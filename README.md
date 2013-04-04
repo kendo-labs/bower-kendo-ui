@@ -4,7 +4,7 @@ Includes Kendo UI Web, as well as typescript support.
 
 ## Installation
 
-    bower kendo
+    bower install kendo
 
 It is dependent on the 1.8.2 - 1.9.1 version of jQuery.
 
