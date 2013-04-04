@@ -1,0 +1,4 @@
+bower-kendo
+===========
+
+bower-kendo
