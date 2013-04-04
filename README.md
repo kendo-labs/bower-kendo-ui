@@ -1,6 +1,6 @@
 # Kendo UI Web GPLv3 For Bower
 
-Includes Kendo UI Web, as well as typescript support.
+Includes [Kendo UI Web](http://demos.kendoui.com/web) GPLV3 version.
 
 ## Installation
 
