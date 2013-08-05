@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Changelog for Kendo UI v2013.1.319</title>
+    <title>Changelog for Kendo UI v2013.2.716</title>
     <style>
         html, body {
             margin: 0;
@@ -52,249 +52,228 @@
 </head>
 <body>
     <div id="page">
-        <h1 class="title">Release notes for Kendo UI v2013.1.319</h1>
+        <h1 class="title">Release notes for Kendo UI v2013.2.716</h1>
 
         <h1>Framework</h1>
         <div class="tClear poTopLine">
             <div class="poBoxIconText">
-                <p><strong>What's new</strong></p><ul><li>Include VSDOC for all suites in Kendo Complete and Kendo Complete for ASP.NET MVC</li><li>Remove the default JSON parameterMap from DataSource Java wrapper implementation</li></ul>
-                <p><strong>What's fixed</strong></p><ul><li>Flip and pageTurn transitons do not work in IE10</li></ul>
+                <p><strong>What's new</strong></p><ul><li>Init method added to classes that didn't inherit one in the TypeScript definitions</li><li>TypeScript 0.9 compatibility</li><li>Android: Styling broken after theme switch</li><li>Chart's pane doesn't apply background and border.</li></ul>
+                <p><strong>What's fixed</strong></p><ul><li>An exception is thrown when kendo scripts are loaded in IE modal dialog.</li><li>Opacity not working with the kendo.fx fade effect</li><li>{wrap: false} not working for kendo.View</li></ul>
             </div>
         </div>
 
 
         <div class="tClear poTopLine">
+            <img src='/libraries/Kendo_UI_Icons_32x32/Chart_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Chart Icon'>
+            <h2>Chart</h2>
+
+            <p><strong>What's new</strong></p><ul><li>Series aggregate function now receives group value (group date)</li></ul>
+            
+        </div>
+        <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/DataSource_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI DataSource Icon'>
             <h2>DataSource</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Support for virtualization with grouping</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>OData tranposrt does not support filtering with "Does not contain" operator</li></ul>
+            
+            <p><strong>What's fixed</strong></p><ul><li>Incorrect number of change events are raised when data is substitude via the data method and the old array is modified</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/Globalization_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Globalization Icon'>
             <h2>Globalization</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Expand culture's numberFormat in order to support globalize.js</li><li>Allow to define shortYearCutoff option through culture info script.</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>kendo.toString hangs out when try to format number with "# yr." format</li><li>Numeric formatting rounds to the last zero placeholder in the decimal part incorrectly</li><li>kendo.parseDate parses incorrectly ISO8601 dates with timezones</li></ul>
-        </div>
-        <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/Grid_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Grid Icon'>
-            <h2>Grid</h2>
-
+            <p><strong>What's new</strong></p><ul><li>Strip literal symbols from the custom numeric format</li></ul>
             
-            <p><strong>What's fixed</strong></p><ul><li>Sorting options of the column menu does not work on touch devices</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/HierarchicalDataSource_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI HierarchicalDataSource Icon'>
             <h2>HierarchicalDataSource</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Breaking change: children datasources are now lazily initialized</li></ul>
             
+            <p><strong>What's fixed</strong></p><ul><li>JS error when removing root-level items to HierarchicalDataSource nested in a kendo.observable object</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/MVVM_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI MVVM Icon'>
             <h2>MVVM</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Support for setting &lt;select&gt; values which do not exist in the source binding.</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>MVVM clears the widget, which initiated the model change</li><li>Multi select selection updated if an item is deselected</li></ul>
+            
+            <p><strong>What's fixed</strong></p><ul><li>Avoid triggering multiple change events for nested observable objects.</li></ul>
+        </div>
+        <div class="tClear poTopLine">
+            <img src='/libraries/Kendo_UI_Icons_32x32/SPA_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI SPA Icon'>
+            <h2>SPA</h2>
+
+            <p><strong>What's new</strong></p><ul><li>View's destroy method should destroy all children widgets.</li></ul>
+            
+        </div>
+        <div class="tClear poTopLine">
+            <img src='/libraries/Kendo_UI_Icons_32x32/ChartStock_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI StockChart Icon'>
+            <h2>StockChart</h2>
+
+            <p><strong>What's new</strong></p><ul><li>Series aggregate function now receives group value (group date)</li></ul>
+            
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/Validator_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Validator Icon'>
             <h2>Validator</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Method for hiding all validation messages</li></ul>
+            <p><strong>What's new</strong></p><ul><li>Performance optimizations for IE8 when validating multiple input elements</li></ul>
             
         </div>
         <h1>Web</h1>
         <div class="tClear poTopLine">
             <div class="poBoxIconText">
-                <p><strong>What's new</strong></p><ul><li>Visual Studio 2012 intellisense annotations</li><li>PHP Wrappers</li><li>TypeScript support</li><li>RequireJS support</li></ul>
-                <p><strong>What's fixed</strong></p><ul><li>Multiple drag&amp;drop issues in IE10 when zoomed.</li><li>document.activeElement triggers Javascript unspecified error in IE from inside iframe</li></ul>
+                
+                <p><strong>What's fixed</strong></p><ul><li>zoomLevel is incorrectly detected in iframe in IE10.</li><li>Popup do not position correctly in IE10 when in iframe.</li></ul>
             </div>
         </div>
 
-        <h1>New UI Widgets</h1>
-        <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/MultiSelect_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI MultiSelect Icon'>
-            <div class="poBoxIconText">
-                <h2>MultiSelect</h2>
-            </div>
-        </div>
-        <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/Tooltip_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Tooltip Icon'>
-            <div class="poBoxIconText">
-                <h2>Tooltip</h2>
-            </div>
-        </div>
-        <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/ColorPicker_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI ColorPicker Icon'>
-            <div class="poBoxIconText">
-                <h2>ColorPicker</h2>
-            </div>
-        </div>
-
-        <h1>UI Widgets Features and Updates</h1>
 
         <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/AutoComplete_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI AutoComplete Icon'>
-            <h2>AutoComplete</h2>
+            <img src='/libraries/Kendo_UI_Icons_32x32/Button_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Button Icon'>
+            <h2>Button</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Honor readonly HTML attribute of the element during widget's initialization</li><li>Support for persisting DataSource's filters</li><li>Support for binding to keys which are not valid JavaScript identifiers.</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Widget does not clear selection of the clicked item on close</li></ul>
+            
+            <p><strong>What's fixed</strong></p><ul><li>Disabled buttons have a hover effect in some themes</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/Calendar_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Calendar Icon'>
             <h2>Calendar</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Honor min and max values rendering view title</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Calendar without footer throws an error when destroyed</li><li>Widget stops propagation of mouse enter/leave events.</li></ul>
+            
+            <p><strong>What's fixed</strong></p><ul><li>Setting min/max value does not re-render view when custom template is defined</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/ColorPicker_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI ColorPicker Icon'>
             <h2>ColorPicker</h2>
 
             
-            <p><strong>What's fixed</strong></p><ul><li>ColorPicker's Pop-up closes automatically on touch device</li><li>Pop-up flickers when opened-closed fast</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>Color pickers gain 1px height when expanded</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/ComboBox_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI ComboBox Icon'>
             <h2>ComboBox</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Honor readonly HTML attribute of the element during widget's initialization</li><li>Support cascading from ComboBox/DropDownList widget</li><li>Widget raises change event when select item with closed popup.</li><li>Support for binding to keys which are not valid JavaScript identifiers.</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Widget does not select next item after filtration</li><li>Support form reset when widget is initialized from select element</li><li>Pop-up flickers when opened-closed fast</li><li>Widget does not select correct item if value is set as HTML attribute (applicable for cascade functionality)</li></ul>
+            <p><strong>What's new</strong></p><ul><li>Add support for the HTML 5 form attribute</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>Widget does not add selected option to the selected item</li><li>Widget does not cascade when its value is 0</li><li>Widget triggers filtering on Shift key</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/DataSource_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI DataSource Icon'>
             <h2>DataSource</h2>
 
+            <p><strong>What's new</strong></p><ul><li>User can provide custom comparer when performing sorting</li><li>String sorting ignores case</li></ul>
             
-            <p><strong>What's fixed</strong></p><ul><li>Total is not refresh when changes are canceled and server paging is enabled</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/DatePicker_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI DatePicker Icon'>
             <h2>DatePicker</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Honor readonly HTML attribute of the element during widget's initialization</li><li>Add format option to the parseFormats array only if it is part of it.</li><li>Avoid parsing input's value if user did not change it</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Widget does not navigate to current focused date on open</li><li>Pop-up flickers when opened-closed fast</li><li>MVC DateTimePicker and NumericTextBox have a k-input class applied to the wrapper element</li><li>Widget does not delete shared calendar if it has never been opened</li></ul>
+            <p><strong>What's new</strong></p><ul><li>Add support for the HTML 5 form attribute</li></ul>
+            
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/DatePicker_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI DateTimePicker Icon'>
             <h2>DateTimePicker</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Honor readonly HTML attribute of the element during widget's initialization</li><li>Add format option to the parseFormats array only if it is part of it.</li><li>Avoid parsing input's value if user did not change it</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Widget does not navigate to current focused date on open</li><li>Pop-up flickers when opened-closed fast</li><li>MVC DateTimePicker and NumericTextBox have a k-input class applied to the wrapper element</li><li>Widget does not delete shared calendar if it has never been opened</li></ul>
-        </div>
-        <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/Draggable_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Draggable Icon'>
-            <h2>Draggable</h2>
-
+            <p><strong>What's new</strong></p><ul><li>Add support for the HTML 5 form attribute</li></ul>
             
-            <p><strong>What's fixed</strong></p><ul><li>iPad: Selection on Drag&amp;Drop not prevented</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/DropDown_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI DropDownList Icon'>
             <h2>DropDownList</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Honor readonly HTML attribute of the element during widget's initialization</li><li>Support cascading from ComboBox/DropDownList widget</li><li>Widget raises change event when select item with closed popup.</li><li>Support for binding to keys which are not valid JavaScript identifiers.</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Widget does not remove tabIndex attribute on disable</li><li>DropDownList is not sized properly if not visible during binding</li><li>Support form reset when widget is initialized from select element</li><li>Pop-up flickers when opened-closed fast</li><li>Widget does not select correct item if value is set as HTML attribute (applicable for cascade functionality)</li><li>Widget does not select correct item if optionLabel is defined</li></ul>
+            <p><strong>What's new</strong></p><ul><li>Add support for the HTML 5 form attribute</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>Widget does not add selected option to the selected item</li><li>Widget does not cascade when its value is 0</li><li>The third cascaded DropDownList is enabled after selecting a value from the first DDL</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/Editor_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Editor Icon'>
             <h2>Editor</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Add support for customizing the ImageBrowser search box text</li><li>Allow images to be deleted with backspace key</li><li>Allow createLink and insertImage commands to be executed with predefined options.</li><li>Support function as ImageBrowser thumbnailUrl</li><li>Use feature detection to get proper selection object</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Scroll position is not persisted when pasting (WebKit)</li><li>Deleting paragraph leaves strange formatting</li><li>ThumbnailUrl with get parameters will result in invalid requests</li><li>'Empty folder' message can be selected and deleted in image browser</li><li>Image onerror handlers are executed</li><li>Large image thumbnails are not shown after upload</li><li>Dialog titles do not honor the localization</li><li>Pasted content appears at the end of the editor in iOS 5</li></ul>
+            <p><strong>What's new</strong></p><ul><li>Add support for emails in the hyperlink dialog</li><li>Improved layout and styling of ImageBrowser dialog</li><li>Allow customization of color picker tools' palettes</li><li>Toolbar button grouping</li><li>Context-aware items in styles tool</li><li>Convert Unicode characters to entities</li><li>Floating toolbar</li><li>Initialization from div[contentEditable]</li><li>Paste from Word improvements</li><li>Table editing tools</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>Editor ImageBrowser MVC wrapper does not have a FileTypes property</li><li>InsertHTML command does not persist selection in old IEs</li><li>JS error when inserting paragraph before image in IE8</li><li>destroy method is slow in a large DOM</li><li>Selected font-family is not persisted when going to new paragraphs</li><li>Editor is not working if nested in Window that is moved in the DOM</li><li>The position cannot be set after an image if there is no text in older versions of IE</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/Grid_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Grid Icon'>
             <h2>Grid</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Support for binding to keys which are not valid JavaScript identifiers.</li><li>Cancel event</li><li>Defer creation of column menu until it is shown</li><li>Defer the creation of the column filter menu until menu is shown</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Issue with Grid grouping in Windows 8</li><li>Fix Column reordering to right when there is a hidden column</li><li>kendo.ns value is not reflected by generated popup edit form container-for attributes</li><li>Input type file should not be automatically bind during editing</li><li>Column menu does not work for template columns with space in the title</li><li>Grid keyboard navigation does scroll to very large cells correctly</li><li>Hiding a column doesn't work when all groups are collapsed</li><li>Grid footer horizontal scroll position is not correct after refresh</li><li>Ungrouping does not properly align footer cells</li><li>Click event of the expand/collapse button is not detached after grid destroy</li><li>Deleting row while editing a new one in inline edit mode does not cancel the changes</li><li>Grid does not display gradient for selected state in IE</li><li>Fix Declaratively initialization of Grid with groupable/reorderable enabled</li><li>Fix adding new items on grid last page</li><li>Grid selection changes when using right mouse button</li><li>Grid content not aligned properly after columnHide action</li><li>Fix Multiple grid selection prevents editing</li><li>Fix Performance regression in grid grouping</li></ul>
+            <p><strong>What's new</strong></p><ul><li>User can provide custom comparer when performing sorting</li><li>String sorting ignores case</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>Grid Grouping drag n drop does not work correctly in RTL mode</li><li>Cannot change the page when editing cell in IE9</li><li>AntiXssEncoder in the web.config may cause parse errors in the Kendo UI MVC Grid client column templates</li><li>Enter key should be pressed twice in batch edit mode in navigatable Grid, when consecutive rows are added</li><li>Changed cell's red triangle indicator is not positioned properly when the cell is empty</li><li>Filter menu dropdown lists icons are broken in IE7</li><li>MultiSelect blurs on mousedown when keyboard navigation of the grid is enabled</li><li>When define className option for the destroy command the default class is not included</li><li>Hovered sort arrow disappears in Metro theme</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/ListView_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI ListView Icon'>
             <h2>ListView</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Cancel event</li></ul>
             
-        </div>
-        <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/MVVM_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI MVVM Icon'>
-            <h2>MVVM</h2>
-
-            <p><strong>What's new</strong></p><ul><li>Support for binding to keys which are not valid JavaScript identifiers.</li><li>Add functional helpers (map, each, find, select, remove) to ObservableArray</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Attribute binding does not update when the value is updated in the parent ViewModel</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>navigatable, selectable ListView throws an error when removing the items and adding a new one</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/Menu_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Menu Icon'>
             <h2>Menu</h2>
 
             
-            <p><strong>What's fixed</strong></p><ul><li>Pop-up flickers when opened-closed fast</li><li>DatePicker cannot be opened in IE when inside a Grid column menu</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>Link ending with sharp doesn't navigate.</li><li>Templated items always close on click</li><li>Menu doesn't open on second tap on the item in a touch-enabled browser</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/MultiSelect_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI MultiSelect Icon'>
             <h2>MultiSelect</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Honor readonly HTML attribute of the element during widget's initialization</li></ul>
-            
+            <p><strong>What's new</strong></p><ul><li>Load data on open when autoBind option is false and initial values are set</li><li>Add support for the HTML 5 form attribute</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>Widget sets new observable array instead of modifying the existing one</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/NumericTextBox_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI NumericTextBox Icon'>
             <h2>NumericTextBox</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Honor readonly HTML attribute of the element during widget's initialization</li><li>Prevent user input if value is longer than maxLength attribute.</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Widget allows to enter '&gt;' symbol</li><li>Vertical line is rendered incorrectly when spinners option is set to false</li><li>MVC DateTimePicker and NumericTextBox have a k-input class applied to the wrapper element</li><li>NumericTextBox does not work in IE7 when placeholder option is set</li></ul>
-        </div>
-        <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/PanelBar_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI PanelBar Icon'>
-            <h2>PanelBar</h2>
-
-            <p><strong>What's new</strong></p><ul><li>Errors in Ajax content fail silently</li></ul>
-            
-        </div>
-        <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/Slider_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Slider Icon'>
-            <h2>Slider</h2>
-
-            <p><strong>What's new</strong></p><ul><li>Updated tooltip with screen boundary detection</li></ul>
-            
+            <p><strong>What's new</strong></p><ul><li>Add support for the HTML 5 form attribute</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>Throws JavaScript expection on focus when group separator is empty string</li><li>Widget allows pasting negative values in the middle of text</li><li>Widget does not show correct decimal separator if current culture is different than en-US</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/Splitter_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Splitter Icon'>
             <h2>Splitter</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Unitless values for `size` will be interpreted as pixel values</li><li>Performance improvement of splitter with large content</li></ul>
             
+            <p><strong>What's fixed</strong></p><ul><li>Splitter pane expand/collapse stops working after calling trigger("resize")</li><li>Splitter does not ignore script tags used as pane siblings</li><li>Inherited splitters do not bind to parent splitter resize events</li></ul>
         </div>
         <div class="tClear poTopLine">
-            <img src='/libraries/Kendo_UI_Icons_32x32/TabStrip_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI TabStrip Icon'>
-            <h2>TabStrip</h2>
+            <img src='/libraries/Kendo_UI_Icons_32x32/ThemeBuilder_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI ThemeBuilder Icon'>
+            <h2>ThemeBuilder</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Errors in Ajax content fail silently</li><li>TabStrip Ajax content loading cannot be canceled.</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>TabStrip with no tabs throws JS error when focused by the user</li></ul>
+            
+            <p><strong>What's fixed</strong></p><ul><li>Creating new skin removes gradients</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/TimePicker_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI TimePicker Icon'>
             <h2>TimePicker</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Honor readonly HTML attribute of the element during widget's initialization</li><li>Avoid parsing input's value if user did not change it</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Last rendered item is bigger then the max time</li></ul>
+            <p><strong>What's new</strong></p><ul><li>Add support for the HTML 5 form attribute</li></ul>
+            
+        </div>
+        <div class="tClear poTopLine">
+            <img src='/libraries/Kendo_UI_Icons_32x32/Tooltip_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Tooltip Icon'>
+            <h2>Tooltip</h2>
+
+            
+            <p><strong>What's fixed</strong></p><ul><li>Tooltip callout is not positioned correctly in IE in some scenarios</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/TreeView_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI TreeView Icon'>
             <h2>TreeView</h2>
 
-            <p><strong>What's new</strong></p><ul><li>Change event (triggered after selection has changed)</li><li>Performance improvement for `checkChildren: true` initialization</li></ul>
-            <p><strong>What's fixed</strong></p><ul><li>Multi-level dataTextField cannot be set through data attribute</li><li>Disabling items through MVVM does not disable them visually</li><li>Disabled nodes render enabled checkboxes</li><li>Space key checks user-rendered checkboxes</li><li>Scroll position is not persisted when focusing widget</li><li>checkChildren:false updates parent indeterminate/checked state</li></ul>
+            <p><strong>What's new</strong></p><ul><li>Allow manual update of indeterminate checkboxes through the updateIndeterminate method</li><li>Improve performance of template rendering</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>Keyboard support does not go past leaf nodes with set expanded flag</li><li>JS error when adding root-level items to HierarchicalDataSource nested in a kendo.observable object</li><li>CheckChildren: true triggers JS error when checking node without child checkboxes in sparse checkbox tree</li><li>Server URLs are not processed when serializing items as datasource</li><li>Initialization from arbitrary HTML elements yields a static tree</li></ul>
+        </div>
+        <div class="tClear poTopLine">
+            <img src='/libraries/Kendo_UI_Icons_32x32/Upload_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Upload Icon'>
+            <h2>Upload</h2>
+
+            
+            <p><strong>What's fixed</strong></p><ul><li>Firefox 20+ can throw an error during asynchronous upload</li><li>Focus state not clearly indicated</li></ul>
         </div>
         <div class="tClear poTopLine">
             <img src='/libraries/Kendo_UI_Icons_32x32/Window_kendoui.sflb' class='poBoxIcon' width='32' height='32' alt='Kendo UI Window Icon'>
             <h2>Window</h2>
 
             
-            <p><strong>What's fixed</strong></p><ul><li>Window content is not scrollable on a touch device</li><li>Width and height cannot be set through data attributes</li><li>Textboxes cannot be focused in Kendo UI Window in IE after closing and destroying an iframe-containing instance</li><li>Window modal overlay not positioned correctly when destroying open instance and 2+ other modal instances are present</li><li>Iframe:true requests the content URL twice, aborting the first request</li><li>Window inside iframe triggers Javascript unspecified error in IE</li></ul>
+            <p><strong>What's fixed</strong></p><ul><li>The content configuration option cannot be decoratively bound</li><li>Calling open on a closing window during animation leaves it in an invalid state</li><li>Hitting escape during close animation triggers another close sequence</li></ul>
         </div>
     </div>
 </body>
