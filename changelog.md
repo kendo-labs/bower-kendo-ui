@@ -1,6 +1,3 @@
-
-[Source](https://raw.github.com/kendo-labs/bower-kendo-ui/master/changelog.html "Permalink to Changelog for Kendo UI v2013.2.716")
-
 # Changelog for Kendo UI v2013.2.716
 
 # Release notes for Kendo UI v2013.2.716
@@ -331,31 +328,31 @@
   * Calling open on a closing window during animation leaves it in an invalid state
   * Hitting escape during close animation triggers another close sequence
 
-   [1]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Chart_kendoui.sflb
-   [2]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/DataSource_kendoui.sflb
-   [3]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Globalization_kendoui.sflb
-   [4]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/HierarchicalDataSource_kendoui.sflb
-   [5]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/MVVM_kendoui.sflb
-   [6]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/SPA_kendoui.sflb
-   [7]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/ChartStock_kendoui.sflb
-   [8]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Validator_kendoui.sflb
-   [9]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Button_kendoui.sflb
-   [10]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Calendar_kendoui.sflb
-   [11]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/ColorPicker_kendoui.sflb
-   [12]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/ComboBox_kendoui.sflb
-   [13]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/DatePicker_kendoui.sflb
-   [14]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/DropDown_kendoui.sflb
-   [15]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Editor_kendoui.sflb
-   [16]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Grid_kendoui.sflb
-   [17]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/ListView_kendoui.sflb
-   [18]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Menu_kendoui.sflb
-   [19]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/MultiSelect_kendoui.sflb
-   [20]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/NumericTextBox_kendoui.sflb
-   [21]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Splitter_kendoui.sflb
-   [22]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/ThemeBuilder_kendoui.sflb
-   [23]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/TimePicker_kendoui.sflb
-   [24]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Tooltip_kendoui.sflb
-   [25]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/TreeView_kendoui.sflb
-   [26]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Upload_kendoui.sflb
-   [27]: https://raw.github.com/libraries/Kendo_UI_Icons_32x32/Window_kendoui.sflb
+   [1]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Chart_kendoui.sflb
+   [2]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/DataSource_kendoui.sflb
+   [3]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Globalization_kendoui.sflb
+   [4]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/HierarchicalDataSource_kendoui.sflb
+   [5]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/MVVM_kendoui.sflb
+   [6]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/SPA_kendoui.sflb
+   [7]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/ChartStock_kendoui.sflb
+   [8]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Validator_kendoui.sflb
+   [9]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Button_kendoui.sflb
+   [10]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Calendar_kendoui.sflb
+   [11]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/ColorPicker_kendoui.sflb
+   [12]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/ComboBox_kendoui.sflb
+   [13]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/DatePicker_kendoui.sflb
+   [14]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/DropDown_kendoui.sflb
+   [15]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Editor_kendoui.sflb
+   [16]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Grid_kendoui.sflb
+   [17]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/ListView_kendoui.sflb
+   [18]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Menu_kendoui.sflb
+   [19]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/MultiSelect_kendoui.sflb
+   [20]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/NumericTextBox_kendoui.sflb
+   [21]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Splitter_kendoui.sflb
+   [22]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/ThemeBuilder_kendoui.sflb
+   [23]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/TimePicker_kendoui.sflb
+   [24]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Tooltip_kendoui.sflb
+   [25]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/TreeView_kendoui.sflb
+   [26]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Upload_kendoui.sflb
+   [27]: https://www.kendoui.com/libraries/Kendo_UI_Icons_32x32/Window_kendoui.sflb
   
