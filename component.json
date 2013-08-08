@@ -1,7 +1,0 @@
-{
-  "name": "kendo",
-  "version": "2013.1.319",
-  "dependencies": {
-    "jquery": ">=1.8.2 <1.9.1"
-  }
-}
