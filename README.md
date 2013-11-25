@@ -6,7 +6,7 @@ Includes [Kendo UI Web](http://demos.kendoui.com/web) GPLV3 version.
 
     bower install kendo-ui
 
-It is dependent on the 1.8.2 - 1.9.1 version of jQuery.
+It is dependent on the 1.9.1 - 2.0.3 version of jQuery.
 
 Installs into the **kendo** folder in the **components** directory.  Each widget file can be used independently.  The **kendo.web.all.min** file contains all widgets.
 
