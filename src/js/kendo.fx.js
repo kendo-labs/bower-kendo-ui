@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "fx",
-    name: "Effects",
-    category: "framework",
-    description: "Required for animation effects in all Kendo UI widgets.",
-    depends: [ "core" ]
-});
+(function(f, define){
+    define([ "./kendo.core" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -113,7 +109,7 @@ kendo_module({
             }
         };
 
-        kendo.directions = directions;
+    kendo.directions = directions;
 
     extend($.fn, {
         kendoStop: function(clearQueue, gotoEnd) {
@@ -225,38 +221,6 @@ kendo_module({
 
     function parseCSS(element, property) {
         return parseInteger(element.css(property));
-    }
-
-
-    function parseTransitionEffects(options) {
-        var effects = options.effects;
-
-        if (effects === "zoom") {
-            effects = "zoom:in fade:in";
-        }
-        if (effects === "fade") {
-            effects = "fade:in";
-        }
-        if (effects === "slide") {
-            effects = "tile:left";
-        }
-        if (/^slide:(.+)$/.test(effects)) {
-            effects = "tile:" + RegExp.$1;
-        }
-        if (effects === "overlay") {
-            effects = "slideIn:left";
-        }
-        if (/^overlay:(.+)$/.test(effects)) {
-            effects = "slideIn:" + RegExp.$1;
-        }
-
-        options.effects = kendo.parseEffects(effects);
-
-        if (ios7 && effects == "tile:left") {
-            options.previousDivisor = 3;
-        }
-
-        return options;
     }
 
     function keys(obj) {
@@ -614,11 +578,6 @@ kendo_module({
         }
     };
 
-    fx.transitionPromise = function(element, destination, options) {
-        fx.animateTo(element, destination, options);
-        return element;
-    };
-
     extend(fx, {
         animate: function(elements, properties, options) {
             var useTransition = options.transition !== false;
@@ -713,57 +672,10 @@ kendo_module({
                     });
                 }
             }
-        },
-
-        animateTo: function(element, destination, options) {
-            var direction,
-                commonParent = element.parents().filter(destination.parents()).first(),
-                both = $().add(element.parent()).add(destination.parent()),
-                isAbsolute = element.css(POSITION) == "absolute",
-                originalOverflow, originalPosition;
-
-            if (!isAbsolute) {
-                originalPosition = both.css(POSITION);
-                both.css(POSITION, "absolute");
-            }
-
-            options = parseTransitionEffects(options);
-            if (!support.mobileOS.android) {
-                originalOverflow = commonParent.css(OVERFLOW);
-                commonParent.css(OVERFLOW, "hidden");
-            }
-
-            $.each(options.effects, function(name, definition) {
-                direction = direction || definition.direction;
-            });
-
-            function complete(animatedElement) {
-                destination[0].style.cssText = "";
-                element.each(function() { this.style.cssText = ""; });
-                if (!support.mobileOS.android) {
-                    commonParent.css(OVERFLOW, originalOverflow);
-                }
-                if (!isAbsolute) {
-                    both.css(POSITION, originalPosition);
-                }
-                if (options.completeCallback) {
-                    options.completeCallback.call(element, animatedElement);
-                }
-            }
-
-            options.complete = browser.msie ? function() { setTimeout(complete, 0); } : complete;
-            options.previous = (options.reverse ? destination : element);
-
-            options.reset = true; // Reset transforms if there are any.
-
-            // execute callback only once, and hook up derived animations to previous view only once.
-            (options.reverse ? element : destination).each(function() {
-                $(this).kendoAnimate(extend(true, {}, options));
-                options.complete = null;
-                options.previous = null;
-            });
         }
     });
+
+    fx.animatedPromise = fx.promise;
 
     var Effect = kendo.Class.extend({
         init: function(element, direction) {
@@ -866,7 +778,7 @@ kendo_module({
                 start = strip3DTransforms(start);
             }
 
-            element.css(start).css(TRANSFORM); // Nudge
+            element.css(start).css(TRANSFORM); // Trick webkit into re-rendering
 
             that.setup();
 
@@ -1426,6 +1338,120 @@ kendo_module({
         }
     });
 
+    var RESTORE_OVERFLOW = !support.mobileOS.android;
+
+    createEffect("replace", {
+        init: function(element, previous, transitionClass) {
+            Effect.prototype.init.call(this, element);
+            this._previous = $(previous);
+            this._transitionClass = transitionClass;
+        },
+
+        duration: function() {
+            throw new Error("The replace effect does not support duration setting; the effect duration may be customized through the transition class rule");
+        },
+
+        _both: function() {
+            return $().add(this._element).add(this._previous);
+        },
+
+        _containerClass: function() {
+            var direction = this._direction,
+                containerClass = "k-fx k-fx-start k-fx-" + this._transitionClass;
+
+            if (direction) {
+                containerClass += " k-fx-" + direction;
+            }
+
+            if (this._reverse) {
+                containerClass += " k-fx-reverse";
+            }
+
+            return containerClass;
+        },
+
+        complete: function() {
+            if (!this.deferred) {
+                return;
+            }
+            var container = this.container;
+
+            container.removeClass("k-fx-end").removeClass(this._containerClass());
+            this._previous.hide().removeClass("k-fx-current");
+            this.element.removeClass("k-fx-next");
+
+            if (RESTORE_OVERFLOW) {
+                container.css(OVERFLOW, "");
+            }
+
+            if (!this.isAbsolute) {
+                this._both().css(POSITION, "");
+            }
+
+            this.deferred.resolve();
+            delete this.deferred;
+        },
+
+        run: function() {
+            if (this._additionalEffects && this._additionalEffects[0]) {
+                return this.compositeRun();
+            }
+
+            var that = this,
+                element = that.element,
+                previous = that._previous,
+                direction = that._direction,
+                container = element.parents().filter(previous.parents()).first(),
+                both = that._both(),
+                deferred = $.Deferred(),
+                originalPosition = element.css(POSITION),
+                originalOverflow;
+
+            // edge case for grid/scheduler, where the previous is already destroyed.
+            if (!container.length) {
+                container = element.parent();
+            }
+
+            this.container = container;
+            this.deferred = deferred;
+            this.isAbsolute = originalPosition  == "absolute";
+
+            if (!this.isAbsolute) {
+                both.css(POSITION, "absolute");
+            }
+
+            if (RESTORE_OVERFLOW) {
+                originalOverflow = container.css(OVERFLOW);
+                container.css(OVERFLOW, "hidden");
+            }
+
+            if (!transitions) {
+                this.complete();
+            } else {
+                element.addClass("k-fx-hidden");
+
+                container.addClass(this._containerClass());
+
+                container.one(transitions.event, $.proxy(this, "complete"));
+
+                kendo.animationFrame(function() {
+                    element.removeClass("k-fx-hidden").addClass("k-fx-next");
+                    previous.css("display", "").addClass("k-fx-current");
+
+                    kendo.animationFrame(function() {
+                        container.removeClass("k-fx-start").addClass("k-fx-end");
+                    });
+                });
+            }
+
+            return deferred.promise();
+        },
+
+        stop: function() {
+            this.complete();
+        }
+    });
+
     var Animation = kendo.Class.extend({
         init: function() {
             var that = this;
@@ -1439,10 +1465,20 @@ kendo_module({
         onCancel: $.noop,
 
         start: function() {
+            if (!this.enabled()) {
+                return;
+            }
+
             if (!this.done()) {
                 this._started = true;
                 kendo.animationFrame(this._tickProxy);
+            } else {
+                this.onEnd();
             }
+        },
+
+        enabled: function() {
+            return true;
         },
 
         cancel: function() {
@@ -1457,7 +1493,7 @@ kendo_module({
             that.tick();
 
             if (!that.done()) {
-                kendo.queueAnimation(that._tickProxy);
+                kendo.animationFrame(that._tickProxy);
             } else {
                 that._started = false;
                 that.onEnd();
@@ -1519,3 +1555,7 @@ kendo_module({
     fx.Transition = Transition;
     fx.createEffect = createEffect;
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

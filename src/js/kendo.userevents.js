@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "userevents",
-    name: "User Events",
-    category: "framework",
-    depends: [ "core" ],
-    hidden: true
-});
+(function(f, define){
+    define([ "./kendo.core" ], f);
+})(function(){
 
 (function ($, undefined) {
     var kendo = window.kendo,
@@ -27,7 +23,7 @@ kendo_module({
         OS = support.mobileOS,
         invalidZeroEvents = OS && OS.android,
         DEFAULT_MIN_HOLD = 800,
-        DEFAULT_THRESHOLD = support.browser.ie ? 5 : 0, // WP8 and W8 are very sensitive and always report move.
+        DEFAULT_THRESHOLD = support.browser.msie ? 5 : 0, // WP8 and W8 are very sensitive and always report move.
 
         // UserEvents events
         PRESS = "press",
@@ -156,9 +152,7 @@ kendo_module({
 
     var Touch = Class.extend({
         init: function(userEvents, target, touchInfo) {
-            var that = this;
-
-            extend(that, {
+            extend(this, {
                 x: new TouchAxis("X", touchInfo.location),
                 y: new TouchAxis("Y", touchInfo.location),
                 userEvents: userEvents,
@@ -166,16 +160,19 @@ kendo_module({
                 currentTarget: touchInfo.currentTarget,
                 initialTouch: touchInfo.target,
                 id: touchInfo.id,
+                pressEvent: touchInfo,
                 _moved: false,
                 _finished: false
             });
+        },
 
-            that.press = function() {
-                that._trigger(PRESS, touchInfo);
-                that._holdTimeout = setTimeout(function() {
-                    that._trigger(HOLD, touchInfo);
-                }, userEvents.minHold);
-            };
+        press: function() {
+            this._holdTimeout = setTimeout($.proxy(this, "_hold"), this.userEvents.minHold);
+            this._trigger(PRESS, this.pressEvent);
+        },
+
+        _hold: function() {
+            this._trigger(HOLD, this.pressEvent);
         },
 
         move: function(touchInfo) {
@@ -211,6 +208,9 @@ kendo_module({
 
             if (that._finished) { return; }
 
+            // Mark the object as finished if there are blocking operations in the event handlers (alert/confirm)
+            that._finished = true;
+
             if (that._moved) {
                 that._trigger(END, touchInfo);
             } else {
@@ -224,13 +224,14 @@ kendo_module({
         },
 
         dispose: function() {
-            var that = this,
-                userEvents = that.userEvents,
+            var userEvents = this.userEvents,
                 activeTouches = userEvents.touches;
 
-            that._finished = true;
+            this._finished = true;
+            this.pressEvent = null;
+            clearTimeout(this._holdTimeout);
 
-            activeTouches.splice($.inArray(that, activeTouches), 1);
+            activeTouches.splice($.inArray(this, activeTouches), 1);
         },
 
         skip: function() {
@@ -400,6 +401,7 @@ kendo_module({
             that.unbind();
             delete that.surface;
             delete that.element;
+            delete that.currentTarget;
         },
 
         capture: function() {
@@ -481,7 +483,12 @@ kendo_module({
                 target,
                 touches = getTouches(e),
                 length = touches.length,
-                touch;
+                touch,
+                which = e.which;
+
+            if (which && which > 1){
+                return;
+            }
 
             if (that._maxTouchesReached()) {
                 return;
@@ -562,14 +569,22 @@ kendo_module({
                 pageY: y,
                 clientX: x,
                 clientY: y,
-                target: target || this.element,
+                target: $(target || this.element)[0],
                 stopPropagation: $.noop,
                 preventDefault: $.noop
             });
         }
     });
 
+    UserEvents.minHold = function(value) {
+        DEFAULT_MIN_HOLD = value;
+    };
+
     kendo.getTouches = getTouches;
     kendo.touchDelta = touchDelta;
     kendo.UserEvents = UserEvents;
  })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

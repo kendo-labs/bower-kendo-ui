@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "groupable",
-    name: "Groupable",
-    category: "framework",
-    depends: [ "core", "draganddrop" ],
-    advanced: true
-});
+(function(f, define){
+    define([ "./kendo.core", "./kendo.draganddrop" ], f);
+})(function(){
 
 (function ($, undefined) {
     var kendo = window.kendo,
@@ -22,6 +18,7 @@ kendo_module({
         proxy = $.proxy,
         isRtl = false,
         NS = ".kendoGroupable",
+        CHANGE = "change",
         indicatorTmpl = kendo.template('<div class="k-group-indicator" data-#=data.ns#field="${data.field}" data-#=data.ns#title="${data.title || ""}" data-#=data.ns#dir="${data.dir || "asc"}">' +
                 '<a href="\\#" class="k-link">' +
                     '<span class="k-icon k-si-arrow-${(data.dir || "asc") == "asc" ? "n" : "s"}">(sorted ${(data.dir || "asc") == "asc" ? "ascending": "descending"})</span>' +
@@ -72,13 +69,13 @@ kendo_module({
                 group: group
             });
 
-            groupContainer = that.groupContainer = $(that.options.groupContainer, that.element)
+            that.groupContainer = $(that.options.groupContainer, that.element)
                 .kendoDropTarget({
                     group: draggable.options.group,
                     dragenter: function(e) {
                         if (that._canDrag(e.draggable.currentTarget)) {
                             e.draggable.hint.find(".k-drag-status").removeClass("k-denied").addClass("k-add");
-                            dropCue.css("top", dropCueOffsetTop(groupContainer)).css(horizontalCuePosition, 0).appendTo(groupContainer);
+                            dropCue.css("top", dropCueOffsetTop(that.groupContainer)).css(horizontalCuePosition, 0).appendTo(that.groupContainer);
                         }
                     },
                     dragleave: function(e) {
@@ -126,7 +123,7 @@ kendo_module({
                             left = isRtl ? elementPosition.left - marginLeft : elementPosition.left + element.outerWidth();
 
                         intializePositions();
-                        dropCue.css({top: dropCueOffsetTop(groupContainer), left: left}).appendTo(groupContainer);
+                        dropCue.css({top: dropCueOffsetTop(that.groupContainer), left: left}).appendTo(that.groupContainer);
                         this.hint.find(".k-drag-status").removeClass("k-denied").addClass("k-add");
                     },
                     dragend: function() {
@@ -175,9 +172,15 @@ kendo_module({
 
             that.dataSource = that.options.dataSource;
 
-            if(that.dataSource) {
+            if (that.dataSource && that._refreshHandler) {
+                that.dataSource.unbind(CHANGE, that._refreshHandler);
+            } else {
                 that._refreshHandler = proxy(that.refresh, that);
+            }
+
+            if(that.dataSource) {
                 that.dataSource.bind("change", that._refreshHandler);
+                that.refresh();
             }
         },
 
@@ -185,13 +188,15 @@ kendo_module({
             var that = this,
                 dataSource = that.dataSource;
 
-            that.groupContainer.empty().append(
-                $.map(dataSource.group() || [], function(item) {
-                    var fieldName = item.field.replace(nameSpecialCharRegExp, "\\$1");
-                    var element = that.element.find(that.options.filter).filter("[" + kendo.attr("field") + "=" + fieldName + "]");
-                    return that.buildIndicator(item.field, element.attr(kendo.attr("title")), item.dir);
-                }).join("")
-            );
+            if (that.groupContainer) {
+                that.groupContainer.empty().append(
+                    $.map(dataSource.group() || [], function(item) {
+                        var fieldName = item.field.replace(nameSpecialCharRegExp, "\\$1");
+                        var element = that.element.find(that.options.filter).filter("[" + kendo.attr("field") + "=" + fieldName + "]");
+                        return that.buildIndicator(item.field, element.attr(kendo.attr("title")), item.dir);
+                    }).join("")
+                );
+            }
             that._invalidateGroupContainer();
         },
 
@@ -200,10 +205,15 @@ kendo_module({
 
             Widget.fn.destroy.call(that);
 
-            that.groupContainer
-                .off(NS)
-                .kendoDropTarget("destroy")
-                .kendoDraggable("destroy");
+            that.groupContainer.off(NS);
+
+            if (that.groupContainer.data("kendoDropTarget")) {
+                that.groupContainer.data("kendoDropTarget").destroy();
+            }
+
+            if (that.groupContainer.data("kendoDraggable")) {
+                that.groupContainer.data("kendoDraggable").destroy();
+            }
 
             if (!that.options.draggable) {
                 that.draggable.destroy();
@@ -211,7 +221,10 @@ kendo_module({
 
             if (that.dataSource && that._refreshHandler) {
                 that.dataSource.unbind("change", that._refreshHandler);
+                that._refreshHandler = null;
             }
+
+            that.groupContainer = that.element = that.draggable = null;
         },
 
         options: {
@@ -355,6 +368,7 @@ kendo_module({
             var that = this,
                 indicators = $(".k-group-indicator", that.groupContainer),
                 left;
+
             that._dropCuePositions = $.map(indicators, function(item) {
                 item = $(item);
                 left = kendo.getOffset(item).left;
@@ -367,7 +381,7 @@ kendo_module({
         },
         _invalidateGroupContainer: function() {
             var groupContainer = this.groupContainer;
-            if(groupContainer.is(":empty")) {
+            if(groupContainer && groupContainer.is(":empty")) {
                 groupContainer.html(this.options.messages.empty);
             }
         }
@@ -376,3 +390,7 @@ kendo_module({
     kendo.ui.plugin(Groupable);
 
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

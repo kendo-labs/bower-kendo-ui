@@ -1,36 +1,27 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "autocomplete",
-    name: "AutoComplete",
-    category: "web",
-    description: "The AutoComplete widget provides suggestions depending on the typed text.It also allows multiple value entries.",
-    depends: [ "list" ],
-    features: [ {
-        id: "mobile-scroller",
-        name: "Mobile scroller",
-        description: "Support for kinetic scrolling in mobile device",
-        depends: [ "mobile.scroller" ]
-    } ]
-});
+(function(f, define){
+    define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
+})(function(){
 
 (function ($, undefined) {
     var kendo = window.kendo,
         support = kendo.support,
+        caret = kendo.caret,
         activeElement = kendo._activeElement,
         placeholderSupported = support.placeholder,
         ui = kendo.ui,
+        List = ui.List,
         keys = kendo.keys,
         DataSource = kendo.data.DataSource,
-        List = ui.List,
         ARIA_DISABLED = "aria-disabled",
         ARIA_READONLY = "aria-readonly",
         DEFAULT = "k-state-default",
@@ -42,34 +33,26 @@ kendo_module({
         HOVER = "k-state-hover",
         ns = ".kendoAutoComplete",
         HOVEREVENTS = "mouseenter" + ns + " mouseleave" + ns,
-        caretPosition = List.caret,
-        selectText = List.selectText,
         proxy = $.proxy;
 
-    function indexOfWordAtCaret(caret, text, separator) {
-        return separator ? text.substring(0, caret).split(separator).length - 1 : 0;
+    function indexOfWordAtCaret(caretIdx, text, separator) {
+        return separator ? text.substring(0, caretIdx).split(separator).length - 1 : 0;
     }
 
-    function wordAtCaret(caret, text, separator) {
-        return text.split(separator)[indexOfWordAtCaret(caret, text, separator)];
+    function wordAtCaret(caretIdx, text, separator) {
+        return text.split(separator)[indexOfWordAtCaret(caretIdx, text, separator)];
     }
 
-    function replaceWordAtCaret(caret, text, word, separator) {
+    function replaceWordAtCaret(caretIdx, text, word, separator) {
         var words = text.split(separator);
 
-        words.splice(indexOfWordAtCaret(caret, text, separator), 1, word);
+        words.splice(indexOfWordAtCaret(caretIdx, text, separator), 1, word);
 
         if (separator && words[words.length - 1] !== "") {
             words.push("");
         }
 
         return words.join(separator);
-    }
-
-    function moveCaretAtEnd(element) {
-        var length = element.value.length;
-
-        selectText(element, length, length);
     }
 
     var AutoComplete = List.extend({
@@ -310,7 +293,7 @@ kendo_module({
             clearTimeout(that._typing);
 
             if (separator) {
-                word = wordAtCaret(caretPosition(that.element[0]), word, separator);
+                word = wordAtCaret(caret(that.element)[0], word, separator);
             }
 
             length = word.length;
@@ -334,11 +317,11 @@ kendo_module({
                 key = that._last,
                 value = that._accessor(),
                 element = that.element[0],
-                caret = caretPosition(element),
+                caretIdx = caret(element)[0],
                 separator = that.options.separator,
                 words = value.split(separator),
-                wordIndex = indexOfWordAtCaret(caret, value, separator),
-                selectionEnd = caret,
+                wordIndex = indexOfWordAtCaret(caretIdx, value, separator),
+                selectionEnd = caretIdx,
                 idx;
 
             if (key == keys.BACKSPACE || key == keys.DELETE) {
@@ -358,12 +341,12 @@ kendo_module({
                 }
             }
 
-            if (caret <= 0) {
-                caret = value.toLowerCase().indexOf(word.toLowerCase()) + 1;
+            if (caretIdx <= 0) {
+                caretIdx = value.toLowerCase().indexOf(word.toLowerCase()) + 1;
             }
 
-            idx = value.substring(0, caret).lastIndexOf(separator);
-            idx = idx > -1 ? caret - (idx + separator.length) : caret;
+            idx = value.substring(0, caretIdx).lastIndexOf(separator);
+            idx = idx > -1 ? caretIdx - (idx + separator.length) : caretIdx;
             value = words[wordIndex].substring(0, idx);
 
             if (word) {
@@ -371,7 +354,7 @@ kendo_module({
                 if (idx > -1) {
                     word = word.substring(idx + value.length);
 
-                    selectionEnd = caret + word.length;
+                    selectionEnd = caretIdx + word.length;
 
                     value += word;
                 }
@@ -387,7 +370,7 @@ kendo_module({
             that._accessor(words.join(separator || ""));
 
             if (element === activeElement()) {
-                selectText(element, caret, selectionEnd);
+                caret(element, caretIdx, selectionEnd);
             }
         },
 
@@ -423,10 +406,10 @@ kendo_module({
         },
 
         _accept: function (li) {
-            var that = this;
+            var element = this.element;
 
-            that._focus(li);
-            moveCaretAtEnd(that.element[0]);
+            this._focus(li);
+            caret(element, element.val().length);
         },
 
         _keydown: function (e) {
@@ -531,7 +514,7 @@ kendo_module({
                        .val(placeholder);
 
                 if (!placeholder && element[0] === document.activeElement) {
-                    List.selectText(element[0], 0, 0);
+                    caret(element[0], 0, 0);
                 }
             }
         },
@@ -565,10 +548,11 @@ kendo_module({
                     text = that._text(data);
 
                     if (separator) {
-                        text = replaceWordAtCaret(caretPosition(that.element[0]), that._accessor(), text, separator);
+                        text = replaceWordAtCaret(caret(that.element)[0], that._accessor(), text, separator);
                     }
 
                     that._accessor(text);
+                    that._prev = that._accessor();
                     that.current(li.addClass(SELECTED));
                 }
             }
@@ -616,3 +600,7 @@ kendo_module({
 
     ui.plugin(AutoComplete);
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

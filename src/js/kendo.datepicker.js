@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "datepicker",
-    name: "DatePicker",
-    category: "web",
-    description: "The DatePicker widget allows the user to select a date from a calendar or by direct input.",
-    depends: [ "calendar", "popup" ]
-});
+(function(f, define){
+    define([ "./kendo.calendar", "./kendo.popup" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -79,17 +75,10 @@ kendo_module({
     var DateView = function(options) {
         var that = this, id,
             body = document.body,
-            sharedCalendar = DatePicker.sharedCalendar,
             div = $(DIV).attr(ARIA_HIDDEN, "true")
                         .addClass("k-calendar-container")
                         .appendTo(body);
 
-        if (!sharedCalendar) {
-            sharedCalendar = DatePicker.sharedCalendar = new ui.Calendar($(DIV).attr(ID, kendo.guid()).hide().appendTo(body), { focusOnNav: false });
-            calendar.makeUnselectable(sharedCalendar.element);
-        }
-
-        that.calendar = sharedCalendar;
         that.options = options = options || {};
         id = options.id;
 
@@ -103,68 +92,65 @@ kendo_module({
         that.popup = new ui.Popup(div, extend(options.popup, options, { name: "Popup", isRtl: kendo.support.isRtl(options.anchor) }));
         that.div = div;
 
-        that._templates();
-
         that.value(options.value);
     };
 
     DateView.prototype = {
         _calendar: function() {
-            var that = this,
-                popup = that.popup,
-                options = that.options,
-                calendar = that.calendar,
-                element = calendar.element;
+            var that = this;
+            var calendar = that.calendar;
+            var options = that.options;
+            var div;
 
-            if (element.data(DATEVIEW) !== that) {
+            if (!calendar) {
+                div = $(DIV).attr(ID, kendo.guid())
+                            .appendTo(that.popup.element)
+                            .on(MOUSEDOWN, preventDefault)
+                            .on(CLICK, "td:has(.k-link)", proxy(that._click, that));
 
-                element.appendTo(popup.element)
-                       .data(DATEVIEW, that)
-                       .off(CLICK + " " + KEYDOWN)
-                       .on(CLICK, "td:has(.k-link)", proxy(that._click, that))
-                       .on(MOUSEDOWN, preventDefault)
-                       .show();
+                that.calendar = calendar = new ui.Calendar(div);
+                that._setOptions(options);
 
-                calendar.unbind(CHANGE)
-                        .bind(CHANGE, options);
+                kendo.calendar.makeUnselectable(calendar.element);
 
-                calendar.month = that.month;
-                calendar.options.dates = options.dates;
-                calendar.options.depth = options.depth;
-                calendar.options.culture = options.culture;
-
-                calendar._footer(that.footer);
-
-                calendar.min(options.min);
-                calendar.max(options.max);
-
-                calendar._value = null;
                 calendar.navigate(that._value || that._current, options.start);
+
                 that.value(that._value);
             }
         },
 
-        destroy: function() {
-            var that = this,
-                calendar = that.calendar,
-                element = calendar.element,
-                dv = element.data(DATEVIEW),
-                popups;
+        _setOptions: function(options) {
+            this.calendar.setOptions({
+                focusOnNav: false,
+                change: options.change,
+                culture: options.culture,
+                dates: options.dates,
+                depth: options.depth,
+                footer: options.footer,
+                format: options.format,
+                max: options.max,
+                min: options.min,
+                month: options.month,
+                start: options.start
+            });
+        },
 
-            if (dv === undefined || dv === that) {
-                popups = $(".k-calendar-container");
+        setOptions: function(options) {
+            var old = this.options;
 
-                if (popups.length > 1) {
-                    element.hide().appendTo(document.body);
-                } else {
-                    element.off(ns);
-                    calendar.destroy();
-                    calendar.element.remove();
-                    DatePicker.sharedCalendar = null;
-                }
+            this.options = extend(old, options, {
+                change: old.change,
+                close: old.close,
+                open: old.open
+            });
+
+            if (this.calendar) {
+                this._setOptions(this.options);
             }
+        },
 
-            that.popup.destroy();
+        destroy: function() {
+            this.popup.destroy();
         },
 
         open: function() {
@@ -227,6 +213,10 @@ kendo_module({
             that._current = calendar._move(e);
         },
 
+        current: function(date) {
+            this._current = date;
+            this.calendar._focus(date);
+        },
 
         value: function(value) {
             var that = this,
@@ -236,7 +226,7 @@ kendo_module({
             that._value = value;
             that._current = new DATE(+restrictValue(value, options.min, options.max));
 
-            if (calendar.element.data(DATEVIEW) === that) {
+            if (calendar) {
                 calendar.value(value);
             }
         },
@@ -248,32 +238,13 @@ kendo_module({
         },
 
         _option: function(option, value) {
-            var that = this,
-                options = that.options,
-                calendar = that.calendar;
+            var that = this;
+            var calendar = that.calendar;
 
-            options[option] = value;
+            that.options[option] = value;
 
-            if (calendar.element.data(DATEVIEW) === that) {
+            if (calendar) {
                 calendar[option](value);
-            }
-        },
-
-        _templates: function() {
-            var that = this,
-                options = that.options,
-                footer = options.footer,
-                month = options.month || {},
-                content = month.content,
-                empty = month.empty;
-
-            that.month = {
-                content: template('<td#=data.cssClass#><a tabindex="-1" class="k-link" href="\\#" ' + kendo.attr("value") + '="#=data.dateString#" title="#=data.title#">' + (content || "#=data.value#") + '</a></td>', { useWithBlock: !!content }),
-                empty: template("<td>" + (empty || "&nbsp;") + "</td>", { useWithBlock: !!empty })
-            };
-
-            if (footer !== false) {
-                that.footer = template(footer || '#= kendo.toString(data,"D","' + options.culture +'") #', { useWithBlock: false });
             }
         }
     };
@@ -291,6 +262,9 @@ kendo_module({
             Widget.fn.init.call(that, element, options);
             element = that.element;
             options = that.options;
+
+            options.min = parse(element.attr("min")) || parse(options.min);
+            options.max = parse(element.attr("max")) || parse(options.max);
 
             normalize(options);
 
@@ -315,21 +289,21 @@ kendo_module({
                 open: function(e) {
                     var options = that.options,
                         date;
+
                     if (that.trigger(OPEN)) {
                         e.preventDefault();
                     } else {
                         if (that.element.val() !== that._oldText) {
                             date = parse(element.val(), options.parseFormats, options.culture);
-                            if (!date) {
-                                that.dateView.value(date);
-                            } else {
-                                that.dateView._current = date;
-                                that.dateView.calendar._focus(date);
-                            }
+
+                            that.dateView[date ? "current" : "value"](date);
                         }
 
                         element.attr(ARIA_EXPANDED, true);
                         div.attr(ARIA_HIDDEN, false);
+
+                        that._updateARIA(date);
+
                     }
                 }
             }));
@@ -346,8 +320,7 @@ kendo_module({
             element
                 .addClass("k-input")
                 .attr({
-                    role: "textbox",
-                    "aria-haspopup": true,
+                    role: "combobox",
                     "aria-expanded": false,
                     "aria-owns": that.dateView._dateViewID
                 });
@@ -389,19 +362,24 @@ kendo_module({
         },
 
         setOptions: function(options) {
-            var that = this,
-                dateView = that.dateView,
-                dateViewOptions = dateView.options;
+            var that = this;
+            var value = that._value;
 
             Widget.fn.setOptions.call(that, options);
 
-            normalize(that.options);
+            options = that.options;
 
-            dateView.options = extend(dateViewOptions, that.options, {
-                change: dateViewOptions.change,
-                close: dateViewOptions.close,
-                open: dateViewOptions.open
-            });
+            options.min = parse(options.min);
+            options.max = parse(options.max);
+
+            normalize(options);
+
+            that.dateView.setOptions(options);
+
+            if (value) {
+                that.element.val(kendo.toString(value, options.format, options.culture));
+                that._updateARIA(value);
+            }
         },
 
         _editable: function(options) {
@@ -671,10 +649,25 @@ kendo_module({
         },
 
         _updateARIA: function(date) {
-            this.element.attr("aria-label", this._ariaTemplate({ current: date }));
+            var cell;
+            var that = this;
+            var calendar = that.dateView.calendar;
+
+            that.element.removeAttr("aria-activedescendant");
+
+            if (calendar) {
+                cell = calendar._cell;
+                cell.attr("aria-label", that._ariaTemplate({ current: date || calendar.current() }));
+
+                that.element.attr("aria-activedescendant", cell.attr("id"));
+            }
         }
     });
 
     ui.plugin(DatePicker);
 
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

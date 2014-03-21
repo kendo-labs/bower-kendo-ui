@@ -1,23 +1,20 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "numerictextbox",
-    name: "NumericTextBox",
-    category: "web",
-    description: "The NumericTextBox widget can format and display numeric, percentage or currency textbox.",
-    depends: [ "core", "userevents" ]
-});
+(function(f, define){
+    define([ "./kendo.core", "./kendo.userevents" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
+        caret = kendo.caret,
         keys = kendo.keys,
         ui = kendo.ui,
         Widget = ui.Widget,
@@ -432,6 +429,8 @@ kendo_module({
             var that = this,
                 key = e.keyCode;
 
+            that._key = key;
+
             if (key == keys.DOWN) {
                 that._step(-1);
             } else if (key == keys.UP) {
@@ -442,32 +441,45 @@ kendo_module({
         },
 
         _keypress: function(e) {
-            if (e.which === 0 || e.keyCode === keys.BACKSPACE) {
+            if (e.which === 0 || e.keyCode === keys.BACKSPACE || e.keyCode === keys.ENTER) {
                 return;
             }
 
-            var element = this.element;
-            var character = String.fromCharCode(e.which);
-            var selection = caret(element[0]);
+            var that = this;
+            var min = that.options.min;
+            var element = that.element;
+            var selection = caret(element);
             var selectionStart = selection[0];
             var selectionEnd = selection[1];
-            var min = this.options.min;
-
+            var character = String.fromCharCode(e.which);
+            var numberFormat = that._format(that.options.format);
+            var isNumPadDecimal = that._key === keys.NUMPAD_DOT;
             var value = element.val();
+            var isValid;
+
+            if (isNumPadDecimal) {
+                character = numberFormat[POINT];
+            }
 
             value = value.substring(0, selectionStart) + character + value.substring(selectionEnd);
+            isValid = that._numericRegex(numberFormat).test(value);
 
-            if ((min !== null && min >= 0 && value.charAt(0) === "-") || !this._numericRegex().test(value)) {
+            if (isValid && isNumPadDecimal) {
+                element.val(value);
+                caret(element, selectionStart + character.length);
+
+                e.preventDefault();
+            } else if ((min !== null && min >= 0 && value.charAt(0) === "-") || !isValid) {
                 e.preventDefault();
             }
+
+            that._key = 0;
         },
 
-        _numericRegex: function() {
+        _numericRegex: function(numberFormat) {
             var that = this;
-            var options = that.options;
-            var numberFormat = that._format(options.format);
             var separator = numberFormat[POINT];
-            var precision = options.decimals;
+            var precision = that.options.decimals;
 
             if (separator === POINT) {
                 separator = "\\" + separator;
@@ -653,41 +665,9 @@ kendo_module({
         return '<span unselectable="on" class="k-link"><span unselectable="on" class="k-icon k-i-arrow-' + className + '" title="' + text + '">' + text + '</span></span>';
     }
 
-    function caret(element, position) {
-        var range,
-            isPosition = position !== undefined;
-
-        if (element.selectionStart !== undefined) {
-            if (isPosition) {
-                element.focus();
-                element.setSelectionRange(position, position);
-            } else {
-                position = [element.selectionStart, element.selectionEnd];
-            }
-        } else if (document.selection) {
-            if ($(element).is(":visible")) {
-                element.focus();
-            }
-            range = document.selection.createRange();
-            if (isPosition) {
-                range.move("character", position);
-                range.select();
-            } else {
-                var rangeElement = element.createTextRange(),
-                    rangeDuplicated = rangeElement.duplicate(),
-                    selectionStart, selectionEnd;
-
-                    rangeElement.moveToBookmark(range.getBookmark());
-                    rangeDuplicated.setEndPoint('EndToStart', rangeElement);
-                    selectionStart = rangeDuplicated.text.length;
-                    selectionEnd = selectionStart + rangeElement.text.length;
-
-                position = [selectionStart, selectionEnd];
-            }
-        }
-
-        return position;
-    }
-
     ui.plugin(NumericTextBox);
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

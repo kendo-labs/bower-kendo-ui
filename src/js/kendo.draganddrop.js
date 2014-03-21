@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "draganddrop",
-    name: "Drag & drop",
-    category: "framework",
-    description: "Drag & drop functionality for any DOM element.",
-    depends: [ "core", "userevents" ]
-});
+(function(f, define){
+    define([ "./kendo.core", "./kendo.userevents" ], f);
+})(function(){
 
 (function ($, undefined) {
     var kendo = window.kendo,
@@ -31,9 +27,7 @@ kendo_module({
         dropTargets = {},
         dropAreas = {},
         lastDropTarget,
-        OS = support.mobileOS,
-        invalidZeroEvents = OS && OS.android,
-        mobileChrome = (invalidZeroEvents && OS.browser == "chrome"),
+        elementUnderCursor = kendo.elementUnderCursor,
         KEYUP = "keyup",
         CHANGE = "change",
 
@@ -54,14 +48,6 @@ kendo_module({
             return $.contains(parent, child) || parent == child;
         } catch (e) {
             return false;
-        }
-    }
-
-    function elementUnderCursor(e) {
-        if (mobileChrome) {
-            return document.elementFromPoint(e.x.screen, e.y.screen);
-        } else {
-            return document.elementFromPoint(e.x.client, e.y.client);
         }
     }
 
@@ -193,8 +179,8 @@ kendo_module({
             $.extend(this, {
                 virtual: true,
                 forcedEnabled: true,
-                _virtualMin: 1000,
-                _virtualMax: -1000
+                _virtualMin: 0,
+                _virtualMax: 0
             });
         },
 
@@ -652,6 +638,8 @@ kendo_module({
             cursorOffset: null,
             axis: null,
             container: null,
+            filter: null,
+            ignore: null,
             holdToDrag: false,
             dropped: false
         },
@@ -693,10 +681,12 @@ kendo_module({
         _start: function(e) {
             var that = this,
                 options = that.options,
+                ignoreSelector = options.ignore,
+                ignore = ignoreSelector && $(e.touch.initialTouch).is(ignoreSelector),
                 container = options.container,
                 hint = options.hint;
 
-            if (options.holdToDrag && !that._activated) {
+            if (ignore || (options.holdToDrag && !that._activated)) {
                 that.userEvents.cancel();
                 return;
             }
@@ -866,6 +856,8 @@ kendo_module({
             that._afterEnd();
 
             that.userEvents.destroy();
+
+            that.currentTarget = null;
         },
 
         _afterEnd: function() {
@@ -895,3 +887,7 @@ kendo_module({
     });
 
  })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

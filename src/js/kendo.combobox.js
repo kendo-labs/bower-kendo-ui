@@ -1,32 +1,23 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "combobox",
-    name: "ComboBox",
-    category: "web",
-    description: "The ComboBox widget allows the selection from pre-defined values or entering a new value.",
-    depends: [ "list" ],
-    features: [ {
-        id: "mobile-scroller",
-        name: "Mobile scroller",
-        description: "Support for kinetic scrolling in mobile device",
-        depends: [ "mobile.scroller" ]
-    } ]
-});
+(function(f, define){
+    define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
         List = ui.List,
         Select = ui.Select,
+        caret = kendo.caret,
         support = kendo.support,
         placeholderSupported = support.placeholder,
         activeElement = kendo._activeElement,
@@ -257,7 +248,8 @@ kendo_module({
                 state = that._state,
                 data = that._data(),
                 length = data.length,
-                hasChild, value, open, custom;
+                keepState = true,
+                hasChild, open, custom;
 
             that.trigger("dataBinding");
 
@@ -269,11 +261,10 @@ kendo_module({
             }
 
             if (that._isSelect) {
-                hasChild = that.element[0].firstChild;
+                hasChild = that.element[0].children[0];
 
                 if (state === STATE_REBIND) {
                     that._state = "";
-                    value = that.value();
                 }
 
                 custom = that._option;
@@ -281,9 +272,9 @@ kendo_module({
                 that._options(data);
 
                 if (custom && custom[0].selected) {
-                    that._custom(custom.val());
+                    that._custom(custom.val(), keepState);
                 } else if (!that._bound && !hasChild) {
-                    that._custom("");
+                    that._custom("", keepState);
                 }
             }
 
@@ -355,7 +346,7 @@ kendo_module({
             var that = this,
                 element = that.input[0],
                 value = that.text(),
-                caret = List.caret(element),
+                caretIdx = caret(element)[0],
                 key = that._last,
                 idx;
 
@@ -376,8 +367,8 @@ kendo_module({
                 }
             }
 
-            if (caret <= 0) {
-                caret = value.toLowerCase().indexOf(word.toLowerCase()) + 1;
+            if (caretIdx <= 0) {
+                caretIdx = value.toLowerCase().indexOf(word.toLowerCase()) + 1;
             }
 
             if (word) {
@@ -386,13 +377,13 @@ kendo_module({
                     value += word.substring(idx + value.length);
                 }
             } else {
-                value = value.substring(0, caret);
+                value = value.substring(0, caretIdx);
             }
 
-            if (value.length !== caret || !word) {
+            if (value.length !== caretIdx || !word) {
                 element.value = value;
                 if (element === activeElement()) {
-                    List.selectText(element, caret, value.length);
+                    caret(element, caretIdx, value.length);
                 }
             }
         },
@@ -400,18 +391,28 @@ kendo_module({
         text: function (text) {
             text = text === null ? "" : text;
 
-            var that = this,
-                input = that.input[0],
-                ignoreCase = that.options.ignoreCase,
-                loweredText = text,
-                dataItem;
+            var that = this;
+            var input = that.input[0];
+            var ignoreCase = that.options.ignoreCase;
+            var loweredText = text;
+            var dataItem;
+            var value;
 
             if (text !== undefined) {
                 dataItem = that.dataItem();
 
-                if (dataItem && that._text(dataItem) === text && that._value(dataItem).toString() === that._old) {
-                    that._triggerCascade();
-                    return;
+                if (dataItem && that._text(dataItem) === text) {
+                    value = that._value(dataItem);
+                    if (value === null) {
+                        value = "";
+                    } else {
+                        value += "";
+                    }
+
+                    if (value === that._old) {
+                        that._triggerCascade();
+                        return;
+                    }
                 }
 
                 if (ignoreCase) {
@@ -494,12 +495,12 @@ kendo_module({
             }
         },
 
-        _custom: function(value) {
-            var that = this,
-                element = that.element,
-                custom = that._option;
+        _custom: function(value, keepState) {
+            var that = this;
+            var element = that.element;
+            var custom = that._option;
 
-            if (that._state === STATE_FILTER) {
+            if (that._state === STATE_FILTER && !keepState) {
                 that._state = STATE_ACCEPT;
             }
 
@@ -692,7 +693,7 @@ kendo_module({
                 input.val(placeholder);
 
                 if (!placeholder && input[0] === activeElement()) {
-                    List.selectText(input[0], 0, 0);
+                    caret(input[0], 0, 0);
                 }
             }
         },
@@ -702,10 +703,13 @@ kendo_module({
 
             that._typing = setTimeout(function() {
                 var value = that.text();
+
                 if (that._prev !== value) {
                     that._prev = value;
                     that.search(value);
                 }
+
+                that._typing = null;
             }, that.options.delay);
         },
 
@@ -762,9 +766,14 @@ kendo_module({
 
             if (isFiltered || !hasValue || custom) {
                 that.value("");
+                that.options.value = "";
             }
         }
     });
 
     ui.plugin(ComboBox);
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

@@ -1,21 +1,18 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "validator",
-    name: "Validator",
-    category: "web",
-    description: "The Validator offers an easy way to do a client-side form validation.",
-    depends: [ "core" ]
-});
+(function(f, define){
+    define([ "./kendo.core" ], f);
+})(function(){
 
+/* jshint eqnull: true */
 (function($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
@@ -90,6 +87,23 @@ kendo_module({
             return $($.parseHTML(text));
         }
         return $(text);
+    }
+
+    function searchForMessageContainer(elements, fieldName) {
+        var containers = $(),
+            element,
+            attr;
+
+        for (var idx = 0, length = elements.length; idx < length; idx++) {
+            element = elements[idx];
+            if (invalidMsgRegExp.test(element.className)) {
+                attr = element.getAttribute(kendo.attr("for"));
+                if (attr === fieldName) {
+                    containers = containers.add(element);
+                }
+            }
+        }
+        return containers;
     }
 
     var Validator = Widget.extend({
@@ -317,17 +331,10 @@ kendo_module({
         _findMessageContainer: function(fieldName) {
             var locators = kendo.ui.validator.messageLocators,
                 name,
-                containers = $(),
-                children = this.element[0].getElementsByTagName("*");
+                containers = $();
 
-            for (var idx = 0, length = children.length; idx < length; idx++) {
-                var element = children[idx];
-                if (invalidMsgRegExp.test(element.className)) {
-                    var attr = element.getAttribute(kendo.attr("for"));
-                    if (attr === fieldName) {
-                        containers = containers.add(element);
-                    }
-                }
+            for (var idx = 0, length = this.element.length; idx < length; idx++) {
+                containers = containers.add(searchForMessageContainer(this.element[idx].getElementsByTagName("*"), fieldName));
             }
 
             for (name in locators) {
@@ -388,3 +395,7 @@ kendo_module({
 
     kendo.ui.plugin(Validator);
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

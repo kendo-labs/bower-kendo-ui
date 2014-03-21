@@ -1,24 +1,21 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "timepicker",
-    name: "TimePicker",
-    category: "web",
-    description: "The TimePicker widget allows the end user to select a value from a list of predefined values or to type a new value.",
-    depends: [ "popup" ]
-});
+(function(f, define){
+    define([ "./kendo.popup" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
         keys = kendo.keys,
+        parse = kendo.parseDate,
         activeElement = kendo._activeElement,
         extractFormat = kendo._extractFormat,
         support = kendo.support,
@@ -126,6 +123,10 @@ kendo_module({
 
             that.ul.off(ns);
             that.list.off(ns);
+
+            if (that._touchScroller) {
+                that._touchScroller.destroy();
+            }
 
             that.popup.destroy();
         },
@@ -256,16 +257,16 @@ kendo_module({
                 ulOffsetHeight = ul.clientHeight,
                 bottomDistance = itemOffsetTop + itemOffsetHeight,
                 touchScroller = this._touchScroller,
-                yDimension;
+                elementHeight;
 
             if (touchScroller) {
-                yDimension = touchScroller.dimensions.y;
+                elementHeight = this.list.height();
 
-                if (yDimension.enabled && itemOffsetTop > yDimension.size) {
-                    itemOffsetTop = itemOffsetTop - yDimension.size + itemOffsetHeight + 4;
-
-                    touchScroller.scrollTo(0, -itemOffsetTop);
+                if (itemOffsetTop > elementHeight) {
+                    itemOffsetTop = itemOffsetTop - elementHeight + itemOffsetHeight;
                 }
+
+                touchScroller.scrollTo(0, -itemOffsetTop);
             } else {
                 ul.scrollTop = ulScrollTop > itemOffsetTop ?
                                itemOffsetTop : bottomDistance > (ulScrollTop + ulOffsetHeight) ?
@@ -295,6 +296,22 @@ kendo_module({
             }
 
             that.current(li);
+        },
+
+        setOptions: function(options) {
+            var old = this.options;
+
+            options.min = parse(options.min);
+            options.max = parse(options.max);
+
+            this.options = extend(old, options, {
+                active: old.active,
+                change: old.change,
+                close: old.close,
+                open: old.open
+            });
+
+            this.bind();
         },
 
         toggle: function() {
@@ -350,7 +367,7 @@ kendo_module({
                 return value;
             }
 
-            value = kendo.parseDate(value, options.parseFormats, options.culture);
+            value = parse(value, options.parseFormats, options.culture);
 
             if (value) {
                 value = new DATE(current.getFullYear(),
@@ -501,6 +518,9 @@ kendo_module({
             element = that.element;
             options = that.options;
 
+            options.min = parse(element.attr("min")) || parse(options.min);
+            options.max = parse(element.attr("max")) || parse(options.max);
+
             normalize(options);
 
             that._wrapper();
@@ -554,8 +574,7 @@ kendo_module({
 
             element.addClass("k-input")
                    .attr({
-                        "role": "textbox",
-                        "aria-haspopup": true,
+                        "role": "combobox",
                         "aria-expanded": false,
                         "aria-owns": timeView._timeViewID
                    });
@@ -593,22 +612,19 @@ kendo_module({
         ],
 
         setOptions: function(options) {
-            var that = this,
-                timeView = that.timeView,
-                timeViewOptions = timeView.options;
+            var that = this;
+            var value = that._value;
 
             Widget.fn.setOptions.call(that, options);
+            options = that.options;
 
-            normalize(that.options);
+            normalize(options);
 
-            timeView.options = extend(timeViewOptions, that.options, {
-                active: timeViewOptions.active,
-                change: timeViewOptions.change,
-                close: timeViewOptions.close,
-                open: timeViewOptions.open
-            });
+            that.timeView.setOptions(options);
 
-            timeView.ul[0].innerHTML = "";
+            if (value) {
+                that.element.val(kendo.toString(value, options.format, options.culture));
+            }
         },
 
         dataBind: function(dates) {
@@ -884,3 +900,7 @@ kendo_module({
     ui.plugin(TimePicker);
 
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

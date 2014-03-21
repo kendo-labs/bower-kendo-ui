@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "tabstrip",
-    name: "TabStrip",
-    category: "web",
-    description: "The TabStrip widget displays a collection of tabs with associated tab content.",
-    depends: [ "data" ]
-});
+(function(f, define){
+    define([ "./kendo.data" ], f);
+})(function(){
 
 (function ($, undefined) {
     var kendo = window.kendo,
@@ -219,7 +215,7 @@ kendo_module({
             var selectedItems = that.tabGroup.children("li." + ACTIVESTATE),
                 content = that.contentHolder(selectedItems.index());
 
-            if (content.length > 0 && content[0].childNodes.length === 0) {
+            if (selectedItems[0] && content.length > 0 && content[0].childNodes.length === 0) {
                 that.activateTab(selectedItems.eq(0));
             }
 
@@ -508,6 +504,8 @@ kendo_module({
             }
 
             that.wrapper.off(NS);
+            that.wrapper.children(".k-tabstrip-items").off(NS);
+
             kendo.destroy(that.wrapper);
         },
 
@@ -578,6 +576,8 @@ kendo_module({
         },
 
         insertBefore: function (tab, referenceTab) {
+            referenceTab = this.tabGroup.find(referenceTab);
+
             var that = this,
                 inserted = that._create(tab),
                 referenceContent = $(that.contentElement(referenceTab.index()));
@@ -594,6 +594,8 @@ kendo_module({
         },
 
         insertAfter: function (tab, referenceTab) {
+            referenceTab = this.tabGroup.find(referenceTab);
+
             var that = this,
                 inserted = that._create(tab),
                 referenceContent = $(that.contentElement(referenceTab.index()));
@@ -633,7 +635,7 @@ kendo_module({
 
         _create: function (tab) {
             var plain = $.isPlainObject(tab),
-                that = this, tabs, contents;
+                that = this, tabs, contents, content;
 
             if (plain || $.isArray(tab)) {
                 tab = $.isArray(tab) ? tab : [tab];
@@ -653,8 +655,20 @@ kendo_module({
                             }
                         });
             } else {
-                tabs = $(tab);
-                contents = $("<div class='" + CONTENT + "'/>");
+                if (typeof tab == "string" && tab[0] != "<") {
+                    tabs = that.element.find(tab);
+                } else {
+                    tabs = $(tab);
+                }
+                contents = $();
+                tabs.each(function () {
+                    content = $("<div class='" + CONTENT + "'/>");
+                    if (/k-tabstrip-items/.test(this.parentNode.className)) {
+                        var index = parseInt(this.getAttribute("aria-controls").replace(/^.*-/, "")) - 1;
+                        content = $(that.contentElement(index));
+                    }
+                    contents = contents.add(content);
+                });
 
                 updateTabClasses(tabs);
             }
@@ -718,28 +732,47 @@ kendo_module({
         _updateContentElements: function() {
             var that = this,
                 contentUrls = that.options.contentUrls || [],
-                tabStripID = that.element.attr("id") || kendo.guid(),
+                items = that.tabGroup.find(".k-item"),
+                tabStripID = (that.element.attr("id") || kendo.guid()) + "-",
                 contentElements = that.wrapper.children("div");
 
-            that.tabGroup.find(".k-item").each(function(idx) {
-                var currentContent = contentElements.eq(idx),
-                    id = tabStripID + "-" + (idx+1);
+            if (contentElements.length && (items.length > contentElements.length)) {
+                contentElements.each(function(idx) {
+                    var currentIndex = parseInt(this.id.replace(tabStripID, "")),
+                        item = items.filter("[aria-controls=" + tabStripID + currentIndex + "]"),
+                        id = tabStripID + (idx+1);
 
-                this.setAttribute("aria-controls", id);
+                    item.data("aria", id);
+                    this.setAttribute("id", id);
+                });
 
-                if (!currentContent.length && contentUrls[idx]) {
-                    $("<div class='" + CONTENT + "'/>").appendTo(that.wrapper).attr("id", id);
-                } else {
-                    currentContent.attr("id", id);
+                items.each(function() {
+                    var item = $(this);
 
-                    if (!$(this).children(".k-loading")[0] && !contentUrls[idx]) {
-                        $("<span class='k-loading k-complete'/>").prependTo(this);
+                    this.setAttribute("aria-controls", item.data("aria"));
+                    item.removeData("aria");
+                });
+            } else {
+                items.each(function(idx) {
+                    var currentContent = contentElements.eq(idx),
+                        id = tabStripID + (idx+1);
+
+                    this.setAttribute("aria-controls", id);
+
+                    if (!currentContent.length && contentUrls[idx]) {
+                        $("<div class='" + CONTENT + "'/>").appendTo(that.wrapper).attr("id", id);
+                    } else {
+                        currentContent.attr("id", id);
+
+                        if (!$(this).children(".k-loading")[0] && !contentUrls[idx]) {
+                            $("<span class='k-loading k-complete'/>").prependTo(this);
+                        }
                     }
-                }
-                currentContent.attr("role", "tabpanel");
-                currentContent.filter(":not(." + ACTIVESTATE + ")").attr("aria-hidden", true).attr("aria-expanded", false);
-                currentContent.filter("." + ACTIVESTATE).attr("aria-expanded", true);
-            });
+                    currentContent.attr("role", "tabpanel");
+                    currentContent.filter(":not(." + ACTIVESTATE + ")").attr("aria-hidden", true).attr("aria-expanded", false);
+                    currentContent.filter("." + ACTIVESTATE).attr("aria-expanded", true);
+                });
+            }
 
             that.contentElements = that.contentAnimators = that.wrapper.children("div"); // refresh the contents
 
@@ -947,12 +980,15 @@ kendo_module({
                 return undefined;
             }
 
-            var contentElements = this.contentElements && this.contentElements[0] && !kendo.kineticScrollNeeded ? this.contentElements : this.contentAnimators,
-                idTest = new RegExp("-" + (itemIndex + 1) + "$");
+            var contentElements = this.contentElements && this.contentElements[0] && !kendo.kineticScrollNeeded ? this.contentElements : this.contentAnimators;
+
+            itemIndex = contentElements && itemIndex < 0 ? contentElements.length + itemIndex : itemIndex;
+
+            var idTest = new RegExp("-" + (itemIndex + 1) + "$");
 
             if (contentElements) {
                 for (var i = 0, len = contentElements.length; i < len; i++) {
-                    if (idTest.test(contentElements.closest(".k-content")[i].id)) {
+                    if (idTest.test(contentElements.eq(i).closest(".k-content")[0].id)) {
                         return contentElements[i];
                     }
                 }
@@ -975,11 +1011,22 @@ kendo_module({
                 xhr = $.ajaxSettings.xhr,
                 link = element.find("." + LINK),
                 data = {},
+                halfWidth = element.width() / 2,
                 fakeProgress = false,
                 statusIcon = element.find(".k-loading").removeClass("k-complete");
 
             if (!statusIcon[0]) {
                 statusIcon = $("<span class='k-loading'/>").prependTo(element);
+            }
+
+            var endState = halfWidth * 2 - statusIcon.width();
+
+            var oldProgressAnimation = function() {
+                statusIcon.animate({ marginLeft: (parseInt(statusIcon.css("marginLeft"), 10) || 0) < halfWidth ? endState : 0 }, 500, oldProgressAnimation);
+            };
+
+            if (kendo.support.browser.msie && kendo.support.browser.version < 10) {
+                setTimeout(oldProgressAnimation, 40);
             }
 
             url = url || link.data(CONTENTURL) || link.attr(HREF);
@@ -994,7 +1041,6 @@ kendo_module({
                 xhr: function() {
                     var current = this,
                         request = xhr(),
-                        loaded = 10,
                         event = current.progressUpload ? "progressUpload" : current.progress ? "progress" : false;
 
                     if (request) {
@@ -1009,19 +1055,20 @@ kendo_module({
                         });
                     }
 
-                    if (!current.progress) {
-                        fakeProgress = setInterval(function () {
-                            current.progress({ lengthComputable: true, loaded: Math.min(loaded, 100), total: 100 });
-                        }, 100);
-                        loaded += 10;
-                    }
+                    current.noProgress = !(window.XMLHttpRequest && ('upload' in new XMLHttpRequest()));
                     return request;
                 },
 
                 progress: function(evt) {
                     if (evt.lengthComputable) {
                         var percent = parseInt((evt.loaded / evt.total * 100), 10) + "%";
-                        statusIcon.width(percent);
+                        statusIcon
+                            .stop(true)
+                            .addClass("k-progress")
+                            .css({
+                                "width": percent,
+                                "marginLeft": 0
+                            });
                     }
                 },
 
@@ -1031,15 +1078,41 @@ kendo_module({
                     }
                 },
 
-                complete: function () {
-                    that.inRequest = false;
+                stopProgress: function () {
                     clearInterval(fakeProgress);
-                    statusIcon.css("width", "");
+                    statusIcon
+                        .stop(true)
+                        .addClass("k-progress")
+                        [0].style.cssText = "";
+                },
+
+                complete: function (xhr) {
+                    that.inRequest = false;
+                    if (this.noProgress) {
+                        setTimeout(this.stopProgress, 500);
+                    } else {
+                        this.stopProgress();
+                    }
+
+                    if (xhr.statusText == "abort") {
+                        statusIcon.remove();
+                    }
                 },
 
                 success: function (data) {
                     statusIcon.addClass("k-complete");
                     try {
+                        var current = this,
+                            loaded = 10;
+
+                        if (current.noProgress) {
+                            statusIcon.width(loaded+"%");
+                            fakeProgress = setInterval(function () {
+                                current.progress({ lengthComputable: true, loaded: Math.min(loaded, 100), total: 100 });
+                                loaded += 10;
+                            }, 40);
+                        }
+
                         content.html(data);
                     } catch (e) {
                         var console = window.console;
@@ -1083,3 +1156,7 @@ kendo_module({
     kendo.ui.plugin(TabStrip);
 
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

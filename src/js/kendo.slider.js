@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "slider",
-    name: "Slider",
-    category: "web",
-    description: "The Slider widget provides a rich input for selecting values or ranges of values.",
-    depends: [ "draganddrop" ]
-});
+(function(f, define){
+    define([ "./kendo.draganddrop" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -142,7 +138,7 @@ kendo_module({
             that._calculateSteps(pixelWidths);
 
             if (options.tickPlacement != "none" && sizeBetweenTicks >= 2 &&
-                options.largeStep > options.smallStep) {
+                options.largeStep >= options.smallStep) {
                 that._setItemsLargeTick();
             }
         },
@@ -647,7 +643,7 @@ kendo_module({
             increaseButtonTitle: "Increase",
             decreaseButtonTitle: "Decrease",
             dragHandleTitle: "drag",
-            tooltip: { format: "{0}" },
+            tooltip: { format: "{0:#,#.##}" },
             value: null
         },
 
@@ -903,6 +899,7 @@ kendo_module({
                 .end();
 
             that._drag.draggable.destroy();
+            that._drag._removeTooltip(true);
         }
     });
 
@@ -1114,6 +1111,7 @@ kendo_module({
                 owner._update(that.selectionStart, that.selectionEnd);
             } else {
                 owner._update(that.val);
+                that.draggable.userEvents._disposeAll();
             }
 
             return that._end();
@@ -1305,7 +1303,7 @@ kendo_module({
             name: "RangeSlider",
             leftDragHandleTitle: "drag",
             rightDragHandleTitle: "drag",
-            tooltip: { format: "{0}" },
+            tooltip: { format: "{0:#,#.##}" },
             selectionStart: null,
             selectionEnd: null
         },
@@ -1377,7 +1375,9 @@ kendo_module({
                         $(document.documentElement).one("selectstart", kendo.preventDefault);
                     })
                     .on(TRACK_MOUSE_UP, function() {
-                        that._activeDragHandle._end();
+                        if (that._activeDragHandle) {
+                            that._activeDragHandle._end();
+                        }
                     });
 
             that.wrapper
@@ -1645,3 +1645,7 @@ kendo_module({
     kendo.ui.plugin(RangeSlider);
 
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

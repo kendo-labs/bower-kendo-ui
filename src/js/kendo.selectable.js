@@ -1,26 +1,23 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "selectable",
-    name: "Selectable",
-    category: "framework",
-    depends: [ "core", "userevents" ],
-    advanced: true
-});
+(function(f, define){
+    define([ "./kendo.core", "./kendo.userevents" ], f);
+})(function(){
 
 (function ($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
         proxy = $.proxy,
         abs = Math.abs,
+        shift = Array.prototype.shift,
         ARIASELECTED = "aria-selected",
         SELECTED = "k-state-selected",
         ACTIVE = "k-state-selecting",
@@ -54,6 +51,8 @@ kendo_module({
             that._lastActive = null;
             that.element.addClass(SELECTABLE);
 
+            that.relatedTarget = that.options.relatedTarget;
+
             multiple = that.options.multiple;
             that.userEvents = new kendo.UserEvents(that.element, {
                 global: true,
@@ -76,7 +75,24 @@ kendo_module({
         options: {
             name: "Selectable",
             filter: ">*",
-            multiple: false
+            multiple: false,
+            relatedTarget: $.noop
+        },
+
+        _isElement: function(target) {
+            var elements = this.element;
+            var idx, length = elements.length, result = false;
+
+            target = target[0];
+
+            for (idx = 0; idx < length; idx ++) {
+                if (elements[idx] === target) {
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
         },
 
         _tap: function(e) {
@@ -90,7 +106,7 @@ kendo_module({
                 buttonCode = e.event.button;
 
             //in case of hierarchy or right-click
-            if (target.closest("." + SELECTABLE)[0] !== that.element[0] || whichCode && whichCode == 3 || buttonCode && buttonCode == 2) {
+            if (!that._isElement(target.closest("." + SELECTABLE)) || whichCode && whichCode == 3 || buttonCode && buttonCode == 2) {
                 return;
             }
 
@@ -98,6 +114,8 @@ kendo_module({
             if (!multiple || !ctrlKey) {
                 that.clear();
             }
+
+            target = target.add(that.relatedTarget(target));
 
             if (shiftKey) {
                 that.selectRange(that._firstSelectee(), target);
@@ -117,15 +135,22 @@ kendo_module({
             var that = this,
                 target = $(e.target),
                 selected = target.hasClass(SELECTED),
+                currentElement,
                 ctrlKey = e.event.ctrlKey || e.event.metaKey;
 
             that._downTarget = target;
 
             //in case of hierarchy
-            if (target.closest("." + SELECTABLE)[0] !== that.element[0]) {
+            if (!that._isElement(target.closest("." + SELECTABLE))) {
                 that.userEvents.cancel();
-                that._downTarget = null;
                 return;
+            }
+
+            if (that.options.useAllItems) {
+                that._items = that.element.find(that.options.filter);
+            } else {
+                currentElement = target.closest(that.element);
+                that._items = currentElement.find(that.options.filter);
             }
 
             that._marquee
@@ -141,6 +166,7 @@ kendo_module({
                 that.clear();
             }
 
+            target = target.add(that.relatedTarget(target));
             if (selected) {
                 that._selectElement(target, true);
                 if (ctrlKey) {
@@ -156,12 +182,11 @@ kendo_module({
                     top: e.y.startLocation > e.y.location ? e.y.location : e.y.startLocation,
                     width: abs(e.x.initialDelta),
                     height: abs(e.y.initialDelta)
-                },
-                items = that.element.find(that.options.filter);
+                };
 
             that._marquee.css(position);
 
-            invalidateSelectables(items, that._downTarget[0], position, (e.event.ctrlKey || e.event.metaKey));
+            that._invalidateSelectables(position, (e.event.ctrlKey || e.event.metaKey));
 
             e.preventDefault();
         },
@@ -175,8 +200,44 @@ kendo_module({
                 .find(that.options.filter + "." + UNSELECTING))
                 .removeClass(UNSELECTING);
 
-            that.value(that.element.find(that.options.filter + "." + ACTIVE));
+
+            var target = that.element.find(that.options.filter + "." + ACTIVE);
+            target = target.add(that.relatedTarget(target));
+
+            that.value(target);
             that._lastActive = that._downTarget;
+            that._items = null;
+        },
+
+
+        _invalidateSelectables: function(position, ctrlKey) {
+            var idx,
+                length,
+                target = this._downTarget[0],
+                items = this._items,
+                related,
+                toSelect;
+
+            for (idx = 0, length = items.length; idx < length; idx ++) {
+                toSelect = items.eq(idx);
+                related = toSelect.add(this.relatedTarget(toSelect));
+
+                if (collision(toSelect, position)) {
+                    if(toSelect.hasClass(SELECTED)) {
+                        if(ctrlKey && target !== toSelect[0]) {
+                            related.removeClass(SELECTED).addClass(UNSELECTING);
+                        }
+                    } else if (!toSelect.hasClass(ACTIVE) && !toSelect.hasClass(UNSELECTING)) {
+                        related.addClass(ACTIVE);
+                    }
+                } else {
+                    if (toSelect.hasClass(ACTIVE)) {
+                        related.removeClass(ACTIVE);
+                    } else if(ctrlKey && toSelect.hasClass(UNSELECTING)) {
+                        related.removeClass(UNSELECTING).addClass(SELECTED);
+                    }
+                }
+            }
         },
 
         value: function(val) {
@@ -206,7 +267,7 @@ kendo_module({
             selected = that.value();
             return selected.length > 0 ?
                     selected[0] :
-                    that.element.find(that.options.filter);
+                    that.element.find(that.options.filter)[0];
         },
 
         _selectElement: function(element, preventNotify) {
@@ -256,34 +317,35 @@ kendo_module({
 
         selectRange: function(start, end) {
             var that = this,
-                found = false,
                 idx,
-                length,
                 tmp,
-                toSelect,
-                items = that.element.find(that.options.filter),
-                selectElement = proxy(that._selectElement, that);
+                items;
 
-            start = $(start)[0];
-            end = $(end)[0];
+            that.clear();
 
-            for (idx = 0, length = items.length; idx < length; idx ++) {
-                toSelect = items[idx];
-                if(found) {
-                    selectElement(toSelect);
-                    found = toSelect !== end;
-                } else if(toSelect === start) {
-                    found = start !== end;
-                    selectElement(toSelect);
-                } else if(toSelect === end) {
-                    tmp = start;
-                    start = end;
-                    end = tmp;
-                    found = true;
-                    selectElement(toSelect);
-                } else {
-                    $(toSelect).removeClass(SELECTED);
-                }
+            if (that.element.length > 1) {
+                items = that.options.continuousItems();
+            }
+
+            if (!items || !items.length) {
+                items = that.element.find(that.options.filter);
+            }
+
+            start = $.inArray($(start)[0], items);
+            end = $.inArray($(end)[0], items);
+
+            if (start > end) {
+                tmp = start;
+                start = end;
+                end = tmp;
+            }
+
+            if (!that.options.useAllItems) {
+                end += that.element.length - 1;
+            }
+
+            for (idx = start; idx <= end; idx ++ ) {
+                that._selectElement(items[idx]);
             }
 
             that._notify(CHANGE);
@@ -297,6 +359,8 @@ kendo_module({
             that.element.off(NS);
 
             that.userEvents.destroy();
+
+            that._marquee = that._lastActive = that.element = that.userEvents = null;
         }
     });
 
@@ -314,33 +378,10 @@ kendo_module({
             elementPosition.bottom < position.top);
     }
 
-    function invalidateSelectables(items, target, position, ctrlKey) {
-        var idx,
-            length,
-            toSelect;
-
-        for (idx = 0, length = items.length; idx < length; idx ++) {
-            toSelect = items.eq(idx);
-
-            if (collision(toSelect, position)) {
-                if(toSelect.hasClass(SELECTED)) {
-                    if(ctrlKey && target !== toSelect[0]) {
-                        toSelect.removeClass(SELECTED).addClass(UNSELECTING);
-                    }
-                } else if (!toSelect.hasClass(ACTIVE) && !toSelect.hasClass(UNSELECTING)) {
-                    toSelect.addClass(ACTIVE);
-                }
-            } else {
-                if (toSelect.hasClass(ACTIVE)) {
-                    toSelect.removeClass(ACTIVE);
-                } else if(ctrlKey && toSelect.hasClass(UNSELECTING)) {
-                    toSelect.removeClass(UNSELECTING).addClass(SELECTED);
-                }
-            }
-        }
-    }
-
     kendo.ui.plugin(Selectable);
 
 })(window.kendo.jQuery);
 
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

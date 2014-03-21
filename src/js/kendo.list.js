@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "list",
-    name: "List",
-    category: "framework",
-    depends: [ "data", "popup" ],
-    hidden: true
-});
+(function(f, define){
+    define([ "./kendo.data", "./kendo.popup" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -142,7 +138,7 @@ kendo_module({
             var header;
 
             if ($.isFunction(template)) {
-                template = template();
+                template = template({});
             }
 
             if (template) {
@@ -227,6 +223,10 @@ kendo_module({
 
             that.ul.off(ns);
             that.list.off(ns);
+
+            if (that._touchScroller) {
+                that._touchScroller.destroy();
+            }
 
             that.popup.destroy();
 
@@ -344,6 +344,7 @@ kendo_module({
 
         _focus: function(li) {
             var that = this;
+            var userTriggered = true;
 
             if (that.popup.visible() && li && that.trigger(SELECT, {item: li})) {
                 that.close();
@@ -351,7 +352,7 @@ kendo_module({
             }
 
             that._select(li);
-            that._triggerCascade();
+            that._triggerCascade(userTriggered);
 
             that._blur();
         },
@@ -386,13 +387,22 @@ kendo_module({
                 var that = this,
                     list = that.list,
                     visible = that.popup.visible(),
-                    height = that.options.height;
+                    height = that.options.height,
+                    header = that.header,
+                    popups;
 
-                list = list.add(list.parent(".k-animation-container")).show()
-                           .height(that.ul[0].scrollHeight > height ? height : "auto");
+                popups = list.add(list.parent(".k-animation-container")).show();
+
+                height = that.ul[0].scrollHeight > height ? height : "auto";
+
+                popups.height(height);
+
+                if (header) {
+                    that.ul.height(height == "auto" ? height : list.height() - header.height());
+                }
 
                 if (!visible) {
-                    list.hide();
+                    popups.hide();
                 }
             }
         },
@@ -479,9 +489,11 @@ kendo_module({
 
         _toggle: function(open) {
             var that = this;
+            var touchEnabled = support.touch && support.MSPointers && support.pointers;
+
             open = open !== undefined? open : !that.popup.visible();
 
-            if (!support.touch && that._focused[0] !== activeElement()) {
+            if (!touchEnabled && that._focused[0] !== activeElement()) {
                 that._focused.focus();
             }
 
@@ -547,11 +559,12 @@ kendo_module({
             }
         },
 
-       _triggerCascade: function() {
+       _triggerCascade: function(userTriggered) {
             var that = this,
                 value = that.value();
+
             if ((!that._bound && value) || that._old !== value) {
-                that.trigger("cascade");
+                that.trigger("cascade", { userTriggered: userTriggered });
             }
         },
 
@@ -566,33 +579,6 @@ kendo_module({
     });
 
     extend(List, {
-        caret: function(element) {
-            var caret,
-                selection = element.ownerDocument.selection;
-
-            if (selection) {
-                caret = Math.abs(selection.createRange().moveStart(CHARACTER, -element.value.length));
-            } else {
-                caret = element.selectionStart;
-            }
-
-            return caret;
-        },
-
-        selectText: function (element, selectionStart, selectionEnd) {
-            try {
-                if (element.createTextRange) {
-                        element.focus();
-                        var textRange = element.createTextRange();
-                        textRange.collapse(true);
-                        textRange.moveStart(CHARACTER, selectionStart);
-                        textRange.moveEnd(CHARACTER, selectionEnd - selectionStart);
-                        textRange.select();
-                } else {
-                    element.setSelectionRange(selectionStart, selectionEnd);
-                }
-            } catch(e) { /* element is not focused or it is not in the DOM */ }
-        },
         inArray: function(node, parentNode) {
             var idx, length, siblings = parentNode.children;
 
@@ -833,6 +819,10 @@ kendo_module({
                     e.preventDefault();
                 }
 
+                if (that._typing || (!that.popup.visible() && (!current || !current.hasClass("k-state-selected")))) {
+                    current = null;
+                }
+
                 that._accept(current);
                 pressed = true;
             } else if (key === keys.ESC) {
@@ -848,25 +838,21 @@ kendo_module({
 
         _selectItem: function() {
             var that = this,
+                notBound = that._bound === undefined,
                 options = that.options,
-                index = that.selectedIndex,
                 useOptionIndex,
                 value;
 
             useOptionIndex = that._isSelect && !that._initial && !options.value && options.index && !that._bound;
 
             if (!useOptionIndex) {
-                value = that._selectedValue || options.value || that._accessor();
+                value = that._selectedValue || (notBound && options.value) || that._accessor();
             }
 
             if (value) {
                 that.value(value);
-            } else if (!that._bound || index > -1) {
-                if (!that._bound) {
-                    index = options.index;
-                }
-
-                that.select(index);
+            } else if (notBound) {
+                that.select(options.index);
             }
         },
 
@@ -885,6 +871,7 @@ kendo_module({
                 }
 
                 that.dataSource.one(CHANGE, function() {
+                    that._old = undefined;
                     that.value(value);
                     that._fetch = false;
                 });
@@ -899,7 +886,6 @@ kendo_module({
         _options: function(data, optionLabel) {
             var that = this,
                 element = that.element,
-                selectedIndex = element[0].selectedIndex,
                 length = data.length,
                 options = "",
                 option,
@@ -911,10 +897,6 @@ kendo_module({
             if (optionLabel) {
                 idx = 1;
                 options = optionLabel;
-
-                if (optionLabel.indexOf($(element[0].firstChild).text()) === -1) {
-                    selectedIndex += 1;
-                }
             }
 
             for (; idx < length; idx++) {
@@ -944,7 +926,6 @@ kendo_module({
             }
 
             element.html(options);
-            element[0].selectedIndex = selectedIndex === -1 ? 0 : selectedIndex;
         },
 
         _reset: function() {
@@ -990,8 +971,12 @@ kendo_module({
                 valueField = options.cascadeFromField || parent.options.dataValueField;
 
                 change = function() {
+                    that.dataSource.unbind(CHANGE, change);
+
                     var value = that._selectedValue || that.value();
-                    if (value) {
+                    if (that._userTriggered) {
+                        that._clearSelection(parent, true);
+                    } else if (value) {
                         that.value(value);
                         if (!that.dataSource.view()[0] || that.selectedIndex === -1) {
                             that._clearSelection(parent, true);
@@ -1001,7 +986,8 @@ kendo_module({
                     }
 
                     that.enable();
-                    that._triggerCascade();
+                    that._triggerCascade(that._userTriggered);
+                    that._userTriggered = false;
                 };
                 select = function() {
                     var dataItem = parent.dataItem(),
@@ -1019,18 +1005,27 @@ kendo_module({
                             value: filterValue
                         });
 
-                        that.dataSource
-                            .one(CHANGE, change)
-                            .filter(filters);
+                        var handler = function() {
+                            that.dataSource.unbind(CHANGE, handler);
+                            change.apply(that, arguments);
+                        };
+
+                        that.first("dataBound", handler);
+
+                        that.dataSource.filter(filters);
 
                     } else {
                         that.enable(false);
                         that._clearSelection(parent);
-                        that._triggerCascade();
+                        that._triggerCascade(that._userTriggered);
+                        that._userTriggered = false;
                     }
                 };
 
-                parent.bind("cascade", function() { select(); });
+                parent.first("cascade", function(e) {
+                    that._userTriggered = e.userTriggered;
+                    select();
+                });
 
                 //refresh was called
                 if (parent._bound) {
@@ -1055,3 +1050,7 @@ kendo_module({
         }
     }
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

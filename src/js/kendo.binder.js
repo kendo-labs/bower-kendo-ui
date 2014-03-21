@@ -1,21 +1,18 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "binder",
-    name: "MVVM",
-    category: "framework",
-    description: "Model View ViewModel (MVVM) is a design pattern which helps developers separate the Model (the data) from the View (the UI).",
-    depends: [ "core", "data" ]
-});
+(function(f, define){
+    define([ "./kendo.core", "./kendo.data" ], f);
+})(function(){
 
+/*jshint eqnull: true */
 (function ($, undefined) {
     var kendo = window.kendo,
         Observable = kendo.Observable,
@@ -31,14 +28,22 @@ kendo_module({
         SOURCE = "source",
         EVENTS = "events",
         CHECKED = "checked",
+        deleteExpando = true,
         CHANGE = "change";
 
     (function() {
         var a = document.createElement("a");
+
         if (a.innerText !== undefined) {
             innerText = "innerText";
         } else if (a.textContent !== undefined) {
             innerText = "textContent";
+        }
+
+        try {
+            delete a.test;
+        } catch(e) {
+            deleteExpando = false;
         }
     })();
 
@@ -164,7 +169,11 @@ kendo_module({
                 // Invoke the function
                 that.start(source);
 
-                result = result.call(source, that.source);
+                if (source !== that.source) {
+                    result = result.call(source, that.source);
+                } else {
+                    result = result.call(source);
+                }
 
                 that.stop(source);
             }
@@ -185,10 +194,19 @@ kendo_module({
         },
 
         set: function(value) {
-            var that = this,
-                source = that.currentSource || that.source;
+            var source = this.currentSource || this.source;
 
-            source.set(that.path, value);
+            var field = kendo.getter(this.path)(source);
+
+            if (typeof field === "function") {
+                if (source !== this.source) {
+                    field.call(source, this.source, value);
+                } else {
+                    field.call(source, value);
+                }
+            } else {
+                source.set(this.path, value);
+            }
         },
 
         destroy: function() {
@@ -503,12 +521,6 @@ kendo_module({
             return template;
         },
 
-        destroy: function() {
-            var source = this.bindings.source.get();
-
-            source.unbind(CHANGE, this._change);
-        },
-
         add: function(index, items) {
             var element = this.container(),
                 parents,
@@ -547,23 +559,14 @@ kendo_module({
                 idx,
                 length,
                 element = this.container(),
-                template = this.template(),
-                parent;
+                template = this.template();
 
             if (source instanceof kendo.data.DataSource) {
                 source = source.view();
             }
 
             if (!(source instanceof ObservableArray) && toString.call(source) !== "[object Array]") {
-                if (source.parent) {
-                    parent = source.parent;
-                }
-
-                source = new ObservableArray([source]);
-
-                if (source.parent) {
-                    source.parent = parent;
-                }
+                source = [source];
             }
 
             if (this.bindings.template) {
@@ -1121,6 +1124,9 @@ kendo_module({
                         var newValue;
                         var found;
 
+                        var oldIdx = 0;
+                        var oldLength = oldValues.length + 1;
+
                         while (old) {
                             found = false;
                             for (j = 0; j < newLength; j++) {
@@ -1150,6 +1156,11 @@ kendo_module({
                             }
 
                             old = oldValues[i];
+                            oldIdx++;
+
+                            if (oldIdx > oldLength) {
+                                break;
+                            }
                         }
 
                         splice.apply(oldValues, [oldValues.length, 0].concat(newValues));
@@ -1298,21 +1309,21 @@ kendo_module({
                 } else if (binding == SOURCE) {
                     hasSource = true;
                 } else {
-                    that.applyBinding(binding, bindings);
+                    that.applyBinding(binding, bindings, specificBinders);
                 }
             }
 
             if (hasSource) {
-                that.applyBinding(SOURCE, bindings);
+                that.applyBinding(SOURCE, bindings, specificBinders);
             }
 
             if (hasValue) {
-                that.applyBinding(VALUE, bindings, specificBinders[VALUE]);
+                that.applyBinding(VALUE, bindings, specificBinders);
             }
         },
 
-        applyBinding: function(name, bindings, specificBinder) {
-            var binder = specificBinder || binders.widget[name],
+        applyBinding: function(name, bindings, specificBinders) {
+            var binder = specificBinders[name] || binders.widget[name],
                 toDestroy = this.toDestroy,
                 attribute,
                 binding = bindings[name];
@@ -1339,13 +1350,20 @@ kendo_module({
     });
 
     function flattenGroups(data) {
-        var idx, length, result = [];
+        var idx,
+            result = [],
+            length,
+            items,
+            itemIndex;
 
         for (idx = 0, length = data.length; idx < length; idx++) {
             if (data[idx].hasSubgroups) {
                 result = result.concat(flattenGroups(data[idx].items));
             } else {
-                result = result.concat.apply(result, data[idx].items);
+                items = data[idx].items;
+                for (itemIndex = 0; itemIndex < items.length; itemIndex++) {
+                    result.push(items[itemIndex]);
+                }
             }
         }
         return result;
@@ -1504,7 +1522,7 @@ kendo_module({
         if (bindingTarget) {
             bindingTarget.destroy();
 
-            if ($.support.deleteExpando) {
+            if (deleteExpando) {
                 delete element.kendoBindingTarget;
             } else if (element.removeAttribute) {
                 element.removeAttribute("kendoBindingTarget");
@@ -1592,3 +1610,7 @@ kendo_module({
     };
 
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

@@ -1,26 +1,22 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "router",
-    name: "Router",
-    category: "framework",
-    description: "The Router class is responsible for tracking the application state and navigating between the application states.",
-    depends: [ "core" ],
-    hidden: false
-});
+(function(f, define){
+    define([ "./kendo.core" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
         CHANGE = "change",
         BACK = "back",
+        SAME = "same",
         support = kendo.support,
         location = window.location,
         history = window.history,
@@ -46,22 +42,51 @@ kendo_module({
         return location.protocol + '//' + (location.host + "/" + path).replace(/\/\/+/g, '/');
     }
 
+    function locationHash() {
+        return location.href.split("#")[1] || "";
+    }
+
     function stripRoot(root, url) {
         if (url.indexOf(root) === 0) {
             return (url.substr(root.length)).replace(/\/\//g, '/');
         } else {
-            return root;
+            return url;
         }
     }
 
-    var PushStateAdapter = kendo.Class.extend({
+    var HistoryAdapter = kendo.Class.extend({
+        back: function() {
+            history.back();
+        },
+
+        forward: function() {
+            history.forward();
+        },
+
+        length: function() {
+            return history.length;
+        },
+
+        replaceLocation: function(url) {
+            location.replace(url);
+        }
+    });
+
+    var PushStateAdapter = HistoryAdapter.extend({
         init: function(root) {
             this.root = root;
         },
 
         navigate: function(to) {
             history.pushState({}, document.title, absoluteURL(to, this.root));
-            return this.current();
+        },
+
+        replace: function(to) {
+            history.replaceState({}, document.title, absoluteURL(to, this.root));
+        },
+
+        normalize: function(url) {
+            return stripRoot(this.root, url);
         },
 
         current: function() {
@@ -80,30 +105,72 @@ kendo_module({
 
         stop: function() {
             $(window).unbind("popstate.kendo");
+        },
+
+        normalizeCurrent: function(options) {
+            var fixedUrl,
+                root = options.root,
+                pathname = location.pathname,
+                hash = locationHash();
+
+            if (root === pathname + "/") {
+                fixedUrl = root;
+            }
+
+            if (root === pathname && hash) {
+                fixedUrl = absoluteURL(hash.replace(hashStrip, ''), root);
+            }
+
+            if (fixedUrl) {
+                history.pushState({}, document.title, fixedUrl);
+            }
         }
     });
 
-    var HashAdapter = kendo.Class.extend({
+    var HashAdapter = HistoryAdapter.extend({
+        init: function() {
+            this._id = kendo.guid();
+        },
+
         navigate: function(to) {
             location.hash = to;
-            return to;
+        },
+
+        replace: function(to) {
+            this.replaceLocation("#" + to.replace(/^#/, ''));
+        },
+
+        normalize: function(url) {
+            return url;
         },
 
         change: function(callback) {
             if (support.hashChange) {
-                $(window).bind("hashchange.kendo", callback);
+                $(window).on("hashchange." + this._id, callback);
             } else {
                 this._interval = setInterval(callback, CHECK_URL_INTERVAL);
             }
         },
 
         stop: function() {
-            $(window).unbind("popstate.kendo");
+            $(window).off("hashchange." + this._id);
             clearInterval(this._interval);
         },
 
         current: function() {
-            return location.hash.replace(hashStrip, '');
+            return locationHash();
+        },
+
+        normalizeCurrent: function(options) {
+            var pathname = location.pathname,
+                root = options.root;
+
+            if (options.pushState && root !== pathname) {
+                this.replaceLocation(root + '#' + stripRoot(root, pathname));
+                return true; // browser will reload at this point.
+            }
+
+            return false;
         }
     });
 
@@ -111,7 +178,7 @@ kendo_module({
         start: function(options) {
             options = options || {};
 
-            this.bind([CHANGE, BACK], options);
+            this.bind([CHANGE, BACK, SAME], options);
 
             if (this._started) {
                 return;
@@ -119,38 +186,31 @@ kendo_module({
 
             this._started = true;
 
-            var pathname = location.pathname,
-                hash = location.hash,
-                pushState = support.pushState && options.pushState,
-                root = options.root || "/",
-                atRoot = root === pathname;
+            options.root = options.root || "/";
 
-            this.adapter = pushState ? new PushStateAdapter(root) : new HashAdapter();
+            var adapter = this.createAdapter(options),
+                current;
 
-            if (options.pushState && !support.pushState && !atRoot) {
-                location.replace(root + '#' + stripRoot(root, pathname));
-                return true; // browser will reload at this point.
+            // adapter may reload the document
+            if (adapter.normalizeCurrent(options)) {
+                return;
             }
 
-            if (pushState) {
-                var fixedUrl;
-                if (root === pathname + "/") {
-                    fixedUrl = root;
-                }
+            current = adapter.current();
 
-                if (atRoot && hash) {
-                    fixedUrl = absoluteURL(hash.replace(hashStrip, ''), root);
-                }
+            $.extend(this, {
+                adapter: adapter,
+                root: options.root,
+                historyLength: adapter.length(),
+                current: current,
+                locations: [current],
+            });
 
-                if (fixedUrl) {
-                    history.replaceState({}, document.title, fixedUrl);
-                }
-            }
+            adapter.change($.proxy(this, "_checkUrl"));
+        },
 
-            this.root = root;
-            this.current = this.adapter.current();
-            this.locations = [this.current];
-            this.adapter.change($.proxy(this, "_checkUrl"));
+        createAdapter:function(options) {
+           return support.pushState && options.pushState ? new PushStateAdapter(options.root) : new HashAdapter();
         },
 
         stop: function() {
@@ -166,15 +226,33 @@ kendo_module({
             this.bind(CHANGE, callback);
         },
 
+        replace: function(to, silent) {
+
+            this._navigate(to, silent, function(adapter) {
+                adapter.replace(to);
+                this.locations[this.locations - 1] = this.current;
+            });
+        },
+
         navigate: function(to, silent) {
             if (to === "#:back") {
-                history.back();
+                this.adapter.back();
                 return;
             }
+
+            this._navigate(to, silent, function(adapter) {
+                adapter.navigate(to);
+                this.locations.push(this.current);
+            });
+        },
+
+        _navigate: function(to, silent, callback) {
+            var adapter = this.adapter;
 
             to = to.replace(hashStrip, '');
 
             if (this.current === to || this.current === decodeURIComponent(to)) {
+                this.trigger(SAME);
                 return;
             }
 
@@ -184,33 +262,41 @@ kendo_module({
                 }
             }
 
-            this.current = this.adapter.navigate(to);
+            this.current = adapter.normalize(to);
 
-            this.locations.push(this.current);
+            callback.call(this, adapter);
+
+            this.historyLength = adapter.length();
         },
 
         _checkUrl: function() {
-            var current = this.adapter.current(),
-                back = current === this.locations[this.locations.length - 2],
+            var adapter = this.adapter,
+                current = adapter.current(),
+                newLength = adapter.length(),
+                navigatingInExisting = this.historyLength === newLength,
+                back = current === this.locations[this.locations.length - 2] && navigatingInExisting,
                 prev = this.current;
 
             if (this.current === current || this.current === decodeURIComponent(current)) {
-                return;
+                return true;
             }
+
+            this.historyLength = newLength;
 
             this.current = current;
 
             if (back && this.trigger("back", { url: prev, to: current })) {
-                history.forward();
+                adapter.forward();
                 this.current = prev;
                 return;
             }
 
             if (this.trigger(CHANGE, { url: current })) {
                 if (back) {
-                    history.forward();
+                    adapter.forward();
                 } else {
-                    history.back();
+                    adapter.back();
+                    this.historyLength --;
                 }
                 this.current = prev;
                 return;
@@ -224,6 +310,10 @@ kendo_module({
         }
     });
 
+    kendo.History = History;
+    kendo.History.HistoryAdapter = HistoryAdapter;
+    kendo.History.HashAdapter = HashAdapter;
+    kendo.History.PushStateAdapter = PushStateAdapter;
     kendo.absoluteURL = absoluteURL;
     kendo.history = new History();
 })(window.kendo.jQuery);
@@ -236,6 +326,7 @@ kendo_module({
         ROUTE_MISSING = "routeMissing",
         CHANGE = "change",
         BACK = "back",
+        SAME = "same",
         optionalParam = /\((.*?)\)/g,
         namedParam = /(\(\?)?:\w+/g,
         splatParam = /\*\w+/g,
@@ -289,7 +380,7 @@ kendo_module({
         },
 
         worksWith: function(url) {
-            if (this.route.test(url)) {
+            if (this.route.test(stripUrl(url))) {
                 this.callback(url);
                 return true;
             } else {
@@ -306,28 +397,31 @@ kendo_module({
             if (options && options.root) {
                 this.root = options.root;
             }
-            this.bind([INIT, ROUTE_MISSING, CHANGE], options);
+            this.bind([INIT, ROUTE_MISSING, CHANGE, SAME], options);
         },
 
         destroy: function() {
             history.unbind(CHANGE, this._urlChangedProxy);
+            history.unbind(SAME, this._sameProxy);
             history.unbind(BACK, this._backProxy);
             this.unbind();
         },
 
         start: function() {
             var that = this,
+                sameProxy = function() { that._same(); },
                 backProxy = function(e) { that._back(e); },
                 urlChangedProxy = function(e) { that._urlChanged(e); };
 
             history.start({
+                same: sameProxy,
                 change: urlChangedProxy,
                 back: backProxy,
                 pushState: that.pushState,
                 root: that.root
             });
 
-            var initEventObject = { url: history.current || "/" };
+            var initEventObject = { url: history.current || "/", preventDefault: $.noop };
 
             if (!that.trigger(INIT, initEventObject)) {
                 that._urlChanged(initEventObject);
@@ -345,10 +439,18 @@ kendo_module({
             kendo.history.navigate(url, silent);
         },
 
+        replace: function(url, silent) {
+            kendo.history.replace(url, silent);
+        },
+
         _back: function(e) {
             if (this.trigger(BACK, { url: e.url, to: e.to })) {
                 e.preventDefault();
             }
+        },
+
+        _same: function(e) {
+            this.trigger(SAME);
         },
 
         _urlChanged: function(e) {
@@ -384,3 +486,7 @@ kendo_module({
 
     kendo.Router = Router;
 })();
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

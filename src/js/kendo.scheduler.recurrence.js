@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "scheduler.recurrence",
-    name: "Recurrence",
-    category: "web",
-    depends: [ "dropdownlist", "datepicker", "numerictextbox" ],
-    hidden: true
-});
+(function(f, define){
+    define([ "./kendo.dropdownlist", "./kendo.datepicker", "./kendo.numerictextbox" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -66,6 +62,7 @@ kendo_module({
         ],
         RULE_NAMES = ["months", "weeks", "yearDays", "monthDays", "weekDays", "hours", "minutes", "seconds"],
         RULE_NAMES_LENGTH = RULE_NAMES.length,
+        RECURRENCE_DATE_FORMAT = "yyyyMMddTHHmmssZ",
         limitation = {
             months: function(date, end, rule) {
                 var monthRules = rule.months,
@@ -195,11 +192,11 @@ kendo_module({
             },
 
             weekDays: function(date, end, rule) {
-                var weekDays = rule.weekDays,
-                    weekStart = rule.weekStart,
-                    weekDayRules = ruleWeekValues(weekDays, date, weekStart),
-                    hours = date.getHours(),
-                    weekDayRule, day;
+                var weekDays = rule.weekDays;
+                var weekStart = rule.weekStart;
+                var weekDayRules = ruleWeekValues(weekDays, date, weekStart);
+                var hours = date.getHours();
+                var weekDayRule, day;
 
                 if (weekDayRules === null) {
                     return false;
@@ -399,6 +396,7 @@ kendo_module({
 
             interval: function (rule, current) {
                 var start = new Date(rule._startPeriod);
+                var date = new Date(current);
                 var hours = current.getHours();
                 var weekStart = rule.weekStart;
                 var interval = rule.interval;
@@ -409,8 +407,23 @@ kendo_module({
                 var day = 1;
                 var diff;
 
+                var startTimeHours;
+
                 if (frequency === "hourly") {
-                    diff = Math.floor((current - start) / (60 * kendo.date.MS_PER_MINUTE));
+                    diff = date.getTimezoneOffset() - start.getTimezoneOffset();
+                    startTimeHours = rule._startTime.getHours();
+
+                    date = date.getTime();
+                    if (hours !== startTimeHours) {
+                        date += (startTimeHours - hours) * kendo.date.MS_PER_HOUR;
+                    }
+                    date -= start;
+
+                    if (diff) {
+                        date -= diff * kendo.date.MS_PER_MINUTE;
+                    }
+
+                    diff = Math.floor(date / kendo.date.MS_PER_HOUR);
                     excess = intervalExcess(diff, interval);
 
                     if (excess !== 0) {
@@ -418,7 +431,9 @@ kendo_module({
                         modified = true;
                     }
                 } else if (frequency === "daily") {
-                    diff = Math.floor((current - start) / kendo.date.MS_PER_DAY);
+                    kendo.date.setTime(date, -start);
+
+                    diff = Math.floor(date / kendo.date.MS_PER_DAY);
                     excess = intervalExcess(diff, interval);
 
                     if (excess !== 0) {
@@ -618,13 +633,17 @@ kendo_module({
         CLICK = "click";
 
     function intervalExcess(diff, interval) {
+        var excess;
         if (diff !== 0 && diff < interval) {
-            diff = interval - diff;
+            excess = interval - diff;
         } else {
-            diff = diff % interval;
+            excess = diff % interval;
+            if (excess) {
+                excess = interval - excess;
+            }
         }
 
-        return diff;
+        return excess;
     }
 
     function dayInYear(date) {
@@ -656,16 +675,47 @@ kendo_module({
     }
 
     function weekInMonth(date, weekStart) {
-        var firstWeekDay = firstDayOfMonth(date).getDay(),
-            firstWeekLength = Math.abs(7 - (firstWeekDay + 7 - (weekStart || 7))) || 7;
+        var firstWeekDay = firstDayOfMonth(date).getDay();
+        var firstWeekLength = 7 - (firstWeekDay + 7 - (weekStart || 7)) || 7;
+
+        if (firstWeekLength < 0) {
+            firstWeekLength += 7;
+        }
 
         return Math.ceil((date.getDate() - firstWeekLength) / 7) + 1;
     }
 
-    function normalizeOffset(date, offset, weekStart) {
-        if (offset < 0) {
-            offset = numberOfWeeks(date, weekStart) + (offset + 1);
+    function normalizeDayIndex(weekDay, weekStart) {
+        return weekDay + (weekDay < weekStart ? 7 : 0);
+    }
+
+    function normalizeOffset(date, rule, weekStart) {
+        var offset = rule.offset;
+
+        if (!offset) {
+            return weekInMonth(date, weekStart);
         }
+
+        var lastDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        var weeksInMonth = weekInMonth(lastDate, weekStart);
+
+        var day = normalizeDayIndex(rule.day, weekStart);
+
+        var skipFirst = day < normalizeDayIndex(new Date(date.getFullYear(), date.getMonth(), 1).getDay(), weekStart);
+        var skipLast = day > normalizeDayIndex(lastDate.getDay(), weekStart);
+
+        if (offset < 0) {
+            offset = weeksInMonth + (offset + 1 - (skipLast ? 1 : 0));
+        } else if (skipFirst) {
+            offset += 1;
+        }
+
+        weeksInMonth -= (skipLast ? 1 : 0);
+
+        if (offset < (skipFirst ? 1 : 0) || offset > weeksInMonth) {
+            return null;
+        }
+
         return offset;
     }
 
@@ -673,74 +723,34 @@ kendo_module({
         return weekInMonth(new Date(date.getFullYear(), date.getMonth() + 1, 0), weekStart);
     }
 
-    function isInWeek(date, weekDayRule, weekStart) {
-        var offset = weekDayRule.offset,
-            weekNumber = weekInMonth(date, weekStart);
-
-        if (!allowFirstWeek(date, weekDayRule, weekStart)) {
-            weekNumber -= 1;
-        }
-
-        return weekNumber === normalizeOffset(date, offset, weekStart);
-    }
-
-    function allowFirstWeek(date, weekDayRule, weekStart) {
-        var day = weekDayRule.day,
-            offset = weekDayRule.offset,
-            firstDay, allow;
-
-        if (!offset) {
-            return true;
-        }
-
-        firstDay = firstDayOfMonth(date).getDay();
-        if (firstDay < weekStart) {
-            firstDay += weekStart;
-        }
-
-        if (day < weekStart) {
-            day += weekStart;
-        }
-
-        allow = day >= firstDay;
-        if (!allow && offset < 0 && normalizeOffset(date, offset, weekStart) !== 1) {
-            allow = true;
-        }
-
-        return allow;
+    function isInWeek(date, rule, weekStart) {
+        return weekInMonth(date, weekStart) === normalizeOffset(date, rule, weekStart);
     }
 
     function ruleWeekValues(weekDays, date, weekStart) {
-        var currentDay = date.getDay(),
-            length = weekDays.length,
-            weekDay, day, offset,
-            weekNumber,
-            result = [],
-            idx = 0;
-
-        if (currentDay < weekStart) {
-            currentDay += 7;
-        }
+        var currentDay = normalizeDayIndex(date.getDay(), weekStart);
+        var length = weekDays.length;
+        var ruleWeekOffset;
+        var weekDay, day;
+        var weekNumber;
+        var result = [];
+        var idx = 0;
 
         for (;idx < length; idx++) {
             weekDay = weekDays[idx];
-            offset = weekDay.offset;
-            day = weekDay.day;
-
-            if (day < weekStart) {
-                day += 7;
-            }
 
             weekNumber = weekInMonth(date, weekStart);
-            if (!allowFirstWeek(date, weekDay, weekStart)) {
-                weekNumber -= 1;
+            ruleWeekOffset = normalizeOffset(date, weekDay, weekStart);
+
+            if (ruleWeekOffset === null) {
+                continue;
             }
 
-            offset = offset ? normalizeOffset(date, offset, weekStart) : weekNumber;
-
-            if (weekNumber < offset) {
+            if (weekNumber < ruleWeekOffset) {
                 result.push(weekDay);
-            } else if (weekNumber === offset) {
+            } else if (weekNumber === ruleWeekOffset) {
+                day = normalizeDayIndex(weekDay.day, weekStart);
+
                 if (currentDay < day) {
                     result.push(weekDay);
                 } else if (currentDay === day) {
@@ -890,6 +900,21 @@ kendo_module({
         return false;
     }
 
+    function toExceptionString(dates, zone) {
+        var idx = 0;
+        var length;
+        var date;
+        var result = [].concat(dates);
+
+        for (length = result.length; idx < length; idx++) {
+            date = result[idx];
+            date = kendo.timezone.convert(date, zone || date.getTimezoneOffset(), "Etc/UTC");
+            result[idx] = kendo.toString(date, RECURRENCE_DATE_FORMAT);
+        }
+
+        return result.join(";") + ";";
+    }
+
     function startPeriodByFreq(start, rule) {
         var date = new Date(start);
 
@@ -993,7 +1018,7 @@ kendo_module({
     }
 
     function expand(event, start, end, zone) {
-        var rule = parseRule(event.recurrenceRule),
+        var rule = parseRule(event.recurrenceRule, zone),
             startTime, endTime, endDate,
             hours, minutes, seconds,
             durationMS, startPeriod, inPeriod,
@@ -1020,8 +1045,8 @@ kendo_module({
 
         if (ruleStart || ruleEnd) {
             event = event.clone({
-                start: ruleStart ? new Date(ruleStart.value) : undefined,
-                end: ruleEnd ? new Date(ruleEnd.value) : undefined
+                start: ruleStart ? new Date(ruleStart.value[0]) : undefined,
+                end: ruleEnd ? new Date(ruleEnd.value[0]) : undefined
             });
         }
 
@@ -1030,6 +1055,12 @@ kendo_module({
         eventStartTime = getMilliseconds(eventStart);
 
         exceptionDates = parseExceptions(event.recurrenceException, zone);
+
+        if (!exceptionDates[0] && rule.exdates) {
+            exceptionDates = rule.exdates.value;
+            event.set("recurrenceException", toExceptionString(exceptionDates, zone));
+        }
+
         startPeriod = start = new Date(start);
         end = new Date(end);
 
@@ -1071,6 +1102,13 @@ kendo_module({
             start = startPeriodByFreq(start, rule);
             end = endPeriodByFreq(end, rule);
 
+            var diff = getMilliseconds(end) - getMilliseconds(start);
+            if (diff < 0) {
+                hours = start.getHours();
+                end.setHours(hours, start.getMinutes(), start.getSeconds(), start.getMilliseconds());
+                kendo.date.adjustDST(end, hours);
+            }
+
             rule._startPeriod = new Date(start);
             rule._endPeriod = endPeriodByFreq(start, rule);
             rule._startIdx = 0;
@@ -1103,7 +1141,7 @@ kendo_module({
                         endTime: endTime
                     }));
                 } else {
-                    event.startTime = startTime;
+                    event.startTime = new Date(startTime);
                     event.endTime = endTime;
                     events.push(event);
                 }
@@ -1156,6 +1194,7 @@ kendo_module({
         var property;
         var value;
         var tzid;
+        var valueIdx, valueLength;
 
         for (var idx = 0, length = pairs.length; idx < length; idx++) {
             pair = pairs[idx].split(":");
@@ -1167,7 +1206,11 @@ kendo_module({
             }
 
             if (value) {
-                value = parseUTCDate(value, tzid || zone);
+                value = value.split(",");
+
+                for (valueIdx = 0, valueLength = value.length; valueIdx < valueLength; valueIdx++) {
+                    value[valueIdx] = parseUTCDate(value[valueIdx], tzid || zone);
+                }
             }
         }
 
@@ -1180,28 +1223,26 @@ kendo_module({
     }
 
     function parseRule(recur, zone) {
-        var instance = {},
-            idx = 0, length,
-            splits, value,
-            property,
-            weekStart,
-            weekDays,
-            ruleValue = false,
-            rule, part, parts,
-            predicate = function(a, b) {
-                var day1 = a.day,
-                    day2 = b.day;
+        var instance = {};
+        var splits, value;
+        var idx = 0, length;
+        var ruleValue = false;
+        var rule, part, parts;
+        var property, weekStart, weekDays;
+        var predicate = function(a, b) {
+            var day1 = a.day,
+                day2 = b.day;
 
-                if (day1 < weekStart) {
-                   day1 += 7;
-                }
+            if (day1 < weekStart) {
+               day1 += 7;
+            }
 
-                if (day2 < weekStart) {
-                    day2 += 7;
-                }
+            if (day2 < weekStart) {
+                day2 += 7;
+            }
 
-                return day1 - day2;
-            };
+            return day1 - day2;
+        };
 
         if (!recur) {
             return null;
@@ -1209,7 +1250,7 @@ kendo_module({
 
         parts = recur.split("\n");
 
-        if (!parts[1] && (recur.indexOf("DTSTART") !== -1 || recur.indexOf("DTEND") !== -1)) {
+        if (!parts[1] && (recur.indexOf("DTSTART") !== -1 || recur.indexOf("DTEND") !== -1 || recur.indexOf("EXDATE") !== -1)) {
             parts = recur.split(" ");
         }
 
@@ -1220,9 +1261,11 @@ kendo_module({
                 instance.start = parseDateRule(part, zone);
             } else if (part.indexOf("DTEND") !== -1) {
                 instance.end = parseDateRule(part, zone);
+            } else if (part.indexOf("EXDATE") !== -1) {
+                instance.exdates = parseDateRule(part, zone);
             } else if (part.indexOf("RRULE") !== -1) {
                 rule = part.substring(6);
-            } else {
+            } else { //improve this. support new row at the end of rule
                 rule = part;
             }
         }
@@ -1316,22 +1359,30 @@ kendo_module({
     function serializeDateRule(dateRule, zone) {
         var value = dateRule.value;
         var tzid = dateRule.tzid || "";
+        var length = value.length;
+        var idx = 0;
+        var val;
 
-        value = timezone.convert(value, tzid || zone || value.getTimezoneOffset(), "Etc/UTC");
+        for (; idx < length; idx++) {
+            val = value[idx];
+            val = timezone.convert(val, tzid || zone || val.getTimezoneOffset(), "Etc/UTC");
+            value[idx] = kendo.toString(val, "yyyyMMddTHHmmssZ");
+        }
 
         if (tzid) {
             tzid = ";TZID=" + tzid;
         }
 
-        return tzid + ":" + kendo.toString(value, "yyyyMMddTHHmmssZ") + " ";
+        return tzid + ":" + value.join(",") + " ";
     }
 
     function serialize(rule, zone) {
-        var weekStart = rule.weekStart,
-            ruleString = "FREQ=" + rule.freq.toUpperCase(),
-            until = rule.until,
-            start = rule.start || "",
-            end = rule.end || "";
+        var weekStart = rule.weekStart;
+        var ruleString = "FREQ=" + rule.freq.toUpperCase();
+        var exdates = rule.exdates || "";
+        var start = rule.start || "";
+        var end = rule.end || "";
+        var until = rule.until;
 
         if (rule.interval > 1) {
             ruleString += ";INTERVAL=" + rule.interval;
@@ -1394,8 +1445,12 @@ kendo_module({
             end = "DTEND" + serializeDateRule(end, zone);
         }
 
-        if (start || end) {
-            ruleString = start + end + "RRULE:" + ruleString;
+        if (exdates) {
+            exdates = "EXDATE" + serializeDateRule(exdates, zone);
+        }
+
+        if (start || end || exdates) {
+            ruleString = start + end + exdates + "RRULE:" + ruleString;
         }
 
         return ruleString;
@@ -1411,7 +1466,8 @@ kendo_module({
         weekInYear: weekInYear,
         weekInMonth: weekInMonth,
         numberOfWeeks: numberOfWeeks,
-        isException: isException
+        isException: isException,
+        toExceptionString: toExceptionString
     };
 
     var weekDayCheckBoxes = function(firstDay) {
@@ -1560,10 +1616,15 @@ kendo_module({
             messages: {
                 frequencies: {
                     never: "Never",
+                    hourly: "Hourly",
                     daily: "Daily",
                     weekly: "Weekly",
                     monthly: "Monthly",
                     yearly: "Yearly"
+                },
+                hourly: {
+                    repeatEvery: "Repeat every: ",
+                    interval: " hour(s)"
                 },
                 daily: {
                     repeatEvery: "Repeat every: ",
@@ -1631,8 +1692,8 @@ kendo_module({
 
         _weekDayRule: function(clear) {
             var that = this;
-            var weekday = that._weekDay.value();
-            var offset = Number(that._weekDayOffset.value());
+            var weekday = (that._weekDay.element || that._weekDay).val();
+            var offset = Number((that._weekDayOffset.element || that._weekDayOffset).val());
             var weekDays = null;
             var positions = null;
 
@@ -1875,7 +1936,7 @@ kendo_module({
 
             kendo.destroy(that._container);
 
-            Widget.fn.destroy.call(that);
+            BaseRecurrenceEditor.fn.destroy.call(that);
         },
 
         value: function(value) {
@@ -1956,6 +2017,7 @@ kendo_module({
                  end: options.messages.end
             };
 
+            kendo.destroy(that._container);
             that._container.html(RECURRENCE_VIEW_TEMPLATE(data));
 
             if (!frequency) {
@@ -2269,6 +2331,9 @@ kendo_module({
                 daily: {
                     interval: ""
                 },
+                hourly: {
+                    interval: ""
+                },
                 weekly: {
                     interval: ""
                 },
@@ -2317,6 +2382,8 @@ kendo_module({
             kendo.destroy(this._endFields);
 
             this._repeatButton.off(CLICK + this._namespace);
+
+            BaseRecurrenceEditor.fn.destroy.call(this);
         },
 
         _initRepeatButton: function() {
@@ -2486,7 +2553,9 @@ kendo_module({
                 that._endFields.toggleClass("k-state-disabled", !frequency);
                 that._repeatButton.text(messages.frequencies[frequency || "never"]);
 
-                that._destroyView();
+                that._pane.one("viewShow", function() {
+                    that._destroyView();
+                });
 
                 that._pane.navigate(returnViewId, that.options.animations.right);
             });
@@ -2761,3 +2830,7 @@ kendo_module({
     ui.plugin(MobileRecurrenceEditor);
 
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

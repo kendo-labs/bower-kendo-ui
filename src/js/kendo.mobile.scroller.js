@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "mobile.scroller",
-    name: "Scroller",
-    category: "mobile",
-    description: "The Kendo Mobile Scroller widget enables touch friendly kinetic scrolling for the contents of a given DOM element.",
-    depends: [ "core", "fx", "draganddrop" ]
-});
+(function(f, define){
+    define([ "./kendo.core", "./kendo.fx", "./kendo.draganddrop" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -43,7 +39,8 @@ kendo_module({
         PULL = "pull",
         CHANGE = "change",
         RESIZE = "resize",
-        SCROLL = "scroll";
+        SCROLL = "scroll",
+        MOUSE_WHEEL_ID = 2;
 
     var ZoomSnapBack = Animation.extend({
         init: function(options) {
@@ -53,6 +50,10 @@ kendo_module({
 
             that.userEvents.bind("gestureend", proxy(that.start, that));
             that.tapCapture.bind("press", proxy(that.cancel, that));
+        },
+
+        enabled: function() {
+          return this.movable.scale < this.dimensions.minScale;
         },
 
         done: function() {
@@ -116,23 +117,20 @@ kendo_module({
         },
 
         start: function(e) {
-            var that = this;
+            var that = this,
+                velocity;
 
             if (!that.dimension.enabled) { return; }
+
 
             if (that._outOfBounds()) {
                 that._snapBack();
             } else {
-                that.velocity = Math.max(Math.min(
-                    e.touch[that.axis].velocity * that.velocityMultiplier,
-                    MAX_VELOCITY), -MAX_VELOCITY);
+                velocity = e.touch.id === MOUSE_WHEEL_ID ? 0 : e.touch[that.axis].velocity;
+                that.velocity = Math.max(Math.min(velocity * that.velocityMultiplier, MAX_VELOCITY), -MAX_VELOCITY);
 
-                if (that.velocity) {
-                    that.tapCapture.captureNext();
-                    Animation.fn.start.call(that);
-                } else {
-                    that._end();
-                }
+                that.tapCapture.captureNext();
+                Animation.fn.start.call(that);
             }
         },
 
@@ -320,9 +318,11 @@ kendo_module({
                         var velocityX = abs(e.x.velocity),
                             velocityY = abs(e.y.velocity),
                             horizontalSwipe  = velocityX * 2 >= velocityY,
+                            originatedFromFixedContainer = $.contains(that.fixedContainer[0], e.event.target),
                             verticalSwipe = velocityY * 2 >= velocityX;
 
-                        if (!avoidScrolling(e) && that.enabled && (dimensions.x.enabled && horizontalSwipe || dimensions.y.enabled && verticalSwipe)) {
+
+                        if (!originatedFromFixedContainer && !avoidScrolling(e) && that.enabled && (dimensions.x.enabled && horizontalSwipe || dimensions.y.enabled && verticalSwipe)) {
                             userEvents.capture();
                         } else {
                             userEvents.cancel();
@@ -360,6 +360,10 @@ kendo_module({
                 });
             });
 
+            if (that.options.mousewheelScrolling) {
+                element.on("DOMMouseScroll mousewheel",  proxy(this, "_wheelScroll"));
+            }
+
             extend(that, {
                 movable: movable,
                 dimensions: dimensions,
@@ -379,11 +383,37 @@ kendo_module({
             that._initAxis("x");
             that._initAxis("y");
 
+            // build closure
+            that._wheelEnd = function() {
+                that._wheel = false;
+                that.userEvents.end(0, that._wheelY);
+            };
+
             dimensions.refresh();
 
             if (that.options.pullToRefresh) {
                 that._initPullToRefresh();
             }
+        },
+
+        _wheelScroll: function(e) {
+            if (!this._wheel) {
+                this._wheel = true;
+                this._wheelY = 0;
+                this.userEvents.press(0, this._wheelY);
+            }
+
+            clearTimeout(this._wheelTimeout);
+            this._wheelTimeout = setTimeout(this._wheelEnd, 50);
+
+            var delta = kendo.wheelDeltaY(e);
+
+            if (delta) {
+                this._wheelY += delta;
+                this.userEvents.move(0, this._wheelY);
+            }
+
+            e.preventDefault();
         },
 
         makeVirtual: function() {
@@ -412,6 +442,7 @@ kendo_module({
             pullOffset: 140,
             elastic: true,
             useNative: false,
+            mousewheelScrolling: true,
             avoidScrolling: function() { return false; },
             pullToRefresh: false,
             pullTemplate: "Pull to refresh",
@@ -466,8 +497,8 @@ kendo_module({
 
         scrollTo: function(x, y) {
             if (this._native) {
-                this.scrollElement.scrollLeft(x);
-                this.scrollElement.scrollTop(y);
+                this.scrollElement.scrollLeft(abs(x));
+                this.scrollElement.scrollTop(abs(y));
             } else {
                 this.dimensions.refresh();
                 this.movable.moveTo({x: x, y: y});
@@ -475,11 +506,18 @@ kendo_module({
         },
 
         animatedScrollTo: function(x, y) {
-            var from = { x: this.movable.x, y: this.movable.y },
+            var from,
+                to;
+
+            if(this._native) {
+                this.scrollTo(x, y);
+            } else {
+                from = { x: this.movable.x, y: this.movable.y };
                 to = { x: x, y: y };
 
-            this.animatedScroller.setCoordinates(from, to);
-            this.animatedScroller.start();
+                this.animatedScroller.setCoordinates(from, to);
+                this.animatedScroller.start();
+            }
         },
 
         pullHandled: function() {
@@ -488,6 +526,7 @@ kendo_module({
             that.hintContainer.html(that.pullTemplate({}));
             that.yinertia.onEnd();
             that.xinertia.onEnd();
+            that.userEvents.cancel();
         },
 
         destroy: function() {
@@ -587,3 +626,7 @@ kendo_module({
 
     ui.plugin(Scroller);
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

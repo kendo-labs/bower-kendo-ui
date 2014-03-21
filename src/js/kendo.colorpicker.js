@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "colorpicker",
-    name: "Color tools",
-    category: "web",
-    description: "Color selection widgets",
-    depends: [ "core", "popup", "slider", "userevents" ]
-});
+(function(f, define){
+    define([ "./kendo.core", "./kendo.popup", "./kendo.slider", "./kendo.userevents" ], f);
+})(function(){
 
 (function($, parseInt, undefined){
     // WARNING: removing the following jshint declaration and turning
@@ -104,6 +100,7 @@ kendo_module({
             var prev = this._value;
             color = this.color(color);
             if (!nohooks) {
+                this.element.trigger("blur");
                 if (!color.equals(prev)) {
                     this.trigger("change", { value: this.value() });
                 } else if (!this._standalone) {
@@ -177,7 +174,11 @@ kendo_module({
                 colors = $.map(colors, function(x) { return parse(x); });
             }
 
+            this._selectedID = (options.ariaId || kendo.guid()) + "_selected";
+
             element.addClass("k-widget k-colorpalette")
+                .attr("role", "grid")
+                .attr("aria-readonly", "true")
                 .append($(that._template({
                     colors   : colors,
                     columns  : options.columns,
@@ -222,8 +223,7 @@ kendo_module({
         },
         _keydown: function(e) {
             var selected,
-                that = this,
-                wrapper = that.wrapper,
+                wrapper = this.wrapper,
                 items = wrapper.find(".k-item"),
                 current = items.filter("." + ITEMSELECTEDCLASS).get(0),
                 keyCode = e.keyCode;
@@ -233,9 +233,9 @@ kendo_module({
             } else if (keyCode == KEYS.RIGHT) {
                 selected = relative(items, current, 1);
             } else if (keyCode == KEYS.DOWN) {
-                selected = relative(items, current, that.options.columns);
+                selected = relative(items, current, this.options.columns);
             } else if (keyCode == KEYS.UP) {
-                selected = relative(items, current, -that.options.columns);
+                selected = relative(items, current, -this.options.columns);
             } else if (keyCode == KEYS.ENTER) {
                 preventDefault(e);
                 if (current) {
@@ -248,41 +248,54 @@ kendo_module({
             if (selected) {
                 preventDefault(e);
 
-                selected = $(selected);
-
-                $(current).removeClass(ITEMSELECTEDCLASS).removeAttr("aria-selected");
-
-                selected.addClass(ITEMSELECTEDCLASS).attr("aria-selected", true);
+                this._current(selected);
 
                 try {
                     var color = parse(selected.css(BACKGROUNDCOLOR));
-                    that._triggerSelect(color);
+                    this._triggerSelect(color);
                 } catch(ex) {}
             }
         },
-        _updateUI: function(color) {
-            var that = this,
-                el = null;
-
-            that.wrapper.find(".k-item." + ITEMSELECTEDCLASS)
+        _current: function(item) {
+            this.wrapper.find("." + ITEMSELECTEDCLASS)
                 .removeClass(ITEMSELECTEDCLASS)
-                .removeAttr("aria-selected");
+                .attr("aria-selected", false)
+                .removeAttr("id");
 
-            that.wrapper.find(".k-item").each(function(){
+            $(item)
+                .addClass(ITEMSELECTEDCLASS)
+                .attr("aria-selected", true)
+                .attr("id", this._selectedID);
+
+            this.element
+                .removeAttr("aria-activedescendant")
+                .attr("aria-activedescendant", this._selectedID);
+        },
+        _updateUI: function(color) {
+            var item = null;
+
+            this.wrapper.find(".k-item").each(function(){
                 var c = parse($(this).css(BACKGROUNDCOLOR));
 
                 if (c && c.equals(color)) {
-                    el = this;
+                    item = this;
+
+                    return false;
                 }
             });
 
-            $(el).addClass(ITEMSELECTEDCLASS).attr("aria-selected", true);
+            this._current(item);
         },
         _template: kendo.template(
-            '<table class="k-palette k-reset"><tr>' +
+            '<table class="k-palette k-reset" role="presentation"><tr role="row">' +
               '# for (var i = 0; i < colors.length; ++i) { #' +
-                '# if (i && i % columns == 0) { # </tr><tr> # } #' +
-                '<td unselectable="on" style="background-color:#= colors[i].toCss() #" #=(id && i === 0) ? "id=\\""+id+"\\" aria-selected=\\"true\\"" : "" # class="k-item #= colors[i].equals(value) ? "' + ITEMSELECTEDCLASS + '" : "" #" aria-label="#= colors[i].toCss() #"></td>' +
+                '# var selected = colors[i].equals(value); #' +
+                '# if (i && i % columns == 0) { # </tr><tr role="row"> # } #' +
+                '<td role="gridcell" unselectable="on" style="background-color:#= colors[i].toCss() #"' +
+                    '#= selected ? " aria-selected=true" : "" # ' +
+                    '#=(id && i === 0) ? "id=\\""+id+"\\" " : "" # ' +
+                    'class="k-item#= selected ? " ' + ITEMSELECTEDCLASS + '" : "" #" ' +
+                    'aria-label="#= colors[i].toCss() #"></td>' +
               '# } #' +
             '</tr></table>'
         )
@@ -853,7 +866,7 @@ kendo_module({
             }
 
             that.element.attr("disabled", !enable);
-            wrapper.attr("disabled", !enable);
+            wrapper.attr("aria-disabled", !enable);
 
             icon.off(NS).on("mousedown" + NS, preventDefault);
 
@@ -877,7 +890,7 @@ kendo_module({
         },
 
         _template: kendo.template(
-            '<span class="k-widget k-colorpicker k-header">' +
+            '<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker k-header">' +
                 '<span class="k-picker-wrap k-state-default">' +
                     '# if (toolIcon) { #' +
                         '<span class="k-tool-icon #= toolIcon #">' +
@@ -902,7 +915,8 @@ kendo_module({
             messages: APPLY_CANCEL,
             opacity: false,
             buttons: true,
-            preview: true
+            preview: true,
+            ARIATemplate: 'Current selected color is #=data || ""#'
         },
 
         events: [ "activate", "change", "select", "open", "close" ],
@@ -924,16 +938,28 @@ kendo_module({
             var el = this.element[0];
             return (/^input$/i).test(el.tagName) && (/^color$/i).test(el.type);
         },
+
         _updateUI: function(value) {
+            var formattedValue = "";
+
             if (value) {
                 if (this._isInputTypeColor() || value.a == 1) {
                     // seems that input type="color" doesn't support opacity
                     // in colors; the only accepted format is hex #RRGGBB
-                    this.element.val(value.toCss());
+                    formattedValue = value.toCss();
                 } else {
-                    this.element.val(value.toCssRgba());
+                    formattedValue = value.toCssRgba();
                 }
+
+                this.element.val(formattedValue);
             }
+
+            if (!this._ariaTemplate) {
+                this._ariaTemplate = kendo.template(this.options.ARIATemplate);
+            }
+
+            this.wrapper.attr("aria-label", this._ariaTemplate(formattedValue));
+
             this._triggerSelect(value);
             this.wrapper.find(".k-selected-color").css(
                 BACKGROUNDCOLOR,
@@ -959,7 +985,7 @@ kendo_module({
             var that = this, popup = that._popup;
 
             if (!popup) {
-                var options = this.options;
+                var options = that.options;
                 var selectorType;
 
                 if (options.palette) {
@@ -973,11 +999,15 @@ kendo_module({
                 delete options.change;
                 delete options.cancel;
 
-                var selector = this._selector = new selectorType($("<div />").appendTo(document.body), options);
+                var id = kendo.guid();
+                var selector = that._selector = new selectorType($('<div id="' + id +'"/>').appendTo(document.body), options);
+
+                that.wrapper.attr("aria-owns", id);
 
                 that._popup = popup = selector.wrapper.kendoPopup({
                     anchor: that.wrapper
                 }).data("kendoPopup");
+
                 selector.bind({
                     select: function(ev){
                         that._updateUI(parse(ev.value));
@@ -1049,3 +1079,7 @@ kendo_module({
     };
 
 })(jQuery, parseInt);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

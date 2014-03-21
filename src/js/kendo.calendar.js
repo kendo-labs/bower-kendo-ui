@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "calendar",
-    name: "Calendar",
-    category: "web",
-    description: "The Calendar widget renders a graphical calendar that supports navigation and selection.",
-    depends: [ "core" ]
-});
+(function(f, define){
+    define([ "./kendo.core" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -167,9 +163,18 @@ kendo_module({
         ],
 
         setOptions: function(options) {
+            var that = this;
+
             normalize(options);
 
-            Widget.fn.setOptions.call(this, options);
+            Widget.fn.setOptions.call(that, options);
+
+            that._templates();
+
+            that._footer(that.footer);
+            that._index = views[that.options.start];
+
+            that.navigate();
         },
 
         destroy: function() {
@@ -566,6 +571,7 @@ kendo_module({
 
             if (cell) {
                 cell.removeAttr(ARIA_SELECTED)
+                    .removeAttr("aria-label")
                     .removeAttr(ID);
             }
 
@@ -659,7 +665,6 @@ kendo_module({
         _header: function() {
             var that = this,
             element = that.element,
-            active = that.options.focusOnNav !== false,
             links;
 
             if (!element.find(".k-header")[0]) {
@@ -674,9 +679,9 @@ kendo_module({
                            .on(MOUSEENTER_WITH_NS + " " + MOUSELEAVE + " " + FOCUS_WITH_NS + " " + BLUR, mousetoggle)
                            .click(false);
 
-            that._title = links.eq(1).on(CLICK, function() { that._focusView(active); that.navigateUp(); });
-            that[PREVARROW] = links.eq(0).on(CLICK, function() { that._focusView(active); that.navigateToPast(); });
-            that[NEXTARROW] = links.eq(2).on(CLICK, function() { that._focusView(active); that.navigateToFuture(); });
+            that._title = links.eq(1).on(CLICK, function() { that._focusView(that.options.focusOnNav !== false); that.navigateUp(); });
+            that[PREVARROW] = links.eq(0).on(CLICK, function() { that._focusView(that.options.focusOnNav !== false); that.navigateToPast(); });
+            that[NEXTARROW] = links.eq(2).on(CLICK, function() { that._focusView(that.options.focusOnNav !== false); that.navigateToFuture(); });
         },
 
         _navigate: function(arrow, modifier) {
@@ -722,7 +727,9 @@ kendo_module({
             }
 
             if (isBigger || isEqualMonth(currentValue, value)) {
-                that._value = null;
+                if (isBigger) {
+                    that._value = null;
+                }
                 that._changeView = true;
             }
 
@@ -789,9 +796,7 @@ kendo_module({
                 empty: template('<td role="gridcell">' + (empty || "&nbsp;") + "</td>", { useWithBlock: !!empty })
             };
 
-            if (footer !== false) {
-                that.footer = template(footer || '#= kendo.toString(data,"D","' + options.culture +'") #', { useWithBlock: false });
-            }
+            that.footer = footer !== false ? template(footer || '#= kendo.toString(data,"D","' + options.culture +'") #', { useWithBlock: false }) : null;
         }
     });
 
@@ -1306,3 +1311,7 @@ kendo_module({
 
     kendo.calendar = calendar;
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

@@ -1,26 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "dropdownlist",
-    name: "DropDownList",
-    category: "web",
-    description: "The DropDownList widget displays a list of values and allows the selection of a single value from the list.",
-    depends: [ "list" ],
-    features: [ {
-        id: "mobile-scroller",
-        name: "Mobile scroller",
-        description: "Support for kinetic scrolling in mobile device",
-        depends: [ "mobile.scroller" ]
-    } ]
-});
+(function(f, define){
+    define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -96,7 +86,7 @@ kendo_module({
             } else if (that.selectedIndex === -1) {
                 text = options.text || "";
                 if (!text) {
-                    optionLabel = options.optionLabel,
+                    optionLabel = options.optionLabel;
                     useOptionLabel = optionLabel && options.index === 0;
 
                     if (that._isSelect) {
@@ -187,7 +177,9 @@ kendo_module({
             var that = this,
                 data = that._data(),
                 length = data.length,
-                optionLabel = that.options.optionLabel;
+                optionLabel = that.options.optionLabel,
+                element = that.element[0],
+                selectedIndex;
 
             that.trigger("dataBinding");
             if (that._current) {
@@ -202,12 +194,14 @@ kendo_module({
             }
 
             if (that._isSelect) {
+                selectedIndex = element.selectedIndex;
+
                 if (optionLabel && length) {
-                    optionLabel = that._optionLabelText(optionLabel);
-                    optionLabel = '<option value="">' + optionLabel + "</option>";
+                    optionLabel = '<option value="">' + that._optionLabelText(optionLabel) + "</option>";
                 }
 
                 that._options(data, optionLabel);
+                element.selectedIndex = selectedIndex === -1 ? 0 : selectedIndex;
             }
 
             if (that._open) {
@@ -435,6 +429,14 @@ kendo_module({
             return data;
         },
 
+        _selectItem: function() {
+            Select.fn._selectItem.call(this);
+
+            if (!this.current()) {
+                this.select(0);
+            }
+        },
+
         _keydown: function(e) {
             var that = this,
                 key = e.keyCode,
@@ -486,6 +488,7 @@ kendo_module({
             }
 
             if (startIndex > 0) {
+                console.log(startIndex);
                 index = 0;
                 for (; index <= startIndex; index++) {
                     text = that._text(data[index]);
@@ -499,7 +502,7 @@ kendo_module({
         },
 
         _keypress: function(e) {
-            if (e.charCode === 0) {
+            if (e.which === 0 || e.keyCode === kendo.keys.ENTER) {
                 return;
             }
 
@@ -533,10 +536,15 @@ kendo_module({
 
         _popup: function() {
             Select.fn._popup.call(this);
-            this.popup.one("open", function() {
-                this.wrapper = kendo.wrap(this.element)
-                                    .addClass("km-popup");
-            });
+            this.popup.one("open", proxy(function() {
+                var popup = this.popup;
+
+                popup.wrapper = kendo.wrap(popup.element);
+                if (popup.element.closest(".km-root")[0]) {
+                    popup.wrapper.addClass("km-popup km-widget");
+                    this.wrapper.addClass("km-widget");
+                }
+            }, this));
         },
 
         _search: function() {
@@ -551,9 +559,13 @@ kendo_module({
                 that._word = "";
             }, that.options.delay);
 
+            if (index === -1) {
+                index = 0;
+            }
+
             if (!that.ul[0].firstChild) {
                 dataSource.one(CHANGE, function () {
-                    if (dataSource.data()[0]) {
+                    if (dataSource.data()[0] && index > -1) {
                         that._selectNext(word, index);
                     }
                 }).fetch();
@@ -664,10 +676,13 @@ kendo_module({
         },
 
         _clearSelection: function() {
-            var that = this,
-                optionLabel = that.options.optionLabel;
+            var that = this;
+            var optionLabel = that.options.optionLabel;
 
-            if (that.dataSource.view()[0] && optionLabel) {
+            that.options.value = "";
+            that._selectedValue = "";
+
+            if (that.dataSource.view()[0] && (optionLabel || that._userTriggered)) {
                 that.select(0);
                 return;
             }
@@ -675,7 +690,7 @@ kendo_module({
             that.selectedIndex = -1;
 
             that.element.val("");
-            that._textAccessor(optionLabel);
+            that._textAccessor(that.options.optionLabel);
         },
 
         _inputTemplate: function() {
@@ -684,7 +699,7 @@ kendo_module({
 
 
             if (!template) {
-                template = $.proxy(kendo.template('#:this._text(data)#'), that);
+                template = $.proxy(kendo.template('#:this._text(data)#', { useWithBlock: false }), that);
             } else {
                 template = kendo.template(template);
             }
@@ -694,16 +709,17 @@ kendo_module({
 
         _textAccessor: function(text) {
             var dataItem = this.dataItem();
+            var options = this.options;
             var span = this.span;
 
             if (text !== undefined) {
                 if ($.isPlainObject(text) || text instanceof kendo.data.ObservableObject) {
                     dataItem = text;
                 } else if (!dataItem || this._text(dataItem) !== text) {
-                    if (this.options.dataTextField) {
+                    if (options.dataTextField) {
                         dataItem = {};
-                        dataItem[this.options.dataTextField] = text;
-                        dataItem[this.options.dataValueField] = this._accessor();
+                        assign(dataItem, options.dataTextField.split("."), text);
+                        assign(dataItem, options.dataValueField.split("."), this._accessor());
                     } else {
                         dataItem = text;
                     }
@@ -736,3 +752,7 @@ kendo_module({
 
     ui.plugin(DropDownList);
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

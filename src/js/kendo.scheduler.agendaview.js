@@ -1,21 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "scheduler.agendaview",
-    name: "Scheduler Agenda View",
-    category: "web",
-    description: "The Scheduler Agenda View",
-    depends: [ "scheduler.view" ],
-    hidden: true
-});
+(function(f, define){
+    define([ "./kendo.scheduler.view" ], f);
+})(function(){
 
 (function($){
     var kendo = window.kendo,
@@ -124,15 +119,8 @@ kendo_module({
                 var start = event.start;
                 var end = event.end;
 
-                if (event.isAllDay) {
-                    end = kendo.date.nextDay(end);
-                }
-
-                var eventDurationInDays = Math.ceil((end - start) / kendo.date.MS_PER_DAY);
-
-                if (!event.isAllDay && eventDurationInDays === 1 && kendo.date.getDate(end).getTime() !== kendo.date.getDate(start).getTime()) {
-                    eventDurationInDays += 1;
-                }
+                var eventDurationInDays =
+                    (kendo.date.getDate(end) - kendo.date.getDate(start)) / kendo.date.MS_PER_DAY + 1;
 
                 var task = event.clone();
                 task.startDate = kendo.date.getDate(start);
@@ -209,10 +197,11 @@ kendo_module({
                             tableRows.push('<tr role="row" aria-selected="false"' + (today ? ' class="k-today">' : ">") + headerCells.join("")  + "</tr>");
                         } else {
                             tableRow.push(kendo.format(
-                                '<td class="k-scheduler-datecolumn{2}" rowspan="{0}">{1}</td>',
+                                '<td class="k-scheduler-datecolumn{3}{2}" rowspan="{0}">{1}</td>',
                                 tasks.length,
                                 this._dateTemplate({ date: date }),
-                                taskGroupIndex == tasksGroups.length - 1 && !groups.length ? " k-last" : ""
+                                taskGroupIndex == tasksGroups.length - 1 && !groups.length ? " k-last" : "",
+                                !groups.length ? " k-first" : ""
                             ));
                         }
                     }
@@ -348,15 +337,15 @@ kendo_module({
 
         select: function(selection) {
             this.clearSelection();
+
             var row = this.table
                 .find(".k-task")
                 .eq(selection.index)
                 .closest("tr")
-                .addClass("k-state-selected")[0];
+                .addClass("k-state-selected")
+                .attr("aria-selected", true)[0];
 
-            if (row) {
-                this._scrollTo(row, this.content[0]);
-            }
+            this.current(row);
         },
 
         move: function(selection, key) {
@@ -513,3 +502,7 @@ kendo_module({
     }
 
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

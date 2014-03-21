@@ -1,21 +1,18 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "filtermenu",
-    name: "Filtering Menu",
-    category: "framework",
-    depends: [ "datepicker", "numerictextbox", "dropdownlist" ],
-    advanced: true
-});
+(function(f, define){
+    define([ "./kendo.datepicker", "./kendo.numerictextbox", "./kendo.dropdownlist" ], f);
+})(function(){
 
+/* jshint eqnull: true */
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -98,7 +95,7 @@ kendo_module({
                     '#=field#'+
                     '<button type="submit" class="k-button k-submit">#=messages.filter#</button>'+
                 '</div>'+
-                '<form class="k-filter-menu k-mobile-list k-secondary">'+
+                '<form class="k-filter-menu k-mobile-list">'+
                     '<ul class="k-filter-help-text"><li><span class="k-link">#=messages.info#</span>'+
                     '<ul>'+
                         '<li class="k-item"><label class="k-label">#=messages.operator#'+
@@ -164,7 +161,7 @@ kendo_module({
                     '#=field#'+
                     '<button type="submit" class="k-button k-submit">#=messages.filter#</button>'+
                 '</div>'+
-                '<form class="k-filter-menu k-mobile-list k-secondary">'+
+                '<form class="k-filter-menu k-mobile-list">'+
                     '<ul class="k-filter-help-text"><li><span class="k-link">#=messages.info#</span>'+
                     '<ul>'+
                         '<li class="k-item"><label class="k-label">'+
@@ -247,7 +244,7 @@ kendo_module({
             options = that.options;
 
             if (!options.appendToElement) {
-                link = element.addClass("k-filterable").find(".k-grid-filter");
+                link = element.addClass("k-with-icon k-filterable").find(".k-grid-filter");
 
                 if (!link[0]) {
                     link = element.prepend('<a class="k-grid-filter" href="#"><span class="k-icon k-filter"/></a>').find(".k-grid-filter");
@@ -312,7 +309,7 @@ kendo_module({
                 setUI = isFunction(ui),
                 role;
 
-            that.pane = that.element.closest(kendo.roleSelector("pane")).data("kendoMobilePane");
+            that.pane = that.options.pane;
             if (that.pane) {
                 that._isMobile = true;
             }
@@ -365,7 +362,7 @@ kendo_module({
 
             operators = operators[type] || options.operators[type];
 
-            that.form = $('<form class="k-filter-menu k-secondary"/>')
+            that.form = $('<form class="k-filter-menu"/>')
                 .html(kendo.template(type === "boolean" ? booleanTemplate : defaultTemplate)({
                     field: that.field,
                     format: options.format,
@@ -383,7 +380,11 @@ kendo_module({
                     anchor: that.link,
                     open: proxy(that._open, that),
                     activate: proxy(that._activate, that),
-                    close: that.options.closeCallback
+                    close: function() {
+                        if (that.options.closeCallback) {
+                            that.options.closeCallback(that.element);
+                        }
+                    }
                 }).data(POPUP);
             } else {
                 that.element.append(that.form);
@@ -463,18 +464,24 @@ kendo_module({
                 that.form.unbind(NS);
                 if (that.popup) {
                     that.popup.destroy();
+                    that.popup = null;
                 }
+                that.form = null;
             }
 
             if (that.view) {
                 that.view.purge();
+                that.view = null;
             }
 
             that.link.unbind(NS);
 
             if (that._refreshHandler) {
                 that.dataSource.unbind("change", that._refreshHandler);
+                that.dataSource = null;
             }
+
+            that.element = that.link = that._refreshHandler = that.filterModel = null;
         },
 
         _bind: function(expression) {
@@ -585,6 +592,7 @@ kendo_module({
 
         _submit: function(e) {
             e.preventDefault();
+            e.stopPropagation();
 
             this.filter(this.filterModel.toJSON());
 
@@ -700,3 +708,7 @@ kendo_module({
 
     ui.plugin(FilterMenu);
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

@@ -1,20 +1,16 @@
 /*
-* Kendo UI Web v2013.3.1119 (http://kendoui.com)
-* Copyright 2013 Telerik AD. All rights reserved.
+* Kendo UI Web v2014.1.318 (http://kendoui.com)
+* Copyright 2014 Telerik AD. All rights reserved.
 *
 * Kendo UI Web commercial licenses may be obtained at
-* https://www.kendoui.com/purchase/license-agreement/kendo-ui-web-commercial.aspx
+* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
 * If you do not own a commercial license, this file shall be governed by the
 * GNU General Public License (GPL) version 3.
 * For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
 */
-kendo_module({
-    id: "columnmenu",
-    name: "Column Menu",
-    category: "framework",
-    depends: [ "popup", "filtermenu", "menu" ],
-    advanced: true
-});
+(function(f, define){
+    define([ "./kendo.popup", "./kendo.filtermenu", "./kendo.menu" ], f);
+})(function(){
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -40,6 +36,16 @@ kendo_module({
         return $.trim(text).replace(/&nbsp;/gi, "");
     }
 
+    function toHash(arr, key) {
+        var result = {};
+        var idx, len, current;
+        for (idx = 0, len = arr.length; idx < len; idx ++) {
+            current = arr[idx];
+            result[current[key]] = current;
+        }
+        return result;
+    }
+
     var ColumnMenu = Widget.extend({
         init: function(element, options) {
             var that = this,
@@ -57,7 +63,7 @@ kendo_module({
             link = element.find(".k-header-column-menu");
 
             if (!link[0]) {
-                link = element.prepend('<a class="k-header-column-menu" href="#"><span class="k-icon k-i-arrowhead-s"/></a>').find(".k-header-column-menu");
+                link = element.addClass("k-with-icon").prepend('<a class="k-header-column-menu" href="#"><span class="k-icon k-i-arrowhead-s"/></a>').find(".k-header-column-menu");
             }
 
             that.link = link
@@ -70,7 +76,7 @@ kendo_module({
         _init: function() {
             var that = this;
 
-            that.pane = that.element.closest(kendo.roleSelector("pane")).data("kendoMobilePane");
+            that.pane = that.options.pane;
             if (that.pane) {
                 that._isMobile = true;
             }
@@ -87,6 +93,8 @@ kendo_module({
 
             that._filter();
 
+            that._lockColumns();
+
             that.trigger(INIT, { field: that.field, container: that.wrapper });
         },
 
@@ -100,7 +108,9 @@ kendo_module({
                 filter: "Filter",
                 columns: "Columns",
                 done: "Done",
-                settings: "Column Settings"
+                settings: "Column Settings",
+                lock: "Lock",
+                unlock: "Unlock"
             },
             filter: "",
             columns: true,
@@ -121,14 +131,19 @@ kendo_module({
                 sortable: options.sortable,
                 filterable: options.filterable,
                 columns: that._ownerColumns(),
-                showColumns: options.columns
+                showColumns: options.columns,
+                lockedColumns: options.lockedColumns
             }));
 
             that.popup = that.wrapper[POPUP]({
                 anchor: that.link,
                 open: proxy(that._open, that),
                 activate: proxy(that._activate, that),
-                close: that.options.closeCallback
+                close: function() {
+                    if (that.options.closeCallback) {
+                        that.options.closeCallback(that.element);
+                    }
+                }
             }).data(POPUP);
 
             that.menu = that.wrapper.children()[MENU]({
@@ -148,7 +163,8 @@ kendo_module({
                 sortable: options.sortable,
                 filterable: options.filterable,
                 columns: that._ownerColumns(),
-                showColumns: options.columns
+                showColumns: options.columns,
+                lockedColumns: options.lockedColumns
             });
 
             that.view = that.pane.append(html);
@@ -163,6 +179,12 @@ kendo_module({
                 that.close();
                 e.preventDefault();
             });
+
+            if (that.options.lockedColumns) {
+                that.view.bind("show", function() {
+                    that._updateLockedColumns();
+                });
+            }
         },
 
         destroy: function() {
@@ -178,7 +200,7 @@ kendo_module({
                 that.dataSource.unbind(CHANGE, that._refreshHandler);
             }
 
-            if (that.options.columns) {
+            if (that.options.columns && that.owner) {
                 that.owner.unbind("columnShow", that._updateColumnsMenuHandler);
                 that.owner.unbind("columnHide", that._updateColumnsMenuHandler);
             }
@@ -199,6 +221,9 @@ kendo_module({
             }
 
             that.link.off(NS);
+            that.owner = null;
+            that.wrapper = null;
+            that.element = null;
         },
 
         close: function() {
@@ -240,6 +265,10 @@ kendo_module({
                     that.close();
                 }
             });
+
+            if (that.options.lockedColumns) {
+                that._updateLockedColumns();
+            }
         },
 
         _activate: function() {
@@ -265,7 +294,8 @@ kendo_module({
                     field: col.field || col.title,
                     title: col.title || col.field,
                     hidden: col.hidden,
-                    index: inArray(col, columns)
+                    index: inArray(col, columns),
+                    locked: !!col.locked
                 };
             });
         },
@@ -382,26 +412,69 @@ kendo_module({
         },
 
         _updateColumnsMenu: function() {
-            var attr = kendo.attr("field"),
+            var idx, length, current, checked, locked;
+            var fieldAttr = kendo.attr("field"),
+                lockedAttr = kendo.attr("locked"),
                 visible = grep(this._ownerColumns(), function(field) {
                     return !field.hidden;
                 }),
                 visibleDataFields = grep(visible, function(field) {
                     return field.originalField;
+                }),
+                lockedCount = grep(visibleDataFields, function(col) {
+                    return col.locked === true;
+                }).length,
+                nonLockedCount = grep(visibleDataFields, function(col) {
+                    return col.locked !== true;
                 }).length;
 
             visible = map(visible, function(col) {
                 return col.field;
             });
 
-            this.wrapper
-                .find(".k-columns-item input[" + attr + "]")
-                .prop("checked", false)
-                .filter(function() {
-                    return inArray($(this).attr(attr), visible) > -1;
-                })
-                .prop("checked", true)
-                .prop("disabled", visibleDataFields == 1);
+            var checkboxes = this.wrapper
+                .find(".k-columns-item input[" + fieldAttr + "]")
+                .prop("disabled", false)
+                .prop("checked", false);
+
+            for (idx = 0, length = checkboxes.length; idx < length; idx ++) {
+                current = checkboxes.eq(idx);
+                locked = current.attr(lockedAttr) === "true";
+                checked = false;
+                if (inArray(current.attr(fieldAttr), visible) > -1) {
+                    checked = true;
+                    current.prop("checked", checked);
+                }
+
+                if (checked) {
+                    if (lockedCount == 1 && locked) {
+                        current.prop("disabled", true);
+                    }
+
+                    if (nonLockedCount == 1 && !locked) {
+                        current.prop("disabled", true);
+                    }
+                }
+            }
+        },
+
+        _updateColumnsLockedState: function() {
+            var idx, length, current, locked, column;
+            var fieldAttr = kendo.attr("field");
+            var lockedAttr = kendo.attr("locked");
+            var columns = toHash(this._ownerColumns(), "field");
+            var checkboxes = this.wrapper
+                .find(".k-columns-item input[type=checkbox]");
+
+            for (idx = 0, length = checkboxes.length; idx < length; idx ++ ) {
+                current = checkboxes.eq(idx);
+                column = columns[current.attr(fieldAttr)];
+                if (column) {
+                    current.attr(lockedAttr, column.locked);
+                }
+            }
+
+            this._updateColumnsMenu();
         },
 
         _filter: function() {
@@ -429,6 +502,47 @@ kendo_module({
                     });
                 }
             }
+        },
+
+        _lockColumns: function() {
+            var that = this;
+            that.menu.bind(SELECT, function(e) {
+                var item = $(e.item);
+
+                if (item.hasClass("k-lock")) {
+                    that.owner.lockColumn(that.field);
+                    that.close();
+                } else if (item.hasClass("k-unlock")) {
+                    that.owner.unlockColumn(that.field);
+                    that.close();
+                }
+            });
+        },
+
+        _updateLockedColumns: function() {
+            var field = this.field;
+            var columns = this.owner.columns;
+            var column = grep(columns, function(column) {
+                return column.field == field || column.title == field;
+            })[0];
+
+            var locked = column.locked === true;
+            var length = grep(columns, function(column) {
+                return !column.hidden && ((column.locked && locked) || (!column.locked && !locked));
+            }).length;
+
+            var lockItem = this.wrapper.find(".k-lock").removeClass("k-state-disabled");
+            var unlockItem = this.wrapper.find(".k-unlock").removeClass("k-state-disabled");
+
+            if (locked || length == 1) {
+                lockItem.addClass("k-state-disabled");
+            }
+
+            if (!locked || length == 1) {
+                unlockItem.addClass("k-state-disabled");
+            }
+
+            this._updateColumnsLockedState();
         },
 
         refresh: function() {
@@ -462,10 +576,10 @@ kendo_module({
                     '#if(showColumns){#'+
                         '<li class="k-item k-columns-item"><span class="k-link"><span class="k-sprite k-i-columns"></span>${messages.columns}</span><ul>'+
                         '#for (var idx = 0; idx < columns.length; idx++) {#'+
-                            '<li><input type="checkbox" data-#=ns#field="#=columns[idx].field.replace(/\"/g,"&\\#34;")#" data-#=ns#index="#=columns[idx].index#"/>#=columns[idx].title#</li>'+
+                            '<li><input type="checkbox" data-#=ns#field="#=columns[idx].field.replace(/\"/g,"&\\#34;")#" data-#=ns#index="#=columns[idx].index#" data-#=ns#locked="#=columns[idx].locked#"/>#=columns[idx].title#</li>'+
                         '#}#'+
                         '</ul></li>'+
-                        '#if(filterable){#'+
+                        '#if(filterable || lockedColumns){#'+
                             '<li class="k-separator"></li>'+
                         '#}#'+
                     '#}#'+
@@ -473,6 +587,13 @@ kendo_module({
                         '<li class="k-item k-filter-item"><span class="k-link"><span class="k-sprite k-filter"></span>${messages.filter}</span><ul>'+
                             '<li><div class="k-filterable"></div></li>'+
                         '</ul></li>'+
+                        '#if(lockedColumns){#'+
+                            '<li class="k-separator"></li>'+
+                        '#}#'+
+                    '#}#'+
+                    '#if(lockedColumns){#'+
+                        '<li class="k-item k-lock"><span class="k-link"><span class="k-sprite k-i-lock"></span>${messages.lock}</span></li>'+
+                        '<li class="k-item k-unlock"><span class="k-link"><span class="k-sprite k-i-unlock"></span>${messages.unlock}</span></li>'+
                     '#}#'+
                     '</ul>';
 
@@ -488,6 +609,10 @@ kendo_module({
                     '<li class="k-item k-sort-asc"><span class="k-link"><span class="k-sprite k-i-sort-asc"></span>${messages.sortAscending}</span></li>'+
                     '<li class="k-item k-sort-desc"><span class="k-link"><span class="k-sprite k-i-sort-desc"></span>${messages.sortDescending}</span></li>'+
                 '#}#'+
+                '#if(lockedColumns){#'+
+                    '<li class="k-item k-lock"><span class="k-link"><span class="k-sprite k-i-lock"></span>${messages.lock}</span></li>'+
+                    '<li class="k-item k-unlock"><span class="k-link"><span class="k-sprite k-i-unlock"></span>${messages.unlock}</span></li>'+
+                '#}#'+
                 '#if(filterable){#'+
                     '<li class="k-item k-filter-item">'+
                         '<span class="k-link k-filterable">'+
@@ -499,7 +624,7 @@ kendo_module({
                 '#if(showColumns){#'+
                     '<li class="k-columns-item"><span class="k-link">${messages.columns}</span><ul>'+
                     '#for (var idx = 0; idx < columns.length; idx++) {#'+
-                        '<li class="k-item"><label class="k-label"><input type="checkbox" class="k-check" data-#=ns#field="#=columns[idx].field.replace(/\"/g,"&\\#34;")#" data-#=ns#index="#=columns[idx].index#"/>#=columns[idx].title#</label></li>'+
+                        '<li class="k-item"><label class="k-label"><input type="checkbox" class="k-check" data-#=ns#field="#=columns[idx].field.replace(/\"/g,"&\\#34;")#" data-#=ns#index="#=columns[idx].index#" data-#=ns#locked="#=columns[idx].locked#"/>#=columns[idx].title#</label></li>'+
                     '#}#'+
                     '</ul></li>'+
                 '#}#'+
@@ -510,15 +635,15 @@ kendo_module({
         init: function(element, options) {
             Widget.fn.init.call(this, element, options);
 
-            this.element.on("click" + NS, "li:not(.k-separator)", "_click");
+            this.element.on("click" + NS, "li:not(.k-separator):not(.k-state-disabled)", "_click");
         },
 
         events: [ SELECT ],
 
         _click: function(e) {
-            if (this.trigger(SELECT, { item: e.currentTarget })) {
-                e.preventDefault();
-            }
+            e.preventDefault();
+
+            this.trigger(SELECT, { item: e.currentTarget });
         },
 
         close: function() {
@@ -534,3 +659,7 @@ kendo_module({
 
     ui.plugin(ColumnMenu);
 })(window.kendo.jQuery);
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });
