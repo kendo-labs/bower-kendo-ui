@@ -1,6 +1,9 @@
 {
   "name": "kendo-ui",
   "version": "2014.1.318",
+  "dependencies": {
+    "jquery": ">=1.9.1 <=2.0.3"
+  },
   "authors": [
     "Telerik"
   ],
