@@ -5,7 +5,7 @@
     "Telerik"
   ],
   "description": "Everything you need to build sites and apps with HTML5 & JavaScript",
-  "main": "dist/kendo.core.min.js",
+  "main": "dist/kendo.ui.core.min.js",
   "moduleType": [
     "amd",
     "globals"
@@ -19,7 +19,7 @@
   ],
   "license": "Apache2",
   "homepage": "http://www.github.com/telerik/kendo-ui-core",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
