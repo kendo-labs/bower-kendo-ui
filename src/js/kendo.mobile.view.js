@@ -1,16 +1,15 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core", "./kendo.fx", "./kendo.mobile.scroller", "./kendo.view" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "mobile.view",
+    name: "View",
+    category: "mobile",
+    description: "Mobile View",
+    depends: [ "core", "fx", "mobile.scroller", "view" ],
+    hidden: true
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -27,6 +26,7 @@
         AFTER_SHOW = "afterShow",
         BEFORE_HIDE = "beforeHide",
         HIDE = "hide",
+        DESTROY = "destroy",
         Z_INDEX = "z-index",
         attrValue = kendo.attrValue,
         roleSelector = kendo.roleSelector;
@@ -70,7 +70,8 @@
             SHOW,
             AFTER_SHOW,
             BEFORE_HIDE,
-            HIDE
+            HIDE,
+            DESTROY
         ],
 
         options: {
@@ -103,11 +104,14 @@
                 this.layout.detach(this);
             }
 
+            this.trigger(DESTROY);
+
             Widget.fn.destroy.call(this);
 
             if (this.scroller) {
                 this.scroller.destroy();
             }
+
 
             kendo.destroy(this.element);
         },

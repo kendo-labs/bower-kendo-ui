@@ -1,16 +1,20 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "combobox",
+    name: "ComboBox",
+    category: "web",
+    description: "The ComboBox widget allows the selection from pre-defined values or entering a new value.",
+    depends: [ "list" ],
+    features: [ {
+        id: "mobile-scroller",
+        name: "Mobile scroller",
+        description: "Support for kinetic scrolling in mobile device",
+        depends: [ "mobile.scroller" ]
+    } ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -188,7 +192,7 @@
                      .attr(ARIA_DISABLED, false)
                      .attr(ARIA_READONLY, false);
 
-                arrow.on(CLICK, function() { that.toggle(); })
+                arrow.on(CLICK, function() { that._toggle(); })
                      .on(MOUSEDOWN, function(e) { e.preventDefault(); });
 
                 that.input
@@ -249,7 +253,7 @@
                 data = that._data(),
                 length = data.length,
                 keepState = true,
-                hasChild, open, custom;
+                hasChild, custom;
 
             that.trigger("dataBinding");
 
@@ -294,13 +298,13 @@
 
             if (that._open) {
                 that._open = false;
-                open = !!length;
 
                 if (that._typing && that.input[0] !== activeElement()) {
-                    open = false;
+                    that.popup.close();
+                } else {
+                    that.toggle(!!length);
                 }
 
-                that.toggle(open);
                 that._typing = undefined;
             }
 
@@ -442,9 +446,7 @@
         },
 
         toggle: function(toggle) {
-            var that = this;
-
-            that._toggle(toggle);
+            this._toggle(toggle, true);
         },
 
         value: function(value) {

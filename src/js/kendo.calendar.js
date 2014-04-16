@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "calendar",
+    name: "Calendar",
+    category: "web",
+    description: "The Calendar widget renders a graphical calendar that supports navigation and selection.",
+    depends: [ "core" ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -100,7 +98,7 @@
 
                         that._click($(link));
                     })
-                    .on("mouseup" + ns, function() {
+                    .on("mouseup" + ns, "table.k-content, .k-footer", function() {
                         that._focusView(that.options.focusOnNav !== false);
                     })
                     .attr(ID);
@@ -166,6 +164,10 @@
             var that = this;
 
             normalize(options);
+
+            if (!options.dates[0]) {
+                options.dates = that.options.dates;
+            }
 
             Widget.fn.setOptions.call(that, options);
 

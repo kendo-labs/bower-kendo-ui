@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core", "./kendo.popup", "./kendo.slider", "./kendo.userevents" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "colorpicker",
+    name: "Color tools",
+    category: "web",
+    description: "Color selection widgets",
+    depends: [ "core", "popup", "slider", "userevents" ]
+};
 
 (function($, parseInt, undefined){
     // WARNING: removing the following jshint declaration and turning
@@ -44,6 +42,7 @@
             element = that.element;
             options = that.options;
             that._value = options.value = parse(options.value);
+            that._tabIndex = element.attr("tabIndex") || 0;
 
             ariaId = that._ariaId = options.ariaId;
             if (ariaId) {
@@ -89,9 +88,8 @@
             if (arguments.length === 0) {
                 enable = true;
             }
-            if (enable) {
-                $(".k-disabled-overlay", this.wrapper).remove();
-            } else {
+            $(".k-disabled-overlay", this.wrapper).remove();
+            if (!enable) {
                 this.wrapper.append("<div class='k-disabled-overlay'></div>");
             }
             this._onEnable(enable);
@@ -174,7 +172,7 @@
                 colors = $.map(colors, function(x) { return parse(x); });
             }
 
-            this._selectedID = (options.ariaId || kendo.guid()) + "_selected";
+            that._selectedID = (options.ariaId || kendo.guid()) + "_selected";
 
             element.addClass("k-widget k-colorpalette")
                 .attr("role", "grid")
@@ -189,7 +187,7 @@
                 .on(CLICK_NS, ".k-item", function(ev){
                     that._select($(ev.currentTarget).css(BACKGROUNDCOLOR));
                 })
-                .attr("tabIndex", 0)
+                .attr("tabIndex", that._tabIndex)
                 .on(KEYDOWN_NS, bind(that._keydown, that));
 
             var tileSize = options.tileSize, width, height;
@@ -216,9 +214,9 @@
         },
         _onEnable: function(enable) {
             if (enable) {
-                this.wrapper.removeAttr("tabIndex");
+                this.wrapper.attr("tabIndex", this._tabIndex);
             } else {
-                this.wrapper.attr("tabIndex", 0);
+                this.wrapper.removeAttr("tabIndex");
             }
         },
         _keydown: function(e) {
@@ -469,7 +467,7 @@
             var handle = this._hsvRect.find(".k-draghandle");
 
             if (enable) {
-                handle.attr("tabIndex", 0);
+                handle.attr("tabIndex", this._tabIndex);
             } else {
                 handle.removeAttr("tabIndex");
             }
@@ -595,7 +593,7 @@
                 '<input class="k-transparency-slider" />' +
             '# } #' +
             '# if (buttons) { #' +
-                '<div unselectable="on" class="k-controls"><button class="k-button apply">#: messages.apply #</button> <button class="k-button cancel">#: messages.cancel #</button></div>' +
+                '<div unselectable="on" class="k-controls"><button class="k-button k-primary apply">#: messages.apply #</button> <button class="k-button cancel">#: messages.cancel #</button></div>' +
             '# } #'
         )
     });
@@ -830,6 +828,8 @@
                 element.appendTo(content);
             }
 
+            that._tabIndex = element.attr("tabIndex") || 0;
+
             that.enable(!element.attr("disabled"));
 
             var accesskey = element.attr("accesskey");
@@ -876,7 +876,7 @@
 
             if (enable) {
                 wrapper.removeClass("k-state-disabled")
-                    .attr("tabIndex", 0)
+                    .attr("tabIndex", that._tabIndex)
                     .on("mouseenter" + NS, function() { innerWrapper.addClass("k-state-hover"); })
                     .on("mouseleave" + NS, function() { innerWrapper.removeClass("k-state-hover"); })
                     .on("focus" + NS, function () { innerWrapper.addClass("k-state-focused"); })

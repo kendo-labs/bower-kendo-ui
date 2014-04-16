@@ -1,19 +1,4 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
-(function(f, define){
-    define([], f);
-})(function(){
-
-(function( window, undefined ) {
-    var kendo = window.kendo || (window.kendo = { cultures: {} });
+﻿(function( window, undefined ) {
     kendo.cultures["sms"] = {
         name: "sms",
         numberFormat: {
@@ -74,8 +59,3 @@
         }
     }
 })(this);
-
-
-return window.kendo;
-
-}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

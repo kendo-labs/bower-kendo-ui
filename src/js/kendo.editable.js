@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.datepicker", "./kendo.numerictextbox", "./kendo.validator", "./kendo.binder" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "editable",
+    name: "Editable",
+    category: "framework",
+    depends: [ "datepicker", "numerictextbox", "validator", "binder" ],
+    hidden: true
+};
 
 /* jshint eqnull: true */
 (function($, undefined) {
@@ -205,11 +203,19 @@
                 isBoolean = typeof e.value === "boolean",
                 input,
                 preventChangeTrigger = that._validationEventInProgress,
-                values = {};
+                values = {},
+                bindAttribute = kendo.attr("bind"),
+                attributeValue = (isBoolean ? 'checked:' : 'value:') + e.field.replace(nameSpecialCharRegExp, "\\$1");
 
             values[e.field] = e.value;
 
-            input = $(':input[' + kendo.attr("bind") + '*="' + (isBoolean ? 'checked:' : 'value:') + e.field.replace(nameSpecialCharRegExp, "\\$1") + '"]', that.element);
+            input = $(':input[' + bindAttribute + '*="' + attributeValue + '"]', that.element)
+                .filter("[" + kendo.attr("validate") + "!='false']");
+            if (input.length > 1) {
+                input = input.filter(function () {
+                    return inArray(attributeValue, $(this).attr(bindAttribute).split(",")) >= 0;
+                });
+            }
 
             try {
                 that._validationEventInProgress = true;

@@ -1,21 +1,11 @@
-# Kendo UI Web GPLv3 For Bower
+# Kendo UI Core
 
-Includes [Kendo UI Web](http://demos.kendoui.com/web) GPLV3 version.
+Shim repository for [Kendo UI Core](http://www.github.com/telerik/kendo-ui-core)
 
-## Installation
+## About Kendo UI Core
 
-    bower install kendo-ui
+Kendo UI is everything you need to build sites and apps with HTML5 & JavaScript & Kendo UI Core is the free and open-source version of Kendo UI that provides access to the web's best UI widgets and key framework features essential for developing great experiences for the web and mobile.
 
-It is dependent on the 1.9.1 - 2.0.3 version of jQuery.
+This package provides the basic Kendo UI Core source and distribution files.
 
-Installs into the **kendo** folder in the **components** directory.  Each widget file can be used independently.  The **kendo.web.all.min** file contains all widgets.
-
-    <script src="components/jquery/jquery.min.js"></script>
-    <script src="components/kendo/js/kendo.web.all.min.js"></script>
-
-The **common** and at least one theme stylesheet are also required.
-
-    <link rel="stylesheet" href="components/kendo/styles/kendo.common.min.css">
-    <link rel="stylesheet" href="components/kendo/styles/kendo.default.min.css">
-
-*Kendo UI Web GPLv3 is governed under the [GNU General Public Licensee](http://opensource.org/licenses/GPL-3.0)*
+[Bower](http://www.bower.io): `kendo-ui-core`

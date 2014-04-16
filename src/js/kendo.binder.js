@@ -1,26 +1,25 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core", "./kendo.data" ], f);
 })(function(){
 
+var __meta__ = {
+    id: "binder",
+    name: "MVVM",
+    category: "framework",
+    description: "Model View ViewModel (MVVM) is a design pattern which helps developers separate the Model (the data) from the View (the UI).",
+    depends: [ "core", "data" ]
+};
+
 /*jshint eqnull: true */
 (function ($, undefined) {
     var kendo = window.kendo,
+        browser = kendo.support.browser,
         Observable = kendo.Observable,
         ObservableObject = kendo.data.ObservableObject,
         ObservableArray = kendo.data.ObservableArray,
         toString = {}.toString,
         binders = {},
-        splice = Array.prototype.splice,
+        slice = Array.prototype.slice,
         Class = kendo.Class,
         innerText,
         proxy = $.proxy,
@@ -1068,6 +1067,10 @@
                               idx = 0, length,
                               values = [];
 
+                    if (value === undefined) {
+                        value = null;
+                    }
+
                     if (field) {
                         if (value instanceof ObservableArray) {
                             for (length = value.length; idx < length; idx++) {
@@ -1124,9 +1127,6 @@
                         var newValue;
                         var found;
 
-                        var oldIdx = 0;
-                        var oldLength = oldValues.length + 1;
-
                         while (old) {
                             found = false;
                             for (j = 0; j < newLength; j++) {
@@ -1149,21 +1149,16 @@
 
                             if (!found) {
                                 remove.push(old);
-                                splice.call(oldValues, i, 1);
+                                arraySplice(oldValues, i, 1);
                                 removeIndex = i;
                             } else {
                                 i += 1;
                             }
 
                             old = oldValues[i];
-                            oldIdx++;
-
-                            if (oldIdx > oldLength) {
-                                break;
-                            }
                         }
 
-                        splice.apply(oldValues, [oldValues.length, 0].concat(newValues));
+                        arraySplice(oldValues, oldValues.length, 0, newValues);
 
                         if (remove.length) {
                             oldValues.trigger("change", {
@@ -1195,6 +1190,10 @@
                             values = [],
                             selectedValue;
 
+                        if (value === undefined) {
+                            value = null;
+                        }
+
                         if (field) {
                             if (value instanceof ObservableArray) {
                                 for (length = value.length; idx < length; idx++) {
@@ -1216,6 +1215,56 @@
                 }
 
             })
+        }
+    };
+
+    var arraySplice = function(arr, idx, remove, add) {
+        add = add || [];
+        remove = remove || 0;
+
+        var addLength = add.length;
+        var oldLength = arr.length;
+
+        var shifted = [].slice.call(arr, idx + remove);
+        var shiftedLength = shifted.length;
+        var index;
+
+        if (addLength) {
+            addLength = idx + addLength;
+            index = 0;
+
+            for (; idx < addLength; idx++) {
+                arr[idx] = add[index];
+                index++;
+            }
+
+            arr.length = addLength;
+        } else if (remove) {
+            arr.length = idx;
+
+            remove += idx;
+            while (idx < remove) {
+                delete arr[--remove];
+            }
+        }
+
+        if (shiftedLength) {
+            shiftedLength = idx + shiftedLength;
+            index = 0;
+
+            for (; idx < shiftedLength; idx++) {
+                arr[idx] = shifted[index];
+                index++;
+            }
+
+            arr.length = shiftedLength;
+        }
+
+        idx = arr.length;
+
+        while (idx < oldLength) {
+            delete arr[idx];
+            idx++;
         }
     };
 

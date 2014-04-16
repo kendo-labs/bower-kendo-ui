@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "data.xml",
+    name: "XML",
+    category: "framework",
+    depends: [ "core" ],
+    hidden: true
+};
 
 /*jshint  eqnull: true, boss: true */
 (function($, undefined) {

@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
-    define([ "./kendo.popup", "./kendo.mobile.application" ], f);
+    define([ "./kendo.popup", "./kendo.mobile.pane" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "mobile.popover",
+    name: "PopOver",
+    category: "mobile",
+    description: "The mobile PopOver widget represents a transient view which is displayed when the user taps on a navigational widget or area on the screen. ",
+    depends: [ "popup", "mobile.pane" ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -181,7 +179,18 @@
                 anchorOffset = $(anchor).offset(),
                 elementOffset = $(popup.element).offset(),
                 cssClass = popup.flipped ? REVERSE[direction] : direction,
-                offsetAmount = anchorOffset[offset] - elementOffset[offset] + ($(anchor)[dimensions.size]() / 2);
+                min = that.arrow[dimensions.size]() * 2,
+                max = that.element[dimensions.size]() - that.arrow[dimensions.size](),
+                size = $(anchor)[dimensions.size](),
+                offsetAmount = anchorOffset[offset] - elementOffset[offset] + (size / 2);
+
+            if (offsetAmount < min) {
+                offsetAmount = min;
+            }
+
+            if (offsetAmount > max) {
+                offsetAmount = max;
+            }
 
             that.wrapper.removeClass(DIRECTION_CLASSES).addClass("km-" + cssClass);
             that.arrow.css(offset, offsetAmount).show();
@@ -206,6 +215,7 @@
             }, this.options.popup);
 
             that.popup = new Popup(that.element, popupOptions);
+            that.popup.overlay.on("move", false);
 
             that.pane = new ui.Pane(that.element, this.options.pane);
             that.pane.navigateToInitial();

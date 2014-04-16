@@ -627,10 +627,6 @@ html .km-pane-wrapper .k-header
 
 .k-calendar .k-footer .k-nav-today
 {
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    padding: .5em 0;
     color: @form-widget-color;
     text-decoration: @calendar-footer-text-decoration;
     background-color: @calendar-footer-background;
@@ -780,8 +776,15 @@ td.k-state-focused.k-state-selected
 .k-mobile-list .k-item > .k-link:active,
 .k-mobile-list .k-item > .k-label:active,
 .k-mobile-list .k-edit-label.k-check:active,
-.k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active,
 .k-mobile-list .k-recur-view .k-check:active
+{
+    color: @hover-text-color;
+    background-color: @hover-background-color;
+    border-color: @hover-border-color;
+}
+
+/* this selector should be used separately, otherwise old IEs ignore the whole rule */
+.k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active
 {
     color: @hover-text-color;
     background-color: @hover-background-color;
@@ -1803,7 +1806,7 @@ html .km-pane-wrapper .km-widget,
 .k-state-disabled .k-primary:active,
 .k-primary.k-state-disabled:active
 {
-    color: @primary-diabled-text-color;
+    color: @primary-disabled-text-color;
     border-color: @primary-disabled-border-color;
     background-color: @primary-disabled-background-color;
     .composite-background(@primary-disabled-gradient);

@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "maskedtextbox",
+    name: "MaskedTextBox",
+    category: "web",
+    description: "The MaskedTextBox widget allows to specify a mask type on an input field.",
+    depends: [ "core" ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo;
@@ -51,6 +49,7 @@
 
                     if (!element.val()) {
                         DOMElement.value = that._old = that._emptyMask;
+                        caret(element, 0);
                     } else {
                         that._timeoutId = setTimeout(function() {
                             element.select();
@@ -361,9 +360,9 @@
             var current = element.value || this._emptyMask;
             var empty = this.options.promptChar;
             var valueLength;
-            var charIdx = 0;
+            var chrIdx = 0;
             var unmasked;
-            var char;
+            var chr;
             var idx;
 
             start = this._find(start, backward);
@@ -382,13 +381,13 @@
 
             value += unmasked;
             current = current.split("");
-            char = value.charAt(charIdx);
+            chr = value.charAt(chrIdx);
 
             while (start < this._maskLength) {
-                current[start] = char || empty;
-                char = value.charAt(++charIdx);
+                current[start] = chr || empty;
+                chr = value.charAt(++chrIdx);
 
-                if (idx === undefined && charIdx > valueLength) {
+                if (idx === undefined && chrIdx > valueLength) {
                     idx = start;
                 }
 
@@ -413,9 +412,9 @@
 
             value = (value + "").split("");
 
-            var char;
+            var chr;
             var token;
-            var charIdx = 0;
+            var chrIdx = 0;
             var tokenIdx = idx || 0;
 
             var empty = this.options.promptChar;
@@ -426,26 +425,26 @@
             var result = "";
 
             while (tokenIdx < tokensLength) {
-                char = value[charIdx];
+                chr = value[chrIdx];
                 token = this.tokens[tokenIdx];
 
-                if (char === token || char === empty) {
-                    result += char === empty ? empty : "";
+                if (chr === token || chr === empty) {
+                    result += chr === empty ? empty : "";
 
-                    charIdx += 1;
+                    chrIdx += 1;
                     tokenIdx += 1;
                 } else if (typeof token !== "string") {
-                    if ((token.test && token.test(char)) || ($.isFunction(token) && token(char))) {
-                        result += char;
+                    if ((token.test && token.test(chr)) || ($.isFunction(token) && token(chr))) {
+                        result += chr;
                         tokenIdx += 1;
                     }
 
-                    charIdx += 1;
+                    chrIdx += 1;
                 } else {
                     tokenIdx += 1;
                 }
 
-                if (charIdx >= valueLength) {
+                if (chrIdx >= valueLength) {
                     break;
                 }
             }
@@ -461,7 +460,7 @@
             var maskChars = mask.split("");
             var length = maskChars.length;
             var idx = 0;
-            var char;
+            var chr;
             var rule;
 
             var emptyMask = "";
@@ -470,28 +469,28 @@
             var rules = this._rules;
 
             for (; idx < length; idx++) {
-                char = maskChars[idx];
-                rule = rules[char];
+                chr = maskChars[idx];
+                rule = rules[chr];
 
                 if (rule) {
                     tokens[tokenIdx] = rule;
                     emptyMask += promptChar;
                     tokenIdx += 1;
                 } else {
-                    if (char === "." || char === ",") {
-                        char = numberFormat[char];
-                    } else if (char === "$") {
-                        char = numberFormat.currency.symbol;
-                    } else if (char === "\\") {
+                    if (chr === "." || chr === ",") {
+                        chr = numberFormat[chr];
+                    } else if (chr === "$") {
+                        chr = numberFormat.currency.symbol;
+                    } else if (chr === "\\") {
                         idx += 1;
-                        char = maskChars[idx];
+                        chr = maskChars[idx];
                     }
 
-                    char = char.split("");
+                    chr = chr.split("");
 
-                    for (var i = 0, l = char.length; i < l; i++) {
-                        tokens[tokenIdx] = char[i];
-                        emptyMask += char[i];
+                    for (var i = 0, l = chr.length; i < l; i++) {
+                        tokens[tokenIdx] = chr[i];
+                        emptyMask += chr[i];
                         tokenIdx += 1;
                     }
                 }

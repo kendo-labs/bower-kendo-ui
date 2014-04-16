@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.data" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "tabstrip",
+    name: "TabStrip",
+    category: "web",
+    description: "The TabStrip widget displays a collection of tabs with associated tab content.",
+    depends: [ "data" ]
+};
 
 (function ($, undefined) {
     var kendo = window.kendo,
@@ -664,7 +662,7 @@
                 tabs.each(function () {
                     content = $("<div class='" + CONTENT + "'/>");
                     if (/k-tabstrip-items/.test(this.parentNode.className)) {
-                        var index = parseInt(this.getAttribute("aria-controls").replace(/^.*-/, "")) - 1;
+                        var index = parseInt(this.getAttribute("aria-controls").replace(/^.*-/, ""), 10) - 1;
                         content = $(that.contentElement(index));
                     }
                     contents = contents.add(content);
@@ -738,7 +736,7 @@
 
             if (contentElements.length && (items.length > contentElements.length)) {
                 contentElements.each(function(idx) {
-                    var currentIndex = parseInt(this.id.replace(tabStripID, "")),
+                    var currentIndex = parseInt(this.id.replace(tabStripID, ""), 10),
                         item = items.filter("[aria-controls=" + tabStripID + currentIndex + "]"),
                         id = tabStripID + (idx+1);
 

@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "popup",
+    name: "Pop-up",
+    category: "framework",
+    depends: [ "core" ],
+    advanced: true
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -412,7 +410,6 @@
 
         _position: function(fixed) {
             var that = this,
-                documentElement = $(document.documentElement),
                 element = that.element.css(POSITION, ""),
                 wrapper = that.wrapper,
                 options = that.options,
@@ -425,13 +422,12 @@
                 zoomLevel = support.zoomLevel(),
                 siblingContainer, parents,
                 parentZIndex, zIndex = 10002,
+                isWindow = !!((viewport[0] == window) && window.innerWidth && (zoomLevel <= 1.02)),
                 idx = 0, length, viewportWidth, viewportHeight;
 
             // $(window).height() uses documentElement to get the height
-            documentElement.css({ overflowX: "hidden", overflowY: "hidden" });
-            viewportWidth = viewport.width();
-            viewportHeight = viewport.height();
-            documentElement.css({ overflowX: "", overflowY: "" });
+            viewportWidth = isWindow ? window.innerWidth : viewport.width();
+            viewportHeight = isWindow ? window.innerHeight : viewport.height();
 
             siblingContainer = anchor.parents().filter(wrapper.siblings());
 

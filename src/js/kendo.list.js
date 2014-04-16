@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.data", "./kendo.popup" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "list",
+    name: "List",
+    category: "framework",
+    depends: [ "data", "popup" ],
+    hidden: true
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -487,13 +485,13 @@
             $(e.currentTarget).toggleClass(HOVER, e.type === "mouseenter");
         },
 
-        _toggle: function(open) {
+        _toggle: function(open, preventFocus) {
             var that = this;
             var touchEnabled = support.touch && support.MSPointers && support.pointers;
 
             open = open !== undefined? open : !that.popup.visible();
 
-            if (!touchEnabled && that._focused[0] !== activeElement()) {
+            if (!preventFocus && !touchEnabled && that._focused[0] !== activeElement()) {
                 that._focused.focus();
             }
 
@@ -1006,7 +1004,7 @@
                         });
 
                         var handler = function() {
-                            that.dataSource.unbind(CHANGE, handler);
+                            that.unbind("dataBound", handler);
                             change.apply(that, arguments);
                         };
 

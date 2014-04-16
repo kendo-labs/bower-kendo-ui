@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.mobile.pane", "./kendo.router" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "mobile.application",
+    name: "Application",
+    category: "mobile",
+    description: "The Mobile application provides a framework to build native looking web applications on mobile devices.",
+    depends: [ "mobile.pane", "router" ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -24,6 +22,7 @@
         VERTICAL = "km-vertical",
         CHROME =  OS.browser === "chrome",
         BROKEN_WEBVIEW_RESIZE = OS.ios && OS.flatVersion >= 700 && (OS.appMode || CHROME),
+        INITIALLY_HORIZONTAL = (Math.abs(window.orientation) / 90 == 1),
         HORIZONTAL = "km-horizontal",
 
         MOBILE_PLATFORMS = {
@@ -256,8 +255,10 @@
             that.osCssClass = osCssClass(that.os, that.options);
 
             if (os.wp) {
-                $(window).off("focusin", refreshBackgroundColor);
-                document.removeEventListener("resume", refreshBackgroundColor);
+                if (refreshBackgroundColor) {
+                    $(window).off("focusin", refreshBackgroundColor);
+                    document.removeEventListener("resume", refreshBackgroundColor);
+                }
 
                 if (!os.skin) {
                     that.element.parent().css("overflow", "hidden");
@@ -275,7 +276,7 @@
         },
 
         _startHistory: function() {
-            this.router = new kendo.Router({ pushState: this.options.pushState, root: this.options.root });
+            this.router = new kendo.Router({ pushState: this.options.pushState, root: this.options.root, hashBang: this.options.hashBang });
             this.pane.bindToRouter(this.router);
             this.router.start();
         },
@@ -290,15 +291,31 @@
             } else {
                 if (isOrientationHorizontal(element)) {
                     if (includeStatusBar) {
-                        height = SCREEN.availWidth;
+                        if (INITIALLY_HORIZONTAL) {
+                            height = SCREEN.availWidth + STATUS_BAR_HEIGHT;
+                        } else {
+                            height = SCREEN.availWidth;
+                        }
                     } else {
-                        height = SCREEN.availWidth - STATUS_BAR_HEIGHT;
+                        if (INITIALLY_HORIZONTAL) {
+                            height = SCREEN.availWidth;
+                        } else {
+                            height = SCREEN.availWidth - STATUS_BAR_HEIGHT;
+                        }
                     }
                 } else {
                     if (includeStatusBar) {
-                        height = SCREEN.availHeight + STATUS_BAR_HEIGHT;
+                        if (INITIALLY_HORIZONTAL) {
+                            height = SCREEN.availHeight;
+                        } else {
+                            height = SCREEN.availHeight + STATUS_BAR_HEIGHT;
+                        }
                     } else {
-                        height = SCREEN.availHeight;
+                        if (INITIALLY_HORIZONTAL) {
+                            height = SCREEN.availHeight - STATUS_BAR_HEIGHT;
+                        } else {
+                            height = SCREEN.availHeight;
+                        }
                     }
                 }
             }
@@ -404,7 +421,7 @@
 
             WINDOW.on("load", hideBar);
 
-            kendo.onResize(function () {
+            kendo.onResize(function() {
                 setTimeout(window.scrollTo, 0, 0, 1);
             });
         },

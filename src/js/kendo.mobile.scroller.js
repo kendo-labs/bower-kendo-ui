@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
-    define([ "./kendo.core", "./kendo.fx", "./kendo.draganddrop" ], f);
+    define([ "./kendo.fx", "./kendo.draganddrop" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "mobile.scroller",
+    name: "Scroller",
+    category: "mobile",
+    description: "The Kendo Mobile Scroller widget enables touch friendly kinetic scrolling for the contents of a given DOM element.",
+    depends: [ "fx", "draganddrop" ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -105,7 +103,7 @@
 
         onEnd: function() {
             var that = this;
-            if (that._outOfBounds()) {
+            if (that.paneAxis.outOfBounds()) {
                 that._snapBack();
             } else {
                 that._end();
@@ -123,7 +121,7 @@
             if (!that.dimension.enabled) { return; }
 
 
-            if (that._outOfBounds()) {
+            if (that.paneAxis.outOfBounds()) {
                 that._snapBack();
             } else {
                 velocity = e.touch.id === MOUSE_WHEEL_ID ? 0 : e.touch[that.axis].velocity;
@@ -137,7 +135,7 @@
         tick: function() {
             var that = this,
                 dimension = that.dimension,
-                friction = that._outOfBounds() ? OUT_OF_BOUNDS_FRICTION : that.friction,
+                friction = that.paneAxis.outOfBounds() ? OUT_OF_BOUNDS_FRICTION : that.friction,
                 delta = (that.velocity *= friction),
                 location = that.movable[that.axis] + delta;
 
@@ -152,10 +150,6 @@
         _end: function() {
             this.tapCapture.cancelCapture();
             this.end();
-        },
-
-        _outOfBounds: function() {
-            return this.dimension.outOfBounds(this.movable[this.axis]);
         },
 
         _snapBack: function() {
@@ -458,9 +452,8 @@
 
         _resize: function() {
             if (!this._native) {
-                this.dimensions.refresh();
+                this.contentResized();
             }
-            this.reset();
         },
 
         setOptions: function(options) {
@@ -477,6 +470,17 @@
             } else {
                 this.movable.moveTo({x: 0, y: 0});
                 this._scale(1);
+            }
+        },
+
+        contentResized: function() {
+            this.dimensions.refresh();
+            if (this.pane.x.outOfBounds()) {
+                this.movable.moveAxis("x", this.dimensions.x.min);
+            }
+
+            if (this.pane.y.outOfBounds()) {
+                this.movable.moveAxis("y", this.dimensions.y.min);
             }
         },
 
@@ -592,6 +596,7 @@
                 movable = that.movable,
                 dimension = that.dimensions[axis],
                 tapCapture = that.tapCapture,
+                paneAxis = that.pane[axis],
                 scrollBar = new ScrollBar({
                     axis: axis,
                     movable: movable,
@@ -599,12 +604,13 @@
                     container: that.element
                 });
 
-            that.pane[axis].bind(CHANGE, function() {
+            paneAxis.bind(CHANGE, function() {
                 scrollBar.show();
             });
 
             that[axis + "inertia"] = new DragInertia({
                 axis: axis,
+                paneAxis: paneAxis,
                 movable: movable,
                 tapCapture: tapCapture,
                 userEvents: that.userEvents,

@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.datepicker", "./kendo.timepicker" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "datetimepicker",
+    name: "DateTimePicker",
+    category: "web",
+    description: "The DateTimePicker allows the end user to select a value from a calendar or a time drop-down list.",
+    depends: [ "datepicker", "timepicker" ]
+};
 
 (function($, undefined) {
 
@@ -400,10 +398,12 @@
                 max = options.max,
                 dates = options.dates,
                 timeView = that.timeView,
+                current = that._value,
                 date = parse(value, options.parseFormats, options.culture),
+                isSameType = (date === null && current === null) || (date instanceof Date && current instanceof Date),
                 rebind, timeViewOptions, old, skip, formattedValue;
 
-            if (+date === +that._value) {
+            if (+date === +current && isSameType) {
                 formattedValue = kendo.toString(date, options.format, options.culture);
 
                 if (formattedValue !== value) {

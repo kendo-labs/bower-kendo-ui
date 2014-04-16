@@ -1,16 +1,13 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([], f);
 })(function(){
+
+var __meta__ = {
+    id: "core",
+    name: "Core",
+    category: "framework",
+    description: "The core of the Kendo framework."
+};
 
 /*jshint eqnull: true, loopfunc: true, evil: true, boss: true, freeze: false*/
 (function($, undefined) {
@@ -40,7 +37,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2014.1.318";
+    kendo.version = "$KENDO_VERSION";
 
     function Class() {}
 
@@ -121,6 +118,7 @@
                             that.unbind(eventName, handler);
                             original.apply(that, arguments);
                         };
+                        handler.original = original;
                     }
                     events = that._events[eventName] = that._events[eventName] || [];
                     events.push(handler);
@@ -196,7 +194,7 @@
             } else if (events) {
                 if (handler) {
                     for (idx = events.length - 1; idx >= 0; idx--) {
-                        if (events[idx] === handler) {
+                        if (events[idx] === handler || events[idx].original === handler) {
                             events.splice(idx, 1);
                         }
                     }
@@ -643,9 +641,14 @@ function pad(number, digits, end) {
             } else if (match === "f") {
                 result = math.floor(date.getMilliseconds() / 100);
             } else if (match === "ff") {
-                result = math.floor(date.getMilliseconds() / 10);
-            } else if (match === "fff") {
                 result = date.getMilliseconds();
+                if (result > 99) {
+                    result = math.floor(result / 10);
+                }
+
+                result = pad(result);
+            } else if (match === "fff") {
+                result = pad(date.getMilliseconds(), 3);
             } else if (match === "tt") {
                 result = date.getHours() < 12 ? calendar.AM[0] : calendar.PM[0];
             }
@@ -1998,7 +2001,8 @@ function pad(number, digits, end) {
 
         (function(browser) {
             // add browser-specific CSS class
-            var cssClass,
+            var cssClass = "",
+                docElement = $(document.documentElement),
                 majorVersion = parseInt(browser.version, 10);
 
             if (browser.msie) {
@@ -2014,8 +2018,13 @@ function pad(number, digits, end) {
             }
 
             if (cssClass) {
-                $(document.documentElement).addClass("k-" + cssClass + " k-" + cssClass + majorVersion);
+                cssClass = "k-" + cssClass + " k-" + cssClass + majorVersion;
             }
+            if (support.mobileOS) {
+                cssClass += " k-mobile";
+            }
+
+            docElement.addClass(cssClass);
         })(support.browser);
 
         support.eventCapture = document.documentElement.addEventListener;
@@ -2911,7 +2920,7 @@ function pad(number, digits, end) {
 
         view: function() {
             var viewElement = this.element.closest(kendo.roleSelector("view splitview modalview drawer"));
-            return kendo.widgetInstance(viewElement, kendo.mobile.ui);
+            return kendo.widgetInstance(viewElement, kendo.mobile.ui) || ContainerNullObject;
         },
 
         viewHasNativeScrolling: function() {
@@ -3652,13 +3661,28 @@ function pad(number, digits, end) {
 
 
     kendo.stripWhitespace = function(element) {
-        var iterator = document.createNodeIterator(element, NodeFilter.SHOW_TEXT, function(node) {
-                return node.parentNode == element ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-            }, false);
+        if (document.createNodeIterator) {
+            var iterator = document.createNodeIterator(element, NodeFilter.SHOW_TEXT, function(node) {
+                    return node.parentNode == element ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+                }, false);
 
-        while (iterator.nextNode()) {
-            if (iterator.referenceNode && !iterator.referenceNode.textContent.trim()) {
-                iterator.referenceNode.parentNode.removeChild(iterator.referenceNode);
+            while (iterator.nextNode()) {
+                if (iterator.referenceNode && !iterator.referenceNode.textContent.trim()) {
+                    iterator.referenceNode.parentNode.removeChild(iterator.referenceNode);
+                }
+            }
+        } else { // IE7/8 support
+            for (var i = 0; i < element.childNodes.length; i++) {
+                var child = element.childNodes[i];
+
+                if (child.nodeType == 3 && !/\S/.test(child.nodeValue)) {
+                    element.removeChild(child);
+                    i--;
+                }
+
+                if (child.nodeType == 1) {
+                    kendo.stripWhitespace(child);
+                }
             }
         }
     };
@@ -3710,16 +3734,8 @@ function pad(number, digits, end) {
         return params;
     };
 
-    var OS = kendo.support.mobileOS,
-        invalidZeroEvents = OS && OS.android,
-        mobileChrome = (invalidZeroEvents && OS.browser == "chrome");
-
     kendo.elementUnderCursor = function(e) {
-        if (mobileChrome) {
-            return document.elementFromPoint(e.x.screen, e.y.screen);
-        } else {
-            return document.elementFromPoint(e.x.client, e.y.client);
-        }
+        return document.elementFromPoint(e.x.client, e.y.client);
     };
 
     kendo.wheelDeltaY = function(jQueryEvent) {

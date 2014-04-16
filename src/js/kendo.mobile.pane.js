@@ -1,16 +1,15 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.mobile.view", "./kendo.mobile.loader" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "mobile.pane",
+    name: "Pane",
+    category: "mobile",
+    description: "Mobile Pane",
+    depends: [ "mobile.view", "mobile.loader" ],
+    hidden: true
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -62,8 +61,6 @@
             };
 
             this._historyNavigate = function(url) {
-                var params = kendo.parseQueryStringParams(url);
-
                 if (url === BACK) {
                     if (that.history.length === 1) {
                         return;
@@ -75,7 +72,7 @@
                     that.history.push(url);
                 }
 
-                that.historyCallback(url, params);
+                that.historyCallback(url, kendo.parseQueryStringParams(url));
             };
 
             this._historyReplace = function(url) {
@@ -302,7 +299,7 @@
                 kendo.widgetInstance($(href), ui).openFor(link);
                 // if propagation is not stopped and actionsheet is opened from tabstrip,
                 // the actionsheet is closed immediately.
-                if (rel === "actionsheet") {
+                if (rel === "actionsheet" || rel === "drawer") {
                     e.stopPropagation();
                 }
             } else {

@@ -1,16 +1,20 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "dropdownlist",
+    name: "DropDownList",
+    category: "web",
+    description: "The DropDownList widget displays a list of values and allows the selection of a single value from the list.",
+    depends: [ "list" ],
+    features: [ {
+        id: "mobile-scroller",
+        name: "Mobile scroller",
+        description: "Support for kinetic scrolling in mobile device",
+        depends: [ "mobile.scroller" ]
+    } ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -170,7 +174,7 @@
         },
 
         toggle: function(toggle) {
-            this._toggle(toggle);
+            this._toggle(toggle, true);
         },
 
         refresh: function() {
@@ -347,7 +351,7 @@
                     .on("click" + ns, function(e) {
                             that._blured = false;
                             e.preventDefault();
-                            that.toggle();
+                            that._toggle();
                     })
                     .on("keydown" + ns, proxy(that._keydown, that))
                     .on("keypress" + ns, proxy(that._keypress, that))

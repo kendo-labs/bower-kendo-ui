@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core", "./kendo.userevents" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "numerictextbox",
+    name: "NumericTextBox",
+    category: "web",
+    description: "The NumericTextBox widget can format and display numeric, percentage or currency textbox.",
+    depends: [ "core", "userevents" ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,

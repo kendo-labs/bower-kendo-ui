@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core", "./kendo.userevents" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "draganddrop",
+    name: "Drag & drop",
+    category: "framework",
+    description: "Drag & drop functionality for any DOM element.",
+    depends: [ "core", "userevents" ]
+};
 
 (function ($, undefined) {
     var kendo = window.kendo,
@@ -193,7 +191,7 @@
         },
 
         outOfBounds: function(offset) {
-            return  offset > this.max || offset < this.min;
+            return offset > this.max || offset < this.min;
         },
 
         forceEnabled: function() {
@@ -274,6 +272,10 @@
             var that = this;
             extend(that, options);
             Observable.fn.init.call(that);
+        },
+
+        outOfBounds: function() {
+            return this.dimension.outOfBounds(this.movable[this.axis]);
         },
 
         dragMove: function(delta) {
@@ -604,6 +606,7 @@
 
             that.userEvents = new UserEvents(that.element, {
                 global: true,
+                allowSelection: true,
                 stopPropagation: true,
                 filter: that.options.filter,
                 threshold: that.options.distance,
@@ -611,7 +614,8 @@
                 hold: proxy(that._hold, that),
                 move: proxy(that._drag, that),
                 end: proxy(that._end, that),
-                cancel: proxy(that._cancel, that)
+                cancel: proxy(that._cancel, that),
+                select: proxy(that._select, that)
             });
 
             that._afterEndHandler = proxy(that._afterEnd, that);
@@ -678,15 +682,24 @@
             that.hint.css(coordinates);
         },
 
+        _shouldIgnoreTarget: function(target) {
+            var ignoreSelector = this.options.ignore;
+            return ignoreSelector && $(target).is(ignoreSelector);
+        },
+
+        _select: function(e) {
+            if (!this._shouldIgnoreTarget(e.event.target)) {
+                e.preventDefault();
+            }
+        },
+
         _start: function(e) {
             var that = this,
                 options = that.options,
-                ignoreSelector = options.ignore,
-                ignore = ignoreSelector && $(e.touch.initialTouch).is(ignoreSelector),
                 container = options.container,
                 hint = options.hint;
 
-            if (ignore || (options.holdToDrag && !that._activated)) {
+            if (this._shouldIgnoreTarget(e.touch.initialTouch) || (options.holdToDrag && !that._activated)) {
                 that.userEvents.cancel();
                 return;
             }

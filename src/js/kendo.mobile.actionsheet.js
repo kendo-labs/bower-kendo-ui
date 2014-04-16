@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.mobile.popover", "./kendo.mobile.shim" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "mobile.actionsheet",
+    name: "ActionSheet",
+    category: "mobile",
+    description: "The mobile ActionSheet widget displays a set of choices related to a task the user initiates.",
+    depends: [ "mobile.popover", "mobile.shim" ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -60,6 +58,10 @@
                 .wrap(WRAP)
                 .on("up", BUTTONS, "_click")
                 .on("click", BUTTONS, kendo.preventDefault);
+
+            that.view().bind("destroy", function() {
+                that.destroy();
+            });
 
             that.wrapper = element.parent().addClass(type ? " km-actionsheet-" + type : "");
             that.shim = new ShimClass(that.wrapper, $.extend({modal: os.ios && os.majorVersion < 7, className: "km-actionsheet-root"}, that.options.popup) );

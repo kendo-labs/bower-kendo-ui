@@ -1,16 +1,20 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "multiselect",
+    name: "MultiSelect",
+    category: "web",
+    description: "The MultiSelect widget allows the selection from pre-defined values.",
+    depends: [ "list" ],
+    features: [ {
+        id: "mobile-scroller",
+        name: "Mobile scroller",
+        description: "Support for kinetic scrolling in mobile device",
+        depends: [ "mobile.scroller" ]
+    } ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -246,7 +250,7 @@
                     .on("focus" + ns, function() { that._placeholder(false); })
                     .on("blur" + ns, function() {
                         clearTimeout(that._typing);
-                        that._placeholder();
+                        that._placeholder(!that._dataItems[0], true);
                         that.close();
 
                         if (that._state === FILTER) {
@@ -301,6 +305,10 @@
 
         open: function() {
             var that = this;
+
+            if (that._request) {
+                that._retrieveData = false;
+            }
 
             if (!that.ul[0].firstChild || that._state === ACCEPT || that._retrieveData) {
                 that._state = "";
@@ -666,11 +674,14 @@
             clearTimeout(that._busy);
             that.input.attr("aria-busy", false);
             that._loading.addClass(HIDDENCLASS);
+            that._request = false;
             that._busy = null;
         },
 
         _showBusy: function () {
             var that = this;
+
+            that._request = true;
 
             if (that._busy) {
                 return;
@@ -682,7 +693,7 @@
             }, 100);
         },
 
-        _placeholder: function(show) {
+        _placeholder: function(show, skipCaret) {
             var that = this,
                 input = that.input,
                 active = activeElement();
@@ -701,7 +712,7 @@
             input.toggleClass("k-readonly", show)
                  .val(show ? that.options.placeholder : "");
 
-            if (input[0] === active) {
+            if (input[0] === active && !skipCaret) {
                 kendo.caret(input[0], 0, 0);
             }
 

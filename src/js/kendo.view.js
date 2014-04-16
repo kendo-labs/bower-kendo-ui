@@ -1,16 +1,15 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core", "./kendo.binder", "./kendo.fx" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "view",
+    name: "View",
+    category: "framework",
+    description: "The View class instantiates and handles the events of a certain screen from the application.",
+    depends: [ "core", "binder", "fx" ],
+    hidden: false
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -80,11 +79,9 @@
         },
 
         showEnd: function() {
-
         },
 
         hideStart: function() {
-
         },
 
         hideEnd: function() {
@@ -150,7 +147,7 @@
             } else {
                 element = content;
                 if (wrap) {
-                    element = element.wrap(wrapper).parent();
+                    element = element.wrapAll(wrapper).parent();
                 }
             }
 
@@ -198,11 +195,23 @@
         },
 
         _createContainer: function(selector) {
-            var element = this.render().find(selector),
-                container = new ViewContainer(element);
+            var root = this.render(),
+                element = root.find(selector),
+                container;
+
+            if (!element.length && root.is(selector)) {
+                if (root.is(selector)) {
+                    element = root;
+                } else {
+
+                    throw new Error("can't find a container with the specified " + selector + " selector");
+                }
+            }
+
+            container = new ViewContainer(element);
 
             container.bind("accepted", function(e) {
-                element.append(e.view.render());
+                e.view.render(element);
             });
 
             return container;
@@ -216,7 +225,7 @@
 
         detach: function() {
             console.log('detach', arguments);
-        },
+        }
     });
 
     var transitionRegExp = /^(\w+)(:(\w+))?( (\w+))?$/;

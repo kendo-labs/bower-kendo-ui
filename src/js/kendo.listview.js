@@ -1,16 +1,25 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.data", "./kendo.editable", "./kendo.selectable" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "listview",
+    name: "ListView",
+    category: "web",
+    description: "The ListView widget offers rich support for interacting with data.",
+    depends: [ "data" ],
+    features: [ {
+        id: "listview-editing",
+        name: "Editing",
+        description: "Support for record editing",
+        depends: [ "editable" ]
+    }, {
+        id: "listview-selection",
+        name: "Selection",
+        description: "Support for selection",
+        depends: [ "selectable" ]
+    } ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,

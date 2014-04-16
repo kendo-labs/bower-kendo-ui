@@ -1,16 +1,25 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
 (function(f, define){
     define([ "./kendo.core", "./kendo.data.odata", "./kendo.data.xml" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "data",
+    name: "Data source",
+    category: "framework",
+    description: "Powerful component for using local and remote data.Fully supports CRUD, Sorting, Paging, Filtering, Grouping, and Aggregates.",
+    depends: [ "core" ],
+    features: [ {
+        id: "data-odata",
+        name: "OData",
+        description: "Support for accessing Open Data Protocol (OData) services.",
+        depends: [ "data.odata" ]
+    }, {
+        id: "data-XML",
+        name: "XML",
+        description: "Support for binding to XML.",
+        depends: [ "data.xml" ]
+    } ]
+};
 
 /*jshint eqnull: true, loopfunc: true, evil: true */
 (function($, undefined) {
@@ -447,12 +456,16 @@
 
         set: function(field, value) {
             var that = this,
+                composite = field.indexOf(".") >= 0,
                 current = kendo.getter(field, true)(that);
 
             if (current !== value) {
 
                 if (!that.trigger("set", { field: field, value: value })) {
-                    if (!that._set(field, that.wrap(value, field, function() { return that; })) || field.indexOf("(") >= 0 || field.indexOf("[") >= 0) {
+                    if (!composite) {
+                        value = that.wrap(value, field, function() { return that; });
+                    }
+                    if (!that._set(field, value) || field.indexOf("(") >= 0 || field.indexOf("[") >= 0) {
                         that.trigger(CHANGE, { field: field });
                     }
                 }
@@ -1315,12 +1328,13 @@
 
         aggregate: function (aggregates) {
             var idx,
-            len,
-            result = {};
+                len,
+                result = {},
+                state = {};
 
             if (aggregates && aggregates.length) {
                 for(idx = 0, len = this.data.length; idx < len; idx++) {
-                    calculateAggregate(result, aggregates, this.data[idx], idx, len);
+                    calculateAggregate(result, aggregates, this.data[idx], idx, len, state);
                 }
             }
             return result;
@@ -1334,19 +1348,21 @@
         return a === b;
     }
 
-    function calculateAggregate(accumulator, aggregates, item, index, length) {
+    function calculateAggregate(accumulator, aggregates, item, index, length, state) {
         aggregates = aggregates || [];
         var idx,
-        aggr,
-        functionName,
-        len = aggregates.length;
+            aggr,
+            functionName,
+            len = aggregates.length;
 
         for (idx = 0; idx < len; idx++) {
             aggr = aggregates[idx];
             functionName = aggr.aggregate;
             var field = aggr.field;
             accumulator[field] = accumulator[field] || {};
-            accumulator[field][functionName] = functions[functionName.toLowerCase()](accumulator[field][functionName], item, kendo.accessor(field), index, length);
+            state[field] = state[field] || {};
+            state[field][functionName] = state[field][functionName] || {};
+            accumulator[field][functionName] = functions[functionName.toLowerCase()](accumulator[field][functionName], item, kendo.accessor(field), index, length, state[field][functionName]);
         }
     }
 
@@ -1365,8 +1381,12 @@
         count: function(accumulator) {
             return (accumulator || 0) + 1;
         },
-        average: function(accumulator, item, accessor, index, length) {
+        average: function(accumulator, item, accessor, index, length, state) {
             var value = accessor.get(item);
+
+            if (state.count === undefined) {
+                state.count = 0;
+            }
 
             if (!isNumber(accumulator)) {
                 accumulator = value;
@@ -1374,8 +1394,12 @@
                 accumulator += value;
             }
 
+            if (isNumber(value)) {
+                state.count++;
+            }
+
             if(index == length - 1 && isNumber(accumulator)) {
-                accumulator = accumulator / length;
+                accumulator = accumulator / state.count;
             }
             return accumulator;
         },
@@ -1778,6 +1802,7 @@
                     }
                 }
 
+                that._dataAccessFunction = dataFunction;
                 that.data = wrapDataAccess(dataFunction, model, convertRecords, getters, originalFieldNames, fieldNames);
                 that.groups = wrapDataAccess(groupsFunction, model, convertGroup, getters, originalFieldNames, fieldNames);
             }
@@ -3054,9 +3079,9 @@
 
         inRange: function(skip, take) {
             var that = this,
-            end = math.min(skip + take, that.total());
+                end = math.min(skip + take, that.total());
 
-            if (!that.options.serverPaging && that.data.length > 0) {
+            if (!that.options.serverPaging && that._data.length > 0) {
                 return true;
             }
 
@@ -3091,12 +3116,16 @@
                 var paging = that.options.serverPaging;
                 var sorting = that.options.serverSorting;
                 var filtering = that.options.serverFiltering;
+                var aggregates = that.options.serverAggregates;
                 try {
                     that.options.serverPaging = true;
                     if (!that._isServerGrouped() && !(that.group() && that.group().length)) {
                         that.options.serverSorting = true;
                     }
                     that.options.serverFiltering = true;
+                    that.options.serverPaging = true;
+                    that.options.serverAggregates = true;
+
                     if (paging) {
                         that._data = data = that._observe(data);
                     }
@@ -3105,6 +3134,7 @@
                     that.options.serverPaging = paging;
                     that.options.serverSorting = sorting;
                     that.options.serverFiltering = filtering;
+                    that.options.serverAggregates = aggregates;
                 }
 
                 return;
@@ -3551,11 +3581,11 @@
                 transport = children.transport;
                 parameterMap = transport.parameterMap;
 
-                transport.parameterMap = function(data) {
+                transport.parameterMap = function(data, type) {
                     data[that.idField || "id"] = that.id;
 
                     if (parameterMap) {
-                        data = parameterMap(data);
+                        data = parameterMap(data, type);
                     }
 
                     return data;

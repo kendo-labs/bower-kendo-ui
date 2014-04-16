@@ -1,16 +1,14 @@
-/*
-* Kendo UI Web v2014.1.318 (http://kendoui.com)
-* Copyright 2014 Telerik AD. All rights reserved.
-*
-* Kendo UI Web commercial licenses may be obtained at
-* http://www.telerik.com/purchase/license-agreement/kendo-ui-web
-* If you do not own a commercial license, this file shall be governed by the
-* GNU General Public License (GPL) version 3.
-* For GPL requirements, please review: http://www.gnu.org/copyleft/gpl.html
-*/
+/* jshint eqnull: true */
 (function(f, define){
     define([ "./kendo.draganddrop" ], f);
 })(function(){
+
+var __meta__ = {
+    id: "sortable",
+    name: "Sortable",
+    category: "framework",
+    depends: [ "draganddrop" ]
+};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -85,6 +83,7 @@
             handler: null,
             cursorOffset: null,
             axis: null,
+            ignore: null,
             cursor: "auto"
         },
 
@@ -105,6 +104,7 @@
                 container: options.container ? $(options.container) : null,
                 cursorOffset: options.cursorOffset,
                 axis: options.axis,
+                ignore: options.ignore,
                 dragstart: $.proxy(that._dragstart, that),
                 dragcancel: $.proxy(that._dragcancel, that),
                 drag: $.proxy(that._drag, that),
@@ -177,6 +177,10 @@
                 if(target.appendToBottom) {
                     this._movePlaceholder(target, null, eventData);
                     return;
+                }
+
+                if(target.appendAfterHidden) {
+                    this._movePlaceholder(target, "next", eventData);
                 }
 
                 if(this.floating) { //horizontal
@@ -289,8 +293,11 @@
                 node = items.filter(element)[0] || items.has(element)[0];
 
                 return node ? { element: $(node), sortable: this } : null;
-            } else if (this.element[0] == element && this.isEmpty()) { //the sortable container is empty
+            } else if (this.element[0] == element && this._isEmpty()) {
                 return { element: this.element, sortable: this, appendToBottom: true };
+            } else if (this.element[0] == element && this._isLastHidden()) {
+                node = this.items().eq(0);
+                return { element: node , sortable: this, appendAfterHidden: true };
             } else if (connectWith) { //connected lists are present
                 return this._searchConnectedTargets(element, e);
             }
@@ -338,8 +345,11 @@
                         }
                     }
                 } else if(connected[i] == element) {
-                    if((sortableInstance && sortableInstance.isEmpty()) || this._isCursorAfterLast(sortableInstance, e)) {
+                    if(sortableInstance && sortableInstance._isEmpty()) {
                         return { element: connected.eq(i), sortable: sortableInstance, appendToBottom: true };
+                    } else if (this._isCursorAfterLast(sortableInstance, e)) {
+                        node = sortableInstance.items().last();
+                        return { element: node, sortable: sortableInstance };
                     }
                 }
             }
@@ -487,8 +497,12 @@
             return items;
         },
 
-        isEmpty: function() {
-            return !this.items().not(":hidden").length;
+        _isEmpty: function() {
+            return !this.items().length;
+        },
+
+        _isLastHidden: function() {
+            return this.items().length === 1 && this.items().is(":hidden");
         }
 
     });
