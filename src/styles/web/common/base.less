@@ -94,10 +94,21 @@
     margin: 0;
     padding: @button-padding;
     font-family: inherit;
-    line-height: 1.66em;
+    line-height: 1.72em;
     text-align: center;
     cursor: pointer;
     text-decoration: none;
+}
+
+.k-button[disabled],
+.k-button.k-state-disabled,
+.k-state-disabled .k-button,
+.k-state-disabled .k-button:hover,
+.k-button.k-state-disabled:hover,
+.k-state-disabled .k-button:active,
+.k-button.k-state-disabled:active
+{
+    cursor: default;
 }
 
 .k-ie7 .k-button { line-height: normal; }
@@ -139,25 +150,25 @@ input[type="reset"].k-button-expand
     width: 100%;
 }
 
-body .k-button-icon
+body .k-button-icon,
+body .k-split-button-arrow
 {
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: .4em;
+    padding-right: .4em;
 }
 .k-ie7 a.k-button-icon { padding-left: 5px; padding-right: 5px;/*+1*/ }
 
 .k-button-icontext
 {
-    padding-right: 8px;
+    padding-right: .8em;
     overflow: visible; /*IE9*/
 }
 
 .k-button-icontext .k-icon,
 .k-button-icontext .k-image
 {
-    margin-right: .2rem;
-    margin-left: -.2rem;
-    vertical-align: text-top;
+    margin-right: .3rem;
+    margin-left: -.3rem;
 }
 
 .k-ie8 .k-button-icontext .k-icon,
@@ -165,7 +176,12 @@ body .k-button-icon
 {
     margin-right: 3px;
     margin-left: -3px;
-	vertical-align: text-top;
+}
+
+.k-button.k-button-icontext .k-icon,
+.k-button.k-button-icontext .k-image
+{
+    vertical-align: text-top;
 }
 
 html body .k-button-bare
@@ -315,6 +331,11 @@ html body .k-button-bare.k-upload-button:hover
     .disable-high-contrast();
 }
 
+.k-icon.k-i-none
+{
+    background-image: none;
+}
+
 /* In IE7 vertical align: middle can't be overridden */
 .k-ie8 .k-icon,
 .k-ie8 .k-sprite,
@@ -345,8 +366,8 @@ html body .k-button-bare.k-upload-button:hover
 .k-numerictextbox .k-link.k-state-selected span.k-i-arrow-s, .k-numerictextbox .k-state-hover .k-link span.k-i-arrow-s { background-position: -16px -35px; }
 
 // Remove sorting arrows hover state in grid headers
-.k-grid-header .k-link:hover span.k-i-arrow-n { .sprite-position(0, 0) }
-.k-grid-header .k-link:hover span.k-i-arrow-s { .sprite-position(0, 2) }
+.k-grid-header th > .k-link:hover span.k-i-arrow-n { .sprite-position(0, 0) }
+.k-grid-header th > .k-link:hover span.k-i-arrow-s { .sprite-position(0, 2) }
 .k-group-indicator .k-link:hover span.k-si-arrow-n { .sprite-position(0, -129px) }
 .k-group-indicator .k-link:hover span.k-si-arrow-s { .sprite-position(0, -159px) }
 .k-group-indicator .k-button:hover span.k-group-delete { .sprite-position(2, 1) }
@@ -431,9 +452,15 @@ html body .k-button-bare.k-upload-button:hover
 .k-i-ungroup { .sprite-hoverable(7, 18); }
 .k-i-columns { .sprite-hoverable(7, 19); }
 
+.k-i-hbars { .sprite-hoverable(4, 2); }
+.k-i-vbars { .sprite-hoverable(4, 3); }
+.k-i-sum { .sprite-hoverable(4, 4); }
+
 .k-file { .sprite-hoverable(0, 0); }
 .k-i-folder-add, .k-addfolder { .sprite-hoverable(2, 17); }
 .k-i-folder-up, .k-goup { .sprite-hoverable(2, 18); }
+
+.k-i-more { .sprite-hoverable(4, 2); }
 
 .k-file > .k-icon
 {

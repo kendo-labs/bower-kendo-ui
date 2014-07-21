@@ -17,7 +17,7 @@
 }
 
 .km-blackberry .km-navbar,
-.km-blackberry .km-toolbar,
+.km-blackberry .k-toolbar,
 .km-blackberry .km-button,
 .km-blackberry .km-buttongroup,
 .km-blackberry .km-tabstrip,
@@ -43,7 +43,8 @@
     .box-shadow(~"inset 0 1px 1px rgba(0,0,0,.2), inset 0 0 0 2px rgba(0,0,0,.1)");
 }
 
-.km-blackberry .km-navbar .km-button
+.km-blackberry .km-navbar .km-button,
+.km-blackberry .k-toolbar .km-button
 {
     color: @blackberry-active-color;
     .linear-gradient-image(top, rgba(255,255,255,.2), rgba(255,255,255,0));
@@ -89,7 +90,7 @@
     background-color: #B01B1A;
 }
 
-.km-blackberry .km-toolbar,
+.km-blackberry .k-toolbar,
 .km-blackberry .km-navbar,
 .km-blackberry .km-popup.km-pane .km-header
 {
@@ -184,8 +185,8 @@
 }
 
 .km-blackberry .km-content .km-button .km-icon,
-.km-blackberry .km-buttongroup .km-button:active .km-icon,
-.km-blackberry .km-buttongroup .km-state-active .km-icon
+.km-blackberry .km-content .km-buttongroup .km-button:active .km-icon,
+.km-blackberry .km-content .km-buttongroup .km-state-active .km-icon
 {
     color: #057fe4;
 }
@@ -487,6 +488,8 @@
 /* PopOver */
 
 .km-blackberry .km-popup.km-pane,
+.km-blackberry .k-split-wrapper div.km-actionsheet-wrapper,
+.km-blackberry .k-overflow-wrapper div.km-actionsheet-wrapper,
 .km-tablet .km-blackberry .km-actionsheet-wrapper:not(.km-actionsheet-phone)
 {
     background: @blackberry-navbar-background;
@@ -511,6 +514,8 @@
     border-color: transparent @blackberry-navbar-background;
 }
 
+.km-blackberry .k-split-container.km-actionsheet,
+.km-blackberry .k-overflow-container.km-actionsheet,
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet,
 .km-blackberry .km-popup.km-pane .km-content
 {
@@ -550,6 +555,11 @@
     background: fade(@blackberry-active-background, 50%);
 }
 
+.km-blackberry .k-toolbar .km-buttongroup .km-state-active
+{
+    .box-shadow(inset 0 0 1000px rgba(0,0,0,.1));
+}
+
 .km-blackberry *:not(.km-buttongroup) > .km-button:active .km-text,
 .km-blackberry *:not(.km-buttongroup) > .km-button.km-state-active .km-text
 {
@@ -558,7 +568,8 @@
 
 .km-blackberry .km-actionsheet > li > a:hover,
 .km-blackberry .km-actionsheet > li > a:focus,
-.km-blackberry .km-actionsheet > li > a:active
+.km-blackberry .km-actionsheet > li > a:active,
+.km-blackberry .km-actionsheet > li > .km-state-active
 {
     background: @blackberry-active-background;
     color: @blackberry-active-color;
@@ -582,6 +593,8 @@
     border-color: transparent #cfd1d3;
 }
 
+.km-blackberry .k-split-container > li > a,
+.km-blackberry .k-overflow-container > li > a,
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > a
 {
     color: @blackberry-main-color;
@@ -589,7 +602,8 @@
 
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > a:hover,
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > a:focus,
-.km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > a:active
+.km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > a:active,
+.km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > .km-state-active
 {
     color: @blackberry-active-color;
     background: @blackberry-active-background;

@@ -216,6 +216,10 @@ var __meta__ = {
                 scaledTotal = total * that.scale,
                 size = that.getSize();
 
+            if (total === 0) {
+                return; // we are not visible.
+            }
+
             that.max = that.virtual ? -that._virtualMin : 0;
             that.size = size;
             that.total = scaledTotal;
@@ -469,6 +473,7 @@ var __meta__ = {
                     that.element[0].style.position = "absolute";
                     that.element[0].style.left = that.x + "px";
                     that.element[0].style.top = that.y + "px";
+
                 } else {
                     that.element[0].style[TRANSFORM_STYLE] = newCoordinates;
                 }
@@ -607,7 +612,6 @@ var __meta__ = {
             that.userEvents = new UserEvents(that.element, {
                 global: true,
                 allowSelection: true,
-                stopPropagation: true,
                 filter: that.options.filter,
                 threshold: that.options.distance,
                 start: proxy(that._start, that),
@@ -619,12 +623,7 @@ var __meta__ = {
             });
 
             that._afterEndHandler = proxy(that._afterEnd, that);
-            that.captureEscape = function(e) {
-                if (e.keyCode === kendo.keys.ESC) {
-                    that._trigger(DRAGCANCEL, {event: e});
-                    that.userEvents.cancel();
-                }
-            };
+            that._captureEscape = proxy(that._captureEscape, that);
         },
 
         events: [
@@ -650,6 +649,15 @@ var __meta__ = {
 
         cancelHold: function() {
             this._activated = false;
+        },
+
+        _captureEscape: function(e) {
+            var that = this;
+
+            if (e.keyCode === kendo.keys.ESC) {
+                that._trigger(DRAGCANCEL, { event: e });
+                that.userEvents.cancel();
+            }
         },
 
         _updateHint: function(e) {
@@ -724,6 +732,14 @@ var __meta__ = {
                     top: offset.top
                 })
                 .appendTo(document.body);
+
+                that.angular("compile", function(){
+                    that.hint.removeAttr("ng-repeat");
+                    return {
+                        elements: that.hint.get(),
+                        scopeFrom: e.target
+                    };
+                });
             }
 
             draggables[options.group] = that;
@@ -739,7 +755,7 @@ var __meta__ = {
                 that._afterEnd();
             }
 
-            $(document).on(KEYUP, that.captureEscape);
+            $(document).on(KEYUP, that._captureEscape);
         },
 
         _hold: function(e) {
@@ -778,7 +794,7 @@ var __meta__ = {
                 lastDropTarget = extend(target, { targetElement: targetElement });
             });
 
-            that._trigger(DRAG, e);
+            that._trigger(DRAG, extend(e, { dropTarget: lastDropTarget }));
 
             if (that.hint) {
                 that._updateHint(e);
@@ -883,7 +899,7 @@ var __meta__ = {
             delete draggables[that.options.group];
 
             that.trigger("destroy");
-            $(document).off(KEYUP, that.captureEscape);
+            $(document).off(KEYUP, that._captureEscape);
         }
     });
 

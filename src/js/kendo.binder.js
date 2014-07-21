@@ -212,6 +212,8 @@ var __meta__ = {
             if (this.observable) {
                 this.source.unbind(CHANGE, this._change);
             }
+
+            this.unbind();
         }
     });
 
@@ -760,6 +762,101 @@ var __meta__ = {
         })
     };
 
+    function dataSourceBinding(bindingName, fieldName, setter) {
+        return Binder.extend({
+            init: function(widget, bindings, options) {
+                var that = this;
+
+                Binder.fn.init.call(that, widget.element[0], bindings, options);
+
+                that.widget = widget;
+                that._dataBinding = proxy(that.dataBinding, that);
+                that._dataBound = proxy(that.dataBound, that);
+                that._itemChange = proxy(that.itemChange, that);
+            },
+
+            itemChange: function(e) {
+                bindElement(e.item[0], e.data, this._ns(e.ns), [e.data].concat(this.bindings[bindingName]._parents()));
+            },
+
+            dataBinding: function(e) {
+                var idx,
+                    length,
+                    widget = this.widget,
+                    items = e.removedItems || widget.items();
+
+                for (idx = 0, length = items.length; idx < length; idx++) {
+                    unbindElementTree(items[idx]);
+                }
+            },
+
+            _ns: function(ns) {
+                ns = ns || kendo.ui;
+                var all = [ kendo.ui, kendo.dataviz.ui, kendo.mobile.ui ];
+                all.splice($.inArray(ns, all), 1);
+                all.unshift(ns);
+
+                return kendo.rolesFromNamespaces(all);
+            },
+
+            dataBound: function(e) {
+                var idx,
+                    length,
+                    widget = this.widget,
+                    items = e.addedItems || widget.items(),
+                    dataSource = widget[fieldName],
+                    view,
+                    parents,
+                    groups = dataSource.group() || [];
+
+                if (items.length) {
+                    view = e.addedDataItems || dataSource.flatView();
+                    parents = this.bindings[bindingName]._parents();
+
+                    for (idx = 0, length = view.length; idx < length; idx++) {
+                        bindElement(items[idx], view[idx], this._ns(e.ns), [view[idx]].concat(parents));
+                    }
+                }
+            },
+
+            refresh: function(e) {
+                var that = this,
+                    source,
+                    widget = that.widget;
+
+                e = e || {};
+
+                if (!e.action) {
+                    that.destroy();
+
+                    widget.bind("dataBinding", that._dataBinding);
+                    widget.bind("dataBound", that._dataBound);
+                    widget.bind("itemChange", that._itemChange);
+
+                    source = that.bindings[bindingName].get();
+
+                    if (widget[fieldName] instanceof kendo.data.DataSource && widget[fieldName] != source) {
+                        if (source instanceof kendo.data.DataSource) {
+                            widget[setter](source);
+                        } else if (source && source._dataSource) {
+                            widget[setter](source._dataSource);
+                        } else {
+                            widget[fieldName].data(source);
+                        }
+                    }
+                }
+            },
+
+            destroy: function() {
+                var widget = this.widget;
+
+                widget.unbind("dataBinding", this._dataBinding);
+                widget.unbind("dataBound", this._dataBound);
+                widget.unbind("itemChange", this._itemChange);
+            }
+        });
+    }
+
     binders.widget = {
         events : Binder.extend({
             init: function(widget, bindings, options) {
@@ -886,101 +983,7 @@ var __meta__ = {
             }
         }),
 
-        source: Binder.extend({
-            init: function(widget, bindings, options) {
-                var that = this;
-
-                Binder.fn.init.call(that, widget.element[0], bindings, options);
-
-                that.widget = widget;
-                that._dataBinding = proxy(that.dataBinding, that);
-                that._dataBound = proxy(that.dataBound, that);
-                that._itemChange = proxy(that.itemChange, that);
-            },
-
-            itemChange: function(e) {
-                bindElement(e.item[0], e.data, this._ns(e.ns), [e.data].concat(this.bindings.source._parents()));
-            },
-
-            dataBinding: function() {
-                var idx,
-                    length,
-                    widget = this.widget,
-                    items = widget.items();
-
-                for (idx = 0, length = items.length; idx < length; idx++) {
-                    unbindElementTree(items[idx]);
-                }
-            },
-
-            _ns: function(ns) {
-                ns = ns || kendo.ui;
-                var all = [ kendo.ui, kendo.dataviz.ui, kendo.mobile.ui ];
-                all.splice($.inArray(ns, all), 1);
-                all.unshift(ns);
-
-                return kendo.rolesFromNamespaces(all);
-            },
-
-            dataBound: function(e) {
-                var idx,
-                    length,
-                    widget = this.widget,
-                    items = widget.items(),
-                    dataSource = widget.dataSource,
-                    view = dataSource.view(),
-                    parents,
-                    groups = dataSource.group() || [];
-
-                if (items.length) {
-                    if (groups.length) {
-                        view = flattenGroups(view);
-                    }
-
-                    parents = this.bindings.source._parents();
-
-                    for (idx = 0, length = view.length; idx < length; idx++) {
-                        bindElement(items[idx], view[idx], this._ns(e.ns), [view[idx]].concat(parents));
-                    }
-                }
-            },
-
-            refresh: function(e) {
-                var that = this,
-                    source,
-                    widget = that.widget;
-
-                e = e || {};
-
-                if (!e.action) {
-                    that.destroy();
-
-                    widget.bind("dataBinding", that._dataBinding);
-                    widget.bind("dataBound", that._dataBound);
-                    widget.bind("itemChange", that._itemChange);
-
-                    source = that.bindings.source.get();
-
-                    if (widget.dataSource instanceof kendo.data.DataSource && widget.dataSource != source) {
-                        if (source instanceof kendo.data.DataSource) {
-                            widget.setDataSource(source);
-                        } else if (source && source._dataSource) {
-                            widget.setDataSource(source._dataSource);
-                        } else {
-                            widget.dataSource.data(source);
-                        }
-                    }
-                }
-            },
-
-            destroy: function() {
-                var widget = this.widget;
-
-                widget.unbind("dataBinding", this._dataBinding);
-                widget.unbind("dataBound", this._dataBound);
-                widget.unbind("itemChange", this._itemChange);
-            }
-        }),
+        source: dataSourceBinding("source", "dataSource", "setDataSource"),
 
         value: Binder.extend({
             init: function(widget, bindings, options) {
@@ -1091,6 +1094,10 @@ var __meta__ = {
                 this.widget.unbind(CHANGE, this._change);
             }
         }),
+
+        gantt: {
+            dependencies: dataSourceBinding("dependencies", "dependencies", "setDependenciesDataSource")
+        },
 
         multiselect: {
             value: Binder.extend({
@@ -1398,26 +1405,6 @@ var __meta__ = {
         }
     });
 
-    function flattenGroups(data) {
-        var idx,
-            result = [],
-            length,
-            items,
-            itemIndex;
-
-        for (idx = 0, length = data.length; idx < length; idx++) {
-            if (data[idx].hasSubgroups) {
-                result = result.concat(flattenGroups(data[idx].items));
-            } else {
-                items = data[idx].items;
-                for (itemIndex = 0; itemIndex < items.length; itemIndex++) {
-                    result.push(items[itemIndex]);
-                }
-            }
-        }
-        return result;
-    }
-
     function bindingTargetForRole(element, roles) {
         var widget = kendo.initWidget(element, {}, roles);
 
@@ -1510,6 +1497,7 @@ var __meta__ = {
             if (bindings.click) {
                 bind.events = bind.events || {};
                 bind.events.click = bind.click;
+                bindings.click.destroy();
                 delete bindings.click;
             }
 

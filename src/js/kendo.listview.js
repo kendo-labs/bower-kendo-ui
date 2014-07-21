@@ -46,7 +46,7 @@ var __meta__ = {
         progress = kendo.ui.progress,
         DataSource = kendo.data.DataSource;
 
-    var ListView = Widget.extend( {
+    var ListView = kendo.ui.DataBoundWidget.extend( {
         init: function(element, options) {
             var that = this;
 
@@ -123,6 +123,13 @@ var __meta__ = {
 
         items: function() {
             return this.element.children();
+        },
+
+        dataItem: function(element) {
+            var attr = kendo.attr("uid");
+            var uid = $(element).closest("[" + attr + "]").attr(attr);
+
+            return this.dataSource.getByUid(uid);
         },
 
         setDataSource: function(dataSource) {
@@ -211,6 +218,8 @@ var __meta__ = {
                 return;
             }
 
+            that._angularItems("cleanup");
+
             that._destroyEditable();
 
             for (idx = 0, length = view.length; idx < length; idx++) {
@@ -233,6 +242,8 @@ var __meta__ = {
             if (that.element[0] === active && that.options.navigatable) {
                 that.current(items.eq(0));
             }
+
+            that._angularItems("compile");
 
             that.trigger(DATABOUND);
         },
@@ -544,7 +555,12 @@ var __meta__ = {
             index = item.index();
             item.replaceWith(that.editTemplate(data));
             container = that.items().eq(index).addClass(KEDITITEM).attr(kendo.attr("uid"), data.uid);
-            that.editable = container.kendoEditable({ model: data, clearContainer: false, errorTemplate: false }).data("kendoEditable");
+            that.editable = container.kendoEditable({
+                model: data,
+                clearContainer: false,
+                errorTemplate: false,
+                target: that
+            }).data("kendoEditable");
 
             that.trigger(EDIT, { model: data, item: container });
        },
@@ -647,10 +663,6 @@ var __meta__ = {
 
            if (that.pager) {
                that.pager.destroy();
-           }
-
-           if (that.selectable) {
-               that.selectable.destroy();
            }
 
            kendo.destroy(that.element);

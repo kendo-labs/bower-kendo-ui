@@ -16,7 +16,7 @@ var __meta__ = {
         mobile = kendo.mobile,
         ui = mobile.ui,
         DataSource = kendo.data.DataSource,
-        Widget = ui.Widget,
+        Widget = ui.DataBoundWidget,
         ITEM_SELECTOR = ".km-list > li, > li:not(.km-group-container)",
         HIGHLIGHT_SELECTOR = ".km-listview-link, .km-listview-label",
         ICON_SELECTOR = "[" + kendo.attr("icon") + "]",
@@ -30,8 +30,8 @@ var __meta__ = {
         SEARCH_TEMPLATE = kendo.template('<form class="km-filter-form"><div class="km-filter-wrap"><input type="search" placeholder="#=placeholder#"/><a href="\\#" class="km-filter-reset" title="Clear"><span class="km-icon km-clear"></span><span class="km-text">Clear</span></a></div></form>'),
         NS = ".kendoMobileListView",
         STYLED = "styled",
-        DATA_BOUND = "dataBound",
-        DATA_BINDING = "dataBinding",
+        DATABOUND = "dataBound",
+        DATABINDING = "dataBinding",
         ITEM_CHANGE = "itemChange",
         CLICK = "click",
         CHANGE = "change",
@@ -114,7 +114,7 @@ var __meta__ = {
             listView.bind("resize", cacheHeaders);
 
             listView.bind(STYLED, cacheHeaders);
-            listView.bind(DATA_BOUND, cacheHeaders);
+            listView.bind(DATABOUND, cacheHeaders);
 
             scroller.bind("scroll", function(e) {
                 headerFixer._fixHeader(e);
@@ -197,8 +197,10 @@ var __meta__ = {
             scroller.setOptions({
                 pullToRefresh: true,
                 pull: function() {
-                    handler._pulled = true;
-                    handler.dataSource.read(pullParameters.call(listView, handler._first));
+                    if (!handler._pulled) {
+                        handler._pulled = true;
+                        handler.dataSource.read(pullParameters.call(listView, handler._first));
+                    }
                 },
                 pullTemplate: options.pullTemplate,
                 releaseTemplate: options.releaseTemplate,
@@ -213,6 +215,10 @@ var __meta__ = {
             this.dataSource = dataSource;
 
             dataSource.bind("change", function() {
+                handler._change();
+            });
+
+            dataSource.bind("error", function() {
                 handler._change();
             });
         },
@@ -707,7 +713,6 @@ var __meta__ = {
                 item;
 
             if (action === "itemchange") {
-                // the itemchange may come from a child collection
                 item = listView.findByDataItem(dataItems)[0];
                 if (item) {
                     listView.setDataItem(item, dataItems[0]);
@@ -715,20 +720,40 @@ var __meta__ = {
                 return;
             }
 
-            listView.trigger(DATA_BINDING);
+            var removedItems, addedItems, addedDataItems;
+            var adding = (action === "add" && !groupedMode) || (prependOnRefresh && !listView._filter);
+            var removing = action === "remove" && !groupedMode;
+
+            if (adding) {
+                // no need to unbind anything
+                removedItems = [];
+            } else if (removing) {
+                // unbind the items about to be removed;
+                removedItems = listView.findByDataItem(dataItems);
+            }
+
+            if (listView.trigger(DATABINDING, { action: action || "rebind", items: dataItems, removedItems: removedItems, index: e && e.index })) {
+                if (this._shouldShowLoading()) {
+                    listView.hideLoading();
+                }
+                return;
+            }
 
             if (action === "add" && !groupedMode) {
                 var index = view.indexOf(dataItems[0]);
                 if (index > -1) {
-                    listView.insertAt(dataItems, index);
+                    addedItems = listView.insertAt(dataItems, index);
+                    addedDataItems = dataItems;
                 }
             } else if (action === "remove" && !groupedMode) {
+                addedItems = [];
                 listView.remove(dataItems);
             } else if (groupedMode) {
                 listView.replaceGrouped(view);
             }
             else if (prependOnRefresh && !listView._filter) {
-                listView.prepend(view);
+                addedItems = listView.prepend(view);
+                addedDataItems = view;
             }
             else {
                 listView.replace(view);
@@ -738,7 +763,7 @@ var __meta__ = {
                 listView.hideLoading();
             }
 
-            listView.trigger(DATA_BOUND, { ns: ui });
+            listView.trigger(DATABOUND, { ns: ui, addedItems: addedItems, addedDataItems: addedDataItems });
         },
 
         setDataSource: function(dataSource) {
@@ -863,12 +888,6 @@ var __meta__ = {
                 allowSelection: true,
                 tap: function(e) {
                     listView._click(e);
-                },
-                // prevent the navigation when native scrolling is present
-                end: function(e) {
-                    if (kendo.mobile.appLevelNativeScrolling() || listView.viewHasNativeScrolling()) {
-                        e.preventDefault();
-                    }
                 }
             });
 
@@ -888,10 +907,6 @@ var __meta__ = {
 
             this._style();
 
-            if (this.options.pullToRefresh) {
-                this._pullToRefreshHandler = new RefreshHandler(this);
-            }
-
             if (this.options.filterable) {
                 this._filter = new ListViewFilter(this);
             }
@@ -900,6 +915,10 @@ var __meta__ = {
                 this._itemBinder = new VirtualListViewItemBinder(this);
             } else {
                 this._itemBinder = new ListViewItemBinder(this);
+            }
+
+            if (this.options.pullToRefresh) {
+                this._pullToRefreshHandler = new RefreshHandler(this);
             }
 
             this.setDataSource(options.dataSource);
@@ -911,8 +930,8 @@ var __meta__ = {
 
         events: [
             CLICK,
-            DATA_BINDING,
-            DATA_BOUND,
+            DATABINDING,
+            DATABOUND,
             ITEM_CHANGE
         ],
 
@@ -1005,7 +1024,7 @@ var __meta__ = {
 
         insertAt: function(dataItems, index) {
             var listView = this;
-            return this._renderItems(dataItems, function(items) {
+            return listView._renderItems(dataItems, function(items) {
                 if (index === 0) {
                     listView.element.prepend(items);
                 }
@@ -1014,9 +1033,14 @@ var __meta__ = {
                 } else {
                     listView.items().eq(index - 1).after(items);
                 }
-                for (var idx = 0; idx < items.length; idx ++) {
-                    listView.trigger(ITEM_CHANGE, { item: [items[idx]], data: dataItems[idx], ns: ui });
-                }
+                listView.angular("compile", function(){
+                    return {
+                        elements: items,
+                        data: dataItems.map(function(data){
+                            return { dataItem: data };
+                        })
+                    };
+                });
             });
         },
 
@@ -1030,6 +1054,7 @@ var __meta__ = {
 
         replace: function(dataItems) {
             this.options.type = "flat";
+            this._angularItems("cleanup");
             this.element.empty();
             this._style();
             return this.insertAt(dataItems, 0);
@@ -1037,17 +1062,22 @@ var __meta__ = {
 
         replaceGrouped: function(groups) {
             this.options.type = "group";
+            this._angularItems("cleanup");
             this.element.empty();
             var items = $(kendo.render(this.groupTemplate, groups));
 
             this._enhanceItems(items.children("ul").children("li"));
             this.element.append(items);
             mobile.init(items);
+            this._angularItems("compile");
             this._style();
         },
 
         remove: function(dataItems) {
             var items = this.findByDataItem(dataItems);
+            this.angular("cleanup", function(){
+                return { elements: items };
+            });
             kendo.destroy(items);
             items.remove();
         },
@@ -1067,6 +1097,7 @@ var __meta__ = {
             var listView = this,
                 replaceItem = function(items) {
                     var newItem = $(items[0]);
+                    kendo.destroy(item);
                     $(item).replaceWith(newItem);
                     listView.trigger(ITEM_CHANGE, { item: newItem, data: dataItem, ns: ui });
                 };

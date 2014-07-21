@@ -25,6 +25,8 @@ var __meta__ = {
         SHOW = "show",
         AFTER_SHOW = "afterShow",
         BEFORE_HIDE = "beforeHide",
+        TRANSITION_END = "transitionEnd",
+        TRANSITION_START = "transitionStart",
         HIDE = "hide",
         DESTROY = "destroy",
         Z_INDEX = "z-index",
@@ -51,6 +53,7 @@ var __meta__ = {
         init: function(element, options) {
             Widget.fn.init.call(this, element, options);
 
+
             this.params = {};
 
             $.extend(this, options);
@@ -71,7 +74,9 @@ var __meta__ = {
             AFTER_SHOW,
             BEFORE_HIDE,
             HIDE,
-            DESTROY
+            DESTROY,
+            TRANSITION_START,
+            TRANSITION_END
         ],
 
         options: {
@@ -84,6 +89,8 @@ var __meta__ = {
             stretch: false,
             zoom: false,
             model: null,
+            modelScope: window,
+            scroller: {},
             initWidgets: true
         },
 
@@ -159,6 +166,18 @@ var __meta__ = {
             var that = this;
             that.element.hide();
             that.trigger(HIDE, {view: that});
+
+            if (that.layout) {
+                that.layout.trigger(HIDE, { view : that, layout: that.layout });
+            }
+        },
+
+        beforeTransition: function(type){
+            this.trigger(TRANSITION_START, { type: type });
+        },
+
+        afterTransition: function(type){
+            this.trigger(TRANSITION_END, { type: type });
         },
 
         _padIfNativeScrolling: function() {
@@ -193,7 +212,7 @@ var __meta__ = {
             if (that.options.stretch) {
                 that.content.addClass("km-stretched-view");
             } else {
-                that.content.kendoMobileScroller({ zoom: that.options.zoom, useNative: that.options.useNativeScrolling });
+                that.content.kendoMobileScroller($.extend(that.options.scroller, { zoom: that.options.zoom, useNative: that.options.useNativeScrolling }));
 
                 that.scroller = that.content.data("kendoMobileScroller");
                 that.scrollerContent = that.scroller.scrollElement;
@@ -214,7 +233,7 @@ var __meta__ = {
                 model = that.options.model;
 
             if (typeof model === "string") {
-                model = kendo.getter(model)(window);
+                model = kendo.getter(model)(that.options.modelScope);
             }
 
             that.model = model;
@@ -224,7 +243,7 @@ var __meta__ = {
             that.element.css("display", "");
             if (that.options.initWidgets) {
                 if (model) {
-                    kendo.bind(element.children(), model, ui, kendo.ui, kendo.dataviz.ui);
+                    kendo.bind(element, model, ui, kendo.ui, kendo.dataviz.ui);
                 } else {
                     mobile.init(element.children());
                 }
@@ -249,7 +268,7 @@ var __meta__ = {
                 contentSelector = roleSelector("content"),
                 element = that.element;
 
-            element.data("kendoView", that).addClass("km-view");
+            element.addClass("km-view");
 
             that.header = element.children(roleSelector("header")).addClass("km-header");
             that.footer = element.children(roleSelector("footer")).addClass("km-footer");
@@ -322,8 +341,6 @@ var __meta__ = {
             if (view.footer === that.footer && that.footer.length) {
                 view.element.append(that.footer.detach()[0].cloneNode(true));
             }
-
-            that.trigger(HIDE, {layout: that, view: view});
         },
 
         attach: function(view) {
@@ -436,7 +453,7 @@ var __meta__ = {
                     return that.viewContainer.show(view, transition, url);
                 },
                 element = that._findViewElement(url),
-                view = element.data("kendoView");
+                view = kendo.widgetInstance(element);
 
             that.url = url;
             that.params = params;
@@ -538,6 +555,7 @@ var __meta__ = {
                 loader: that.loader,
                 container: that.container,
                 layout: layout,
+                modelScope: that.modelScope,
                 reload: attrValue(element, "reload")
             };
 

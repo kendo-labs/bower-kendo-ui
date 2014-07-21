@@ -23,6 +23,7 @@ var __meta__ = {
         INIT = "init",
         SHOW = "show",
         HIDE = "hide",
+        AFTER_HIDE = "afterHide",
         NULL_VIEW = { enable: $.noop };
 
     var Drawer = ui.View.extend({
@@ -97,6 +98,7 @@ var __meta__ = {
             name: "Drawer",
             position: "left",
             views: [],
+            swipeToOpenViews: [],
             swipeToOpen: true,
             title: "",
             container: null
@@ -105,6 +107,7 @@ var __meta__ = {
         events: [
             BEFORE_SHOW,
             HIDE,
+            AFTER_HIDE,
             INIT,
             SHOW
         ],
@@ -146,16 +149,9 @@ var __meta__ = {
                 return true;
             }
 
-            var view,
-                visibleOnCurrentView = true,
-                views = this.options.views;
+            var visibleOnCurrentView = this._currentViewIncludedIn(this.options.views);
 
-            if (this.pane && views.length) {
-                view = this.pane.view();
-                visibleOnCurrentView = this._viewsInclude(view.id.replace('#', '')) || this._viewsInclude(view.element.attr("id"));
-            }
-
-            if (this.trigger(BEFORE_SHOW, { view: this }) || !visibleOnCurrentView) {
+            if (!visibleOnCurrentView || this.trigger(BEFORE_SHOW, { view: this })) {
                 return false;
             }
 
@@ -166,8 +162,13 @@ var __meta__ = {
             return true;
         },
 
-        _viewsInclude: function(id) {
-            return this.options.views.indexOf(id) > -1;
+        _currentViewIncludedIn: function(views) {
+            if (!this.pane || !views.length) {
+                return true;
+            }
+
+            var view = this.pane.view();
+            return $.inArray(view.id.replace('#', ''), views) > -1 || $.inArray(view.element.attr("id"), views) > -1;
         },
 
         _show: function() {
@@ -234,6 +235,7 @@ var __meta__ = {
                     if (movable[AXIS] === 0) {
                         element[0].style.cssText = "";
                         that.element.hide();
+                        that.trigger(AFTER_HIDE);
                         that.visible = false;
                     }
                 }
@@ -253,7 +255,7 @@ var __meta__ = {
             var userEvents = e.sender;
 
             // ignore non-horizontal swipes
-            if (Math.abs(e.x.velocity) < Math.abs(e.y.velocity) || kendo.triggeredByInput(e.event)) {
+            if (Math.abs(e.x.velocity) < Math.abs(e.y.velocity) || kendo.triggeredByInput(e.event) || !this._currentViewIncludedIn(this.options.swipeToOpenViews)) {
                 userEvents.cancel();
                 return;
             }

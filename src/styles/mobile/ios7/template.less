@@ -18,6 +18,7 @@
 @ios7-overlay-background: rgba(0,0,0,.4);
 
 .km-ios7 .km-navbar,
+.km-ios7 .k-toolbar,
 .km-ios7 .km-tabstrip
 {
     background-color: @ios7-light-background;
@@ -38,7 +39,7 @@
 /* NavBar */
 
 .km-ios7 .km-navbar,
-.km-ios7 .km-toolbar,
+.km-ios7 .k-toolbar,
 .km-ios7 .km-tabstrip
 {
     border-color: @ios7-second-border-color;
@@ -201,7 +202,9 @@
 /* PopUp */
 
 .km-ios7 .km-popup .k-item,
-.km-ios7 .km-actionsheet > li > a
+.km-ios7 .km-actionsheet > li > a,
+.km-ios7 .k-overflow-container a.km-state-disabled,
+.km-ios7 .k-overflow-container .km-state-disabled:active
 {
     background: @ios7-actionsheet-background;
     border-bottom-color: @ios7-second-border-color;
@@ -225,6 +228,12 @@
     .box-shadow(0 0 0 1px @ios7-second-border-color);
 }
 
+.km-ios7 .k-split-wrapper .km-popup,
+.km-ios7 .k-overflow-wrapper .km-popup
+{
+    .box-shadow(0 0 5px @ios7-second-border-color);
+}
+
 .km-ios7 .km-popup-arrow:after
 {
     border-color: @ios7-actionsheet-background transparent;
@@ -240,6 +249,12 @@
 
 .km-ios7.km-pane > .km-loader,
 .km-ios7 .km-pane > .km-loader
+{
+    background: rgba(0,0,0,.1);
+}
+
+.km-ios7 .k-split-wrapper .km-actionsheet-wrapper,
+.km-ios7 .k-overflow-wrapper .km-actionsheet-wrapper
 {
     background: rgba(0,0,0,.2);
 }

@@ -211,7 +211,7 @@ var __meta__ = {
                 i = 0, item, value;
 
             if ((1000 * options.largeStep) % (1000 * options.smallStep) === 0 || that._distance / options.largeStep >= 3) {
-                if (that._isHorizontal && !that._isRtl) {
+                if (!that._isHorizontal && !that._isRtl) {
                     items = $.makeArray(items).reverse();
                 }
 
@@ -962,6 +962,7 @@ var __meta__ = {
             this.owner._activeDragHandle = this;
 
             owner.element.off(MOUSE_OVER);
+            owner.wrapper.find("." + STATE_FOCUSED).removeClass(STATE_FOCUSED + " " + STATE_SELECTED);
             that.element.addClass(STATE_FOCUSED + " " + STATE_SELECTED);
             $(document.documentElement).css("cursor", "pointer");
 
@@ -1336,6 +1337,7 @@ var __meta__ = {
                     from, to, drag;
 
                 if (target.hasClass("k-draghandle")) {
+                    that.wrapper.find("." + STATE_FOCUSED).removeClass(STATE_FOCUSED + " " + STATE_SELECTED);
                     target.addClass(STATE_FOCUSED + " " + STATE_SELECTED);
                     return;
                 }

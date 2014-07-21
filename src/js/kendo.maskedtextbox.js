@@ -45,22 +45,25 @@ var __meta__ = {
                 .addClass("k-textbox")
                 .attr("autocomplete", "off")
                 .on("focus" + ns, function() {
-                    that._oldValue = DOMElement.value;
+                    var value = DOMElement.value;
+                    that._oldValue = value;
 
-                    if (!element.val()) {
+                    if (!value) {
                         DOMElement.value = that._old = that._emptyMask;
-                        caret(element, 0);
-                    } else {
-                        that._timeoutId = setTimeout(function() {
-                            element.select();
-                        });
                     }
-                })
-                .on("blur" + ns, function() {
-                    clearTimeout(that._timeoutId);
 
-                    if (element.val() === that._emptyMask) {
-                        DOMElement.value = that._old = "";
+                    that._timeoutId = setTimeout(function() {
+                        caret(element, 0, value ? that._maskLength : 0);
+                    });
+                })
+                .on("focusout" + ns, function() {
+                    var value = element.val();
+
+                    clearTimeout(that._timeoutId);
+                    DOMElement.value = that._old = "";
+
+                    if (value !== that._emptyMask) {
+                        DOMElement.value = that._old = value;
                     }
 
                     that._change();
@@ -325,7 +328,7 @@ var __meta__ = {
         },
 
         _keypress: function(e) {
-            if (e.which === 0) {
+            if (e.which === 0 || e.ctrlKey) {
                 return;
             }
 

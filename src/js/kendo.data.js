@@ -590,6 +590,13 @@ var __meta__ = {
 
             if (!data || $.isEmptyObject(data)) {
                 data = $.extend({}, that.defaults, data);
+
+                if (that._initializers) {
+                    for (var idx = 0; idx < that._initializers.length; idx++) {
+                         var name = that._initializers[idx];
+                         data[name] = that.defaults[name]();
+                    }
+                }
             }
 
             ObservableObject.fn.init.call(that, data);
@@ -698,7 +705,8 @@ var __meta__ = {
             length,
             fields = {},
             originalName,
-            id = proto.id;
+            id = proto.id,
+            functionFields = [];
 
         if (id) {
             proto.idField = id;
@@ -734,6 +742,10 @@ var __meta__ = {
 
             if (!field.nullable) {
                 value = proto.defaults[originalName !== name ? originalName : name] = field.defaultValue !== undefined ? field.defaultValue : defaultValues[type.toLowerCase()];
+
+                if (typeof value === "function") {
+                    functionFields.push(name);
+                }
             }
 
             if (options.id === name) {
@@ -743,6 +755,10 @@ var __meta__ = {
             proto.defaults[originalName !== name ? originalName : name] = value;
 
             field.parse = field.parse || parsers[type];
+        }
+
+        if (functionFields.length > 0) {
+            proto._initializers = functionFields;
         }
 
         model = base.extend(proto);
@@ -1406,11 +1422,11 @@ var __meta__ = {
         max: function(accumulator, item, accessor) {
             var value = accessor.get(item);
 
-            if (!isNumber(accumulator)) {
+            if (!isNumber(accumulator) && !isDate(accumulator)) {
                 accumulator = value;
             }
 
-            if(accumulator < value && isNumber(value)) {
+            if(accumulator < value && (isNumber(value) || isDate(value))) {
                 accumulator = value;
             }
             return accumulator;
@@ -1418,11 +1434,11 @@ var __meta__ = {
         min: function(accumulator, item, accessor) {
             var value = accessor.get(item);
 
-            if (!isNumber(accumulator)) {
+            if (!isNumber(accumulator) && !isDate(accumulator)) {
                 accumulator = value;
             }
 
-            if(accumulator > value && isNumber(value)) {
+            if(accumulator > value && (isNumber(value) || isDate(value))) {
                 accumulator = value;
             }
             return accumulator;
@@ -1431,6 +1447,10 @@ var __meta__ = {
 
     function isNumber(val) {
         return typeof val === "number" && !isNaN(val);
+    }
+
+    function isDate(val) {
+        return val && val.getTime;
     }
 
     function toJSON(array) {
@@ -1760,9 +1780,12 @@ var __meta__ = {
                 that.model = model = base.define(that.model);
             }
 
+            var dataFunction = proxy(that.data, that);
+
+            that._dataAccessFunction = dataFunction;
+
             if (that.model) {
-                var dataFunction = proxy(that.data, that),
-                    groupsFunction = proxy(that.groups, that),
+                var groupsFunction = proxy(that.groups, that),
                     serializeFunction = proxy(that.serialize, that),
                     originalFieldNames = {},
                     getters = {},
@@ -1872,13 +1895,20 @@ var __meta__ = {
     }
 
     function flattenGroups(data) {
-        var idx, length, result = [];
+        var idx,
+            result = [],
+            length,
+            items,
+            itemIndex;
 
         for (idx = 0, length = data.length; idx < length; idx++) {
             if (data[idx].hasSubgroups) {
                 result = result.concat(flattenGroups(data[idx].items));
             } else {
-                result = result.concat(data[idx].items.slice());
+                items = data[idx].items;
+                for (itemIndex = 0; itemIndex < items.length; itemIndex++) {
+                    result.push(items[itemIndex]);
+                }
             }
         }
         return result;
@@ -2196,6 +2226,16 @@ var __meta__ = {
             return this._view;
         },
 
+        flatView: function() {
+            var groups = this.group() || [];
+
+            if (groups.length) {
+                return flattenGroups(this._view);
+            } else {
+                return this._view;
+            }
+        },
+
         add: function(model) {
             return this.insert(this._data.length, model);
         },
@@ -2233,21 +2273,27 @@ var __meta__ = {
             }
 
             var pushed = [];
+            var autoSync = this.options.autoSync;
+            this.options.autoSync = false;
 
-            for (var idx = 0; idx < items.length; idx ++) {
-                var item = items[idx];
+            try {
+                for (var idx = 0; idx < items.length; idx ++) {
+                    var item = items[idx];
 
-                var result = this.add(item);
+                    var result = this.add(item);
 
-                pushed.push(result);
+                    pushed.push(result);
 
-                var pristine = result.toJSON();
+                    var pristine = result.toJSON();
 
-                if (this._isServerGrouped()) {
-                    pristine = wrapInEmptyGroup(this.group(), pristine);
+                    if (this._isServerGrouped()) {
+                        pristine = wrapInEmptyGroup(this.group(), pristine);
+                    }
+
+                    this._pristineData.push(pristine);
                 }
-
-                this._pristineData.push(pristine);
+            } finally {
+                this.options.autoSync = autoSync;
             }
 
             if (pushed.length) {
@@ -2501,7 +2547,7 @@ var __meta__ = {
 
         _readData: function(data) {
             var read = !this._isServerGrouped() ? this.reader.data : this.reader.groups;
-            return read(data);
+            return read.call(this.reader, data);
         },
 
         _eachPristineItem: function(callback) {
@@ -2783,7 +2829,10 @@ var __meta__ = {
             if (that.options.autoSync && (action === "add" || action === "remove" || action === "itemchange")) {
                 that.sync();
             } else {
-                var total = parseInt(that._total || that._pristineTotal, 10);
+                var total = parseInt(that._total, 10);
+                if (!isNumber(that._total)) {
+                    total = parseInt(that._pristineTotal, 10);
+                }
                 if (action === "add") {
                     total += e.items.length;
                 } else if (action === "remove") {
@@ -3098,6 +3147,10 @@ var __meta__ = {
             return ranges.length && ranges[0].data.length && ranges[0].data[0].uid;
         },
 
+        enableRequestsInProgress: function() {
+            this._skipRequestsInProgress = false;
+        },
+
         range: function(skip, take) {
             skip = math.min(skip || 0, this.total());
 
@@ -3106,9 +3159,15 @@ var __meta__ = {
                 size = math.min(pageSkip + take, that.total()),
                 data;
 
+            that._skipRequestsInProgress = false;
+
             data = that._findRange(skip, math.min(skip + take, that.total()));
 
             if (data.length) {
+
+                that._skipRequestsInProgress = true;
+                that._pending = undefined;
+
                 that._skip = skip > that.skip() ? math.min(size, (that.totalPages() - 1) * that.take()) : pageSkip;
 
                 that._take = take;
@@ -3287,10 +3346,12 @@ var __meta__ = {
                 that._ranges.sort( function(x, y) { return x.start - y.start; } );
                 that._total = that.reader.total(data);
 
-                if (callback && temp.length) {
-                    callback();
-                } else {
-                    that.trigger(CHANGE, {});
+                if (!that._skipRequestsInProgress) {
+                    if (callback && temp.length) {
+                        callback();
+                    } else {
+                        that.trigger(CHANGE, {});
+                    }
                 }
             };
         },
@@ -3539,7 +3600,8 @@ var __meta__ = {
                     data: childrenField,
                     model: {
                         hasChildren: hasChildren,
-                        id: that.idField
+                        id: that.idField,
+                        fields: that.fields
                     }
                 }
             };
@@ -4035,6 +4097,7 @@ var __meta__ = {
             this.dataOffset = offset;
             this._expanding = expanding;
             this.dataSource.range(offset, this.pageSize);
+            this.dataSource.enableRequestsInProgress();
         },
 
         _change: function() {

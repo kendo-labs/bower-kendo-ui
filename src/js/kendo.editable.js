@@ -160,6 +160,9 @@ var __meta__ = {
         init: function(element, options) {
             var that = this;
 
+            if (options.target) {
+                options.$angular = options.target.options.$angular;
+            }
             Widget.fn.init.call(that, element, options);
             that._validateProxy = $.proxy(that._validate, that);
             that.refresh();
@@ -200,20 +203,25 @@ var __meta__ = {
 
         _validate: function(e) {
             var that = this,
-                isBoolean = typeof e.value === "boolean",
                 input,
+                value = e.value,
                 preventChangeTrigger = that._validationEventInProgress,
                 values = {},
                 bindAttribute = kendo.attr("bind"),
-                attributeValue = (isBoolean ? 'checked:' : 'value:') + e.field.replace(nameSpecialCharRegExp, "\\$1");
+                fieldName = e.field.replace(nameSpecialCharRegExp, "\\$1"),
+                checkedBinding = 'checked:' + fieldName,
+                valueBinding = 'value:' + fieldName;
 
             values[e.field] = e.value;
 
-            input = $(':input[' + bindAttribute + '*="' + attributeValue + '"]', that.element)
+            input = $(':input[' + bindAttribute + '*="' + valueBinding + '"],:input[' + bindAttribute + '*="' + checkedBinding + '"]', that.element)
                 .filter("[" + kendo.attr("validate") + "!='false']");
             if (input.length > 1) {
                 input = input.filter(function () {
-                    return inArray(attributeValue, $(this).attr(bindAttribute).split(",")) >= 0;
+                    var element = $(this);
+                    var bindings = element.attr(bindAttribute).split(",");
+                    var matchesBinding = inArray(valueBinding, bindings) >= 0 || inArray(checkedBinding, bindings) >= 0;
+                    return matchesBinding && (!element.is(":radio") || element.val() == value);
                 });
             }
 
@@ -235,6 +243,10 @@ var __meta__ = {
 
         destroy: function() {
             var that = this;
+
+            that.angular("cleanup", function(){
+                return { elements: that.element };
+            });
 
             Widget.fn.destroy.call(that);
 
@@ -264,6 +276,15 @@ var __meta__ = {
                 modelField,
                 modelFields;
 
+            if (that.options.target) {
+                that.angular("compile", function(){
+                    return {
+                        elements: container,
+                        data: [ { dataItem: model } ]
+                    };
+                });
+            }
+
             if (!$.isArray(fields)) {
                 fields = [fields];
             }
@@ -288,8 +309,13 @@ var __meta__ = {
 
             convertToValueBinding(container);
 
+            if (that.validatable) {
+                that.validatable.destroy();
+            }
+
             kendo.bind(container, that.options.model);
 
+            that.options.model.unbind("set", that._validateProxy);
             that.options.model.bind("set", that._validateProxy);
 
             that.validatable = new kendo.ui.Validator(container, {

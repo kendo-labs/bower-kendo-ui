@@ -79,11 +79,11 @@ var __meta__ = {
 
             that._enable();
 
+            that._oldIndex = that.selectedIndex = -1;
+
             that._cascade();
 
             that._aria();
-
-            that._oldIndex = that.selectedIndex = -1;
 
             if (options.autoBind) {
                 that._filterSource();
@@ -201,9 +201,10 @@ var __meta__ = {
                         wrapper.addClass(FOCUSED);
                         that._placeholder(false);
                     })
-                    .on("blur" + ns, function() {
+                    .on("focusout" + ns, function() {
                         wrapper.removeClass(FOCUSED);
                         clearTimeout(that._typing);
+                        that._typing = null;
 
                         if (that.options.text !== that.input.val()) {
                             that.text(that.text());
@@ -255,6 +256,7 @@ var __meta__ = {
                 keepState = true,
                 hasChild, custom;
 
+            that._angularItems("cleanup");
             that.trigger("dataBinding");
 
             ul.innerHTML = kendo.render(that.template, data);
@@ -305,7 +307,7 @@ var __meta__ = {
                     that.toggle(!!length);
                 }
 
-                that._typing = undefined;
+                that._typing = null;
             }
 
             if (that._touchScroller) {
@@ -316,34 +318,8 @@ var __meta__ = {
 
             that._hideBusy();
             that._bound = true;
+            that._angularItems("compile");
             that.trigger("dataBound");
-        },
-
-        search: function(word) {
-            word = typeof word === "string" ? word : this.text();
-            var that = this,
-                length = word.length,
-                options = that.options,
-                ignoreCase = options.ignoreCase,
-                filter = options.filter,
-                field = options.dataTextField;
-
-            clearTimeout(that._typing);
-
-            if (length >= options.minLength) {
-                that._state = STATE_FILTER;
-                if (filter === "none") {
-                    that._filter(word);
-                } else {
-                    that._open = true;
-                    that._filterSource({
-                        value: ignoreCase ? word.toLowerCase() : word,
-                        field: field,
-                        operator: filter,
-                        ignoreCase: ignoreCase
-                    });
-                }
-            }
         },
 
         suggest: function(word) {
@@ -659,6 +635,7 @@ var __meta__ = {
             that._last = key;
 
             clearTimeout(that._typing);
+            that._typing = null;
 
             if (key != keys.TAB && !that._move(e)) {
                that._search();

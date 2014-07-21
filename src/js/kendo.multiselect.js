@@ -247,9 +247,15 @@ var __meta__ = {
 
                 that.input.on(KEYDOWN, proxy(that._keydown, that))
                     .on("paste" + ns, proxy(that._search, that))
-                    .on("focus" + ns, function() { that._placeholder(false); })
-                    .on("blur" + ns, function() {
+                    .on("focus" + ns, function() {
+                        that._placeholder(false);
+                        wrapper.addClass(FOCUSEDCLASS);
+                    })
+                    .on("focusout" + ns, function() {
                         clearTimeout(that._typing);
+
+                        wrapper.removeClass(FOCUSEDCLASS);
+
                         that._placeholder(!that._dataItems[0], true);
                         that.close();
 
@@ -703,9 +709,6 @@ var __meta__ = {
                 if (input[0] !== active) {
                     show = !that._dataItems[0];
                 }
-                that.wrapper.removeClass(FOCUSEDCLASS);
-            } else {
-                that.wrapper.addClass(FOCUSEDCLASS);
             }
 
             that._prev = "";
@@ -963,6 +966,7 @@ var __meta__ = {
             that.element.removeAttr("accesskey");
             that._focused = that.input = input.attr({
                 "accesskey": accessKey,
+                "autocomplete": "off",
                 "role": "listbox",
                 "aria-expanded": false
             });

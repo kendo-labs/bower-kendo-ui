@@ -15,6 +15,7 @@ var __meta__ = {
         ui = kendo.mobile.ui,
         Shim = ui.Shim,
         Widget = ui.Widget,
+        BEFORE_OPEN = "beforeOpen",
         OPEN = "open",
         CLOSE = "close",
         INIT = "init",
@@ -48,7 +49,9 @@ var __meta__ = {
                 effect: "fade:in",
                 className: "km-modalview-root",
                 hide: function(e) {
-                    that.trigger(CLOSE);
+                    if (that.trigger(CLOSE)) {
+                        e.preventDefault();
+                    }
                 }
             });
 
@@ -67,6 +70,7 @@ var __meta__ = {
 
         events: [
             INIT,
+            BEFORE_OPEN,
             OPEN,
             CLOSE
         ],
@@ -87,18 +91,22 @@ var __meta__ = {
             var that = this;
             that.target = $(target);
             that.shim.show();
+            // necessary for the mobile view interface
             that.trigger("show", { view: that });
         },
 
         // Interface implementation, called from the pane click handlers
         openFor: function(target) {
-            this.open(target);
-            this.trigger(OPEN, { target: target });
+            if (!this.trigger(BEFORE_OPEN, { target: target })) {
+                this.open(target);
+                this.trigger(OPEN, { target: target });
+            }
         },
 
         close: function() {
-            this.shim.hide();
-            this.trigger(CLOSE);
+            if (this.element.is(":visible") && !this.trigger(CLOSE)) {
+                this.shim.hide();
+            }
         }
     });
 

@@ -38,6 +38,13 @@ var __meta__ = {
         GESTUREEND = "gestureend",
         GESTURETAP = "gesturetap";
 
+    var THRESHOLD = {
+        "api": 0,
+        "touch": 0,
+        "mouse": 9,
+        "pointer": 9
+    };
+
     function touchDelta(touch1, touch2) {
         var x1 = touch1.x.location,
             y1 = touch1.y.location,
@@ -70,7 +77,8 @@ var __meta__ = {
                 event: e,
                 target: e.target,
                 currentTarget: e.target,
-                location: e
+                location: e,
+                type: "api"
             });
         }
         else if (e.type.match(/touch/)) {
@@ -82,7 +90,8 @@ var __meta__ = {
                     event: e,
                     target: touch.target,
                     currentTarget: currentTarget,
-                    id: touch.identifier
+                    id: touch.identifier,
+                    type: "touch"
                 });
             }
         }
@@ -92,7 +101,8 @@ var __meta__ = {
                 event: e,
                 target: e.target,
                 currentTarget: currentTarget,
-                id: originalEvent.pointerId
+                id: originalEvent.pointerId,
+                type: "pointer"
             });
         } else {
             touches.push({
@@ -100,7 +110,8 @@ var __meta__ = {
                 event: e,
                 target: e.target,
                 currentTarget: currentTarget,
-                location: e
+                location: e,
+                type: "mouse"
             });
         }
 
@@ -153,6 +164,8 @@ var __meta__ = {
             extend(this, {
                 x: new TouchAxis("X", touchInfo.location),
                 y: new TouchAxis("Y", touchInfo.location),
+                type: touchInfo.type,
+                threshold: userEvents.threshold || THRESHOLD[touchInfo.type],
                 userEvents: userEvents,
                 target: target,
                 currentTarget: touchInfo.currentTarget,
@@ -209,6 +222,8 @@ var __meta__ = {
             // Mark the object as finished if there are blocking operations in the event handlers (alert/confirm)
             that._finished = true;
 
+            that._trigger(RELEASE, touchInfo); // Release should be fired before TAP (as click is after mouseup/touchend)
+
             if (that._moved) {
                 that._trigger(END, touchInfo);
             } else {
@@ -216,7 +231,6 @@ var __meta__ = {
             }
 
             clearTimeout(that._holdTimeout);
-            that._trigger(RELEASE, touchInfo);
 
             that.dispose();
         },
@@ -272,23 +286,9 @@ var __meta__ = {
             var xDelta = this.x.initialDelta,
                 yDelta = this.y.initialDelta;
 
-            return Math.sqrt(xDelta * xDelta + yDelta * yDelta) <= this.userEvents.threshold;
+            return Math.sqrt(xDelta * xDelta + yDelta * yDelta) <= this.threshold;
         }
     });
-
-    function preventTrigger(e) {
-        e.preventDefault();
-
-        var target = $(e.data.root),   // Determine the correct parent to receive the event and bubble.
-            parent = target.closest(".k-widget").parent();
-
-        if (!parent[0]) {
-            parent = target.parent();
-        }
-
-        var fakeEventData = $.extend(true, {}, e, { target: target[0] });
-        parent.trigger($.Event(e.type, fakeEventData));
-    }
 
     function withEachUpEvent(callback) {
         var downEvents = kendo.eventMap.up.split(" "),
@@ -340,7 +340,7 @@ var __meta__ = {
                 element.on(kendo.applyEventMap("dragstart", ns), kendo.preventDefault);
             }
 
-            element.on(kendo.applyEventMap("mousedown selectstart", ns), filter, { root: element }, "_select");
+            element.on(kendo.applyEventMap("mousedown", ns), filter, { root: element }, "_select");
 
             if (that.captureUpIfMoved && support.eventCapture) {
                 var surfaceElement = that.surface[0],
@@ -431,7 +431,7 @@ var __meta__ = {
                 extend(data, {touches: touches}, touchDelta(touches[0], touches[1]));
             }
 
-            return this.trigger(eventName, data);
+            return this.trigger(eventName, extend(data, {type: eventName}));
         },
 
         // API
@@ -470,7 +470,7 @@ var __meta__ = {
 
         _select: function(e) {
            if (!this.allowSelection || this.trigger(SELECT, { event: e })) {
-                preventTrigger(e);
+               e.preventDefault();
            }
         },
 
@@ -484,11 +484,7 @@ var __meta__ = {
                 touch,
                 which = e.which;
 
-            if (which && which > 1){
-                return;
-            }
-
-            if (that._maxTouchesReached()) {
+            if ((which && which > 1) || (that._maxTouchesReached())){
                 return;
             }
 
@@ -573,6 +569,10 @@ var __meta__ = {
             });
         }
     });
+
+    UserEvents.defaultThreshold = function(value) {
+        DEFAULT_THRESHOLD = value;
+    };
 
     UserEvents.minHold = function(value) {
         DEFAULT_MIN_HOLD = value;

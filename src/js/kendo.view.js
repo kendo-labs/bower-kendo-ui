@@ -18,6 +18,8 @@ var __meta__ = {
         INIT = "init",
         SHOW = "show",
         HIDE = "hide",
+        TRANSITION_START = "transitionStart",
+        TRANSITION_END = "transitionEnd",
 
         ATTACH = "attach",
         DETACH = "detach",
@@ -34,9 +36,10 @@ var __meta__ = {
             that.tagName = options.tagName || "div";
             that.model = options.model;
             that._wrap = options.wrap !== false;
+            this._evalTemplate = options.evalTemplate || false;
             that._fragments = {};
 
-            that.bind([ INIT, SHOW, HIDE ], options);
+            that.bind([ INIT, SHOW, HIDE, TRANSITION_START, TRANSITION_END ], options);
         },
 
         render: function(container) {
@@ -88,6 +91,14 @@ var __meta__ = {
             this.hide();
         },
 
+        beforeTransition: function(type){
+            this.trigger(TRANSITION_START, { type: type });
+        },
+
+        afterTransition: function(type){
+            this.trigger(TRANSITION_END, { type: type });
+        },
+
         hide: function() {
             this._eachFragment(DETACH);
             this.element.detach();
@@ -116,7 +127,6 @@ var __meta__ = {
 
         _createElement: function() {
             var that = this,
-                wrap = that._wrap,
                 wrapper = "<" + that.tagName + " />",
                 element,
                 content;
@@ -134,19 +144,23 @@ var __meta__ = {
             }
 
             if (typeof content === "string") {
+                content = content.replace(/^\s+|\s+$/g, '');
+                if (that._evalTemplate) {
+                    content = kendo.template(content)(that.model || {});
+                }
+
                 element = $(wrapper).append(content);
-                kendo.stripWhitespace(element[0]);
-                // drop the wrapper if asked - this seems like the easiest (although not very intuitive) way to avoid messing up templates with questionable content, like the one below
+                // drop the wrapper if asked - this seems like the easiest (although not very intuitive) way to avoid messing up templates with questionable content, like this one for instance:
                 // <script id="my-template">
                 // foo
                 // <span> Span </span>
                 // </script>
-                if (!wrap) {
+                if (!that._wrap) {
                    element = element.contents();
                 }
             } else {
                 element = content;
-                if (wrap) {
+                if (that._wrap) {
                     element = element.wrapAll(wrapper).parent();
                 }
             }
@@ -170,7 +184,10 @@ var __meta__ = {
 
         hideEnd: function() {
             this.element.remove();
-        }
+        },
+
+        beforeTransition: $.noop,
+        afterTransition: $.noop
     });
 
     var Layout = View.extend({
@@ -224,7 +241,6 @@ var __meta__ = {
         },
 
         detach: function() {
-            console.log('detach', arguments);
         }
     });
 
@@ -310,17 +326,29 @@ var __meta__ = {
             }
 
             current.hideStart();
-            view.showStart();
 
             if (!theTransition || !kendo.effects.enabled) {
+                view.showStart();
                 that.end();
             } else {
+                // hide the view element before init/show - prevents blinks on iPad
+                // the replace effect will remove this class
+                view.element.addClass("k-fx-hidden");
+                view.showStart();
                 // do not reverse the explicit transition
                 if (back && !transition) {
                     transitionData.reverse = !transitionData.reverse;
                 }
 
                 that.effect = kendo.fx(view.element).replace(current.element, transitionData.type)
+                    .beforeTransition(function() {
+                        view.beforeTransition("show");
+                        current.beforeTransition("hide");
+                    })
+                    .afterTransition(function() {
+                        view.afterTransition("show");
+                        current.afterTransition("hide");
+                    })
                     .direction(transitionData.direction)
                     .setReverse(transitionData.reverse);
 

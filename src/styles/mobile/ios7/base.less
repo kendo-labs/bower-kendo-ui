@@ -23,6 +23,7 @@
 }
 
 .km-ios7 .km-navbar,
+.km-ios7 .k-toolbar,
 .km-ios7 .km-tabstrip
 {
     background-clip: border-box;
@@ -46,8 +47,22 @@
     .background-clip(content-box);
 }
 
+/* Revert box/clip for Web widgets */
+.km-ios7 [class^=k-],
+.km-ios7 .k-calendar th,
+.km-ios7 .k-calendar td
+{
+    .box-sizing(content-box);
+    .background-clip(border-box);
+}
+
+.km-ios7.km-on-android *
+{
+    .background-clip(border-box);
+}
+
 .km-ios7 .km-navbar,
-.km-ios7 .km-toolbar,
+.km-ios7 .k-toolbar,
 .km-ios7 .km-tabstrip
 {
     border-style: solid;
@@ -55,14 +70,14 @@
 }
 
 .km-ios7 .km-footer .km-navbar,
-.km-ios7 .km-footer .km-toolbar,
+.km-ios7 .km-footer .k-toolbar,
 .km-ios7 .km-tabstrip
 {
     border-width: @ios7-border-width 0 0;
 }
 
 .km-ios7 .km-navbar,
-.km-ios7 .km-toolbar,
+.km-ios7 .k-toolbar,
 .km-ios7 .km-tabstrip,
 .km-ios7 .km-tabstrip .km-button
 {
@@ -233,6 +248,7 @@
     left: auto;
     width: 8px;
     height: 2px;
+    font-size: 1em;
     margin: 0;
     border: 0;
     border-radius: 5px;
@@ -262,6 +278,7 @@
     position: absolute;
     left: 0;
     top: 0;
+    margin-left: 0;
     margin-top: 0;
     .transform-origin(inherit);
     .transform(rotate(-45deg));
@@ -343,7 +360,11 @@
 
 .km-ios7 .km-state-active,
 .km-ios7 .k-slider-selection,
-.km-ios7 .km-pages .km-current-page
+.km-ios7 .km-pages .km-current-page,
+.km-ios7 .k-split-container .km-state-active,
+.km-ios7 .k-overflow-container .km-state-active,
+.km-ios7 .k-split-container li > a:active,
+.km-ios7 .k-overflow-container li > a:active
 {
     background: currentcolor;
 }
@@ -351,10 +372,17 @@
 .km-ios7 .km-tabstrip .km-state-active,
 .km-ios7 li.km-state-active .km-listview-link,
 .km-ios7 li.km-state-active .km-listview-label,
+.km-ios7 .k-toolbar > .km-state-active,
 .km-ios7 .km-leftitem .km-button.km-state-active,
-.km-ios7 .km-rightitem .km-button.km-state-active
+.km-ios7 .km-rightitem .km-button.km-state-active,
+.km-ios7 .k-overflow-container .km-state-disabled
 {
     -webkit-text-fill-color: currentcolor;
+}
+
+.km-ios7 .k-overflow-container .km-state-disabled .km-text
+{
+    opacity: .5;
 }
 
 .km-ios7 .km-leftitem .km-button.km-state-active,
@@ -362,6 +390,19 @@
 {
     background: none;
     opacity: .4;
+}
+
+.km-ios7 .k-toolbar > .km-state-active,
+.km-ios7 .k-toolbar .k-split-button .km-state-active
+{
+    background: none;
+    -webkit-text-stroke: .5px currentcolor;
+    -webkit-text-fill-color: initial;
+}
+
+.km-root .km-ios7 .k-toolbar .km-state-disabled
+{
+    -webkit-text-stroke: 0;
 }
 
 /* transitions */

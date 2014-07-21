@@ -96,7 +96,7 @@ var __meta__ = {
                     that._placeholder(false);
                     wrapper.addClass(FOCUSED);
                 })
-                .on("blur" + ns, function () {
+                .on("focusout" + ns, function () {
                     that._change();
                     that._placeholder();
                     wrapper.removeClass(FOCUSED);
@@ -237,6 +237,7 @@ var __meta__ = {
             length = data.length,
             action;
 
+            that._angularItems("cleanup");
             that.trigger("dataBinding");
 
             ul.innerHTML = kendo.render(that.template, data);
@@ -276,6 +277,7 @@ var __meta__ = {
             that._makeUnselectable();
 
             that._hideBusy();
+            that._angularItems("compile");
             that.trigger("dataBound");
         },
 
@@ -381,7 +383,7 @@ var __meta__ = {
         value: function (value) {
             if (value !== undefined) {
                 this._accessor(value);
-                this._old = value;
+                this._old = this._accessor();
             } else {
                 return this._accessor();
             }

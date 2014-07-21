@@ -188,12 +188,23 @@ var __meta__ = {
 
         onEnd: function() {
             this.moveTo(this.destination);
+            if (this.callback) {
+                this.callback.call();
+            }
         },
 
         setCoordinates: function(from, to) {
             this.offset = {};
             this.origin = from;
             this.destination = to;
+        },
+
+        setCallback: function(callback) {
+            if (callback && kendo.isFunction(callback)) {
+                this.callback = callback;
+            } else {
+                callback = undefined;
+            }
         },
 
         _updateCoordinates: function() {
@@ -220,14 +231,18 @@ var __meta__ = {
                 elementSize: 0,
                 movable: new Movable(element),
                 scrollMovable: options.movable,
+                alwaysVisible: options.alwaysVisible,
                 size: horizontal ? "width" : "height"
             });
 
-            that.scrollMovable.bind(CHANGE, proxy(that._move, that));
+            that.scrollMovable.bind(CHANGE, proxy(that.refresh, that));
             that.container.append(element);
+            if (options.alwaysVisible) {
+                that.show();
+            }
         },
 
-        _move: function() {
+        refresh: function() {
             var that = this,
                 axis = that.axis,
                 dimension = that.dimension,
@@ -236,6 +251,12 @@ var __meta__ = {
                 sizeRatio = paneSize / dimension.total,
                 position = Math.round(-scrollMovable[axis] * sizeRatio),
                 size = Math.round(paneSize * sizeRatio);
+
+                if (sizeRatio >= 1) {
+                    this.element.css("display", "none");
+                } else {
+                    this.element.css("display", "");
+                }
 
                 if (position + size > paneSize) {
                     size = paneSize - position;
@@ -257,7 +278,9 @@ var __meta__ = {
         },
 
         hide: function() {
-            this.element.css({opacity: 0});
+            if (!this.alwaysVisible) {
+                this.element.css({opacity: 0});
+            }
         }
     });
 
@@ -434,6 +457,7 @@ var __meta__ = {
             name: "Scroller",
             zoom: false,
             pullOffset: 140,
+            visibleScrollHints: false,
             elastic: true,
             useNative: false,
             mousewheelScrolling: true,
@@ -509,7 +533,7 @@ var __meta__ = {
             }
         },
 
-        animatedScrollTo: function(x, y) {
+        animatedScrollTo: function(x, y, callback) {
             var from,
                 to;
 
@@ -520,6 +544,7 @@ var __meta__ = {
                 to = { x: x, y: y };
 
                 this.animatedScroller.setCoordinates(from, to);
+                this.animatedScroller.setCallback(callback);
                 this.animatedScroller.start();
             }
         },
@@ -601,8 +626,13 @@ var __meta__ = {
                     axis: axis,
                     movable: movable,
                     dimension: dimension,
-                    container: that.element
+                    container: that.element,
+                    alwaysVisible: that.options.visibleScrollHints
                 });
+
+            dimension.bind(CHANGE, function() {
+                scrollBar.refresh();
+            });
 
             paneAxis.bind(CHANGE, function() {
                 scrollBar.show();

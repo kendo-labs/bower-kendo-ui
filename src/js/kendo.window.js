@@ -238,12 +238,12 @@ var __meta__ = {
             kendo.notify(that);
         },
 
-        _buttonEnter: function() {
-            $(this).addClass(KHOVERSTATE);
+        _buttonEnter: function(e) {
+            $(e.currentTarget).addClass(KHOVERSTATE);
         },
 
-        _buttonLeave: function() {
-            $(this).removeClass(KHOVERSTATE);
+        _buttonLeave: function(e) {
+            $(e.currentTarget).removeClass(KHOVERSTATE);
         },
 
         _focus: function() {
@@ -583,7 +583,7 @@ var __meta__ = {
             }
 
             newLeft = scrollLeft + Math.max(0, (documentWindow.width() - wrapper.width()) / 2);
-            newTop = scrollTop + Math.max(0, (documentWindow.height() - wrapper.height()) / 2);
+            newTop = scrollTop + Math.max(0, (documentWindow.height() - wrapper.height() - parseInt(wrapper.css("paddingTop"), 10)) / 2);
 
             wrapper.css({
                 left: newLeft,
@@ -626,7 +626,7 @@ var __meta__ = {
             return that;
         },
 
-        content: function (html) {
+        content: function (html, data) {
             var content = this.wrapper.children(KWINDOWCONTENT),
                 scrollContainer = content.children(".km-scroll-container");
 
@@ -636,9 +636,25 @@ var __meta__ = {
                 return content.html();
             }
 
+            this.angular("cleanup", function(){
+                return { elements: content.children() };
+            });
+
             kendo.destroy(this.element.children());
 
             content.empty().html(html);
+
+            this.angular("compile", function(){
+                var a = [];
+                for (var i = content.length; --i >= 0;) {
+                    a.push({ dataItem: data });
+                }
+                return {
+                    elements: content.children(),
+                    data: a
+                };
+            });
+
             return this;
         },
 
@@ -1036,7 +1052,7 @@ var __meta__ = {
                 that.trigger(REFRESH);
             }
 
-            element.toggleClass("k-window-iframecontent", showIframe);
+            element.toggleClass("k-window-iframecontent", !!showIframe);
 
             return that;
         },
@@ -1056,11 +1072,12 @@ var __meta__ = {
 
         _ajaxSuccess: function (contentTemplate) {
             return function (data) {
+                var html = data;
                 if (contentTemplate) {
-                    data = template(contentTemplate)(data || {});
+                    html = template(contentTemplate)(data || {});
                 }
 
-                this.content(data);
+                this.content(html, data);
                 this.element.prop("scrollTop", 0);
 
                 this.trigger(REFRESH);
@@ -1195,35 +1212,45 @@ var __meta__ = {
 
 
     function WindowResizing(wnd) {
-        this.owner = wnd;
-        this._draggable = new Draggable(wnd.wrapper, {
+        var that = this;
+        that.owner = wnd;
+        that._draggable = new Draggable(wnd.wrapper, {
             filter: KWINDOWRESIZEHANDLES,
             group: wnd.wrapper.id + "-resizing",
-            dragstart: proxy(this.dragstart, this),
-            drag: proxy(this.drag, this),
-            dragend: proxy(this.dragend, this)
+            dragstart: proxy(that.dragstart, that),
+            drag: proxy(that.drag, that),
+            dragend: proxy(that.dragend, that)
         });
+
+        that._draggable.userEvents.bind("press", proxy(that.addOverlay, that));
+        that._draggable.userEvents.bind("release", proxy(that.removeOverlay, that));
     }
 
     WindowResizing.prototype = {
+        addOverlay: function () {
+            this.owner.wrapper.append(templates.overlay);
+        },
+        removeOverlay: function () {
+            this.owner.wrapper.find(KOVERLAY).remove();
+        },
         dragstart: function (e) {
-            var wnd = this.owner;
+            var that = this;
+            var wnd = that.owner;
             var wrapper = wnd.wrapper;
 
-            this.elementPadding = parseInt(wnd.wrapper.css("padding-top"), 10);
-            this.initialCursorPosition = kendo.getOffset(wrapper, "position");
+            that.elementPadding = parseInt(wrapper.css("padding-top"), 10);
+            that.initialPosition = kendo.getOffset(wrapper, "position");
 
-            this.resizeDirection = e.currentTarget.prop("className").replace("k-resize-handle k-resize-", "");
+            that.resizeDirection = e.currentTarget.prop("className").replace("k-resize-handle k-resize-", "");
 
-            this.initialSize = {
+            that.initialSize = {
                 width: wrapper.width(),
                 height: wrapper.height()
             };
 
-            this.containerOffset = kendo.getOffset(wnd.appendTo);
+            that.containerOffset = kendo.getOffset(wnd.appendTo, "position");
 
             wrapper
-                .append(templates.overlay)
                 .children(KWINDOWRESIZEHANDLES).not(e.currentTarget).hide();
 
             $(BODY).css(CURSOR, e.currentTarget.css(CURSOR));
@@ -1235,7 +1262,7 @@ var __meta__ = {
                 options = wnd.options,
                 direction = that.resizeDirection,
                 containerOffset = that.containerOffset,
-                initialPosition = that.initialCursorPosition,
+                initialPosition = that.initialPosition,
                 initialSize = that.initialSize,
                 newWidth, newHeight,
                 windowBottom, windowRight,
@@ -1285,7 +1312,6 @@ var __meta__ = {
                 wrapper = wnd.wrapper;
 
             wrapper
-                .find(KOVERLAY).remove().end()
                 .children(KWINDOWRESIZEHANDLES).not(e.currentTarget).show();
 
             $(BODY).css(CURSOR, "");
@@ -1294,7 +1320,7 @@ var __meta__ = {
                wnd.touchScroller.reset();
             }
             if (e.keyCode == 27) {
-                wrapper.css(that.initialCursorPosition)
+                wrapper.css(that.initialPosition)
                     .css(that.initialSize);
             }
 
@@ -1310,17 +1336,18 @@ var __meta__ = {
     };
 
     function WindowDragging(wnd, dragHandle) {
-        this.owner = wnd;
-        this._draggable = new Draggable(wnd.wrapper, {
+        var that = this;
+        that.owner = wnd;
+        that._draggable = new Draggable(wnd.wrapper, {
             filter: dragHandle,
             group: wnd.wrapper.id + "-moving",
-            dragstart: proxy(this.dragstart, this),
-            drag: proxy(this.drag, this),
-            dragend: proxy(this.dragend, this),
-            dragcancel: proxy(this.dragcancel, this)
+            dragstart: proxy(that.dragstart, that),
+            drag: proxy(that.drag, that),
+            dragend: proxy(that.dragend, that),
+            dragcancel: proxy(that.dragcancel, that)
         });
 
-        this._draggable.userEvents.stopPropagation = false;
+        that._draggable.userEvents.stopPropagation = false;
     }
 
     WindowDragging.prototype = {

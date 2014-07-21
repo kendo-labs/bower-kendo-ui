@@ -25,6 +25,7 @@ var __meta__ = {
         IMG = "img",
         HREF = "href",
         PREV = "prev",
+        SHOW = "show",
         LINK = "k-link",
         LAST = "k-last",
         CLICK = "click",
@@ -165,13 +166,9 @@ var __meta__ = {
 
             that._animations(that.options);
 
-            if (that.element.is("ul")) {
-                that.wrapper = that.element.wrapAll("<div />").parent();
-            } else {
-                that.wrapper = that.element;
-            }
-
             options = that.options;
+
+            that._wrapper();
 
             that._isRtl = kendo.support.isRtl(that.wrapper);
 
@@ -194,9 +191,14 @@ var __meta__ = {
 
             that.wrapper
                 .on(MOUSEENTER + NS + " " + MOUSELEAVE + NS, HOVERABLEITEMS, that._toggleHover)
-                .on("keydown" + NS, $.proxy(that._keydown, that))
                 .on("focus" + NS, $.proxy(that._active, that))
                 .on("blur" + NS, function() { that._current(null); });
+
+            that._keyDownProxy = $.proxy(that._keydown, that);
+
+            if (options.navigatable) {
+                that.wrapper.on("keydown" + NS, that._keyDownProxy);
+            }
 
             that.wrapper.children(".k-tabstrip-items")
                 .on(CLICK + NS, ".k-state-disabled .k-link", false)
@@ -453,18 +455,26 @@ var __meta__ = {
         },
 
         setOptions: function(options) {
-            var animation = this.options.animation;
+            var that = this,
+                animation = that.options.animation;
 
-            this._animations(options);
+            that._animations(options);
 
             options.animation = extend(true, animation, options.animation);
 
-            Widget.fn.setOptions.call(this, options);
+            if (options.navigatable) {
+                that.wrapper.on("keydown" + NS,  that._keyDownProxy);
+            } else {
+                that.wrapper.off("keydown" + NS,  that._keyDownProxy);
+            }
+
+            Widget.fn.setOptions.call(that, options);
         },
 
         events: [
             SELECT,
             ACTIVATE,
+            SHOW,
             ERROR,
             CONTENTLOAD,
             "change",
@@ -489,7 +499,9 @@ var __meta__ = {
                     duration: 200
                 }
             },
-            collapsible: false
+            collapsible: false,
+            navigatable: true,
+            contentUrls: false
         },
 
         destroy: function() {
@@ -503,6 +515,8 @@ var __meta__ = {
 
             that.wrapper.off(NS);
             that.wrapper.children(".k-tabstrip-items").off(NS);
+
+            that.scrollWrap.children(".k-tabstrip").unwrap();
 
             kendo.destroy(that.wrapper);
         },
@@ -646,7 +660,7 @@ var __meta__ = {
                         });
 
                 contents = map( tab, function (value, idx) {
-                            if (value.content || value.contentUrl) {
+                            if (typeof value.content == "string" || value.contentUrl) {
                                 return $(TabStrip.renderContent({
                                     item: extend(value, { index: idx })
                                 }));
@@ -774,10 +788,30 @@ var __meta__ = {
 
             that.contentElements = that.contentAnimators = that.wrapper.children("div"); // refresh the contents
 
+            that.tabsHeight = that.tabGroup.outerHeight() +
+                              parseInt(that.wrapper.css("border-top-width"), 10) +
+                              parseInt(that.wrapper.css("border-bottom-width"), 10);
+
             if (kendo.kineticScrollNeeded && kendo.mobile.ui.Scroller) {
                 kendo.touchScroller(that.contentElements);
                 that.contentElements = that.contentElements.children(".km-scroll-container");
             }
+        },
+
+        _wrapper: function() {
+            var that = this;
+
+            if (that.element.is("ul")) {
+                that.wrapper = that.element.wrapAll("<div />").parent();
+            } else {
+                that.wrapper = that.element;
+            }
+
+            that.scrollWrap = that.wrapper.wrapAll("<div class='k-tabstrip-wrapper' />").parent();
+        },
+
+        _sizeScrollWrap: function(element) {
+            this.scrollWrap.css("height", Math.floor(element.outerHeight(true)) + this.tabsHeight).css("height");
         },
 
         _toggleHover: function(e) {
@@ -856,6 +890,8 @@ var __meta__ = {
         },
 
         activateTab: function (item) {
+            if (this.tabGroup.children("[data-animating]").length) { return; }
+
             item = this.tabGroup.find(item);
 
             var that = this,
@@ -902,6 +938,12 @@ var __meta__ = {
                 contentHolder = that.contentHolder(itemIndex),
                 contentElement = contentHolder.closest(".k-content");
 
+            that.tabsHeight = that.tabGroup.outerHeight() +
+                              parseInt(that.wrapper.css("border-top-width"), 10) +
+                              parseInt(that.wrapper.css("border-bottom-width"), 10);
+
+            that._sizeScrollWrap(visibleContents);
+
             if (contentHolder.length === 0) {
                 visibleContents
                     .removeClass( ACTIVESTATE )
@@ -931,14 +973,26 @@ var __meta__ = {
 
                     that._current(item);
 
+                    that._sizeScrollWrap(contentElement);
+
                     contentElement
                         .addClass(ACTIVESTATE)
                         .removeAttr("aria-hidden")
                         .kendoStop(true, true)
                         .attr("aria-expanded", true)
                         .kendoAnimate( extend({ init: function () {
-                            that.trigger(ACTIVATE, { item: item[0], contentElement: contentHolder[0] });
-                        } }, animation, { complete: function () { item.removeAttr("data-animating"); } } ) );
+                            that.trigger(SHOW, { item: item[0], contentElement: contentHolder[0] });
+                            kendo.resize(contentHolder);
+                        } }, animation, {
+                            complete: function () {
+                                item.removeAttr("data-animating");
+
+                                that.trigger(ACTIVATE, { item: item[0], contentElement: contentHolder[0] });
+                                kendo.resize(contentHolder);
+
+                                that.scrollWrap.css("height", "").css("height");
+                            }
+                        } ) );
                 },
                 showContent = function() {
                     if (!isAjaxContent) {
@@ -1111,7 +1165,9 @@ var __meta__ = {
                             }, 40);
                         }
 
+                        that.angular("cleanup", function(){ return { elements: content.get() }; });
                         content.html(data);
+                        that.angular("compile", function(){ return { elements: content.get() }; });
                     } catch (e) {
                         var console = window.console;
 

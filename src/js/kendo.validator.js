@@ -107,7 +107,8 @@ var __meta__ = {
     var Validator = Widget.extend({
         init: function(element, options) {
             var that = this,
-                resolved = resolveRules(element);
+                resolved = resolveRules(element),
+                validateAttributeSelector = "[" + kendo.attr("validate") + "!=false]";
 
             options = options || {};
 
@@ -122,11 +123,15 @@ var __meta__ = {
                 that.element.attr(NOVALIDATE, NOVALIDATE);
             }
 
+            that._inputSelector = INPUTSELECTOR + validateAttributeSelector;
+            that._checkboxSelector = CHECKBOXSELECTOR + validateAttributeSelector;
+
             that._errors = {};
             that._attachEvents();
+            that._isValidated = false;
         },
 
-        events: [ "validate" ],
+        events: [ "validate", "change" ],
 
         options: {
             name: "Validator",
@@ -211,6 +216,14 @@ var __meta__ = {
             this.element.off(NS);
         },
 
+        value: function() {
+            if (!this._isValidated) {
+                return false;
+            }
+
+            return this.errors().length === 0;
+        },
+
         _submit: function(e) {
             if (!this.validate()) {
                 e.stopPropagation();
@@ -219,6 +232,16 @@ var __meta__ = {
                 return false;
             }
             return true;
+        },
+
+        _checkElement: function(element) {
+            var state = this.value();
+
+            this.validateInput(element);
+
+            if (this.value() !== state) {
+                this.trigger("change");
+            }
         },
 
         _attachEvents: function() {
@@ -230,21 +253,21 @@ var __meta__ = {
 
             if (that.options.validateOnBlur) {
                 if (!that.element.is(INPUTSELECTOR)) {
-                    that.element.on(BLUR + NS, INPUTSELECTOR, function() {
-                        that.validateInput($(this));
+                    that.element.on(BLUR + NS, that._inputSelector, function() {
+                        that._checkElement($(this));
                     });
 
-                    that.element.on("click" + NS, CHECKBOXSELECTOR, function() {
-                        that.validateInput($(this));
+                    that.element.on("click" + NS, that._checkboxSelector, function() {
+                        that._checkElement($(this));
                     });
                 } else {
                     that.element.on(BLUR + NS, function() {
-                        that.validateInput(that.element);
+                        that._checkElement(that.element);
                     });
 
                     if (that.element.is(CHECKBOXSELECTOR)) {
                         that.element.on("click" + NS, function() {
-                            that.validateInput(that.element);
+                            that._checkElement(that.element);
                         });
                     }
                 }
@@ -257,12 +280,14 @@ var __meta__ = {
             var result = false;
             var length;
 
+            var isValid = this.value();
+
             this._errors = {};
 
             if (!this.element.is(INPUTSELECTOR)) {
                 var invalid = false;
 
-                inputs = this.element.find(INPUTSELECTOR);
+                inputs = this.element.find(this._inputSelector);
 
                 for (idx = 0, length = inputs.length; idx < length; idx++) {
                     if (!this.validateInput(inputs.eq(idx))) {
@@ -277,11 +302,17 @@ var __meta__ = {
 
             this.trigger("validate", { valid: result });
 
+            if (isValid !== result) {
+                this.trigger("change");
+            }
+
             return result;
         },
 
         validateInput: function(input) {
             input = $(input);
+
+            this._isValidated = true;
 
             var that = this,
                 template = that._errorTemplate,
@@ -307,6 +338,8 @@ var __meta__ = {
                 messageLabel.show();
 
                 input.attr("aria-invalid", true);
+            } else {
+                delete that._errors[fieldName];
             }
 
             input.toggleClass(INVALIDINPUT, !valid);
@@ -371,7 +404,7 @@ var __meta__ = {
                 rule;
 
             for (rule in rules) {
-                if (!rules[rule](input)) {
+                if (!rules[rule].call(this, input)) {
                     return { valid: false, key: rule };
                 }
             }

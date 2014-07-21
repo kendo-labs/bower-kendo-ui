@@ -42,7 +42,7 @@ var __meta__ = {
             "DropDownList": "ComboBox"
         };
 
-    var List = Widget.extend({
+    var List = kendo.ui.DataBoundWidget.extend({
         init: function(element, options) {
             var that = this,
                 ns = that.ns,
@@ -68,7 +68,9 @@ var __meta__ = {
             that.list = $("<div class='k-list-container'/>")
                         .append(that.ul)
                         .on("mousedown" + ns, function(e) {
-                            e.preventDefault();
+                            if (!that.filterInput || that.filterInput[0] !== e.target) {
+                                e.preventDefault();
+                            }
                         });
 
             id = element.attr(ID);
@@ -181,8 +183,9 @@ var __meta__ = {
         },
 
         current: function(candidate) {
-            var that = this,
-                id = that._optionID;
+            var that = this;
+            var focused = that._focused.add(that.filterInput);
+            var id = that._optionID;
 
             if (candidate !== undefined) {
                 if (that._current) {
@@ -191,8 +194,7 @@ var __meta__ = {
                         .removeAttr("aria-selected")
                         .removeAttr(ID);
 
-                    that._focused
-                        .removeAttr("aria-activedescendant");
+                    focused.removeAttr("aria-activedescendant");
                 }
 
                 if (candidate) {
@@ -201,7 +203,7 @@ var __meta__ = {
 
                     if (id) {
                         candidate.attr("id", id);
-                        that._focused.attr("aria-activedescendant", id);
+                        focused.attr("aria-activedescendant", id);
                     }
                 }
 
@@ -236,8 +238,11 @@ var __meta__ = {
         dataItem: function(index) {
             var that = this;
 
+
             if (index === undefined) {
                 index = that.selectedIndex;
+            } else if (typeof index !== "number") {
+                index = $(that.items()).index(index);
             }
 
             return that._data()[index];
@@ -266,7 +271,7 @@ var __meta__ = {
         _aria: function(id) {
             var that = this,
                 options = that.options,
-                element = that._focused;
+                element = that._focused.add(that.filterInput);
 
             if (options.suggest !== undefined) {
                 element.attr("aria-autocomplete", options.suggest ? "both" : "list");
@@ -384,9 +389,11 @@ var __meta__ = {
             if (length) {
                 var that = this,
                     list = that.list,
-                    visible = that.popup.visible(),
                     height = that.options.height,
+                    visible = that.popup.visible(),
+                    filterInput = that.filterInput,
                     header = that.header,
+                    offsetHeight = 0,
                     popups;
 
                 popups = list.add(list.parent(".k-animation-container")).show();
@@ -395,9 +402,21 @@ var __meta__ = {
 
                 popups.height(height);
 
-                if (header) {
-                    that.ul.height(height == "auto" ? height : list.height() - header.height());
+                if (height !== "auto") {
+                    if (filterInput) {
+                        offsetHeight += filterInput.outerHeight();
+                    }
+
+                    if (header) {
+                        offsetHeight += header.outerHeight();
+                    }
                 }
+
+                if (offsetHeight) {
+                    height = list.height() - offsetHeight;
+                }
+
+                that.ul.height(height);
 
                 if (!visible) {
                     popups.hide();
@@ -515,7 +534,7 @@ var __meta__ = {
                 ulOffsetHeight = ul.clientHeight,
                 bottomDistance = itemOffsetTop + itemOffsetHeight,
                 touchScroller = this._touchScroller,
-                yDimension, headerHeight;
+                yDimension, offsetHeight;
 
             if (touchScroller) {
                 yDimension = touchScroller.dimensions.y;
@@ -526,11 +545,12 @@ var __meta__ = {
                     touchScroller.scrollTo(0, -itemOffsetTop);
                 }
             } else {
-                headerHeight = this.header ? this.header.outerHeight() : 0;
+                offsetHeight = this.header ? this.header.outerHeight() : 0;
+                offsetHeight += this.filterInput ? this.filterInput.outerHeight() : 0;
 
                 ul.scrollTop = ulScrollTop > itemOffsetTop ?
-                               (itemOffsetTop - headerHeight) : bottomDistance > (ulScrollTop + ulOffsetHeight) ?
-                               (bottomDistance - ulOffsetHeight - headerHeight) : ulScrollTop;
+                               (itemOffsetTop - offsetHeight) : bottomDistance > (ulScrollTop + ulOffsetHeight) ?
+                               (bottomDistance - ulOffsetHeight - offsetHeight) : ulScrollTop;
             }
         },
 
@@ -557,7 +577,7 @@ var __meta__ = {
             }
         },
 
-       _triggerCascade: function(userTriggered) {
+        _triggerCascade: function(userTriggered) {
             var that = this,
                 value = that.value();
 
@@ -566,7 +586,7 @@ var __meta__ = {
             }
         },
 
-       _unbindDataSource: function() {
+        _unbindDataSource: function() {
             var that = this;
 
             that.dataSource.unbind(CHANGE, that._refreshHandler)
@@ -627,6 +647,33 @@ var __meta__ = {
                 that._triggerCascade();
                 that._old = that._accessor();
                 that._oldIndex = that.selectedIndex;
+            }
+        },
+
+        search: function(word) {
+            word = typeof word === "string" ? word : this.text();
+            var that = this;
+            var length = word.length;
+            var options = that.options;
+            var ignoreCase = options.ignoreCase;
+            var filter = options.filter;
+            var field = options.dataTextField;
+
+            clearTimeout(that._typing);
+
+            if (!length || length >= options.minLength) {
+                that._state = "filter";
+                if (filter === "none") {
+                    that._filter(word);
+                } else {
+                    that._open = true;
+                    that._filterSource({
+                        value: ignoreCase ? word.toLowerCase() : word,
+                        field: field,
+                        operator: filter,
+                        ignoreCase: ignoreCase
+                    });
+                }
             }
         },
 
@@ -817,11 +864,11 @@ var __meta__ = {
                     e.preventDefault();
                 }
 
-                if (that._typing || (!that.popup.visible() && (!current || !current.hasClass("k-state-selected")))) {
+                if (!that.popup.visible() && (!current || !current.hasClass("k-state-selected"))) {
                     current = null;
                 }
 
-                that._accept(current);
+                that._accept(current, key);
                 pressed = true;
             } else if (key === keys.ESC) {
                 if (that.popup.visible()) {
@@ -863,7 +910,7 @@ var __meta__ = {
                 return true;
             }
 
-            if (!that._fetch && !hasItems) {
+            if (!that._bound && !that._fetch && !hasItems) {
                 if (that.options.cascadeFrom) {
                     return !hasItems;
                 }

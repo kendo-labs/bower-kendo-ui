@@ -79,7 +79,7 @@ var __meta__ = {
         classes.push("km-" + os.majorVersion);
         classes.push("km-m" + (os.minorVersion ? os.minorVersion[0] : 0));
 
-        if (os.variant) {
+        if (os.variant && ((os.skin && os.skin === os.name) || !os.skin)) {
             classes.push("km-" + (os.skin ? os.skin : os.name) + "-" + os.variant);
         }
 
@@ -140,6 +140,7 @@ var __meta__ = {
                 statusBarStyle: "black",
                 transition: "",
                 historyTransition: HISTORY_TRANSITION,
+                modelScope: window,
                 updateDocumentTitle: true
             }, options);
 
@@ -250,27 +251,33 @@ var __meta__ = {
                 os = $.extend({}, os, { skin: split[0], variant: split[1] });
             }
 
+            if (!os.variant) {
+                os.variant = "dark";
+            }
+
             that.os = os;
 
             that.osCssClass = osCssClass(that.os, that.options);
 
             if (os.wp) {
-                if (refreshBackgroundColor) {
-                    $(window).off("focusin", refreshBackgroundColor);
-                    document.removeEventListener("resume", refreshBackgroundColor);
+                if (!that.refreshBackgroundColorProxy) {
+                    that.refreshBackgroundColorProxy = $.proxy(function () {
+                        if ((that.os.variant && ((that.os.skin && that.os.skin === that.os.name)) || !that.os.skin)) {
+                            that.element.removeClass("km-wp-dark km-wp-light").addClass("km-wp-" + wp8Background());
+                        }
+                    }, that);
                 }
+
+                $(window).off("focusin", that.refreshBackgroundColorProxy);
+                $(document).off("resume", that.refreshBackgroundColorProxy);
 
                 if (!os.skin) {
                     that.element.parent().css("overflow", "hidden");
 
-                    var refreshBackgroundColor = function() {
-                        that.element.removeClass("km-wp-dark km-wp-light").addClass("km-wp-" + wp8Background());
-                    };
+                    $(window).on("focusin", that.refreshBackgroundColorProxy); // Restore theme on browser focus (requires click).
+                    $(document).on("resume", that.refreshBackgroundColorProxy); // PhoneGap fires resume.
 
-                    $(window).on("focusin", refreshBackgroundColor); // Restore theme on browser focus (requires click).
-                    document.addEventListener("resume", refreshBackgroundColor); // PhoneGap fires resume.
-
-                    refreshBackgroundColor();
+                    that.refreshBackgroundColorProxy();
                 }
             }
         },

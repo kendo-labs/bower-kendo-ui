@@ -38,7 +38,6 @@ var __meta__ = {
         ACTIVEBORDERREGEXP = /k-state-border-(\w+)/,
         ACTIVECHILDREN = ".k-picker-wrap, .k-dropdown-wrap, .k-link",
         MOUSEDOWN = "down",
-        WINDOW = $(window),
         DOCUMENT_ELEMENT = $(document.documentElement),
         RESIZE_SCROLL = "resize scroll",
         cssPrefix = support.transitions.css,
@@ -73,6 +72,7 @@ var __meta__ = {
             options = that.options;
 
             that.collisions = options.collision ? options.collision.split(" ") : [];
+            that.downEvent = kendo.applyEventMap(MOUSEDOWN, kendo.guid());
 
             if (that.collisions.length === 1) {
                 that.collisions.push(that.collisions[0]);
@@ -102,37 +102,13 @@ var __meta__ = {
             extend(options.animation.open, {
                 complete: function() {
                     that.wrapper.css({ overflow: VISIBLE }); // Forcing refresh causes flickering in mobile.
-                    that.trigger(ACTIVATE);
+                    that._trigger(ACTIVATE);
                 }
             });
 
             extend(options.animation.close, {
                 complete: function() {
-                    that.wrapper.hide();
-
-                    var location = that.wrapper.data(LOCATION),
-                        anchor = $(options.anchor),
-                        direction, dirClass;
-
-                    if (location) {
-                        that.wrapper.css(location);
-                    }
-
-                    if (options.anchor != BODY) {
-                        direction = (anchor[0].className.match(ACTIVEBORDERREGEXP) || ["", "down"])[1];
-                        dirClass = ACTIVEBORDER + "-" + direction;
-
-                        anchor
-                            .removeClass(dirClass)
-                            .children(ACTIVECHILDREN)
-                            .removeClass(ACTIVE)
-                            .removeClass(dirClass);
-
-                        element.removeClass(ACTIVEBORDER + "-" + kendo.directions[direction].reverse);
-                    }
-
-                    that._closing = false;
-                    that.trigger(DEACTIVATE);
+                    that._animationClose();
                 }
             });
 
@@ -162,6 +138,7 @@ var __meta__ = {
             origin: BOTTOM + " " + LEFT,
             position: TOP + " " + LEFT,
             anchor: BODY,
+            appendTo: null,
             collision: "flip fit",
             viewport: window,
             copyAnchorStyles: true,
@@ -180,6 +157,37 @@ var __meta__ = {
             }
         },
 
+        _animationClose: function() {
+            var that = this,
+                options = that.options;
+
+            that.wrapper.hide();
+
+            var location = that.wrapper.data(LOCATION),
+                anchor = $(options.anchor),
+                direction, dirClass;
+
+            if (location) {
+                that.wrapper.css(location);
+            }
+
+            if (options.anchor != BODY) {
+                direction = (anchor[0].className.match(ACTIVEBORDERREGEXP) || ["", "down"])[1];
+                dirClass = ACTIVEBORDER + "-" + direction;
+
+                anchor
+                    .removeClass(dirClass)
+                    .children(ACTIVECHILDREN)
+                    .removeClass(ACTIVE)
+                    .removeClass(dirClass);
+
+                that.element.removeClass(ACTIVEBORDER + "-" + kendo.directions[direction].reverse);
+            }
+
+            that._closing = false;
+            that._trigger(DEACTIVATE);
+        },
+
         destroy: function() {
             var that = this,
                 options = that.options,
@@ -193,8 +201,8 @@ var __meta__ = {
             }
 
             if (!options.modal) {
-                DOCUMENT_ELEMENT.unbind(MOUSEDOWN, that._mousedownProxy);
-                WINDOW.unbind(RESIZE_SCROLL, that._resizeProxy);
+                DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy);
+                that._scrollableParents().unbind(RESIZE_SCROLL, that._resizeProxy);
             }
 
             kendo.destroy(that.element.children());
@@ -229,18 +237,19 @@ var __meta__ = {
                     element.css(kendo.getComputedStyles(anchor[0], styles));
                 }
 
-                if (element.data("animating") || that.trigger(OPEN)) {
+                if (element.data("animating") || that._trigger(OPEN)) {
                     return;
                 }
 
                 if (!options.modal) {
-                    DOCUMENT_ELEMENT.unbind(MOUSEDOWN, that._mousedownProxy)
-                                .bind(MOUSEDOWN, that._mousedownProxy);
+                    DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy)
+                                .bind(that.downEvent, that._mousedownProxy);
 
                     // this binding hangs iOS in editor
                     if (!(support.mobileOS.ios || support.mobileOS.android)) {
-                        WINDOW.unbind(RESIZE_SCROLL, that._resizeProxy)
-                              .bind(RESIZE_SCROLL, that._resizeProxy);
+                        this._scrollableParents()
+                            .unbind(RESIZE_SCROLL, that._resizeProxy)
+                            .bind(RESIZE_SCROLL, that._resizeProxy);
                     }
                 }
 
@@ -252,7 +261,7 @@ var __meta__ = {
                                         });
 
                 if (support.mobileOS.android) {
-                    wrapper.add(anchor).css(TRANSFORM, "translatez(0)"); // Android is VERY slow otherwise. Should be tested in other droids as well since it may cause blur.
+                    wrapper.css(TRANSFORM, "translatez(0)"); // Android is VERY slow otherwise. Should be tested in other droids as well since it may cause blur.
                 }
 
                 wrapper.css(POSITION);
@@ -295,7 +304,7 @@ var __meta__ = {
             return this.element.is(":" + VISIBLE);
         },
 
-        close: function() {
+        close: function(skipEffects) {
             var that = this,
                 options = that.options, wrap,
                 animation, openEffects, closeEffects;
@@ -303,7 +312,7 @@ var __meta__ = {
             if (that.visible()) {
                 wrap = (that.wrapper[0] ? that.wrapper : kendo.wrap(that.element).hide());
 
-                if (that._closing || that.trigger(CLOSE)) {
+                if (that._closing || that._trigger(CLOSE)) {
                     return;
                 }
 
@@ -313,28 +322,36 @@ var __meta__ = {
                         popup = that.data("kendoPopup");
 
                     if (popup) {
-                        popup.close();
+                        popup.close(skipEffects);
                     }
                 });
 
-                DOCUMENT_ELEMENT.unbind(MOUSEDOWN, that._mousedownProxy);
-                WINDOW.unbind(RESIZE_SCROLL, that._resizeProxy);
+                DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy);
+                that._scrollableParents().unbind(RESIZE_SCROLL, that._resizeProxy);
 
-                animation = extend(true, {}, options.animation.close);
-                openEffects = that.element.data(EFFECTS);
-                closeEffects = animation.effects;
+                if (skipEffects) {
+                    animation = { hide: true, effects: {} };
+                } else {
+                    animation = extend(true, {}, options.animation.close);
+                    openEffects = that.element.data(EFFECTS);
+                    closeEffects = animation.effects;
 
-                if (!closeEffects && !kendo.size(closeEffects) && openEffects && kendo.size(openEffects)) {
-                    animation.effects = openEffects;
-                    animation.reverse = true;
+                    if (!closeEffects && !kendo.size(closeEffects) && openEffects && kendo.size(openEffects)) {
+                        animation.effects = openEffects;
+                        animation.reverse = true;
+                    }
+
+                    that._closing = true;
                 }
-
-                that._closing = true;
 
                 that.element.kendoStop(true);
                 wrap.css({ overflow: HIDDEN }); // stop callback will remove hidden overflow
                 that.element.kendoAnimate(animation);
             }
+        },
+
+        _trigger: function(ev) {
+            return this.trigger(ev, { type: ev });
         },
 
         _resize: function(e) {
@@ -408,6 +425,16 @@ var __meta__ = {
             return output;
         },
 
+        _scrollableParents: function() {
+            return $(this.options.anchor)
+                       .parentsUntil("body")
+                       .filter(function(index, element) {
+                            var computedStyle = kendo.getComputedStyles(element, ["overflow"]);
+                            return computedStyle.overflow != "visible";
+                       })
+                       .add(window);
+        },
+
         _position: function(fixed) {
             var that = this,
                 element = that.element.css(POSITION, ""),
@@ -432,15 +459,18 @@ var __meta__ = {
             siblingContainer = anchor.parents().filter(wrapper.siblings());
 
             if (siblingContainer[0]) {
-                parentZIndex = Number($(siblingContainer).css("zIndex"));
+                parentZIndex = Math.max(Number(siblingContainer.css("zIndex")), 0);
+
+                // set z-index to be more than that of the container/sibling
+                // compensate with more units for window z-stack
                 if (parentZIndex) {
-                    zIndex = parentZIndex + 1;
+                    zIndex = parentZIndex + 10;
                 } else {
                     parents = anchor.parentsUntil(siblingContainer);
                     for (length = parents.length; idx < length; idx++) {
                         parentZIndex = Number($(parents[idx]).css("zIndex"));
                         if (parentZIndex && zIndex < parentZIndex) {
-                            zIndex = parentZIndex + 1;
+                            zIndex = parentZIndex + 10;
                         }
                     }
                 }

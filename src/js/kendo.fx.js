@@ -1097,44 +1097,23 @@ var __meta__ = {
         prepare: function(start, end) {
             var that = this,
                 element = that.element,
-                options = that.options,
-                reverse = that._reverse,
-                target = options.target,
-                offset,
+                outerBox = fx.box(element),
+                innerBox = fx.box(that.options.target),
                 currentScale = animationProperty(element, "scale"),
-                targetOffset = target.offset(),
-                scale = target.outerHeight() / element.outerHeight();
+                scale = fx.fillScale(innerBox, outerBox),
+                transformOrigin = fx.transformOrigin(innerBox, outerBox);
 
             extend(start, TRANSFER_START_STATE);
             end.scale = 1;
 
             element.css(TRANSFORM, "scale(1)").css(TRANSFORM);
-            offset = element.offset();
             element.css(TRANSFORM, "scale(" + currentScale + ")");
 
-            var x1 = 0,
-                y1 = 0,
+            start.top = outerBox.top;
+            start.left = outerBox.left;
+            start.transformOrigin = transformOrigin.x + PX + " " + transformOrigin.y + PX;
 
-                x2 = targetOffset.left - offset.left,
-                y2 = targetOffset.top - offset.top,
-
-                x3 = x1 + element.outerWidth(),
-                y3 = y1,
-
-                x4 = x2 + target.outerWidth(),
-                y4 = y2,
-
-                Z1 = (y2 - y1) / (x2 - x1),
-                Z2 = (y4 - y3) / (x4 - x3),
-
-                X = (y1 - y3 - Z1 * x1 + Z2 * x3) / (Z2 - Z1),
-                Y = y1 + Z1 * (X - x1);
-
-            start.top = offset.top;
-            start.left = offset.left;
-            start.transformOrigin = X + PX + " " + Y + PX;
-
-            if (reverse) {
+            if (that._reverse) {
                 start.scale = scale;
             } else {
                 end.scale = scale;
@@ -1337,8 +1316,11 @@ var __meta__ = {
     });
 
     var RESTORE_OVERFLOW = !support.mobileOS.android;
+    var IGNORE_TRANSITION_EVENT_SELECTOR = ".km-touch-scrollbar, .km-actionsheet-wrapper";
 
     createEffect("replace", {
+        _before: $.noop,
+        _after: $.noop,
         init: function(element, previous, transitionClass) {
             Effect.prototype.init.call(this, element);
             this._previous = $(previous);
@@ -1347,6 +1329,16 @@ var __meta__ = {
 
         duration: function() {
             throw new Error("The replace effect does not support duration setting; the effect duration may be customized through the transition class rule");
+        },
+
+        beforeTransition: function(callback) {
+            this._before = callback;
+            return this;
+        },
+
+        afterTransition: function(callback) {
+            this._after = callback;
+            return this;
         },
 
         _both: function() {
@@ -1368,13 +1360,18 @@ var __meta__ = {
             return containerClass;
         },
 
-        complete: function() {
-            if (!this.deferred) {
+        complete: function(e) {
+            if (!this.deferred || (e && $(e.target).is(IGNORE_TRANSITION_EVENT_SELECTOR))) {
                 return;
             }
+
             var container = this.container;
 
-            container.removeClass("k-fx-end").removeClass(this._containerClass());
+            container
+                .removeClass("k-fx-end")
+                .removeClass(this._containerClass())
+                .off(transitions.event, this.completeProxy);
+
             this._previous.hide().removeClass("k-fx-current");
             this.element.removeClass("k-fx-next");
 
@@ -1398,7 +1395,6 @@ var __meta__ = {
             var that = this,
                 element = that.element,
                 previous = that._previous,
-                direction = that._direction,
                 container = element.parents().filter(previous.parents()).first(),
                 both = that._both(),
                 deferred = $.Deferred(),
@@ -1430,14 +1426,16 @@ var __meta__ = {
 
                 container.addClass(this._containerClass());
 
-                container.one(transitions.event, $.proxy(this, "complete"));
+                this.completeProxy = $.proxy(this, "complete");
+                container.on(transitions.event, this.completeProxy);
 
                 kendo.animationFrame(function() {
                     element.removeClass("k-fx-hidden").addClass("k-fx-next");
                     previous.css("display", "").addClass("k-fx-current");
-
+                    that._before(previous, element);
                     kendo.animationFrame(function() {
                         container.removeClass("k-fx-start").addClass("k-fx-end");
+                        that._after(previous, element);
                     });
                 });
             }
@@ -1552,6 +1550,32 @@ var __meta__ = {
     fx.Animation = Animation;
     fx.Transition = Transition;
     fx.createEffect = createEffect;
+
+    fx.box = function(element) {
+        element = $(element);
+        var result = element.offset();
+        result.width = element.outerWidth();
+        result.height = element.outerHeight();
+        return result;
+    };
+
+    fx.transformOrigin = function(inner, outer) {
+        var x = (inner.left - outer.left) * outer.width / (outer.width - inner.width),
+            y = (inner.top - outer.top) * outer.height / (outer.height - inner.height);
+
+        return {
+            x: isNaN(x) ? 0 : x,
+            y: isNaN(y) ? 0 : y
+        };
+    };
+
+    fx.fillScale = function(inner, outer) {
+        return Math.min(inner.width / outer.width, inner.height / outer.height);
+    };
+
+    fx.fitScale = function(inner, outer) {
+        return Math.max(inner.width / outer.width, inner.height / outer.height);
+    };
 })(window.kendo.jQuery);
 
 return window.kendo;

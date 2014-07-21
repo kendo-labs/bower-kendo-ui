@@ -22,6 +22,7 @@
         "./kendo.popup",
         "./kendo.notification",
         "./kendo.tooltip",
+        "./kendo.toolbar",
         "./kendo.list",
         "./kendo.calendar",
         "./kendo.datepicker",
@@ -60,7 +61,8 @@
         "./kendo.mobile.navbar",
         "./kendo.mobile.scrollview",
         "./kendo.mobile.switch",
-        "./kendo.mobile.tabstrip"
+        "./kendo.mobile.tabstrip",
+        "./kendo.angular"
     ], f);
 })(function(){
     "bundle all";

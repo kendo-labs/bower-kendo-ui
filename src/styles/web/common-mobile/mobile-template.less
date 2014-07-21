@@ -75,6 +75,17 @@
     background: @widget-background-color;
 }
 
+.km-navbar
+{
+    color: @header-text-color;
+    background: @header-background-color;
+}
+
+.km-view
+{
+    background: transparent;
+}
+
 /* NavBar */
 
 .km-navbar
@@ -120,7 +131,7 @@
 .km-switch-background
 {
     .composite-background(~"@{mobile-second-color}, @{mobile-second-color}");
-    background-position: 4.25em 0;
+    background-position: 4.3em 0;
     background-repeat: no-repeat;
     background-color: currentcolor;
 }
@@ -318,6 +329,7 @@
 
 .km-popup.km-pane
 {
+    border-color: @mobile-alternate-background;
     background-color: @mobile-alternate-background;
 }
 
@@ -365,7 +377,7 @@
 .km-badge,
 .km-rowinsert,
 .km-rowdelete,
-.km-state-active,
+html .km-state-active,
 .km-switch-label-on,
 .km-switch-label-off,
 .km-tabstrip .km-button,
