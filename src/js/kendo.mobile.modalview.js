@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.mobile.shim", "./kendo.mobile.view" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "mobile.modalview",
-    name: "ModalView",
-    category: "mobile",
-    description: "The Kendo ModalView is used to present self-contained functionality in the context of the current task.",
-    depends: [ "mobile.shim", "mobile.view" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -54,10 +61,6 @@ var __meta__ = {
                     }
                 }
             });
-
-            if (kendo.support.mobileOS.wp) {
-                that.shim.shim.on("click", false);
-            }
 
             that._id();
             that._layout();

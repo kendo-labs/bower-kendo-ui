@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.mobile.popover", "./kendo.mobile.shim" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "mobile.actionsheet",
-    name: "ActionSheet",
-    category: "mobile",
-    description: "The mobile ActionSheet widget displays a set of choices related to a task the user initiates.",
-    depends: [ "mobile.popover", "mobile.shim" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -136,9 +143,12 @@ var __meta__ = {
             this._close();
         },
 
-        _close: function() {
-            this.close();
-            this.trigger(CLOSE);
+        _close: function(e) {
+            if (!this.trigger(CLOSE)) {
+                this.close();
+            } else {
+                e.preventDefault();
+            }
         }
     });
 

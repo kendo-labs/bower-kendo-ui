@@ -1,6 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.core" ], f);
-})(function() {
+})(function(){
 
 (function ($, angular, undefined) {
     "use strict";
@@ -14,14 +29,25 @@
     var module = angular.module('kendo.directives', []);
     var $parse, $timeout, $compile, $log;
 
+    function withoutTimeout(f) {
+        var save = $timeout;
+        try {
+            $timeout = function(f){ return f(); };
+            return f();
+        } finally {
+            $timeout = save;
+        }
+    }
+
     var OPTIONS_NOW;
 
     var createDataSource = (function() {
         var types = {
-            TreeView  : 'HierarchicalDataSource',
-            Scheduler : 'SchedulerDataSource',
-            PanelBar  : '$PLAIN',
-            Menu      : "$PLAIN"
+            TreeView    : 'HierarchicalDataSource',
+            Scheduler   : 'SchedulerDataSource',
+            PanelBar    : '$PLAIN',
+            Menu        : "$PLAIN",
+            ContextMenu : "$PLAIN"
         };
         var toDataSource = function(dataSource, type) {
             if (type == '$PLAIN') {
@@ -29,12 +55,12 @@
             }
             return kendo.data[type].create(dataSource);
         };
-        return function(scope, element, attrs, role) {
+        return function(scope, element, role, source) {
             var type = types[role] || 'DataSource';
-            var ds = toDataSource(scope.$eval(attrs.kDataSource), type);
+            var ds = toDataSource(scope.$eval(source), type);
 
             // not recursive -- this triggers when the whole data source changed
-            scope.$watch(attrs.kDataSource, function(mew, old){
+            scope.$watch(source, function(mew, old){
                 if (mew !== old) {
                     var ds = toDataSource(mew, type);
                     var widget = kendoWidgetInstance(element);
@@ -55,11 +81,48 @@
         kNgDelay    : true
     };
 
+    function addOption(scope, options, name, value) {
+        options[name] = angular.copy(scope.$eval(value));
+        if (options[name] === undefined && value.match(/^\w*$/)) {
+            $log.warn(name + ' attribute resolved to undefined. Maybe you meant to use a string literal like: \'' + value + '\'?');
+        }
+    }
+
     function createWidget(scope, element, attrs, widget, origAttr) {
         var role = widget.replace(/^kendo/, '');
-        var options = angular.extend({}, scope.$eval(attrs.kOptions));
+        var options = angular.extend({}, scope.$eval(attrs.kOptions || attrs.options));
+        var ctor = $(element)[widget];
+
+        if (!ctor) {
+            window.console.error("Could not find: " + widget);
+            return null;
+        }
+
+        var widgetOptions = ctor.widget.prototype.options;
+        var widgetEvents = ctor.widget.prototype.events;
+
         $.each(attrs, function(name, value) {
-            if (!ignoredAttributes[name]) {
+            if (name === "source" || name === "kDataSource") {
+                return;
+            }
+
+            var dataName = "data" + name.charAt(0).toUpperCase() + name.slice(1);
+
+            if (name.indexOf("on") === 0) { // let's search for such event.
+                var eventKey = name.replace(/^on./, function(prefix) {
+                    return prefix.charAt(2).toLowerCase();
+                });
+
+                if (widgetEvents.indexOf(eventKey) > -1) {
+                    options[eventKey] = value;
+                }
+            } // don't elsif here - there are on* options
+
+            if (widgetOptions.hasOwnProperty(dataName)) {
+                addOption(scope, options, dataName, value);
+            } else if (widgetOptions.hasOwnProperty(name) && name != "name") { // `name` must be forbidden. XXX: other names to ignore here?
+                addOption(scope, options, name, value);
+            } else if (!ignoredAttributes[name]) {
                 var match = name.match(/^k(On)?([A-Z].*)/);
                 if (match) {
                     var optionName = match[2].charAt(0).toLowerCase() + match[2].slice(1);
@@ -70,29 +133,34 @@
                         if (name == "kOnLabel") {
                             optionName = "onLabel"; // XXX: that's awful.
                         }
-                        options[optionName] = angular.copy(scope.$eval(value));
-                        if (options[optionName] === undefined && value.match(/^\w*$/)) {
-                            $log.warn(widget + '\'s ' + name + ' attribute resolved to undefined. Maybe you meant to use a string literal like: \'' + value + '\'?');
-                        }
+                        addOption(scope, options, optionName, value);
                     }
                 }
             }
         });
 
         // parse the datasource attribute
-        if (attrs.kDataSource) {
-            options.dataSource = createDataSource(scope, element, attrs, role);
+        var dataSource = attrs.kDataSource || attrs.source;
+
+        if (dataSource) {
+            options.dataSource = createDataSource(scope, element, role, dataSource);
         }
 
         // deepExtend in kendo.core (used in Editor) will fail with stack
         // overflow if we don't put it in an array :-\
         options.$angular = [ scope ];
 
-        var ctor = $(element)[widget];
-        if (!ctor) {
-            window.console.error("Could not find: " + widget);
-            return null;
+        if (element.is("select")) {
+            (function(options){
+                if (options.length > 0) {
+                    var first = $(options[0]);
+                    if (!/\S/.test(first.text()) && /^\?/.test(first.val())) {
+                        first.remove();
+                    }
+                }
+            }(element[0].options));
         }
+
         var object = ctor.call(element, OPTIONS_NOW = options).data(widget);
         exposeWidget(object, scope, attrs, widget, origAttr);
         scope.$emit("kendoWidgetCreated", object);
@@ -112,10 +180,6 @@
         }
     }
 
-    function hasKendoTag(element) {
-        return (/^kendo/i).test(element.prop("tagName"));
-    }
-
     module.factory('directiveFactory', ['$timeout', '$parse', '$compile', '$log', function(timeout, parse, compile, log) {
 
         $timeout = timeout;
@@ -124,40 +188,18 @@
         $log = log;
 
         var KENDO_COUNT = 0;
+        var RENDERED = false;
 
         var create = function(role, origAttr) {
 
             return {
                 // Parse the directive for attributes and classes
-                restrict: "ACE",
+                restrict: "AC",
                 require: [ "?ngModel", "^?form" ],
                 scope: false,
 
                 transclude: true,
                 controller: [ '$scope', '$attrs', '$element', '$transclude', function($scope, $attrs, $element, $transclude) {
-
-                    if (hasKendoTag($element)) {(function(){
-                        var element = $element[0];
-                        $attrs.$kendoOrigElement = element.cloneNode(true);
-                        var attributes = Array.prototype.slice.call(element.attributes); // guess why we need that. :-\
-                        for (var i = 0; i < attributes.length; ++i) {
-                            var orig = attributes[i].nodeName;
-                            if (!/^(k|ng)-/.test(orig) && !/^(style|class|id)$/.test(orig)) {
-                                var name = ("k-" + orig).replace(/-(.)/g, function(s, p){
-                                    return p.toUpperCase();
-                                });
-                                if (!(name in $attrs)) {
-                                    $attrs[name] = attributes[i].nodeValue;
-                                }
-
-                                // we must remove the original attribute!  otherwise some widgets (DropDownList at least) will prefer to
-                                // take options from there instead of the options object we actually pass to constructor, ending up with
-                                // dataTextField = "'name'" (unevaluated), leading to a SyntaxError: Unexpected string error.
-                                element.removeAttribute(orig);
-                            }
-                        }
-                    })();}
-
                     // Make the element's contents available to the kendo widget to allow creating some widgets from existing elements.
                     $transclude($scope, function(clone){
                         $element.append(clone);
@@ -172,11 +214,14 @@
                     // we must remove data-kendo-widget-name attribute because
                     // it breaks kendo.widgetInstance; can generate all kinds
                     // of funny issues like
-                    // https://github.com/kendo-labs/angular-kendo/issues/167
-
-                    // $(element).removeData(role);
-                    // console.log($(element).data(role)); // --> not undefined.  now I'm pissed.
-                    $(element)[0].removeAttribute("data-" + role.replace(/([A-Z])/g, "-$1"));
+                    //
+                    //   https://github.com/kendo-labs/angular-kendo/issues/167
+                    //
+                    // but we still keep the attribute without the
+                    // `data-` prefix, so k-rebind would work.
+                    var roleattr = role.replace(/([A-Z])/g, "-$1");
+                    $(element).attr(roleattr, $(element).attr("data-" + roleattr));
+                    $(element)[0].removeAttribute("data-" + roleattr);
 
                     ++KENDO_COUNT;
 
@@ -191,7 +236,7 @@
                                         kNgDelay = null;
                                         $timeout(createIt); // XXX: won't work without `timeout` ;-\
                                     }
-                                }, true);
+                                });
                             })();
                         }
 
@@ -252,7 +297,10 @@
                             prev_destroy = scope.$on("$destroy", function() {
                                 if (widget) {
                                     if (widget.element) {
-                                        widget.destroy();
+                                        widget = kendoWidgetInstance(widget.element);
+                                        if (widget) {
+                                            widget.destroy();
+                                        }
                                     }
                                     widget = null;
                                 }
@@ -275,13 +323,15 @@
                                         val = ngModel.$modelValue;
                                     }
                                     setTimeout(function(){
-                                        widget.value(val);
+                                        if (widget) { // might have been destroyed in between. :-(
+                                            widget.value(val);
+                                        }
                                     }, 0);
                                 };
 
                                 // Some widgets trigger "change" on the input field
                                 // and this would result in two events sent (#135)
-                                var haveChangeOnElement;
+                                var haveChangeOnElement = false;
                                 if (isFormField) {
                                     element.on("change", function(){
                                         haveChangeOnElement = true;
@@ -290,28 +340,27 @@
 
                                 var onChange = function(pristine){
                                     return function(){
+                                        var formPristine;
+                                        if (haveChangeOnElement) {
+                                            return;
+                                        }
                                         haveChangeOnElement = false;
-                                        $timeout(function(){
-                                            var formPristine;
-                                            if (haveChangeOnElement) {
-                                                return;
+                                        if (pristine && ngForm) {
+                                            formPristine = ngForm.$pristine;
+                                        }
+                                        ngModel.$setViewValue(value());
+                                        if (pristine) {
+                                            ngModel.$setPristine();
+                                            if (formPristine) {
+                                                ngForm.$setPristine();
                                             }
-                                            if (pristine && ngForm) {
-                                                formPristine = ngForm.$pristine;
-                                            }
-                                            ngModel.$setViewValue(value());
-                                            if (pristine) {
-                                                ngModel.$setPristine();
-                                                if (formPristine) {
-                                                    ngForm.$setPristine();
-                                                }
-                                            }
-                                        });
+                                        }
+                                        digest(scope);
                                     };
                                 };
 
-                                bindBefore(widget, "change", onChange(false));
-                                bindBefore(widget, "dataBound", onChange(true));
+                                widget.first("change", onChange(false));
+                                widget.first("dataBound", onChange(true));
 
                                 var currentVal = value();
 
@@ -325,14 +374,6 @@
                                 }
 
                                 ngModel.$setPristine();
-                                if (ngForm) {
-                                    var form = element, top;
-                                    while (form.controller("form")) {
-                                        top = form.controller("form");
-                                        form = form.parent();
-                                    }
-                                    top.$setPristine();
-                                }
                             }
 
                             // kNgModel is used for the "logical" value
@@ -356,10 +397,11 @@
                                     }
                                     widget.value(newValue);
                                 });
-                                bindBefore(widget, "change", function(){
+                                widget.first("change", function(){
                                     updating = true;
-                                    setter(scope, widget.value());
-                                    digest(scope);
+                                    scope.$apply(function(){
+                                        setter(scope, widget.value());
+                                    });
                                     updating = false;
                                 });
                             }
@@ -431,12 +473,21 @@
                                 mo.observe($(element)[0], { attributes: true });
                             }
                             resume();
-                            bindBefore(widget, "destroy", suspend);
+                            widget.first("destroy", suspend);
                         })();
 
                         --KENDO_COUNT;
                         if (KENDO_COUNT === 0) {
-                            scope.$emit("kendoRendered");
+                            if (!RENDERED) {
+                                RENDERED = true;
+                                scope.$emit("kendoRendered");
+                                $("form").each(function(){
+                                    var form = $(this).controller("form");
+                                    if (form) {
+                                        form.$setPristine();
+                                    }
+                                });
+                            }
                         }
 
                     });
@@ -448,6 +499,25 @@
             create: create
         };
     }]);
+
+    var TAGNAMES = {
+        Editor         : "textarea",
+        NumericTextBox : "input",
+        DatePicker     : "input",
+        DateTimePicker : "input",
+        TimePicker     : "input",
+        AutoComplete   : "input",
+        ColorPicker    : "input",
+        MaskedTextBox  : "input",
+        MultiSelect    : "input",
+        Upload         : "input",
+        Validator      : "form",
+        Button         : "button",
+        ListView       : "ul",
+        TreeView       : "ul",
+        Menu           : "ul",
+        ContextMenu    : "ul"
+    };
 
     function createDirectives(klass, isMobile) {
         function make(directiveName, widgetName) {
@@ -461,6 +531,7 @@
 
         var name = isMobile ? "Mobile" : "";
         name += klass.fn.options.name;
+        var className = name;
         var shortcut = "kendo" + name.charAt(0) + name.substr(1).toLowerCase();
         name = "kendo" + name;
 
@@ -471,6 +542,19 @@
         if (shortcut != name) {
             make(shortcut, name);
         }
+
+        // <kendo-numerictextbox>-type directives
+        var dashed = name.replace(/([A-Z])/g, "-$1");
+        module.directive(shortcut, function(){
+            return {
+                restrict : "E",
+                replace  : true,
+                template : function(element, attributes) {
+                    var tag = TAGNAMES[className] || "div";
+                    return "<" + tag + " " + dashed + ">" + element.html() + "</" + tag + ">";
+                }
+            };
+        });
     }
 
     (function(){
@@ -496,17 +580,16 @@
             kendo.widgetInstance(el, kendo.dataviz.ui);
     }
 
-    // XXX: using internal API (Widget::_events).  Seems to be no way in Kendo to
-    // insert a handler to be executed before any existing ones, hence this hack.
-    // Use for a single event/handler combination.
-    function bindBefore(widget, name, handler, one) {
-        widget.bind.call(widget, name, handler, one);
-        var a = widget._events[name];
-        a.unshift(a.pop());
-    }
-
-    function digest(scope) {
-        if (!/^\$(digest|apply)$/.test(scope.$root.$$phase)) {
+    function digest(scope, func) {
+        var root = scope.$root || scope;
+        var isDigesting = /^\$(digest|apply)$/.test(root.$$phase);
+        if (func) {
+            if (isDigesting) {
+                func();
+            } else {
+                scope.$apply(func);
+            }
+        } else if (!isDigesting) {
             scope.$digest();
         }
     }
@@ -587,38 +670,40 @@
             return;
         }
         var scope = self.$angular_scope || angular.element(self.element).scope();
-        if (scope) {
-            var x = arg(), elements = x.elements, data = x.data;
-            if (elements.length > 0) {
-                switch (cmd) {
+        if (scope && $compile) {
+            withoutTimeout(function(){
+                var x = arg(), elements = x.elements, data = x.data;
+                if (elements.length > 0) {
+                    switch (cmd) {
 
-                  case "cleanup":
-                    angular.forEach(elements, function(el){
-                        var itemScope = angular.element(el).scope();
-                        if (itemScope && itemScope !== scope) {
-                            destroyScope(itemScope);
-                        }
-                    });
-                    break;
-
-                  case "compile":
-                    angular.forEach(elements, function(el, i){
-                        var itemScope;
-                        if (x.scopeFrom) {
-                            itemScope = angular.element(x.scopeFrom).scope();
-                        } else {
-                            var vars = data && data[i];
-                            if (vars !== undefined) {
-                                itemScope = $.extend(scope.$new(), vars);
+                      case "cleanup":
+                        angular.forEach(elements, function(el){
+                            var itemScope = angular.element(el).scope();
+                            if (itemScope && itemScope !== scope) {
+                                destroyScope(itemScope, el);
                             }
-                        }
+                        });
+                        break;
 
-                        $compile(el)(itemScope || scope);
-                    });
-                    digest(scope);
-                    break;
+                      case "compile":
+                        angular.forEach(elements, function(el, i){
+                            var itemScope;
+                            if (x.scopeFrom) {
+                                itemScope = angular.element(x.scopeFrom).scope();
+                            } else {
+                                var vars = data && data[i];
+                                if (vars !== undefined) {
+                                    itemScope = $.extend(scope.$new(), vars);
+                                }
+                            }
+
+                            $compile(el)(itemScope || scope);
+                        });
+                        digest(scope);
+                        break;
+                    }
                 }
-            }
+            });
         }
     });
 
@@ -641,11 +726,9 @@
     defadvice("ui.Widget", "$angular_makeEventHandler", function(event, scope, handler){
         handler = $parse(handler);
         return function(e) {
-            if (/^\$(apply|digest)$/.test(scope.$root.$$phase)) {
+            digest(scope, function() {
                 handler(scope, { kendoEvent: e });
-            } else {
-                scope.$apply(function() { handler(scope, { kendoEvent: e }); });
-            }
+            });
         };
     });
 
@@ -689,7 +772,9 @@
                 locals.selected = elems[0];
             }
 
-            scope.$apply(function() { handler(scope, locals); });
+            digest(scope, function() {
+                handler(scope, locals);
+            });
         };
     });
 
@@ -701,7 +786,7 @@
         if (options.columns) {
             var settings = $.extend({}, kendo.Template, options.templateSettings);
             angular.forEach(options.columns, function(col){
-                if (col.field && !col.template && !col.format && !col.values) {
+                if (col.field && !col.template && !col.format && !col.values && (col.encoded === undefined || col.encoded)) {
                     col.template = "<span ng-bind='" +
                         kendo.expr(col.field, "dataItem") + "'>#: " +
                         kendo.expr(col.field, settings.paramName) + "#</span>";

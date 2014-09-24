@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.fx", "./kendo.data", "./kendo.draganddrop" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "mobile.scrollview",
-    name: "ScrollView",
-    category: "mobile",
-    description: "The Kendo Mobile ScrollView widget is used to scroll content wider than the device screen.",
-    depends: [ "fx", "data", "draganddrop" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -570,12 +577,7 @@ var __meta__ = {
 
         _onReset: function() {
             this.pageCount = ceil(this.dataSource.total() / this.options.itemsPerPage);
-
-            if(this.element.is(":visible")) {
-                this._resetPages();
-            } else {
-                this._widgetNeedsRefresh = true;
-            }
+            this._resetPages();
         },
 
         _onEndReached: function() {
@@ -793,19 +795,29 @@ var __meta__ = {
         },
 
         prev: function() {
-            var that = this;
+            var that = this,
+                prevPage = that.page - 1;
 
-            that._content.paneMoved(RIGHT_SWIPE, undefined, function(eventData) {
-                return that.trigger(CHANGING, eventData);
-            });
+            if (that._content instanceof VirtualScrollViewContent) {
+                that._content.paneMoved(RIGHT_SWIPE, undefined, function(eventData) {
+                    return that.trigger(CHANGING, eventData);
+                });
+            } else if (prevPage > -1) {
+                that.scrollTo(prevPage);
+            }
         },
 
         next: function() {
-            var that = this;
+            var that = this,
+                nextPage = that.page + 1;
 
-            that._content.paneMoved(LEFT_SWIPE, undefined, function(eventData) {
-                return that.trigger(CHANGING, eventData);
-            });
+            if (that._content instanceof VirtualScrollViewContent) {
+                that._content.paneMoved(LEFT_SWIPE, undefined, function(eventData) {
+                    return that.trigger(CHANGING, eventData);
+                });
+            } else if (nextPage < that._content.pageCount) {
+                that.scrollTo(nextPage);
+            }
         },
 
         setDataSource: function(dataSource) {

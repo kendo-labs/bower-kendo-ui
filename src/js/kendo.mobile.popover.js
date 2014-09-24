@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.popup", "./kendo.mobile.pane" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "mobile.popover",
-    name: "PopOver",
-    category: "mobile",
-    description: "The mobile PopOver widget represents a transient view which is displayed when the user taps on a navigational widget or area on the screen. ",
-    depends: [ "popup", "mobile.pane" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -213,7 +220,11 @@ var __meta__ = {
             }, this.options.popup);
 
             that.popup = new Popup(that.element, popupOptions);
-            that.popup.overlay.on("move", false);
+            that.popup.overlay.on("move", function(e) {
+                if (e.target == that.popup.overlay[0]) {
+                    e.preventDefault();
+                }
+            });
 
             that.pane = new ui.Pane(that.element, this.options.pane);
             that.pane.navigateToInitial();

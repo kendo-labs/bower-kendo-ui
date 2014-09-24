@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.data", "./kendo.popup" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "list",
-    name: "List",
-    category: "framework",
-    depends: [ "data", "popup" ],
-    hidden: true
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -67,11 +74,7 @@ var __meta__ = {
 
             that.list = $("<div class='k-list-container'/>")
                         .append(that.ul)
-                        .on("mousedown" + ns, function(e) {
-                            if (!that.filterInput || that.filterInput[0] !== e.target) {
-                                e.preventDefault();
-                            }
-                        });
+                        .on("mousedown" + ns, proxy(that._listMousedown, that));
 
             id = element.attr(ID);
 
@@ -115,6 +118,12 @@ var __meta__ = {
                 readonly: false,
                 disable: !(enable = enable === undefined ? true : enable)
             });
+        },
+
+        _listMousedown: function(e) {
+            if (!this.filterInput || this.filterInput[0] !== e.target) {
+                e.preventDefault();
+            }
         },
 
         _filterSource: function(filter) {
@@ -249,18 +258,18 @@ var __meta__ = {
         },
 
         _accessors: function() {
-            var that = this,
-                element = that.element,
-                options = that.options,
-                getter = kendo.getter,
-                textField = element.attr(kendo.attr("text-field")),
-                valueField = element.attr(kendo.attr("value-field"));
+            var that = this;
+            var element = that.element;
+            var options = that.options;
+            var getter = kendo.getter;
+            var textField = element.attr(kendo.attr("text-field"));
+            var valueField = element.attr(kendo.attr("value-field"));
 
-            if (textField) {
+            if (!options.dataTextField && textField) {
                 options.dataTextField = textField;
             }
 
-            if (valueField) {
+            if (!options.dataValueField && valueField) {
                 options.dataValueField = valueField;
             }
 
@@ -312,10 +321,10 @@ var __meta__ = {
                 that._old = value;
                 that._oldIndex = index;
 
-                that.trigger(CHANGE);
-
                 // trigger the DOM change event so any subscriber gets notified
                 that.element.trigger(CHANGE);
+
+                that.trigger(CHANGE);
             }
         },
 
@@ -437,7 +446,7 @@ var __meta__ = {
             computedStyle = window.getComputedStyle ? window.getComputedStyle(wrapper[0], null) : 0;
             computedWidth = computedStyle ? parseFloat(computedStyle.width) : wrapper.outerWidth();
 
-            if (computedStyle && (browser.mozilla || browser.msie)) { // getComputedStyle returns different box in FF and IE.
+            if (computedStyle && browser.msie) { // getComputedStyle returns different box in IE.
                 computedWidth += parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight) + parseFloat(computedStyle.borderLeftWidth) + parseFloat(computedStyle.borderRightWidth);
             }
 
@@ -456,47 +465,48 @@ var __meta__ = {
             return true;
         },
 
+        _openHandler: function(e) {
+            this._adjustListWidth();
+
+            if (this.trigger(OPEN)) {
+                e.preventDefault();
+            } else {
+                this._focused.attr("aria-expanded", true);
+                this.ul.attr("aria-hidden", false);
+            }
+        },
+
+        _closeHandler: function(e) {
+            if (this.trigger(CLOSE)) {
+                e.preventDefault();
+            } else {
+                this._focused.attr("aria-expanded", false);
+                this.ul.attr("aria-hidden", true);
+            }
+        },
+
+        _firstOpen: function() {
+            this._height(this._data().length);
+        },
+
         _popup: function() {
-            var that = this,
-                list = that.list,
-                focused = that._focused,
-                options = that.options,
-                wrapper = that.wrapper;
+            var that = this;
 
-            that.popup = new ui.Popup(list, extend({}, options.popup, {
-                anchor: wrapper,
-                open: function(e) {
-                    that._adjustListWidth();
-
-                    if (that.trigger(OPEN)) {
-                        e.preventDefault();
-                    } else {
-                        focused.attr("aria-expanded", true);
-                        that.ul.attr("aria-hidden", false);
-                    }
-                },
-                close: function(e) {
-                    if (that.trigger(CLOSE)) {
-                        e.preventDefault();
-                    } else {
-                        focused.attr("aria-expanded", false);
-                        that.ul.attr("aria-hidden", true);
-                    }
-                },
-                animation: options.animation,
-                isRtl: support.isRtl(wrapper)
+            that.popup = new ui.Popup(that.list, extend({}, that.options.popup, {
+                anchor: that.wrapper,
+                open: proxy(that._openHandler, that),
+                close: proxy(that._closeHandler, that),
+                animation: that.options.animation,
+                isRtl: support.isRtl(that.wrapper)
             }));
 
-            that.popup.one(OPEN, function() {
-                that._height(that._data().length);
-            });
-
+            that.popup.one(OPEN, proxy(that._firstOpen, that));
             that._touchScroller = kendo.touchScroller(that.popup.element);
         },
 
         _makeUnselectable: function() {
             if (isIE8) {
-                this.list.find("*").attr("unselectable", "on");
+                this.list.find("*").not(".k-textbox").attr("unselectable", "on");
             }
         },
 
@@ -731,8 +741,10 @@ var __meta__ = {
             }
 
             that._busy = setTimeout(function () {
-                that._focused.attr("aria-busy", true);
-                that._arrow.addClass(LOADING);
+                if (that._arrow) { //destroyed after request start
+                    that._focused.attr("aria-busy", true);
+                    that._arrow.addClass(LOADING);
+                }
             }, 100);
         },
 

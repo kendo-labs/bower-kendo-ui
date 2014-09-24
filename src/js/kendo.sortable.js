@@ -1,14 +1,21 @@
-/* jshint eqnull: true */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.draganddrop" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "sortable",
-    name: "Sortable",
-    category: "framework",
-    depends: [ "draganddrop" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -59,7 +66,6 @@ var __meta__ = {
             }
 
             that._draggable = that._createDraggable();
-            that.floating = false;
         },
 
         events: [
@@ -129,7 +135,6 @@ var __meta__ = {
                 if(this.trigger(START, { item: draggedElement, draggableEvent: e })) {
                     e.preventDefault();
                 } else {
-                    this.floating = this._isFloating(draggedElement);
                     draggedElement.css("display", "none");
                     draggedElement.before(placeholder);
 
@@ -183,7 +188,7 @@ var __meta__ = {
                     this._movePlaceholder(target, "next", eventData);
                 }
 
-                if(this.floating) { //horizontal
+                if(this._isFloating(target.element)) { //horizontal
                     if(axisDelta.x < 0 && offsetDelta.left < 0) {
                         direction = "prev";
                     } else if(axisDelta.x > 0 && offsetDelta.left > 0) {
@@ -366,7 +371,7 @@ var __meta__ = {
             lastItemOffset.top += lastItem.outerHeight();
             lastItemOffset.left += lastItem.outerWidth();
 
-            if(this.floating) { //horizontal
+            if(this._isFloating(lastItem)) { //horizontal
                 delta = lastItemOffset.left - cursorOffset.left;
             } else { //vertical
                 delta = lastItemOffset.top - cursorOffset.top;

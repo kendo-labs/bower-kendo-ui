@@ -1,20 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "dropdownlist",
-    name: "DropDownList",
-    category: "web",
-    description: "The DropDownList widget displays a list of values and allows the selection of a single value from the list.",
-    depends: [ "list" ],
-    features: [ {
-        id: "mobile-scroller",
-        name: "Mobile scroller",
-        description: "Support for kinetic scrolling in mobile device",
-        depends: [ "mobile.scroller" ]
-    } ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -50,14 +51,10 @@ var __meta__ = {
 
             Select.fn.init.call(that, element, options);
 
-            that._focusHandler = function() {
-                that.wrapper.focus();
-            };
-
             options = that.options;
-            element = that.element.on("focus" + ns, that._focusHandler);
+            element = that.element.on("focus" + ns, proxy(that._focusHandler, that));
 
-            this._inputTemplate();
+            that._inputTemplate();
 
             that._reset();
 
@@ -165,6 +162,9 @@ var __meta__ = {
             that.wrapper.off(ns);
             that.element.off(ns);
             that._inputWrapper.off(ns);
+
+            that._arrow.off();
+            that._arrow = null;
 
             Select.fn.destroy.call(that);
         },
@@ -320,44 +320,59 @@ var __meta__ = {
             }
         },
 
+        _focusHandler: function() {
+            this.wrapper.focus();
+        },
+
+        _focusinHandler: function() {
+            this._inputWrapper.addClass(FOCUSED);
+            this._prevent = false;
+        },
+
+        _focusoutHandler: function() {
+            var that = this;
+            var filtered = that._state === STATE_FILTER;
+            var isIFrame = window.self !== window.top;
+
+            if (!that._prevent) {
+                if (filtered) {
+                    that._select(that._current);
+                }
+
+                if (!filtered || that.dataItem()) {
+                    that._triggerCascade();
+                }
+
+                if (kendo.support.mobileOS.ios && isIFrame) {
+                    that._change();
+                } else {
+                    that._blur();
+                }
+
+                that._inputWrapper.removeClass(FOCUSED);
+                that._prevent = true;
+                that._open = false;
+                that.element.blur();
+            }
+        },
+
+        _wrapperMousedown: function() {
+            this._prevent = !!this.filterInput;
+        },
+
+        _wrapperClick: function(e) {
+            e.preventDefault();
+            this._focused = this.wrapper;
+            this._toggle();
+        },
+
         _editable: function(options) {
             var that = this,
                 element = that.element,
                 disable = options.disable,
                 readonly = options.readonly,
                 wrapper = that.wrapper.add(that.filterInput).off(ns),
-                dropDownWrapper = that._inputWrapper.off(HOVEREVENTS),
-                focusin = function() {
-                    dropDownWrapper.addClass(FOCUSED);
-                    that._prevent = false;
-                },
-                focusout = function() {
-                    if (!that._prevent) {
-                        var filtered = that._state === STATE_FILTER;
-                        var isIFrame = window.self !== window.top;
-
-                        if (filtered) {
-                            that._select(that._current);
-                        }
-
-                        if (!filtered || that.dataItem()) {
-                            that._triggerCascade();
-                        }
-
-                        if (kendo.support.mobileOS.ios && isIFrame) {
-                            that._change();
-                        } else {
-                            that._blur();
-                        }
-
-                        dropDownWrapper.removeClass(FOCUSED);
-                        that._prevent = true;
-                        that._open = false;
-                        element.blur();
-                    }
-
-                    that._wrapperClicked = false;
-                };
+                dropDownWrapper = that._inputWrapper.off(HOVEREVENTS);
 
             if (!readonly && !disable) {
                 element.removeAttr(DISABLED).removeAttr(READONLY);
@@ -372,18 +387,11 @@ var __meta__ = {
                     .attr(ARIA_DISABLED, false)
                     .attr(ARIA_READONLY, false)
                     .on("keydown" + ns, proxy(that._keydown, that))
-                    .on("focusin" + ns, focusin)
-                    .on("focusout" + ns, focusout)
-                    .on("mousedown" + ns, function(e) {
-                        that._prevent = true;
-                    });
+                    .on("focusin" + ns, proxy(that._focusinHandler, that))
+                    .on("focusout" + ns, proxy(that._focusoutHandler, that))
+                    .on("mousedown" + ns, proxy(that._wrapperMousedown, that));
 
-                that.wrapper
-                    .on("click" + ns, function(e) {
-                        e.preventDefault();
-                        that._focused = that.wrapper;
-                        that._toggle();
-                    });
+                that.wrapper.on("click" + ns, proxy(that._wrapperClick, that));
 
                 if (!that.filterInput) {
                     wrapper.on("keypress" + ns, proxy(that._keypress, that));
@@ -400,8 +408,8 @@ var __meta__ = {
                     .removeClass(STATEDISABLED);
 
                 wrapper
-                    .on("focusin" + ns, focusin)
-                    .on("focusout" + ns, focusout);
+                    .on("focusin" + ns, proxy(that._focusinHandler, that))
+                    .on("focusout" + ns, proxy(that._focusoutHandler, that));
             }
 
             element.attr(DISABLED, disable)
@@ -594,17 +602,20 @@ var __meta__ = {
             that._search();
         },
 
+        _popupOpen: function() {
+            var popup = this.popup;
+
+            popup.wrapper = kendo.wrap(popup.element);
+
+            if (popup.element.closest(".km-root")[0]) {
+                popup.wrapper.addClass("km-popup km-widget");
+                this.wrapper.addClass("km-widget");
+            }
+        },
+
         _popup: function() {
             Select.fn._popup.call(this);
-            this.popup.one("open", proxy(function() {
-                var popup = this.popup;
-
-                popup.wrapper = kendo.wrap(popup.element);
-                if (popup.element.closest(".km-root")[0]) {
-                    popup.wrapper.addClass("km-popup km-widget");
-                    this.wrapper.addClass("km-widget");
-                }
-            }, this));
+            this.popup.one("open", proxy(this._popupOpen, this));
         },
 
         _focusElement: function(element) {
@@ -705,9 +716,14 @@ var __meta__ = {
 
                 idx = ui.List.inArray(li[0], that.ul[0]);
                 if (idx > -1) {
+                    that.selectedIndex = idx;
+
                     data = that._data()[idx];
                     value = that._value(data);
-                    that.selectedIndex = idx;
+
+                    if (value === null) {
+                        value = "";
+                    }
 
                     that._textAccessor(data);
                     that._accessor(value !== undefined ? value : that._text(data), idx);
@@ -742,20 +758,21 @@ var __meta__ = {
         },
 
         _filterHeader: function() {
+            var icon;
             var options = this.options;
             var filterEnalbed = options.filter !== "none";
 
-            if (this.filterInput && !filterEnalbed) {
-                this.filterInput.off(ns)
+            if (this.filterInput) {
+                this.filterInput
+                    .off(ns)
                     .parent()
                     .remove();
 
                 this.filterInput = null;
-                return;
             }
 
             if (filterEnalbed) {
-                var icon = '<span unselectable="on" class="k-icon k-i-search">select</span>';
+                icon = '<span unselectable="on" class="k-icon k-i-search">select</span>';
 
                 this.filterInput = $('<input class="k-textbox"/>')
                                       .attr({
@@ -768,6 +785,11 @@ var __meta__ = {
                     .prepend($('<span class="k-list-filter" />')
                     .append(this.filterInput.add(icon)));
             }
+        },
+
+        _iconMousedown: function(e) {
+            this.wrapper.focusin();
+            e.preventDefault();
         },
 
         _span: function() {
@@ -787,7 +809,8 @@ var __meta__ = {
 
             that.span = span;
             that._inputWrapper = $(wrapper[0].firstChild);
-            that._arrow = wrapper.find(".k-icon").mousedown(function(e) { e.preventDefault(); });
+            that._arrow = wrapper.find(".k-icon")
+                                 .mousedown(proxy(that._iconMousedown, that));
         },
 
         _wrapper: function() {

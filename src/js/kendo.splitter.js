@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.resizable" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "splitter",
-    name: "Splitter",
-    category: "web",
-    description: "The Splitter widget provides an easy way to create a dynamic layout of resizable and collapsible panes.",
-    depends: [ "resizable" ]
-};
 
 (function ($, undefined) {
     var kendo = window.kendo,
@@ -46,6 +53,16 @@ var __meta__ = {
 
     function isFluid(size) {
         return !isPercentageSize(size) && !isPixelSize(size);
+    }
+
+    function calculateSize(size, total) {
+        var output = parseInt(size, 10);
+
+        if (isPercentageSize(size)) {
+            output = Math.floor(output * total / 100);
+        }
+
+        return output;
     }
 
     function panePropertyAccessor(propertyName, triggersResize) {
@@ -339,6 +356,10 @@ var __meta__ = {
                         catIconIf("k-collapse-next", nextCollapsible && !nextCollapsed && !prevCollapsed) +
                         catIconIf("k-expand-next", nextCollapsible && nextCollapsed && !prevCollapsed)
                     );
+
+            if (!draggable && !prevCollapsible && !nextCollapsible) {
+                splitbar.removeAttr("tabindex");
+            }
         },
         _updateSplitBars: function() {
             var that = this;
@@ -394,20 +415,18 @@ var __meta__ = {
 
             panes.css({ position: "absolute", top: 0 })
                 [sizingProperty](function() {
-                    var config = $(this).data(PANE) || {}, size;
+                    var element = $(this),
+                        config = element.data(PANE) || {}, size;
 
+                    element.removeClass("k-state-collapsed");
                     if (config.collapsed) {
-                        size = 0;
-                        $(this).css("overflow", "hidden");
+                        size = config.collapsedSize ? calculateSize(config.collapsedSize, totalSize) : 0;
+                        element.css("overflow", "hidden").addClass("k-state-collapsed");
                     } else if (isFluid(config.size)) {
                         freeSizedPanes = freeSizedPanes.add(this);
                         return;
                     } else { // sized in px/%, not collapsed
-                        size = parseInt(config.size, 10);
-
-                        if (isPercentageSize(config.size)) {
-                            size = Math.floor(size * totalSize / 100);
-                        }
+                        size = calculateSize(config.size, totalSize);
                     }
 
                     sizedPanesCount++;

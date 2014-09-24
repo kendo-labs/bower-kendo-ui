@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.popup" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "timepicker",
-    name: "TimePicker",
-    category: "web",
-    description: "The TimePicker widget allows the end user to select a value from a list of predefined values or to type a new value.",
-    depends: [ "popup" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -77,6 +84,7 @@ var __meta__ = {
         }
 
         that._popup();
+        that._heightHandler = proxy(that._height, that);
 
         that.template = kendo.template('<li tabindex="-1" role="option" class="k-item" unselectable="on">#=data#</li>', { useWithBlock: false });
     };
@@ -161,7 +169,7 @@ var __meta__ = {
                 }
             }
 
-            that._html(html, length);
+            that._html(html);
         },
 
         refresh: function() {
@@ -219,7 +227,7 @@ var __meta__ = {
                 html += template(toString(start, format, options.culture));
             }
 
-            that._html(html, length);
+            that._html(html);
         },
 
         bind: function() {
@@ -233,11 +241,13 @@ var __meta__ = {
             }
         },
 
-        _html: function(html, length) {
+        _html: function(html) {
             var that = this;
 
             that.ul[0].innerHTML = html;
-            that._height(length);
+
+            that.popup.unbind(OPEN, that._heightHandler);
+            that.popup.one(OPEN, that._heightHandler);
 
             that.current(null);
             that.select(that._value);
@@ -342,13 +352,13 @@ var __meta__ = {
             }
         },
 
-        _height: function(length) {
-            if (length) {
-                var that = this,
-                    list = that.list,
-                    parent = list.parent(".k-animation-container"),
-                    height = that.options.height;
+        _height: function() {
+            var that = this;
+            var list = that.list;
+            var parent = list.parent(".k-animation-container");
+            var height = that.options.height;
 
+            if (that.ul[0].children.length) {
                 list.add(parent)
                     .show()
                     .height(that.ul[0].scrollHeight > height ? height : "auto")
@@ -762,10 +772,10 @@ var __meta__ = {
                 that._old = value;
                 that._oldText = that.element.val();
 
-                that.trigger(CHANGE);
-
                 // trigger the DOM change event so any subscriber gets notified
                 that.element.trigger(CHANGE);
+
+                that.trigger(CHANGE);
             }
         },
 

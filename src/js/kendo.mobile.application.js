@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.mobile.pane", "./kendo.router" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "mobile.application",
-    name: "Application",
-    category: "mobile",
-    description: "The Mobile application provides a framework to build native looking web applications on mobile devices.",
-    depends: [ "mobile.pane", "router" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -99,8 +106,10 @@ var __meta__ = {
         return classes.join(" ");
     }
 
-    function wp8Background() {
-        return parseInt($("<div style='background: Background' />").css("background-color").split(",")[1], 10) === 0 ? 'dark' : 'light';
+    function wp8Background(os) {
+        return 'km-wp-' + (os.noVariantSet ?
+                            (parseInt($("<div style='background: Background' />").css("background-color").split(",")[1], 10) === 0 ? 'dark' : 'light') :
+                            os.variant + " km-wp-" + os.variant + "-force");
     }
 
     function isOrientationHorizontal(element) {
@@ -252,6 +261,7 @@ var __meta__ = {
             }
 
             if (!os.variant) {
+                os.noVariantSet = true;
                 os.variant = "dark";
             }
 
@@ -259,22 +269,22 @@ var __meta__ = {
 
             that.osCssClass = osCssClass(that.os, that.options);
 
-            if (os.wp) {
+            if (os.name == "wp") {
                 if (!that.refreshBackgroundColorProxy) {
                     that.refreshBackgroundColorProxy = $.proxy(function () {
-                        if ((that.os.variant && ((that.os.skin && that.os.skin === that.os.name)) || !that.os.skin)) {
-                            that.element.removeClass("km-wp-dark km-wp-light").addClass("km-wp-" + wp8Background());
+                        if (that.os.variant && (that.os.skin && that.os.skin === that.os.name) || !that.os.skin) {
+                            that.element.removeClass("km-wp-dark km-wp-light km-wp-dark-force km-wp-light-force").addClass(wp8Background(that.os));
                         }
                     }, that);
                 }
 
-                $(window).off("focusin", that.refreshBackgroundColorProxy);
+                $(document).off("visibilitychange", that.refreshBackgroundColorProxy);
                 $(document).off("resume", that.refreshBackgroundColorProxy);
 
                 if (!os.skin) {
                     that.element.parent().css("overflow", "hidden");
 
-                    $(window).on("focusin", that.refreshBackgroundColorProxy); // Restore theme on browser focus (requires click).
+                    $(document).on("visibilitychange", that.refreshBackgroundColorProxy); // Restore theme on browser focus (using the Visibility API).
                     $(document).on("resume", that.refreshBackgroundColorProxy); // PhoneGap fires resume.
 
                     that.refreshBackgroundColorProxy();

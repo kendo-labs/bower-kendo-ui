@@ -1,15 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.popup" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "mobile.shim",
-    name: "Shim",
-    category: "mobile",
-    description: "Mobile Shim",
-    depends: [ "popup" ],
-    hidden: true
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -65,20 +71,22 @@ var __meta__ = {
                     }
                 },
 
-                deactivate: function(e) {
+                close: function(e) {
                     var prevented = false;
 
                     if (!that._apiCall) {
                         prevented = that.trigger(HIDE);
                     }
 
-                    if (!prevented) {
-                        shim.hide();
-                    } else {
+                    if (prevented) {
                         e.preventDefault();
                     }
 
                     that._apiCall = false;
+                },
+
+                deactivate: function() { // Deactivate event can't be prevented.
+                    shim.hide();
                 },
 
                 open: function() {

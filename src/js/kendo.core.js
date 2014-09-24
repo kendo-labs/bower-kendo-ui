@@ -1,13 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([], f);
 })(function(){
-
-var __meta__ = {
-    id: "core",
-    name: "Core",
-    category: "framework",
-    description: "The core of the Kendo framework."
-};
 
 /*jshint eqnull: true, loopfunc: true, evil: true, boss: true, freeze: false*/
 (function($, undefined) {
@@ -37,7 +45,7 @@ var __meta__ = {
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "$KENDO_VERSION";
+    kendo.version = "2014.2.903";
 
     function Class() {}
 
@@ -454,7 +462,7 @@ function pad(number, digits, end) {
 
 // Date and Number formatting
 (function() {
-    var dateFormatRegExp = /dddd|ddd|dd|d|MMMM|MMM|MM|M|yyyy|yy|HH|H|hh|h|mm|m|fff|ff|f|tt|ss|s|"[^"]*"|'[^']*'/g,
+    var dateFormatRegExp = /dddd|ddd|dd|d|MMMM|MMM|MM|M|yyyy|yy|HH|H|hh|h|mm|m|fff|ff|f|tt|ss|s|zzz|zz|z|"[^"]*"|'[^']*'/g,
         standardFormatRegExp =  /^(n|c|p|e)(\d*)$/i,
         literalRegExp = /(\\.)|(['][^']*[']?)|(["][^"]*["]?)/g,
         commaRegExp = /\,/g,
@@ -594,7 +602,9 @@ function pad(number, digits, end) {
         format = calendar.patterns[format] || format;
 
         return format.replace(dateFormatRegExp, function (match) {
+            var minutes;
             var result;
+            var sign;
 
             if (match === "d") {
                 result = date.getDate();
@@ -639,12 +649,29 @@ function pad(number, digits, end) {
                 if (result > 99) {
                     result = math.floor(result / 10);
                 }
-
                 result = pad(result);
             } else if (match === "fff") {
                 result = pad(date.getMilliseconds(), 3);
             } else if (match === "tt") {
                 result = date.getHours() < 12 ? calendar.AM[0] : calendar.PM[0];
+            } else if (match === "zzz") {
+                minutes = date.getTimezoneOffset();
+                sign = minutes < 0;
+
+                result = math.abs(minutes / 60).toString().split(".")[0];
+                minutes = math.abs(minutes) - (result * 60);
+
+                result = (sign ? "-" : "+") + pad(result);
+                result += ":" + pad(minutes);
+            } else if (match === "zz") {
+                result = date.getTimezoneOffset() / 60;
+                sign = result < 0;
+
+                result = math.abs(result).toString().split(".")[0];
+                result = (sign ? "-" : "+") + pad(result);
+            } else if (match === "z") {
+                result = date.getTimezoneOffset() / 60;
+                result = (result > 0 ? "+" : "") + result.toString().split(".")[0];
             }
 
             return result !== undefined ? result : match.slice(1, match.length - 1);
@@ -1086,7 +1113,7 @@ function pad(number, digits, end) {
     var nonBreakingSpaceRegExp = /\u00A0/g,
         exponentRegExp = /[eE][\-+]?[0-9]+/,
         shortTimeZoneRegExp = /[+|\-]\d{1,2}/,
-        longTimeZoneRegExp = /[+|\-]\d{1,2}:\d{2}/,
+        longTimeZoneRegExp = /[+|\-]\d{1,2}:?\d{2}/,
         dateRegExp = /^\/Date\((.*?)\)\/$/,
         offsetRegExp = /[+-]\d*/,
         formatsSequence = ["G", "g", "d", "F", "D", "y", "m", "T", "t"],
@@ -1210,7 +1237,7 @@ function pad(number, digits, end) {
             twoDigitYearMax = calendar.twoDigitYearMax || 2029,
             defaultYear = date.getFullYear(),
             ch, count, length, pattern,
-            pmHour, UTC, ISO8601, matches,
+            pmHour, UTC, matches,
             amDesignators, pmDesignators,
             hoursOffset, minutesOffset,
             hasTime, match;
@@ -1347,10 +1374,6 @@ function pad(number, digits, end) {
                     count = lookAhead("z");
 
                     if (value.substr(valueIdx, 1) === "Z") {
-                        if (!ISO8601) {
-                            return null;
-                        }
-
                         checkLiteral();
                         continue;
                     }
@@ -1362,23 +1385,28 @@ function pad(number, digits, end) {
                         return null;
                     }
 
-                    matches = matches[0];
-                    valueIdx = matches.length;
-                    matches = matches.split(":");
+                    matches = matches[0].split(":");
 
-                    hoursOffset = parseInt(matches[0], 10);
+                    hoursOffset = matches[0];
+                    minutesOffset = matches[1];
+
+                    if (!minutesOffset && hoursOffset.length > 3) { //(+|-)[hh][mm] format is used
+                        valueIdx = hoursOffset.length - 2;
+                        minutesOffset = hoursOffset.substring(valueIdx);
+                        hoursOffset = hoursOffset.substring(0, valueIdx);
+                    }
+
+                    hoursOffset = parseInt(hoursOffset, 10);
                     if (outOfRange(hoursOffset, -12, 13)) {
                         return null;
                     }
 
                     if (count > 2) {
-                        minutesOffset = parseInt(matches[1], 10);
+                        minutesOffset = parseInt(minutesOffset, 10);
                         if (isNaN(minutesOffset) || outOfRange(minutesOffset, 0, 59)) {
                             return null;
                         }
                     }
-                } else if (ch === "T") {
-                    ISO8601 = checkLiteral();
                 } else if (ch === "'") {
                     literal = true;
                     checkLiteral();
@@ -1805,19 +1833,26 @@ function pad(number, digits, end) {
         return styles;
     }
 
-    (function() {
-        support.scrollbar = function() {
-            var div = document.createElement("div"),
-                result;
+    (function () {
+        support._scrollbar = undefined;
 
-            div.style.cssText = "overflow:scroll;overflow-x:hidden;zoom:1;clear:both;display:block";
-            div.innerHTML = "&nbsp;";
-            document.body.appendChild(div);
+        support.scrollbar = function (refresh) {
+            if (!isNaN(support._scrollbar) && !refresh) {
+                return support._scrollbar;
+            } else {
+                var div = document.createElement("div"),
+                    result;
 
-            result = div.offsetWidth - div.scrollWidth;
+                div.style.cssText = "overflow:scroll;overflow-x:hidden;zoom:1;clear:both;display:block";
+                div.innerHTML = "&nbsp;";
+                document.body.appendChild(div);
 
-            document.body.removeChild(div);
-            return result;
+                support._scrollbar = result = div.offsetWidth - div.scrollWidth;
+
+                document.body.removeChild(div);
+
+                return result;
+            }
         };
 
         support.isRtl = function(element) {
@@ -1887,6 +1922,7 @@ function pad(number, digits, end) {
             var os = false, minorVersion, match = [],
                 notAndroidPhone = !/mobile safari/i.test(ua),
                 agentRxs = {
+                    wp: /(Windows Phone(?: OS)?)\s(\d+)\.(\d+(\.\d+)?)/,
                     fire: /(Silk)\/(\d+)\.(\d+(\.\d+)?)/,
                     android: /(Android|Android.*(?:Opera|Firefox).*?\/)\s*(\d+)\.(\d+(\.\d+)?)/,
                     iphone: /(iPhone|iPod).*OS\s+(\d+)[\._]([\d\._]+)/,
@@ -1895,7 +1931,6 @@ function pad(number, digits, end) {
                     webos: /(webOS)\/(\d+)\.(\d+(\.\d+)?)/,
                     blackberry: /(BlackBerry|BB10).*?Version\/(\d+)\.(\d+(\.\d+)?)/,
                     playbook: /(PlayBook).*?Tablet\s*OS\s*(\d+)\.(\d+(\.\d+)?)/,
-                    wp: /(Windows Phone(?: OS)?)\s(\d+)\.(\d+(\.\d+)?)/,
                     windows: /(MSIE)\s+(\d+)\.(\d+(\.\d+)?)/,
                     tizen: /(tizen).*?Version\/(\d+)\.(\d+(\.\d+)?)/i,
                     sailfish: /(sailfish).*rv:(\d+)\.(\d+(\.\d+)?).*firefox/i,
@@ -1918,9 +1953,9 @@ function pad(number, digits, end) {
                     omobile: /Opera\sMobi/i,
                     firefox: /Firefox|Fennec/i,
                     mobilesafari: /version\/.*safari/i,
+                    ie: /MSIE|Windows\sPhone/i,
                     chrome: /chrome|crios/i,
-                    webkit: /webkit/i,
-                    ie: /MSIE|Windows\sPhone/i
+                    webkit: /webkit/i
                 };
 
             for (var agent in agentRxs) {
@@ -1982,7 +2017,7 @@ function pad(number, digits, end) {
                     if (match) {
                         browser = {};
                         browser[agent] = true;
-                        browser[match[1].toLowerCase()] = true;
+                        browser[match[1].toLowerCase().split(" ")[0].split("/")[0]] = true;
                         browser.version = parseInt(document.documentMode || match[2], 10);
 
                         break;
@@ -2479,7 +2514,8 @@ function pad(number, digits, end) {
         },
 
         getter: function(expression, safe) {
-            return getterCache[expression] = getterCache[expression] || new Function("d", "return " + kendo.expr(expression, safe));
+            var key = expression + safe;
+            return getterCache[key] = getterCache[key] || new Function("d", "return " + kendo.expr(expression, safe));
         },
 
         setter: function(expression) {
@@ -2629,7 +2665,7 @@ function pad(number, digits, end) {
     var DataBoundWidget = Widget.extend({
         // Angular consumes these.
         dataItems: function() {
-            return this.dataSource.view();
+            return this.dataSource.flatView();
         },
 
         _angularItems: function(cmd) {
@@ -2637,7 +2673,7 @@ function pad(number, digits, end) {
             that.angular(cmd, function(){
                 return {
                     elements: that.items(),
-                    data: that.dataItems().map(function(dataItem){
+                    data: $.map(that.dataItems(), function(dataItem){
                         return { dataItem: dataItem };
                     })
                 };
@@ -2719,7 +2755,9 @@ function pad(number, digits, end) {
             length,
             role,
             value,
-            dataSource;
+            dataSource,
+            fullPath,
+            widgetKeyRegExp;
 
         // Preserve backwards compatibility with (element, options, namespace) signature, where namespace was kendo.ui
         if (!roles) {
@@ -2736,17 +2774,26 @@ function pad(number, digits, end) {
             return;
         }
 
-        if (role.indexOf(".") === -1) {
+        fullPath = role.indexOf(".") === -1;
+
+        // look for any widget that may be already instantiated based on this role.
+        // The prefix used is unknown, hence the regexp
+        //
+
+        if (fullPath) {
             widget = roles[role];
         } else { // full namespace path - like kendo.ui.Widget
             widget = kendo.getter(role)(window);
         }
 
-        // look for any widget that may be already instantiated based on this role.
-        // The prefix used is unknown, hence the regexp
         var data = $(element).data(),
-            widgetKey = widget ? "kendo" + widget.fn.options.prefix + widget.fn.options.name : "",
+            widgetKey = widget ? "kendo" + widget.fn.options.prefix + widget.fn.options.name : "";
+
+        if (fullPath) {
             widgetKeyRegExp = new RegExp("^kendo.*" + role + "$", "i");
+        } else { // full namespace path - like kendo.ui.Widget
+            widgetKeyRegExp = new RegExp("^" + widgetKey + "$", "i");
+        }
 
         for(var key in data) {
             if (key.match(widgetKeyRegExp)) {
@@ -2836,7 +2883,7 @@ function pad(number, digits, end) {
 
     function resizableWidget() {
         var widget = $(this);
-        return ($.inArray(widget.attr("data-role"), ["slider", "rangeslider"]) > 0) || widget.is(":visible");
+        return ($.inArray(widget.attr("data-" + kendo.ns + "role"), ["slider", "rangeslider"]) > -1) || widget.is(":visible");
     }
 
     kendo.resize = function(element, force) {
@@ -2939,6 +2986,8 @@ function pad(number, digits, end) {
 
                 return value;
             };
+
+            $.fn[name].widget = widget;
 
             $.fn[getter] = function() {
                 return this.data(name);

@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.core", "./kendo.userevents" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "numerictextbox",
-    name: "NumericTextBox",
-    category: "web",
-    description: "The NumericTextBox widget can format and display numeric, percentage or currency textbox.",
-    depends: [ "core", "userevents" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -351,10 +358,11 @@ var __meta__ = {
 
             if (that._old != value) {
                 that._old = value;
-                that.trigger(CHANGE);
 
                 // trigger the DOM change event so any subscriber gets notified
                 that.element.trigger(CHANGE);
+
+                that.trigger(CHANGE);
             }
         },
 

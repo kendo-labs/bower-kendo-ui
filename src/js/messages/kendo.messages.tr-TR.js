@@ -1,3 +1,22 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+(function(f, define){
+    define([], f);
+})(function(){
+
 
 
 /* Filter menu operator messages */
@@ -228,7 +247,7 @@ $.extend(true, kendo.ui.Groupable.prototype.options.messages,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
-  "display": "{0} - {1} {2} öğeleri",
+  "display": "{0} - {1} aralığı gösteriliyor. Toplam {2} öğe var",
   "empty": "Görüntülenecek öğe yok",
   "first": "İlk sayfaya git",
   "itemsPerPage": "Sayfa başına ürün",
@@ -310,6 +329,11 @@ $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "statusFailed": "Başarız Oldu",
   "statusUploaded": "Yüklendi",
   "statusUploading": "Yükleniyor",
-  "uploadSelectedFiles": "Dosyaları Yükle"
+  "uploadSelectedFiles": "seçilen dosyaları Yükle"
 });
 }
+
+
+return window.kendo;
+
+}, typeof define == 'function' && define.amd ? define : function(_, f){ f(); });

@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.core" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "toolbar",
-    name: "ToolBar",
-    category: "web",
-    description: "The ToolBar widget displays one or more command buttons divided into groups.",
-    depends: [ "core" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -190,9 +197,16 @@ var __meta__ = {
 
             separator: {
                 base: function(options, overflow) {
-                    var element = overflow ? $('<li class="k-separator">&nbsp;</li>') : $('<div class="k-separator">&nbsp;</div>');
+                    var element = overflow ? $('<li>&nbsp;</li>') : $('<div>&nbsp;</div>');
                     element.data({ type: "separator" });
                     element.attr(KENDO_UID_ATTR, options.uid);
+
+                    if (options.attributes) {
+                        element.attr(options.attributes);
+                    }
+
+                    element.addClass(SEPARATOR);
+
                     return element;
                 },
                 toolbar: function(options) {
@@ -213,6 +227,10 @@ var __meta__ = {
 
             element.data({ type: "button" });
             element.attr(KENDO_UID_ATTR, options.uid);
+
+            if (options.attributes) {
+                element.attr(options.attributes);
+            }
 
             if (options.togglable) {
                 element.addClass(TOGGLE_BUTTON);
@@ -269,7 +287,7 @@ var __meta__ = {
                 if (options.mobile) {
                     element.html('<span class="km-text">' + options.text + "</span>");
                 } else {
-                    element.text(options.text);
+                    element.html(options.text);
                 }
             }
 
@@ -300,7 +318,7 @@ var __meta__ = {
                 if (options.mobile) {
                     element.html('<span class="km-text">' + options.text + "</span>");
                 } else {
-                    element.text(options.text);
+                    element.html(options.text);
                 }
             }
 
@@ -422,6 +440,7 @@ var __meta__ = {
 
                     that.overflowUserEvents = new kendo.UserEvents(that.element, {
                         threshold: 5,
+                        allowSelection: true,
                         filter: "." + OVERFLOW_ANCHOR,
                         tap: proxy(that._toggleOverflow, that)
                     });
@@ -441,6 +460,7 @@ var __meta__ = {
 
                 that.userEvents = new kendo.UserEvents(document, {
                     threshold: 5,
+                    allowSelection: true,
                     filter:
                         "[" + KENDO_UID_ATTR + "=" + this.uid + "] ." + BUTTON + ", " +
                         "[" + KENDO_UID_ATTR + "=" + this.uid + "] ." + OVERFLOW_BUTTON,
@@ -590,6 +610,10 @@ var __meta__ = {
             enable: function(element, enable) {
                 var uid = this.element.find(element).attr(KENDO_UID_ATTR);
 
+                if (!uid && this.popup) {
+                    uid = this.popup.element.find(element).parent("li").attr(KENDO_UID_ATTR);
+                }
+
                 if (typeof enable == "undefined") {
                     enable = true;
                 }
@@ -709,7 +733,7 @@ var __meta__ = {
                 var that = this, popup,
                     target, splitContainer,
                     isDisabled, isChecked,
-                    group, handler, eventData;
+                    group, handler, eventData, id;
 
                 e.preventDefault();
 
@@ -734,19 +758,21 @@ var __meta__ = {
                     return;
                 }
 
+                id = target.attr("id") ? target.attr("id").replace(/(_overflow$)/, "") : undefined;
+
                 if (target.hasClass(TOGGLE_BUTTON)) {
                     group = target.data("group");
                     handler = isFunction(target.data("toggle")) ? target.data("toggle") : null;
 
                     that.toggle(target);
                     isChecked = target.hasClass(STATE_ACTIVE);
-                    eventData = { target: target, group: group, checked: isChecked, id: target.attr("id") };
+                    eventData = { target: target, group: group, checked: isChecked, id: id };
 
                     if (handler) { handler.call(that, eventData); }
                     that.trigger(TOGGLE, eventData);
                 } else {
                     handler = isFunction(target.data("click")) ? target.data("click") : null;
-                    eventData = { target: target, id: target.attr("id") };
+                    eventData = { target: target, id: id };
 
                     if (handler) { handler.call(that, eventData); }
                     that.trigger(CLICK, eventData);
@@ -787,6 +813,10 @@ var __meta__ = {
 
             _resize: function(e) {
                 var containerWidth = e.width;
+
+                if (!this.options.resizable) {
+                    return;
+                }
 
                 this.popup.close();
 

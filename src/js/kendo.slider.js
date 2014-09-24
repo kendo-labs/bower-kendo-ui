@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.draganddrop" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "slider",
-    name: "Slider",
-    category: "web",
-    description: "The Slider widget provides a rich input for selecting values or ranges of values.",
-    depends: [ "draganddrop" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -57,7 +64,7 @@ var __meta__ = {
 
             options = that.options;
 
-            that._distance = options.max - options.min;
+            that._distance = round(options.max - options.min);
             that._isHorizontal = options.orientation == "horizontal";
             that._isRtl = that._isHorizontal && kendo.support.isRtl(element);
             that._position = that._isHorizontal ? "left" : "bottom";
@@ -210,7 +217,7 @@ var __meta__ = {
                 items = that.wrapper.find(TICK_SELECTOR),
                 i = 0, item, value;
 
-            if ((1000 * options.largeStep) % (1000 * options.smallStep) === 0 || that._distance / options.largeStep >= 3) {
+            if (removeFraction(options.largeStep) % removeFraction(options.smallStep) === 0 || that._distance / options.largeStep >= 3) {
                 if (!that._isHorizontal && !that._isRtl) {
                     items = $.makeArray(items).reverse();
                 }
@@ -218,7 +225,7 @@ var __meta__ = {
                 for (i = 0; i < items.length; i++) {
                     item = $(items[i]);
                     value = that._values[i];
-                    if (value % options.smallStep === 0 && value % options.largeStep === 0) {
+                    if (removeFraction(value) % removeFraction(options.smallStep) === 0 && removeFraction(value) % removeFraction(options.largeStep) === 0) {
                         item.addClass("k-tick-large")
                             .html("<span class='k-label'>" + item.attr("title") + "</span>");
 
@@ -308,7 +315,8 @@ var __meta__ = {
             while (i < itemsCount) {
                 selection += (pixelWidths[i - 1] + pixelWidths[i]) / 2;
                 that._pixelSteps[i] = selection;
-                that._values[i] = val += options.smallStep;
+                val += options.smallStep;
+                that._values[i] = round(val);
 
                 i++;
             }
@@ -421,10 +429,10 @@ var __meta__ = {
                 inputs = element.find("input");
 
             if (inputs.length == 2) {
-                inputs.eq(0).val(options.selectionStart);
-                inputs.eq(1).val(options.selectionEnd);
+                inputs.eq(0).prop("value", formatValue(options.selectionStart));
+                inputs.eq(1).prop("value", formatValue(options.selectionEnd));
             } else {
-                element.val(options.value);
+                element.prop("value", formatValue(options.value));
             }
 
             element.wrap(createWrapper(options, element, that._isHorizontal)).hide();
@@ -602,6 +610,10 @@ var __meta__ = {
         return typeof value !== UNDEFINED;
     }
 
+    function removeFraction(value) {
+        return value * 10000;
+    }
+
     var Slider = SliderBase.extend({
         init: function(element, options) {
             var that = this,
@@ -625,7 +637,7 @@ var __meta__ = {
             options = that.options;
             if (!defined(options.value) || options.value === null) {
                 options.value = options.min;
-                element.val(options.min);
+                element.prop("value", formatValue(options.min));
             }
             options.value = math.max(math.min(options.value, options.max), options.min);
 
@@ -1283,12 +1295,12 @@ var __meta__ = {
             options = that.options;
             if (!defined(options.selectionStart) || options.selectionStart === null) {
                 options.selectionStart = options.min;
-                inputs.eq(0).val(options.min);
+                inputs.eq(0).prop("value", formatValue(options.min));
             }
 
             if (!defined(options.selectionEnd) || options.selectionEnd === null) {
                 options.selectionEnd = options.max;
-                inputs.eq(1).val(options.max);
+                inputs.eq(1).prop("value", formatValue(options.max));
             }
 
             var dragHandles = that.wrapper.find(DRAG_HANDLE);

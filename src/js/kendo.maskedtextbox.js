@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.core" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "maskedtextbox",
-    name: "MaskedTextBox",
-    category: "web",
-    description: "The MaskedTextBox widget allows to specify a mask type on an input field.",
-    depends: [ "core" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo;
@@ -46,11 +53,14 @@ var __meta__ = {
                 .attr("autocomplete", "off")
                 .on("focus" + ns, function() {
                     var value = DOMElement.value;
-                    that._oldValue = value;
 
                     if (!value) {
                         DOMElement.value = that._old = that._emptyMask;
+                    } else {
+                        that._togglePrompt(true);
                     }
+
+                    that._oldValue = value;
 
                     that._timeoutId = setTimeout(function() {
                         caret(element, 0, value ? that._maskLength : 0);
@@ -67,6 +77,7 @@ var __meta__ = {
                     }
 
                     that._change();
+                    that._togglePrompt();
                 });
 
              var disabled = element.is("[disabled]");
@@ -85,6 +96,7 @@ var __meta__ = {
         options: {
             name: "MaskedTextBox",
             promptChar: "_",
+            clearPromptChar: false,
             culture: "",
             rules: {},
             value: "",
@@ -137,6 +149,7 @@ var __meta__ = {
         value: function(value) {
             var element = this.element;
             var emptyMask = this._emptyMask;
+            var options = this.options;
 
             if (value === undefined) {
                 return this.element.val();
@@ -153,8 +166,30 @@ var __meta__ = {
 
             this._mask(0, this._maskLength, value);
 
-            if (kendo._activeElement() !== element && element.val() === emptyMask) {
-                element.val("");
+            value = element.val();
+            this._oldValue = value;
+
+            if (kendo._activeElement() !== element) {
+                if (value === emptyMask) {
+                    element.val("");
+                } else {
+                    this._togglePrompt();
+                }
+            }
+        },
+
+        _togglePrompt: function(show) {
+            var DOMElement = this.element[0];
+            var value = DOMElement.value;
+
+            if (this.options.clearPromptChar) {
+                if (!show) {
+                    value = value.replace(new RegExp(this.options.promptChar, "g"), " ");
+                } else {
+                    value = this._oldValue;
+                }
+
+                DOMElement.value = this._old = value;
             }
         },
 
@@ -323,20 +358,23 @@ var __meta__ = {
                 e.preventDefault();
             } else if (key === keys.ENTER) {
                 this._change();
-                e.preventDefault();
             }
         },
 
         _keypress: function(e) {
-            if (e.which === 0 || e.ctrlKey) {
+            if (e.which === 0 || e.ctrlKey || e.keyCode === keys.ENTER) {
                 return;
             }
 
+            var character = String.fromCharCode(e.which);
+
             var selection = caret(this.element);
 
-            this._mask(selection[0], selection[1], String.fromCharCode(e.which));
+            this._mask(selection[0], selection[1], character);
 
-            e.preventDefault();
+            if (e.keyCode === keys.BACKSPACE || character) {
+                e.preventDefault();
+            }
         },
 
         _find: function(idx, backward) {

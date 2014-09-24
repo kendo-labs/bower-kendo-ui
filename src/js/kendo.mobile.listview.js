@@ -1,14 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.data", "./kendo.userevents", "./kendo.mobile.button" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "mobile.listview",
-    name: "ListView",
-    category: "mobile",
-    description: "The Kendo Mobile ListView widget is used to display flat or grouped list of items.",
-    depends: [ "data", "userevents", "mobile.button" ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -453,7 +460,7 @@ var __meta__ = {
 
     var VirtualListViewItem = kendo.Class.extend({
         init: function(listView, dataItem) {
-            var element = listView.append([dataItem])[0],
+            var element = listView.append([dataItem], true)[0],
                 height = element.offsetHeight;
 
             $.extend(this, {
@@ -1022,7 +1029,7 @@ var __meta__ = {
             }
         },
 
-        insertAt: function(dataItems, index) {
+        insertAt: function(dataItems, index, triggerChange) {
             var listView = this;
             return listView._renderItems(dataItems, function(items) {
                 if (index === 0) {
@@ -1033,6 +1040,13 @@ var __meta__ = {
                 } else {
                     listView.items().eq(index - 1).after(items);
                 }
+
+                if (triggerChange) {
+                    for (var i = 0; i < items.length; i ++) {
+                        listView.trigger(ITEM_CHANGE, { item: items.eq(i), data: dataItems[i], ns: ui });
+                    }
+                }
+
                 listView.angular("compile", function(){
                     return {
                         elements: items,
@@ -1044,12 +1058,12 @@ var __meta__ = {
             });
         },
 
-        append: function(dataItems) {
-            return this.insertAt(dataItems, -1);
+        append: function(dataItems, triggerChange) {
+            return this.insertAt(dataItems, -1, triggerChange);
         },
 
-        prepend: function(dataItems) {
-            return this.insertAt(dataItems, 0);
+        prepend: function(dataItems, triggerChange) {
+            return this.insertAt(dataItems, 0, triggerChange);
         },
 
         replace: function(dataItems) {
@@ -1069,8 +1083,8 @@ var __meta__ = {
             this._enhanceItems(items.children("ul").children("li"));
             this.element.append(items);
             mobile.init(items);
-            this._angularItems("compile");
             this._style();
+            this._angularItems("compile");
         },
 
         remove: function(dataItems) {

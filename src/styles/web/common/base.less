@@ -160,22 +160,21 @@ body .k-split-button-arrow
 
 .k-button-icontext
 {
-    padding-right: .8em;
     overflow: visible; /*IE9*/
+}
+
+.k-toolbar .k-button-icontext
+{
+    padding-right: .8em;
 }
 
 .k-button-icontext .k-icon,
 .k-button-icontext .k-image
 {
-    margin-right: .3rem;
-    margin-left: -.3rem;
-}
-
-.k-ie8 .k-button-icontext .k-icon,
-.k-ie8 .k-button-icontext .k-image
-{
     margin-right: 3px;
+    margin-right: .3rem;
     margin-left: -3px;
+    margin-left: -.3rem;
 }
 
 .k-button.k-button-icontext .k-icon,
@@ -472,6 +471,16 @@ html body .k-button-bare.k-upload-button:hover
     border: 0;
 }
 
+.k-breadcrumbs:hover .k-i-arrow-n
+{
+    background-position: 0 0;
+}
+
+.k-breadcrumbs:hover .k-i-arrow-e
+{
+    background-position: 0 -16px;
+}
+
 /* Colors */
 
 html .k-success-colored
@@ -679,7 +688,7 @@ a.k-button:hover
 /* override iOS styles in mobile Kendo */
 
 .k-widget,
-.k-widget *,
+.k-widget *
 {
     -moz-background-clip: border-box;
     -webkit-background-clip: border-box;

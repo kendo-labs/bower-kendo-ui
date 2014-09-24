@@ -1,20 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "multiselect",
-    name: "MultiSelect",
-    category: "web",
-    description: "The MultiSelect widget allows the selection from pre-defined values.",
-    depends: [ "list" ],
-    features: [ {
-        id: "mobile-scroller",
-        name: "Mobile scroller",
-        description: "Support for kinetic scrolling in mobile device",
-        depends: [ "mobile.scroller" ]
-    } ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -208,11 +209,62 @@ var __meta__ = {
             var that = this,
                 ns = that.ns;
 
+            clearTimeout(that._busy);
+            clearTimeout(that._typing);
+
             that.wrapper.off(ns);
             that.tagList.off(ns);
             that.input.off(ns);
 
             List.fn.destroy.call(that);
+        },
+
+        _wrapperMousedown: function(e) {
+            var that = this;
+            var notInput = e.target.nodeName.toLowerCase() !== "input";
+
+            if (notInput) {
+                e.preventDefault();
+            }
+
+            if (e.target.className.indexOf("k-delete") === -1) {
+                if (that.input[0] !== activeElement() && notInput) {
+                    that.input.focus();
+                }
+
+                if (that.options.minLength === 0) {
+                    that.open();
+                }
+            }
+
+        },
+
+        _inputFocus: function() {
+            this._placeholder(false);
+            this.wrapper.addClass(FOCUSEDCLASS);
+        },
+
+        _inputFocusout: function() {
+            var that = this;
+
+            clearTimeout(that._typing);
+
+            that.wrapper.removeClass(FOCUSEDCLASS);
+
+            that._placeholder(!that._dataItems[0], true);
+            that.close();
+
+            if (that._state === FILTER) {
+                that._state = ACCEPT;
+            }
+
+            that.element.blur();
+        },
+
+        _tagListClick: function(e) {
+            this._unselect($(e.target).closest(LI));
+            this._change();
+            this.close();
         },
 
         _editable: function(options) {
@@ -227,44 +279,12 @@ var __meta__ = {
                 wrapper
                     .removeClass(STATEDISABLED)
                     .on(HOVEREVENTS, that._toggleHover)
-                    .on("mousedown" + ns, function(e) {
-                        var notInput = e.target.nodeName.toLowerCase() !== "input";
-
-                        if (notInput) {
-                            e.preventDefault();
-                        }
-
-                        if (e.target.className.indexOf("k-delete") === -1) {
-                            if (that.input[0] !== activeElement() && notInput) {
-                                that.input.focus();
-                            }
-
-                            if (that.options.minLength === 0) {
-                                that.open();
-                            }
-                        }
-                    });
+                    .on("mousedown" + ns, proxy(that._wrapperMousedown, that));
 
                 that.input.on(KEYDOWN, proxy(that._keydown, that))
                     .on("paste" + ns, proxy(that._search, that))
-                    .on("focus" + ns, function() {
-                        that._placeholder(false);
-                        wrapper.addClass(FOCUSEDCLASS);
-                    })
-                    .on("focusout" + ns, function() {
-                        clearTimeout(that._typing);
-
-                        wrapper.removeClass(FOCUSEDCLASS);
-
-                        that._placeholder(!that._dataItems[0], true);
-                        that.close();
-
-                        if (that._state === FILTER) {
-                            that._state = ACCEPT;
-                        }
-
-                        that.element.blur();
-                    });
+                    .on("focus" + ns, proxy(that._inputFocus, that))
+                    .on("focusout" + ns, proxy(that._inputFocusout, that));
 
                 input.removeAttr(DISABLED)
                      .removeAttr(READONLY)
@@ -274,12 +294,7 @@ var __meta__ = {
                 tagList
                     .on(MOUSEENTER, LI, function() { $(this).addClass(HOVERCLASS); })
                     .on(MOUSELEAVE, LI, function() { $(this).removeClass(HOVERCLASS); })
-                    .on(CLICK, ".k-delete", function(e) {
-                        that._unselect($(e.target).closest(LI));
-                        that._change();
-                        that.close();
-                    });
-
+                    .on(CLICK, ".k-delete", proxy(that._tagListClick, that));
             } else {
                 if (disable) {
                     wrapper.addClass(STATEDISABLED);
@@ -490,6 +505,7 @@ var __meta__ = {
                 that._resetHandler = function() {
                     setTimeout(function() {
                         that.value(that._initialValues);
+                        that._placeholder();
                     });
                 };
 
@@ -684,6 +700,11 @@ var __meta__ = {
             that._busy = null;
         },
 
+        _showBusyHandler: function() {
+            this.input.attr("aria-busy", true);
+            this._loading.removeClass(HIDDENCLASS);
+        },
+
         _showBusy: function () {
             var that = this;
 
@@ -693,10 +714,7 @@ var __meta__ = {
                 return;
             }
 
-            that._busy = setTimeout(function () {
-                that.input.attr("aria-busy", true);
-                that._loading.removeClass(HIDDENCLASS);
-            }, 100);
+            that._busy = setTimeout(proxy(that._showBusyHandler, that), 100);
         },
 
         _placeholder: function(show, skipCaret) {

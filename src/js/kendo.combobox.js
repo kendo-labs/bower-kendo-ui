@@ -1,20 +1,21 @@
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
 })(function(){
-
-var __meta__ = {
-    id: "combobox",
-    name: "ComboBox",
-    category: "web",
-    description: "The ComboBox widget allows the selection from pre-defined values or entering a new value.",
-    depends: [ "list" ],
-    features: [ {
-        id: "mobile-scroller",
-        name: "Mobile scroller",
-        description: "Support for kinetic scrolling in mobile device",
-        depends: [ "mobile.scroller" ]
-    } ]
-};
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -55,12 +56,8 @@ var __meta__ = {
 
             Select.fn.init.call(that, element, options);
 
-            that._focusHandler = function() {
-                that.input.focus();
-            };
-
             options = that.options;
-            element = that.element.on("focus" + ns, that._focusHandler);
+            element = that.element.on("focus" + ns, proxy(that._focusHandler, that));
 
             options.placeholder = options.placeholder || element.attr("placeholder");
 
@@ -173,6 +170,36 @@ var __meta__ = {
             Select.fn.destroy.call(that);
         },
 
+        _focusHandler: function() {
+            this.input.focus();
+        },
+
+        _arrowClick: function() {
+            this._toggle();
+        },
+
+        _inputFocus: function() {
+            this._inputWrapper.addClass(FOCUSED);
+            this._placeholder(false);
+        },
+
+        _inputFocusout: function() {
+            var that = this;
+
+            that._inputWrapper.removeClass(FOCUSED);
+            clearTimeout(that._typing);
+            that._typing = null;
+
+            if (that.options.text !== that.input.val()) {
+                that.text(that.text());
+            }
+
+            that._placeholder();
+            that._blur();
+
+            that.element.blur();
+        },
+
         _editable: function(options) {
             var that = this,
                 disable = options.disable,
@@ -192,29 +219,13 @@ var __meta__ = {
                      .attr(ARIA_DISABLED, false)
                      .attr(ARIA_READONLY, false);
 
-                arrow.on(CLICK, function() { that._toggle(); })
+                arrow.on(CLICK, proxy(that._arrowClick, that))
                      .on(MOUSEDOWN, function(e) { e.preventDefault(); });
 
                 that.input
                     .on("keydown" + ns, proxy(that._keydown, that))
-                    .on("focus" + ns, function() {
-                        wrapper.addClass(FOCUSED);
-                        that._placeholder(false);
-                    })
-                    .on("focusout" + ns, function() {
-                        wrapper.removeClass(FOCUSED);
-                        clearTimeout(that._typing);
-                        that._typing = null;
-
-                        if (that.options.text !== that.input.val()) {
-                            that.text(that.text());
-                        }
-
-                        that._placeholder();
-                        that._blur();
-
-                        that.element.blur();
-                    });
+                    .on("focus" + ns, proxy(that._inputFocus, that))
+                    .on("focusout" + ns, proxy(that._inputFocusout, that));
 
             } else {
                 wrapper
@@ -229,14 +240,16 @@ var __meta__ = {
         },
 
         open: function() {
-            var that = this,
-                serverFiltering = that.dataSource.options.serverFiltering;
+            var that = this;
+            var state = that._state;
+            var serverFiltering = that.dataSource.options.serverFiltering;
 
             if (that.popup.visible()) {
                 return;
             }
 
-            if (!that.ul[0].firstChild || (that._state === STATE_ACCEPT && !serverFiltering)) {
+            if ((!that.ul[0].firstChild && state !== STATE_FILTER) ||
+                (state === STATE_ACCEPT && !serverFiltering)) {
                 that._open = true;
                 that._state = STATE_REBIND;
                 that._filterSource();
@@ -523,7 +536,7 @@ var __meta__ = {
 
             if (!that.ul[0].firstChild) {
                 dataSource.one(CHANGE, function () {
-                    if (dataSource.data()[0]) {
+                    if (dataSource.view()[0]) {
                         that.search(word);
                     }
                 }).fetch();
@@ -711,6 +724,10 @@ var __meta__ = {
                 data = data[idx];
                 text = that._text(data);
                 value = that._value(data);
+
+                if (value === null) {
+                    value = "";
+                }
 
                 that._prev = that.input[0].value = text;
                 that._accessor(value !== undefined ? value : text, idx);
