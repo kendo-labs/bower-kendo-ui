@@ -187,8 +187,15 @@
 [data-role="layout"] {
   display: none;
 }
+/**
+ * The angular tags will be converted to div kendo-mobile-view
+ *
+ */
 [data-role="view"],
-[data-role="drawer"] {
+[data-role="drawer"],
+kendo-mobile-view,
+kendo-mobile-split-view,
+kendo-mobile-drawer {
   visibility: hidden;
 }
 .km-view {
@@ -5249,10 +5256,12 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios7 li.km-state-active .km-listview-label {
   background: #d9d9d9;
 }
-.km-ios7 .km-tabstrip .km-button:not(.km-state-active),
 .km-ios7 li.km-state-active .km-listview-link,
 .km-ios7 li.km-state-active .km-listview-label {
   color: #000000;
+}
+.km-ios7 .km-tabstrip .km-button:not(.km-state-active) {
+  color: #929292;
 }
 .km-ios7 .k-list,
 .km-ios7 .k-slider,
@@ -5665,9 +5674,15 @@ html .km-ios7 .k-overflow-container.km-actionsheet > li {
   font-size: .7em;
   display: table-cell;
   border: 0;
+  padding: .7em .8em .2em;
 }
 .km-ios7 .km-tabstrip .km-icon:before {
   display: none;
+}
+.km-ios7 .km-tabstrip .km-image,
+.km-ios7 .km-tabstrip .km-button .km-icon {
+  margin: 0 auto .2em;
+  display: inline-block;
 }
 /* Switch */
 .km-ios7 .km-switch {
