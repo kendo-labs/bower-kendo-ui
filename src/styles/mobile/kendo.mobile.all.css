@@ -1512,7 +1512,7 @@ button.km-button {
   -ms-flex: auto;
 }
 /* SplitView */
-.km-splitview > .km-content {
+div.km-splitview > .km-content {
   -moz-box-orient: horizontal;
   -webkit-box-orient: horizontal;
   -moz-box-direction: normal;
@@ -1521,14 +1521,14 @@ button.km-button {
   -ms-flex-direction: row;
   flex-direction: row;
 }
-.km-split-vertical > .km-content {
+div.km-split-vertical > .km-content {
   -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.km-split-content > .km-pane {
+div.km-split-content > .km-pane {
   -moz-box-flex: 2;
   -webkit-box-flex: 2;
   -webkit-flex: 2;
@@ -1537,14 +1537,14 @@ button.km-button {
   width: auto;
   height: auto;
 }
-.km-split-content > .km-pane:first-child {
+div.km-split-content > .km-pane:first-child {
   -moz-box-flex: 1;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
 }
-.km-split-horizontal > .km-content > .km-pane {
+div.km-split-horizontal > .km-content > .km-pane {
   top: 0;
   bottom: 0;
 }
@@ -5466,6 +5466,8 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-view-title {
   font-weight: bold;
   line-height: 2.5em;
+  margin-top: 1px;
+  margin-bottom: -1px;
 }
 .km-ios7.k-fx-slide {
   /* left */
@@ -5830,7 +5832,7 @@ html .km-ios7 .k-overflow-container.km-actionsheet > li {
 }
 /* ScrollView */
 .km-ios7 .km-pages {
-  padding-top: .5em;
+  padding-top: .4em;
 }
 .km-ios7 .km-pages li {
   background: transparent;
@@ -9483,7 +9485,7 @@ html .km-blackberry .k-overflow-container.km-actionsheet > li {
     opacity: 0;
   }
 }
-.km-wp .km-content:not(.km-stretched-view) {
+.km-wp .km-view:not(.km-splitview) .km-content:not(.km-stretched-view) {
   display: block;
 }
 /* Color Template */
@@ -11437,6 +11439,10 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   box-sizing: border-box;
   border-radius: 1em;
 }
+.km-android4.km-flat .km-scroller-pull .km-icon:after {
+  margin-left: -6px;
+  margin-top: -3px;
+}
 /* SplitView */
 .km-material {
   font: normal 1em "HelveticaNeue Light", "Roboto Light", "Slate Light", "Segoe WP", NokiaPureTextLight, sans-serif;
@@ -12105,9 +12111,6 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   font-weight: 500;
   margin-top: 0.5em;
 }
-.km-root {
-  font-size: 1em;
-}
 .km-material .k-popup .km-button {
   text-transform: uppercase;
 }
@@ -12185,7 +12188,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   border-radius: 0 3px 3px 0;
   border-radius: 0;
 }
-.km-buttongroup {
+.km-material .km-buttongroup {
   margin: 0;
 }
 .km-material .km-buttongroup {
@@ -12199,7 +12202,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   border-width: 0 0 2px;
   display: inline-block;
 }
-.km-view .km-buttongroup .km-button:last-child {
+.km-material .km-buttongroup .km-button:last-child {
   border-right-width: 0;
 }
 .km-material .km-widget.km-navbar .km-buttongroup {
@@ -12473,7 +12476,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
   border-width: 0;
   border-style: solid;
 }
-.km-list > li {
+.km-material .km-list > li {
   padding: .750em .7em .688em;
   line-height: 2em;
 }
@@ -12509,8 +12512,8 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-material .km-detaildisclose:before {
   margin-top: 0;
 }
-.km-widget .km-listview-link,
-.km-widget .km-listview-label {
+.km-material .km-listview-link,
+.km-material .km-listview-label {
   margin: -0.75em -0.7em -0.688em;
   padding: .750em .7em .688em;
 }
@@ -12523,7 +12526,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 }
 /* ScrollView */
 .km-material .km-pages {
-  padding-top: .5em;
+  padding-top: .4em;
 }
 .km-material .km-pages li {
   border-radius: 1em;
@@ -12893,7 +12896,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-material .km-modalview .km-content .km-button {
   float: right;
 }
-.km-scroll-container:after {
+.km-material .km-scroll-container:after {
   content: "";
   display: block;
   clear: both;
@@ -12912,7 +12915,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
   box-sizing: border-box;
   border-radius: 1em;
 }
-.km-touch-scrollbar {
+.km-material .km-touch-scrollbar {
   width: .143em;
 }
 /* SplitView */
@@ -13583,9 +13586,6 @@ html .km-material .k-overflow-container.km-actionsheet > li {
   font-weight: 500;
   margin-top: 0.5em;
 }
-.km-root {
-  font-size: 1em;
-}
 .km-materialblack .k-popup .km-button {
   text-transform: uppercase;
 }
@@ -13663,7 +13663,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
   border-radius: 0 3px 3px 0;
   border-radius: 0;
 }
-.km-buttongroup {
+.km-materialblack .km-buttongroup {
   margin: 0;
 }
 .km-materialblack .km-buttongroup {
@@ -13677,7 +13677,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
   border-width: 0 0 2px;
   display: inline-block;
 }
-.km-view .km-buttongroup .km-button:last-child {
+.km-materialblack .km-buttongroup .km-button:last-child {
   border-right-width: 0;
 }
 .km-materialblack .km-widget.km-navbar .km-buttongroup {
@@ -13951,7 +13951,7 @@ html .km-materialblack .k-overflow-container.km-actionsheet > li {
   border-width: 0;
   border-style: solid;
 }
-.km-list > li {
+.km-materialblack .km-list > li {
   padding: .750em .7em .688em;
 }
 .km-materialblack .km-group-container {
@@ -13986,8 +13986,8 @@ html .km-materialblack .k-overflow-container.km-actionsheet > li {
 .km-materialblack .km-detaildisclose:before {
   margin-top: 0;
 }
-.km-widget .km-listview-link,
-.km-widget .km-listview-label {
+.km-materialblack .km-listview-link,
+.km-materialblack .km-listview-label {
   margin: -0.75em -0.7em -0.688em;
   padding: .750em .7em .688em;
 }
@@ -14000,7 +14000,7 @@ html .km-materialblack .k-overflow-container.km-actionsheet > li {
 }
 /* ScrollView */
 .km-materialblack .km-pages {
-  padding-top: .5em;
+  padding-top: .4em;
 }
 .km-materialblack .km-pages li {
   border-radius: 1em;
@@ -14366,7 +14366,7 @@ html .km-materialblack .k-overflow-container.km-actionsheet > li {
 .km-materialblack .km-modalview .km-content .km-button {
   float: right;
 }
-.km-scroll-container:after {
+.km-materialblack .km-scroll-container:after {
   content: "";
   display: block;
   clear: both;
@@ -14385,7 +14385,7 @@ html .km-materialblack .k-overflow-container.km-actionsheet > li {
   box-sizing: border-box;
   border-radius: 1em;
 }
-.km-touch-scrollbar {
+.km-materialblack .km-touch-scrollbar {
   width: .143em;
 }
 /* SplitView */

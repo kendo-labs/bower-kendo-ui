@@ -218,6 +218,9 @@
         destroy: function() {
             if (this.observable) {
                 this.source.unbind(CHANGE, this._change);
+                if(this.currentSource) {
+                    this.currentSource.unbind(CHANGE, this._change);
+                }
             }
 
             this.unbind();
@@ -707,6 +710,10 @@
 
                 if (field) {
                     source = this.bindings.source.get();
+                    if (source instanceof kendo.data.DataSource) {
+                        source = source.view();
+                    }
+
                     for (valueIndex = 0; valueIndex < values.length; valueIndex++) {
                         for (idx = 0, length = source.length; idx < length; idx++) {
                             if (source[idx].get(field) == values[valueIndex]) {
@@ -720,7 +727,7 @@
                 value = this.bindings[VALUE].get();
                 if (value instanceof ObservableArray) {
                     value.splice.apply(value, [0, value.length].concat(values));
-                } else if (!valuePrimitive && (value instanceof ObservableObject || !field)) {
+                } else if (!valuePrimitive && (value instanceof ObservableObject || value === null || value === undefined || !field)) {
                     this.bindings[VALUE].set(values[0]);
                 } else {
                     this.bindings[VALUE].set(values[0].get(field));
@@ -1228,6 +1235,29 @@
                     this.widget.unbind(CHANGE, this._change);
                 }
 
+            })
+        },
+        scheduler: {
+            source: dataSourceBinding("source", "dataSource", "setDataSource").extend({
+                dataBound: function(e) {
+                    var idx;
+                    var length;
+                    var widget = this.widget;
+                    var view = widget.view();
+                    var items = e.addedItems || widget.items();
+                    var dataSource = widget.dataSource;
+                    var groups = dataSource.group() || [];
+                    var data, parents;
+
+                    if (items.length) {
+                        data = e.addedDataItems || dataSource.expand(view.startDate(), view.endDate());
+                        parents = this.bindings.source._parents();
+
+                        for (idx = 0, length = data.length; idx < length; idx++) {
+                            bindElement(items[idx], data[idx], this._ns(e.ns), [data[idx]].concat(parents));
+                        }
+                    }
+                }
             })
         }
     };

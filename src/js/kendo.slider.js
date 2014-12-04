@@ -225,7 +225,8 @@
                 for (i = 0; i < items.length; i++) {
                     item = $(items[i]);
                     value = that._values[i];
-                    if (removeFraction(value) % removeFraction(options.smallStep) === 0 && removeFraction(value) % removeFraction(options.largeStep) === 0) {
+                    var valueWithoutFraction = removeFraction(value - this.options.min);
+                    if (valueWithoutFraction % removeFraction(options.smallStep) === 0 && valueWithoutFraction % removeFraction(options.largeStep) === 0) {
                         item.addClass("k-tick-large")
                             .html("<span class='k-label'>" + item.attr("title") + "</span>");
 

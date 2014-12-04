@@ -13,11 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([], f);
 })(function(){
 
 
+
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "date": {
+    "eq": "Egal cu",
+    "gt": "După",
+    "gte": "După sau egal cu",
+    "lt": "Inainte de",
+    "lte": "Inainte sau egal cu",
+    "neq": "Diferit de"
+  },
+  "enums": {
+    "eq": "Egal cu",
+    "neq": "Diferit de"
+  },
+  "number": {
+    "eq": "Egal cu",
+    "gt": "Mai mare decât",
+    "gte": "Mai mare sau egal cu",
+    "lt": "Mai mic decât",
+    "lte": "Mai mic sau egal cu",
+    "neq": "Diferit de"
+  },
+  "string": {
+    "contains": "Conține",
+    "doesnotcontain": "Nu conține",
+    "endswith": "Se termină cu",
+    "eq": "Egal cu",
+    "neq": "Diferit de",
+    "startswith": "Incepe cu"
+  }
+});
+}
 
 /* Filter menu operator messages */
 
@@ -32,7 +84,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "lte": "Inainte sau egal cu",
     "neq": "Diferit de"
   },
-  "enum": {
+  "enums": {
     "eq": "Egal cu",
     "neq": "Diferit de"
   },
@@ -191,6 +243,19 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
 });
 }
 
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "clear": "Șterge",
+  "filter": "Filtrează",
+  "isFalse": "este fals",
+  "isTrue": "este adevărat",
+  "operator": "Operator"
+});
+}
+
 /* FilterMenu messages */
 
 if (kendo.ui.FilterMenu) {
@@ -332,6 +397,7 @@ $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "headerStatusUploading": "Uploading..."
 });
 }
+
 
 return window.kendo;
 

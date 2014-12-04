@@ -13,11 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([], f);
 })(function(){
 
 
+
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "date": {
+    "eq": "Is gelijk aan",
+    "gt": "Is na",
+    "gte": "Is op of na",
+    "lt": "Is voor",
+    "lte": "Is op of voor",
+    "neq": "Is ongelijk aan"
+  },
+  "enums": {
+    "eq": "Is gelijk aan",
+    "neq": "Is ongelijk aan"
+  },
+  "number": {
+    "eq": "Is gelijk aan",
+    "gt": "Is groter dan",
+    "gte": "Is groter of gelijk aan",
+    "lt": "Is kleiner dan",
+    "lte": "Is kleiner of gelijk aan",
+    "neq": "Is ongelijk aan"
+  },
+  "string": {
+    "contains": "Bevat",
+    "doesnotcontain": "Bevat niet",
+    "endswith": "Eindigt op",
+    "eq": "Is gelijk aan",
+    "neq": "Is ongelijk aan",
+    "startswith": "Begint met"
+  }
+});
+}
 
 /* Filter menu operator messages */
 
@@ -32,7 +84,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "lte": "Is op of voor",
     "neq": "Is ongelijk aan"
   },
-  "enum": {
+  "enums": {
     "eq": "Is gelijk aan",
     "neq": "Is ongelijk aan"
   },
@@ -191,6 +243,19 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
 });
 }
 
+/* Filter cell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "clear": "Filter wissen",
+  "filter": "Filter",
+  "isFalse": "is niet waar",
+  "isTrue": "is waar",
+  "operator": "Operator"
+});
+}
+
 /* FilterMenu messages */
 
 if (kendo.ui.FilterMenu) {
@@ -332,6 +397,7 @@ $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "uploadSelectedFiles": "Bestanden uploaden"
 });
 }
+
 
 return window.kendo;
 

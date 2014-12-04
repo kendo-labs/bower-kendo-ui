@@ -1512,7 +1512,7 @@ button.km-button {
   -ms-flex: auto;
 }
 /* SplitView */
-.km-splitview > .km-content {
+div.km-splitview > .km-content {
   -moz-box-orient: horizontal;
   -webkit-box-orient: horizontal;
   -moz-box-direction: normal;
@@ -1521,14 +1521,14 @@ button.km-button {
   -ms-flex-direction: row;
   flex-direction: row;
 }
-.km-split-vertical > .km-content {
+div.km-split-vertical > .km-content {
   -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.km-split-content > .km-pane {
+div.km-split-content > .km-pane {
   -moz-box-flex: 2;
   -webkit-box-flex: 2;
   -webkit-flex: 2;
@@ -1537,14 +1537,14 @@ button.km-button {
   width: auto;
   height: auto;
 }
-.km-split-content > .km-pane:first-child {
+div.km-split-content > .km-pane:first-child {
   -moz-box-flex: 1;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
 }
-.km-split-horizontal > .km-content > .km-pane {
+div.km-split-horizontal > .km-content > .km-pane {
   top: 0;
   bottom: 0;
 }
@@ -3768,9 +3768,6 @@ body:before {
   font-weight: 500;
   margin-top: 0.5em;
 }
-.km-root {
-  font-size: 1em;
-}
 .km-material .k-popup .km-button {
   text-transform: uppercase;
 }
@@ -3848,7 +3845,7 @@ body:before {
   border-radius: 0 3px 3px 0;
   border-radius: 0;
 }
-.km-buttongroup {
+.km-material .km-buttongroup {
   margin: 0;
 }
 .km-material .km-buttongroup {
@@ -3862,7 +3859,7 @@ body:before {
   border-width: 0 0 2px;
   display: inline-block;
 }
-.km-view .km-buttongroup .km-button:last-child {
+.km-material .km-buttongroup .km-button:last-child {
   border-right-width: 0;
 }
 .km-material .km-widget.km-navbar .km-buttongroup {
@@ -4136,7 +4133,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
   border-width: 0;
   border-style: solid;
 }
-.km-list > li {
+.km-material .km-list > li {
   padding: .750em .7em .688em;
   line-height: 2em;
 }
@@ -4172,8 +4169,8 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-material .km-detaildisclose:before {
   margin-top: 0;
 }
-.km-widget .km-listview-link,
-.km-widget .km-listview-label {
+.km-material .km-listview-link,
+.km-material .km-listview-label {
   margin: -0.75em -0.7em -0.688em;
   padding: .750em .7em .688em;
 }
@@ -4186,7 +4183,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 }
 /* ScrollView */
 .km-material .km-pages {
-  padding-top: .5em;
+  padding-top: .4em;
 }
 .km-material .km-pages li {
   border-radius: 1em;
@@ -4556,7 +4553,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-material .km-modalview .km-content .km-button {
   float: right;
 }
-.km-scroll-container:after {
+.km-material .km-scroll-container:after {
   content: "";
   display: block;
   clear: both;
@@ -4575,7 +4572,7 @@ html .km-material .k-overflow-container.km-actionsheet > li {
   box-sizing: border-box;
   border-radius: 1em;
 }
-.km-touch-scrollbar {
+.km-material .km-touch-scrollbar {
   width: .143em;
 }
 /* SplitView */

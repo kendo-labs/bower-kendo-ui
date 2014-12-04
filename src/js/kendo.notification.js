@@ -13,6 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([ "./kendo.core", "./kendo.popup" ], f);
 })(function(){
@@ -106,7 +122,7 @@
         _compileTemplates: function(templates) {
             var that = this;
             var kendoTemplate = kendo.template;
-            
+
             that._compiled = {};
 
             $.each(templates, function(key, value) {
@@ -208,7 +224,7 @@
                 y = options.position.top,
                 allowHideAfter = options.allowHideAfter,
                 popup, openPopup, attachClick, closeIcon;
-            
+
             openPopup = $("." + that._guid).last();
 
             popup = new kendo.ui.Popup(wrapper, {
@@ -220,7 +236,7 @@
                 collision: "",
                 isRtl: that._isRtl,
                 close: function(e) {
-                    that.trigger(HIDE, {element: this.element});
+                    that._triggerHide(this.element);
                 },
                 deactivate: function(e) {
                     e.sender.element.off(NS);
@@ -328,7 +344,14 @@
                 wrapper.off(NS).find(KICLOSE).off(NS);
                 wrapper.remove();
             }}));
-            this.trigger(HIDE, {element: wrapper});
+            this._triggerHide(wrapper);
+        },
+
+        _triggerHide: function(element) {
+            this.trigger(HIDE, { element: element });
+            this.angular("cleanup", function(){
+                return { elements: element };
+            });
         },
 
         show: function(content, type) {
@@ -342,7 +365,7 @@
             }
 
             if (content !== null && content !== undefined && content !== "") {
-                
+
                 if (kendo.isFunction(content)) {
                     content = content();
                 }
@@ -361,7 +384,14 @@
                     .attr("data-role", "alert")
                     .css({width: options.width, height: options.height})
                     .append(that._getCompiled(type)(args));
-                
+
+                that.angular("compile", function(){
+                    return {
+                        elements: wrapper,
+                        data: [{ dataItem: args }]
+                    };
+                });
+
                 if ($(options.appendTo)[0]) {
                     that._showStatic(wrapper, options);
                 } else {
@@ -413,7 +443,7 @@
         getNotifications: function() {
             var that = this,
                 guidElements = $("." + that._guid);
-                
+
             if (that.options.appendTo) {
                 return guidElements;
             } else {

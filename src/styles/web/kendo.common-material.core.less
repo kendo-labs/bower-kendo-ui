@@ -85,7 +85,23 @@
 .k-grid-header th.k-header,
 .k-filter-row th
 {
-    padding: .786em .6em .714em .6em;
+    padding: .429em .6em .571em .6em;
+}
+
+.k-filtercell > span {
+    padding-right: 5.714em;
+}
+
+.k-filtercell > span > .k-button {
+    padding-left: .714em;
+    padding-right: .714em;
+    line-height: 1.286em;
+    margin: 0;
+}
+
+.k-filter-row .k-dropdown-operator {
+    width: 2.714em;
+    right: 2.857em;
 }
 
 .k-grouping-header .k-group-indicator
@@ -110,6 +126,7 @@
 .k-grid-header th.k-header>.k-link {
     font-size: 0.929em;
     padding: 0.462em 1.286em;
+    margin-top: 0;
 }
 
 .k-grouping-header
@@ -123,10 +140,9 @@
     border-style: solid;
 }
 
-.k-grid .k-grid-header,
-.k-grid-header .k-grid-header-wrap,
-.k-grid-header tr:last-child th.k-header {
-    border-bottom-width: 0;
+.k-grid-content table tr:first-child td,
+.k-grid-content-locked table tr:first-child td {
+    border-top: 0;
 }
 
 .k-grid-content tr td {
@@ -174,14 +190,14 @@
 .k-dropdown-wrap,
 .k-picker-wrap,
 .k-numeric-wrap {
-    padding: 0 2.5em 0 0;   
+    padding: 0 2.571em 0 0;  
 }
 
 .k-picker-wrap .k-select,
 .k-numeric-wrap .k-select,
 .k-dropdown-wrap .k-select
 {
-    width: 2.5em;
+    width: 2.571em;
 }
 
 .k-datetimepicker {
@@ -241,7 +257,6 @@
 .k-fieldselector .k-list .k-item {
     min-height: 2.143em;
     line-height: 2.143em;
-    text-indent: 0.429em;
 }
 
 .k-button,
@@ -616,13 +631,20 @@ div.k-window {
     background-position: 0 0; 
 }
 
-.k-numerictextbox .k-select .k-link span.k-i-arrow-n  { background-position: 0 -3px; }
-.k-numerictextbox .k-select .k-link span.k-i-arrow-s { background-position: 0 -35px; }
+.k-numerictextbox .k-select .k-link span.k-i-arrow-n,
+.k-grid-header .k-numerictextbox .k-select .k-link span.k-i-arrow-n {
+     background-position: 0 -3px;
+}
+
+.k-numerictextbox .k-select .k-link span.k-i-arrow-s,
+.k-grid-header .k-numerictextbox .k-select .k-link span.k-i-arrow-s {
+     background-position: 0 -35px;
+}
 
 .k-i-close,
 .k-delete,
 .k-group-delete {
-	background-position: -48px -16px;
+	background-position: -32px -16px;
 }
 
 .k-multiselect {
@@ -748,7 +770,8 @@ div.k-window {
 
 .k-grid-header .k-grid-filter,
 .k-grid-header .k-header-column-menu {
-    margin: -0.5em 0 -0.4em -0.6em;
+    padding: .357em .6em .5em .6em;
+    margin: 0 0 -.4em -.6em;
 }
 
 .k-grid-header .k-header-column-menu .k-i-arrowhead-s {
@@ -850,7 +873,10 @@ div.k-window {
     }
 }
 
-.k-i-arrowhead-s,
+.k-i-arrowhead-s {
+    background-position: 0 -288px;
+}
+
 .k-item.k-state-hover .k-i-arrowhead-s,
 .k-button:hover .k-i-arrowhead-s {
     background-position: -16px -288px;
@@ -884,16 +910,23 @@ div.k-window {
 }
 
 .k-pivot-configurator-settings {
-    .k-i-arrowhead-s,
-    .k-item.k-state-hover .k-i-arrowhead-s,
-    .k-button:hover .k-i-arrowhead-s {
-        background-position: 0 -288px;
-}
-
     .k-si-close,
     .k-item.k-state-hover .k-si-close,
     .k-button:hover .k-si-close {
         background-position: -160px -80px;
+    }
+}
+
+.k-pivot {
+    .k-header,
+    .k-button:not(.k-state-disabled):hover {
+        .k-i-arrowhead-s {
+            background-position: -16px -288px;
+        }
+
+        .k-si-close {
+            background-position: -176px -80px;
+        }
     }
 }
 

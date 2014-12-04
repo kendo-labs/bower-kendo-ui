@@ -13,11 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([], f);
 })(function(){
 
 
+
+/* Filter menu operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "date": {
+    "eq": "Eşittir",
+    "gt": "Sonra",
+    "gte": "Sonra ya da eşit",
+    "lt": "Önce",
+    "lte": "Önce ya da eşit",
+    "neq": "Eşit değildir"
+  },
+  "enums": {
+    "eq": "Eşittir",
+    "neq": "Eşit değildir"
+  },
+  "number": {
+    "eq": "Eşittir",
+    "gt": "Büyüktür",
+    "gte": "Daha büyük veya eşittir",
+    "lt": "Daha küçük",
+    "lte": "Daha küçük veya eşit",
+    "neq": "Eşit değildir"
+  },
+  "string": {
+    "contains": "İçeriyor",
+    "doesnotcontain": "İçermiyor",
+    "endswith": "İle biter",
+    "eq": "Eşittir",
+    "neq": "Eşit değildir",
+    "startswith": "İle başlar"
+  }
+});
+}
 
 /* Filter menu operator messages */
 
@@ -32,7 +84,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "lte": "Önce ya da eşit",
     "neq": "Eşit değildir"
   },
-  "enum": {
+  "enums": {
     "eq": "Eşittir",
     "neq": "Eşit değildir"
   },
@@ -188,6 +240,19 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
   "uploadFile": "Yükle",
   "viewHtml": "HTML Görünümü ",
   "insertFile": "Insert file"
+});
+}
+
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "clear": "Temizle",
+  "filter": "Filtre",
+  "isFalse": "FALSE",
+  "isTrue": "Doğru ",
+  "operator": "Operatör(işletmen)"
 });
 }
 

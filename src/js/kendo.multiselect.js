@@ -13,6 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
 })(function(){
@@ -149,6 +165,7 @@
             CLOSE,
             CHANGE,
             SELECT,
+            "filtering",
             "dataBinding",
             "dataBound"
         ],
@@ -394,7 +411,9 @@
                 ignoreCase = options.ignoreCase,
                 filter = options.filter,
                 field = options.dataTextField,
-                inputValue = that.input.val();
+                inputValue = that.input.val(),
+                expression,
+                length;
 
             if (options.placeholder === inputValue) {
                 inputValue = "";
@@ -404,16 +423,21 @@
 
             word = typeof word === "string" ? word : inputValue;
 
-            if (word.length >= options.minLength) {
+            length = word.length;
+
+            if (!length || length >= options.minLength) {
                 that._state = FILTER;
                 that._open = true;
 
-                that._filterSource({
+                expression = {
                     value: ignoreCase ? word.toLowerCase() : word,
                     field: field,
                     operator: filter,
                     ignoreCase: ignoreCase
-                });
+                };
+
+                that._filterSource(expression, that._retrieveData);
+                that._retrieveData = false;
             }
         },
 

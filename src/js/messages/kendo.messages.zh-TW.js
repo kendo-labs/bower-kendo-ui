@@ -13,6 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([], f);
 })(function(){
@@ -139,6 +155,19 @@ $.extend(true, kendo.ui.FileBrowser.prototype.options.messages,{
 });
 }
 
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "isTrue": "為真",
+  "isFalse": "為假",
+  "filter": "過濾",
+  "clear": "清除",
+  "operator": "運算符"
+});
+}
+
 /* FilterMenu messages */
 
 if (kendo.ui.FilterMenu) {
@@ -155,6 +184,42 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "operator": "運算符",
   "value": "值",
   "cancel": "取消"
+});
+}
+
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "string": {
+    "eq": "等於",
+    "neq": "不等於",
+    "startswith": "開頭為",
+    "contains": "包含",
+    "doesnotcontain": "不包含",
+    "endswith": "結尾為"
+  },
+  "number": {
+    "eq": "等於",
+    "neq": "不等於",
+    "gte": "大於等於",
+    "gt": "大於",
+    "lte": "小於等於",
+    "lt": "小於"
+  },
+  "date": {
+    "eq": "等於",
+    "neq": "不等於",
+    "gte": "大於等於",
+    "gt": "大於",
+    "lte": "小於等於",
+    "lt": "小於"
+  },
+  "enums": {
+    "eq": "等於",
+    "neq": "不等於"
+  }
 });
 }
 
@@ -187,7 +252,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "lte": "小於等於",
     "lt": "小於"
   },
-  "enum": {
+  "enums": {
     "eq": "等於",
     "neq": "不等於"
   }

@@ -13,6 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([ "./kendo.core" ], f);
 })(function(){
@@ -31,6 +47,7 @@
         BUTTON_GROUP = "k-button-group",
         SPLIT_BUTTON = "k-split-button",
         SEPARATOR = "k-separator",
+        POPUP = "k-popup",
 
         RESIZABLE_TOOLBAR = "k-toolbar-resizable",
         STATE_ACTIVE = "k-state-active",
@@ -79,6 +96,14 @@
                     var items = options.buttons,
                         item;
 
+                    if (!items) {
+                        return;
+                    }
+
+                    if (options.attributes) {
+                        element.attr(options.attributes);
+                    }
+
                     element.data({ type: "buttonGroup" });
                     element.attr(KENDO_UID_ATTR, options.uid);
 
@@ -94,8 +119,11 @@
                     element.children().last().addClass(GROUP_END);
                 },
                 toolbar: function (options) {
-                    var element = $('<div class="' + BUTTON_GROUP + '"></div>');
+                    var element = $('<div></div>');
+
                     components.buttonGroup.base(options, components.button.toolbar, element);
+
+                    element.addClass(BUTTON_GROUP);
 
                     if (options.align) {
                         element.addClass("k-align-" + options.align);
@@ -108,8 +136,11 @@
                     return element;
                 },
                 overflow: function (options) {
-                    var element = $('<li class="' + (options.mobile ? "" : BUTTON_GROUP) + ' k-overflow-group"></li>');
+                    var element = $('<li></li>');
+
                     components.buttonGroup.base(options, components.button.overflow, element);
+
+                    element.addClass((options.mobile ? "" : BUTTON_GROUP) + " k-overflow-group");
 
                     if (options.id) {
                         element.attr("id", options.id + "_overflow");
@@ -182,10 +213,6 @@
                     for (var i = 0; i < items.length; i++) {
                         item = components.button.overflow($.extend({mobile: options.mobile}, items[i]));
                         item.appendTo(element);
-                    }
-
-                    if (options.id) {
-                        element.attr("id", options.id + "_overflow");
                     }
 
                     element.data({ type: "splitButton" });
@@ -589,22 +616,45 @@
             },
 
             remove: function(element) {
-                var commandElement = this.element.find(element),
-                    type = commandElement.data("type"),
-                    uid = commandElement.attr(KENDO_UID_ATTR);
+                var toolbarElement,
+                    overflowElement,
+                    isResizable = this.options.resizable,
+                    type, uid;
 
-                if (commandElement.parent("." + SPLIT_BUTTON).data("type")) {
-                    type = "splitButton";
-                    commandElement = commandElement.parent();
+                toolbarElement = this.element.find(element);
+
+                if (isResizable) {
+                    overflowElement = this.popup.element.find(element);
                 }
 
-                if (type === "splitButton") {
-                    commandElement.data("kendoPopup").destroy();
+                if (toolbarElement.length) {
+                    type = toolbarElement.data("type");
+                    uid = toolbarElement.attr(KENDO_UID_ATTR);
+
+                    if (toolbarElement.parent("." + SPLIT_BUTTON).data("type") === "splitButton") {
+                        type = "splitButton";
+                        toolbarElement = toolbarElement.parent();
+                    }
+
+                    overflowElement = isResizable ? this.popup.element.find("li[" + KENDO_UID_ATTR + "='" + uid + "']") : $([]);
+                } else if (overflowElement.length) {
+                    type = overflowElement.data("type");
+                    overflowElement = overflowElement.parent();
+
+                    if (overflowElement.data("type") === "splitButton") {
+                        type = "splitButton";
+                    }
+
+                    uid = overflowElement.attr(KENDO_UID_ATTR);
+                    toolbarElement = this.element.find("div." + SPLIT_BUTTON + "[" + KENDO_UID_ATTR + "='" + uid + "']");
                 }
 
-                commandElement
-                    .add(this.popup.element.find("[" + KENDO_UID_ATTR + "='" + commandElement.attr(KENDO_UID_ATTR) + "']"))
-                    .remove();
+                if (type === "splitButton" && toolbarElement.data("kendoPopup")) {
+                    toolbarElement.data("kendoPopup").destroy();
+                }
+
+                toolbarElement.remove();
+                overflowElement.remove();
             },
 
             enable: function(element, enable) {
@@ -716,7 +766,7 @@
             },
 
             _toggleOverflowAnchor: function() {
-                if (this.popup.element.children(":not(." + OVERFLOW_HIDDEN + ")").length > 0) {
+                if (this.popup.element.children(":not(." + OVERFLOW_HIDDEN + ", ." + POPUP + ")").length > 0) {
                     this.overflowAnchor.css({
                         visibility: "visible",
                         width: ""
@@ -747,7 +797,7 @@
                     target = $(e.target).closest("." + OVERFLOW_BUTTON, that.popup.container);
                 }
 
-                isDisabled = target.hasClass(STATE_DISABLED);
+                isDisabled = target.hasClass(OVERFLOW_BUTTON) ? target.parent("li").hasClass(STATE_DISABLED) : target.hasClass(STATE_DISABLED);
 
                 if (isDisabled) {
                     return;
@@ -795,6 +845,10 @@
                     isDefaultPrevented;
 
                 e.preventDefault();
+
+                if (splitButton.hasClass(STATE_DISABLED)) {
+                    return;
+                }
 
                 if (popup.element.is(":visible")) {
                     isDefaultPrevented = this.trigger(CLOSE, { target: splitButton });

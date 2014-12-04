@@ -1512,7 +1512,7 @@ button.km-button {
   -ms-flex: auto;
 }
 /* SplitView */
-.km-splitview > .km-content {
+div.km-splitview > .km-content {
   -moz-box-orient: horizontal;
   -webkit-box-orient: horizontal;
   -moz-box-direction: normal;
@@ -1521,14 +1521,14 @@ button.km-button {
   -ms-flex-direction: row;
   flex-direction: row;
 }
-.km-split-vertical > .km-content {
+div.km-split-vertical > .km-content {
   -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.km-split-content > .km-pane {
+div.km-split-content > .km-pane {
   -moz-box-flex: 2;
   -webkit-box-flex: 2;
   -webkit-flex: 2;
@@ -1537,14 +1537,14 @@ button.km-button {
   width: auto;
   height: auto;
 }
-.km-split-content > .km-pane:first-child {
+div.km-split-content > .km-pane:first-child {
   -moz-box-flex: 1;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
 }
-.km-split-horizontal > .km-content > .km-pane {
+div.km-split-horizontal > .km-content > .km-pane {
   top: 0;
   bottom: 0;
 }
@@ -5466,6 +5466,8 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-view-title {
   font-weight: bold;
   line-height: 2.5em;
+  margin-top: 1px;
+  margin-bottom: -1px;
 }
 .km-ios7.k-fx-slide {
   /* left */
@@ -5830,7 +5832,7 @@ html .km-ios7 .k-overflow-container.km-actionsheet > li {
 }
 /* ScrollView */
 .km-ios7 .km-pages {
-  padding-top: .5em;
+  padding-top: .4em;
 }
 .km-ios7 .km-pages li {
   background: transparent;
@@ -8646,6 +8648,10 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   box-sizing: border-box;
   border-radius: 1em;
 }
+.km-android4.km-flat .km-scroller-pull .km-icon:after {
+  margin-left: -6px;
+  margin-top: -3px;
+}
 /* SplitView */
 .km-wp {
   font-size: 1em;
@@ -8977,7 +8983,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
     opacity: 0;
   }
 }
-.km-wp .km-content:not(.km-stretched-view) {
+.km-wp .km-view:not(.km-splitview) .km-content:not(.km-stretched-view) {
   display: block;
 }
 /* Color Template */

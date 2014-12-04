@@ -13,11 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([], f);
 })(function(){
 
 
+
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "date": {
+    "eq": "Ist gleich",
+    "gt": "Ist nach",
+    "gte": "Ist nach oder gleich",
+    "lt": "Ist vor",
+    "lte": "Ist vor oder gleich",
+    "neq": "Ist nicht gleich"
+  },
+  "enums": {
+    "eq": "Ist gleich",
+    "neq": "Ist nicht gleich"
+  },
+  "number": {
+    "eq": "Ist gleich",
+    "gt": "Ist größer als",
+    "gte": "Ist größer als oder gleich",
+    "lt": "Ist kleiner",
+    "lte": "Ist kleiner als oder gleich",
+    "neq": "Ist nicht gleich"
+  },
+  "string": {
+    "contains": "Beinhaltet",
+    "doesnotcontain": "Beinhaltet nicht",
+    "endswith": "Endet mit",
+    "eq": "Ist gleich",
+    "neq": "Ist nicht gleich",
+    "startswith": "Beginnt mit"
+  }
+});
+}
 
 /* Filter menu operator messages */
 
@@ -32,7 +84,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "lte": "Ist vor oder gleich",
     "neq": "Ist nicht gleich"
   },
-  "enum": {
+  "enums": {
     "eq": "Ist gleich",
     "neq": "Ist nicht gleich"
   },
@@ -192,6 +244,18 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
 });
 }
 
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "clear": "Löschen",
+  "filter": "Filter",
+  "isFalse": "ist falsch",
+  "isTrue": "ist richtig",
+  "operator": "Operator"
+});
+}
 /* FilterMenu messages */
 
 if (kendo.ui.FilterMenu) {

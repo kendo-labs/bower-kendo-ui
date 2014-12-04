@@ -1650,7 +1650,7 @@ button.km-button {
   left: 0;
 }
 /* SplitView */
-.km-splitview > .km-content {
+div.km-splitview > .km-content {
   -moz-box-orient: horizontal;
   -webkit-box-orient: horizontal;
   -ms-box-orient: horizontal;
@@ -1663,7 +1663,7 @@ button.km-button {
   -ms-flex-direction: row;
   flex-direction: row;
 }
-.km-split-vertical > .km-content {
+div.km-split-vertical > .km-content {
   -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
   -ms-box-orient: vertical;
@@ -1672,7 +1672,7 @@ button.km-button {
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.km-split-content > .km-pane {
+div.km-split-content > .km-pane {
   -moz-box-flex: 2;
   -webkit-box-flex: 2;
   -webkit-flex: 2;
@@ -1681,14 +1681,14 @@ button.km-button {
   width: auto;
   height: auto;
 }
-.km-split-content > .km-pane:first-child {
+div.km-split-content > .km-pane:first-child {
   -moz-box-flex: 1;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
 }
-.km-split-horizontal > .km-content > .km-pane {
+div.km-split-horizontal > .km-content > .km-pane {
   top: 0;
   bottom: 0;
 }

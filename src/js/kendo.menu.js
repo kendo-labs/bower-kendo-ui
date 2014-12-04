@@ -13,6 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([ "./kendo.popup" ], f);
 })(function(){
@@ -807,7 +823,9 @@
                 targetHref = target.attr("href"),
                 sampleHref = $("<a href='#' />").attr("href"),
                 isLink = (!!href && href !== sampleHref),
-                isTargetLink = (!!targetHref && targetHref !== sampleHref);
+                isLocalLink = isLink && !!href.match(/^#/),
+                isTargetLink = (!!targetHref && targetHref !== sampleHref),
+                shouldCloseTheRootItem = (options.openOnClick && childGroupVisible && that._isRootItem(element));
 
             if (!options.openOnClick && element.children(templateSelector)[0]) {
                 return;
@@ -827,7 +845,7 @@
             childGroup = element.children(popupSelector);
             childGroupVisible = childGroup.is(":visible");
 
-            if (options.closeOnClick && !isLink && (!childGroup.length || (options.openOnClick && childGroupVisible && that._isRootItem(element)))) {
+            if (options.closeOnClick && (!isLink || isLocalLink) && (!childGroup.length || shouldCloseTheRootItem)) {
                 element.removeClass(HOVERSTATE).css("height"); // Force refresh for Chrome
                 that._oldHoverItem = that._findRootParent(element);
                 that.close(link.parentsUntil(that.element, allItemsSelector));
@@ -842,7 +860,7 @@
                 link[0].click();
             }
 
-            if ((!element.parent().hasClass(MENU) || !options.openOnClick) && !kendo.support.touch && !((pointers || msPointers) && that._isRootItem(element.closest(allItemsSelector)))) {
+            if ((!that._isRootItem(element) || !options.openOnClick) && !kendo.support.touch && !((pointers || msPointers) && that._isRootItem(element.closest(allItemsSelector)))) {
                 return;
             }
 
@@ -1265,7 +1283,7 @@
                         that.popup.open();
                     }
 
-                    DOCUMENT_ELEMENT.off(MOUSEDOWN, that.popup._mousedownProxy);
+                    DOCUMENT_ELEMENT.off(that.popup.downEvent, that.popup._mousedownProxy);
                     DOCUMENT_ELEMENT
                         .on(kendo.support.mousedown + NS, that._closeProxy);
                 }
@@ -1331,10 +1349,10 @@
         _closeHandler: function (e) {
             var that = this,
 				options = that.options,
-                target = e.relatedTarget || e.target,
-				sameTarget = target == that.target[0],
-                children = $(target).closest(itemSelector).children(popupSelector),
-                containment = contains(that.element[0], target);
+                target = $(e.relatedTarget || e.target),
+				sameTarget = target.closest(that.target.selector)[0] == that.target[0],
+                children = target.closest(itemSelector).children(popupSelector),
+                containment = contains(that.element[0], target[0]);
 
             that._eventOrigin = e;
 

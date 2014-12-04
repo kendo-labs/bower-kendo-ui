@@ -13,6 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([ "./kendo.mobile.pane", "./kendo.router" ], f);
 })(function(){
@@ -21,6 +37,7 @@
     var kendo = window.kendo,
         mobile = kendo.mobile,
         support = kendo.support,
+        Widget = mobile.ui.Widget,
         Pane = mobile.ui.Pane,
 
         DEFAULT_OS = "ios7",
@@ -28,7 +45,7 @@
         BERRYPHONEGAP = OS.device == "blackberry" && OS.flatVersion >= 600 && OS.flatVersion < 1000 && OS.appMode,
         VERTICAL = "km-vertical",
         CHROME =  OS.browser === "chrome",
-        BROKEN_WEBVIEW_RESIZE = OS.ios && OS.flatVersion >= 700 && (OS.appMode || CHROME),
+        BROKEN_WEBVIEW_RESIZE = OS.ios && OS.flatVersion >= 700 && OS.flatVersion < 800 && (OS.appMode || CHROME),
         INITIALLY_HORIZONTAL = (Math.abs(window.orientation) / 90 == 1),
         HORIZONTAL = "km-horizontal",
 
@@ -137,42 +154,62 @@
         }));
     }
 
-    var Application = kendo.Observable.extend({
+    var Application = Widget.extend({
         init: function(element, options) {
-            var that = this;
+            // global reference to current application
+            mobile.application = this;
+            $($.proxy(this, 'bootstrap', element, options));
+        },
 
-            mobile.application = that; // global reference to current application
+        bootstrap: function(element, options) {
+            element = $(element);
 
-            that.options = $.extend({
-                hideAddressBar: true,
-                useNativeScrolling: false,
-                statusBarStyle: "black",
-                transition: "",
-                historyTransition: HISTORY_TRANSITION,
-                modelScope: window,
-                updateDocumentTitle: true
-            }, options);
+            if (!element[0]) {
+                element = $(document.body);
+            }
 
-            kendo.Observable.fn.init.call(that, that.options);
-            that.bind(that.events, that.options);
+            Widget.fn.init.call(this, element, options);
+            this.element.removeAttr("data-" + kendo.ns + "role");
 
-            $(function(){
-                element = $(element);
-                that.element = element[0] ? element : $(document.body);
-                that._setupPlatform();
-                that._attachMeta();
-                that._setupElementClass();
-                that._attachHideBarHandlers();
-                that.pane = new Pane(that.element, that.options);
-                that.pane.navigateToInitial();
+            this._setupPlatform();
+            this._attachMeta();
+            this._setupElementClass();
+            this._attachHideBarHandlers();
+            var paneOptions = $.extend({}, this.options);
+            delete paneOptions.name;
 
-                if (that.options.updateDocumentTitle) {
-                    that._setupDocumentTitle();
-                }
+            var that = this,
+                startHistory = function() {
+                    that.pane = new Pane(that.element, paneOptions);
+                    that.pane.navigateToInitial();
 
-                that._startHistory();
-                that.trigger(INIT);
-            });
+                    if (that.options.updateDocumentTitle) {
+                        that._setupDocumentTitle();
+                    }
+
+                    that._startHistory();
+                    that.trigger(INIT);
+                };
+
+            if (this.options.$angular) {
+                setTimeout(startHistory);
+            } else {
+                startHistory();
+            }
+        },
+
+        options: {
+            name: "Application",
+            hideAddressBar: true,
+            browserHistory: true,
+            historyTransition: HISTORY_TRANSITION,
+            modelScope: window,
+            statusBarStyle: "black",
+            transition: "",
+            platform: null,
+            skin: null,
+            updateDocumentTitle: true,
+            useNativeScrolling: false
         },
 
         events: [
@@ -235,6 +272,7 @@
         },
 
         destroy: function() {
+            Widget.fn.destroy.call(this);
             this.pane.destroy();
             this.router.destroy();
         },
@@ -293,9 +331,15 @@
         },
 
         _startHistory: function() {
-            this.router = new kendo.Router({ pushState: this.options.pushState, root: this.options.root, hashBang: this.options.hashBang });
-            this.pane.bindToRouter(this.router);
-            this.router.start();
+            if (this.options.browserHistory) {
+                this.router = new kendo.Router({ pushState: this.options.pushState, root: this.options.root, hashBang: this.options.hashBang });
+                this.pane.bindToRouter(this.router);
+                this.router.start();
+            } else {
+                if (!this.options.initial) {
+                    this.pane.navigate("");
+                }
+            }
         },
 
         _resizeToScreenHeight: function() {
@@ -463,6 +507,7 @@
     });
 
     kendo.mobile.Application = Application;
+    kendo.ui.plugin(Application, kendo.mobile, 'Mobile');
 })(window.kendo.jQuery);
 
 return window.kendo;

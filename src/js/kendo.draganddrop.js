@@ -42,6 +42,7 @@
         DRAG = "drag",
         DRAGEND = "dragend",
         DRAGCANCEL = "dragcancel",
+        HINTDESTROYED = "hintDestroyed",
 
         // DropTarget events
         DRAGENTER = "dragenter",
@@ -638,12 +639,13 @@
             DRAGSTART,
             DRAG,
             DRAGEND,
-            DRAGCANCEL
+            DRAGCANCEL,
+            HINTDESTROYED
         ],
 
         options: {
             name: "Draggable",
-            distance: 5,
+            distance: ( kendo.support.touch ? 0 : 5),
             group: "default",
             cursorOffset: null,
             axis: null,
@@ -761,6 +763,8 @@
                 that.userEvents.cancel();
                 that._afterEnd();
             }
+
+            that.userEvents.capture();
 
             $(document).on(KEYUP, that._captureEscape);
         },
@@ -906,6 +910,7 @@
             delete draggables[that.options.group];
 
             that.trigger("destroy");
+            that.trigger(HINTDESTROYED);
             $(document).off(KEYUP, that._captureEscape);
         }
     });

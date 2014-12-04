@@ -13,11 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([], f);
 })(function(){
 
 
+
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "date": {
+    "eq": "Est égal à",
+    "gte": "Est postérieur ou égal à",
+    "gt": "Est postérieur",
+    "lte": "Est antérieur ou égal à",
+    "lt": "Est antérieur",
+    "neq": "N’est pas égal à"
+  },
+  "number": {
+    "eq": "Est égal à",
+    "gte": "Est supérieur ou égal à",
+    "gt": "Est supérieur à",
+    "lte": "Est inférieur ou égal à",
+    "lt": "Est inférieur à",
+    "neq": "N’est pas égal à"
+  },
+  "string": {
+    "endswith": "Se termine par",
+    "eq": "Est égal à",
+    "neq": "N’est pas égal à",
+    "startswith": "Commence par",
+    "contains": "Contient",
+    "doesnotcontain": "Ne contient pas"
+  },
+  "enums": {
+    "eq": "Est égal à",
+    "neq": "N’est pas égal à"
+  }
+});
+}
 
 /* Filter menu operator messages */
 
@@ -48,7 +100,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "contains": "Contient",
     "doesnotcontain": "Ne contient pas"
   },
-  "enum": {
+  "enums": {
     "eq": "Est égal à",
     "neq": "N’est pas égal à"
   }
@@ -165,6 +217,19 @@ $.extend(true, kendo.ui.Pager.prototype.options.messages,{
   "next": "Aller à la page suivante",
   "previous": "Aller à la page précédente",
   "morePages": "Plusieurs pages"
+});
+}
+
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "filter": "Filtrer",
+  "clear": "Effacer filtre",
+  "isFalse": "est fausse",
+  "isTrue": "est vrai",
+  "operator": "Opérateur"
 });
 }
 
@@ -332,6 +397,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   "showWorkDay": "Montrer les heures ouvrables"
 });
 }
+
 
 return window.kendo;
 

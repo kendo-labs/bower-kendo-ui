@@ -13,6 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Copyright 2014 Telerik AD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 (function(f, define){
     define([ "./kendo.core" ], f);
 })(function(){
@@ -32,12 +48,15 @@
             endswith: "endswith",
             startswith: "startswith"
         },
+        odataFiltersVersionFour = extend({}, odataFilters, {
+            contains: "contains"
+        }),
         mappers = {
             pageSize: $.noop,
             page: $.noop,
-            filter: function(params, filter) {
+            filter: function(params, filter, useVersionFour) {
                 if (filter) {
-                    params.$filter = toOdataFilter(filter);
+                    params.$filter = toOdataFilter(filter, useVersionFour);
                 }
             },
             sort: function(params, orderby) {
@@ -72,7 +91,7 @@
             }
         };
 
-    function toOdataFilter(filter) {
+    function toOdataFilter(filter, useOdataFour) {
         var result = [],
             logic = filter.logic || "and",
             idx,
@@ -92,11 +111,14 @@
             operator = filter.operator;
 
             if (filter.filters) {
-                filter = toOdataFilter(filter);
+                filter = toOdataFilter(filter, useOdataFour);
             } else {
                 ignoreCase = filter.ignoreCase;
                 field = field.replace(/\./g, "/");
                 filter = odataFilters[operator];
+                if (useOdataFour) {
+                    filter = odataFiltersVersionFour[operator];
+                }
 
                 if (filter && value !== undefined) {
                     type = $.type(value);
@@ -109,7 +131,11 @@
                         }
 
                     } else if (type === "date") {
-                        format = "datetime'{1:yyyy-MM-ddTHH:mm:ss}'";
+                        if (useOdataFour) {
+                            format = "{1:yyyy-MM-ddTHH:mm:ss+00:00}";
+                        } else {
+                            format = "datetime'{1:yyyy-MM-ddTHH:mm:ss}'";
+                        }
                     } else {
                         format = "{1}";
                     }
@@ -120,7 +146,12 @@
                         } else {
                             format = "{0}(" + format + ",{2})";
                             if (operator === "doesnotcontain") {
-                                format += " eq false";
+                                if (useOdataFour) {
+                                    format = "{0}({2},'{1}') eq -1";
+                                    filter = "indexof";
+                                } else {
+                                    format += " eq false";
+                                }
                             }
                         }
                     } else {
@@ -141,6 +172,14 @@
         }
 
         return filter;
+    }
+
+    function stripMetadata(obj) {
+        for (var name in obj) {
+            if(name.indexOf("@odata") === 0) {
+                delete obj[name];
+            }
+        }
     }
 
     extend(true, kendo.data, {
@@ -177,7 +216,7 @@
                     dataType: "json",
                     type: "DELETE"
                 },
-                parameterMap: function(options, type) {
+                parameterMap: function(options, type, useVersionFour) {
                     var params,
                         value,
                         option,
@@ -199,7 +238,7 @@
 
                         for (option in options) {
                             if (mappers[option]) {
-                                mappers[option](params, options[option]);
+                                mappers[option](params, options[option], useVersionFour);
                             } else {
                                 params[option] = options[option];
                             }
@@ -226,6 +265,61 @@
             }
         }
     });
+
+    extend(true, kendo.data, {
+        schemas: {
+            "odata-v4": {
+                type: "json",
+                data: function(data) {
+                    data = $.extend({}, data);
+                    stripMetadata(data);
+
+                    if (data.value) {
+                        return data.value;
+                    }
+                    return [data];
+                },
+                total: function(data) {
+                    return data["@odata.count"];
+                }
+            }
+        },
+        transports: {
+            "odata-v4": {
+                read: {
+                    cache: true, // to prevent jQuery from adding cache buster
+                    dataType: "json"
+                },
+                update: {
+                    cache: true,
+                    dataType: "json",
+                    contentType: "application/json;IEEE754Compatible=true", // to inform the server the the request body is JSON encoded
+                    type: "PUT" // can be PUT or MERGE
+                },
+                create: {
+                    cache: true,
+                    dataType: "json",
+                    contentType: "application/json;IEEE754Compatible=true",
+                    type: "POST" // must be POST to create new entity
+                },
+                destroy: {
+                    cache: true,
+                    dataType: "json",
+                    type: "DELETE"
+                },
+                parameterMap: function(options, type) {
+                    var result = kendo.data.transports.odata.parameterMap(options, type, true);
+                    if (type == "read") {
+                        result.$count = true;
+                        delete result.$inlinecount;
+                    }
+
+                    return result;
+                }
+            }
+        }
+    });
+
 })(window.kendo.jQuery);
 
 return window.kendo;

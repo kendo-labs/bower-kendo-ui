@@ -1686,3 +1686,57 @@ html .km-pane-wrapper .km-widget,
     border-color: #fff;
   }
 }
+.ktb-checkbox-label-after {
+  border-color: #cccccc;
+  background: #ffffff;
+}
+.ktb-checkbox-label-hover-after,
+.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
+  border-color: #cccccc;
+}
+.ktb-checkbox-checked + .ktb-checkbox-label-after {
+  background-color: #ffffff;
+  border-color: #cccccc;
+  color: #686868;
+}
+.ktb-checkbox-label-hover-after,
+.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
+  border-color: #cccccc;
+}
+.ktb-checkbox-label-active-after {
+  border-color: #929292;
+}
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-after,
+.ktb-checkbox-disabled + .ktb-checkbox-label-after,
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-active-after,
+.ktb-checkbox-disabled + .ktb-checkbox-label-hover-before,
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-hover-after {
+  background: #ffffff;
+  color: #d4d4d4;
+  border-color: #d4d4d4;
+}
+.ktb-radio-label-before {
+  border-color: #cccccc;
+  background-color: #ffffff;
+}
+.ktb-radio-checked + .ktb-radio-label-after {
+  background-color: #686868;
+}
+.ktb-radio-checked + .ktb-radio-label-before {
+  border-color: #cccccc;
+}
+.ktb-radio-label-hover-before,
+.ktb-radio-checked + .ktb-radio-label-hover-before {
+  border-color: #cccccc;
+}
+.ktb-radio-label-active-before {
+  border-color: #929292;
+}
+.ktb-radio-checked + .ktb-radio-label-after {
+  background-color: #686868;
+}
+.ktb-radio-disabled + .ktb-radio-label-before,
+.ktb-radio-disabled + .ktb-radio-label-active-before {
+  background: #ffffff;
+  border-color: #d4d4d4;
+}

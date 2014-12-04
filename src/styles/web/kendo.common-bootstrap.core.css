@@ -1630,6 +1630,20 @@ a.k-button:hover {
 .k-radio:disabled + .k-radio-label {
   cursor: auto;
 }
+.k-ie8 .k-checkbox,
+.k-ie8 .k-radio {
+  display: inline-block;
+}
+.k-ie8 .k-checkbox-label,
+.k-ie8 .k-radio-label {
+  padding-left: 0;
+}
+.k-ie8 .k-checkbox-label:before,
+.k-ie8 .k-checkbox-label:after,
+.k-ie8 .k-radio-label:before,
+.k-ie8 .k-radio-label:after {
+  display: none;
+}
 input.k-checkbox + label {
   -webkit-user-select: none;
   user-select: none;
@@ -2651,6 +2665,7 @@ body .k-datetimepicker .k-select {
 .k-overflow-container .k-item {
   padding: 1px;
 }
+.k-overflow-container > .k-state-disabled .k-button,
 .k-overflow-container .k-button.k-state-disabled,
 .k-overflow-container .k-button.k-state-disabled:hover {
   border: 0 ;
@@ -4511,4 +4526,12 @@ span.k-tooltip {
 .k-grid tr td {
   border-width: 1px 0 0 1px;
   border-style: solid;
+}
+.k-slider-horizontal .k-slider-track,
+.k-slider-horizontal .k-slider-selection {
+  margin-top: -5px;
+}
+.k-slider-vertical .k-slider-track,
+.k-slider-vertical .k-slider-selection {
+  margin-left: -5px;
 }

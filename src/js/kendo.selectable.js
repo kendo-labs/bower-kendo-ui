@@ -30,7 +30,7 @@
         CHANGE = "change",
         NS = ".kendoSelectable",
         UNSELECTING = "k-state-unselecting",
-        INPUTSELECTOR = "input,a,textarea,.k-multiselect-wrap,select,button",
+        INPUTSELECTOR = "input,a,textarea,.k-multiselect-wrap,select,button,a.k-button>.k-icon",
         msie = kendo.support.browser.msie,
         supportEventDelegation = false;
 
@@ -61,6 +61,11 @@
             that.relatedTarget = that.options.relatedTarget;
 
             multiple = that.options.multiple;
+
+            if (this.options.aria && multiple) {
+                that.element.attr("aria-multiselectable", true);
+            }
+
             that.userEvents = new kendo.UserEvents(that.element, {
                 global: true,
                 allowSelection: true,
@@ -167,6 +172,8 @@
                 currentElement = target.closest(that.element);
                 that._items = currentElement.find(that.options.filter);
             }
+
+            e.sender.capture();
 
             that._marquee
                 .appendTo(document.body)
@@ -389,7 +396,20 @@
         }
     });
 
+    Selectable.parseOptions = function(selectable) {
+        var asLowerString = typeof selectable === "string" && selectable.toLowerCase();
+
+        return {
+            multiple: asLowerString && asLowerString.indexOf("multiple") > -1,
+            cell: asLowerString && asLowerString.indexOf("cell") > -1
+        };
+    };
+
     function collision(element, position) {
+        if (!element.is(":visible")) {
+            return false;
+        }
+
         var elementPosition = kendo.getOffset(element),
             right = position.left + position.width,
             bottom = position.top + position.height;
