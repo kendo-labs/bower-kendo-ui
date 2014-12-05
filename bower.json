@@ -8,7 +8,7 @@
     "Telerik"
   ],
   "description": "Everything you need to build sites and apps with HTML5 & JavaScript",
-  "main": "js/kendo.ui.core.min.js",
+  "main": "dist/kendo.ui.core.min.js",
   "moduleType": [
     "amd",
     "globals"
