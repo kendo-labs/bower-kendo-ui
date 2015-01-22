@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2271,6 +2271,11 @@ html .k-error-colored {
   overflow-x: auto;
   /*needed by IE8*/
 }
+/* current time indicator */
+.k-current-time {
+  background: #f00;
+  position: absolute;
+}
 /* override box sizing for grid layout framework integration (Bootstrap 3, Foundation 4) */
 .k-animation-container,
 .k-widget,
@@ -2318,9 +2323,12 @@ a.k-button:hover {
   -webkit-background-clip: border-box;
   background-clip: border-box;
 }
-.k-checkbox,
+input.k-checkbox,
 .k-radio {
-  display: none;
+  display: inline;
+  opacity: 0;
+  width: 0;
+  margin: 0;
 }
 .k-checkbox-label {
   position: relative;
@@ -2389,6 +2397,20 @@ a.k-button:hover {
 }
 .k-radio:disabled + .k-radio-label {
   cursor: auto;
+}
+.k-ie8 .k-checkbox,
+.k-ie8 .k-radio {
+  display: inline-block;
+}
+.k-ie8 .k-checkbox-label,
+.k-ie8 .k-radio-label {
+  padding-left: 0;
+}
+.k-ie8 .k-checkbox-label:before,
+.k-ie8 .k-checkbox-label:after,
+.k-ie8 .k-radio-label:before,
+.k-ie8 .k-radio-label:after {
+  display: none;
 }
 input.k-checkbox + label {
   -webkit-user-select: none;
@@ -2713,7 +2735,7 @@ div.k-window-iframecontent {
   position: static;
   border-style: solid;
   border-width: 1px;
-  margin: 0 .29em .3em;
+  margin: 0 .286em .3em;
   padding: .3em .92em;
   zoom: 1;
 }
@@ -3411,6 +3433,7 @@ body .k-datetimepicker .k-select {
 .k-overflow-container .k-item {
   padding: 1px;
 }
+.k-overflow-container > .k-state-disabled .k-button,
 .k-overflow-container .k-button.k-state-disabled,
 .k-overflow-container .k-button.k-state-disabled:hover {
   border: 0 ;
@@ -4787,10 +4810,6 @@ span.k-tooltip {
 .k-fx-hidden * {
   visibility: hidden !important;
 }
-.k-fx-hidden .km-view-title {
-  visibility: visible !important;
-  opacity: 0;
-}
 .k-fx-reverse .k-fx-current {
   z-index: 1;
 }
@@ -5252,7 +5271,6 @@ span.k-tooltip {
   padding: 9px 14px;
 }
 .k-widget.k-tabstrip {
-  background-color: transparent;
   background-image: none;
   border-style: none;
   -webkit-box-shadow: none;
@@ -5291,7 +5309,20 @@ span.k-tooltip {
 }
 .k-grid-header th.k-header,
 .k-filter-row th {
-  padding: .786em .6em .714em .6em;
+  padding: .429em .6em .571em .6em;
+}
+.k-filtercell > span {
+  padding-right: 5.714em;
+}
+.k-filtercell > span > .k-button {
+  padding-left: .714em;
+  padding-right: .714em;
+  line-height: 1.286em;
+  margin: 0;
+}
+.k-filter-row .k-dropdown-operator {
+  width: 2.714em;
+  right: 2.857em;
 }
 .k-grouping-header .k-group-indicator {
   padding: .5em .15em .429em .4em;
@@ -5309,18 +5340,25 @@ span.k-tooltip {
 .k-grid-header th.k-header > .k-link {
   font-size: 0.929em;
   padding: 0.462em 1.286em;
+  margin-top: 0;
 }
 .k-grouping-header {
   line-height: 2.6;
 }
-.k-grid tr td {
-  border-width: 1px 0 0 1px;
+.k-grid-content tr:last-child td {
+  border-bottom-width: 0;
+}
+.k-grid tr td,
+.k-pivot-layout .k-grid tr td {
+  border-bottom-width: 1px;
   border-style: solid;
 }
-.k-grid .k-grid-header,
-.k-grid-header .k-grid-header-wrap,
-.k-grid-header tr:last-child th.k-header {
-  border-bottom-width: 0;
+.k-grouping-row + tr td {
+  border-top-width: 0;
+}
+.k-grid-content table tr:first-child td,
+.k-grid-content-locked table tr:first-child td {
+  border-top: 0;
 }
 .k-grid-content tr td {
   border-left-width: 0;
@@ -5357,12 +5395,12 @@ span.k-tooltip {
 .k-dropdown-wrap,
 .k-picker-wrap,
 .k-numeric-wrap {
-  padding: 0 2.5em 0 0;
+  padding: 0 2.571em 0 0;
 }
 .k-picker-wrap .k-select,
 .k-numeric-wrap .k-select,
 .k-dropdown-wrap .k-select {
-  width: 2.5em;
+  width: 2.571em;
 }
 .k-datetimepicker {
   width: 19.5em;
@@ -5377,13 +5415,14 @@ span.k-tooltip {
   margin: 0 6px;
 }
 .k-calendar {
-  width: 19em;
+  width: 18.29em;
+  padding: 0 5px;
+}
+.k-calendar .k-header {
+  margin: 0 -5px;
 }
 .k-calendar td {
   padding: 0;
-}
-.k-calendar .k-content {
-  padding: 5px;
 }
 .k-calendar .k-content .k-link {
   min-height: 2.571em;
@@ -5398,6 +5437,7 @@ span.k-tooltip {
 .k-calendar .k-footer {
   border-top-width: 1px;
   border-top-style: solid;
+  margin: 0 -5px;
 }
 .k-popup.k-list-container {
   padding: 0.286em 0;
@@ -5409,7 +5449,6 @@ span.k-tooltip {
 .k-fieldselector .k-list .k-item {
   min-height: 2.143em;
   line-height: 2.143em;
-  text-indent: 0.429em;
 }
 .k-button,
 .k-calendar .k-header .k-link,
@@ -5687,16 +5726,18 @@ div.k-window {
 .k-state-border-down .k-select .k-i-arrow-s {
   background-position: 0 0;
 }
-.k-numerictextbox .k-select .k-link span.k-i-arrow-n {
+.k-numerictextbox .k-select .k-link span.k-i-arrow-n,
+.k-grid-header .k-numerictextbox .k-select .k-link span.k-i-arrow-n {
   background-position: 0 -3px;
 }
-.k-numerictextbox .k-select .k-link span.k-i-arrow-s {
+.k-numerictextbox .k-select .k-link span.k-i-arrow-s,
+.k-grid-header .k-numerictextbox .k-select .k-link span.k-i-arrow-s {
   background-position: 0 -35px;
 }
 .k-i-close,
 .k-delete,
 .k-group-delete {
-  background-position: -48px -16px;
+  background-position: -32px -16px;
 }
 .k-multiselect .k-delete,
 .k-multiselect .k-state-hover .k-delete {
@@ -5782,7 +5823,8 @@ div.k-window {
 }
 .k-grid-header .k-grid-filter,
 .k-grid-header .k-header-column-menu {
-  margin: -0.5em 0 -0.4em -0.6em;
+  padding: .357em .6em .5em .6em;
+  margin: 0 0 -0.4em -0.6em;
 }
 .k-grid-header .k-header-column-menu .k-i-arrowhead-s {
   background-position: -64px -32px;
@@ -5854,7 +5896,9 @@ div.k-window {
 .k-gantt .k-i-expand {
   background-position: 0 0;
 }
-.k-i-arrowhead-s,
+.k-i-arrowhead-s {
+  background-position: 0 -288px;
+}
 .k-item.k-state-hover .k-i-arrowhead-s,
 .k-button:hover .k-i-arrowhead-s {
   background-position: -16px -288px;
@@ -5888,15 +5932,18 @@ div.k-window {
 .k-pivot .k-link:not(.k-state-disabled):hover > .k-i-arrow-e {
   background-position: 0 -190px;
 }
-.k-pivot-configurator-settings .k-i-arrowhead-s,
-.k-pivot-configurator-settings .k-item.k-state-hover .k-i-arrowhead-s,
-.k-pivot-configurator-settings .k-button:hover .k-i-arrowhead-s {
-  background-position: 0 -288px;
-}
 .k-pivot-configurator-settings .k-si-close,
 .k-pivot-configurator-settings .k-item.k-state-hover .k-si-close,
 .k-pivot-configurator-settings .k-button:hover .k-si-close {
   background-position: -160px -80px;
+}
+.k-pivot .k-header .k-i-arrowhead-s,
+.k-pivot .k-button:not(.k-state-disabled):hover .k-i-arrowhead-s {
+  background-position: -16px -288px;
+}
+.k-pivot .k-header .k-si-close,
+.k-pivot .k-button:not(.k-state-disabled):hover .k-si-close {
+  background-position: -176px -80px;
 }
 .k-notification .k-i-note {
   background-position: -176px -240px;
@@ -5919,4 +5966,15 @@ div.k-window {
 .k-webkit .k-rtl .k-widget .k-dropdown-wrap .k-input,
 .k-webkit .k-rtl .k-widget .k-numeric-wrap .k-input {
   margin-right: 0;
+}
+.km-pane-wrapper .k-pager-numbers .k-link,
+.km-pane-wrapper .k-pager-numbers .k-state-selected,
+.km-pane-wrapper .k-pager-wrap > .k-link {
+  border-radius: 0;
+}
+.km-pane-wrapper .k-pager-numbers .k-link,
+.km-pane-wrapper .k-pager-numbers .k-state-selected,
+.km-pane-wrapper .k-pager-wrap > .k-link,
+.km-pane-wrapper .k-pager-wrap > .k-pager-info {
+  padding: .571em .86em;
 }

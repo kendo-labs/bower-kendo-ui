@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -150,7 +150,7 @@
                 item
                     .contents()      // exclude groups, real links, templates and empty text nodes
                     .filter(function() { return (!this.nodeName.match(excludedNodesRegExp) && !(this.nodeType == 3 && !trim(this.nodeValue))); })
-                    .wrapAll("<a class='" + LINK + "'/>");
+                    .wrapAll("<span class='" + LINK + "'/>");
             }
         });
 
@@ -209,9 +209,20 @@
 
             that.wrapper.children(".k-tabstrip-items")
                 .on(CLICK + NS, ".k-state-disabled .k-link", false)
-                .on(CLICK + NS, " > " + NAVIGATABLEITEMS, function(e) {
-                    if (that.wrapper[0] !== document.activeElement) {
-                        that.wrapper.focus();
+                .on(CLICK + NS, " > " + NAVIGATABLEITEMS, function (e) {
+                    var wr = that.wrapper[0];
+                    if (wr !== document.activeElement) {
+                        var msie = kendo.support.browser.msie;
+                        if (msie) {
+                            try {
+                                // does not scroll to the active element
+                                wr.setActive();
+                            } catch (j) {
+                                wr.focus();
+                            }
+                        } else {
+                            wr.focus();
+                        }
                     }
 
                     if (that._click($(e.currentTarget))) {
@@ -355,9 +366,11 @@
         },
 
         setDataSource: function(dataSource) {
-            this.options.dataSource = dataSource;
-            this._dataSource();
-            dataSource.fetch();
+            var that = this;
+
+            that.options.dataSource = dataSource;
+            that._dataSource();
+            that.dataSource.fetch();
         },
 
         _animations: function(options) {
@@ -584,8 +597,10 @@
                 inserted = that._create(tab);
 
             each(inserted.tabs, function (idx) {
+                var contents = inserted.contents[idx];
                 that.tabGroup.append(this);
-                that.wrapper.append(inserted.contents[idx]);
+                that.wrapper.append(contents);
+                that.angular("compile", function(){ return { elements: [ contents ] }; });
             });
 
             updateFirstLast(that.tabGroup);
@@ -602,8 +617,10 @@
                 referenceContent = $(that.contentElement(referenceTab.index()));
 
             each(inserted.tabs, function (idx) {
+                var contents = inserted.contents[idx];
                 referenceTab.before(this);
-                referenceContent.before(inserted.contents[idx]);
+                referenceContent.before(contents);
+                that.angular("compile", function(){ return { elements: [ contents ] }; });
             });
 
             updateFirstLast(that.tabGroup);
@@ -620,8 +637,10 @@
                 referenceContent = $(that.contentElement(referenceTab.index()));
 
             each(inserted.tabs, function (idx) {
+                var contents = inserted.contents[idx];
                 referenceTab.after(this);
-                referenceContent.after(inserted.contents[idx]);
+                referenceContent.after(contents);
+                that.angular("compile", function(){ return { elements: [ contents ] }; });
             });
 
             updateFirstLast(that.tabGroup);
@@ -631,9 +650,9 @@
         },
 
         remove: function (elements) {
-            var that = this,
-                type = typeof elements,
-                contents = $();
+            var that = this;
+            var type = typeof elements;
+            var contents;
 
             if (type === "string") {
                 elements = that.tabGroup.find(elements);
@@ -641,9 +660,12 @@
                 elements = that.tabGroup.children().eq(elements);
             }
 
-            elements.each(function () {
-                contents.push(that.contentElement($(this).index()));
+            contents = elements.map(function () {
+                var content = that.contentElement($(this).index());
+                kendo.destroy(content);
+                return content;
             });
+
             elements.remove();
             contents.remove();
 
@@ -1176,7 +1198,8 @@
                             }, 40);
                         }
 
-                        that.angular("cleanup", function(){ return { elements: content.get() }; });
+                        that.angular("cleanup", function () { return { elements: content.get() }; });
+                        kendo.destroy(content);
                         content.html(data);
                     } catch (e) {
                         var console = window.console;

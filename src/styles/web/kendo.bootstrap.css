@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -790,9 +790,10 @@ div.k-filebrowser-dropzone em {
 .k-tiles li.k-state-selected {
   border-color: #428bca;
 }
-.k-tile .k-folder,
-.k-tile .k-file {
+.k-filebrowser .k-tile .k-folder,
+.k-filebrowser .k-tile .k-file {
   background-image: url('Bootstrap/imagebrowser.png');
+  background-size: auto auto;
 }
 /* TreeMap */
 .k-leaf,
@@ -1333,6 +1334,10 @@ html .km-pane-wrapper .km-widget,
 .k-state-focused > .k-select {
   border-color: #67afe9;
 }
+.k-tabstrip:focus {
+  -webkit-box-shadow: 0 0 7px 0 #67afe9;
+  box-shadow: 0 0 7px 0 #67afe9;
+}
 .k-tabstrip-items .k-state-default .k-link,
 .k-panelbar > li.k-state-default > .k-link {
   color: #428bca;
@@ -1595,6 +1600,11 @@ html .km-pane-wrapper .km-widget,
 .k-radio:disabled + .k-radio-label:hover:before {
   box-shadow: none;
 }
+.k-checkbox:focus + .k-checkbox-label:after,
+.k-radio:focus + .k-radio-label:before {
+  border-color: #67afe9;
+  box-shadow: 0 0 2px 0 #67afe9;
+}
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
   .k-icon:not(.k-loading),
   .k-grouping-dropclue,
@@ -1633,6 +1643,60 @@ html .km-pane-wrapper .km-widget,
   .k-editor-toolbar-wrap .k-button-group .k-tool:focus {
     border-color: #fff;
   }
+}
+.ktb-checkbox-label-after {
+  border-color: #cccccc;
+  background: #ffffff;
+}
+.ktb-checkbox-label-hover-after,
+.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
+  border-color: #adadad;
+}
+.ktb-checkbox-checked + .ktb-checkbox-label-after {
+  background-color: #ffffff;
+  border-color: #cccccc;
+  color: #428bca;
+}
+.ktb-checkbox-label-hover-after,
+.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
+  border-color: #adadad;
+}
+.ktb-checkbox-label-active-after {
+  border-color: #67afe9;
+}
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-after,
+.ktb-checkbox-disabled + .ktb-checkbox-label-after,
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-active-after,
+.ktb-checkbox-disabled + .ktb-checkbox-label-hover-before,
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-hover-after {
+  background: #ffffff;
+  color: #999999;
+  border-color: #cccccc;
+}
+.ktb-radio-label-before {
+  border-color: #cccccc;
+  background-color: #ffffff;
+}
+.ktb-radio-checked + .ktb-radio-label-after {
+  background-color: #428bca;
+}
+.ktb-radio-checked + .ktb-radio-label-before {
+  border-color: #cccccc;
+}
+.ktb-radio-label-hover-before,
+.ktb-radio-checked + .ktb-radio-label-hover-before {
+  border-color: #adadad;
+}
+.ktb-radio-label-active-before {
+  border-color: #67afe9;
+}
+.ktb-radio-checked + .ktb-radio-label-after {
+  background-color: #428bca;
+}
+.ktb-radio-disabled + .ktb-radio-label-before,
+.ktb-radio-disabled + .ktb-radio-label-active-before {
+  background: #ffffff;
+  border-color: #cccccc;
 }
 .k-grid,
 .k-scheduler,
@@ -2038,4 +2102,10 @@ td.k-state-focused.k-state-selected,
   color: #333333;
   background-color: #ebebeb;
   border-color: #adadad;
+}
+.k-button:active:hover,
+.k-button.k-state-active:hover {
+  color: #333333;
+  border-color: #adadad;
+  background-color: #ebebeb;
 }

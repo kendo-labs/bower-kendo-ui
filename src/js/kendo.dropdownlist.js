@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,6 +140,7 @@
             "close",
             CHANGE,
             "select",
+            "filtering",
             "dataBinding",
             "dataBound",
             "cascade"
@@ -787,11 +788,6 @@
             }
         },
 
-        _iconMousedown: function(e) {
-            this.wrapper.focusin();
-            e.preventDefault();
-        },
-
         _span: function() {
             var that = this,
                 wrapper = that.wrapper,
@@ -809,8 +805,7 @@
 
             that.span = span;
             that._inputWrapper = $(wrapper[0].firstChild);
-            that._arrow = wrapper.find(".k-icon")
-                                 .mousedown(proxy(that._iconMousedown, that));
+            that._arrow = wrapper.find(".k-icon");
         },
 
         _wrapper: function() {

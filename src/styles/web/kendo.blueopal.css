@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -810,9 +810,10 @@ div.k-filebrowser-dropzone em {
 .k-tiles li.k-state-selected {
   border-color: #13688c;
 }
-.k-tile .k-folder,
-.k-tile .k-file {
+.k-filebrowser .k-tile .k-folder,
+.k-filebrowser .k-tile .k-file {
   background-image: url('BlueOpal/imagebrowser.png');
+  background-size: auto auto;
 }
 /* TreeMap */
 .k-leaf,
@@ -1365,6 +1366,10 @@ html .km-pane-wrapper .km-widget,
 .k-state-focused > .k-select {
   border-color: #7ec6e3;
 }
+.k-tabstrip:focus {
+  -webkit-box-shadow: 0 0 3px 0 rgba(18, 115, 157, 0.5);
+  box-shadow: 0 0 3px 0 rgba(18, 115, 157, 0.5);
+}
 .k-tabstrip-items .k-state-default .k-link,
 .k-panelbar > li.k-state-default > .k-link {
   color: #003f59;
@@ -1647,6 +1652,11 @@ html .km-pane-wrapper .km-widget,
 .k-radio:disabled + .k-radio-label:hover:before {
   box-shadow: none;
 }
+.k-checkbox:focus + .k-checkbox-label:after,
+.k-radio:focus + .k-radio-label:before {
+  border-color: #7ec6e3;
+  box-shadow: 0 0 3px 0 #7ec6e3;
+}
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
   .k-icon:not(.k-loading),
   .k-grouping-dropclue,
@@ -1685,4 +1695,58 @@ html .km-pane-wrapper .km-widget,
   .k-editor-toolbar-wrap .k-button-group .k-tool:focus {
     border-color: #fff;
   }
+}
+.ktb-checkbox-label-after {
+  border-color: #94c0d2;
+  background: #ffffff;
+}
+.ktb-checkbox-label-hover-after,
+.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
+  border-color: #7ec6e3;
+}
+.ktb-checkbox-checked + .ktb-checkbox-label-after {
+  background-color: #ffffff;
+  border-color: #94c0d2;
+  color: #13688c;
+}
+.ktb-checkbox-label-hover-after,
+.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
+  border-color: #7ec6e3;
+}
+.ktb-checkbox-label-active-after {
+  border-color: #7ec6e3;
+}
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-after,
+.ktb-checkbox-disabled + .ktb-checkbox-label-after,
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-active-after,
+.ktb-checkbox-disabled + .ktb-checkbox-label-hover-before,
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-hover-after {
+  background: #e4f1f7;
+  color: #94c0d2;
+  border-color: #94c0d2;
+}
+.ktb-radio-label-before {
+  border-color: #94c0d2;
+  background-color: #ffffff;
+}
+.ktb-radio-checked + .ktb-radio-label-after {
+  background-color: #207093;
+}
+.ktb-radio-checked + .ktb-radio-label-before {
+  border-color: #94c0d2;
+}
+.ktb-radio-label-hover-before,
+.ktb-radio-checked + .ktb-radio-label-hover-before {
+  border-color: #7ec6e3;
+}
+.ktb-radio-label-active-before {
+  border-color: #7ec6e3;
+}
+.ktb-radio-checked + .ktb-radio-label-after {
+  background-color: #207093;
+}
+.ktb-radio-disabled + .ktb-radio-label-before,
+.ktb-radio-disabled + .ktb-radio-label-active-before {
+  background: #e4f1f7;
+  border-color: #94c0d2;
 }

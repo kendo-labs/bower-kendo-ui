@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -195,7 +195,7 @@
 
                         if (decimals) {
                             raise = Math.pow(10, decimals);
-                            return (((val-min)*raise)%(step*raise)) / Math.pow(100, decimals) === 0;
+                            return ((Math.floor((val-min)*raise))%(step*raise)) / Math.pow(100, decimals) === 0;
                         }
                         return ((val-min)%step) === 0;
                     }
@@ -327,7 +327,15 @@
                 valid = result.valid,
                 className = "." + INVALIDMSG,
                 fieldName = (input.attr(NAME) || ""),
-                lbl = that._findMessageContainer(fieldName).add(input.next(className)).hide(),
+                lbl = that._findMessageContainer(fieldName).add(input.next(className).filter(function() {
+                    var element = $(this);
+                    if (element.filter("[" + kendo.attr("for") + "]").length) {
+                        return element.attr(kendo.attr("for")) === fieldName;
+                    }
+
+                    return true;
+
+                })).hide(),
                 messageText;
 
             input.removeAttr("aria-invalid");

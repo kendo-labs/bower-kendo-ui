@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -208,7 +208,8 @@
     var PopOver = Widget.extend({
         init: function(element, options) {
             var that = this,
-                popupOptions;
+                popupOptions,
+                paneOptions;
 
             that.initialOpen = false;
 
@@ -226,7 +227,7 @@
                 }
             });
 
-            that.pane = new ui.Pane(that.element, this.options.pane);
+            that.pane = new ui.Pane(that.element, $.extend(this.options.pane, { $angular: this.options.$angular }));
             that.pane.navigateToInitial();
 
             kendo.notify(that, ui);
@@ -250,6 +251,8 @@
                 this.pane.navigate("");
                 this.popup.popup._position();
                 this.initialOpen = true;
+            } else {
+                this.pane.view()._invokeNgController();
             }
         },
 

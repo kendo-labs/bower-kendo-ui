@@ -4,6 +4,82 @@
 
 /* ListView */
 
+.km-material .km-list
+{
+    font-size: 1.2em;
+}
+
+.km-material .km-list > li
+{
+    padding: 1em;
+    padding: 1em;
+    line-height: 1.4em;
+}
+
+.km-material .km-group-container
+{
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.km-material .km-listinset,
+.km-material .km-listgroupinset
+{
+    margin: 0.64em 0;
+}
+
+.km-material .km-group-title
+{
+    text-indent: 1.4em;
+    font-size: .9em;
+    font-weight: 500;
+}
+
+.km-material .km-list .km-icon
+{
+    font-size: 1.5em;
+    vertical-align: middle;
+}
+
+.km-material .km-icon:before
+{
+    margin-top: 0;
+}
+
+.km-material .km-contactadd:before,
+.km-material .km-rowdelete:before,
+.km-material .km-rowinsert:before,
+.km-material .km-detaildisclose:before
+{
+    display: none;
+}
+
+.km-material .km-contactadd:after,
+.km-material .km-rowdelete:after,
+.km-material .km-rowinsert:after
+{
+    font-size: 1.4em;
+}
+
+.km-material .km-listview-link,
+.km-material .km-listview-label
+{
+    margin: -1em -1em;
+    padding: 1em 1em;
+}
+
+.km-material .km-detail
+{
+    width: 2em;
+    height: 2em;
+    margin-top: -1em;
+}
+
+.km-material .km-detaildisclose
+{
+    font-size: 0.86em;
+}
+
 .km-material .km-list > li
 {
     border-style: solid;
@@ -41,15 +117,7 @@
 
 .km-material .km-listview-link:after
 {
-    border-width: .2rem .2rem 0 0;
-}
-
-.km-material:not(.km-on-android) .km-listview-link:after
-{
-    width: .66rem;
-    height: .64rem;
-    border-width: 0;
-    box-shadow: inset -.2rem .2rem 0;
+    display: none;
 }
 
 .km-material .km-listinset li:first-child > .km-listview-link,
@@ -95,7 +163,7 @@
 
 .km-material .km-listview .km-switch
 {
-    margin-top: -.9rem;
+    margin-top: -0.44rem;
 }
 
 /* Filter box */
@@ -132,63 +200,4 @@
 {
     border-width: @material-border-width;
     border-style: solid;
-}
-
-.km-list > li {
-    padding: .750em .7em .688em;
-    line-height: 2em;
-}
-
-.km-material .km-group-container {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-}
-
-.km-material .km-listinset,
-.km-material .km-listgroupinset {
-    margin: 0.643em;
-}
-
-.km-material .km-group-title {
-    text-indent: .5em;
-}
-
-.km-material .km-listgroupinset .km-group-title {
-    margin-top: 0;
-    font-weight: 500;
-}
-
-.km-material .km-listview .km-text {
-    font-size: .875em;
-    line-height: 1em;
-    padding: 1.429em 0 1.429em;
-}
-
-.km-material .km-list .km-icon {
-    font-size: 1.5em;
-    margin-right: 1.333em;
-    vertical-align: middle;
-}
-
-.km-material .km-icon:before,
-.km-material .km-contactadd:before,
-.km-material .km-rowdelete:before,
-.km-material .km-rowinsert:before,
-.km-material .km-detaildisclose:before {
-    margin-top: 0;
-}
-
-.km-widget .km-listview-link,
-.km-widget .km-listview-label {
-    margin: -.750em -.7em -.688em;
-    padding: .750em .7em .688em;
-}
-
-.km-material .km-detail {
-    width: 2em;
-    height: 2em;
-}
-
-.km-material .km-detaildisclose  {
-    font-size: 0.857em;
 }

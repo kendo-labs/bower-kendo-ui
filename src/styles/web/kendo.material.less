@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,7 +155,7 @@
 /* Gantt*/
 
 @task-summary-color: lighten(@header-background-color, 25%);
-@task-summary-selected-color: lighten(@selected-background-color, 25%);
+@task-summary-selected-color: lighten(@header-background-color, 25%);
 
 /* Loading Indicators */
 @loading-panel-color: #fff;
@@ -351,13 +351,15 @@ div.k-splitbar.k-state-focused .k-icon,
 .k-scheduler-content .k-icon,
 .k-gantt-toolbar .k-icon,
 .k-field-actions .k-icon,
-.k-notification .k-icon
+.k-notification .k-icon,
+.k-pivot-configurator-settings .k-icon:hover
 {
     opacity:1;
 }
 
 .k-tool-icon,
-.k-splitbar .k-icon
+.k-splitbar .k-icon,
+.k-pivot-configurator-settings .k-icon
 {
     opacity: @default-icon-opacity;
 }
@@ -597,7 +599,7 @@ background-color: @widget-background-color;
 border-color: @widget-background-color;
 }
 
-.k-list > .k-state-selected {
+.k-list > .k-state-selected.k-state-focused {
 background-color: @selected-background-color;
 border-color: @selected-background-color;
 .box-shadow(none);
@@ -749,7 +751,8 @@ border-color: @panelbar-items-border;
 .k-scheduler .k-header .k-link,
 .k-gantt > .k-header li,
 .k-gantt > .k-header .k-link,
-.k-gantt-toolbar .k-button {
+.k-gantt-toolbar .k-button,
+.km-pane-wrapper .k-header .k-button {
 color: @header-text-color;
 background-color: @header-background-color;
 border-color: @header-background-color;
@@ -762,10 +765,15 @@ border-color: @header-background-color;
 .k-scheduler .k-scheduler-toolbar .k-scheduler-views li.k-state-hover .k-link,
 .k-gantt .k-gantt-toolbar .k-gantt-views li.k-state-hover,
 .k-gantt .k-gantt-toolbar .k-gantt-views li.k-state-hover .k-link,
-.k-gantt .k-gantt-toolbar .k-button:hover
+.k-gantt .k-gantt-toolbar .k-button:hover,
+.km-pane-wrapper .k-header .k-button:hover
 {
 background-color: @secondary-hover-background-color;
 border-color: @secondary-hover-background-color;
+}
+
+.km-pane-wrapper .k-header .k-button:active:hover {
+    color: @header-text-color;
 }
 
 .k-scheduler .k-scheduler-toolbar ul li.k-state-hover,
@@ -817,7 +825,8 @@ border-color: @secondary-header-background-color;
 .k-pager-numbers .k-state-selected,
 .k-grid-footer,
 .k-grid-footer td,
-.k-scheduler-header {
+.k-scheduler-header,
+.km-pane-wrapper .k-grid-header .k-header {
 color: @widget-text-color;
 background-color: @secondary-background-color;
 }
@@ -875,11 +884,14 @@ color: @header-text-color;
 .k-gantt .k-treelist .k-state-selected,
 .k-gantt .k-treelist .k-state-selected td,
 .k-gantt .k-treelist .k-alt.k-state-selected,
-.k-gantt .k-treelist .k-alt.k-state-selected > td {
+.k-gantt .k-treelist .k-alt.k-state-selected > td,
+.k-listview > .k-state-selected {
 background-color: @accent-color; 
 }
 
-.k-grid tr.k-state-selected {
+.k-grid tr.k-state-selected,
+.k-listview > .k-state-selected,
+.k-state-selected .k-progress-status {
 color: @inverse-text-color;
 }
 
@@ -992,8 +1004,11 @@ background-color: @widget-background-color;
 
 /* Gantt */
 .k-task-milestone,
-.k-task-summary-complete {
+.k-task-summary-complete,
+.k-state-selected.k-task-milestone,
+.k-state-selected .k-task-summary-complete {
 background-color: @header-background-color;
+border-color: @header-background-color;
 }
 
 .k-task-single
@@ -1015,6 +1030,7 @@ background-color: @accent-color;
 border-color: @accent-color;
 }
 
+.k-grid td.k-state-focused,
 .k-multiselect .k-button:focus:active:not(.k-state-disabled):not([disabled]),
 .k-toolbar .k-button:focus:active:not(.k-state-disabled):not([disabled]),
 .k-group-indicator .k-button,
@@ -1135,7 +1151,8 @@ table.k-editor {
    background-color: @alt-background-color
 }
 
-.k-list > .k-state-hover {
+.k-list > .k-state-hover,
+.k-list > .k-state-focused {
 	color: @widget-text-color;
 	background-color: @hover-background-color;
 	border-color: @hover-background-color;
@@ -1244,4 +1261,13 @@ div.k-scheduler-marquee:after {
 
 .k-notification.k-group {
     color: @secondary-text-color;
+}
+
+.km-pane-wrapper > .km-pane > .km-view > .km-content {
+    color: @header-background-color;
+    background-color: @header-text-color;
+}
+
+.km-pane-wrapper > .km-pane .km-content .k-mobile-list > ul > li > .k-link {
+    color: @header-background-color;
 }

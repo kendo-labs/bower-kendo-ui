@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
     define([ "./kendo.data" ], f);
 })(function(){
 
-(function() {
-    kendo.data.transports.signalr = kendo.data.RemoteTransport.extend({
+(function($) {
+    var transport = kendo.data.RemoteTransport.extend({
         init: function (options) {
             var signalr = options && options.signalr ? options.signalr : {};
 
@@ -105,7 +105,14 @@
             this._crud(options, "destroy");
         }
     });
-})();
+
+    $.extend(true, kendo.data, {
+        transports: {
+            signalr: transport
+        }
+    });
+
+})(window.kendo.jQuery);
 
 return window.kendo;
 

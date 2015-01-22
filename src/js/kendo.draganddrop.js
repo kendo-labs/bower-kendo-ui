@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@
         DRAG = "drag",
         DRAGEND = "dragend",
         DRAGCANCEL = "dragcancel",
+        HINTDESTROYED = "hintDestroyed",
 
         // DropTarget events
         DRAGENTER = "dragenter",
@@ -223,7 +224,7 @@
                 scaledTotal = total * that.scale,
                 size = that.getSize();
 
-            if (total === 0) {
+            if (total === 0 && !that.forcedEnabled) {
                 return; // we are not visible.
             }
 
@@ -494,6 +495,26 @@
         }
     });
 
+    function destroyDroppable(collection, widget) {
+        var groupName = widget.options.group,
+        droppables = collection[groupName],
+        i;
+
+        Widget.fn.destroy.call(widget);
+
+        if (droppables.length > 1) {
+            for (i = 0; i < droppables.length; i++) {
+                if (droppables[i] == widget) {
+                    droppables.splice(i, 1);
+                    break;
+                }
+            }
+        } else {
+            droppables.length = 0; // WTF, porting this from the previous destroyGroup
+            delete collection[groupName];
+        }
+    }
+
     var DropTarget = Widget.extend({
         init: function(element, options) {
             var that = this;
@@ -521,22 +542,7 @@
         },
 
         destroy: function() {
-            var groupName = this.options.group,
-                group = dropTargets[groupName] || dropAreas[groupName],
-                i;
-
-            if (group.length > 1) {
-                Widget.fn.destroy.call(this);
-
-                for (i = 0; i < group.length; i++) {
-                    if (group[i] == this) {
-                        group.splice(i, 1);
-                        break;
-                    }
-                }
-            } else {
-                DropTarget.destroyGroup(groupName);
-            }
+            destroyDroppable(dropTargets, this);
         },
 
         _trigger: function(eventName, e) {
@@ -601,6 +607,10 @@
             }
         },
 
+        destroy: function() {
+            destroyDroppable(dropAreas, this);
+        },
+
         options: {
             name: "DropTargetArea",
             group: "default",
@@ -638,12 +648,13 @@
             DRAGSTART,
             DRAG,
             DRAGEND,
-            DRAGCANCEL
+            DRAGCANCEL,
+            HINTDESTROYED
         ],
 
         options: {
             name: "Draggable",
-            distance: 5,
+            distance: ( kendo.support.touch ? 0 : 5),
             group: "default",
             cursorOffset: null,
             axis: null,
@@ -761,6 +772,8 @@
                 that.userEvents.cancel();
                 that._afterEnd();
             }
+
+            that.userEvents.capture();
 
             $(document).on(KEYUP, that._captureEscape);
         },
@@ -906,6 +919,7 @@
             delete draggables[that.options.group];
 
             that.trigger("destroy");
+            that.trigger(HINTDESTROYED);
             $(document).off(KEYUP, that._captureEscape);
         }
     });

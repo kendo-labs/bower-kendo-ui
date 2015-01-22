@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,9 +76,7 @@
              } else {
                  that._text.on(TOUCHEND + ns + " " + FOCUS + ns, function(e) {
                     that._toggleText(false);
-                    if (e.type === FOCUS) {
-                        element.focus();
-                    }
+                    element.focus();
                  });
              }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,6 +167,7 @@
             "close",
             "change",
             "select",
+            "filtering",
             "dataBinding",
             "dataBound"
         ],
@@ -306,9 +307,7 @@
 
             length = word.length;
 
-            if (!length) {
-                that.popup.close();
-            } else if (length >= that.options.minLength) {
+            if (!length || length >= options.minLength) {
                 that._open = true;
 
                 that._filterSource({

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,6 +139,55 @@ $.extend(true, kendo.ui.FileBrowser.prototype.options.messages,{
 });
 }
 
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "isTrue": "is true",
+  "isFalse": "is false",
+  "filter": "Filter",
+  "clear": "Clear",
+  "operator": "Operator"
+});
+}
+
+/* FilterCell operators */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "string": {
+    "eq": "Is equal to",
+    "neq": "Is not equal to",
+    "startswith": "Starts with",
+    "contains": "Contains",
+    "doesnotcontain": "Does not contain",
+    "endswith": "Ends with"
+  },
+  "number": {
+    "eq": "Is equal to",
+    "neq": "Is not equal to",
+    "gte": "Is greater than or equal to",
+    "gt": "Is greater than",
+    "lte": "Is less than or equal to",
+    "lt": "Is less than"
+  },
+  "date": {
+    "eq": "Is equal to",
+    "neq": "Is not equal to",
+    "gte": "Is after or equal to",
+    "gt": "Is after",
+    "lte": "Is before or equal to",
+    "lt": "Is before"
+  },
+  "enums": {
+    "eq": "Is equal to",
+    "neq": "Is not equal to"
+  }
+});
+}
+
 /* FilterMenu messages */
 
 if (kendo.ui.FilterMenu) {
@@ -199,16 +248,37 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
 if (kendo.ui.Gantt) {
 kendo.ui.Gantt.prototype.options.messages =
 $.extend(true, kendo.ui.Gantt.prototype.options.messages,{
+  "actions": {
+    "addChild": "Add Child",
+    "append": "Add Task",
+    "insertAfter": "Add Below",
+    "insertBefore": "Add Above",
+    "pdf": "Export to PDF"
+  },
+  "cancel": "Cancel",
+  "deleteDependencyWindowTitle": "Delete dependency",
+  "deleteTaskWindowTitle": "Delete task",
+  "destroy": "Delete",
+  "editor": {
+    "assingButton": "Assign",
+    "editorTitle": "Task",
+    "end": "End",
+    "percentComplete": "Complete",
+    "resources": "Resources",
+    "resourcesEditorTitle": "Resources",
+    "resourcesHeader": "Resources",
+    "start": "Start",
+    "title": "Title",
+    "unitsHeader": "Units"
+  },
+  "save": "Save",
   "views": {
     "day": "Day",
+    "end": "End",
+    "month": "Month",
+    "start": "Start",
     "week": "Week",
-    "month": "Month"
-  },
-  "actions": {
-    "append": "Add Task",
-    "addChild": "Add Child",
-    "insertBefore": "Add Above",
-    "insertAfter": "Add Below"
+    "year": "Year"
   }
 });
 }

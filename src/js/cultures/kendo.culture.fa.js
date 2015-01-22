@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,18 +25,18 @@
             pattern: ["n-"],
             decimals: 2,
             ",": ",",
-            ".": ".",
+            ".": "/",
             groupSize: [3],
             percent: {
                 pattern: ["-n %","n %"],
                 decimals: 2,
                 ",": ",",
-                ".": ".",
+                ".": "/",
                 groupSize: [3],
                 symbol: "%"
             },
             currency: {
-                pattern: ["$n-","$ n"],
+                pattern: ["$n-","$n"],
                 decimals: 2,
                 ",": ",",
                 ".": "/",
@@ -47,24 +47,24 @@
         calendars: {
             standard: {
                 days: {
-                    names: ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"],
-                    namesAbbr: ["الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"],
-                    namesShort: ["ح","ن","ث","ر","خ","ج","س"]
+                    names: ["يكشنبه","دوشنبه","سه شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"],
+                    namesAbbr: ["يكشنبه","دوشنبه","سه شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"],
+                    namesShort: ["ی","د","س","چ","پ","ج","ش"]
                 },
                 months: {
-                    names: ["جانفييه","فيفرييه","مارس","أفريل","مي","جوان","جوييه","أوت","سبتمبر","اكتوبر","نوفمبر","ديسمبر",""],
-                    namesAbbr: ["جانفييه","فيفرييه","مارس","أفريل","مي","جوان","جوييه","أوت","سبتمبر","اكتوبر","نوفمبر","ديسمبر",""]
+                    names: ["ژانويه","فوريه","مارس","آوريل","مه","ژوئن","ژوئيه","اوت","سپتامبر","اُكتبر","نوامبر","دسامبر",""],
+                    namesAbbr: ["ژانويه","فوريه","مارس","آوريل","مه","ژوئن","ژوئيه","اوت","سپتامبر","اُكتبر","نوامبر","دسامبر",""]
                 },
                 AM: ["ق.ظ","ق.ظ","ق.ظ"],
                 PM: ["ب.ظ","ب.ظ","ب.ظ"],
                 patterns: {
-                    d: "MM/dd/yyyy",
-                    D: "dddd, MMMM dd, yyyy",
-                    F: "dddd, MMMM dd, yyyy hh:mm:ss tt",
-                    g: "MM/dd/yyyy hh:mm tt",
-                    G: "MM/dd/yyyy hh:mm:ss tt",
-                    m: "MMMM dd",
-                    M: "MMMM dd",
+                    d: "dd/MM/yyyy",
+                    D: "dddd, dd MMMM yyyy",
+                    F: "dddd, dd MMMM yyyy hh:mm:ss tt",
+                    g: "dd/MM/yyyy hh:mm tt",
+                    G: "dd/MM/yyyy hh:mm:ss tt",
+                    m: "d MMMM",
+                    M: "d MMMM",
                     s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
                     t: "hh:mm tt",
                     T: "hh:mm:ss tt",

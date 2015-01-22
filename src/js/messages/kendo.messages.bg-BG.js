@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,16 +89,37 @@ $.extend(true, kendo.ui.NumericTextBox.prototype.options,{
 if (kendo.ui.Gantt) {
 kendo.ui.Gantt.prototype.options.messages =
 $.extend(true, kendo.ui.Gantt.prototype.options.messages,{
+  "actions": {
+    "addChild": "Добави дете",
+    "append": "Добави задача",
+    "insertAfter": "Добави отдолу",
+    "insertBefore": "Добави отгоре",
+    "pdf": "Експорт към PDF"
+  },
+  "cancel": "Откажи",
+  "deleteDependencyWindowTitle": "Изтрий връзка",
+  "deleteTaskWindowTitle": "Изтрий задача",
+  "destroy": "Изтрий",
+  "editor": {
+    "assingButton": "Задай",
+    "editorTitle": "Задача",
+    "end": "Край",
+    "percentComplete": "Завършено",
+    "resources": "Ресурси",
+    "resourcesEditorTitle": "Ресурси",
+    "resourcesHeader": "Ресурси",
+    "start": "Начало",
+    "title": "Заглавие",
+    "unitsHeader": "Единици"
+  },
+  "save": "Запази",
   "views": {
     "day": "Ден",
+    "end": "Край",
+    "month": "Месец",
+    "start": "Начало",
     "week": "Седмица",
-    "month": "Месец"
-  },
-  "actions": {
-    "append": "Добави задача",
-    "addChild": "Добави дете",
-    "insertBefore": "Добави отгоре",
-    "insertAfter": "Добави отдолу"
+    "year": "Година"
   }
 });
 }
@@ -148,6 +169,42 @@ $.extend(true, kendo.ui.ColorPicker.prototype.options.messages,{
 if (kendo.ui.FilterMenu) {
 kendo.ui.FilterMenu.prototype.options.operators =
 $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
+  "string": {
+    "eq": "Е равно на",
+    "neq": "Не е равно на",
+    "startswith": "Започва с",
+    "contains": "Съдържа",
+    "doesnotcontain": "Не съдържа",
+    "endswith": "Завършва на"
+  },
+  "number": {
+    "eq": "Е равно на",
+    "neq": "Не е равно на",
+    "gte": "Е по-голяма или равно на",
+    "gt": "Е по-голямо от",
+    "lte": "Е по-малко или равно на",
+    "lt": "Е по-малко от"
+  },
+  "date": {
+    "eq": "Е равно на",
+    "neq": "Не е равно на",
+    "gte": "Е след или равно на",
+    "gt": "Е след",
+    "lte": "Е преди или равно на",
+    "lt": "Е преди"
+  },
+  "enums": {
+    "eq": "E равно на",
+    "neq": "Не е равно на"
+  }
+});
+}
+
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
   "string": {
     "eq": "Е равно на",
     "neq": "Не е равно на",
@@ -269,7 +326,7 @@ $.extend(true, kendo.ui.Grid.prototype.options.messages,{
   "editable": {
     "cancelDelete": "Откажи",
     "confirmation": "Сигурни ли сте, че искате да изтриете записа?",
-    "confirmDelete": "Изтрии"
+    "confirmDelete": "Изтрий"
   }
 });
 }
@@ -309,6 +366,19 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "cancel": "Откажи",
   "operator": "Оператор",
   "value": "Стойност"
+});
+}
+
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "filter": "Филтрирай",
+  "clear": "Премахни филтър",
+  "isFalse": "не е вярно",
+  "isTrue": "е вярно",
+  "operator": "Оператор"
 });
 }
 
@@ -415,7 +485,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   "cancel": "Откажи",
   "confirmation": "Сигурен ли сте че искате да изтриете това събитие?",
   "date": "Дата",
-  "destroy": "Изтрии",
+  "destroy": "Изтрий",
   "editor": {
     "allDayEvent": "Целодневно събитие",
     "description": "Описание",
@@ -435,8 +505,8 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   "event": "Събитие",
   "recurrenceMessages": {
     "deleteRecurring": "Сигурен ли сте че искате да изтриете това събитие или цялата серия?",
-    "deleteWindowOccurrence": "Изтрии единично събитие",
-    "deleteWindowSeries": "Изтрии серията",
+    "deleteWindowOccurrence": "Изтрий единично събитие",
+    "deleteWindowSeries": "Изтрий серията",
     "deleteWindowTitle": "Изтриване на повтарящо се събитие",
     "editRecurring": "Сигурен ли сте че искате да промените това събитие или цялата серия?",
     "editWindowOccurrence": "Промени единично събитие",
@@ -453,7 +523,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
     "week": "Седмица",
     "workWeek": "Работна седмица"
   },
-  "deleteWindowTitle": "Изтрии събитие",
+  "deleteWindowTitle": "Изтрий събитие",
   "showFullDay": "Покажи цял ден",
   "showWorkDay": "Покажи работни часове"
 });

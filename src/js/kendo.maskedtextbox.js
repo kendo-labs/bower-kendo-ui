@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,6 +155,10 @@
                 return this.element.val();
             }
 
+            if (value === null) {
+                value = "";
+            }
+
             if (!emptyMask) {
                 element.val(value);
                 return;
@@ -266,6 +270,10 @@
             var value = element.value;
             var unmasked;
             var start;
+
+            if (kendo._activeElement() !== element) {
+                return;
+            }
 
             if (value !== that._old && !that._pasting) {
                 start = caret(element)[0];
