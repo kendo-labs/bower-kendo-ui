@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 
 
 /*jshint eqnull: true, loopfunc: true, evil: true, boss: true, freeze: false*/
-(function($, undefined) {
+(function($, window, undefined) {
     var kendo = window.kendo = window.kendo || { cultures: {} },
         extend = $.extend,
         each = $.each,
@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2014.2.903";
+    kendo.version = "2014.3.1425";
 
     function Class() {}
 
@@ -233,9 +233,9 @@
              if (first === "=") {
                  return "+(" + rest + ")+";
              } else if (first === ":") {
-                 return "+e(" + rest + ")+";
+                 return "+$kendoHtmlEncode(" + rest + ")+";
              } else {
-                 return ";" + part + ";o+=";
+                 return ";" + part + ";$kendoOutput+=";
              }
          }
      }
@@ -267,7 +267,7 @@
                 paramName = settings.paramName,
                 argumentName = paramName.match(argumentNameRegExp)[0],
                 useWithBlock = settings.useWithBlock,
-                functionBody = "var o,e=kendo.htmlEncode;",
+                functionBody = "var $kendoOutput, $kendoHtmlEncode = kendo.htmlEncode;",
                 fn,
                 parts,
                 idx;
@@ -278,11 +278,11 @@
 
             functionBody += useWithBlock ? "with(" + paramName + "){" : "";
 
-            functionBody += "o=";
+            functionBody += "$kendoOutput=";
 
             parts = template
                 .replace(escapedCurlyRegExp, "__CURLY__")
-                .replace(encodeRegExp, "#=e($1)#")
+                .replace(encodeRegExp, "#=$kendoHtmlEncode($1)#")
                 .replace(curlyRegExp, "}")
                 .replace(escapedSharpRegExp, "__SHARP__")
                 .split("#");
@@ -293,7 +293,7 @@
 
             functionBody += useWithBlock ? ";}" : ";";
 
-            functionBody += "return o;";
+            functionBody += "return $kendoOutput;";
 
             functionBody = functionBody.replace(sharpRegExp, "#");
 
@@ -663,17 +663,14 @@ function pad(number, digits, end) {
                 result = math.abs(minutes / 60).toString().split(".")[0];
                 minutes = math.abs(minutes) - (result * 60);
 
-                result = (sign ? "-" : "+") + pad(result);
+                result = (sign ? "+" : "-") + pad(result);
                 result += ":" + pad(minutes);
-            } else if (match === "zz") {
+            } else if (match === "zz" || match === "z") {
                 result = date.getTimezoneOffset() / 60;
                 sign = result < 0;
 
                 result = math.abs(result).toString().split(".")[0];
-                result = (sign ? "-" : "+") + pad(result);
-            } else if (match === "z") {
-                result = date.getTimezoneOffset() / 60;
-                result = (result > 0 ? "+" : "") + result.toString().split(".")[0];
+                result = (sign ? "+" : "-") + (match === "zz" ? pad(result) : result);
             }
 
             return result !== undefined ? result : match.slice(1, match.length - 1);
@@ -1752,19 +1749,29 @@ function pad(number, digits, end) {
 
     function deepExtendOne(destination, source) {
         var ObservableArray = kendo.data.ObservableArray,
+            LazyObservableArray = kendo.data.LazyObservableArray,
             DataSource = kendo.data.DataSource,
             HierarchicalDataSource = kendo.data.HierarchicalDataSource,
             property,
             propValue,
             propType,
+            propInit,
             destProp;
 
         for (property in source) {
             propValue = source[property];
             propType = typeof propValue;
-            if (propType === OBJECT && propValue !== null &&
-                propValue.constructor !== Array && propValue.constructor !== ObservableArray &&
-                propValue.constructor !== DataSource && propValue.constructor !== HierarchicalDataSource) {
+
+            if (propType === OBJECT && propValue !== null) {
+                propInit = propValue.constructor;
+            } else {
+                propInit = null;
+            }
+
+            if (propInit &&
+                propInit !== Array && propInit !== ObservableArray && propInit !== LazyObservableArray &&
+                propInit !== DataSource && propInit !== HierarchicalDataSource) {
+
                 if (propValue instanceof Date) {
                     destination[property] = new Date(propValue.getTime());
                 } else if (isFunction(propValue.clone)) {
@@ -2439,7 +2446,7 @@ function pad(number, digits, end) {
         effects: kendo.effects || effects,
         mobile: kendo.mobile || { },
         data: kendo.data || {},
-        dataviz: kendo.dataviz || {ui: { roles: {}}},
+        dataviz: kendo.dataviz || {},
         keys: {
             INSERT: 45,
             DELETE: 46,
@@ -2550,6 +2557,20 @@ function pad(number, digits, end) {
             return role.replace(/(\S+)/g, "[" + kendo.attr("role") + "=$1],").slice(0, -1);
         },
 
+        directiveSelector: function(directives) {
+            var selectors = directives.split(" ");
+
+            if (selectors) {
+                for (var i = 0; i < selectors.length; i++) {
+                    if (selectors[i] != "view") {
+                        selectors[i] = selectors[i].replace(/(\w*)(view|bar|strip|over)$/, "$1-$2");
+                    }
+                }
+            }
+
+            return selectors.join(" ").replace(/(\S+)/g, "kendo-mobile-$1,").slice(0, -1);
+        },
+
         triggeredByInput: function(e) {
             return (/^(label|input|textarea|select)$/i).test(e.target.tagName);
         },
@@ -2573,7 +2594,18 @@ function pad(number, digits, end) {
 
             Observable.fn.init.call(that);
 
+            var dataSource = options ? options.dataSource : null;
+
+            if (dataSource) {
+                // avoid deep cloning the data source
+                options = extend({}, options, { dataSource: {} });
+            }
+
             options = that.options = extend(true, {}, that.options, options);
+
+            if (dataSource) {
+                options.dataSource = dataSource;
+            }
 
             if (!that.element.attr(kendo.attr("role"))) {
                 that.element.attr(kendo.attr("role"), (options.name || "").toLowerCase());
@@ -2836,7 +2868,7 @@ function pad(number, digits, end) {
 
         if (!result) {
             result = new widget(element, options);
-        } else {
+        } else if (!$.isEmptyObject(options)) {
             result.setOptions(options);
         }
 
@@ -3043,6 +3075,8 @@ function pad(number, digits, end) {
             return kendo.mobile.application && kendo.mobile.application.options && kendo.mobile.application.options.useNativeScrolling;
         },
 
+        roles: {},
+
         ui: {
             Widget: MobileWidget,
             DataBoundWidget: DataBoundWidget.extend(MobileWidget.prototype),
@@ -3051,6 +3085,21 @@ function pad(number, digits, end) {
                 kendo.ui.plugin(widget, kendo.mobile.ui, "Mobile");
             }
         }
+    });
+
+    deepExtend(kendo.dataviz, {
+        init: function(element) {
+            kendo.init(element, kendo.dataviz.ui);
+        },
+        ui: {
+            roles: {},
+            themes: {},
+            views: [],
+            plugin: function(widget) {
+                kendo.ui.plugin(widget, kendo.dataviz.ui);
+            }
+        },
+        roles: {}
     });
 
     kendo.touchScroller = function(elements, options) {
@@ -3863,14 +3912,14 @@ function pad(number, digits, end) {
             return fn;
         }
 
-        return function() {
+        var throttled = function() {
             var that = this;
             var elapsed = +new Date() - lastExecTime;
             var args = arguments;
 
             function exec() {
-                lastExecTime = +new Date();
                 fn.apply(that, args);
+                lastExecTime = +new Date();
             }
 
             // first execution
@@ -3888,6 +3937,12 @@ function pad(number, digits, end) {
                 timeout = setTimeout(exec, delay - elapsed);
             }
         };
+
+        throttled.cancel = function() {
+            clearTimeout(timeout);
+        };
+
+        return throttled;
     };
 
 
@@ -3947,7 +4002,121 @@ function pad(number, digits, end) {
         return start;
     };
 
-})(jQuery);
+    kendo.compileMobileDirective = function(element, scopeSetup) {
+        var angular = window.angular;
+
+        element.attr("data-" + kendo.ns + "role", element[0].tagName.toLowerCase().replace('kendo-mobile-', '').replace('-', ''));
+
+        angular.element(element).injector().invoke(["$compile", function($compile) {
+            var scope = angular.element(element).scope();
+            if (scopeSetup) {
+                scopeSetup(scope);
+            }
+            $compile(element)(scope);
+
+            if (!/^\$(digest|apply)$/.test(scope.$$phase)) {
+                scope.$digest();
+            }
+        }]);
+
+        return kendo.widgetInstance(element, kendo.mobile.ui);
+    };
+
+    kendo.antiForgeryTokens = function() {
+        var tokens = { },
+            csrf_token = $("meta[name=csrf-token],meta[name=_csrf]").attr("content"),
+            csrf_param = $("meta[name=csrf-param],meta[name=_csrf_header]").attr("content");
+
+        $("input[name^='__RequestVerificationToken']").each(function() {
+            tokens[this.name] = this.value;
+        });
+
+        if (csrf_param !== undefined && csrf_token !== undefined) {
+          tokens[csrf_param] = csrf_token;
+        }
+
+        return tokens;
+    };
+
+    // kendo.saveAs -----------------------------------------------
+    (function() {
+        function postToProxy(dataURI, fileName, proxyURL) {
+            var form = $("<form>").attr({
+                action: proxyURL,
+                method: "POST"
+            });
+
+            var data = kendo.antiForgeryTokens();
+            data.fileName = fileName;
+
+            var parts = dataURI.split(";base64,");
+            data.contentType = parts[0].replace("data:", "");
+            data.base64 = parts[1];
+
+            for (var name in data) {
+                if (data.hasOwnProperty(name)) {
+                    $('<input>').attr({
+                        value: data[name],
+                        name: name,
+                        type: "hidden"
+                    }).appendTo(form);
+                }
+            }
+
+            form.appendTo("body").submit().remove();
+        }
+
+        var fileSaver = document.createElement("a");
+        var downloadAttribute = "download" in fileSaver;
+
+        function saveAsBlob(dataURI, fileName) {
+            var blob = dataURI; // could be a Blob object
+
+            if (typeof dataURI == "string") {
+                var parts = dataURI.split(";base64,");
+                var contentType = parts[0];
+                var base64 = atob(parts[1]);
+                var array = new Uint8Array(base64.length);
+
+                for (var idx = 0; idx < base64.length; idx++) {
+                    array[idx] = base64.charCodeAt(idx);
+                }
+                blob = new Blob([array.buffer], { type: contentType });
+            }
+
+            navigator.msSaveBlob(blob, fileName);
+        }
+
+        function saveAsDataURI(dataURI, fileName) {
+            if (window.Blob && dataURI instanceof Blob) {
+                dataURI = URL.createObjectURL(dataURI);
+            }
+
+            fileSaver.download = fileName;
+            fileSaver.href = dataURI;
+
+            var e = document.createEvent("MouseEvents");
+            e.initMouseEvent("click", true, false, window,
+                0, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+            fileSaver.dispatchEvent(e);
+        }
+
+        kendo.saveAs = function(options) {
+            var save = postToProxy;
+
+            if (!options.forceProxy) {
+                if (downloadAttribute) {
+                    save = saveAsDataURI;
+                } else if (navigator.msSaveBlob) {
+                    save = saveAsBlob;
+                }
+            }
+
+            save(options.dataURI, options.fileName, options.proxyURL);
+        };
+    })();
+})(jQuery, window);
 
 
 
@@ -4205,7 +4374,7 @@ function pad(number, digits, end) {
 
             this._navigate(to, silent, function(adapter) {
                 adapter.replace(to);
-                this.locations[this.locations - 1] = this.current;
+                this.locations[this.locations.length - 1] = this.current;
             });
         },
 
@@ -4314,12 +4483,12 @@ function pad(number, digits, end) {
         return optional ? match : '([^\/]+)';
     }
 
-    function routeToRegExp(route) {
+    function routeToRegExp(route, ignoreCase) {
         return new RegExp('^' + route
             .replace(escapeRegExp, '\\$&')
             .replace(optionalParam, '(?:$1)?')
             .replace(namedParam, namedParamReplace)
-            .replace(splatParam, '(.*?)') + '$');
+            .replace(splatParam, '(.*?)') + '$', ignoreCase ? "i" : "");
     }
 
     function stripUrl(url) {
@@ -4327,9 +4496,9 @@ function pad(number, digits, end) {
     }
 
     var Route = kendo.Class.extend({
-        init: function(route, callback) {
+        init: function(route, callback, ignoreCase) {
             if (!(route instanceof RegExp)) {
-                route = routeToRegExp(route);
+                route = routeToRegExp(route, ignoreCase);
             }
 
             this.route = route;
@@ -4379,6 +4548,7 @@ function pad(number, digits, end) {
             this.pushState = options.pushState;
             this.hashBang = options.hashBang;
             this.root = options.root;
+            this.ignoreCase = options.ignoreCase !== false;
 
             this.bind([INIT, ROUTE_MISSING, CHANGE, SAME], options);
         },
@@ -4416,7 +4586,7 @@ function pad(number, digits, end) {
         },
 
         route: function(route, callback) {
-            this.routes.push(new Route(route, callback));
+            this.routes.push(new Route(route, callback, this.ignoreCase));
         },
 
         navigate: function(url, silent) {
@@ -4509,6 +4679,8 @@ function pad(number, digits, end) {
         "mouse": 9,
         "pointer": 9
     };
+
+    var ENABLE_GLOBAL_SURFACE = (!support.touch || support.mouseAndTouchPresent);
 
     function touchDelta(touch1, touch2) {
         var x1 = touch1.x.location,
@@ -4786,7 +4958,8 @@ function pad(number, digits, end) {
 
             extend(that, {
                 element: element,
-                surface: options.global ? $(document.documentElement) : $(options.surface || element),
+                // the touch events lock to the element anyway, so no need for the global setting
+                surface: options.global && ENABLE_GLOBAL_SURFACE ? $(document.documentElement) : $(options.surface || element),
                 stopPropagation: options.stopPropagation,
                 pressed: false
             });
@@ -5108,6 +5281,7 @@ function pad(number, digits, end) {
             options = that.options;
 
             element = that.element;
+            that.wrapper = element;
 
             function eventProxy(name) {
                 return function(e) {
@@ -5264,12 +5438,15 @@ function pad(number, digits, end) {
             endswith: "endswith",
             startswith: "startswith"
         },
+        odataFiltersVersionFour = extend({}, odataFilters, {
+            contains: "contains"
+        }),
         mappers = {
             pageSize: $.noop,
             page: $.noop,
-            filter: function(params, filter) {
+            filter: function(params, filter, useVersionFour) {
                 if (filter) {
-                    params.$filter = toOdataFilter(filter);
+                    params.$filter = toOdataFilter(filter, useVersionFour);
                 }
             },
             sort: function(params, orderby) {
@@ -5304,7 +5481,7 @@ function pad(number, digits, end) {
             }
         };
 
-    function toOdataFilter(filter) {
+    function toOdataFilter(filter, useOdataFour) {
         var result = [],
             logic = filter.logic || "and",
             idx,
@@ -5324,11 +5501,14 @@ function pad(number, digits, end) {
             operator = filter.operator;
 
             if (filter.filters) {
-                filter = toOdataFilter(filter);
+                filter = toOdataFilter(filter, useOdataFour);
             } else {
                 ignoreCase = filter.ignoreCase;
                 field = field.replace(/\./g, "/");
                 filter = odataFilters[operator];
+                if (useOdataFour) {
+                    filter = odataFiltersVersionFour[operator];
+                }
 
                 if (filter && value !== undefined) {
                     type = $.type(value);
@@ -5341,7 +5521,11 @@ function pad(number, digits, end) {
                         }
 
                     } else if (type === "date") {
-                        format = "datetime'{1:yyyy-MM-ddTHH:mm:ss}'";
+                        if (useOdataFour) {
+                            format = "{1:yyyy-MM-ddTHH:mm:ss+00:00}";
+                        } else {
+                            format = "datetime'{1:yyyy-MM-ddTHH:mm:ss}'";
+                        }
                     } else {
                         format = "{1}";
                     }
@@ -5352,7 +5536,12 @@ function pad(number, digits, end) {
                         } else {
                             format = "{0}(" + format + ",{2})";
                             if (operator === "doesnotcontain") {
-                                format += " eq false";
+                                if (useOdataFour) {
+                                    format = "{0}({2},'{1}') eq -1";
+                                    filter = "indexof";
+                                } else {
+                                    format += " eq false";
+                                }
                             }
                         }
                     } else {
@@ -5373,6 +5562,14 @@ function pad(number, digits, end) {
         }
 
         return filter;
+    }
+
+    function stripMetadata(obj) {
+        for (var name in obj) {
+            if(name.indexOf("@odata") === 0) {
+                delete obj[name];
+            }
+        }
     }
 
     extend(true, kendo.data, {
@@ -5409,7 +5606,7 @@ function pad(number, digits, end) {
                     dataType: "json",
                     type: "DELETE"
                 },
-                parameterMap: function(options, type) {
+                parameterMap: function(options, type, useVersionFour) {
                     var params,
                         value,
                         option,
@@ -5431,7 +5628,7 @@ function pad(number, digits, end) {
 
                         for (option in options) {
                             if (mappers[option]) {
-                                mappers[option](params, options[option]);
+                                mappers[option](params, options[option], useVersionFour);
                             } else {
                                 params[option] = options[option];
                             }
@@ -5458,6 +5655,61 @@ function pad(number, digits, end) {
             }
         }
     });
+
+    extend(true, kendo.data, {
+        schemas: {
+            "odata-v4": {
+                type: "json",
+                data: function(data) {
+                    data = $.extend({}, data);
+                    stripMetadata(data);
+
+                    if (data.value) {
+                        return data.value;
+                    }
+                    return [data];
+                },
+                total: function(data) {
+                    return data["@odata.count"];
+                }
+            }
+        },
+        transports: {
+            "odata-v4": {
+                read: {
+                    cache: true, // to prevent jQuery from adding cache buster
+                    dataType: "json"
+                },
+                update: {
+                    cache: true,
+                    dataType: "json",
+                    contentType: "application/json;IEEE754Compatible=true", // to inform the server the the request body is JSON encoded
+                    type: "PUT" // can be PUT or MERGE
+                },
+                create: {
+                    cache: true,
+                    dataType: "json",
+                    contentType: "application/json;IEEE754Compatible=true",
+                    type: "POST" // must be POST to create new entity
+                },
+                destroy: {
+                    cache: true,
+                    dataType: "json",
+                    type: "DELETE"
+                },
+                parameterMap: function(options, type) {
+                    var result = kendo.data.transports.odata.parameterMap(options, type, true);
+                    if (type == "read") {
+                        result.$count = true;
+                        delete result.$inlinecount;
+                    }
+
+                    return result;
+                }
+            }
+        }
+    });
+
 })(window.kendo.jQuery);
 
 
@@ -5777,6 +6029,10 @@ function pad(number, digits, end) {
             that.wrapAll(array, that);
         },
 
+        at: function(index) {
+            return this[index];
+        },
+
         toJSON: function() {
             var idx, length = this.length, value, json = new Array(length);
 
@@ -5832,7 +6088,7 @@ function pad(number, digits, end) {
                         node: e.node,
                         index: e.index,
                         items: e.items || [this],
-                        action: e.node  ? (e.action || "itemchange") : "itemchange"
+                        action: e.node ? (e.action || "itemloaded") : "itemchange"
                     });
                 });
             }
@@ -5857,6 +6113,8 @@ function pad(number, digits, end) {
         },
 
         slice: slice,
+
+        sort: [].sort,
 
         join: join,
 
@@ -6040,6 +6298,32 @@ function pad(number, digits, end) {
         }
     });
 
+    var LazyObservableArray = ObservableArray.extend({
+        init: function(data, type) {
+            Observable.fn.init.call(this);
+
+            this.type = type || ObservableObject;
+
+            for (var idx = 0; idx < data.length; idx++) {
+                this[idx] = data[idx];
+            }
+
+            this.length = idx;
+            this._parent = proxy(function() { return this; }, this);
+        },
+        at: function(index) {
+            var item = this[index];
+
+            if (!(item instanceof this.type)) {
+                item = this[index] = this.wrap(item, this._parent);
+            } else {
+                item.parent = this._parent;
+            }
+
+            return item;
+        }
+    });
+
     function eventHandler(context, type, field, prefix) {
         return function(e) {
             var event = {}, key;
@@ -6076,7 +6360,7 @@ function pad(number, digits, end) {
             for (field in value) {
                 member = value[field];
 
-                if (field.charAt(0) != "_") {
+                if (typeof member === "object" && member && !member.getTime && field.charAt(0) != "_") {
                     member = that.wrap(member, field, parent);
                 }
 
@@ -6643,6 +6927,17 @@ function pad(number, digits, end) {
         }
 
         return {
+            quote: function(value) {
+                if (value && value.getTime) {
+                    return "new Date(" + value.getTime() + ")";
+                }
+
+                if (typeof value == "string") {
+                    return "'" + quote(value) + "'";
+                }
+
+                return "" + value;
+            },
             eq: function(a, b, ignore) {
                 return operator("==", a, b, ignore);
             },
@@ -6766,7 +7061,7 @@ function pad(number, digits, end) {
                 }
 
                 if (typeof operator === FUNCTION) {
-                    filter = "__o[" + operatorFunctions.length + "](" + expr + ", " + filter.value + ")";
+                    filter = "__o[" + operatorFunctions.length + "](" + expr + ", " + operators.quote(filter.value) + ")";
                     operatorFunctions.push(operator);
                 } else {
                     filter = operators[(operator || "eq").toLowerCase()](expr, filter.value, filter.ignoreCase !== undefined? filter.ignoreCase : true);
@@ -6952,6 +7247,7 @@ function pad(number, digits, end) {
                 };
             }
 
+
             for (idx = 0, length = data.length; idx < length; idx++) {
                 current = data[idx];
 
@@ -6959,6 +7255,7 @@ function pad(number, digits, end) {
                     result.push(current);
                 }
             }
+
             return new Query(result);
         },
 
@@ -7170,12 +7467,18 @@ function pad(number, digits, end) {
             group = options.group,
             sort = normalizeGroup(group || []).concat(normalizeSort(options.sort || [])),
             total,
+            filterCallback = options.filterCallback,
             filter = options.filter,
             skip = options.skip,
             take = options.take;
 
         if (filter) {
             query = query.filter(filter);
+
+            if (filterCallback) {
+                query = filterCallback(query);
+            }
+
             total = query.toArray().length;
         }
 
@@ -7200,20 +7503,6 @@ function pad(number, digits, end) {
             data: query.toArray()
         };
     };
-
-    function calculateAggregates(data, options) {
-        options = options || {};
-
-        var query = new Query(data),
-            aggregates = options.aggregate,
-            filter = options.filter;
-
-        if(filter) {
-            query = query.filter(filter);
-        }
-
-        return query.aggregate(aggregates);
-    }
 
     var LocalTransport = Class.extend({
         init: function(options) {
@@ -7602,12 +7891,13 @@ function pad(number, digits, end) {
             itemIndex;
 
         for (idx = 0, length = data.length; idx < length; idx++) {
-            if (data[idx].hasSubgroups) {
-                result = result.concat(flattenGroups(data[idx].items));
+            var group = data.at(idx);
+            if (group.hasSubgroups) {
+                result = result.concat(flattenGroups(group.items));
             } else {
-                items = data[idx].items;
+                items = group.items;
                 for (itemIndex = 0; itemIndex < items.length; itemIndex++) {
-                    result.push(items[itemIndex]);
+                    result.push(items.at(itemIndex));
                 }
             }
         }
@@ -7618,23 +7908,19 @@ function pad(number, digits, end) {
         var idx, length, group, items;
         if (model) {
             for (idx = 0, length = data.length; idx < length; idx++) {
-                group = data[idx];
-                items = group.items;
+                group = data.at(idx);
 
                 if (group.hasSubgroups) {
-                    wrapGroupItems(items, model);
-                } else if (items.length && !(items[0] instanceof model)) {
-                    items.type = model;
-                    items.wrapAll(items, items);
+                    wrapGroupItems(group.items, model);
+                } else {
+                    group.items = new LazyObservableArray(group.items, model);
                 }
             }
         }
     }
 
     function eachGroupItems(data, func) {
-        var idx, length;
-
-        for (idx = 0, length = data.length; idx < length; idx++) {
+        for (var idx = 0, length = data.length; idx < length; idx++) {
             if (data[idx].hasSubgroups) {
                 if (eachGroupItems(data[idx].items, func)) {
                     return true;
@@ -7645,14 +7931,58 @@ function pad(number, digits, end) {
         }
     }
 
+    function replaceInRanges(ranges, data, item, observable) {
+        for (var idx = 0; idx < ranges.length; idx++) {
+            if (ranges[idx].data === data) {
+                break;
+            }
+            if (replaceInRange(ranges[idx].data, item, observable)) {
+                break;
+            }
+        }
+    }
+
+    function replaceInRange(items, item, observable) {
+        for (var idx = 0, length = items.length; idx < length; idx++) {
+            if (items[idx] && items[idx].hasSubgroups) {
+                return replaceInRange(items[idx].items, item, observable);
+            } else if (items[idx] === item || items[idx] === observable) {
+               items[idx] = observable;
+               return true;
+            }
+        }
+    }
+
+    function replaceWithObservable(view, data, ranges, type, serverGrouping) {
+        for (var viewIndex = 0, length = view.length; viewIndex < length; viewIndex++) {
+            var item = view[viewIndex];
+
+            if (!item || item instanceof type) {
+                continue;
+            }
+
+            if (item.hasSubgroups !== undefined && !serverGrouping) {
+                replaceWithObservable(item.items, data, ranges, type, serverGrouping);
+            } else {
+                for (var idx = 0; idx < data.length; idx++) {
+                    if (data[idx] === item) {
+                        view[viewIndex] = data.at(idx);
+                        replaceInRanges(ranges, data, item, view[viewIndex]);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     function removeModel(data, model) {
         var idx, length;
 
         for (idx = 0, length = data.length; idx < length; idx++) {
-            if (data[idx].uid == model.uid) {
-                model = data[idx];
+            var dataItem = data.at(idx);
+            if (dataItem.uid == model.uid) {
                 data.splice(idx, 1);
-                return model;
+                return dataItem;
             }
         }
     }
@@ -7804,6 +8134,8 @@ function pad(number, digits, end) {
             that._aggregate = options.aggregate;
             that._total = options.total;
 
+            that._shouldDetachObservableParents = true;
+
             Observable.fn.init.call(that);
 
             that.transport = Transport.create(options, data);
@@ -7838,6 +8170,7 @@ function pad(number, digits, end) {
             model = that.reader.model || {};
 
             that._detachObservableParents();
+
             that._data = that._observe(that._data);
             that._online = true;
 
@@ -7845,7 +8178,7 @@ function pad(number, digits, end) {
         },
 
         options: {
-            data: [],
+            data: null,
             schema: {
                modelBase: Model
             },
@@ -7864,9 +8197,11 @@ function pad(number, digits, end) {
                     this._online = value;
 
                     if (value) {
-                        this.sync();
+                        return this.sync();
                     }
                 }
+
+                return $.Deferred().resolve().promise();
             } else {
                 return this._online;
             }
@@ -7912,10 +8247,19 @@ function pad(number, digits, end) {
             this[operation](data);
         },
 
-        _flatData: function(data) {
-            if (this._isServerGrouped()) {
-                return flattenGroups(data);
+        _flatData: function(data, skip) {
+            if (data) {
+                if (this._isServerGrouped()) {
+                    return flattenGroups(data);
+                }
+
+                if (!skip) {
+                    for (var idx = 0; idx < data.length; idx++) {
+                        data.at(idx);
+                    }
+                }
             }
+
             return data;
         },
 
@@ -7950,7 +8294,7 @@ function pad(number, digits, end) {
         },
 
         at: function(index) {
-            return this._data[index];
+            return this._data.at(index);
         },
 
         data: function(value) {
@@ -7964,6 +8308,7 @@ function pad(number, digits, end) {
                 that._storeData();
 
                 that._ranges = [];
+                that.trigger("reset");
                 that._addRange(that._data);
 
                 that._total = that._data.length;
@@ -7971,12 +8316,31 @@ function pad(number, digits, end) {
 
                 that._process(that._data);
             } else {
+                if (that._data) {
+                    for (var idx = 0; idx < that._data.length; idx++) {
+                        that._data.at(idx);
+                    }
+                }
+
                 return that._data;
             }
         },
 
-        view: function() {
-            return this._view;
+        view: function(value) {
+            if (value === undefined) {
+                return this._view;
+            } else {
+                this._view = this._observeView(value);
+            }
+        },
+
+        _observeView: function(data) {
+            var that = this;
+            replaceWithObservable(data, that._data, that._ranges, that.reader.model || ObservableObject, that._isServerGrouped());
+
+            var view = new LazyObservableArray(data, that.reader.model);
+            view.parent = function() { return that.parent(); };
+            return view;
         },
 
         flatView: function() {
@@ -8079,7 +8443,7 @@ function pad(number, digits, end) {
 
                     target.accept(item);
 
-                    target.trigger("change");
+                    target.trigger(CHANGE);
 
                     this._updatePristineForModel(target, item);
                 } else {
@@ -8096,11 +8460,22 @@ function pad(number, digits, end) {
         },
 
         pushDestroy: function(items) {
+            var pushed = this._removeItems(items);
+
+            if (pushed.length) {
+                this.trigger("push", {
+                    type: "destroy",
+                    items: pushed
+                });
+            }
+        },
+
+        _removeItems: function(items) {
             if (!isArray(items)) {
                 items = [items];
             }
 
-            var pushed = [];
+            var destroyed = [];
             var autoSync = this.options.autoSync;
             this.options.autoSync = false;
             try {
@@ -8111,8 +8486,9 @@ function pad(number, digits, end) {
 
                     this._eachItem(this._data, function(items){
                         for (var idx = 0; idx < items.length; idx++) {
-                            if (items[idx].id === model.id) {
-                                pushed.push(items[idx]);
+                            var item = items.at(idx);
+                            if (item.id === model.id) {
+                                destroyed.push(item);
                                 items.splice(idx, 1);
                                 found = true;
                                 break;
@@ -8129,12 +8505,7 @@ function pad(number, digits, end) {
                 this.options.autoSync = autoSync;
             }
 
-            if (pushed.length) {
-                this.trigger("push", {
-                    type: "destroy",
-                    items: pushed
-                });
-            }
+            return destroyed;
         },
 
         remove: function(model) {
@@ -8168,10 +8539,12 @@ function pad(number, digits, end) {
                 destroyed = that._destroyed,
                 data = that._flatData(that._data);
 
+            var promise = $.Deferred().resolve().promise();
+
             if (that.online()) {
 
                 if (!that.reader.model) {
-                    return;
+                    return promise;
                 }
 
                 for (idx = 0, length = data.length; idx < length; idx++) {
@@ -8187,7 +8560,7 @@ function pad(number, digits, end) {
                 promises.push.apply(promises, that._send("update", updated));
                 promises.push.apply(promises, that._send("destroy", destroyed));
 
-                $.when
+                promise = $.when
                  .apply(null, promises)
                  .then(function() {
                     var idx, length;
@@ -8207,6 +8580,8 @@ function pad(number, digits, end) {
 
                 that._change({ action: "sync" });
             }
+
+            return promise;
         },
 
         cancelChanges: function(model) {
@@ -8221,6 +8596,10 @@ function pad(number, digits, end) {
                 if (that.options.serverPaging) {
                     that._total = that._pristineTotal;
                 }
+
+                that._ranges = [];
+                that._addRange(that._data);
+
                 that._change();
             }
         },
@@ -8235,7 +8614,7 @@ function pad(number, digits, end) {
             }
 
             for (idx = 0, length = data.length; idx < length; idx++) {
-                if (data[idx].isNew() || data[idx].dirty) {
+                if ((data[idx].isNew && data[idx].isNew()) || data[idx].dirty) {
                     return true;
                 }
             }
@@ -8407,9 +8786,11 @@ function pad(number, digits, end) {
 
         read: function(data) {
             var that = this, params = that._params(data);
+            var deferred = $.Deferred();
 
             that._queueRequest(params, function() {
-                if (!that.trigger(REQUESTSTART, { type: "read" })) {
+                var isPrevented = that.trigger(REQUESTSTART, { type: "read" });
+                if (!isPrevented) {
                     that.trigger(PROGRESS);
 
                     that._ranges = [];
@@ -8417,16 +8798,36 @@ function pad(number, digits, end) {
                     if (that.online()) {
                         that.transport.read({
                             data: params,
-                            success: proxy(that.success, that),
-                            error: proxy(that.error, that)
+                            success: function(data) {
+                                that.success(data);
+
+                                deferred.resolve();
+                            },
+                            error: function() {
+                                var args = slice.call(arguments);
+
+                                that.error.apply(that, args);
+
+                                deferred.reject.apply(deferred, args);
+                            }
                         });
                     } else if (that.options.offlineStorage != null){
                         that.success(that.offlineData());
+
+                        deferred.resolve();
                     }
                 } else {
                     that._dequeueRequest();
+
+                    deferred.resolve(isPrevented);
                 }
             });
+
+            return deferred.promise();
+        },
+
+        _readAggregates: function(data) {
+            return this.reader.aggregates(data);
         },
 
         success: function(data) {
@@ -8446,11 +8847,13 @@ function pad(number, digits, end) {
                 that._total = that.reader.total(data);
 
                 if (that._aggregate && options.serverAggregates) {
-                    that._aggregateResult = that.reader.aggregates(data);
+                    that._aggregateResult = that._readAggregates(data);
                 }
 
                 data = that._readData(data);
             } else {
+                data = that._readData(data);
+
                 var items = [];
 
                 for (var idx = 0; idx < data.length; idx++) {
@@ -8480,8 +8883,9 @@ function pad(number, digits, end) {
             if (that.options.offlineStorage != null) {
                 that._eachItem(that._data, function(items) {
                     for (var idx = 0; idx < items.length; idx++) {
-                        if (items[idx].__state__ == "update") {
-                            items[idx].dirty = true;
+                        var item = items.at(idx);
+                        if (item.__state__ == "update") {
+                            item.dirty = true;
                         }
                     }
                 });
@@ -8497,28 +8901,35 @@ function pad(number, digits, end) {
         },
 
         _detachObservableParents: function() {
-            if (this._data) {
+            if (this._data && this._shouldDetachObservableParents) {
                 for (var idx = 0; idx < this._data.length; idx++) {
-                    this._data[idx].parent = null;
+                    if (this._data[idx].parent) {
+                        this._data[idx].parent = noop;
+                    }
                 }
             }
         },
 
         _storeData: function(updatePristine) {
+            var serverGrouping = this._isServerGrouped();
+            var model = this.reader.model;
+
             function items(data) {
                 var state = [];
 
                 for (var idx = 0; idx < data.length; idx++) {
-                    var item = data[idx].toJSON();
+                    var dataItem = data.at(idx);
+                    var item = dataItem.toJSON();
 
-                    if (serverGrouping && data[idx].items) {
-                        item.items = items(data[idx].items);
+                    if (serverGrouping && dataItem.items) {
+                        item.items = items(dataItem.items);
                     } else {
-                        item.uid = data[idx].uid;
+                        item.uid = dataItem.uid;
+
                         if (model) {
-                            if (data[idx].isNew()) {
+                            if (dataItem.isNew()) {
                                 item.__state__ = "create";
-                            } else if (data[idx].dirty) {
+                            } else if (dataItem.dirty) {
                                 item.__state__ = "update";
                             }
                         }
@@ -8528,11 +8939,8 @@ function pad(number, digits, end) {
 
                 return state;
             }
+
             if (this.options.offlineStorage != null) {
-                var model = this.reader.model;
-                var serverGrouping = this._isServerGrouped();
-
-
                 var state = items(this._data);
 
                 for (var idx = 0; idx < this._destroyed.length; idx++) {
@@ -8552,7 +8960,7 @@ function pad(number, digits, end) {
         _addRange: function(data) {
             var that = this,
                 start = that._skip || 0,
-                end = start + that._flatData(data).length;
+                end = start + that._flatData(data, true).length;
 
             that._ranges.push({ start: start, end: end, data: data });
             that._ranges.sort( function(x, y) { return x.start - y.start; } );
@@ -8640,22 +9048,27 @@ function pad(number, digits, end) {
             }
             return false;
         },
+
         _observe: function(data) {
             var that = this,
                 model = that.reader.model,
                 wrap = false;
+
+            that._shouldDetachObservableParents = true;
 
             if (model && data.length) {
                 wrap = !(data[0] instanceof model);
             }
 
             if (data instanceof ObservableArray) {
+                that._shouldDetachObservableParents = false;
                 if (wrap) {
                     data.type = that.reader.model;
                     data.wrapAll(data, data);
                 }
             } else {
-                data = new ObservableArray(data, that.reader.model);
+                var arrayType = that.pageSize() && !that.options.serverPaging ? LazyObservableArray : ObservableArray;
+                data = new arrayType(data, that.reader.model);
                 data.parent = function() { return that.parent(); };
             }
 
@@ -8706,6 +9119,20 @@ function pad(number, digits, end) {
             }
         },
 
+        _calculateAggregates: function (data, options) {
+            options = options || {};
+
+            var query = new Query(data),
+                aggregates = options.aggregate,
+                filter = options.filter;
+
+            if (filter) {
+                query = query.filter(filter);
+            }
+
+            return query.aggregate(aggregates);
+        },
+
         _process: function (data, e) {
             var that = this,
                 options = {},
@@ -8734,12 +9161,12 @@ function pad(number, digits, end) {
 
             if (that.options.serverAggregates !== true) {
                 options.aggregate = that._aggregate;
-                that._aggregateResult = calculateAggregates(data, options);
+                that._aggregateResult = that._calculateAggregates(data, options);
             }
 
-            result = Query.process(data, options);
+            result = that._queryProcess(data, options);
 
-            that._view = result.data;
+            that.view(result.data);
 
             if (result.total !== undefined && !that.options.serverFiltering) {
                 that._total = result.total;
@@ -8750,6 +9177,10 @@ function pad(number, digits, end) {
             e.items = e.items || that._view;
 
             that.trigger(CHANGE, e);
+        },
+
+        _queryProcess: function(data, options) {
+            return Query.process(data, options);
         },
 
         _mergeState: function(options) {
@@ -8794,62 +9225,51 @@ function pad(number, digits, end) {
         },
 
         query: function(options) {
-            var that = this,
-                result,
-                remote = that.options.serverSorting || that.options.serverPaging || that.options.serverFiltering || that.options.serverGrouping || that.options.serverAggregates;
+            var result;
+            var remote = this.options.serverSorting || this.options.serverPaging || this.options.serverFiltering || this.options.serverGrouping || this.options.serverAggregates;
 
-            if (remote || ((that._data === undefined || that._data.length === 0) && !that._destroyed.length)) {
-                that.read(that._mergeState(options));
-            } else {
-                if (!that.trigger(REQUESTSTART, { type: "read" })) {
-                    that.trigger(PROGRESS);
-
-                    result = Query.process(that._data, that._mergeState(options));
-
-                    if (!that.options.serverFiltering) {
-                        if (result.total !== undefined) {
-                            that._total = result.total;
-                        } else {
-                            that._total = that._data.length;
-                        }
-                    }
-
-                    that._view = result.data;
-                    that._aggregateResult = calculateAggregates(that._data, options);
-                    that.trigger(REQUESTEND, { });
-                    that.trigger(CHANGE, { items: result.data });
-                }
+            if (remote || ((this._data === undefined || this._data.length === 0) && !this._destroyed.length)) {
+                return this.read(this._mergeState(options));
             }
+
+            var isPrevented = this.trigger(REQUESTSTART, { type: "read" });
+            if (!isPrevented) {
+                this.trigger(PROGRESS);
+
+                result = this._queryProcess(this._data, this._mergeState(options));
+
+                if (!this.options.serverFiltering) {
+                    if (result.total !== undefined) {
+                        this._total = result.total;
+                    } else {
+                        this._total = this._data.length;
+                    }
+                }
+
+                this._aggregateResult = this._calculateAggregates(this._data, options);
+                this.view(result.data);
+                this.trigger(REQUESTEND, { });
+                this.trigger(CHANGE, { items: result.data });
+            }
+
+            return $.Deferred().resolve(isPrevented).promise();
         },
 
         fetch: function(callback) {
             var that = this;
+            var fn = function(isPrevented) {
+                if (isPrevented !== true && isFunction(callback)) {
+                    callback.call(that);
+                }
+            };
 
-            return $.Deferred(function(deferred) {
-                var success = function(e) {
-                    that.unbind(ERROR, error);
-
-                    deferred.resolve();
-
-                    if (callback) {
-                        callback.call(that, e);
-                    }
-                };
-
-                var error = function(e) {
-                    deferred.reject(e);
-                };
-
-                that.one(CHANGE, success);
-                that.one(ERROR, error);
-                that._query();
-            }).promise();
+            return this._query().then(fn);
         },
 
         _query: function(options) {
             var that = this;
 
-            that.query(extend({}, {
+            return that.query(extend({}, {
                 page: that.page(),
                 pageSize: that.pageSize(),
                 sort: that.sort(),
@@ -8944,6 +9364,7 @@ function pad(number, digits, end) {
             }
 
             that._query({ filter: val, page: 1 });
+            that.trigger("reset");
         },
 
         group: function(val) {
@@ -9101,7 +9522,7 @@ function pad(number, digits, end) {
 
                     for (takeIdx = skipIdx; takeIdx < length; takeIdx++) {
                         range = ranges[takeIdx];
-                        flatData = that._flatData(range.data);
+                        flatData = that._flatData(range.data, true);
 
                         if (flatData.length && start + count >= range.start) {
                             rangeData = range.data;
@@ -9109,7 +9530,7 @@ function pad(number, digits, end) {
 
                             if (!remote) {
                                 var sort = normalizeGroup(that.group() || []).concat(normalizeSort(that.sort() || []));
-                                processed = Query.process(range.data, { sort: sort, filter: that.filter() });
+                                processed = that._queryProcess(range.data, { sort: sort, filter: that.filter() });
                                 flatData = rangeData = processed.data;
 
                                 if (processed.total !== undefined) {
@@ -9200,7 +9621,7 @@ function pad(number, digits, end) {
                 }
 
                 range.data = that._observe(temp);
-                range.end = range.start + that._flatData(range.data).length;
+                range.end = range.start + that._flatData(range.data, true).length;
                 that._ranges.sort( function(x, y) { return x.start - y.start; } );
                 that._total = that.reader.total(data);
 
@@ -9292,7 +9713,7 @@ function pad(number, digits, end) {
                 range = this._ranges[idx];
                 range.start = range.start - startOffset;
 
-                rangeLength = this._flatData(range.data).length;
+                rangeLength = this._flatData(range.data, true).length;
                 startOffset = range.end - rangeLength;
                 range.end = range.start + rangeLength;
             }
@@ -9309,6 +9730,9 @@ function pad(number, digits, end) {
             transportOptions.read = typeof transportOptions.read === STRING ? { url: transportOptions.read } : transportOptions.read;
 
             if (options.type) {
+                kendo.data.transports = kendo.data.transports || {};
+                kendo.data.schemas = kendo.data.schemas || {};
+
                 if (kendo.data.transports[options.type] && !isPlainObject(kendo.data.transports[options.type])) {
                     transport = new kendo.data.transports[options.type](extend(transportOptions, { data: data }));
                 } else {
@@ -9322,7 +9746,7 @@ function pad(number, digits, end) {
                 transport = isFunction(transportOptions.read) ? transportOptions : new RemoteTransport(transportOptions);
             }
         } else {
-            transport = new LocalTransport({ data: options.data });
+            transport = new LocalTransport({ data: options.data || [] });
         }
         return transport;
     };
@@ -9441,6 +9865,8 @@ function pad(number, digits, end) {
     }
 
     var Node = Model.define({
+        idField: "id",
+
         init: function(value) {
             var that = this,
                 hasChildren = that.hasChildren || value && value.hasChildren,
@@ -9568,7 +9994,7 @@ function pad(number, digits, end) {
         load: function() {
             var options = {};
             var method = "_query";
-            var children;
+            var children, promise;
 
             if (this.hasChildren) {
                 this._initChildren();
@@ -9583,10 +10009,13 @@ function pad(number, digits, end) {
                 }
 
                 children.one(CHANGE, proxy(this._childrenLoaded, this));
-                children[method](options);
+
+                promise = children[method](options);
             } else {
                 this.loaded(true);
             }
+
+            return promise || $.Deferred().resolve().promise();
         },
 
         parentNode: function() {
@@ -9686,7 +10115,7 @@ function pad(number, digits, end) {
                 return node;
             }
 
-            data = this._flatData(this.data());
+            data = this._flatData(this._data);
 
             if (!data) {
                 return;
@@ -9819,6 +10248,10 @@ function pad(number, digits, end) {
                 buffer._change();
             });
 
+            dataSource.bind("reset", function() {
+                buffer._reset();
+            });
+
             this._syncWithDataSource();
 
             this.setViewSize(viewSize);
@@ -9830,11 +10263,14 @@ function pad(number, digits, end) {
         },
 
         at: function(index)  {
-            var pageSize = this.pageSize, item;
+            var pageSize = this.pageSize,
+                item,
+                itemPresent = true,
+                changeTo;
 
             if (index >= this.total()) {
                 this.trigger("endreached", {index: index });
-                return;
+                return null;
             }
 
             if (!this.useRanges) {
@@ -9842,9 +10278,8 @@ function pad(number, digits, end) {
             }
             if (this.useRanges) {
                 // out of range request
-                if (index < this.dataOffset || index > this.skip + pageSize) {
-                    var offset = Math.floor(index / pageSize) * pageSize;
-                    this.range(offset);
+                if (index < this.dataOffset || index >= this.skip + pageSize) {
+                    itemPresent = this.range(Math.floor(index / pageSize) * pageSize);
                 }
 
                 // prefetch
@@ -9854,7 +10289,7 @@ function pad(number, digits, end) {
 
                 // mid-range jump - prefetchThreshold and nextPageThreshold may be equal, do not change to else if
                 if (index === this.midPageThreshold) {
-                    this.range(this.nextMidRange);
+                    this.range(this.nextMidRange, true);
                 }
                 // next range jump
                 else if (index === this.nextPageThreshold) {
@@ -9869,14 +10304,13 @@ function pad(number, digits, end) {
                     }
                 }
 
-                item = this.dataSource.at(index - this.dataOffset);
+                if (itemPresent) {
+                    return this.dataSource.at(index - this.dataOffset);
+                } else {
+                    this.trigger("endreached", { index: index });
+                    return null;
+                }
             }
-
-            if (item === undefined) {
-                this.trigger("endreached", { index: index });
-            }
-
-            return item;
         },
 
         indexOf: function(item) {
@@ -9890,8 +10324,8 @@ function pad(number, digits, end) {
         next: function() {
             var buffer = this,
                 pageSize = buffer.pageSize,
-                offset = buffer.skip - buffer.viewSize, // this calculation relies that the buffer has already jumped into the mid range segment
-                pageSkip = math.max(math.floor(offset / pageSize), 0) * pageSize + pageSize;
+                offset = buffer.skip - buffer.viewSize + pageSize,
+                pageSkip = math.max(math.floor(offset / pageSize), 0) * pageSize;
 
             this.offset = offset;
             this.dataSource.prefetch(pageSkip, pageSize, function() {
@@ -9899,25 +10333,35 @@ function pad(number, digits, end) {
             });
         },
 
-        range: function(offset) {
+        range: function(offset, nextRange) {
             if (this.offset === offset) {
-                return;
+                return true;
             }
 
             var buffer = this,
                 pageSize = this.pageSize,
-                pageSkip = math.max(math.floor(offset / pageSize), 0) * pageSize + pageSize,
+                pageSkip = math.max(math.floor(offset / pageSize), 0) * pageSize,
                 dataSource = this.dataSource;
 
-            this.offset = offset;
-            this._recalculate();
+            if (nextRange) {
+                pageSkip += pageSize;
+            }
+
             if (dataSource.inRange(offset, pageSize)) {
+                this.offset = offset;
+                this._recalculate();
                 this._goToRange(offset);
+                return true;
             } else if (this.prefetch) {
                 dataSource.prefetch(pageSkip, pageSize, function() {
+                    buffer.offset = offset;
+                    buffer._recalculate();
                     buffer._goToRange(offset, true);
                 });
+                return false;
             }
+
+            return true;
         },
 
         syncDataSource: function() {
@@ -9958,15 +10402,19 @@ function pad(number, digits, end) {
             this.dataSource.enableRequestsInProgress();
         },
 
+        _reset: function() {
+            this._syncPending = true;
+        },
+
         _change: function() {
-            var dataSource = this.dataSource,
-                firstItemUid = dataSource.firstItemUid();
+            var dataSource = this.dataSource;
 
             this.length = this.useRanges ? dataSource.lastRange().end : dataSource.view().length;
 
-            if (this._firstItemUid !== firstItemUid || !this.useRanges) {
+            if (this._syncPending) {
                 this._syncWithDataSource();
                 this._recalculate();
+                this._syncPending = false;
                 this.trigger("reset", { offset: this.offset });
             }
 
@@ -10058,7 +10506,7 @@ function pad(number, digits, end) {
             for (var i = 0; i < take; i++) {
                 item = buffer.at(skip + i);
 
-                if (item === undefined) {
+                if (item === null) {
                     break;
                 }
 
@@ -10088,6 +10536,7 @@ function pad(number, digits, end) {
         Node: Node,
         ObservableObject: ObservableObject,
         ObservableArray: ObservableArray,
+        LazyObservableArray: LazyObservableArray,
         LocalTransport: LocalTransport,
         RemoteTransport: RemoteTransport,
         Cache: Cache,
@@ -10303,6 +10752,9 @@ function pad(number, digits, end) {
         destroy: function() {
             if (this.observable) {
                 this.source.unbind(CHANGE, this._change);
+                if(this.currentSource) {
+                    this.currentSource.unbind(CHANGE, this._change);
+                }
             }
 
             this.unbind();
@@ -10792,6 +11244,10 @@ function pad(number, digits, end) {
 
                 if (field) {
                     source = this.bindings.source.get();
+                    if (source instanceof kendo.data.DataSource) {
+                        source = source.view();
+                    }
+
                     for (valueIndex = 0; valueIndex < values.length; valueIndex++) {
                         for (idx = 0, length = source.length; idx < length; idx++) {
                             if (source[idx].get(field) == values[valueIndex]) {
@@ -10805,7 +11261,7 @@ function pad(number, digits, end) {
                 value = this.bindings[VALUE].get();
                 if (value instanceof ObservableArray) {
                     value.splice.apply(value, [0, value.length].concat(values));
-                } else if (!valuePrimitive && (value instanceof ObservableObject || !field)) {
+                } else if (!valuePrimitive && (value instanceof ObservableObject || value === null || value === undefined || !field)) {
                     this.bindings[VALUE].set(values[0]);
                 } else {
                     this.bindings[VALUE].set(values[0].get(field));
@@ -11226,7 +11682,7 @@ function pad(number, digits, end) {
                         var newValue;
                         var found;
 
-                        while (old) {
+                        while (old !== undefined) {
                             found = false;
                             for (j = 0; j < newLength; j++) {
                                 if (valuePrimitive) {
@@ -11314,6 +11770,26 @@ function pad(number, digits, end) {
                 }
 
             })
+        },
+        scheduler: {
+            source: dataSourceBinding("source", "dataSource", "setDataSource").extend({
+                dataBound: function(e) {
+                    var idx;
+                    var length;
+                    var widget = this.widget;
+                    var elements = e.addedItems || widget.items();
+                    var data, parents;
+
+                    if (elements.length) {
+                        data = e.addedDataItems || widget.dataItems();
+                        parents = this.bindings.source._parents();
+
+                        for (idx = 0, length = data.length; idx < length; idx++) {
+                            bindElement(elements[idx], data[idx], this._ns(e.ns), [data[idx]].concat(parents));
+                        }
+                    }
+                }
+            })
         }
     };
 
@@ -11375,25 +11851,27 @@ function pad(number, digits, end) {
         },
 
         bind: function(bindings) {
-            var nodeName = this.target.nodeName.toLowerCase(),
-                key,
+            var key,
                 hasValue,
                 hasSource,
                 hasEvents,
-                specificBinders = binders[nodeName] || {};
+                hasChecked,
+                widgetBinding = this instanceof WidgetBindingTarget,
+                specificBinders = this.binders();
 
             for (key in bindings) {
                 if (key == VALUE) {
                     hasValue = true;
                 } else if (key == SOURCE) {
                     hasSource = true;
-                } else if (key == EVENTS) {
+                } else if (key == EVENTS && !widgetBinding) {
                     hasEvents = true;
+                } else if (key == CHECKED) {
+                    hasChecked = true;
                 } else {
                     this.applyBinding(key, bindings, specificBinders);
                 }
             }
-
             if (hasSource) {
                 this.applyBinding(SOURCE, bindings, specificBinders);
             }
@@ -11402,9 +11880,17 @@ function pad(number, digits, end) {
                 this.applyBinding(VALUE, bindings, specificBinders);
             }
 
-            if (hasEvents) {
+            if (hasChecked) {
+                this.applyBinding(CHECKED, bindings, specificBinders);
+            }
+
+            if (hasEvents && !widgetBinding) {
                 this.applyBinding(EVENTS, bindings, specificBinders);
             }
+        },
+
+        binders: function() {
+            return binders[this.target.nodeName.toLowerCase()] || {};
         },
 
         applyBinding: function(name, bindings, specificBinders) {
@@ -11444,30 +11930,8 @@ function pad(number, digits, end) {
     });
 
     var WidgetBindingTarget = BindingTarget.extend( {
-        bind: function(bindings) {
-            var that = this,
-                binding,
-                hasValue = false,
-                hasSource = false,
-                specificBinders = binders.widget[that.target.options.name.toLowerCase()] || {};
-
-            for (binding in bindings) {
-                if (binding == VALUE) {
-                    hasValue = true;
-                } else if (binding == SOURCE) {
-                    hasSource = true;
-                } else {
-                    that.applyBinding(binding, bindings, specificBinders);
-                }
-            }
-
-            if (hasSource) {
-                that.applyBinding(SOURCE, bindings, specificBinders);
-            }
-
-            if (hasValue) {
-                that.applyBinding(VALUE, bindings, specificBinders);
-            }
+        binders: function() {
+            return binders.widget[this.target.options.name.toLowerCase()] || {};
         },
 
         applyBinding: function(name, bindings, specificBinders) {
@@ -13465,6 +13929,9 @@ function pad(number, digits, end) {
                 }
             } else {
                 element = content;
+                if (that._evalTemplate) {
+                    element.html(kendo.template(element.html())(that.model || {}));
+                }
                 if (that._wrap) {
                     element = element.wrapAll(wrapper).parent();
                 }
@@ -13676,8 +14143,8 @@ function pad(number, digits, end) {
 
 
 
-(function() {
-    kendo.data.transports.signalr = kendo.data.RemoteTransport.extend({
+(function($) {
+    var transport = kendo.data.RemoteTransport.extend({
         init: function (options) {
             var signalr = options && options.signalr ? options.signalr : {};
 
@@ -13764,7 +14231,14 @@ function pad(number, digits, end) {
             this._crud(options, "destroy");
         }
     });
-})();
+
+    $.extend(true, kendo.data, {
+        transports: {
+            signalr: transport
+        }
+    });
+
+})(window.kendo.jQuery);
 
 
 
@@ -13948,7 +14422,7 @@ function pad(number, digits, end) {
 
                         if (decimals) {
                             raise = Math.pow(10, decimals);
-                            return (((val-min)*raise)%(step*raise)) / Math.pow(100, decimals) === 0;
+                            return ((Math.floor((val-min)*raise))%(step*raise)) / Math.pow(100, decimals) === 0;
                         }
                         return ((val-min)%step) === 0;
                     }
@@ -14080,7 +14554,15 @@ function pad(number, digits, end) {
                 valid = result.valid,
                 className = "." + INVALIDMSG,
                 fieldName = (input.attr(NAME) || ""),
-                lbl = that._findMessageContainer(fieldName).add(input.next(className)).hide(),
+                lbl = that._findMessageContainer(fieldName).add(input.next(className).filter(function() {
+                    var element = $(this);
+                    if (element.filter("[" + kendo.attr("for") + "]").length) {
+                        return element.attr(kendo.attr("for")) === fieldName;
+                    }
+
+                    return true;
+
+                })).hide(),
                 messageText;
 
             input.removeAttr("aria-invalid");
@@ -14216,6 +14698,7 @@ function pad(number, digits, end) {
         DRAG = "drag",
         DRAGEND = "dragend",
         DRAGCANCEL = "dragcancel",
+        HINTDESTROYED = "hintDestroyed",
 
         // DropTarget events
         DRAGENTER = "dragenter",
@@ -14397,7 +14880,7 @@ function pad(number, digits, end) {
                 scaledTotal = total * that.scale,
                 size = that.getSize();
 
-            if (total === 0) {
+            if (total === 0 && !that.forcedEnabled) {
                 return; // we are not visible.
             }
 
@@ -14668,6 +15151,26 @@ function pad(number, digits, end) {
         }
     });
 
+    function destroyDroppable(collection, widget) {
+        var groupName = widget.options.group,
+        droppables = collection[groupName],
+        i;
+
+        Widget.fn.destroy.call(widget);
+
+        if (droppables.length > 1) {
+            for (i = 0; i < droppables.length; i++) {
+                if (droppables[i] == widget) {
+                    droppables.splice(i, 1);
+                    break;
+                }
+            }
+        } else {
+            droppables.length = 0; // WTF, porting this from the previous destroyGroup
+            delete collection[groupName];
+        }
+    }
+
     var DropTarget = Widget.extend({
         init: function(element, options) {
             var that = this;
@@ -14695,22 +15198,7 @@ function pad(number, digits, end) {
         },
 
         destroy: function() {
-            var groupName = this.options.group,
-                group = dropTargets[groupName] || dropAreas[groupName],
-                i;
-
-            if (group.length > 1) {
-                Widget.fn.destroy.call(this);
-
-                for (i = 0; i < group.length; i++) {
-                    if (group[i] == this) {
-                        group.splice(i, 1);
-                        break;
-                    }
-                }
-            } else {
-                DropTarget.destroyGroup(groupName);
-            }
+            destroyDroppable(dropTargets, this);
         },
 
         _trigger: function(eventName, e) {
@@ -14775,6 +15263,10 @@ function pad(number, digits, end) {
             }
         },
 
+        destroy: function() {
+            destroyDroppable(dropAreas, this);
+        },
+
         options: {
             name: "DropTargetArea",
             group: "default",
@@ -14812,12 +15304,13 @@ function pad(number, digits, end) {
             DRAGSTART,
             DRAG,
             DRAGEND,
-            DRAGCANCEL
+            DRAGCANCEL,
+            HINTDESTROYED
         ],
 
         options: {
             name: "Draggable",
-            distance: 5,
+            distance: ( kendo.support.touch ? 0 : 5),
             group: "default",
             cursorOffset: null,
             axis: null,
@@ -14935,6 +15428,8 @@ function pad(number, digits, end) {
                 that.userEvents.cancel();
                 that._afterEnd();
             }
+
+            that.userEvents.capture();
 
             $(document).on(KEYUP, that._captureEscape);
         },
@@ -15080,6 +15575,7 @@ function pad(number, digits, end) {
             delete draggables[that.options.group];
 
             that.trigger("destroy");
+            that.trigger(HINTDESTROYED);
             $(document).off(KEYUP, that._captureEscape);
         }
     });
@@ -15555,9 +16051,11 @@ function pad(number, digits, end) {
             mousewheelScrolling: true,
             avoidScrolling: function() { return false; },
             pullToRefresh: false,
-            pullTemplate: "Pull to refresh",
-            releaseTemplate: "Release to refresh",
-            refreshTemplate: "Refreshing"
+            messages: {
+                pullTemplate: "Pull to refresh",
+                releaseTemplate: "Release to refresh",
+                refreshTemplate: "Refreshing"
+            }
         },
 
         events: [
@@ -15666,9 +16164,9 @@ function pad(number, digits, end) {
             var that = this;
 
             that.dimensions.y.forceEnabled();
-            that.pullTemplate = kendo.template(that.options.pullTemplate);
-            that.releaseTemplate = kendo.template(that.options.releaseTemplate);
-            that.refreshTemplate = kendo.template(that.options.refreshTemplate);
+            that.pullTemplate = kendo.template(that.options.messages.pullTemplate);
+            that.releaseTemplate = kendo.template(that.options.messages.releaseTemplate);
+            that.refreshTemplate = kendo.template(that.options.messages.refreshTemplate);
 
             that.scrollElement.prepend('<span class="km-scroller-pull"><span class="km-icon"></span><span class="km-loading-left"></span><span class="km-loading-right"></span><span class="km-template">' + that.pullTemplate({}) + '</span></span>');
             that.refreshHint = that.scrollElement.children().first();
@@ -15784,7 +16282,7 @@ function pad(number, digits, end) {
             that._sizingDom = that.orientation == HORIZONTAL ? "outerWidth" : "outerHeight";
 
             that.draggable = new ui.Draggable(element, {
-                distance: 0,
+                distance: 1,
                 filter: options.handle,
                 drag: proxy(that._resize, that),
                 dragcancel: proxy(that._cancel, that),
@@ -16459,7 +16957,7 @@ function pad(number, digits, end) {
         CHANGE = "change",
         NS = ".kendoSelectable",
         UNSELECTING = "k-state-unselecting",
-        INPUTSELECTOR = "input,a,textarea,.k-multiselect-wrap,select,button",
+        INPUTSELECTOR = "input,a,textarea,.k-multiselect-wrap,select,button,a.k-button>.k-icon,span.k-icon.k-i-expand,span.k-icon.k-i-collapse",
         msie = kendo.support.browser.msie,
         supportEventDelegation = false;
 
@@ -16490,6 +16988,11 @@ function pad(number, digits, end) {
             that.relatedTarget = that.options.relatedTarget;
 
             multiple = that.options.multiple;
+
+            if (this.options.aria && multiple) {
+                that.element.attr("aria-multiselectable", true);
+            }
+
             that.userEvents = new kendo.UserEvents(that.element, {
                 global: true,
                 allowSelection: true,
@@ -16596,6 +17099,8 @@ function pad(number, digits, end) {
                 currentElement = target.closest(that.element);
                 that._items = currentElement.find(that.options.filter);
             }
+
+            e.sender.capture();
 
             that._marquee
                 .appendTo(document.body)
@@ -16818,7 +17323,20 @@ function pad(number, digits, end) {
         }
     });
 
+    Selectable.parseOptions = function(selectable) {
+        var asLowerString = typeof selectable === "string" && selectable.toLowerCase();
+
+        return {
+            multiple: asLowerString && asLowerString.indexOf("multiple") > -1,
+            cell: asLowerString && asLowerString.indexOf("cell") > -1
+        };
+    };
+
     function collision(element, position) {
+        if (!element.is(":visible")) {
+            return false;
+        }
+
         var elementPosition = kendo.getOffset(element),
             right = position.left + position.width,
             bottom = position.top + position.height;
@@ -16909,7 +17427,9 @@ function pad(number, digits, end) {
 
         _click: function(e) {
             if (this.options.enable) {
-                this.trigger(CLICK, {event: e});
+                if (this.trigger(CLICK, { event: e })) {
+                    e.preventDefault();
+                }
             }
         },
 
@@ -17001,7 +17521,11 @@ function pad(number, digits, end) {
             element.toggleClass(DISABLEDSTATE, !enable)
                    .attr("aria-disabled", !enable)
                    .attr(DISABLED, !enable);
-            element.blur();
+            // prevent 'Unspecified error' in IE when inside iframe
+            try {
+                element.blur();
+            } catch (err) {
+            }
         }
     });
 
@@ -17495,6 +18019,7 @@ function pad(number, digits, end) {
             extend(options.animation.open, {
                 complete: function() {
                     that.wrapper.css({ overflow: VISIBLE }); // Forcing refresh causes flickering in mobile.
+                    that._activated = true;
                     that._trigger(ACTIVATE);
                 }
             });
@@ -17537,6 +18062,10 @@ function pad(number, digits, end) {
             copyAnchorStyles: true,
             autosize: false,
             modal: false,
+            adjustSize: {
+                width: 0,
+                height: 0
+            },
             animation: {
                 open: {
                     effects: "slideIn:down",
@@ -17565,7 +18094,7 @@ function pad(number, digits, end) {
             }
 
             if (options.anchor != BODY) {
-                direction = (anchor[0].className.match(ACTIVEBORDERREGEXP) || ["", "down"])[1];
+                direction = ((anchor.attr("class") || "").match(ACTIVEBORDERREGEXP) || ["", "down"])[1];
                 dirClass = ACTIVEBORDER + "-" + direction;
 
                 anchor
@@ -17634,6 +18163,8 @@ function pad(number, digits, end) {
                 if (element.data("animating") || that._trigger(OPEN)) {
                     return;
                 }
+
+                that._activated = false;
 
                 if (!options.modal) {
                     DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy)
@@ -17762,7 +18293,7 @@ function pad(number, digits, end) {
                     that._resizeTimeout = null;
                 }, 50);
             } else {
-                if (!that._hovered && !contains(that.element[0], activeElement())) {
+                if (!that._hovered || (that._activated && that.element.hasClass("k-list-container"))) {
                     that.close();
                 }
             }
@@ -17904,14 +18435,15 @@ function pad(number, digits, end) {
             }
 
             var offsets = extend({}, offset),
-                location = extend({}, pos);
+                location = extend({}, pos),
+                adjustSize = options.adjustSize;
 
             if (collisions[0] === "fit") {
-                location.top += that._fit(offsets.top, wrapper.outerHeight(), viewportHeight / zoomLevel);
+                location.top += that._fit(offsets.top, wrapper.outerHeight() + adjustSize.height, viewportHeight / zoomLevel);
             }
 
             if (collisions[1] === "fit") {
-                location.left += that._fit(offsets.left, wrapper.outerWidth(), viewportWidth / zoomLevel);
+                location.left += that._fit(offsets.left, wrapper.outerWidth() + adjustSize.width, viewportWidth / zoomLevel);
             }
 
             var flipPos = extend({}, location);
@@ -18000,7 +18532,7 @@ function pad(number, digits, end) {
 
 
 
-;
+
 
 (function($, undefined) {
     var kendo = window.kendo,
@@ -18089,7 +18621,7 @@ function pad(number, digits, end) {
         _compileTemplates: function(templates) {
             var that = this;
             var kendoTemplate = kendo.template;
-            
+
             that._compiled = {};
 
             $.each(templates, function(key, value) {
@@ -18191,7 +18723,7 @@ function pad(number, digits, end) {
                 y = options.position.top,
                 allowHideAfter = options.allowHideAfter,
                 popup, openPopup, attachClick, closeIcon;
-            
+
             openPopup = $("." + that._guid).last();
 
             popup = new kendo.ui.Popup(wrapper, {
@@ -18203,7 +18735,7 @@ function pad(number, digits, end) {
                 collision: "",
                 isRtl: that._isRtl,
                 close: function(e) {
-                    that.trigger(HIDE, {element: this.element});
+                    that._triggerHide(this.element);
                 },
                 deactivate: function(e) {
                     e.sender.element.off(NS);
@@ -18311,7 +18843,14 @@ function pad(number, digits, end) {
                 wrapper.off(NS).find(KICLOSE).off(NS);
                 wrapper.remove();
             }}));
-            this.trigger(HIDE, {element: wrapper});
+            this._triggerHide(wrapper);
+        },
+
+        _triggerHide: function(element) {
+            this.trigger(HIDE, { element: element });
+            this.angular("cleanup", function(){
+                return { elements: element };
+            });
         },
 
         show: function(content, type) {
@@ -18325,7 +18864,7 @@ function pad(number, digits, end) {
             }
 
             if (content !== null && content !== undefined && content !== "") {
-                
+
                 if (kendo.isFunction(content)) {
                     content = content();
                 }
@@ -18344,7 +18883,14 @@ function pad(number, digits, end) {
                     .attr("data-role", "alert")
                     .css({width: options.width, height: options.height})
                     .append(that._getCompiled(type)(args));
-                
+
+                that.angular("compile", function(){
+                    return {
+                        elements: wrapper,
+                        data: [{ dataItem: args }]
+                    };
+                });
+
                 if ($(options.appendTo)[0]) {
                     that._showStatic(wrapper, options);
                 } else {
@@ -18396,7 +18942,7 @@ function pad(number, digits, end) {
         getNotifications: function() {
             var that = this,
                 guidElements = $("." + that._guid);
-                
+
             if (that.options.appendTo) {
                 return guidElements;
             } else {
@@ -18430,6 +18976,7 @@ function pad(number, digits, end) {
     kendo.ui.plugin(Notification);
 
 })(window.kendo.jQuery);
+
 
 
 
@@ -18878,6 +19425,7 @@ function pad(number, digits, end) {
         BUTTON_GROUP = "k-button-group",
         SPLIT_BUTTON = "k-split-button",
         SEPARATOR = "k-separator",
+        POPUP = "k-popup",
 
         RESIZABLE_TOOLBAR = "k-toolbar-resizable",
         STATE_ACTIVE = "k-state-active",
@@ -18926,6 +19474,14 @@ function pad(number, digits, end) {
                     var items = options.buttons,
                         item;
 
+                    if (!items) {
+                        return;
+                    }
+
+                    if (options.attributes) {
+                        element.attr(options.attributes);
+                    }
+
                     element.data({ type: "buttonGroup" });
                     element.attr(KENDO_UID_ATTR, options.uid);
 
@@ -18941,8 +19497,11 @@ function pad(number, digits, end) {
                     element.children().last().addClass(GROUP_END);
                 },
                 toolbar: function (options) {
-                    var element = $('<div class="' + BUTTON_GROUP + '"></div>');
+                    var element = $('<div></div>');
+
                     components.buttonGroup.base(options, components.button.toolbar, element);
+
+                    element.addClass(BUTTON_GROUP);
 
                     if (options.align) {
                         element.addClass("k-align-" + options.align);
@@ -18955,8 +19514,11 @@ function pad(number, digits, end) {
                     return element;
                 },
                 overflow: function (options) {
-                    var element = $('<li class="' + (options.mobile ? "" : BUTTON_GROUP) + ' k-overflow-group"></li>');
+                    var element = $('<li></li>');
+
                     components.buttonGroup.base(options, components.button.overflow, element);
+
+                    element.addClass((options.mobile ? "" : BUTTON_GROUP) + " k-overflow-group");
 
                     if (options.id) {
                         element.attr("id", options.id + "_overflow");
@@ -19031,10 +19593,6 @@ function pad(number, digits, end) {
                         item.appendTo(element);
                     }
 
-                    if (options.id) {
-                        element.attr("id", options.id + "_overflow");
-                    }
-
                     element.data({ type: "splitButton" });
                     element.attr(KENDO_UID_ATTR, options.uid);
 
@@ -19057,10 +19615,22 @@ function pad(number, digits, end) {
                     return element;
                 },
                 toolbar: function(options) {
-                   return components.separator.base(options, false);
+                   var element = components.separator.base(options, false);
+
+                   if (options.id) {
+                       element.attr("id", options.id);
+                   }
+
+                   return element;
                 },
                 overflow: function(options) {
-                   return components.separator.base(options, true);
+                    var element = components.separator.base(options, true);
+
+                    if (options.id) {
+                        element.attr("id", options.id + "_overflow");
+                    }
+
+                    return  element;
                 }
             },
 
@@ -19379,6 +19949,10 @@ function pad(number, digits, end) {
                 if (options.overflow !== OVERFLOW_NEVER && that.options.resizable) {
                     if (overflowTemplate) { //template command
                         overflowElement = isFunction(overflowTemplate) ? $(overflowTemplate(options)) : $(overflowTemplate);
+
+                        if (options.id) {
+                            overflowElement.attr("id", options.id + "_overflow");
+                        }
                     } else if (component) { //build-in command
                         overflowElement = (component.overflow || $.noop)(options);
                     }
@@ -19412,6 +19986,12 @@ function pad(number, digits, end) {
                         }
 
                         element = element.wrap("<div></div>").parent();
+                        if (options.id) {
+                           element.attr("id", options.id);
+                        }
+                        if (options.attributes) {
+                            element.attr(options.attributes);
+                        }
                         element.attr(KENDO_UID_ATTR, options.uid);
                     } else if (component) { //build-in command
                         element = (component.toolbar || $.noop)(options);
@@ -19436,22 +20016,45 @@ function pad(number, digits, end) {
             },
 
             remove: function(element) {
-                var commandElement = this.element.find(element),
-                    type = commandElement.data("type"),
-                    uid = commandElement.attr(KENDO_UID_ATTR);
+                var toolbarElement,
+                    overflowElement,
+                    isResizable = this.options.resizable,
+                    type, uid;
 
-                if (commandElement.parent("." + SPLIT_BUTTON).data("type")) {
-                    type = "splitButton";
-                    commandElement = commandElement.parent();
+                toolbarElement = this.element.find(element);
+
+                if (isResizable) {
+                    overflowElement = this.popup.element.find(element);
                 }
 
-                if (type === "splitButton") {
-                    commandElement.data("kendoPopup").destroy();
+                if (toolbarElement.length) {
+                    type = toolbarElement.data("type");
+                    uid = toolbarElement.attr(KENDO_UID_ATTR);
+
+                    if (toolbarElement.parent("." + SPLIT_BUTTON).data("type") === "splitButton") {
+                        type = "splitButton";
+                        toolbarElement = toolbarElement.parent();
+                    }
+
+                    overflowElement = isResizable ? this.popup.element.find("li[" + KENDO_UID_ATTR + "='" + uid + "']") : $([]);
+                } else if (overflowElement.length) {
+                    type = overflowElement.data("type");
+                    overflowElement = overflowElement.parent();
+
+                    if (overflowElement.data("type") === "splitButton") {
+                        type = "splitButton";
+                    }
+
+                    uid = overflowElement.attr(KENDO_UID_ATTR);
+                    toolbarElement = this.element.find("div." + SPLIT_BUTTON + "[" + KENDO_UID_ATTR + "='" + uid + "']");
                 }
 
-                commandElement
-                    .add(this.popup.element.find("[" + KENDO_UID_ATTR + "='" + commandElement.attr(KENDO_UID_ATTR) + "']"))
-                    .remove();
+                if (type === "splitButton" && toolbarElement.data("kendoPopup")) {
+                    toolbarElement.data("kendoPopup").destroy();
+                }
+
+                toolbarElement.remove();
+                overflowElement.remove();
             },
 
             enable: function(element, enable) {
@@ -19563,7 +20166,7 @@ function pad(number, digits, end) {
             },
 
             _toggleOverflowAnchor: function() {
-                if (this.popup.element.children(":not(." + OVERFLOW_HIDDEN + ")").length > 0) {
+                if (this.popup.element.children(":not(." + OVERFLOW_HIDDEN + ", ." + POPUP + ")").length > 0) {
                     this.overflowAnchor.css({
                         visibility: "visible",
                         width: ""
@@ -19594,7 +20197,7 @@ function pad(number, digits, end) {
                     target = $(e.target).closest("." + OVERFLOW_BUTTON, that.popup.container);
                 }
 
-                isDisabled = target.hasClass(STATE_DISABLED);
+                isDisabled = target.hasClass(OVERFLOW_BUTTON) ? target.parent("li").hasClass(STATE_DISABLED) : target.hasClass(STATE_DISABLED);
 
                 if (isDisabled) {
                     return;
@@ -19642,6 +20245,10 @@ function pad(number, digits, end) {
                     isDefaultPrevented;
 
                 e.preventDefault();
+
+                if (splitButton.hasClass(STATE_DISABLED)) {
+                    return;
+                }
 
                 if (popup.element.is(":visible")) {
                     isDefaultPrevented = this.trigger(CLOSE, { target: splitButton });
@@ -19872,24 +20479,33 @@ function pad(number, digits, end) {
             }
         },
 
-        _filterSource: function(filter) {
-            var that = this,
-                options = that.options,
-                dataSource = that.dataSource,
-                expression = dataSource.filter() || {};
+        _filterSource: function(filter, force) {
+            var that = this;
+            var options = that.options;
+            var dataSource = that.dataSource;
+            var expression = extend({}, dataSource.filter() || {});
 
-            removeFiltersForField(expression, options.dataTextField);
+            var removed = removeFiltersForField(expression, options.dataTextField);
+
+            if ((filter || removed) && that.trigger("filtering", { filter: filter })) {
+                return;
+            }
 
             if (filter) {
                 expression = expression.filters || [];
                 expression.push(filter);
             }
 
-            dataSource.filter(expression);
+            if (!force) {
+                dataSource.filter(expression);
+            } else {
+                dataSource.read(expression);
+            }
         },
 
         _header: function() {
-            var template = this.options.headerTemplate;
+            var that = this;
+            var template = that.options.headerTemplate;
             var header;
 
             if ($.isFunction(template)) {
@@ -19897,11 +20513,16 @@ function pad(number, digits, end) {
             }
 
             if (template) {
-                this.list.prepend(template);
+                that.list.prepend(template);
 
-                header = this.ul.prev();
+                header = that.ul.prev();
 
-                this.header = header[0] ? header : null;
+                that.header = header[0] ? header : null;
+                if (that.header) {
+                    that.angular("compile", function(){
+                        return { elements: that.header };
+                    });
+                }
             }
         },
 
@@ -20146,9 +20767,7 @@ function pad(number, digits, end) {
                     list = that.list,
                     height = that.options.height,
                     visible = that.popup.visible(),
-                    filterInput = that.filterInput,
-                    header = that.header,
-                    offsetHeight = 0,
+                    offsetTop,
                     popups;
 
                 popups = list.add(list.parent(".k-animation-container")).show();
@@ -20158,17 +20777,11 @@ function pad(number, digits, end) {
                 popups.height(height);
 
                 if (height !== "auto") {
-                    if (filterInput) {
-                        offsetHeight += filterInput.outerHeight();
-                    }
+                    offsetTop = that.ul[0].offsetTop;
 
-                    if (header) {
-                        offsetHeight += header.outerHeight();
+                    if (offsetTop) {
+                        height = list.height() - offsetTop;
                     }
-                }
-
-                if (offsetHeight) {
-                    height = list.height() - offsetHeight;
                 }
 
                 that.ul.height(height);
@@ -20262,7 +20875,7 @@ function pad(number, digits, end) {
 
         _toggle: function(open, preventFocus) {
             var that = this;
-            var touchEnabled = support.touch && support.MSPointers && support.pointers;
+            var touchEnabled = support.mobileOS && (support.touch || support.MSPointers || support.pointers);
 
             open = open !== undefined? open : !that.popup.visible();
 
@@ -20841,16 +21454,27 @@ function pad(number, digits, end) {
     });
 
     function removeFiltersForField(expression, field) {
+        var filters;
+        var found = false;
+
         if (expression.filters) {
-            expression.filters = $.grep(expression.filters, function(filter) {
-                removeFiltersForField(filter, field);
+            filters = $.grep(expression.filters, function(filter) {
+                found = removeFiltersForField(filter, field);
                 if (filter.filters) {
                     return filter.filters.length;
                 } else {
                     return filter.field != field;
                 }
             });
+
+            if (!found && expression.filters.length !== filters.length) {
+                found = true;
+            }
+
+            expression.filters = filters;
         }
+
+        return found;
     }
 })(window.kendo.jQuery);
 
@@ -22979,6 +23603,7 @@ function pad(number, digits, end) {
             "close",
             "change",
             "select",
+            "filtering",
             "dataBinding",
             "dataBound"
         ],
@@ -23118,9 +23743,7 @@ function pad(number, digits, end) {
 
             length = word.length;
 
-            if (!length) {
-                that.popup.close();
-            } else if (length >= that.options.minLength) {
+            if (!length || length >= options.minLength) {
                 that._open = true;
 
                 that._filterSource({
@@ -23548,6 +24171,7 @@ function pad(number, digits, end) {
             "close",
             CHANGE,
             "select",
+            "filtering",
             "dataBinding",
             "dataBound",
             "cascade"
@@ -24195,11 +24819,6 @@ function pad(number, digits, end) {
             }
         },
 
-        _iconMousedown: function(e) {
-            this.wrapper.focusin();
-            e.preventDefault();
-        },
-
         _span: function() {
             var that = this,
                 wrapper = that.wrapper,
@@ -24217,8 +24836,7 @@ function pad(number, digits, end) {
 
             that.span = span;
             that._inputWrapper = $(wrapper[0].firstChild);
-            that._arrow = wrapper.find(".k-icon")
-                                 .mousedown(proxy(that._iconMousedown, that));
+            that._arrow = wrapper.find(".k-icon");
         },
 
         _wrapper: function() {
@@ -24404,7 +25022,7 @@ function pad(number, digits, end) {
             that._aria();
 
             if (options.autoBind) {
-                that._filterSource();
+                that._filterSource(); //TODO: diff when just bind and actually filter
             } else {
                 text = options.text;
 
@@ -24453,6 +25071,7 @@ function pad(number, digits, end) {
             "close",
             CHANGE,
             "select",
+            "filtering",
             "dataBinding",
             "dataBound",
             "cascade"
@@ -25227,6 +25846,7 @@ function pad(number, digits, end) {
             CLOSE,
             CHANGE,
             SELECT,
+            "filtering",
             "dataBinding",
             "dataBound"
         ],
@@ -25357,7 +25977,7 @@ function pad(number, digits, end) {
                 wrapper
                     .removeClass(STATEDISABLED)
                     .on(HOVEREVENTS, that._toggleHover)
-                    .on("mousedown" + ns, proxy(that._wrapperMousedown, that));
+                    .on("mousedown" + ns + " touchend" + ns, proxy(that._wrapperMousedown, that));
 
                 that.input.on(KEYDOWN, proxy(that._keydown, that))
                     .on("paste" + ns, proxy(that._search, that))
@@ -25472,7 +26092,9 @@ function pad(number, digits, end) {
                 ignoreCase = options.ignoreCase,
                 filter = options.filter,
                 field = options.dataTextField,
-                inputValue = that.input.val();
+                inputValue = that.input.val(),
+                expression,
+                length;
 
             if (options.placeholder === inputValue) {
                 inputValue = "";
@@ -25482,16 +26104,21 @@ function pad(number, digits, end) {
 
             word = typeof word === "string" ? word : inputValue;
 
-            if (word.length >= options.minLength) {
+            length = word.length;
+
+            if (!length || length >= options.minLength) {
                 that._state = FILTER;
                 that._open = true;
 
-                that._filterSource({
+                expression = {
                     value: ignoreCase ? word.toLowerCase() : word,
                     field: field,
                     operator: filter,
                     ignoreCase: ignoreCase
-                });
+                };
+
+                that._filterSource(expression, that._retrieveData);
+                that._retrieveData = false;
             }
         },
 
@@ -26178,6 +26805,365 @@ function pad(number, digits, end) {
 
 
 
+(function ($, parseFloat, parseInt) {
+    var Color = function(value) {
+        var color = this,
+            formats = Color.formats,
+            re,
+            processor,
+            parts,
+            i,
+            channels;
+
+        if (arguments.length === 1) {
+            value = color.resolveColor(value);
+
+            for (i = 0; i < formats.length; i++) {
+                re = formats[i].re;
+                processor = formats[i].process;
+                parts = re.exec(value);
+
+                if (parts) {
+                    channels = processor(parts);
+                    color.r = channels[0];
+                    color.g = channels[1];
+                    color.b = channels[2];
+                }
+            }
+        } else {
+            color.r = arguments[0];
+            color.g = arguments[1];
+            color.b = arguments[2];
+        }
+
+        color.r = color.normalizeByte(color.r);
+        color.g = color.normalizeByte(color.g);
+        color.b = color.normalizeByte(color.b);
+    };
+
+    Color.prototype = {
+        toHex: function() {
+            var color = this,
+                pad = color.padDigit,
+                r = color.r.toString(16),
+                g = color.g.toString(16),
+                b = color.b.toString(16);
+
+            return "#" + pad(r) + pad(g) + pad(b);
+        },
+
+        resolveColor: function(value) {
+            value = value || "black";
+
+            if (value.charAt(0) == "#") {
+                value = value.substr(1, 6);
+            }
+
+            value = value.replace(/ /g, "");
+            value = value.toLowerCase();
+            value = Color.namedColors[value] || value;
+
+            return value;
+        },
+
+        normalizeByte: function(value) {
+            return (value < 0 || isNaN(value)) ? 0 : ((value > 255) ? 255 : value);
+        },
+
+        padDigit: function(value) {
+            return (value.length === 1) ? "0" + value : value;
+        },
+
+        brightness: function(value) {
+            var color = this,
+                round = Math.round;
+
+            color.r = round(color.normalizeByte(color.r * value));
+            color.g = round(color.normalizeByte(color.g * value));
+            color.b = round(color.normalizeByte(color.b * value));
+
+            return color;
+        },
+
+        percBrightness: function() {
+            var color = this;
+
+            return Math.sqrt(0.241 * color.r * color.r + 0.691 * color.g * color.g + 0.068 * color.b * color.b);
+        }
+    };
+
+    Color.formats = [{
+            re: /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/,
+            process: function(parts) {
+                return [
+                    parseInt(parts[1], 10), parseInt(parts[2], 10), parseInt(parts[3], 10)
+                ];
+            }
+        }, {
+            re: /^(\w{2})(\w{2})(\w{2})$/,
+            process: function(parts) {
+                return [
+                    parseInt(parts[1], 16), parseInt(parts[2], 16), parseInt(parts[3], 16)
+                ];
+            }
+        }, {
+            re: /^(\w{1})(\w{1})(\w{1})$/,
+            process: function(parts) {
+                return [
+                    parseInt(parts[1] + parts[1], 16),
+                    parseInt(parts[2] + parts[2], 16),
+                    parseInt(parts[3] + parts[3], 16)
+                ];
+            }
+        }
+    ];
+
+    Color.namedColors = {
+        aqua: "00ffff", azure: "f0ffff", beige: "f5f5dc",
+        black: "000000", blue: "0000ff", brown: "a52a2a",
+        coral: "ff7f50", cyan: "00ffff", darkblue: "00008b",
+        darkcyan: "008b8b", darkgray: "a9a9a9", darkgreen: "006400",
+        darkorange: "ff8c00", darkred: "8b0000", dimgray: "696969",
+        fuchsia: "ff00ff", gold: "ffd700", goldenrod: "daa520",
+        gray: "808080", green: "008000", greenyellow: "adff2f",
+        indigo: "4b0082", ivory: "fffff0", khaki: "f0e68c",
+        lightblue: "add8e6", lightgrey: "d3d3d3", lightgreen: "90ee90",
+        lightpink: "ffb6c1", lightyellow: "ffffe0", lime: "00ff00",
+        limegreen: "32cd32", linen: "faf0e6", magenta: "ff00ff",
+        maroon: "800000", mediumblue: "0000cd", navy: "000080",
+        olive: "808000", orange: "ffa500", orangered: "ff4500",
+        orchid: "da70d6", pink: "ffc0cb", plum: "dda0dd",
+        purple: "800080", red: "ff0000", royalblue: "4169e1",
+        salmon: "fa8072", silver: "c0c0c0", skyblue: "87ceeb",
+        slateblue: "6a5acd", slategray: "708090", snow: "fffafa",
+        steelblue: "4682b4", tan: "d2b48c", teal: "008080",
+        tomato: "ff6347", turquoise: "40e0d0", violet: "ee82ee",
+        wheat: "f5deb3", white: "ffffff", whitesmoke: "f5f5f5",
+        yellow: "ffff00", yellowgreen: "9acd32"
+    };
+
+    // Tools from ColorPicker =================================================
+
+    var namedColorRegexp = [ "transparent" ];
+    for (var i in Color.namedColors) {
+        if (Color.namedColors.hasOwnProperty(i)) {
+            namedColorRegexp.push(i);
+        }
+    }
+    namedColorRegexp = new RegExp("^(" + namedColorRegexp.join("|") + ")(\\W|$)", "i");
+
+    /*jshint eqnull:true  */
+
+    function parseColor(color, nothrow) {
+        var m, ret;
+        if (color == null || color == "none") {
+            return null;
+        }
+        if (color instanceof _Color) {
+            return color;
+        }
+        color = color.toLowerCase();
+        if ((m = namedColorRegexp.exec(color))) {
+            if (m[1] == "transparent") {
+                color = new _RGB(1, 1, 1, 0);
+            }
+            else {
+                color = parseColor(Color.namedColors[m[1]], nothrow);
+            }
+            color.match = [ m[1] ];
+            return color;
+        }
+        if ((m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(color))) {
+            ret = new _Bytes(parseInt(m[1], 16),
+                             parseInt(m[2], 16),
+                             parseInt(m[3], 16), 1);
+        }
+        else if ((m = /^#?([0-9a-f])([0-9a-f])([0-9a-f])/i.exec(color))) {
+            ret = new _Bytes(parseInt(m[1] + m[1], 16),
+                             parseInt(m[2] + m[2], 16),
+                             parseInt(m[3] + m[3], 16), 1);
+        }
+        else if ((m = /^rgb\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/.exec(color))) {
+            ret = new _Bytes(parseInt(m[1], 10),
+                             parseInt(m[2], 10),
+                             parseInt(m[3], 10), 1);
+        }
+        else if ((m = /^rgba\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9.]+)\s*\)/.exec(color))) {
+            ret = new _Bytes(parseInt(m[1], 10),
+                             parseInt(m[2], 10),
+                             parseInt(m[3], 10), parseFloat(m[4]));
+        }
+        else if ((m = /^rgb\(\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*\)/.exec(color))) {
+            ret = new _RGB(parseFloat(m[1]) / 100,
+                           parseFloat(m[2]) / 100,
+                           parseFloat(m[3]) / 100, 1);
+        }
+        else if ((m = /^rgba\(\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9.]+)\s*\)/.exec(color))) {
+            ret = new _RGB(parseFloat(m[1]) / 100,
+                           parseFloat(m[2]) / 100,
+                           parseFloat(m[3]) / 100, parseFloat(m[4]));
+        }
+        if (ret) {
+            ret.match = m;
+        } else if (!nothrow) {
+            throw new Error("Cannot parse color: " + color);
+        }
+        return ret;
+    }
+
+    function hex(n, width, pad) {
+        if (!pad) { pad = "0"; }
+        n = n.toString(16);
+        while (width > n.length) {
+            n = "0" + n;
+        }
+        return n;
+    }
+
+    var _Color = kendo.Class.extend({
+        toHSV: function() { return this; },
+        toRGB: function() { return this; },
+        toHex: function() { return this.toBytes().toHex(); },
+        toBytes: function() { return this; },
+        toCss: function() { return "#" + this.toHex(); },
+        toCssRgba: function() {
+            var rgb = this.toBytes();
+            return "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + parseFloat((+this.a).toFixed(3)) + ")";
+        },
+        toDisplay: function() {
+            if (kendo.support.browser.msie && kendo.support.browser.version < 9) {
+                return this.toCss(); // no RGBA support; does it support any opacity in colors?
+            }
+            return this.toCssRgba();
+        },
+        equals: function(c) { return c === this || c !== null && this.toCssRgba() == parseColor(c).toCssRgba(); },
+        diff: function(c2) {
+            if (c2 == null) {
+                return NaN;
+            }
+            var c1 = this.toBytes();
+            c2 = c2.toBytes();
+            return Math.sqrt(Math.pow((c1.r - c2.r) * 0.30, 2) +
+                             Math.pow((c1.g - c2.g) * 0.59, 2) +
+                             Math.pow((c1.b - c2.b) * 0.11, 2));
+        },
+        clone: function() {
+            var c = this.toBytes();
+            if (c === this) {
+                c = new _Bytes(c.r, c.g, c.b, c.a);
+            }
+            return c;
+        }
+    });
+
+    var _RGB = _Color.extend({
+        init: function(r, g, b, a) {
+            this.r = r; this.g = g; this.b = b; this.a = a;
+        },
+        toHSV: function() {
+            var min, max, delta, h, s, v;
+            var r = this.r, g = this.g, b = this.b;
+            min = Math.min(r, g, b);
+            max = Math.max(r, g, b);
+            v = max;
+            delta = max - min;
+            if (delta === 0) {
+                return new _HSV(0, 0, v, this.a);
+            }
+            if (max !== 0) {
+                s = delta / max;
+                if (r == max) {
+                    h = (g - b) / delta;
+                } else if (g == max) {
+                    h = 2 + (b - r) / delta;
+                } else {
+                    h = 4 + (r - g) / delta;
+                }
+                h *= 60;
+                if (h < 0) {
+                    h += 360;
+                }
+            } else {
+                s = 0;
+                h = -1;
+            }
+            return new _HSV(h, s, v, this.a);
+        },
+        toBytes: function() {
+            return new _Bytes(this.r * 255, this.g * 255, this.b * 255, this.a);
+        }
+    });
+
+    var _Bytes = _RGB.extend({
+        init: function(r, g, b, a) {
+            this.r = Math.round(r); this.g = Math.round(g); this.b = Math.round(b); this.a = a;
+        },
+        toRGB: function() {
+            return new _RGB(this.r / 255, this.g / 255, this.b / 255, this.a);
+        },
+        toHSV: function() {
+            return this.toRGB().toHSV();
+        },
+        toHex: function() {
+            return hex(this.r, 2) + hex(this.g, 2) + hex(this.b, 2);
+        },
+        toBytes: function() {
+            return this;
+        }
+    });
+
+    var _HSV = _Color.extend({
+        init: function(h, s, v, a) {
+            this.h = h; this.s = s; this.v = v; this.a = a;
+        },
+        toRGB: function() {
+            var h = this.h, s = this.s, v = this.v;
+            var i, r, g, b, f, p, q, t;
+            if (s === 0) {
+                r = g = b = v;
+            } else {
+                h /= 60;
+                i = Math.floor(h);
+                f = h - i;
+                p = v * (1 - s);
+                q = v * (1 - s * f);
+                t = v * (1 - s * (1 - f));
+                switch (i) {
+                  case 0  : r = v; g = t; b = p; break;
+                  case 1  : r = q; g = v; b = p; break;
+                  case 2  : r = p; g = v; b = t; break;
+                  case 3  : r = p; g = q; b = v; break;
+                  case 4  : r = t; g = p; b = v; break;
+                  default : r = v; g = p; b = q; break;
+                }
+            }
+            return new _RGB(r, g, b, this.a);
+        },
+        toBytes: function() {
+            return this.toRGB().toBytes();
+        }
+    });
+
+    Color.fromBytes = function(r, g, b, a) {
+        return new _Bytes(r, g, b, a != null ? a : 1);
+    };
+
+    Color.fromRGB = function(r, g, b, a) {
+        return new _RGB(r, g, b, a != null ? a : 1);
+    };
+
+    Color.fromHSV = function(h, s, v, a) {
+        return new _HSV(h, s, v, a != null ? a : 1);
+    };
+
+    // Exports ================================================================
+    kendo.Color = Color;
+    kendo.parseColor = parseColor;
+
+})(window.kendo.jQuery, parseFloat, parseInt);
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
@@ -26243,6 +27229,8 @@ function pad(number, digits, end) {
             that._maxSelection = that._trackDiv[that._sizeFn]();
 
             that._sliderItemsInit();
+
+            that._reset();
 
             that._tabindex(that.wrapper.find(DRAG_HANDLE));
             that[options.enabled ? "enable" : "disable"]();
@@ -26386,7 +27374,8 @@ function pad(number, digits, end) {
                 for (i = 0; i < items.length; i++) {
                     item = $(items[i]);
                     value = that._values[i];
-                    if (removeFraction(value) % removeFraction(options.smallStep) === 0 && removeFraction(value) % removeFraction(options.largeStep) === 0) {
+                    var valueWithoutFraction = round(removeFraction(value - this.options.min));
+                    if (valueWithoutFraction % removeFraction(options.smallStep) === 0 && valueWithoutFraction % removeFraction(options.largeStep) === 0) {
                         item.addClass("k-tick-large")
                             .html("<span class='k-label'>" + item.attr("title") + "</span>");
 
@@ -26678,6 +27667,24 @@ function pad(number, digits, end) {
             if (drag && drag.tooltipDiv) {
                 drag.tooltipDiv.stop(true, false).css("opacity", 1);
             }
+        },
+
+        _reset: function () {
+            var that = this,
+                element = that.element,
+                formId = element.attr("form"),
+                form = formId ? $("#" + formId) : element.closest("form");
+
+            if (form[0]) {
+                that._form = form.on("reset", proxy(that._formResetHandler, that));
+            }
+        },
+
+        destroy: function () {
+            if (this._form) {
+                this._form.off("reset", this._formResetHandler);
+            }
+            Widget.fn.destroy.call(this);
         }
     });
 
@@ -27056,10 +28063,20 @@ function pad(number, digits, end) {
             return this._values[math.max(0, math.min(index, count - 1))];
         },
 
+        _formResetHandler: function () {
+            var that = this,
+                min = that.options.min;
+
+            setTimeout(function () {
+                var value = that.element[0].value;
+                that.value(value === "" || isNaN(value) ? min : value);
+            });
+        },
+
         destroy: function() {
             var that = this;
 
-            Widget.fn.destroy.call(that);
+            SliderBase.fn.destroy.call(that);
 
             that.wrapper.off(NS)
                 .find(".k-button").off(NS)
@@ -27757,10 +28774,22 @@ function pad(number, digits, end) {
             });
         },
 
+        _formResetHandler: function () {
+            var that = this,
+                options = that.options;
+
+            setTimeout(function () {
+                var inputs = that.element.find("input");
+                var start = inputs[0].value;
+                var end = inputs[1].value;
+                that.values(start === "" || isNaN(start) ? options.min : start, end === "" || isNaN(end) ? options.max : end);
+            });
+        },
+
         destroy: function() {
             var that = this;
 
-            Widget.fn.destroy.call(that);
+            SliderBase.fn.destroy.call(that);
 
             that.wrapper.off(NS)
                 .find(TICK_SELECTOR + ", " + TRACK_SELECTOR).off(NS)
@@ -27828,9 +28857,10 @@ function pad(number, digits, end) {
     // == into === to make JSHint happy will break functionality.
     /*jshint eqnull:true  */
     var kendo = window.kendo,
-        Class = kendo.Class,
         ui = kendo.ui,
         Widget = ui.Widget,
+        parseColor = kendo.parseColor,
+        Color = kendo.Color,
         KEYS = kendo.keys,
         BACKGROUNDCOLOR = "background-color",
         ITEMSELECTEDCLASS = "k-state-selected",
@@ -27854,7 +28884,7 @@ function pad(number, digits, end) {
             Widget.fn.init.call(that, element, options);
             element = that.element;
             options = that.options;
-            that._value = options.value = parse(options.value);
+            that._value = options.value = parseColor(options.value);
             that._tabIndex = element.attr("tabIndex") || 0;
 
             ariaId = that._ariaId = options.ariaId;
@@ -27878,7 +28908,7 @@ function pad(number, digits, end) {
         ],
         color: function(value) {
             if (value !== undefined) {
-                this._value = parse(value);
+                this._value = parseColor(value);
                 this._updateUI(this._value);
             }
 
@@ -27945,7 +28975,7 @@ function pad(number, digits, end) {
     });
 
     function triggerEvent(self, type, color) {
-        color = parse(color);
+        color = parseColor(color);
         if (color && !color.equals(self.color())) {
             if (type == "change") {
                 // UI is already updated.  setting _value directly
@@ -27982,7 +29012,7 @@ function pad(number, digits, end) {
             }
 
             if ($.isArray(colors)) {
-                colors = $.map(colors, function(x) { return parse(x); });
+                colors = $.map(colors, function(x) { return parseColor(x); });
             }
 
             that._selectedID = (options.ariaId || kendo.guid()) + "_selected";
@@ -28062,7 +29092,7 @@ function pad(number, digits, end) {
                 this._current(selected);
 
                 try {
-                    var color = parse(selected.css(BACKGROUNDCOLOR));
+                    var color = parseColor(selected.css(BACKGROUNDCOLOR));
                     this._triggerSelect(color);
                 } catch(ex) {}
             }
@@ -28086,7 +29116,7 @@ function pad(number, digits, end) {
             var item = null;
 
             this.wrapper.find(".k-item").each(function(){
-                var c = parse($(this).css(BACKGROUNDCOLOR));
+                var c = parseColor($(this).css(BACKGROUNDCOLOR));
 
                 if (c && c.equals(color)) {
                     item = this;
@@ -28132,14 +29162,14 @@ function pad(number, digits, end) {
 
             that._hsvArea();
 
-            that._updateUI(that._value || new _RGB(1, 0, 0, 1));
+            that._updateUI(that._value || parseColor("#f00"));
 
             element
                 .find("input.k-color-value").on(KEYDOWN_NS, function(ev){
                     var input = this;
                     if (ev.keyCode == KEYS.ENTER) {
                         try {
-                            var color = parse(input.value);
+                            var color = parseColor(input.value);
                             var val = that.color();
                             that._select(color, color.equals(val));
                         } catch(ex) {
@@ -28147,7 +29177,7 @@ function pad(number, digits, end) {
                         }
                     } else if (that.options.autoupdate) {
                         setTimeout(function(){
-                            var color = parse(input.value, true);
+                            var color = parseColor(input.value, true);
                             if (color) {
                                 that._updateUI(color, true);
                             }
@@ -28356,7 +29386,7 @@ function pad(number, digits, end) {
             if (a == null) {
                 a = this._opacitySlider ? this._opacitySlider.value() / 100 : 1;
             }
-            return new _HSV(h, s, v, a);
+            return Color.fromHSV(h, s, v, a);
         },
         _svChange: function(s, v) {
             var color = this._getHSV(null, s, v, null);
@@ -28386,7 +29416,7 @@ function pad(number, digits, end) {
                 top: (1 - color.v) * rect.height() + "px"
             });
 
-            that._hueElements.css(BACKGROUNDCOLOR, new _HSV(color.h, 1, 1, 1).toCss());
+            that._hueElements.css(BACKGROUNDCOLOR, Color.fromHSV(color.h, 1, 1, 1).toCss());
             that._hueSlider.value(color.h);
 
             if (that._opacitySlider) {
@@ -28410,196 +29440,6 @@ function pad(number, digits, end) {
             '# } #'
         )
     });
-
-    /* -----[ color utils ]----- */
-
-    function hex(n, width, pad) {
-        if (!pad) { pad = "0"; }
-        n = n.toString(16);
-        while (width > n.length) {
-            n = "0" + n;
-        }
-        return n;
-    }
-
-    function fixed(n) {
-        return parseFloat((+n).toFixed(3));
-    }
-
-    var Color = Class.extend({
-        toHSV: function() { return this; },
-        toRGB: function() { return this; },
-        toHex: function() { return this.toBytes().toHex(); },
-        toBytes: function() { return this; },
-        toCss: function() { return "#" + this.toHex(); },
-        toCssRgba: function() {
-            var rgb = this.toBytes();
-            return "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", " + fixed(this.a) + ")";
-        },
-        toDisplay: function() {
-            if (isIE8) {
-                return this.toCss(); // no RGBA support; does it support any opacity in colors?
-            }
-            return this.toCssRgba();
-        },
-        equals: function(c) { return c === this || c !== null && this.toCssRgba() == parse(c).toCssRgba(); },
-        diff: function(c2) {
-            if (c2 == null) {
-                return NaN;
-            }
-            var c1 = this.toBytes();
-            c2 = c2.toBytes();
-            return Math.sqrt(Math.pow((c1.r - c2.r) * 0.30, 2) +
-                             Math.pow((c1.g - c2.g) * 0.59, 2) +
-                             Math.pow((c1.b - c2.b) * 0.11, 2));
-        },
-        clone: function() {
-            var c = this.toBytes();
-            if (c === this) {
-                c = new _Bytes(c.r, c.g, c.b, c.a);
-            }
-            return c;
-        }
-    });
-
-    var _RGB = Color.extend({
-        init: function(r, g, b, a) {
-            this.r = r; this.g = g; this.b = b; this.a = a;
-        },
-        toHSV: function() {
-            var min, max, delta, h, s, v;
-            var r = this.r, g = this.g, b = this.b;
-            min = Math.min(r, g, b);
-            max = Math.max(r, g, b);
-            v = max;
-            delta = max - min;
-            if (delta === 0) {
-                return new _HSV(0, 0, v, this.a);
-            }
-            if (max !== 0) {
-                s = delta / max;
-                if (r == max) {
-                    h = (g - b) / delta;
-                } else if (g == max) {
-                    h = 2 + (b - r) / delta;
-                } else {
-                    h = 4 + (r - g) / delta;
-                }
-                h *= 60;
-                if (h < 0) {
-                    h += 360;
-                }
-            } else {
-                s = 0;
-                h = -1;
-            }
-            return new _HSV(h, s, v, this.a);
-        },
-        toBytes: function() {
-            return new _Bytes(this.r * 255, this.g * 255, this.b * 255, this.a);
-        }
-    });
-
-    var _Bytes = _RGB.extend({
-        init: function(r, g, b, a) {
-            this.r = Math.round(r); this.g = Math.round(g); this.b = Math.round(b); this.a = a;
-        },
-        toRGB: function() {
-            return new _RGB(this.r / 255, this.g / 255, this.b / 255, this.a);
-        },
-        toHSV: function() {
-            return this.toRGB().toHSV();
-        },
-        toHex: function() {
-            return hex(this.r, 2) + hex(this.g, 2) + hex(this.b, 2);
-        },
-        toBytes: function() {
-            return this;
-        }
-    });
-
-    var _HSV = Color.extend({
-        init: function(h, s, v, a) {
-            this.h = h; this.s = s; this.v = v; this.a = a;
-        },
-        toRGB: function() {
-            var h = this.h, s = this.s, v = this.v;
-            var i, r, g, b, f, p, q, t;
-            if (s === 0) {
-                r = g = b = v;
-            } else {
-                h /= 60;
-                i = Math.floor(h);
-                f = h - i;
-                p = v * (1 - s);
-                q = v * (1 - s * f);
-                t = v * (1 - s * (1 - f));
-                switch (i) {
-                  case 0  : r = v; g = t; b = p; break;
-                  case 1  : r = q; g = v; b = p; break;
-                  case 2  : r = p; g = v; b = t; break;
-                  case 3  : r = p; g = q; b = v; break;
-                  case 4  : r = t; g = p; b = v; break;
-                  default : r = v; g = p; b = q; break;
-                }
-            }
-            return new _RGB(r, g, b, this.a);
-        },
-        toBytes: function() {
-            return this.toRGB().toBytes();
-        }
-    });
-
-    function parse(color, nothrow) {
-        if (color == null ||
-            color == "transparent" /* IE8 does this */)
-        {
-            return null;
-        }
-        if (color instanceof Color) {
-            return color;
-        }
-        var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(color);
-        if (m) {
-            return new _Bytes(parseInt(m[1], 16),
-                              parseInt(m[2], 16),
-                              parseInt(m[3], 16), 1);
-        }
-        m = /^#?([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec(color);
-        if (m) {
-            return new _Bytes(parseInt(m[1] + m[1], 16),
-                              parseInt(m[2] + m[2], 16),
-                              parseInt(m[3] + m[3], 16), 1);
-        }
-        m = /^rgb\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/.exec(color);
-        if (m) {
-            return new _Bytes(parseInt(m[1], 10),
-                              parseInt(m[2], 10),
-                              parseInt(m[3], 10), 1);
-        }
-        m = /^rgba\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9.]+)\s*\)/.exec(color);
-        if (m) {
-            return new _Bytes(parseInt(m[1], 10),
-                              parseInt(m[2], 10),
-                              parseInt(m[3], 10), parseFloat(m[4]));
-        }
-        m = /^rgb\(\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*\)/.exec(color);
-        if (m) {
-            return new _RGB(parseFloat(m[1]) / 100,
-                            parseFloat(m[2]) / 100,
-                            parseFloat(m[3]) / 100, 1);
-        }
-        m = /^rgba\(\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9.]+)\s*\)/.exec(color);
-        if (m) {
-            return new _RGB(parseFloat(m[1]) / 100,
-                            parseFloat(m[2]) / 100,
-                            parseFloat(m[3]) / 100, parseFloat(m[4]));
-        }
-        if (!nothrow) {
-            throw new Error("Cannot parse color: " + color);
-        }
-        return undefined;
-    }
 
     function relative(array, element, delta) {
         array = Array.prototype.slice.call(array);
@@ -28628,9 +29468,9 @@ function pad(number, digits, end) {
 
             var value = element.attr("value") || element.val();
             if (value) {
-                value = parse(value, true);
+                value = parseColor(value, true);
             } else {
-                value = parse(options.value, true);
+                value = parseColor(options.value, true);
             }
             that._value = options.value = value;
 
@@ -28639,6 +29479,21 @@ function pad(number, digits, end) {
 
             if (element.is("input")) {
                 element.appendTo(content);
+
+                // if there exists a <label> associated with this
+                // input field, we must catch clicks on it to prevent
+                // the built-in color picker from showing up.
+                // https://github.com/telerik/kendo-ui-core/issues/292
+
+                var label = element.closest("label");
+                var id = element.attr("id");
+                if (id) {
+                    label = label.add('label[for="' + id + '"]');
+                }
+                label.click(function(ev){
+                    that.open();
+                    ev.preventDefault();
+                });
             }
 
             that._tabIndex = element.attr("tabIndex") || 0;
@@ -28818,12 +29673,13 @@ function pad(number, digits, end) {
                 that.wrapper.attr("aria-owns", id);
 
                 that._popup = popup = selector.wrapper.kendoPopup({
-                    anchor: that.wrapper
+                    anchor: that.wrapper,
+                    adjustSize: { width: 5, height: 0 }
                 }).data("kendoPopup");
 
                 selector.bind({
                     select: function(ev){
-                        that._updateUI(parse(ev.value));
+                        that._updateUI(parseColor(ev.value));
                     },
                     change: function(){
                         that._select(selector.color());
@@ -28877,19 +29733,6 @@ function pad(number, digits, end) {
     ui.plugin(ColorPalette);
     ui.plugin(FlatColorPicker);
     ui.plugin(ColorPicker);
-
-    kendo.parseColor = parse;
-    kendo.Color = {
-        fromBytes: function(r, g, b, a) {
-            return new _Bytes(r, g, b, a != null ? a : 1);
-        },
-        fromRGB: function(r, g, b, a) {
-            return new _RGB(r, g, b, a != null ? a : 1);
-        },
-        fromHSV: function(h, s, v, a) {
-            return new _HSV(h, s, v, a != null ? a : 1);
-        }
-    };
 
 })(jQuery, parseInt);
 
@@ -28956,9 +29799,7 @@ function pad(number, digits, end) {
              } else {
                  that._text.on(TOUCHEND + ns + " " + FOCUS + ns, function(e) {
                     that._toggleText(false);
-                    if (e.type === FOCUS) {
-                        element.focus();
-                    }
+                    element.focus();
                  });
              }
 
@@ -29327,7 +30168,7 @@ function pad(number, digits, end) {
         },
 
         _keypress: function(e) {
-            if (e.which === 0 || e.ctrlKey || e.keyCode === keys.BACKSPACE || e.keyCode === keys.ENTER) {
+            if (e.which === 0 || e.metaKey || e.ctrlKey || e.keyCode === keys.BACKSPACE || e.keyCode === keys.ENTER) {
                 return;
             }
 
@@ -30064,9 +30905,18 @@ function pad(number, digits, end) {
 
                     if (item.length > 0) {
                         idx = item.index();
+
+                        that.angular("cleanup", function() {
+                            return { elements: [ item ]};
+                        });
+
                         item.replaceWith(template(data));
                         item = that.items().eq(idx);
                         item.attr(kendo.attr("uid"), data.uid);
+
+                        that.angular("compile", function() {
+                            return { elements: [ item ], data: [ { dataItem: data } ]};
+                        });
 
                         that.trigger("itemChange", {
                             item: item,
@@ -30137,11 +30987,7 @@ function pad(number, digits, end) {
                 navigatable = that.options.navigatable;
 
             if (selectable) {
-                multi = typeof selectable === STRING && selectable.toLowerCase().indexOf("multiple") > -1;
-
-                if (multi) {
-                    that.element.attr("aria-multiselectable", true);
-                }
+                multi = kendo.ui.Selectable.parseOptions(selectable).multiple;
 
                 that.selectable = new kendo.ui.Selectable(that.element, {
                     aria: true,
@@ -30380,6 +31226,7 @@ function pad(number, digits, end) {
            var that = this,
                editable = that.editable,
                data,
+               item,
                index,
                template = that.template,
                valid = true;
@@ -30399,7 +31246,12 @@ function pad(number, digits, end) {
 
                    index = editable.element.index();
                    editable.element.replaceWith(template(data));
-                   that.items().eq(index).attr(kendo.attr("uid"), data.uid);
+                   item = that.items().eq(index);
+                   item.attr(kendo.attr("uid"), data.uid);
+
+                   if (that._hasBindingTarget()) {
+                        kendo.bind(item, data);
+                   }
                }
            }
 
@@ -30450,6 +31302,11 @@ function pad(number, digits, end) {
            var that = this,
                dataSource = that.dataSource,
                data = that._modelFromElement(item);
+
+           if (that.editable) {
+               dataSource.cancelChanges(that._modelFromElement(that.editable.element));
+               that._closeEditable(false);
+           }
 
            if (!that.trigger(REMOVE, { model: data, item: item })) {
                item.hide();
@@ -30678,6 +31535,10 @@ function pad(number, digits, end) {
                 return this.element.val();
             }
 
+            if (value === null) {
+                value = "";
+            }
+
             if (!emptyMask) {
                 element.val(value);
                 return;
@@ -30790,6 +31651,10 @@ function pad(number, digits, end) {
             var unmasked;
             var start;
 
+            if (kendo._activeElement() !== element) {
+                return;
+            }
+
             if (value !== that._old && !that._pasting) {
                 start = caret(element)[0];
                 unmasked = that._unmask(value.substring(start), start);
@@ -30885,7 +31750,7 @@ function pad(number, digits, end) {
         },
 
         _keypress: function(e) {
-            if (e.which === 0 || e.ctrlKey || e.keyCode === keys.ENTER) {
+            if (e.which === 0 || e.metaKey || e.ctrlKey || e.keyCode === keys.ENTER) {
                 return;
             }
 
@@ -31126,7 +31991,7 @@ function pad(number, digits, end) {
         exclusionSelector = ":not(.k-item.k-separator)",
         nextSelector = exclusionSelector + ":eq(0)",
         lastSelector = exclusionSelector + ":last",
-        templateSelector = "div:not(.k-animation-container,.k-list-container)",
+        templateSelector = "> div:not(.k-animation-container,.k-list-container)",
         touchPointerTypes = { "2": 1, "touch": 1 },
 
         templates = {
@@ -31344,7 +32209,7 @@ function pad(number, digits, end) {
 
             that._focusProxy = proxy(that._focusHandler, that);
 
-            element.on(POINTERDOWN, that._focusProxy)
+            element.on(POINTERDOWN, itemSelector, that._focusProxy)
                    .on(CLICK + NS, disabledSelector, false)
                    .on(CLICK + NS, itemSelector, proxy(that._click , that))
                    .on("keydown" + NS, proxy(that._keydown, that))
@@ -31540,7 +32405,7 @@ function pad(number, digits, end) {
                             }
                         }));
             } else {
-                if (typeof item == "string" && item[0] != "<") {
+                if (typeof item == "string" && item.charAt(0) != "<") {
                     items = that.element.find(item);
                 } else {
                     items = $(item);
@@ -31675,7 +32540,7 @@ function pad(number, digits, end) {
                                         li.css(ZINDEX, li.data(ZINDEX));
                                         li.removeData(ZINDEX);
 
-                                        if (mobile) {
+                                        if (touch) {
                                             li.removeClass(HOVERSTATE);
                                             that._removeHoverItem();
                                         }
@@ -31865,9 +32730,11 @@ function pad(number, digits, end) {
                 targetHref = target.attr("href"),
                 sampleHref = $("<a href='#' />").attr("href"),
                 isLink = (!!href && href !== sampleHref),
-                isTargetLink = (!!targetHref && targetHref !== sampleHref);
+                isLocalLink = isLink && !!href.match(/^#/),
+                isTargetLink = (!!targetHref && targetHref !== sampleHref),
+                shouldCloseTheRootItem = (options.openOnClick && childGroupVisible && that._isRootItem(element));
 
-            if (!options.openOnClick && element.children(templateSelector)[0]) {
+            if (target.closest(templateSelector, element[0]).length) {
                 return;
             }
 
@@ -31885,7 +32752,7 @@ function pad(number, digits, end) {
             childGroup = element.children(popupSelector);
             childGroupVisible = childGroup.is(":visible");
 
-            if (options.closeOnClick && !isLink && (!childGroup.length || (options.openOnClick && childGroupVisible && that._isRootItem(element)))) {
+            if (options.closeOnClick && (!isLink || isLocalLink) && (!childGroup.length || shouldCloseTheRootItem)) {
                 element.removeClass(HOVERSTATE).css("height"); // Force refresh for Chrome
                 that._oldHoverItem = that._findRootParent(element);
                 that.close(link.parentsUntil(that.element, allItemsSelector));
@@ -31900,7 +32767,7 @@ function pad(number, digits, end) {
                 link[0].click();
             }
 
-            if ((!element.parent().hasClass(MENU) || !options.openOnClick) && !kendo.support.touch && !((pointers || msPointers) && that._isRootItem(element.closest(allItemsSelector)))) {
+            if ((!that._isRootItem(element) || !options.openOnClick) && !kendo.support.touch && !((pointers || msPointers) && that._isRootItem(element.closest(allItemsSelector)))) {
                 return;
             }
 
@@ -32323,7 +33190,7 @@ function pad(number, digits, end) {
                         that.popup.open();
                     }
 
-                    DOCUMENT_ELEMENT.off(MOUSEDOWN, that.popup._mousedownProxy);
+                    DOCUMENT_ELEMENT.off(that.popup.downEvent, that.popup._mousedownProxy);
                     DOCUMENT_ELEMENT
                         .on(kendo.support.mousedown + NS, that._closeProxy);
                 }
@@ -32389,16 +33256,16 @@ function pad(number, digits, end) {
         _closeHandler: function (e) {
             var that = this,
 				options = that.options,
-                target = e.relatedTarget || e.target,
-				sameTarget = target == that.target[0],
-                children = $(target).closest(itemSelector).children(popupSelector),
-                containment = contains(that.element[0], target);
+                target = $(e.relatedTarget || e.target),
+				sameTarget = target.closest(that.target.selector)[0] == that.target[0],
+                children = target.closest(itemSelector).children(popupSelector),
+                containment = contains(that.element[0], target[0]);
 
             that._eventOrigin = e;
 
-            if (that.popup.visible() && ((e.which !== 3 && sameTarget) || !sameTarget) && ((that.options.closeOnClick && !touch &&
-                !((pointers || msPointers) && e.originalEvent.pointerType in touchPointerTypes) &&
-                !children[0] && containment) || !containment)) {
+            var normalClick = e.which !== 3;
+
+            if (that.popup.visible() && ((normalClick && sameTarget) || !sameTarget) && ((that.options.closeOnClick && !children[0] && containment) || !containment)) {
                     if (containment) {
                         this.unbind(SELECT, this._closeTimeoutProxy);
                         that.bind(SELECT, that._closeTimeoutProxy);
@@ -32513,7 +33380,7 @@ function pad(number, digits, end) {
         SELECTEDSELECTOR = "." + SELECTEDCLASS,
         HIGHLIGHTCLASS = "k-state-highlight",
         ACTIVEITEMSELECTOR = ITEM + ":not(.k-state-disabled)",
-        clickableItems = ACTIVEITEMSELECTOR + " > .k-link",
+        clickableItems = "> " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR + ", .k-panel > " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR,
         disabledItems = ITEM + ".k-state-disabled > .k-link",
         selectableItems = "> li > " + SELECTEDSELECTOR + ", .k-panel > li > " + SELECTEDSELECTOR,
         defaultState = "k-state-default",
@@ -33126,6 +33993,10 @@ function pad(number, digits, end) {
                 parent = $(PanelBar.renderGroup({ group: groupData })).appendTo(referenceItem);
             }
 
+            if (item instanceof kendo.Observable) {
+                item = item.toJSON();
+            }
+
             if (plain || $.isArray(item)) { // is JSON
                 items = $.map(plain ? [ item ] : item, function (value, idx) {
                             if (typeof value === "string") {
@@ -33142,7 +34013,7 @@ function pad(number, digits, end) {
                     referenceItem.attr(ARIA_EXPANDED, false);
                 }
             } else {
-                if (typeof item == "string" && item[0] != "<") {
+                if (typeof item == "string" && item.charAt(0) != "<") {
                     items = that.element.find(item);
                 } else {
                     items = $(item);
@@ -34133,7 +35004,7 @@ function pad(number, digits, end) {
                 item
                     .contents()      // exclude groups, real links, templates and empty text nodes
                     .filter(function() { return (!this.nodeName.match(excludedNodesRegExp) && !(this.nodeType == 3 && !trim(this.nodeValue))); })
-                    .wrapAll("<a class='" + LINK + "'/>");
+                    .wrapAll("<span class='" + LINK + "'/>");
             }
         });
 
@@ -34192,9 +35063,20 @@ function pad(number, digits, end) {
 
             that.wrapper.children(".k-tabstrip-items")
                 .on(CLICK + NS, ".k-state-disabled .k-link", false)
-                .on(CLICK + NS, " > " + NAVIGATABLEITEMS, function(e) {
-                    if (that.wrapper[0] !== document.activeElement) {
-                        that.wrapper.focus();
+                .on(CLICK + NS, " > " + NAVIGATABLEITEMS, function (e) {
+                    var wr = that.wrapper[0];
+                    if (wr !== document.activeElement) {
+                        var msie = kendo.support.browser.msie;
+                        if (msie) {
+                            try {
+                                // does not scroll to the active element
+                                wr.setActive();
+                            } catch (j) {
+                                wr.focus();
+                            }
+                        } else {
+                            wr.focus();
+                        }
                     }
 
                     if (that._click($(e.currentTarget))) {
@@ -34338,9 +35220,11 @@ function pad(number, digits, end) {
         },
 
         setDataSource: function(dataSource) {
-            this.options.dataSource = dataSource;
-            this._dataSource();
-            dataSource.fetch();
+            var that = this;
+
+            that.options.dataSource = dataSource;
+            that._dataSource();
+            that.dataSource.fetch();
         },
 
         _animations: function(options) {
@@ -34567,8 +35451,10 @@ function pad(number, digits, end) {
                 inserted = that._create(tab);
 
             each(inserted.tabs, function (idx) {
+                var contents = inserted.contents[idx];
                 that.tabGroup.append(this);
-                that.wrapper.append(inserted.contents[idx]);
+                that.wrapper.append(contents);
+                that.angular("compile", function(){ return { elements: [ contents ] }; });
             });
 
             updateFirstLast(that.tabGroup);
@@ -34585,8 +35471,10 @@ function pad(number, digits, end) {
                 referenceContent = $(that.contentElement(referenceTab.index()));
 
             each(inserted.tabs, function (idx) {
+                var contents = inserted.contents[idx];
                 referenceTab.before(this);
-                referenceContent.before(inserted.contents[idx]);
+                referenceContent.before(contents);
+                that.angular("compile", function(){ return { elements: [ contents ] }; });
             });
 
             updateFirstLast(that.tabGroup);
@@ -34603,8 +35491,10 @@ function pad(number, digits, end) {
                 referenceContent = $(that.contentElement(referenceTab.index()));
 
             each(inserted.tabs, function (idx) {
+                var contents = inserted.contents[idx];
                 referenceTab.after(this);
-                referenceContent.after(inserted.contents[idx]);
+                referenceContent.after(contents);
+                that.angular("compile", function(){ return { elements: [ contents ] }; });
             });
 
             updateFirstLast(that.tabGroup);
@@ -34614,9 +35504,9 @@ function pad(number, digits, end) {
         },
 
         remove: function (elements) {
-            var that = this,
-                type = typeof elements,
-                contents = $();
+            var that = this;
+            var type = typeof elements;
+            var contents;
 
             if (type === "string") {
                 elements = that.tabGroup.find(elements);
@@ -34624,9 +35514,12 @@ function pad(number, digits, end) {
                 elements = that.tabGroup.children().eq(elements);
             }
 
-            elements.each(function () {
-                contents.push(that.contentElement($(this).index()));
+            contents = elements.map(function () {
+                var content = that.contentElement($(this).index());
+                kendo.destroy(content);
+                return content;
             });
+
             elements.remove();
             contents.remove();
 
@@ -35159,7 +36052,8 @@ function pad(number, digits, end) {
                             }, 40);
                         }
 
-                        that.angular("cleanup", function(){ return { elements: content.get() }; });
+                        that.angular("cleanup", function () { return { elements: content.get() }; });
+                        kendo.destroy(content);
                         content.html(data);
                     } catch (e) {
                         var console = window.console;
@@ -36142,7 +37036,7 @@ function pad(number, digits, end) {
         ARIA_DISABLED = "aria-disabled",
         ARIA_READONLY = "aria-readonly",
         DATE = Date,
-        MIN = new DATE(1900, 0, 1),
+        MIN = new DATE(1800, 0, 1),
         MAX = new DATE(2099, 11, 31),
         dateViewParams = { view: "date" },
         timeViewParams = { view: "time" },
@@ -36636,7 +37530,7 @@ function pad(number, digits, end) {
                         e.preventDefault();
                     } else {
 
-                        if (that.element.val() !== that._oldText) {
+                        if (element.val() !== that._oldText) {
                             date = parse(element.val(), options.parseFormats, options.culture);
 
                             that.dateView[date ? "current" : "value"](date);
@@ -36703,6 +37597,12 @@ function pad(number, digits, end) {
                     if (that.trigger(OPEN, timeViewParams)) {
                         e.preventDefault();
                     } else {
+                        if (element.val() !== that._oldText) {
+                            date = parse(element.val(), options.parseFormats, options.culture);
+
+                            that.timeView.value(date);
+                        }
+
                         ul.attr(ARIA_HIDDEN, false);
                         element.attr(ARIA_EXPANDED, true)
                                .attr(ARIA_OWNS, timeView._timeViewID);
@@ -36933,6 +37833,14 @@ function pad(number, digits, end) {
             LAYOUTCHANGE
         ],
 
+        _addOverlays: function() {
+            this._panes().append("<div class='k-splitter-overlay k-overlay' />");
+        },
+
+        _removeOverlays: function() {
+            this._panes().children(".k-splitter-overlay").remove();
+        },
+
         _attachEvents: function() {
             var that = this,
                 orientation = that.options.orientation;
@@ -36940,7 +37848,7 @@ function pad(number, digits, end) {
             // do not use delegated events to increase performance of nested elements
             that.element
                 .children(".k-splitbar-draggable-" + orientation)
-                    .on("keydown" + NS, $.proxy(that._keydown, that))
+                    .on("keydown" + NS, proxy(that._keydown, that))
                     .on("mousedown" + NS, function(e) { e.currentTarget.focus(); })
                     .on("focus" + NS, function(e) { $(e.currentTarget).addClass(FOCUSED);  })
                     .on("blur" + NS, function(e) { $(e.currentTarget).removeClass(FOCUSED);
@@ -36950,8 +37858,7 @@ function pad(number, digits, end) {
                     })
                     .on(MOUSEENTER + NS, function() { $(this).addClass("k-splitbar-" + that.orientation + "-hover"); })
                     .on(MOUSELEAVE + NS, function() { $(this).removeClass("k-splitbar-" + that.orientation + "-hover"); })
-                    .on("mousedown" + NS, function() { that._panes().append("<div class='k-splitter-overlay k-overlay' />"); })
-                    .on("mouseup" + NS, function() { that._panes().children(".k-splitter-overlay").remove(); })
+                    .on("mousedown" + NS, proxy(that._addOverlays, that))
                 .end()
                 .children(".k-splitbar")
                     .on("dblclick" + NS, proxy(that._togglePane, that))
@@ -36959,7 +37866,9 @@ function pad(number, digits, end) {
                     .children(".k-expand-next, .k-expand-prev").on(CLICK + NS, that._arrowClick(EXPAND)).end()
                 .end();
 
-            $(window).on("resize" + NS + that._marker, proxy(that.resize, that));
+            $(window)
+                .on("resize" + NS + that._marker, proxy(that.resize, that))
+                .on("mouseup" + NS + that._marker, proxy(that._removeOverlays, that));
         },
 
         _detachEvents: function() {
@@ -37195,6 +38104,9 @@ function pad(number, digits, end) {
             this.element.children(".k-splitbar").remove();
         },
         _panes: function() {
+            if (!this.element) {
+                return $();
+            }
             return this.element.children(PANECLASS);
         },
 
@@ -37912,6 +38824,18 @@ function pad(number, digits, end) {
             }
         },
 
+        _actions: function() {
+            var actions = this.options.actions;
+            var titlebar = this.wrapper.children(KWINDOWTITLEBAR);
+            var container = titlebar.find(".k-window-actions");
+
+            actions = $.map(actions, function(action) {
+                return { name: action };
+            });
+
+            container.html(kendo.render(templates.action, actions));
+        },
+
         setOptions: function(options) {
             Widget.fn.setOptions.call(this, options);
             this._animations();
@@ -37919,6 +38843,7 @@ function pad(number, digits, end) {
             this._position();
             this._resizable();
             this._draggable();
+            this._actions();
         },
 
         events:[
@@ -38147,7 +39072,7 @@ function pad(number, digits, end) {
                 options = that.options,
                 titleBar = wrapper.children(KWINDOWTITLEBAR),
                 title = titleBar.children(KWINDOWTITLE),
-                titleBarHeight = titleBar.outerHeight();
+                titleBarHeight;
 
             if (!arguments.length) {
                 return title.text();
@@ -38158,14 +39083,19 @@ function pad(number, digits, end) {
                 titleBar.remove();
             } else {
                 if (!titleBar.length) {
-                    wrapper.prepend(templates.titlebar(extend(templates, options)));
+                    wrapper.prepend(templates.titlebar(options));
+                    that._actions();
+                    titleBar = wrapper.children(KWINDOWTITLEBAR);
+                } else {
+                    title.html(text);
                 }
+
+                titleBarHeight = titleBar.outerHeight();
 
                 wrapper.css("padding-top", titleBarHeight);
                 titleBar.css("margin-top", -titleBarHeight);
             }
 
-            title.text(text);
             that.options.title = text;
 
             return that;
@@ -38532,14 +39462,15 @@ function pad(number, digits, end) {
             var that = this,
                 wrapper = that.wrapper,
                 wnd = $(window),
+                zoomLevel = kendo.support.zoomLevel(),
                 w, h;
 
             if (!that.options.isMaximized) {
                 return;
             }
 
-            w = wnd.width();
-            h = wnd.height() - parseInt(wrapper.css("padding-top"), 10);
+            w = wnd.width() / zoomLevel;
+            h = wnd.height() / zoomLevel - parseInt(wrapper.css("padding-top"), 10);
 
             wrapper.css({
                     width: w,
@@ -38695,10 +39626,6 @@ function pad(number, digits, end) {
 
             wrapper = $(templates.wrapper(options));
 
-            if (options.title !== false) {
-                wrapper.append(templates.titlebar(extend(templates, options)));
-            }
-
             // Collect the src attributes of all iframes and then set them to empty string.
             // This seems to fix this IE9 "feature": http://msdn.microsoft.com/en-us/library/gg622929%28v=VS.85%29.aspx?ppud=4
             iframeSrcAttributes = contentHtml.find("iframe:not(.k-content)").map(function() {
@@ -38744,11 +39671,7 @@ function pad(number, digits, end) {
         titlebar: template(
             "<div class='k-window-titlebar k-header'>&nbsp;" +
                 "<span class='k-window-title'>#= title #</span>" +
-                "<div class='k-window-actions'>" +
-                "# for (var i = 0; i < actions.length; i++) { #" +
-                    "#= action({ name: actions[i] }) #" +
-                "# } #" +
-                "</div>" +
+                "<div class='k-window-actions' />" +
             "</div>"
         ),
         overlay: "<div class='k-overlay' />",
@@ -38993,6 +39916,7 @@ function pad(number, digits, end) {
 
 (function($, undefined) {
     var kendo = window.kendo,
+        angular = window.angular,
         mobile = kendo.mobile,
         ui = mobile.ui,
         attr = kendo.attr,
@@ -39011,7 +39935,9 @@ function pad(number, digits, end) {
         DESTROY = "destroy",
         Z_INDEX = "z-index",
         attrValue = kendo.attrValue,
-        roleSelector = kendo.roleSelector;
+        roleSelector = kendo.roleSelector,
+        directiveSelector = kendo.directiveSelector,
+        compileMobileDirective = kendo.compileMobileDirective;
 
     function initPopOvers(element) {
         var popovers = element.find(roleSelector("popover")),
@@ -39032,8 +39958,6 @@ function pad(number, digits, end) {
     var View = Widget.extend({
         init: function(element, options) {
             Widget.fn.init.call(this, element, options);
-
-
             this.params = {};
 
             $.extend(this, options);
@@ -39041,10 +39965,15 @@ function pad(number, digits, end) {
             this.transition = this.transition || this.defaultTransition;
 
             this._id();
-            this._layout();
-            this._overlay();
-            this._scroller();
-            this._model();
+
+            if (!this.options.$angular) {
+                this._layout();
+                this._overlay();
+                this._scroller();
+                this._model();
+            } else {
+                this._overlay();
+            }
         },
 
         events: [
@@ -39062,6 +39991,8 @@ function pad(number, digits, end) {
         options: {
             name: "View",
             title: "",
+            layout: null,
+            getLayout: $.noop,
             reload: false,
             transition: "",
             defaultTransition: "",
@@ -39093,12 +40024,16 @@ function pad(number, digits, end) {
 
             this.trigger(DESTROY);
 
+
             Widget.fn.destroy.call(this);
 
             if (this.scroller) {
                 this.scroller.destroy();
             }
 
+            if (this.options.$angular) {
+                this.element.scope().$destroy();
+            }
 
             kendo.destroy(this.element);
         },
@@ -39116,21 +40051,24 @@ function pad(number, digits, end) {
         },
 
         showStart: function() {
-            var that = this;
-            that.element.css("display", "");
+            var element = this.element;
 
-            if (!that.inited) {
-                that.inited = true;
-                that.trigger(INIT, {view: that});
+            element.css("display", "");
+
+            if (!this.inited) {
+                this.inited = true;
+                this.trigger(INIT, {view: this});
+            } else { // skip the initial controller update
+                this._invokeNgController();
             }
 
-            if (that.layout) {
-                that.layout.attach(that);
+            if (this.layout) {
+                this.layout.attach(this);
             }
 
-            that._padIfNativeScrolling();
-            that.trigger(SHOW, {view: that});
-            kendo.resize(that.element);
+            this._padIfNativeScrolling();
+            this.trigger(SHOW, {view: this});
+            kendo.resize(element);
         },
 
         showEnd: function() {
@@ -39163,8 +40101,11 @@ function pad(number, digits, end) {
         _padIfNativeScrolling: function() {
             if (mobile.appLevelNativeScrolling()) {
                 var isAndroid = kendo.support.mobileOS && kendo.support.mobileOS.android,
-                    topContainer = isAndroid ? "footer" : "header",
-                    bottomContainer = isAndroid ? "header" : "footer";
+                    skin = mobile.application.skin() || "",
+                    isAndroidForced = mobile.application.os.android || (skin.indexOf("android") > -1),
+                    hasPlatformIndependentSkin = skin === "flat" || (skin.indexOf("material") > -1),
+                    topContainer = (isAndroid || isAndroidForced) && (!hasPlatformIndependentSkin) ? "footer" : "header",
+                    bottomContainer = (isAndroid || isAndroidForced) && (!hasPlatformIndependentSkin) ? "header" : "footer";
 
                 this.content.css({
                     paddingTop: this[topContainer].height(),
@@ -39244,32 +40185,57 @@ function pad(number, digits, end) {
         },
 
         _layout: function() {
-            var that = this,
-                contentSelector = roleSelector("content"),
-                element = that.element;
+            var contentSelector = roleSelector("content"),
+                element = this.element;
 
             element.addClass("km-view");
 
-            that.header = element.children(roleSelector("header")).addClass("km-header");
-            that.footer = element.children(roleSelector("footer")).addClass("km-footer");
+            this.header = element.children(roleSelector("header")).addClass("km-header");
+            this.footer = element.children(roleSelector("footer")).addClass("km-footer");
 
             if (!element.children(contentSelector)[0]) {
               element.wrapInner("<div " + attr("role") + '="content"></div>');
             }
 
-            that.content = element.children(roleSelector("content"))
+            this.content = element.children(roleSelector("content"))
                                 .addClass("km-content");
 
-            that.element.prepend(that.header).append(that.footer);
+            this.element.prepend(this.header).append(this.footer);
 
 
-            if (that.layout) {
-                that.layout.setup(that);
+            this.layout = this.options.getLayout(this.layout);
+
+            if (this.layout) {
+                this.layout.setup(this);
             }
         },
 
         _overlay: function() {
             this.overlay = $(UI_OVERLAY).appendTo(this.element);
+        },
+
+        _invokeNgController: function() {
+            var controller,
+                scope;
+
+            if (this.options.$angular) {
+                controller = this.element.controller();
+                scope = this.element.scope();
+
+                if (controller) {
+                    var callback = $.proxy(this, '_callController', controller, scope);
+
+                    if (/^\$(digest|apply)$/.test(scope.$$phase)) {
+                        callback();
+                    } else {
+                        scope.$apply(callback);
+                    }
+                }
+            }
+        },
+
+        _callController: function(controller, scope) {
+            this.element.injector().invoke(controller.constructor, controller, { $scope: scope });
         }
     });
 
@@ -39281,24 +40247,31 @@ function pad(number, digits, end) {
 
     var Layout = Widget.extend({
         init: function(element, options) {
-            var that = this;
-            Widget.fn.init.call(that, element, options);
+            Widget.fn.init.call(this, element, options);
 
-            element = that.element;
+            element = this.element;
 
-            that.header = element.children(roleSelector("header")).addClass("km-header");
-            that.footer = element.children(roleSelector("footer")).addClass("km-footer");
-            that.elements = that.header.add(that.footer);
+            this.header = element.children(this._locate("header")).addClass("km-header");
+            this.footer = element.children(this._locate("footer")).addClass("km-footer");
+            this.elements = this.header.add(this.footer);
 
             initPopOvers(element);
 
-            kendo.mobile.init(that.element.children());
-            that.element.detach();
-            that.trigger(INIT, {layout: that});
+            if (!this.options.$angular) {
+                kendo.mobile.init(this.element.children());
+            }
+            this.element.detach();
+            this.trigger(INIT, {layout: this});
+        },
+
+        _locate: function(selectors) {
+            return this.options.$angular ? directiveSelector(selectors) : roleSelector(selectors);
         },
 
         options: {
-            name: "Layout"
+            name: "Layout",
+            id: null,
+            platform: null
         },
 
         events: [
@@ -39355,6 +40328,7 @@ function pad(number, digits, end) {
         SHOW_START = "showStart",
         SAME_VIEW_REQUESTED = "sameViewRequested",
         VIEW_SHOW = "viewShow",
+        VIEW_TYPE_DETERMINED = "viewTypeDetermined",
         AFTER = "after";
 
     var ViewEngine = Observable.extend({
@@ -39362,7 +40336,8 @@ function pad(number, digits, end) {
             var that = this,
                 views,
                 errorMessage,
-                container;
+                container,
+                collection;
 
             Observable.fn.init.call(that);
 
@@ -39398,10 +40373,32 @@ function pad(number, digits, end) {
                 that.trigger(AFTER);
             });
 
+            this.getLayoutProxy = $.proxy(this, "_getLayout");
             that._setupLayouts(container);
 
-            initWidgets(container.children(roleSelector("modalview drawer")));
+            collection = container.children(that._locate("modalview drawer"));
+            if (that.$angular) {
+                collection.each(function(idx, element) {
+                    compileMobileDirective($(element), function(scope) {
+                        //pass the options?
+                    });
+                });
+            } else {
+                initWidgets(collection);
+            }
+
+            this.bind(this.events, options);
         },
+
+        events: [
+            SHOW_START,
+            AFTER,
+            VIEW_SHOW,
+            LOAD_START,
+            LOAD_COMPLETE,
+            SAME_VIEW_REQUESTED,
+            VIEW_TYPE_DETERMINED
+        ],
 
         destroy: function() {
             kendo.destroy(this.container);
@@ -39421,7 +40418,7 @@ function pad(number, digits, end) {
                 url = "/";
             }
 
-            if (url === this.url) {
+            if (url.replace(/^#/, "") === this.url) {
                 this.trigger(SAME_VIEW_REQUESTED);
                 return false;
             }
@@ -39435,7 +40432,8 @@ function pad(number, digits, end) {
                 element = that._findViewElement(url),
                 view = kendo.widgetInstance(element);
 
-            that.url = url;
+            that.url = url.replace(/^#/, "");
+
             that.params = params;
 
             if (view && view.reload) {
@@ -39443,7 +40441,7 @@ function pad(number, digits, end) {
                 element = [];
             }
 
-            this.trigger("viewTypeDetermined", { remote: element.length === 0, url: url });
+            this.trigger(VIEW_TYPE_DETERMINED, { remote: element.length === 0, url: url });
 
             if (element[0]) {
                 if (!view) {
@@ -39452,16 +40450,19 @@ function pad(number, digits, end) {
 
                 return showClosure(view);
             } else {
-                that._loadView(url, showClosure);
+                if (this.serverNavigation) {
+                    location.href = url;
+                } else {
+                    that._loadView(url, showClosure);
+                }
                 return true;
             }
         },
 
         append: function(html, url) {
-            var that = this,
-                sandbox = that.sandbox,
+            var sandbox = this.sandbox,
                 urlPath = (url || "").split("?")[0],
-                container = that.container,
+                container = this.container,
                 views,
                 modalViews,
                 view;
@@ -39474,7 +40475,7 @@ function pad(number, digits, end) {
 
             container.append(sandbox.children("script, style"));
 
-            views = that._hideViews(sandbox);
+            views = this._hideViews(sandbox);
             view = views.first();
 
             // Generic HTML content found as remote view - no remote view markers
@@ -39486,18 +40487,21 @@ function pad(number, digits, end) {
                 view.hide().attr(attr("url"), urlPath);
             }
 
-            that._setupLayouts(sandbox);
+            this._setupLayouts(sandbox);
 
-            modalViews = sandbox.children(roleSelector("modalview drawer"));
+            modalViews = sandbox.children(this._locate("modalview drawer"));
 
-            container.append(sandbox.children(roleSelector("layout modalview drawer")).add(views));
+            container.append(sandbox.children(this._locate("layout modalview drawer")).add(views));
 
             // Initialize the modalviews after they have been appended to the final container
             initWidgets(modalViews);
 
-            return that._createView(view);
+            return this._createView(view);
         },
 
+        _locate: function(selectors) {
+            return this.$angular ? directiveSelector(selectors) : roleSelector(selectors);
+        },
 
         _findViewElement: function(url) {
             var element,
@@ -39518,71 +40522,93 @@ function pad(number, digits, end) {
         },
 
         _createView: function(element) {
-            var that = this,
-                viewOptions,
-                layout = attrValue(element, "layout");
+            if (this.$angular) {
+                var that = this;
 
-            if (typeof layout === "undefined") {
-                layout = that.layout;
+                return compileMobileDirective(element, function(scope) {
+                    scope.viewOptions = {
+                        defaultTransition: that.transition,
+                        loader: that.loader,
+                        container: that.container,
+                        getLayout: that.getLayoutProxy
+                    };
+                });
+            } else {
+                return kendo.initWidget(element, {
+                    defaultTransition: this.transition,
+                    loader: this.loader,
+                    container: this.container,
+                    getLayout: this.getLayoutProxy,
+                    modelScope: this.modelScope,
+                    reload: attrValue(element, "reload")
+                }, ui.roles);
+            }
+        },
+
+        _getLayout: function(name) {
+            if (name === "") {
+                return null;
             }
 
-            if (layout) {
-                layout = that.layouts[layout];
-            }
-
-            viewOptions = {
-                defaultTransition: that.transition,
-                loader: that.loader,
-                container: that.container,
-                layout: layout,
-                modelScope: that.modelScope,
-                reload: attrValue(element, "reload")
-            };
-
-            return kendo.initWidget(element, viewOptions, ui.roles);
+            return name ? this.layouts[name] : this.layouts[this.layout];
         },
 
         _loadView: function(url, callback) {
-            var that = this;
-
-            if (this.serverNavigation) {
-                location.href = url;
-                return;
+            if (this._xhr) {
+                this._xhr.abort();
             }
 
-            if (that._xhr) {
-                that._xhr.abort();
+            this.trigger(LOAD_START);
+
+            this._xhr = $.get(kendo.absoluteURL(url, this.remoteViewURLPrefix), "html")
+                .always($.proxy(this, "_xhrComplete", callback, url));
+        },
+
+        _xhrComplete: function(callback, url, response, status, err) {
+            var success = true;
+
+            if (typeof response === "object") {
+                if (response.status === 0) {
+                    if (response.responseText && response.responseText.length > 0) {
+                        success = true;
+                        response = response.responseText;
+                    } else { // request has been aborted for real
+                        return;
+                    }
+                }
             }
 
-            that.trigger(LOAD_START);
+            this.trigger(LOAD_COMPLETE);
 
-            that._xhr = $.get(kendo.absoluteURL(url, that.remoteViewURLPrefix), function(html) {
-                            that.trigger(LOAD_COMPLETE);
-                            callback(that.append(html, url));
-                        }, 'html')
-                        .fail(function(request) {
-                            that.trigger(LOAD_COMPLETE);
-                            if (request.status === 0 && request.responseText) {
-                                callback(that.append(request.responseText, url));
-                            }
-                        });
+            if (success) {
+                callback(this.append(response, url));
+            }
         },
 
         _hideViews: function(container) {
-            return container.children(roleSelector("view splitview")).hide();
+            return container.children(this._locate("view splitview")).hide();
         },
 
         _setupLayouts: function(element) {
-            var that = this;
+            var that = this,
+                layout;
 
-            element.children(roleSelector("layout")).each(function() {
-                var layout = $(this),
-                    platform = attrValue(layout,  "platform");
+            element.children(that._locate("layout")).each(function() {
+                if (that.$angular) {
+                    layout = compileMobileDirective($(this));
+                } else {
+                    layout = kendo.initWidget($(this), {}, ui.roles);
+                }
 
-                if (platform === undefined || platform === mobile.application.os.name) {
-                    that.layouts[kendo.attrValue(layout, "id")] = kendo.initWidget(layout, {}, ui.roles);
+                var platform = layout.options.platform;
+
+                if (!platform || platform === mobile.application.os.name) {
+                    that.layouts[layout.options.id] = layout;
+                } else {
+                    layout.destroy();
                 }
             });
+
         }
     });
 
@@ -39772,39 +40798,41 @@ function pad(number, digits, end) {
                 serverNavigation: options.serverNavigation,
                 remoteViewURLPrefix: options.root || "",
                 layout: options.layout,
-                loader: that.loader
-            });
+                $angular: options.$angular,
+                loader: that.loader,
 
-            that.viewEngine.bind("showStart", function() {
-                that.loader.transition();
-                that.closeActiveDialogs();
-            });
+                showStart: function() {
+                    that.loader.transition();
+                    that.closeActiveDialogs();
+                },
 
-            that.viewEngine.bind("after", function(e) {
-                that.loader.transitionDone();
-            });
+                after: function(e) {
+                    that.loader.transitionDone();
+                },
 
-            that.viewEngine.bind(VIEW_SHOW, function(e) {
-                that.trigger(VIEW_SHOW, e);
-            });
+                viewShow: function(e) {
+                    that.trigger(VIEW_SHOW, e);
+                },
 
-            that.viewEngine.bind("loadStart", function() {
-                that.loader.show();
-            });
+                loadStart: function() {
+                    that.loader.show();
+                },
 
-            that.viewEngine.bind("loadComplete", function() {
-                that.loader.hide();
-            });
+                loadComplete: function() {
+                    that.loader.hide();
+                },
 
-            that.viewEngine.bind(SAME_VIEW_REQUESTED, function() {
-                that.trigger(SAME_VIEW_REQUESTED);
-            });
+                sameViewRequested: function() {
+                    that.trigger(SAME_VIEW_REQUESTED);
+                },
 
-            that.viewEngine.bind("viewTypeDetermined", function(e) {
-                if (!e.remote || !that.options.serverNavigation)  {
-                    that.trigger(NAVIGATE, { url: e.url });
+                viewTypeDetermined: function(e) {
+                    if (!e.remote || !that.options.serverNavigation)  {
+                        that.trigger(NAVIGATE, { url: e.url });
+                    }
                 }
             });
+
 
             this._setPortraitWidth();
 
@@ -39879,8 +40907,7 @@ function pad(number, digits, end) {
 
         bindToRouter: function(router) {
             var that = this,
-                options = that.options,
-                initial = options.initial,
+                history = this.history,
                 viewEngine = this.viewEngine;
 
             router.bind("init", function(e) {
@@ -39889,8 +40916,11 @@ function pad(number, digits, end) {
 
                 viewEngine.rootView.attr(kendo.attr("url"), attrUrl);
 
-                if (url === "/" && initial) {
-                    router.navigate(initial, true);
+                // if current is set, then this means that the pane has navigated to a given view - we need to update the router accordingly.
+                var length = history.length;
+
+                if (url === "/" && length) {
+                    router.navigate(history[length - 1], true);
                     e.preventDefault(); // prevents from executing routeMissing, by default
                 }
             });
@@ -39953,6 +40983,9 @@ function pad(number, digits, end) {
                     that._mouseup(e.event);
                 }
             });
+
+            // remove the ms-touch-action added by the user events, breaks native scrolling in WP8
+            this.element.css('-ms-touch-action', '');
         },
 
         _appLinkClick: function (e) {
@@ -40218,7 +41251,8 @@ function pad(number, digits, end) {
     var PopOver = Widget.extend({
         init: function(element, options) {
             var that = this,
-                popupOptions;
+                popupOptions,
+                paneOptions;
 
             that.initialOpen = false;
 
@@ -40236,7 +41270,7 @@ function pad(number, digits, end) {
                 }
             });
 
-            that.pane = new ui.Pane(that.element, this.options.pane);
+            that.pane = new ui.Pane(that.element, $.extend(this.options.pane, { $angular: this.options.$angular }));
             that.pane.navigateToInitial();
 
             kendo.notify(that, ui);
@@ -40260,6 +41294,8 @@ function pad(number, digits, end) {
                 this.pane.navigate("");
                 this.popup.popup._position();
                 this.initialOpen = true;
+            } else {
+                this.pane.view()._invokeNgController();
             }
         },
 
@@ -40427,38 +41463,16 @@ function pad(number, digits, end) {
 
             Widget.fn.init.call(that, element, options);
 
-            element = that.element;
-            options = that.options;
-
-            width = element[0].style.width || "auto";
-            height = element[0].style.height || "auto";
-
-            element.addClass("km-modalview").wrap(WRAP);
-
-            that.wrapper = element.parent().css({
-                width: options.width || width || 300,
-                height: options.height || height || 300
-            }).addClass(height == "auto" ? " km-auto-height" : "");
-
-            element.css({ width: "", height: "" });
-
-            that.shim = new Shim(that.wrapper, {
-                modal: options.modal,
-                position: "center center",
-                align: "center center",
-                effect: "fade:in",
-                className: "km-modalview-root",
-                hide: function(e) {
-                    if (that.trigger(CLOSE)) {
-                        e.preventDefault();
-                    }
-                }
-            });
-
             that._id();
-            that._layout();
-            that._scroller();
-            that._model();
+            that._wrap();
+            that._shim();
+
+            if (!this.options.$angular) {
+                that._layout();
+                that._scroller();
+                that._model();
+            }
+
             that.element.css("display", "");
 
             that.trigger(INIT);
@@ -40487,6 +41501,9 @@ function pad(number, digits, end) {
             var that = this;
             that.target = $(target);
             that.shim.show();
+
+            that._invokeNgController();
+
             // necessary for the mobile view interface
             that.trigger("show", { view: that });
         },
@@ -40503,6 +41520,42 @@ function pad(number, digits, end) {
             if (this.element.is(":visible") && !this.trigger(CLOSE)) {
                 this.shim.hide();
             }
+        },
+
+        _wrap: function() {
+            var that = this,
+                element = that.element,
+                options = that.options,
+                width, height;
+
+            width = element[0].style.width || "auto";
+            height = element[0].style.height || "auto";
+
+            element.addClass("km-modalview").wrap(WRAP);
+
+            that.wrapper = element.parent().css({
+                width: options.width || width || 300,
+                height: options.height || height || 300
+            }).addClass(height == "auto" ? " km-auto-height" : "");
+
+            element.css({ width: "", height: "" });
+        },
+
+        _shim: function() {
+            var that = this;
+
+            that.shim = new Shim(that.wrapper, {
+                modal: that.options.modal,
+                position: "center center",
+                align: "center center",
+                effect: "fade:in",
+                className: "km-modalview-root",
+                hide: function(e) {
+                    if (that.trigger(CLOSE)) {
+                        e.preventDefault();
+                    }
+                }
+            });
         }
     });
 
@@ -40536,8 +41589,11 @@ function pad(number, digits, end) {
 
             mobile.ui.Widget.fn.init.call(this, element, options);
 
-            this._layout();
-            this._scroller();
+            if (!this.options.$angular) {
+                this._layout();
+                this._scroller();
+            }
+
             this._model();
 
             var pane = this.element.closest(roleSelector("pane")).data("kendoMobilePane"),
@@ -40662,6 +41718,7 @@ function pad(number, digits, end) {
             this.element.show();
 
             this.trigger(SHOW, { view: this });
+            this._invokeNgController();
             return true;
         },
 
@@ -40831,7 +41888,8 @@ function pad(number, digits, end) {
 
     var SplitView = View.extend({
         init: function(element, options) {
-            var that = this, pane;
+            var that = this,
+            pane, modalViews;
 
             Widget.fn.init.call(that, element, options);
             element = that.element;
@@ -40839,18 +41897,40 @@ function pad(number, digits, end) {
             $.extend(that, options);
 
             that._id();
-            that._layout();
-            that._overlay();
+
+            if (!that.options.$angular) {
+                that._layout();
+                that._overlay();
+            } else {
+                that._overlay();
+            }
+
             that._style();
-            kendo.mobile.init(element.children(kendo.roleSelector("modalview")));
+
+            modalViews = element.children(that._locate("modalview"));
+
+            if (!that.options.$angular) {
+                kendo.mobile.init(modalViews);
+            } else {
+                modalViews.each(function(idx, element) {
+                    kendo.compileMobileDirective($(element));
+                });
+            }
 
             that.panes = [];
             that._paramsHistory = [];
 
-            that.content.children(kendo.roleSelector("pane")).each(function() {
-                pane = kendo.initWidget(this, {}, ui.roles);
-                that.panes.push(pane);
-            });
+            if (!that.options.$angular) {
+                that.content.children(kendo.roleSelector("pane")).each(function() {
+                    pane = kendo.initWidget(this, {}, ui.roles);
+                    that.panes.push(pane);
+                });
+            } else {
+                that.element.children(kendo.directiveSelector("pane")).each(function() {
+                    pane = kendo.compileMobileDirective($(this));
+                    that.panes.push(pane);
+                });
+            }
 
             that.expandedPaneShim = $(EXPANED_PANE_SHIM).appendTo(that.element);
 
@@ -40859,6 +41939,10 @@ function pad(number, digits, end) {
                     that.collapsePanes();
                 }
             });
+        },
+
+        _locate: function(selectors) {
+            return this.options.$angular ? kendo.directiveSelector(selectors) : kendo.roleSelector(selectors);
         },
 
         options: {
@@ -40930,6 +42014,7 @@ function pad(number, digits, end) {
     var kendo = window.kendo,
         mobile = kendo.mobile,
         support = kendo.support,
+        Widget = mobile.ui.Widget,
         Pane = mobile.ui.Pane,
 
         DEFAULT_OS = "ios7",
@@ -40937,7 +42022,7 @@ function pad(number, digits, end) {
         BERRYPHONEGAP = OS.device == "blackberry" && OS.flatVersion >= 600 && OS.flatVersion < 1000 && OS.appMode,
         VERTICAL = "km-vertical",
         CHROME =  OS.browser === "chrome",
-        BROKEN_WEBVIEW_RESIZE = OS.ios && OS.flatVersion >= 700 && (OS.appMode || CHROME),
+        BROKEN_WEBVIEW_RESIZE = OS.ios && OS.flatVersion >= 700 && OS.flatVersion < 800 && (OS.appMode || CHROME),
         INITIALLY_HORIZONTAL = (Math.abs(window.orientation) / 90 == 1),
         HORIZONTAL = "km-horizontal",
 
@@ -40995,7 +42080,7 @@ function pad(number, digits, end) {
         classes.push("km-" + os.majorVersion);
         classes.push("km-m" + (os.minorVersion ? os.minorVersion[0] : 0));
 
-        if (os.variant && ((os.skin && os.skin === os.name) || !os.skin)) {
+        if (os.variant && ((os.skin && os.skin === os.name) || !os.skin || os.setDefaultPlatform === false)) {
             classes.push("km-" + (os.skin ? os.skin : os.name) + "-" + os.variant);
         }
 
@@ -41046,42 +42131,62 @@ function pad(number, digits, end) {
         }));
     }
 
-    var Application = kendo.Observable.extend({
+    var Application = Widget.extend({
         init: function(element, options) {
-            var that = this;
+            // global reference to current application
+            mobile.application = this;
+            $($.proxy(this, 'bootstrap', element, options));
+        },
 
-            mobile.application = that; // global reference to current application
+        bootstrap: function(element, options) {
+            element = $(element);
 
-            that.options = $.extend({
-                hideAddressBar: true,
-                useNativeScrolling: false,
-                statusBarStyle: "black",
-                transition: "",
-                historyTransition: HISTORY_TRANSITION,
-                modelScope: window,
-                updateDocumentTitle: true
-            }, options);
+            if (!element[0]) {
+                element = $(document.body);
+            }
 
-            kendo.Observable.fn.init.call(that, that.options);
-            that.bind(that.events, that.options);
+            Widget.fn.init.call(this, element, options);
+            this.element.removeAttr("data-" + kendo.ns + "role");
 
-            $(function(){
-                element = $(element);
-                that.element = element[0] ? element : $(document.body);
-                that._setupPlatform();
-                that._attachMeta();
-                that._setupElementClass();
-                that._attachHideBarHandlers();
-                that.pane = new Pane(that.element, that.options);
-                that.pane.navigateToInitial();
+            this._setupPlatform();
+            this._attachMeta();
+            this._setupElementClass();
+            this._attachHideBarHandlers();
+            var paneOptions = $.extend({}, this.options);
+            delete paneOptions.name;
 
-                if (that.options.updateDocumentTitle) {
-                    that._setupDocumentTitle();
-                }
+            var that = this,
+                startHistory = function() {
+                    that.pane = new Pane(that.element, paneOptions);
+                    that.pane.navigateToInitial();
 
-                that._startHistory();
-                that.trigger(INIT);
-            });
+                    if (that.options.updateDocumentTitle) {
+                        that._setupDocumentTitle();
+                    }
+
+                    that._startHistory();
+                    that.trigger(INIT);
+                };
+
+            if (this.options.$angular) {
+                setTimeout(startHistory);
+            } else {
+                startHistory();
+            }
+        },
+
+        options: {
+            name: "Application",
+            hideAddressBar: true,
+            browserHistory: true,
+            historyTransition: HISTORY_TRANSITION,
+            modelScope: window,
+            statusBarStyle: "black",
+            transition: "",
+            platform: null,
+            skin: null,
+            updateDocumentTitle: true,
+            useNativeScrolling: false
         },
 
         events: [
@@ -41144,6 +42249,7 @@ function pad(number, digits, end) {
         },
 
         destroy: function() {
+            Widget.fn.destroy.call(this);
             this.pane.destroy();
             this.router.destroy();
         },
@@ -41156,6 +42262,7 @@ function pad(number, digits, end) {
                 os = OS || MOBILE_PLATFORMS[DEFAULT_OS];
 
             if (platform) {
+                os.setDefaultPlatform = true;
                 if (typeof platform === "string") {
                     split = platform.split("-");
                     os = $.extend({ variant: split[1] }, os, MOBILE_PLATFORMS[split[0]]);
@@ -41166,6 +42273,9 @@ function pad(number, digits, end) {
 
             if (skin) {
                 split = skin.split("-");
+                if (!OS) {
+                    os.setDefaultPlatform = false;
+                }
                 os = $.extend({}, os, { skin: split[0], variant: split[1] });
             }
 
@@ -41202,9 +42312,15 @@ function pad(number, digits, end) {
         },
 
         _startHistory: function() {
-            this.router = new kendo.Router({ pushState: this.options.pushState, root: this.options.root, hashBang: this.options.hashBang });
-            this.pane.bindToRouter(this.router);
-            this.router.start();
+            if (this.options.browserHistory) {
+                this.router = new kendo.Router({ pushState: this.options.pushState, root: this.options.root, hashBang: this.options.hashBang });
+                this.pane.bindToRouter(this.router);
+                this.router.start();
+            } else {
+                if (!this.options.initial) {
+                    this.pane.navigate("");
+                }
+            }
         },
 
         _resizeToScreenHeight: function() {
@@ -41372,6 +42488,7 @@ function pad(number, digits, end) {
     });
 
     kendo.mobile.Application = Application;
+    kendo.ui.plugin(Application, kendo.mobile, 'Mobile');
 })(window.kendo.jQuery);
 
 
@@ -41492,10 +42609,17 @@ function pad(number, digits, end) {
             var action = currentTarget.data("action");
 
             if (action) {
-                kendo.getter(action)(window)({
+                var actionData = {
                     target: this.target,
                     context: this.context
-                });
+                },
+                $angular = this.options.$angular;
+
+                if ($angular) {
+                    this.element.injector().get("$parse")(action)($angular[0])(actionData);
+                } else {
+                    kendo.getter(action)(window)(actionData);
+                }
             }
 
             this.trigger(COMMAND, { target: this.target, context: this.context, currentTarget: currentTarget });
@@ -42099,9 +43223,11 @@ function pad(number, digits, end) {
                         handler.dataSource.read(pullParameters.call(listView, handler._first));
                     }
                 },
-                pullTemplate: options.pullTemplate,
-                releaseTemplate: options.releaseTemplate,
-                refreshTemplate: options.refreshTemplate
+                messages: {
+                    pullTemplate: options.messages.pullTemplate,
+                    releaseTemplate: options.messages.releaseTemplate,
+                    refreshTemplate: options.messages.refreshTemplate
+                }
             });
         },
 
@@ -42420,7 +43546,7 @@ function pad(number, digits, end) {
         init: function(listView, buffer) {
 
             this._loadIcon = $(LOAD_ICON).hide();
-            this._loadButton = $('<a class="km-load">' + listView.options.loadMoreText + '</a>').hide();
+            this._loadButton = $('<a class="km-load">' + listView.options.messages.loadMoreText + '</a>').hide();
             this.element = $('<li class="km-load-more" style="display: none"></li>').append(this._loadIcon).append(this._loadButton).appendTo(listView.element);
 
             var loadMore = this;
@@ -42533,6 +43659,7 @@ function pad(number, digits, end) {
 
             list.bind("resize", function() {
                 binder.updateScrollerSize();
+                listView.updateSize();
             });
 
             list.bind("reset", function() {
@@ -42690,7 +43817,8 @@ function pad(number, digits, end) {
         init: function(listView) {
             var filter = this,
                 filterable = listView.options.filterable,
-                events = "change paste";
+                events = "change paste",
+                that = this;
 
             this.listView = listView;
             this.options = filterable;
@@ -42716,6 +43844,22 @@ function pad(number, digits, end) {
             this.clearButton = listView.wrapper.find(".km-filter-reset")
                 .on(CLICK, proxy(this, "_clearFilter"))
                 .hide();
+
+             this._dataSourceChange = $.proxy(this._refreshInput, this);
+             listView.bind("_dataSource", function(e) {
+                 e.dataSource.bind("change", that._dataSourceChange);
+             });
+        },
+
+        _refreshInput: function() {
+            var appliedFilters = this.listView.dataSource.filter();
+            var searchInput = this.listView._filter.searchInput;
+
+            if (!appliedFilters || appliedFilters.filters[0].field !== this.listView.options.filterable.field)  {
+                searchInput.val("");
+            } else {
+                searchInput.val(appliedFilters.filters[0].value);
+            }
         },
 
         _search: function(expr) {
@@ -42842,13 +43986,15 @@ function pad(number, digits, end) {
             headerTemplate: '<span class="km-text">#:value#</span>',
             appendOnRefresh: false,
             loadMore: false,
-            loadMoreText: "Press to load more",
             endlessScroll: false,
             scrollThreshold: 30,
             pullToRefresh: false,
-            pullTemplate: "Pull to refresh",
-            releaseTemplate: "Release to refresh",
-            refreshTemplate: "Refreshing",
+            messages: {
+                loadMoreText: "Press to load more",
+                pullTemplate: "Pull to refresh",
+                releaseTemplate: "Release to refresh",
+                refreshTemplate: "Refreshing"
+            },
             pullOffset: 140,
             filterable: false,
             virtualViewSize: null
@@ -42936,15 +44082,6 @@ function pad(number, digits, end) {
                         listView.trigger(ITEM_CHANGE, { item: items.eq(i), data: dataItems[i], ns: ui });
                     }
                 }
-
-                listView.angular("compile", function(){
-                    return {
-                        elements: items,
-                        data: dataItems.map(function(data){
-                            return { dataItem: data };
-                        })
-                    };
-                });
             });
         },
 
@@ -43009,8 +44146,22 @@ function pad(number, digits, end) {
             return this._renderItems([dataItem], replaceItem)[0];
         },
 
+        updateSize: function() {
+            this._size = this.getSize();
+        },
+
         _renderItems: function(dataItems, callback) {
             var items = $(kendo.render(this.template, dataItems));
+
+            this.angular("compile", function(){
+                return {
+                    elements: items,
+                    data: dataItems.map(function(data){
+                        return { dataItem: data };
+                    })
+                };
+            });
+
             callback(items);
             mobile.init(items);
             this._enhanceItems(items);
@@ -43164,7 +44315,6 @@ function pad(number, digits, end) {
     var kendo = window.kendo,
         mobile = kendo.mobile,
         ui = mobile.ui,
-        roleSelector = kendo.roleSelector,
         Widget = ui.Widget;
 
     function createContainer(align, element) {
@@ -43178,13 +44328,14 @@ function pad(number, digits, end) {
     function toggleTitle(centerElement) {
         var siblings = centerElement.siblings(),
             noTitle = !!centerElement.children("ul")[0],
-            showTitle = (!!siblings[0] && $.trim(centerElement.text()) === "");
+            showTitle = (!!siblings[0] && $.trim(centerElement.text()) === ""),
+            android = kendo.mobile.application && kendo.mobile.application.element.is(".km-android");
 
         centerElement.prevAll().toggleClass("km-absolute", noTitle);
         centerElement.toggleClass("km-show-title", showTitle);
         centerElement.toggleClass("km-fill-title", showTitle && !$.trim(centerElement.html()));
         centerElement.toggleClass("km-no-title", noTitle);
-        centerElement.toggleClass("km-hide-title", centerElement.css("visibility") == "hidden" && !siblings.children().is(":visible"));
+        centerElement.toggleClass("km-hide-title", android && !siblings.children().is(":visible"));
     }
 
     var NavBar = Widget.extend({
@@ -43208,7 +44359,7 @@ function pad(number, digits, end) {
         },
 
         title: function(value) {
-            this.element.find(roleSelector("view-title")).text(value);
+            this.element.find(kendo.roleSelector("view-title")).text(value);
             toggleTitle(this.centerElement);
         },
 
@@ -43502,9 +44653,9 @@ function pad(number, digits, end) {
             if (this.contentHeight === "100%") {
                 var containerHeight = this.element.parent().height();
 
-                if(this.enablePager === true) {
+                if (this.enablePager === true) {
                     var pager = this.element.parent().find("ol.km-pages");
-                    if(pager.length) {
+                    if (pager.length) {
                         containerHeight -= pager.outerHeight(true);
                     }
                 }
@@ -43528,7 +44679,7 @@ function pad(number, digits, end) {
         },
 
         _getPages: function() {
-            this.pageElements = this.element.find("[data-role=page]");
+            this.pageElements = this.element.find(kendo.roleSelector("page"));
             this._paged = this.pageElements.length > 0;
         }
     });
@@ -43562,7 +44713,7 @@ function pad(number, digits, end) {
 
         _viewShow: function() {
             var that = this;
-            if(that._pendingWidgetRefresh) {
+            if (that._pendingWidgetRefresh) {
                 setTimeout(function() {
                     that._resetPages();
                 }, 0);
@@ -43573,11 +44724,11 @@ function pad(number, digits, end) {
         _buffer: function() {
             var itemsPerPage = this.options.itemsPerPage;
 
-            if(this.buffer) {
+            if (this.buffer) {
                 this.buffer.destroy();
             }
 
-            if(itemsPerPage > 1) {
+            if (itemsPerPage > 1) {
                 this.buffer = new BatchBuffer(this.dataSource, itemsPerPage);
             } else {
                 this.buffer = new Buffer(this.dataSource, itemsPerPage * 3);
@@ -43600,14 +44751,14 @@ function pad(number, digits, end) {
                 templateProxy = {},
                 emptyTemplateProxy = {};
 
-            if(typeof template === FUNCTION) {
+            if (typeof template === FUNCTION) {
                 templateProxy.template = template;
                 template = "#=this.template(data)#";
             }
 
             this.template = proxy(kendo.template(template), templateProxy);
 
-            if(typeof emptyTemplate === FUNCTION) {
+            if (typeof emptyTemplate === FUNCTION) {
                 emptyTemplateProxy.emptyTemplate = emptyTemplate;
                 emptyTemplate = "#=this.emptyTemplate(data)#";
             }
@@ -43643,9 +44794,9 @@ function pad(number, digits, end) {
             else if (this.options.contentHeight === "100%") {
                 var containerHeight = this.element.parent().height();
 
-                if(this.options.enablePager === true) {
+                if (this.options.enablePager === true) {
                     var pager = this.element.parent().find("ol.km-pages");
-                    if(pager.length) {
+                    if (pager.length) {
                         containerHeight -= pager.outerHeight(true);
                     }
                 }
@@ -43670,7 +44821,7 @@ function pad(number, digits, end) {
             buffer.syncDataSource();
             dataItem = buffer.at(page);
 
-            if(!dataItem) {
+            if (!dataItem) {
                 return;
             }
 
@@ -43690,30 +44841,30 @@ function pad(number, digits, end) {
                 nextPage,
                 delta = 0;
 
-            if(swipeType === RIGHT_SWIPE) {
-                if(that.page !== 0) {
+            if (swipeType === RIGHT_SWIPE) {
+                if (that.page !== 0) {
                     delta = -1; //backward
                 }
-            } else if(swipeType === LEFT_SWIPE && !isEndReached) {
+            } else if (swipeType === LEFT_SWIPE && !isEndReached) {
                 delta = 1; //forward
-            } else if(offset > 0 && (thresholdPassed && !isEndReached)) {
+            } else if (offset > 0 && (thresholdPassed && !isEndReached)) {
                 delta = 1; //forward
-            } else if(offset < 0 && thresholdPassed) {
-                if(that.page !== 0) {
+            } else if (offset < 0 && thresholdPassed) {
+                if (that.page !== 0) {
                     delta = -1; //backward
                 }
             }
 
             nextPage = that.page;
-            if(delta) {
+            if (delta) {
                 nextPage = (delta > 0) ? nextPage + 1 : nextPage - 1;
             }
 
-            if(callback && callback({ currentPage: that.page, nextPage: nextPage })) {
+            if (callback && callback({ currentPage: that.page, nextPage: nextPage })) {
                 delta = 0;
             }
 
-            if(delta === 0) {
+            if (delta === 0) {
                 that._cancelMove(ease, instant);
             } else if (delta === -1) {
                 that._moveBackward(instant);
@@ -43725,11 +44876,11 @@ function pad(number, digits, end) {
         updatePage: function() {
             var pages = this.pages;
 
-            if(this.pane.offset() === 0) {
+            if (this.pane.offset() === 0) {
                 return false;
             }
 
-            if(this.pane.offset() > 0) {
+            if (this.pane.offset() > 0) {
                 pages.push(this.pages.shift());//forward
                 this.page++;
                 this.setPageContent(pages[2], this.page + 1);
@@ -43750,7 +44901,7 @@ function pad(number, digits, end) {
             var offset = this.pane.offset(),
                 threshold  = this.pane.size().width * 3/4;
 
-            if(abs(offset) > threshold) {
+            if (abs(offset) > threshold) {
                 return this.updatePage();
             }
 
@@ -43783,13 +44934,14 @@ function pad(number, digits, end) {
         },
 
         _onResize: function() {
-            var page = this.pages[2], //last page
-                idx = this.page + 1;
+            this.pageCount = ceil(this.dataSource.total() / this.options.itemsPerPage);
 
-            if(this._pendingPageRefresh) {
-                this.setPageContent(page, idx);
+            if (this._pendingPageRefresh) {
+                this._updatePagesContent(this.page);
                 this._pendingPageRefresh = false;
             }
+
+            this.trigger("resize");
         },
 
         _onReset: function() {
@@ -43824,7 +44976,7 @@ function pad(number, digits, end) {
                 emptyTemplate = this.emptyTemplate,
                 view = null;
 
-            if(index >= 0) {
+            if (index >= 0) {
                 view = buffer.at(index);
                 if ($.isArray(view) && !view.length) {
                     view = null;
@@ -43833,7 +44985,7 @@ function pad(number, digits, end) {
 
             this.trigger(CLEANUP, { item: page.element });
 
-            if(view) {
+            if (view !== null) {
                 page.content(template(view));
             } else {
                 page.content(emptyTemplate({}));
@@ -43886,7 +45038,7 @@ function pad(number, digits, end) {
                 .wrapInner("<div/>")
                 .addClass("km-scrollview");
 
-            if(this.options.enablePager) {
+            if (this.options.enablePager) {
                 this.pager = new Pager(this);
             }
 
@@ -43910,17 +45062,20 @@ function pad(number, digits, end) {
 
             var empty = this.inner.children().length === 0;
 
-            that._content = empty ? new VirtualScrollViewContent(that.inner, that.pane, options) : new ScrollViewContent(that.inner, that.pane, options);
-            that._content.page = that.page;
+            var content = empty ? new VirtualScrollViewContent(that.inner, that.pane, options) : new ScrollViewContent(that.inner, that.pane, options);
 
-            that._content.bind("reset", function() {
-                var content = that._content;
+            content.page = that.page;
 
+            content.bind("reset", function() {
                 that._syncWithContent();
                 that.trigger(REFRESH, { pageCount: content.pageCount, page: content.page });
             });
 
-            that._content.bind(ITEM_CHANGE, function(e) {
+            content.bind("resize", function() {
+                that.trigger(REFRESH, { pageCount: content.pageCount, page: content.page });
+            });
+
+            content.bind(ITEM_CHANGE, function(e) {
                 that.trigger(ITEM_CHANGE, e);
 
                 that.angular("compile", function() {
@@ -43928,17 +45083,18 @@ function pad(number, digits, end) {
                 });
             });
 
-            that._content.bind(CLEANUP, function(e) {
+            content.bind(CLEANUP, function(e) {
                 that.angular("cleanup", function() {
                     return { elements: e.item };
                 });
             });
 
+            that._content = content;
             that.setDataSource(options.dataSource);
 
             var mobileContainer = that.container();
 
-            if(mobileContainer.nullObject) {
+            if (mobileContainer.nullObject) {
                 that.viewInit();
                 that.viewShow();
             } else {
@@ -43973,7 +45129,7 @@ function pad(number, digits, end) {
         },
 
         viewInit: function() {
-            if(this.options.autoBind) {
+            if (this.options.autoBind) {
                 this._content.scrollTo(this._content.page, true);
             }
         },
@@ -44066,7 +45222,7 @@ function pad(number, digits, end) {
             this.page = this._content.page;
 
             data = buffer ? buffer.at(this.page) : undefined;
-            if(!(data instanceof Array)) {
+            if (!(data instanceof Array)) {
                 data = [data];
             }
             element = pages ? pages[1].element : undefined;
@@ -44089,7 +45245,7 @@ function pad(number, digits, end) {
 
             if (velocity > velocityThreshold) {
                 swipeType = RIGHT_SWIPE;
-            } else if(velocity < -velocityThreshold) {
+            } else if (velocity < -velocityThreshold) {
                 swipeType = LEFT_SWIPE;
             }
 
@@ -44531,8 +45687,12 @@ function pad(number, digits, end) {
 
     /*jshint eqnull:true,loopfunc:true,-W052,-W028  */
 
-    var module = angular.module('kendo.directives', []);
-    var $parse, $timeout, $compile, $log;
+    var module = angular.module('kendo.directives', []),
+        $injector = angular.injector(['ng']),
+        $parse = $injector.get('$parse'),
+        $timeout = $injector.get('$timeout'),
+        $defaultCompile,
+        $log = $injector.get('$log');
 
     function withoutTimeout(f) {
         var save = $timeout;
@@ -44548,6 +45708,7 @@ function pad(number, digits, end) {
 
     var createDataSource = (function() {
         var types = {
+            TreeList    : 'TreeListDataSource',
             TreeView    : 'HierarchicalDataSource',
             Scheduler   : 'SchedulerDataSource',
             PanelBar    : '$PLAIN',
@@ -44586,6 +45747,13 @@ function pad(number, digits, end) {
         kNgDelay    : true
     };
 
+    var ignoredOwnProperties = {
+        // XXX: other names to ignore here?
+        name    : true,
+        title   : true,
+        style   : true
+    };
+
     function addOption(scope, options, name, value) {
         options[name] = angular.copy(scope.$eval(value));
         if (options[name] === undefined && value.match(/^\w*$/)) {
@@ -44593,88 +45761,155 @@ function pad(number, digits, end) {
         }
     }
 
-    function createWidget(scope, element, attrs, widget, origAttr) {
-        var role = widget.replace(/^kendo/, '');
-        var options = angular.extend({}, scope.$eval(attrs.kOptions || attrs.options));
-        var ctor = $(element)[widget];
+    function createWidget(scope, element, attrs, widget, origAttr, controllers) {
+        var kNgDelay = attrs.kNgDelay,
+            delayValue = scope.$eval(kNgDelay);
 
-        if (!ctor) {
-            window.console.error("Could not find: " + widget);
-            return null;
-        }
+        controllers = controllers || [];
 
-        var widgetOptions = ctor.widget.prototype.options;
-        var widgetEvents = ctor.widget.prototype.events;
+        var ngModel = controllers[0],
+            ngForm = controllers[1];
 
-        $.each(attrs, function(name, value) {
-            if (name === "source" || name === "kDataSource") {
-                return;
-            }
+        if (kNgDelay && !delayValue) {
+            var root = scope.$root || scope;
 
-            var dataName = "data" + name.charAt(0).toUpperCase() + name.slice(1);
-
-            if (name.indexOf("on") === 0) { // let's search for such event.
-                var eventKey = name.replace(/^on./, function(prefix) {
-                    return prefix.charAt(2).toLowerCase();
+            var register = function() {
+                var unregister = scope.$watch(kNgDelay, function(newValue, oldValue) {
+                        if (newValue !== oldValue) {
+                        unregister();
+                        // remove subsequent delays, to make ng-rebind work
+                        element.removeAttr(attrs.$attr.kNgDelay);
+                        kNgDelay = null;
+                        $timeout(createIt); // XXX: won't work without `timeout` ;-\
+                    }
                 });
+            };
 
-                if (widgetEvents.indexOf(eventKey) > -1) {
-                    options[eventKey] = value;
-                }
-            } // don't elsif here - there are on* options
-
-            if (widgetOptions.hasOwnProperty(dataName)) {
-                addOption(scope, options, dataName, value);
-            } else if (widgetOptions.hasOwnProperty(name) && name != "name") { // `name` must be forbidden. XXX: other names to ignore here?
-                addOption(scope, options, name, value);
-            } else if (!ignoredAttributes[name]) {
-                var match = name.match(/^k(On)?([A-Z].*)/);
-                if (match) {
-                    var optionName = match[2].charAt(0).toLowerCase() + match[2].slice(1);
-                    if (match[1] && name != "kOnLabel" // XXX: k-on-label can be used on MobileSwitch :-\
-                       ) {
-                        options[optionName] = value;
-                    } else {
-                        if (name == "kOnLabel") {
-                            optionName = "onLabel"; // XXX: that's awful.
-                        }
-                        addOption(scope, options, optionName, value);
-                    }
-                }
+            // WARNING: the watchers should be registered in the digest cycle.
+            // the fork here is for the timeout/non-timeout initiated widgets.
+            if (/^\$(digest|apply)$/.test(root.$$phase)) {
+                register();
+            } else {
+                scope.$apply(register);
             }
-        });
 
-        // parse the datasource attribute
-        var dataSource = attrs.kDataSource || attrs.source;
-
-        if (dataSource) {
-            options.dataSource = createDataSource(scope, element, role, dataSource);
+            return;
+        } else {
+            return createIt();
         }
 
-        // deepExtend in kendo.core (used in Editor) will fail with stack
-        // overflow if we don't put it in an array :-\
-        options.$angular = [ scope ];
+        function createIt() {
+            var originalElement;
 
-        if (element.is("select")) {
-            (function(options){
-                if (options.length > 0) {
-                    var first = $(options[0]);
-                    if (!/\S/.test(first.text()) && /^\?/.test(first.val())) {
-                        first.remove();
+            if (attrs.kRebind) {
+                originalElement = $($(element)[0].cloneNode(true));
+            }
+
+
+            var role = widget.replace(/^kendo/, '');
+            var options = angular.extend({}, attrs.defaultOptions, scope.$eval(attrs.kOptions || attrs.options));
+            var ctor = $(element)[widget];
+
+            if (!ctor) {
+                window.console.error("Could not find: " + widget);
+                return null;
+            }
+
+            var widgetOptions = ctor.widget.prototype.options;
+            var widgetEvents = ctor.widget.prototype.events;
+
+            $.each(attrs, function(name, value) {
+                if (name === "source" || name === "kDataSource") {
+                    return;
+                }
+
+                var dataName = "data" + name.charAt(0).toUpperCase() + name.slice(1);
+
+                if (name.indexOf("on") === 0) { // let's search for such event.
+                    var eventKey = name.replace(/^on./, function(prefix) {
+                        return prefix.charAt(2).toLowerCase();
+                    });
+
+                    if (widgetEvents.indexOf(eventKey) > -1) {
+                        options[eventKey] = value;
+                    }
+                } // don't elsif here - there are on* options
+
+                if (widgetOptions.hasOwnProperty(dataName)) {
+                    addOption(scope, options, dataName, value);
+                } else if (widgetOptions.hasOwnProperty(name) && !ignoredOwnProperties[name]) {
+                    addOption(scope, options, name, value);
+                } else if (!ignoredAttributes[name]) {
+                    var match = name.match(/^k(On)?([A-Z].*)/);
+                    if (match) {
+                        var optionName = match[2].charAt(0).toLowerCase() + match[2].slice(1);
+                        if (match[1] && name != "kOnLabel" // XXX: k-on-label can be used on MobileSwitch :-\
+                        ) {
+                            options[optionName] = value;
+                        } else {
+                            if (name == "kOnLabel") {
+                                optionName = "onLabel"; // XXX: that's awful.
+                            }
+                            addOption(scope, options, optionName, value);
+                        }
                     }
                 }
-            }(element[0].options));
-        }
+            });
 
-        var object = ctor.call(element, OPTIONS_NOW = options).data(widget);
-        exposeWidget(object, scope, attrs, widget, origAttr);
-        scope.$emit("kendoWidgetCreated", object);
-        return object;
+            // parse the datasource attribute
+            var dataSource = attrs.kDataSource || attrs.source;
+
+            if (dataSource) {
+                options.dataSource = createDataSource(scope, element, role, dataSource);
+            }
+
+            // deepExtend in kendo.core (used in Editor) will fail with stack
+            // overflow if we don't put it in an array :-\
+                options.$angular = [ scope ];
+
+            if (element.is("select")) {
+                (function(options){
+                    if (options.length > 0) {
+                        var first = $(options[0]);
+                        if (!/\S/.test(first.text()) && /^\?/.test(first.val())) {
+                            first.remove();
+                        }
+                    }
+                }(element[0].options));
+            }
+
+            var object = ctor.call(element, OPTIONS_NOW = options).data(widget);
+
+            exposeWidget(object, scope, attrs, widget, origAttr);
+
+            scope.$emit("kendoWidgetCreated", object);
+
+            var destroyRegister = destroyWidgetOnScopeDestroy(scope, object);
+
+            if (attrs.kRebind) {
+                setupRebind(object, scope, element, originalElement, attrs.kRebind, destroyRegister);
+            }
+
+            // kNgModel is used for the "logical" value
+            if (attrs.kNgModel) {
+                bindToKNgModel(object, scope, attrs.kNgModel);
+            }
+
+            // 2 way binding: ngModel <-> widget.value()
+            if (ngModel) {
+                bindToNgModel(object, scope, element, ngModel, ngForm);
+            }
+
+            if (object) {
+                propagateClassToWidgetWrapper(object, element);
+            }
+
+            return object;
+        }
     }
 
     function exposeWidget(widget, scope, attrs, kendoWidget, origAttr) {
         if (attrs[origAttr]) {
-            // expose the widget object
             var set = $parse(attrs[origAttr]).assign;
             if (set) {
                 // set the value of the expression to the kendo widget object to expose its api
@@ -44685,15 +45920,276 @@ function pad(number, digits, end) {
         }
     }
 
-    module.factory('directiveFactory', ['$timeout', '$parse', '$compile', '$log', function(timeout, parse, compile, log) {
+    function formValue(element) {
+        if (/checkbox|radio/i.test(element.attr("type"))) {
+            return element.prop("checked");
+        }
+        return element.val();
+    }
 
-        $timeout = timeout;
-        $parse = parse;
-        $compile = compile;
-        $log = log;
+    var formRegExp = /^(input|select|textarea)$/i;
 
+    function isForm(element) {
+        return formRegExp.test(element[0].tagName);
+    }
+
+    function bindToNgModel(widget, scope, element, ngModel, ngForm) {
+        if (!widget.value) {
+            return;
+        }
+
+        var value;
+
+        if (isForm(element)) {
+            value = function() {
+                return formValue(element);
+            };
+        } else {
+            value = function() {
+                return widget.value();
+            };
+        }
+
+        // Angular will invoke $render when the view needs to be updated with the view value.
+        ngModel.$render = function() {
+            // Update the widget with the view value.
+
+            // delaying with setTimout for cases where the datasource is set thereafter.
+            // https://github.com/kendo-labs/angular-kendo/issues/304
+            var val = ngModel.$viewValue;
+            if (val === undefined) {
+                val = ngModel.$modelValue;
+            }
+            setTimeout(function(){
+                if (widget) { // might have been destroyed in between. :-(
+                    widget.value(val);
+                }
+            }, 0);
+        };
+
+        // Some widgets trigger "change" on the input field
+        // and this would result in two events sent (#135)
+        var haveChangeOnElement = false;
+
+        if (isForm(element)) {
+            element.on("change", function() {
+                haveChangeOnElement = true;
+            });
+        }
+
+        var onChange = function(pristine) {
+            return function() {
+                var formPristine;
+                if (haveChangeOnElement) {
+                    return;
+                }
+                haveChangeOnElement = false;
+                if (pristine && ngForm) {
+                    formPristine = ngForm.$pristine;
+                }
+                ngModel.$setViewValue(value());
+                if (pristine) {
+                    ngModel.$setPristine();
+                    if (formPristine) {
+                        ngForm.$setPristine();
+                    }
+                }
+                digest(scope);
+            };
+        };
+
+        widget.first("change", onChange(false));
+        widget.first("dataBound", onChange(true));
+
+        var currentVal = value();
+
+        // if the model value is undefined, then we set the widget value to match ( == null/undefined )
+        if (currentVal != ngModel.$viewValue) {
+            if (!ngModel.$isEmpty(ngModel.$viewValue)) {
+                widget.value(ngModel.$viewValue);
+            } else if (currentVal != null && currentVal !== "" && currentVal != ngModel.$viewValue) {
+                ngModel.$setViewValue(currentVal);
+            }
+        }
+
+        ngModel.$setPristine();
+    }
+
+    function bindToKNgModel(widget, scope, kNgModel) {
+        if (typeof widget.value != "function") {
+            $log.warn("k-ng-model specified on a widget that does not have the value() method: " + (widget.options.name));
+            return;
+        }
+
+        var getter = $parse(kNgModel);
+        var setter = getter.assign;
+        var updating = false;
+
+        widget.$angular_setLogicValue(getter(scope));
+
+        // keep in sync
+        scope.$apply(function() {
+            var watchHandler = function(newValue, oldValue) {
+                if (newValue === undefined) {
+                    // because widget's value() method usually checks if the new value is undefined,
+                    // in which case it returns the current value rather than clearing the field.
+                    // https://github.com/telerik/kendo-ui-core/issues/299
+                    newValue = null;
+                }
+                if (updating) {
+                    return;
+                }
+                if (newValue === oldValue) {
+                    return;
+                }
+                widget.$angular_setLogicValue(newValue);
+            };
+            if (kendo.ui.MultiSelect && widget instanceof kendo.ui.MultiSelect) {
+                scope.$watchCollection(kNgModel, watchHandler);
+            } else {
+                scope.$watch(kNgModel, watchHandler);
+            }
+        });
+
+        widget.first("change", function(){
+            updating = true;
+            scope.$apply(function(){
+                setter(scope, widget.$angular_getLogicValue());
+            });
+            updating = false;
+        });
+    }
+
+    function destroyWidgetOnScopeDestroy(scope, widget) {
+        var deregister = scope.$on("$destroy", function() {
+            deregister();
+            if (widget) {
+                if (widget.element) {
+                    widget = kendoWidgetInstance(widget.element);
+                    if (widget) {
+                        widget.destroy();
+                    }
+                }
+                widget = null;
+            }
+        });
+
+        return deregister;
+    }
+
+    // mutation observers - propagate the original
+    // element's class to the widget wrapper.
+    function propagateClassToWidgetWrapper(widget, element) {
+        if (!(window.MutationObserver && widget.wrapper)) {
+            return;
+        }
+
+        var prevClassList = [].slice.call($(element)[0].classList);
+
+        var mo = new MutationObserver(function(changes){
+            suspend();    // make sure we don't trigger a loop
+            if (!widget) {
+                return;
+            }
+
+            changes.forEach(function(chg){
+                var w = $(widget.wrapper)[0];
+                switch (chg.attributeName) {
+
+                    case "class":
+                        // sync classes to the wrapper element
+                        var currClassList = [].slice.call(chg.target.classList);
+                        currClassList.forEach(function(cls){
+                            if (prevClassList.indexOf(cls) < 0) {
+                                w.classList.add(cls);
+                                if (kendo.ui.ComboBox && widget instanceof kendo.ui.ComboBox) { // https://github.com/kendo-labs/angular-kendo/issues/356
+                                    widget.input[0].classList.add(cls);
+                                }
+                            }
+                        });
+                        prevClassList.forEach(function(cls){
+                            if (currClassList.indexOf(cls) < 0) {
+                                w.classList.remove(cls);
+                                if (kendo.ui.ComboBox && widget instanceof kendo.ui.ComboBox) { // https://github.com/kendo-labs/angular-kendo/issues/356
+                                    widget.input[0].classList.remove(cls);
+                                }
+                            }
+                        });
+                        prevClassList = currClassList;
+                        break;
+
+                    case "disabled":
+                        if (typeof widget.enable == "function") {
+                            widget.enable(!$(chg.target).attr("disabled"));
+                        }
+                        break;
+
+                    case "readonly":
+                        if (typeof widget.readonly == "function") {
+                            widget.readonly(!!$(chg.target).attr("readonly"));
+                        }
+                        break;
+                }
+            });
+
+            resume();
+        });
+
+        function suspend() {
+            mo.disconnect();
+        }
+
+        function resume() {
+            mo.observe($(element)[0], { attributes: true });
+        }
+
+        resume();
+        widget.first("destroy", suspend);
+    }
+
+    function setupRebind(widget, scope, element, originalElement, rebindAttr, destroyRegister) {
+        // watch for changes on the expression passed in the k-rebind attribute
+        var unregister = scope.$watch(rebindAttr, function(newValue, oldValue) {
+            if (newValue !== oldValue) {
+                unregister(); // this watcher will be re-added if we compile again!
+
+                /****************************************************************
+                // XXX: this is a gross hack that might not even work with all
+                // widgets.  we need to destroy the current widget and get its
+                // wrapper element out of the DOM, then make the original element
+                // visible so we can initialize a new widget on it.
+                //
+                // kRebind is probably impossible to get right at the moment.
+                ****************************************************************/
+
+                var _wrapper = $(widget.wrapper)[0];
+                var _element = $(widget.element)[0];
+                var compile = element.injector().get("$compile");
+                widget.destroy();
+
+                if (destroyRegister) {
+                    destroyRegister();
+                }
+
+                widget = null;
+
+                if (_wrapper && _element) {
+                    _wrapper.parentNode.replaceChild(_element, _wrapper);
+                    $(element).replaceWith(originalElement);
+                }
+
+                compile(originalElement)(scope);
+            }
+        }, true); // watch for object equality. Use native or simple values.
+        digest(scope);
+    }
+
+    module.factory('directiveFactory', [ '$compile', function(compile) {
         var KENDO_COUNT = 0;
         var RENDERED = false;
+
+        // caching $compile for the dirty hack upstairs. This is awful, but we happen to have elements outside of the bootstrapped root :(.
+        $defaultCompile = compile;
 
         var create = function(role, origAttr) {
 
@@ -44703,18 +46199,14 @@ function pad(number, digits, end) {
                 require: [ "?ngModel", "^?form" ],
                 scope: false,
 
-                transclude: true,
-                controller: [ '$scope', '$attrs', '$element', '$transclude', function($scope, $attrs, $element, $transclude) {
-                    // Make the element's contents available to the kendo widget to allow creating some widgets from existing elements.
-                    $transclude($scope, function(clone){
-                        $element.append(clone);
-                    });
+                controller: [ '$scope', '$attrs', '$element', function($scope, $attrs, $element) {
+                    this.template = function(key, value) {
+                        $attrs[key] = kendo.stringify(value);
+                    };
                 }],
 
                 link: function(scope, element, attrs, controllers) {
-
-                    var ngModel = controllers[0];
-                    var ngForm = controllers[1];
+                    var $element = $(element);
 
                     // we must remove data-kendo-widget-name attribute because
                     // it breaks kendo.widgetInstance; can generate all kinds
@@ -44725,267 +46217,32 @@ function pad(number, digits, end) {
                     // but we still keep the attribute without the
                     // `data-` prefix, so k-rebind would work.
                     var roleattr = role.replace(/([A-Z])/g, "-$1");
-                    $(element).attr(roleattr, $(element).attr("data-" + roleattr));
-                    $(element)[0].removeAttribute("data-" + roleattr);
+                    var isVisible = $element.css("visibility") !== "hidden";
+
+                    $element.attr(roleattr, $element.attr("data-" + roleattr));
+                    $element[0].removeAttribute("data-" + roleattr);
+
+                    if (isVisible) {
+                        $element.css("visibility", "hidden");
+                    }
 
                     ++KENDO_COUNT;
 
-                    var kNgDelay = attrs.kNgDelay;
-
-                    $timeout(function createIt() {
-                        if (kNgDelay) {
-                            return (function(){
-                                var unregister = scope.$watch(kNgDelay, function(newValue, oldValue){
-                                    if (newValue !== oldValue) {
-                                        unregister();
-                                        kNgDelay = null;
-                                        $timeout(createIt); // XXX: won't work without `timeout` ;-\
-                                    }
-                                });
-                            })();
+                    $timeout(function() {
+                        if (isVisible) {
+                            $element.css("visibility", "");
                         }
+                        var widget = createWidget(scope, element, attrs, role, origAttr, controllers);
 
-                        // if k-rebind attribute is provided, rebind the kendo widget when
-                        // the watched value changes
-                        if (attrs.kRebind) {
-                            var originalElement = attrs.$kendoOrigElement || $(element)[0].cloneNode(true);
-                            // watch for changes on the expression passed in the k-rebind attribute
-                            var unregister = scope.$watch(attrs.kRebind, function(newValue, oldValue) {
-                                if (newValue !== oldValue) {
-                                    unregister(); // this watcher will be re-added if we compile again!
-
-                                    /****************************************************************
-                                     // XXX: this is a gross hack that might not even work with all
-                                     // widgets.  we need to destroy the current widget and get its
-                                     // wrapper element out of the DOM, then make the original element
-                                     // visible so we can initialize a new widget on it.
-                                     //
-                                     // kRebind is probably impossible to get right at the moment.
-                                     ****************************************************************/
-
-                                    var _wrapper = $(widget.wrapper)[0];
-                                    var _element = $(widget.element)[0];
-                                    widget.destroy();
-                                    widget = null;
-                                    if (_wrapper && _element) {
-                                        _wrapper.parentNode.replaceChild(_element, _wrapper);
-                                        var clone = originalElement.cloneNode(true);
-                                        $(element).replaceWith(clone);
-                                        element = $(clone);
-                                    }
-                                    $compile(element)(scope);
-                                }
-                            }, true); // watch for object equality. Use native or simple values.
+                        if (!widget) {
+                            return;
                         }
-
-                        var widget = createWidget(scope, element, attrs, role, origAttr);
-                        setupBindings();
-
-                        var prev_destroy = null;
-                        function setupBindings() {
-
-                            var isFormField = /^(input|select|textarea)$/i.test(element[0].tagName);
-                            function formValue(element) {
-                                if (/checkbox|radio/i.test(element.attr("type"))) {
-                                    return element.prop("checked");
-                                }
-                                return element.val();
-                            }
-                            function value() {
-                                return isFormField ? formValue(element) : widget.value();
-                            }
-
-                            // Cleanup after ourselves
-                            if (prev_destroy) {
-                                prev_destroy();
-                            }
-                            prev_destroy = scope.$on("$destroy", function() {
-                                if (widget) {
-                                    if (widget.element) {
-                                        widget = kendoWidgetInstance(widget.element);
-                                        if (widget) {
-                                            widget.destroy();
-                                        }
-                                    }
-                                    widget = null;
-                                }
-                            });
-
-                            // 2 way binding: ngModel <-> widget.value()
-                            OUT: if (ngModel) {
-                                if (!widget.value) {
-                                    break OUT;
-                                }
-
-                                // Angular will invoke $render when the view needs to be updated with the view value.
-                                ngModel.$render = function() {
-                                    // Update the widget with the view value.
-
-                                    // delaying with setTimout for cases where the datasource is set thereafter.
-                                    // https://github.com/kendo-labs/angular-kendo/issues/304
-                                    var val = ngModel.$viewValue;
-                                    if (val === undefined) {
-                                        val = ngModel.$modelValue;
-                                    }
-                                    setTimeout(function(){
-                                        if (widget) { // might have been destroyed in between. :-(
-                                            widget.value(val);
-                                        }
-                                    }, 0);
-                                };
-
-                                // Some widgets trigger "change" on the input field
-                                // and this would result in two events sent (#135)
-                                var haveChangeOnElement = false;
-                                if (isFormField) {
-                                    element.on("change", function(){
-                                        haveChangeOnElement = true;
-                                    });
-                                }
-
-                                var onChange = function(pristine){
-                                    return function(){
-                                        var formPristine;
-                                        if (haveChangeOnElement) {
-                                            return;
-                                        }
-                                        haveChangeOnElement = false;
-                                        if (pristine && ngForm) {
-                                            formPristine = ngForm.$pristine;
-                                        }
-                                        ngModel.$setViewValue(value());
-                                        if (pristine) {
-                                            ngModel.$setPristine();
-                                            if (formPristine) {
-                                                ngForm.$setPristine();
-                                            }
-                                        }
-                                        digest(scope);
-                                    };
-                                };
-
-                                widget.first("change", onChange(false));
-                                widget.first("dataBound", onChange(true));
-
-                                var currentVal = value();
-
-                                // if the model value is undefined, then we set the widget value to match ( == null/undefined )
-                                if (currentVal != ngModel.$viewValue) {
-                                    if (!ngModel.$isEmpty(ngModel.$viewValue)) {
-                                        widget.value(ngModel.$viewValue);
-                                    } else if (currentVal != null && currentVal !== "" && currentVal != ngModel.$viewValue) {
-                                        ngModel.$setViewValue(currentVal);
-                                    }
-                                }
-
-                                ngModel.$setPristine();
-                            }
-
-                            // kNgModel is used for the "logical" value
-                            OUT2: if (attrs.kNgModel) {
-                                if (typeof widget.value != "function") {
-                                    $log.warn("k-ng-model specified on a widget that does not have the value() method: " + (widget.options.name));
-                                    break OUT2;
-                                }
-                                var getter = $parse(attrs.kNgModel);
-                                var setter = getter.assign;
-                                var updating = false;
-                                widget.value(getter(scope));
-
-                                // keep in sync
-                                scope.$watch(attrs.kNgModel, function(newValue, oldValue){
-                                    if (updating) {
-                                        return;
-                                    }
-                                    if (newValue === oldValue) {
-                                        return;
-                                    }
-                                    widget.value(newValue);
-                                });
-                                widget.first("change", function(){
-                                    updating = true;
-                                    scope.$apply(function(){
-                                        setter(scope, widget.value());
-                                    });
-                                    updating = false;
-                                });
-                            }
-                        }
-
-                        // mutation observers — propagate the original
-                        // element's class to the widget wrapper.
-                        (function(){
-
-                            if (!(window.MutationObserver && widget.wrapper)) {
-                                return;
-                            }
-
-                            var prevClassList = [].slice.call($(element)[0].classList);
-
-                            var mo = new MutationObserver(function(changes){
-                                suspend();    // make sure we don't trigger a loop
-                                if (!widget) {
-                                    return;
-                                }
-
-                                changes.forEach(function(chg){
-                                    var w = $(widget.wrapper)[0];
-                                    switch (chg.attributeName) {
-
-                                      case "class":
-                                        // sync classes to the wrapper element
-                                        var currClassList = [].slice.call(chg.target.classList);
-                                        currClassList.forEach(function(cls){
-                                            if (prevClassList.indexOf(cls) < 0) {
-                                                w.classList.add(cls);
-                                                if (widget instanceof kendo.ui.ComboBox) { // https://github.com/kendo-labs/angular-kendo/issues/356
-                                                    widget.input[0].classList.add(cls);
-                                                }
-                                            }
-                                        });
-                                        prevClassList.forEach(function(cls){
-                                            if (currClassList.indexOf(cls) < 0) {
-                                                w.classList.remove(cls);
-                                                if (widget instanceof kendo.ui.ComboBox) { // https://github.com/kendo-labs/angular-kendo/issues/356
-                                                    widget.input[0].classList.remove(cls);
-                                                }
-                                            }
-                                        });
-                                        prevClassList = currClassList;
-                                        break;
-
-                                      case "disabled":
-                                        if (typeof widget.enable == "function") {
-                                            widget.enable(!$(chg.target).attr("disabled"));
-                                        }
-                                        break;
-
-                                      case "readonly":
-                                        if (typeof widget.readonly == "function") {
-                                            widget.readonly(!!$(chg.target).attr("readonly"));
-                                        }
-                                        break;
-                                    }
-                                });
-
-                                resume();
-                            });
-
-                            function suspend() {
-                                mo.disconnect();
-                            }
-                            function resume() {
-                                mo.observe($(element)[0], { attributes: true });
-                            }
-                            resume();
-                            widget.first("destroy", suspend);
-                        })();
 
                         --KENDO_COUNT;
                         if (KENDO_COUNT === 0) {
+                            scope.$emit("kendoRendered");
                             if (!RENDERED) {
                                 RENDERED = true;
-                                scope.$emit("kendoRendered");
                                 $("form").each(function(){
                                     var form = $(this).controller("form");
                                     if (form) {
@@ -44994,7 +46251,6 @@ function pad(number, digits, end) {
                                 });
                             }
                         }
-
                     });
                 }
             };
@@ -45018,11 +46274,50 @@ function pad(number, digits, end) {
         Upload         : "input",
         Validator      : "form",
         Button         : "button",
+        MobileButton        : "a",
+        MobileBackButton    : "a",
+        MobileDetailButton  : "a",
         ListView       : "ul",
+        MobileListView : "ul",
         TreeView       : "ul",
         Menu           : "ul",
-        ContextMenu    : "ul"
+        ContextMenu    : "ul",
+        ActionSheet    : "ul"
     };
+
+    var SKIP_SHORTCUTS = [
+        'MobileView',
+        'MobileLayout',
+        'MobileSplitView',
+        'MobilePane',
+        'MobileModalView'
+    ];
+
+    var MANUAL_DIRECTIVES = [
+        'MobileApplication',
+        'MobileView',
+        'MobileModalView',
+        'MobileLayout',
+        'MobileActionSheet',
+        'MobileDrawer',
+        'MobileSplitView',
+        'MobilePane',
+        'MobileScrollView',
+        'MobilePopOver'
+    ];
+
+    angular.forEach(['MobileNavBar', 'MobileButton', 'MobileBackButton', 'MobileDetailButton', 'MobileTabStrip', 'MobileScrollView', 'MobileScroller'], function(widget) {
+        MANUAL_DIRECTIVES.push(widget);
+        widget = "kendo" + widget;
+        module.directive(widget, function() {
+            return {
+                restrict: "A",
+                link: function(scope, element, attrs, controllers) {
+                    createWidget(scope, element, attrs, widget, widget);
+                }
+            };
+        });
+    });
 
     function createDirectives(klass, isMobile) {
         function make(directiveName, widgetName) {
@@ -45036,9 +46331,33 @@ function pad(number, digits, end) {
 
         var name = isMobile ? "Mobile" : "";
         name += klass.fn.options.name;
+
         var className = name;
         var shortcut = "kendo" + name.charAt(0) + name.substr(1).toLowerCase();
         name = "kendo" + name;
+
+        // <kendo-numerictextbox>-type directives
+        var dashed = name.replace(/([A-Z])/g, "-$1");
+
+        if (SKIP_SHORTCUTS.indexOf(name.replace("kendo", "")) == -1) {
+            var names = name === shortcut ? [ name ] : [ name, shortcut ];
+            angular.forEach(names, function(directiveName) {
+                module.directive(directiveName, function(){
+                    return {
+                        restrict : "E",
+                        replace  : true,
+                        template : function(element, attributes) {
+                            var tag = TAGNAMES[className] || "div";
+                            return "<" + tag + " " + dashed + ">" + element.html() + "</" + tag + ">";
+                        }
+                    };
+                });
+            });
+        }
+
+        if (MANUAL_DIRECTIVES.indexOf(name.replace("kendo", "")) > -1) {
+            return;
+        }
 
         // here name should be like kendoMobileListView so kendo-mobile-list-view works,
         // and shortcut like kendoMobilelistview, for kendo-mobilelistview
@@ -45048,18 +46367,6 @@ function pad(number, digits, end) {
             make(shortcut, name);
         }
 
-        // <kendo-numerictextbox>-type directives
-        var dashed = name.replace(/([A-Z])/g, "-$1");
-        module.directive(shortcut, function(){
-            return {
-                restrict : "E",
-                replace  : true,
-                template : function(element, attributes) {
-                    var tag = TAGNAMES[className] || "div";
-                    return "<" + tag + " " + dashed + ">" + element.html() + "</" + tag + ">";
-                }
-            };
-        });
     }
 
     (function(){
@@ -45092,10 +46399,10 @@ function pad(number, digits, end) {
             if (isDigesting) {
                 func();
             } else {
-                scope.$apply(func);
+                root.$apply(func);
             }
         } else if (!isDigesting) {
-            scope.$digest();
+            root.$digest();
         }
     }
 
@@ -45174,8 +46481,10 @@ function pad(number, digits, end) {
             }
             return;
         }
-        var scope = self.$angular_scope || angular.element(self.element).scope();
-        if (scope && $compile) {
+
+        var scope = self.$angular_scope; //  || angular.element(self.element).scope();
+
+        if (scope) {
             withoutTimeout(function(){
                 var x = arg(), elements = x.elements, data = x.data;
                 if (elements.length > 0) {
@@ -45184,13 +46493,18 @@ function pad(number, digits, end) {
                       case "cleanup":
                         angular.forEach(elements, function(el){
                             var itemScope = angular.element(el).scope();
-                            if (itemScope && itemScope !== scope) {
+                            if (itemScope && itemScope !== scope && itemScope.$$kendoScope) {
                                 destroyScope(itemScope, el);
                             }
                         });
                         break;
 
                       case "compile":
+                        var injector = self.element.injector();
+                        // gross gross gross hack :(. Works for popups that may be out of the ng-app directive.
+                        // they don't have injectors. Same thing happens in our tests, too.
+                        var compile = injector ? injector.get("$compile") : $defaultCompile;
+
                         angular.forEach(elements, function(el, i){
                             var itemScope;
                             if (x.scopeFrom) {
@@ -45199,10 +46513,11 @@ function pad(number, digits, end) {
                                 var vars = data && data[i];
                                 if (vars !== undefined) {
                                     itemScope = $.extend(scope.$new(), vars);
+                                    itemScope.$$kendoScope = true;
                                 }
                             }
 
-                            $compile(el)(itemScope || scope);
+                            compile(el)(itemScope || scope);
                         });
                         digest(scope);
                         break;
@@ -45210,6 +46525,111 @@ function pad(number, digits, end) {
                 }
             });
         }
+    });
+
+    defadvice("ui.Widget", "$angular_getLogicValue", function(){
+        return this.self.value();
+    });
+
+    defadvice("ui.Widget", "$angular_setLogicValue", function(val){
+        this.self.value(val);
+    });
+
+    defadvice("ui.Select", "$angular_getLogicValue", function(){
+        var item = this.self.dataItem();
+        if (item) {
+            if (this.self.options.valuePrimitive) {
+                return item[this.self.options.dataValueField];
+            } else {
+                return item.toJSON();
+            }
+        } else {
+            return null;
+        }
+    });
+
+    defadvice("ui.Select", "$angular_setLogicValue", function(val){
+        var self = this.self;
+        var options = self.options;
+        var valueField = options.dataValueField;
+
+        if (valueField && !options.valuePrimitive) {
+            val = val != null ? val[options.dataValueField || options.dataTextField] : null;
+        }
+
+        self.value(val);
+    });
+
+    defadvice("ui.MultiSelect", "$angular_getLogicValue", function() {
+        var value = this.self.dataItems().slice(0);
+        var valueField = this.self.options.dataValueField;
+
+        if (valueField && this.self.options.valuePrimitive) {
+            value = $.map(value, function(item) {
+                return item[valueField];
+            });
+        }
+
+        return value;
+    });
+
+    defadvice("ui.MultiSelect", "$angular_setLogicValue", function(val){
+        if (val == null) {
+            val = [];
+        }
+        var self = this.self,
+            valueField = self.options.dataValueField;
+
+        if (valueField && !self.options.valuePrimitive) {
+            val = $.map(val, function(item) {
+                return item[valueField];
+            });
+        }
+
+        self.value(val);
+    });
+
+    defadvice("ui.AutoComplete", "$angular_getLogicValue", function(){
+        var options = this.self.options;
+
+        var values = this.self.value().split(options.separator);
+        var valuePrimitive = options.valuePrimitive;
+        var data = this.self.dataSource.data();
+        var dataItems = [];
+        for (var idx = 0, length = data.length; idx < length; idx++) {
+            var item = data[idx];
+            var dataValue = options.dataTextField ? item[options.dataTextField] : item;
+            for (var j = 0; j < values.length; j++) {
+                if (dataValue === values[j]) {
+                    if (valuePrimitive) {
+                        dataItems.push(dataValue);
+                    } else {
+                        dataItems.push(item.toJSON());
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return dataItems;
+    });
+
+    defadvice("ui.AutoComplete", "$angular_setLogicValue", function(value) {
+        if (value == null) {
+            value = [];
+        }
+
+        var self = this.self,
+            dataTextField = self.options.dataTextField;
+
+        if (dataTextField && !self.options.valuePrimitive) {
+            value = $.map(value, function(item){
+                return item[dataTextField];
+            });
+        }
+
+        self.value(value);
     });
 
     // All event handlers that are strings are compiled the Angular way.
@@ -45319,6 +46739,222 @@ function pad(number, digits, end) {
             this.self.trigger("change");
         });
     }
+
+    // mobile directives
+    module
+    .directive('kendoMobileApplication', function() {
+        return {
+            terminal: true,
+            link: function(scope, element, attrs, controllers) {
+                createWidget(scope, element, attrs, 'kendoMobileApplication', 'kendoMobileApplication');
+            }
+        };
+    }).directive('kendoMobileView', function() {
+        return {
+            scope: true,
+            link: {
+                pre: function(scope, element, attrs, controllers) {
+                    attrs.defaultOptions = scope.viewOptions;
+                    attrs._instance = createWidget(scope, element, attrs, 'kendoMobileView', 'kendoMobileView');
+                },
+
+                post: function(scope, element, attrs) {
+                    attrs._instance._layout();
+                    attrs._instance._scroller();
+                }
+            }
+        };
+    }).directive('kendoMobileDrawer', function() {
+        return {
+            scope: true,
+            link: {
+                pre: function(scope, element, attrs, controllers) {
+                    attrs.defaultOptions = scope.viewOptions;
+                    attrs._instance = createWidget(scope, element, attrs, 'kendoMobileDrawer', 'kendoMobileDrawer');
+                },
+
+                post: function(scope, element, attrs) {
+                    attrs._instance._layout();
+                    attrs._instance._scroller();
+                }
+            }
+        };
+    }).directive('kendoMobileModalView', function() {
+        return {
+            scope: true,
+            link: {
+                pre: function(scope, element, attrs, controllers) {
+                    attrs.defaultOptions = scope.viewOptions;
+                    attrs._instance = createWidget(scope, element, attrs, 'kendoMobileModalView', 'kendoMobileModalView');
+                },
+
+                post: function(scope, element, attrs) {
+                    attrs._instance._layout();
+                    attrs._instance._scroller();
+                }
+            }
+        };
+    }).directive('kendoMobileSplitView', function() {
+        return {
+            terminal: true,
+            link: {
+                pre: function(scope, element, attrs, controllers) {
+                    attrs.defaultOptions = scope.viewOptions;
+                    attrs._instance = createWidget(scope, element, attrs, 'kendoMobileSplitView', 'kendoMobileSplitView');
+                },
+
+                post: function(scope, element, attrs) {
+                    attrs._instance._layout();
+                }
+            }
+        };
+    }).directive('kendoMobilePane', function() {
+        return {
+            terminal: true,
+            link: {
+                pre: function(scope, element, attrs, controllers) {
+                    attrs.defaultOptions = scope.viewOptions;
+                    createWidget(scope, element, attrs, 'kendoMobilePane', 'kendoMobilePane');
+                }
+            }
+        };
+    }).directive('kendoMobileLayout', function() {
+        return {
+            link: {
+                pre: function (scope, element, attrs, controllers) {
+                    createWidget(scope, element, attrs, 'kendoMobileLayout', 'kendoMobileLayout');
+                }
+            }
+        };
+    }).directive('kendoMobileActionSheet', function() {
+        return {
+            restrict: "A",
+            link: function(scope, element, attrs, controllers) {
+                element.find("a[k-action]").each(function() {
+                    $(this).attr("data-" + kendo.ns + "action", $(this).attr("k-action"));
+                });
+
+                createWidget(scope, element, attrs, 'kendoMobileActionSheet', 'kendoMobileActionSheet');
+            }
+        };
+    }).directive('kendoMobilePopOver', function() {
+        return {
+            terminal: true,
+            link: {
+                pre: function(scope, element, attrs, controllers) {
+                    attrs.defaultOptions = scope.viewOptions;
+                    createWidget(scope, element, attrs, 'kendoMobilePopOver', 'kendoMobilePopOver');
+                }
+            }
+        };
+    }).directive('kendoViewTitle', function(){
+        return {
+            restrict : "E",
+            replace  : true,
+            template : function(element, attributes) {
+                return "<span data-" + kendo.ns + "role='view-title'>" + element.html() + "</span>";
+            }
+        };
+    }).directive('kendoMobileHeader', function() {
+            return {
+                restrict: "E",
+                link: function(scope, element, attrs, controllers) {
+                    element.addClass("km-header").attr("data-role", "header");
+                }
+            };
+    }).directive('kendoMobileFooter', function() {
+            return {
+                restrict: 'E',
+                link: function(scope, element, attrs, controllers) {
+                    element.addClass("km-footer").attr("data-role", "footer");
+                }
+            };
+    }).directive('kendoMobileScrollViewPage', function(){
+        return {
+            restrict : "E",
+            replace  : true,
+            template : function(element, attributes) {
+                return "<div data-" + kendo.ns + "role='page'>" + element.html() + "</div>";
+            }
+        };
+    });
+
+    angular.forEach(['align', 'icon', 'rel', 'transition', 'actionsheetContext'], function(attr) {
+          var kAttr = "k" + attr.slice(0, 1).toUpperCase() + attr.slice(1);
+
+          module.directive(kAttr, function() {
+              return {
+                  restrict: 'A',
+                  priority: 2,
+                  link: function(scope, element, attrs) {
+                      element.attr(kendo.attr(kendo.toHyphens(attr)), scope.$eval(attrs[kAttr]));
+                  }
+              };
+          });
+    });
+
+    var WIDGET_TEMPLATE_OPTIONS = {
+        "TreeMap": [ "Template" ],
+        "MobileListView": [ "HeaderTemplate", "Template" ],
+        "MobileScrollView": [ "EmptyTemplate", "Template" ],
+        "Grid": [ "AltRowTemplate", "DetailTemplate", "RowTemplate" ],
+        "ListView": [ "EditTemplate", "Template", "AltTemplate" ],
+        "Pager": [ "SelectTemplate", "LinkTemplate" ],
+        "PivotGrid": [ "ColumnHeaderTemplate", "DataCellTemplate", "RowHeaderTemplate" ],
+        "Scheduler": [ "AllDayEventTemplate", "DateHeaderTemplate", "EventTemplate", "MajorTimeHeaderTemplate", "MinorTimeHeaderTemplate" ],
+        "TreeView": [ "Template" ],
+        "Validator": [ "ErrorTemplate" ]
+    };
+
+    (function() {
+        var templateDirectives = {};
+        angular.forEach(WIDGET_TEMPLATE_OPTIONS, function(templates, widget) {
+            angular.forEach(templates, function(template) {
+                if (!templateDirectives[template]) {
+                    templateDirectives[template] = [ ];
+                }
+                templateDirectives[template].push("?^^kendo" + widget);
+            });
+        });
+
+        angular.forEach(templateDirectives, function(parents, directive) {
+            var templateName = "k" + directive;
+            var attrName = kendo.toHyphens(templateName);
+
+            module.directive(templateName, function() {
+                return {
+                    restrict: "A",
+                    require: parents,
+                    terminal: true,
+                    compile: function($element, $attrs) {
+                        if ($attrs[templateName] !== "") {
+                            return;
+                        }
+
+                        $element.removeAttr(attrName);
+                        var template = $element[0].outerHTML;
+
+                        return function(scope, element, attrs, controllers) {
+                            var controller;
+
+                            while(!controller && controllers.length) {
+                                controller = controllers.shift();
+                            }
+
+                            if (!controller) {
+                                $log.warn(attrName + " without a matching parent widget found. It can be one of the following: " + parents.join(", "));
+                            } else {
+                                controller.template(templateName, template);
+                                $element.remove();
+                            }
+                        };
+                    }
+                };
+            });
+        });
+
+    })();
+
 
 })(window.kendo.jQuery, window.angular);
 

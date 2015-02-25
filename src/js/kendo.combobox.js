@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@
             that._aria();
 
             if (options.autoBind) {
-                that._filterSource();
+                that._filterSource(); //TODO: diff when just bind and actually filter
             } else {
                 text = options.text;
 
@@ -132,6 +132,7 @@
             "close",
             CHANGE,
             "select",
+            "filtering",
             "dataBinding",
             "dataBound",
             "cascade"

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,6 +73,7 @@
             options = that.options;
 
             element = that.element;
+            that.wrapper = element;
 
             function eventProxy(name) {
                 return function(e) {

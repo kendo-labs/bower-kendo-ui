@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,42 @@
 
 
 
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "date": {
+    "eq": "É igual a",
+    "gt": "É posterior a",
+    "gte": "É posterior ou igual a",
+    "lt": "É anterior a",
+    "lte": "É anterior ou igual a",
+    "neq": "Não é igual a"
+  },
+  "enums": {
+    "eq": "É igual a",
+    "neq": "Não é igual a"
+  },
+  "number": {
+    "eq": "É igual a",
+    "gt": "É maior que",
+    "gte": "É maior que ou igual a",
+    "lt": "É menor que",
+    "lte": "É menor que ou igual a",
+    "neq": "Não é igual a"
+  },
+  "string": {
+    "contains": "Contém",
+    "doesnotcontain": "Não contém",
+    "endswith": "Termina com",
+    "eq": "É igual a",
+    "neq": "Não é igual a",
+    "startswith": "Começa com"
+  }
+});
+}
+
 /* Filter menu operator messages */
 
 if (kendo.ui.FilterMenu) {
@@ -32,7 +68,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "lte": "É anterior ou igual a",
     "neq": "Não é igual a"
   },
-  "enum": {
+  "enums": {
     "eq": "É igual a",
     "neq": "Não é igual a"
   },
@@ -186,6 +222,19 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
 });
 }
 
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "clear": "Limpar",
+  "filter": "Filtrar",
+  "isFalse": "É falso",
+  "isTrue": "É verdade",
+  "operator": "Operador"
+});
+}
+
 /* FilterMenu messages */
 
 if (kendo.ui.FilterMenu) {
@@ -329,6 +378,7 @@ $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "uploadSelectedFiles1": "Enviar arquivos"
 });
 }
+
 
 return window.kendo;
 

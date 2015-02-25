@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@
         exclusionSelector = ":not(.k-item.k-separator)",
         nextSelector = exclusionSelector + ":eq(0)",
         lastSelector = exclusionSelector + ":last",
-        templateSelector = "div:not(.k-animation-container,.k-list-container)",
+        templateSelector = "> div:not(.k-animation-container,.k-list-container)",
         touchPointerTypes = { "2": 1, "touch": 1 },
 
         templates = {
@@ -286,7 +286,7 @@
 
             that._focusProxy = proxy(that._focusHandler, that);
 
-            element.on(POINTERDOWN, that._focusProxy)
+            element.on(POINTERDOWN, itemSelector, that._focusProxy)
                    .on(CLICK + NS, disabledSelector, false)
                    .on(CLICK + NS, itemSelector, proxy(that._click , that))
                    .on("keydown" + NS, proxy(that._keydown, that))
@@ -482,7 +482,7 @@
                             }
                         }));
             } else {
-                if (typeof item == "string" && item[0] != "<") {
+                if (typeof item == "string" && item.charAt(0) != "<") {
                     items = that.element.find(item);
                 } else {
                     items = $(item);
@@ -617,7 +617,7 @@
                                         li.css(ZINDEX, li.data(ZINDEX));
                                         li.removeData(ZINDEX);
 
-                                        if (mobile) {
+                                        if (touch) {
                                             li.removeClass(HOVERSTATE);
                                             that._removeHoverItem();
                                         }
@@ -807,9 +807,11 @@
                 targetHref = target.attr("href"),
                 sampleHref = $("<a href='#' />").attr("href"),
                 isLink = (!!href && href !== sampleHref),
-                isTargetLink = (!!targetHref && targetHref !== sampleHref);
+                isLocalLink = isLink && !!href.match(/^#/),
+                isTargetLink = (!!targetHref && targetHref !== sampleHref),
+                shouldCloseTheRootItem = (options.openOnClick && childGroupVisible && that._isRootItem(element));
 
-            if (!options.openOnClick && element.children(templateSelector)[0]) {
+            if (target.closest(templateSelector, element[0]).length) {
                 return;
             }
 
@@ -827,7 +829,7 @@
             childGroup = element.children(popupSelector);
             childGroupVisible = childGroup.is(":visible");
 
-            if (options.closeOnClick && !isLink && (!childGroup.length || (options.openOnClick && childGroupVisible && that._isRootItem(element)))) {
+            if (options.closeOnClick && (!isLink || isLocalLink) && (!childGroup.length || shouldCloseTheRootItem)) {
                 element.removeClass(HOVERSTATE).css("height"); // Force refresh for Chrome
                 that._oldHoverItem = that._findRootParent(element);
                 that.close(link.parentsUntil(that.element, allItemsSelector));
@@ -842,7 +844,7 @@
                 link[0].click();
             }
 
-            if ((!element.parent().hasClass(MENU) || !options.openOnClick) && !kendo.support.touch && !((pointers || msPointers) && that._isRootItem(element.closest(allItemsSelector)))) {
+            if ((!that._isRootItem(element) || !options.openOnClick) && !kendo.support.touch && !((pointers || msPointers) && that._isRootItem(element.closest(allItemsSelector)))) {
                 return;
             }
 
@@ -1265,7 +1267,7 @@
                         that.popup.open();
                     }
 
-                    DOCUMENT_ELEMENT.off(MOUSEDOWN, that.popup._mousedownProxy);
+                    DOCUMENT_ELEMENT.off(that.popup.downEvent, that.popup._mousedownProxy);
                     DOCUMENT_ELEMENT
                         .on(kendo.support.mousedown + NS, that._closeProxy);
                 }
@@ -1331,16 +1333,16 @@
         _closeHandler: function (e) {
             var that = this,
 				options = that.options,
-                target = e.relatedTarget || e.target,
-				sameTarget = target == that.target[0],
-                children = $(target).closest(itemSelector).children(popupSelector),
-                containment = contains(that.element[0], target);
+                target = $(e.relatedTarget || e.target),
+				sameTarget = target.closest(that.target.selector)[0] == that.target[0],
+                children = target.closest(itemSelector).children(popupSelector),
+                containment = contains(that.element[0], target[0]);
 
             that._eventOrigin = e;
 
-            if (that.popup.visible() && ((e.which !== 3 && sameTarget) || !sameTarget) && ((that.options.closeOnClick && !touch &&
-                !((pointers || msPointers) && e.originalEvent.pointerType in touchPointerTypes) &&
-                !children[0] && containment) || !containment)) {
+            var normalClick = e.which !== 3;
+
+            if (that.popup.visible() && ((normalClick && sameTarget) || !sameTarget) && ((that.options.closeOnClick && !children[0] && containment) || !containment)) {
                     if (containment) {
                         this.unbind(SELECT, this._closeTimeoutProxy);
                         that.bind(SELECT, that._closeTimeoutProxy);

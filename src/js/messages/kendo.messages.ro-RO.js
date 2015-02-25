@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,42 @@
 
 
 
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "date": {
+    "eq": "Egal cu",
+    "gt": "După",
+    "gte": "După sau egal cu",
+    "lt": "Inainte de",
+    "lte": "Inainte sau egal cu",
+    "neq": "Diferit de"
+  },
+  "enums": {
+    "eq": "Egal cu",
+    "neq": "Diferit de"
+  },
+  "number": {
+    "eq": "Egal cu",
+    "gt": "Mai mare decât",
+    "gte": "Mai mare sau egal cu",
+    "lt": "Mai mic decât",
+    "lte": "Mai mic sau egal cu",
+    "neq": "Diferit de"
+  },
+  "string": {
+    "contains": "Conține",
+    "doesnotcontain": "Nu conține",
+    "endswith": "Se termină cu",
+    "eq": "Egal cu",
+    "neq": "Diferit de",
+    "startswith": "Incepe cu"
+  }
+});
+}
+
 /* Filter menu operator messages */
 
 if (kendo.ui.FilterMenu) {
@@ -32,7 +68,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "lte": "Inainte sau egal cu",
     "neq": "Diferit de"
   },
-  "enum": {
+  "enums": {
     "eq": "Egal cu",
     "neq": "Diferit de"
   },
@@ -191,6 +227,19 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
 });
 }
 
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "clear": "Șterge",
+  "filter": "Filtrează",
+  "isFalse": "este fals",
+  "isTrue": "este adevărat",
+  "operator": "Operator"
+});
+}
+
 /* FilterMenu messages */
 
 if (kendo.ui.FilterMenu) {
@@ -332,6 +381,7 @@ $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "headerStatusUploading": "Uploading..."
 });
 }
+
 
 return window.kendo;
 

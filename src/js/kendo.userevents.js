@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,8 @@
         "mouse": 9,
         "pointer": 9
     };
+
+    var ENABLE_GLOBAL_SURFACE = (!support.touch || support.mouseAndTouchPresent);
 
     function touchDelta(touch1, touch2) {
         var x1 = touch1.x.location,
@@ -328,7 +330,8 @@
 
             extend(that, {
                 element: element,
-                surface: options.global ? $(document.documentElement) : $(options.surface || element),
+                // the touch events lock to the element anyway, so no need for the global setting
+                surface: options.global && ENABLE_GLOBAL_SURFACE ? $(document.documentElement) : $(options.surface || element),
                 stopPropagation: options.stopPropagation,
                 pressed: false
             });

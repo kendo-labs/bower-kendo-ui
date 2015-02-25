@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
     var kendo = window.kendo,
         mobile = kendo.mobile,
         ui = mobile.ui,
-        roleSelector = kendo.roleSelector,
         Widget = ui.Widget;
 
     function createContainer(align, element) {
@@ -35,13 +34,14 @@
     function toggleTitle(centerElement) {
         var siblings = centerElement.siblings(),
             noTitle = !!centerElement.children("ul")[0],
-            showTitle = (!!siblings[0] && $.trim(centerElement.text()) === "");
+            showTitle = (!!siblings[0] && $.trim(centerElement.text()) === ""),
+            android = kendo.mobile.application && kendo.mobile.application.element.is(".km-android");
 
         centerElement.prevAll().toggleClass("km-absolute", noTitle);
         centerElement.toggleClass("km-show-title", showTitle);
         centerElement.toggleClass("km-fill-title", showTitle && !$.trim(centerElement.html()));
         centerElement.toggleClass("km-no-title", noTitle);
-        centerElement.toggleClass("km-hide-title", centerElement.css("visibility") == "hidden" && !siblings.children().is(":visible"));
+        centerElement.toggleClass("km-hide-title", android && !siblings.children().is(":visible"));
     }
 
     var NavBar = Widget.extend({
@@ -65,7 +65,7 @@
         },
 
         title: function(value) {
-            this.element.find(roleSelector("view-title")).text(value);
+            this.element.find(kendo.roleSelector("view-title")).text(value);
             toggleTitle(this.centerElement);
         },
 

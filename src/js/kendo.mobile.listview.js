@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -209,9 +209,11 @@
                         handler.dataSource.read(pullParameters.call(listView, handler._first));
                     }
                 },
-                pullTemplate: options.pullTemplate,
-                releaseTemplate: options.releaseTemplate,
-                refreshTemplate: options.refreshTemplate
+                messages: {
+                    pullTemplate: options.messages.pullTemplate,
+                    releaseTemplate: options.messages.releaseTemplate,
+                    refreshTemplate: options.messages.refreshTemplate
+                }
             });
         },
 
@@ -530,7 +532,7 @@
         init: function(listView, buffer) {
 
             this._loadIcon = $(LOAD_ICON).hide();
-            this._loadButton = $('<a class="km-load">' + listView.options.loadMoreText + '</a>').hide();
+            this._loadButton = $('<a class="km-load">' + listView.options.messages.loadMoreText + '</a>').hide();
             this.element = $('<li class="km-load-more" style="display: none"></li>').append(this._loadIcon).append(this._loadButton).appendTo(listView.element);
 
             var loadMore = this;
@@ -643,6 +645,7 @@
 
             list.bind("resize", function() {
                 binder.updateScrollerSize();
+                listView.updateSize();
             });
 
             list.bind("reset", function() {
@@ -800,7 +803,8 @@
         init: function(listView) {
             var filter = this,
                 filterable = listView.options.filterable,
-                events = "change paste";
+                events = "change paste",
+                that = this;
 
             this.listView = listView;
             this.options = filterable;
@@ -826,6 +830,22 @@
             this.clearButton = listView.wrapper.find(".km-filter-reset")
                 .on(CLICK, proxy(this, "_clearFilter"))
                 .hide();
+
+             this._dataSourceChange = $.proxy(this._refreshInput, this);
+             listView.bind("_dataSource", function(e) {
+                 e.dataSource.bind("change", that._dataSourceChange);
+             });
+        },
+
+        _refreshInput: function() {
+            var appliedFilters = this.listView.dataSource.filter();
+            var searchInput = this.listView._filter.searchInput;
+
+            if (!appliedFilters || appliedFilters.filters[0].field !== this.listView.options.filterable.field)  {
+                searchInput.val("");
+            } else {
+                searchInput.val(appliedFilters.filters[0].value);
+            }
         },
 
         _search: function(expr) {
@@ -952,13 +972,15 @@
             headerTemplate: '<span class="km-text">#:value#</span>',
             appendOnRefresh: false,
             loadMore: false,
-            loadMoreText: "Press to load more",
             endlessScroll: false,
             scrollThreshold: 30,
             pullToRefresh: false,
-            pullTemplate: "Pull to refresh",
-            releaseTemplate: "Release to refresh",
-            refreshTemplate: "Refreshing",
+            messages: {
+                loadMoreText: "Press to load more",
+                pullTemplate: "Pull to refresh",
+                releaseTemplate: "Release to refresh",
+                refreshTemplate: "Refreshing"
+            },
             pullOffset: 140,
             filterable: false,
             virtualViewSize: null
@@ -1046,15 +1068,6 @@
                         listView.trigger(ITEM_CHANGE, { item: items.eq(i), data: dataItems[i], ns: ui });
                     }
                 }
-
-                listView.angular("compile", function(){
-                    return {
-                        elements: items,
-                        data: dataItems.map(function(data){
-                            return { dataItem: data };
-                        })
-                    };
-                });
             });
         },
 
@@ -1119,8 +1132,22 @@
             return this._renderItems([dataItem], replaceItem)[0];
         },
 
+        updateSize: function() {
+            this._size = this.getSize();
+        },
+
         _renderItems: function(dataItems, callback) {
             var items = $(kendo.render(this.template, dataItems));
+
+            this.angular("compile", function(){
+                return {
+                    elements: items,
+                    data: dataItems.map(function(data){
+                        return { dataItem: data };
+                    })
+                };
+            });
+
             callback(items);
             mobile.init(items);
             this._enhanceItems(items);

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,42 @@
 })(function(){
 
 
+
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "date": {
+    "eq": "È uguale a",
+    "gt": "È dopo",
+    "gte": "È dopo o uguale a",
+    "lt": "È prima",
+    "lte": "È prima o uguale a",
+    "neq": "Non è uguale a"
+  },
+  "number": {
+    "eq": "È uguale a",
+    "gt": "È più grande di",
+    "gte": "È più grande o uguale a",
+    "lt": "È più piccolo di",
+    "lte": "È più piccolo o uguale a",
+    "neq": "Non è uguale a"
+  },
+  "string": {
+    "contains": "Contiene",
+    "doesnotcontain": "Non contiene",
+    "endswith": "Finisce con",
+    "eq": "È uguale a",
+    "neq": "Non è uguale a",
+    "startswith": "Inizia con"
+  },
+  "enums": {
+    "eq": "È uguale a",
+    "neq": "Non è uguale a"
+  }
+});
+}
 
 /* Filter menu operator messages */
 
@@ -48,7 +84,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "neq": "Non è uguale a",
     "startswith": "Inizia con"
   },
-  "enum": {
+  "enums": {
     "eq": "È uguale a",
     "neq": "Non è uguale a"
   }
@@ -61,6 +97,7 @@ if (kendo.ui.ColumnMenu) {
 kendo.ui.ColumnMenu.prototype.options.messages =
 $.extend(true, kendo.ui.ColumnMenu.prototype.options.messages,{
   "columns": "Colonne",
+  "filter": "Filtro",
   "sortAscending": "In ordine crescente",
   "sortDescending": "In ordine decrescente",
   "settings": "Impostazioni colonna",
@@ -123,6 +160,19 @@ $.extend(true, kendo.ui.RecurrenceEditor.prototype.options.messages,{
     "weekday": "giorno della settimana",
     "weekend": "giorno finesettimana"
   }
+});
+}
+
+/* FilterCenn messages */
+
+if (kendo.ui.FilterCenn) {
+kendo.ui.FilterCenn.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCenn.prototype.options.messages,{
+  "clear": "Rimuovi",
+  "filter": "Filtro",
+  "isFalse": "è falso",
+  "isTrue": "è vero",
+  "operator": "Operatore"
 });
 }
 
@@ -331,6 +381,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   "showWorkDay": "Mostra solo le ore lavorative"
 });
 }
+
 
 return window.kendo;
 

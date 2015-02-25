@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@
             that._sizingDom = that.orientation == HORIZONTAL ? "outerWidth" : "outerHeight";
 
             that.draggable = new ui.Draggable(element, {
-                distance: 0,
+                distance: 1,
                 filter: options.handle,
                 drag: proxy(that._resize, that),
                 dragcancel: proxy(that._cancel, that),

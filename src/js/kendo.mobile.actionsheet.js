@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,10 +131,17 @@
             var action = currentTarget.data("action");
 
             if (action) {
-                kendo.getter(action)(window)({
+                var actionData = {
                     target: this.target,
                     context: this.context
-                });
+                },
+                $angular = this.options.$angular;
+
+                if ($angular) {
+                    this.element.injector().get("$parse")(action)($angular[0])(actionData);
+                } else {
+                    kendo.getter(action)(window)(actionData);
+                }
             }
 
             this.trigger(COMMAND, { target: this.target, context: this.context, currentTarget: currentTarget });

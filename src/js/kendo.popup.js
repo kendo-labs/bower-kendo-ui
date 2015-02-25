@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,6 +111,7 @@
             extend(options.animation.open, {
                 complete: function() {
                     that.wrapper.css({ overflow: VISIBLE }); // Forcing refresh causes flickering in mobile.
+                    that._activated = true;
                     that._trigger(ACTIVATE);
                 }
             });
@@ -153,6 +154,10 @@
             copyAnchorStyles: true,
             autosize: false,
             modal: false,
+            adjustSize: {
+                width: 0,
+                height: 0
+            },
             animation: {
                 open: {
                     effects: "slideIn:down",
@@ -181,7 +186,7 @@
             }
 
             if (options.anchor != BODY) {
-                direction = (anchor[0].className.match(ACTIVEBORDERREGEXP) || ["", "down"])[1];
+                direction = ((anchor.attr("class") || "").match(ACTIVEBORDERREGEXP) || ["", "down"])[1];
                 dirClass = ACTIVEBORDER + "-" + direction;
 
                 anchor
@@ -250,6 +255,8 @@
                 if (element.data("animating") || that._trigger(OPEN)) {
                     return;
                 }
+
+                that._activated = false;
 
                 if (!options.modal) {
                     DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy)
@@ -378,7 +385,7 @@
                     that._resizeTimeout = null;
                 }, 50);
             } else {
-                if (!that._hovered && !contains(that.element[0], activeElement())) {
+                if (!that._hovered || (that._activated && that.element.hasClass("k-list-container"))) {
                     that.close();
                 }
             }
@@ -520,14 +527,15 @@
             }
 
             var offsets = extend({}, offset),
-                location = extend({}, pos);
+                location = extend({}, pos),
+                adjustSize = options.adjustSize;
 
             if (collisions[0] === "fit") {
-                location.top += that._fit(offsets.top, wrapper.outerHeight(), viewportHeight / zoomLevel);
+                location.top += that._fit(offsets.top, wrapper.outerHeight() + adjustSize.height, viewportHeight / zoomLevel);
             }
 
             if (collisions[1] === "fit") {
-                location.left += that._fit(offsets.left, wrapper.outerWidth(), viewportWidth / zoomLevel);
+                location.left += that._fit(offsets.left, wrapper.outerWidth() + adjustSize.width, viewportWidth / zoomLevel);
             }
 
             var flipPos = extend({}, location);

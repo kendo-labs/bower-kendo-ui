@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,6 +139,19 @@ $.extend(true, kendo.ui.FileBrowser.prototype.options.messages,{
 });
 }
 
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "isTrue": "为真",
+  "isFalse": "为假",
+  "filter": "过滤",
+  "clear": "清除",
+  "operator": "运算符"
+});
+}
+
 /* FilterMenu messages */
 
 if (kendo.ui.FilterMenu) {
@@ -157,6 +170,43 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "cancel": "取消"
 });
 }
+
+/* Filter cell operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "string": {
+    "eq": "等于",
+    "neq": "不等于",
+    "startswith": "开头为",
+    "contains": "包含",
+    "doesnotcontain": "不包含",
+    "endswith": "结尾为"
+  },
+  "number": {
+    "eq": "等于",
+    "neq": "不等于",
+    "gte": "大于等于",
+    "gt": "大于",
+    "lte": "小于等于",
+    "lt": "小于"
+  },
+  "date": {
+    "eq": "等于",
+    "neq": "不等于",
+    "gte": "大于等于",
+    "gt": "大于",
+    "lte": "小于等于",
+    "lt": "小于"
+  },
+  "enums": {
+    "eq": "等于",
+    "neq": "不等于"
+  }
+});
+}
+
 
 /* Filter menu operator messages */
 
@@ -187,7 +237,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "lte": "小于等于",
     "lt": "小于"
   },
-  "enum": {
+  "enums": {
     "eq": "等于",
     "neq": "不等于"
   }

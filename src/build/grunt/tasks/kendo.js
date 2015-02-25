@@ -3,6 +3,8 @@ var PATH = require("path");
 var META = require("../../kendo-meta.js");
 var UTILS = require("./utils.js");
 
+var RX_SRCDIR = new RegExp("^" + KENDO_SRC_DIR + "/");
+
 module.exports = function(grunt) {
 
     function makeSources(task) {
@@ -12,9 +14,9 @@ module.exports = function(grunt) {
             f.src.forEach(function(f){
                 var basename = PATH.basename(f, PATH.extname(f));
                 var dest = PATH.join(destDir, basename + ext);
-                var comp = META.getKendoFile(f.replace(/^src\//, "")), code;
+                var comp = META.getKendoFile(f.replace(RX_SRCDIR, "")), code;
                 var srcFiles = comp.getBuildDeps().map(function(f){
-                    return "src/" + f;
+                    return KENDO_SRC_DIR + "/" + f;
                 });
                 if (UTILS.outdated(srcFiles, dest)) {
                     grunt.log.writeln("Making " + dest);
@@ -36,7 +38,7 @@ module.exports = function(grunt) {
         var bundleMin = bundle.replace(/\.js$/, ".min.js");
         var dest = PATH.join(task.options().destDir, bundle);
         var destMin = PATH.join(task.options().destDir, bundleMin);
-        var files = components.map(function(f){ return PATH.join("src", f) });
+        var files = components.map(function(f){ return PATH.join(KENDO_SRC_DIR, f) });
 
         if (grunt.option("show")) {
             META.loadComponents(components).forEach(function(f){

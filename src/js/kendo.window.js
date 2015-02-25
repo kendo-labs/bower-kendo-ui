@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -378,6 +378,18 @@
             }
         },
 
+        _actions: function() {
+            var actions = this.options.actions;
+            var titlebar = this.wrapper.children(KWINDOWTITLEBAR);
+            var container = titlebar.find(".k-window-actions");
+
+            actions = $.map(actions, function(action) {
+                return { name: action };
+            });
+
+            container.html(kendo.render(templates.action, actions));
+        },
+
         setOptions: function(options) {
             Widget.fn.setOptions.call(this, options);
             this._animations();
@@ -385,6 +397,7 @@
             this._position();
             this._resizable();
             this._draggable();
+            this._actions();
         },
 
         events:[
@@ -613,7 +626,7 @@
                 options = that.options,
                 titleBar = wrapper.children(KWINDOWTITLEBAR),
                 title = titleBar.children(KWINDOWTITLE),
-                titleBarHeight = titleBar.outerHeight();
+                titleBarHeight;
 
             if (!arguments.length) {
                 return title.text();
@@ -624,14 +637,19 @@
                 titleBar.remove();
             } else {
                 if (!titleBar.length) {
-                    wrapper.prepend(templates.titlebar(extend(templates, options)));
+                    wrapper.prepend(templates.titlebar(options));
+                    that._actions();
+                    titleBar = wrapper.children(KWINDOWTITLEBAR);
+                } else {
+                    title.html(text);
                 }
+
+                titleBarHeight = titleBar.outerHeight();
 
                 wrapper.css("padding-top", titleBarHeight);
                 titleBar.css("margin-top", -titleBarHeight);
             }
 
-            title.text(text);
             that.options.title = text;
 
             return that;
@@ -998,14 +1016,15 @@
             var that = this,
                 wrapper = that.wrapper,
                 wnd = $(window),
+                zoomLevel = kendo.support.zoomLevel(),
                 w, h;
 
             if (!that.options.isMaximized) {
                 return;
             }
 
-            w = wnd.width();
-            h = wnd.height() - parseInt(wrapper.css("padding-top"), 10);
+            w = wnd.width() / zoomLevel;
+            h = wnd.height() / zoomLevel - parseInt(wrapper.css("padding-top"), 10);
 
             wrapper.css({
                     width: w,
@@ -1161,10 +1180,6 @@
 
             wrapper = $(templates.wrapper(options));
 
-            if (options.title !== false) {
-                wrapper.append(templates.titlebar(extend(templates, options)));
-            }
-
             // Collect the src attributes of all iframes and then set them to empty string.
             // This seems to fix this IE9 "feature": http://msdn.microsoft.com/en-us/library/gg622929%28v=VS.85%29.aspx?ppud=4
             iframeSrcAttributes = contentHtml.find("iframe:not(.k-content)").map(function() {
@@ -1210,11 +1225,7 @@
         titlebar: template(
             "<div class='k-window-titlebar k-header'>&nbsp;" +
                 "<span class='k-window-title'>#= title #</span>" +
-                "<div class='k-window-actions'>" +
-                "# for (var i = 0; i < actions.length; i++) { #" +
-                    "#= action({ name: actions[i] }) #" +
-                "# } #" +
-                "</div>" +
+                "<div class='k-window-actions' />" +
             "</div>"
         ),
         overlay: "<div class='k-overlay' />",

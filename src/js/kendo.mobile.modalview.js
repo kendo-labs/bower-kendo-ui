@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,38 +34,16 @@
 
             Widget.fn.init.call(that, element, options);
 
-            element = that.element;
-            options = that.options;
-
-            width = element[0].style.width || "auto";
-            height = element[0].style.height || "auto";
-
-            element.addClass("km-modalview").wrap(WRAP);
-
-            that.wrapper = element.parent().css({
-                width: options.width || width || 300,
-                height: options.height || height || 300
-            }).addClass(height == "auto" ? " km-auto-height" : "");
-
-            element.css({ width: "", height: "" });
-
-            that.shim = new Shim(that.wrapper, {
-                modal: options.modal,
-                position: "center center",
-                align: "center center",
-                effect: "fade:in",
-                className: "km-modalview-root",
-                hide: function(e) {
-                    if (that.trigger(CLOSE)) {
-                        e.preventDefault();
-                    }
-                }
-            });
-
             that._id();
-            that._layout();
-            that._scroller();
-            that._model();
+            that._wrap();
+            that._shim();
+
+            if (!this.options.$angular) {
+                that._layout();
+                that._scroller();
+                that._model();
+            }
+
             that.element.css("display", "");
 
             that.trigger(INIT);
@@ -94,6 +72,9 @@
             var that = this;
             that.target = $(target);
             that.shim.show();
+
+            that._invokeNgController();
+
             // necessary for the mobile view interface
             that.trigger("show", { view: that });
         },
@@ -110,6 +91,42 @@
             if (this.element.is(":visible") && !this.trigger(CLOSE)) {
                 this.shim.hide();
             }
+        },
+
+        _wrap: function() {
+            var that = this,
+                element = that.element,
+                options = that.options,
+                width, height;
+
+            width = element[0].style.width || "auto";
+            height = element[0].style.height || "auto";
+
+            element.addClass("km-modalview").wrap(WRAP);
+
+            that.wrapper = element.parent().css({
+                width: options.width || width || 300,
+                height: options.height || height || 300
+            }).addClass(height == "auto" ? " km-auto-height" : "");
+
+            element.css({ width: "", height: "" });
+        },
+
+        _shim: function() {
+            var that = this;
+
+            that.shim = new Shim(that.wrapper, {
+                modal: that.options.modal,
+                position: "center center",
+                align: "center center",
+                effect: "fade:in",
+                className: "km-modalview-root",
+                hide: function(e) {
+                    if (that.trigger(CLOSE)) {
+                        e.preventDefault();
+                    }
+                }
+            });
         }
     });
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -463,7 +463,8 @@ thead.k-grid-header th.k-header:last-child
     .box-shadow(@concave-shadow);
 }
 
-.k-menu .k-state-border-right
+.k-menu .k-item > .k-state-border-right,
+.k-menu .k-item > .k-state-border-left
 {
     background-color: @selected-background-color;
     color: @selected-text-color;
@@ -855,4 +856,11 @@ td.k-state-focused.k-state-selected,
     color: @button-text-color;
     background-color:@button-active-background;
     border-color: @hover-border-color;
+}
+
+.k-button:active:hover,
+.k-button.k-state-active:hover {
+    color: @widget-text-color;
+    border-color: @hover-border-color;
+    background-color: @hover-background-color;
 }

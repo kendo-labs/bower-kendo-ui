@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -788,9 +788,10 @@ div.k-filebrowser-dropzone em {
 .k-tiles li.k-state-selected {
   border-color: #7ea700;
 }
-.k-tile .k-folder,
-.k-tile .k-file {
+.k-filebrowser .k-tile .k-folder,
+.k-filebrowser .k-tile .k-file {
   background-image: url('Metro/imagebrowser.png');
+  background-size: auto auto;
 }
 /* TreeMap */
 .k-leaf,
@@ -891,22 +892,22 @@ div.k-filebrowser-dropzone em {
   color: #fff;
 }
 /* Notification */
-.k-notification.k-notification-info {
+.k-widget.k-notification.k-notification-info {
   background-color: #e5f5fa;
   color: #0487c4;
   border-color: #b7e1f0;
 }
-.k-notification.k-notification-success {
+.k-widget.k-notification.k-notification-success {
   background-color: #eaf7ec;
   color: #349946;
   border-color: #c3e8ca;
 }
-.k-notification.k-notification-warning {
+.k-widget.k-notification.k-notification-warning {
   background-color: #fff4d9;
   color: #0487c4;
   border-color: #fff0c8;
 }
-.k-notification.k-notification-error {
+.k-widget.k-notification.k-notification-error {
   background-color: #ffe0d9;
   color: #ef470a;
   border-color: #ffb7a8;
@@ -1339,6 +1340,10 @@ html .km-pane-wrapper .km-widget,
 .k-state-focused > .k-select {
   border-color: #dadada;
 }
+.k-tabstrip:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 .k-tabstrip-items .k-state-default .k-link,
 .k-panelbar > li.k-state-default > .k-link {
   color: #787878;
@@ -1601,6 +1606,11 @@ html .km-pane-wrapper .km-widget,
 .k-radio:disabled + .k-radio-label:hover:before {
   box-shadow: none;
 }
+.k-checkbox:focus + .k-checkbox-label:after,
+.k-radio:focus + .k-radio-label:before {
+  border-color: #8ebc00;
+  box-shadow: none;
+}
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
   .k-icon:not(.k-loading),
   .k-grouping-dropclue,
@@ -1639,4 +1649,58 @@ html .km-pane-wrapper .km-widget,
   .k-editor-toolbar-wrap .k-button-group .k-tool:focus {
     border-color: #fff;
   }
+}
+.ktb-checkbox-label-after {
+  border-color: #dadada;
+  background: #ffffff;
+}
+.ktb-checkbox-label-hover-after,
+.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
+  border-color: #8ebc00;
+}
+.ktb-checkbox-checked + .ktb-checkbox-label-after {
+  background-color: #ffffff;
+  border-color: #dadada;
+  color: #7ea700;
+}
+.ktb-checkbox-label-hover-after,
+.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
+  border-color: #8ebc00;
+}
+.ktb-checkbox-label-active-after {
+  border-color: #8ebc00;
+}
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-after,
+.ktb-checkbox-disabled + .ktb-checkbox-label-after,
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-active-after,
+.ktb-checkbox-disabled + .ktb-checkbox-label-hover-before,
+.ktb-checkbox-checked-disabled + .ktb-checkbox-label-hover-after {
+  background: #ffffff;
+  color: #cacaca;
+  border-color: #cacaca;
+}
+.ktb-radio-label-before {
+  border-color: #dadada;
+  background-color: #ffffff;
+}
+.ktb-radio-checked + .ktb-radio-label-after {
+  background-color: #7ea700;
+}
+.ktb-radio-checked + .ktb-radio-label-before {
+  border-color: #dadada;
+}
+.ktb-radio-label-hover-before,
+.ktb-radio-checked + .ktb-radio-label-hover-before {
+  border-color: #8ebc00;
+}
+.ktb-radio-label-active-before {
+  border-color: #8ebc00;
+}
+.ktb-radio-checked + .ktb-radio-label-after {
+  background-color: #7ea700;
+}
+.ktb-radio-disabled + .ktb-radio-label-before,
+.ktb-radio-disabled + .ktb-radio-label-active-before {
+  background: #ffffff;
+  border-color: #cacaca;
 }

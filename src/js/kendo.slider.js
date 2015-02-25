@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,8 @@
             that._maxSelection = that._trackDiv[that._sizeFn]();
 
             that._sliderItemsInit();
+
+            that._reset();
 
             that._tabindex(that.wrapper.find(DRAG_HANDLE));
             that[options.enabled ? "enable" : "disable"]();
@@ -225,7 +227,8 @@
                 for (i = 0; i < items.length; i++) {
                     item = $(items[i]);
                     value = that._values[i];
-                    if (removeFraction(value) % removeFraction(options.smallStep) === 0 && removeFraction(value) % removeFraction(options.largeStep) === 0) {
+                    var valueWithoutFraction = round(removeFraction(value - this.options.min));
+                    if (valueWithoutFraction % removeFraction(options.smallStep) === 0 && valueWithoutFraction % removeFraction(options.largeStep) === 0) {
                         item.addClass("k-tick-large")
                             .html("<span class='k-label'>" + item.attr("title") + "</span>");
 
@@ -517,6 +520,24 @@
             if (drag && drag.tooltipDiv) {
                 drag.tooltipDiv.stop(true, false).css("opacity", 1);
             }
+        },
+
+        _reset: function () {
+            var that = this,
+                element = that.element,
+                formId = element.attr("form"),
+                form = formId ? $("#" + formId) : element.closest("form");
+
+            if (form[0]) {
+                that._form = form.on("reset", proxy(that._formResetHandler, that));
+            }
+        },
+
+        destroy: function () {
+            if (this._form) {
+                this._form.off("reset", this._formResetHandler);
+            }
+            Widget.fn.destroy.call(this);
         }
     });
 
@@ -895,10 +916,20 @@
             return this._values[math.max(0, math.min(index, count - 1))];
         },
 
+        _formResetHandler: function () {
+            var that = this,
+                min = that.options.min;
+
+            setTimeout(function () {
+                var value = that.element[0].value;
+                that.value(value === "" || isNaN(value) ? min : value);
+            });
+        },
+
         destroy: function() {
             var that = this;
 
-            Widget.fn.destroy.call(that);
+            SliderBase.fn.destroy.call(that);
 
             that.wrapper.off(NS)
                 .find(".k-button").off(NS)
@@ -1596,10 +1627,22 @@
             });
         },
 
+        _formResetHandler: function () {
+            var that = this,
+                options = that.options;
+
+            setTimeout(function () {
+                var inputs = that.element.find("input");
+                var start = inputs[0].value;
+                var end = inputs[1].value;
+                that.values(start === "" || isNaN(start) ? options.min : start, end === "" || isNaN(end) ? options.max : end);
+            });
+        },
+
         destroy: function() {
             var that = this;
 
-            Widget.fn.destroy.call(that);
+            SliderBase.fn.destroy.call(that);
 
             that.wrapper.off(NS)
                 .find(TICK_SELECTOR + ", " + TRACK_SELECTOR).off(NS)

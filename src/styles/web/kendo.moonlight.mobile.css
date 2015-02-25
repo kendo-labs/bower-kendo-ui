@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,6 +68,8 @@
   z-index: 2 !important;
   -webkit-transition: -webkit-transform 350ms ease-out;
   -ms-transition: -ms-transform 350ms ease-out;
+  -o-transition: -o-transform 350ms ease-out;
+  transition: transform 350ms ease-out;
   -webkit-transform: translatex(-100%);
   -moz-transform: translatex(-100%);
   -ms-transform: translatex(-100%);
@@ -315,7 +317,6 @@ kendo-mobile-drawer {
 .km-load-more .km-icon,
 .km-scroller-refresh .km-icon {
   animation: km-spin 1s infinite linear;
-  -moz-animation: km-spin 1s infinite linear;
   -webkit-animation: km-spin 1s infinite linear;
   display: block;
   margin: 0 auto;
@@ -439,9 +440,13 @@ kendo-mobile-drawer {
   -webkit-transform: none;
   overflow-x: visible;
 }
+.km-native-scrolling,
 .km-native-scrolling .km-pane,
 .km-native-scrolling .km-view {
   -ms-touch-action: auto;
+}
+.km-native-scrolling .km-pane,
+.km-native-scrolling .km-view {
   display: block;
 }
 .km-native-scrolling .km-content {
@@ -1580,7 +1585,6 @@ button.km-button {
   -o-transform: rotate(0deg);
   transform: rotate(0deg);
   -webkit-transition: -webkit-transform 300ms linear;
-  -moz-transition: -moz-transform 300ms linear;
   -ms-transition: -ms-transform 300ms linear;
   -o-transition: -o-transform 300ms linear;
   transition: transform 300ms linear;
@@ -1594,7 +1598,6 @@ button.km-button {
 }
 .km-widget .km-scroller-refresh .km-icon {
   -webkit-transition: none;
-  -moz-transition: none;
   -ms-transition: none;
   -o-transition: none;
   transition: none;
@@ -1609,12 +1612,10 @@ button.km-button {
   background-color: #333;
   opacity: 0;
   -webkit-transform-origin: 0 0;
-  -moz-transform-origin: 0 0;
   -ms-transform-origin: 0 0;
   -o-transform-origin: 0 0;
   transform-origin: 0 0;
   -webkit-transition: opacity 0.3s linear;
-  -moz-transition: opacity 0.3s linear;
   -ms-transition: opacity 0.3s linear;
   -o-transition: opacity 0.3s linear;
   transition: opacity 0.3s linear;
@@ -1650,7 +1651,8 @@ button.km-button {
   left: 0;
 }
 /* SplitView */
-.km-splitview > .km-content {
+div.km-splitview > .km-content,
+kendo-mobile-split-view.km-splitview > .km-content {
   -moz-box-orient: horizontal;
   -webkit-box-orient: horizontal;
   -ms-box-orient: horizontal;
@@ -1663,7 +1665,8 @@ button.km-button {
   -ms-flex-direction: row;
   flex-direction: row;
 }
-.km-split-vertical > .km-content {
+div.km-split-vertical > .km-content,
+kendo-mobile-split-view.km-split-vertical > .km-content {
   -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
   -ms-box-orient: vertical;
@@ -1672,7 +1675,7 @@ button.km-button {
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.km-split-content > .km-pane {
+div.km-split-content > .km-pane {
   -moz-box-flex: 2;
   -webkit-box-flex: 2;
   -webkit-flex: 2;
@@ -1681,14 +1684,14 @@ button.km-button {
   width: auto;
   height: auto;
 }
-.km-split-content > .km-pane:first-child {
+div.km-split-content > .km-pane:first-child {
   -moz-box-flex: 1;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
 }
-.km-split-horizontal > .km-content > .km-pane {
+div.km-split-horizontal > .km-content > .km-pane {
   top: 0;
   bottom: 0;
 }
@@ -1699,7 +1702,6 @@ button.km-button {
 .k-fx-end .k-fx-next,
 .k-fx-end .k-fx-current {
   -webkit-transition: all 350ms ease-out;
-  -moz-transition: all 350ms ease-out;
   -ms-transition: all 350ms ease-out;
   -o-transition: all 350ms ease-out;
   transition: all 350ms ease-out;
@@ -1716,10 +1718,6 @@ button.km-button {
 .k-fx-hidden,
 .k-fx-hidden * {
   visibility: hidden !important;
-}
-.k-fx-hidden .km-view-title {
-  visibility: visible !important;
-  opacity: 0;
 }
 .k-fx-reverse .k-fx-current {
   z-index: 1;
@@ -1792,7 +1790,6 @@ button.km-button {
 .k-fx-slide.k-fx-end .k-fx-current .km-header,
 .k-fx-slide.k-fx-end .k-fx-current .km-footer {
   -webkit-transition: all 350ms ease-out;
-  -moz-transition: all 350ms ease-out;
   -ms-transition: all 350ms ease-out;
   -o-transition: all 350ms ease-out;
   transition: all 350ms ease-out;
@@ -2382,7 +2379,6 @@ button.km-button {
   margin-top: -0.5em;
   border-radius: 1em;
   animation: km-webload 0.6s infinite linear;
-  -moz-animation: km-webload 0.6s infinite linear;
   -webkit-animation: km-webload 0.6s infinite linear;
   -webkit-background-clip: none;
 }
@@ -2395,19 +2391,16 @@ button.km-button {
   margin-left: -0.6em;
   width: .25em;
   animation: km-webrefresh 0.6s infinite linear;
-  -moz-animation: km-webrefresh 0.6s infinite linear;
   -webkit-animation: km-webrefresh 0.6s infinite linear;
 }
 .km-root .km-loading-left {
   margin-left: -0.2em;
   animation-delay: 0.2s;
-  -moz-animation-delay: 0.2s;
   -webkit-animation-delay: 0.2s;
 }
 .km-root .km-loading-right {
   margin-left: .42em;
   animation-delay: 0.4s;
-  -moz-animation-delay: 0.4s;
   -webkit-animation-delay: 0.4s;
 }
 @keyframes km-webload {
@@ -3577,7 +3570,6 @@ body:before {
   -o-transform: scale(0.9, 1);
   transform: scale(0.9, 1);
   -webkit-transform-origin: 10% 50%;
-  -moz-transform-origin: 10% 50%;
   -ms-transform-origin: 10% 50%;
   -o-transform-origin: 10% 50%;
   transform-origin: 10% 50%;

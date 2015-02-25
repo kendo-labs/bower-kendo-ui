@@ -73,8 +73,7 @@
 .km-vertical .km-collapsible-pane {
     position: absolute;
     z-index: 2 !important;
-    -webkit-transition: -webkit-transform 350ms ease-out;
-    -ms-transition: -ms-transform 350ms ease-out;
+    .pTransition(transform 350ms ease-out);
     .transform(translatex(-100%));
 }
 
@@ -439,10 +438,16 @@
     overflow-x: visible;
 }
 
+.km-native-scrolling,
 .km-native-scrolling .km-pane,
 .km-native-scrolling .km-view
 {
     -ms-touch-action: auto;
+}
+
+.km-native-scrolling .km-pane,
+.km-native-scrolling .km-view
+{
     display: block;
 }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,42 @@
 })(function(){
 
 
+
+/* Filter menu operator messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.operators =
+$.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
+  "date": {
+    "eq": "равна",
+    "gte": "после или равна",
+    "gt": "после",
+    "lte": "до или равна",
+    "lt": "до",
+    "neq": "не равна"
+  },
+  "number": {
+    "eq": "равно",
+    "gte": "больше или равно",
+    "gt": "больше",
+    "lte": "меньше или равно",
+    "lt": "меньше",
+    "neq": "не равно"
+  },
+  "string": {
+    "endswith": "оканчивается на",
+    "eq": "равно",
+    "neq": "не равно",
+    "startswith": "начинающимися на",
+    "contains": "содержащими",
+    "doesnotcontain": "не содержит"
+  },
+  "enums": {
+    "eq": "равно",
+    "neq": "не равно"
+  }
+});
+}
 
 /* Filter menu operator messages */
 
@@ -48,7 +84,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "contains": "содержащими",
     "doesnotcontain": "не содержит"
   },
-  "enum": {
+  "enums": {
     "eq": "равно",
     "neq": "не равно"
   }
@@ -166,6 +202,19 @@ $.extend(true, kendo.ui.Pager.prototype.options.messages,{
   "next": "Перейдите на следующую страницу",
   "previous": "Перейти на предыдущую страницу",
   "morePages": "Больше страниц"
+});
+}
+
+/* FilterCell messages */
+
+if (kendo.ui.FilterCell) {
+kendo.ui.FilterCell.prototype.options.messages =
+$.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
+  "filter": "фильтровать",
+  "clear": "очистить фильтр",
+  "isFalse": "ложь",
+  "isTrue": "истина",
+  "operator": "Оператор"
 });
 }
 

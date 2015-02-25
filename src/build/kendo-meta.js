@@ -3,7 +3,22 @@ var FS    = require("fs");
 var SYS   = require("util");
 var U2    = require("uglify-js");
 
-var SRCDIR = PATH.join(__dirname, "..", "src");
+(function(){
+    function tryDir(dir) {
+        try {
+            var filename = PATH.join(dir, "cultures", "kendo.culture.en-US.js");
+            FS.statSync(filename);
+            global.KENDO_SRC_DIR = dir;
+            return true;
+        } catch(ex) {};
+    }
+    if (!(tryDir("src") || tryDir("js"))) {
+        console.error("!!! Cannot find Kendo sources directory");
+        throw "EXIT";
+    }
+})();
+
+var SRCDIR = PATH.join(__dirname, "..", KENDO_SRC_DIR);
 
 var AMD_WRAPPER = "(function(f, define){\n\
     define($DEPS, f);\n\
@@ -235,7 +250,7 @@ var getKendoFile = (function() {
                 file: this.filename().replace(/\.js$/i, ".min.js"),
                 orig_line_diff: 8,
                 dest_line_diff: 8,
-                root: "../src/js/"
+                root: "../src/" + KENDO_SRC_DIR + "/"
             });
             return this.buildMinAST().print_to_string({
                 source_map: source_map
@@ -728,7 +743,7 @@ function bundleFiles(files, filename, min) {
             file: filename,
             orig_line_diff: 8,
             dest_line_diff: 8,
-            root: "../src/js/"
+            root: "../src/" + KENDO_SRC_DIR + "/"
         });
         code = ast.print_to_string({ source_map: map });
         return {

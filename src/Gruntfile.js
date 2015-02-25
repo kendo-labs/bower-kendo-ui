@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     grunt.loadTasks('build/grunt/tasks');
 
     var mainKendoFiles = META.listKendoFiles().map(function(f) {
-        return PATH.join("src", f);
+        return PATH.join(KENDO_SRC_DIR, f);
     });
 
     grunt.initConfig({
@@ -17,7 +17,7 @@ module.exports = function(grunt) {
                 files: [{
                     expand: true,
                     cwd: "styles",
-                    src: ["**/*.less", "**/*.woff", "**/*.ttf", "**/*.png", "**/*.gif", "**/*.css", "**/*.svg" ],
+                    src: ["**/*.less", "**/*.woff", "**/*.ttf", "**/*.png", "**/*.gif", "**/*.css", "**/*.svg", "**/LICENSE", "**/LICENSE.txt" ],
                     dest: '<%= kendo.options.stylesDestDir %>/',
                 }]
             }

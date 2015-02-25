@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -166,6 +166,9 @@
                 }
             } else {
                 element = content;
+                if (that._evalTemplate) {
+                    element.html(kendo.template(element.html())(that.model || {}));
+                }
                 if (that._wrap) {
                     element = element.wrapAll(wrapper).parent();
                 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1511,6 +1511,11 @@ html .k-error-colored {
   overflow-x: auto;
   /*needed by IE8*/
 }
+/* current time indicator */
+.k-current-time {
+  background: #f00;
+  position: absolute;
+}
 /* override box sizing for grid layout framework integration (Bootstrap 3, Foundation 4) */
 .k-animation-container,
 .k-widget,
@@ -1558,9 +1563,12 @@ a.k-button:hover {
   -webkit-background-clip: border-box;
   background-clip: border-box;
 }
-.k-checkbox,
+input.k-checkbox,
 .k-radio {
-  display: none;
+  display: inline;
+  opacity: 0;
+  width: 0;
+  margin: 0;
 }
 .k-checkbox-label {
   position: relative;
@@ -1629,6 +1637,34 @@ a.k-button:hover {
 }
 .k-radio:disabled + .k-radio-label {
   cursor: auto;
+}
+.k-ie8 input.k-checkbox,
+.k-ie8 .k-radio {
+  display: inline-block;
+  width: auto;
+}
+.k-ie8 .k-checkbox-label,
+.k-ie8 .k-radio-label {
+  padding-left: 0;
+}
+.k-ie8 .k-checkbox-label:before,
+.k-ie8 .k-checkbox-label:after,
+.k-ie8 .k-radio-label:before,
+.k-ie8 .k-radio-label:after {
+  display: none;
+}
+/* RTL for checkboxes and radio buttons */
+.k-rtl .k-checkbox-label,
+.k-rtl .k-radio-label {
+  padding-right: 1.5em;
+}
+.k-rtl .k-checkbox-label:before,
+.k-rtl .k-checkbox-label:after,
+.k-rtl .k-radio-label:before {
+  right: 0;
+}
+.k-rtl .k-radio:checked + .k-radio-label:after {
+  right: 3px;
 }
 input.k-checkbox + label {
   -webkit-user-select: none;
@@ -1953,7 +1989,7 @@ div.k-window-iframecontent {
   position: static;
   border-style: solid;
   border-width: 1px;
-  margin: 0 .29em .3em;
+  margin: 0 .286em .3em;
   padding: .3em .92em;
   zoom: 1;
 }
@@ -2268,8 +2304,11 @@ ul.k-menu-vertical .k-separator,
   border-width: 0;
   margin: 0;
   table-layout: fixed;
-  text-align: right;
   outline: 0;
+}
+.k-calendar .k-content,
+.k-calendar .k-content th {
+  text-align: right;
 }
 .k-calendar .k-animation-container .k-content {
   height: 100%;
@@ -2651,6 +2690,7 @@ body .k-datetimepicker .k-select {
 .k-overflow-container .k-item {
   padding: 1px;
 }
+.k-overflow-container > .k-state-disabled .k-button,
 .k-overflow-container .k-button.k-state-disabled,
 .k-overflow-container .k-button.k-state-disabled:hover {
   border: 0 ;
@@ -4027,10 +4067,6 @@ span.k-tooltip {
 .k-fx-hidden * {
   visibility: hidden !important;
 }
-.k-fx-hidden .km-view-title {
-  visibility: visible !important;
-  opacity: 0;
-}
 .k-fx-reverse .k-fx-current {
   z-index: 1;
 }
@@ -4511,4 +4547,12 @@ span.k-tooltip {
 .k-grid tr td {
   border-width: 1px 0 0 1px;
   border-style: solid;
+}
+.k-slider-horizontal .k-slider-track,
+.k-slider-horizontal .k-slider-selection {
+  margin-top: -5px;
+}
+.k-slider-vertical .k-slider-track,
+.k-slider-vertical .k-slider-selection {
+  margin-left: -5px;
 }

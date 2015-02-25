@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,8 +40,11 @@
 
             mobile.ui.Widget.fn.init.call(this, element, options);
 
-            this._layout();
-            this._scroller();
+            if (!this.options.$angular) {
+                this._layout();
+                this._scroller();
+            }
+
             this._model();
 
             var pane = this.element.closest(roleSelector("pane")).data("kendoMobilePane"),
@@ -166,6 +169,7 @@
             this.element.show();
 
             this.trigger(SHOW, { view: this });
+            this._invokeNgController();
             return true;
         },
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Telerik AD
+ * Copyright 2015 Telerik AD
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,7 +86,9 @@
 
         _click: function(e) {
             if (this.options.enable) {
-                this.trigger(CLICK, {event: e});
+                if (this.trigger(CLICK, { event: e })) {
+                    e.preventDefault();
+                }
             }
         },
 
@@ -178,7 +180,11 @@
             element.toggleClass(DISABLEDSTATE, !enable)
                    .attr("aria-disabled", !enable)
                    .attr(DISABLED, !enable);
-            element.blur();
+            // prevent 'Unspecified error' in IE when inside iframe
+            try {
+                element.blur();
+            } catch (err) {
+            }
         }
     });
 
