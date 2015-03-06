@@ -291,6 +291,16 @@ $.extend(true, kendo.ui.Groupable.prototype.options.messages,{
 });
 }
 
+/* NumericTextBox messages */
+
+if (kendo.ui.NumericTextBox) {
+kendo.ui.NumericTextBox.prototype.options =
+$.extend(true, kendo.ui.NumericTextBox.prototype.options,{
+  "upArrowText": "Wert erhöhen",
+  "downArrowText": "Wert verringern"
+});
+}
+
 /* Pager messages */
 
 if (kendo.ui.Pager) {
@@ -353,7 +363,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
     "timezoneEditorButton": "Zeitzone",
     "timezoneEditorTitle": "Zeitzonen",
     "title": "Titel",
-    "noTimezone": "No timezone"
+    "noTimezone": "Keine Zeitzone"
   },
   "event": "Termin",
   "recurrenceMessages": {
@@ -374,7 +384,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
     "day": "Tag",
     "month": "Monat",
     "week": "Woche",
-    "workWeek": "Work Week"
+    "workWeek": "Arbeitswoche"
   },
   "deleteWindowTitle": "Termin löschen",
   "showFullDay": "Ganzen Tag anzeigen",
