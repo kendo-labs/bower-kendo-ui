@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2014.3.1506";
+    kendo.version = "2014.3.1513";
 
     function Class() {}
 
@@ -7857,6 +7857,9 @@ function pad(number, digits, end) {
                 dest.splice(idx--, 1);
             } else if (group.hasSubgroups && items.length) {
                 mergeGroups(group, items, skip, take);
+                if (!group.items.length) {
+                    dest.splice(idx--, 1);
+                }
             } else {
                 items = items.slice(skip, skip + take);
                 group.items = items;
@@ -19824,6 +19827,10 @@ function pad(number, digits, end) {
                              .wrap('<div class="km-popup-wrapper k-popup"></div>').parent();
         }
 
+        function preventClick(e) {
+            e.preventDefault();
+        }
+
         var ToolBar = Widget.extend({
             init: function(element, options) {
                 var that = this;
@@ -19885,6 +19892,11 @@ function pad(number, digits, end) {
                     press: toggleActive,
                     release: toggleActive
                 });
+
+                that.element.on(CLICK, "." + STATE_DISABLED, preventClick);
+                if (options.resizable) {
+                    that.popup.element.on(CLICK, + "." + STATE_DISABLED, preventClick);
+                }
 
                 if (options.resizable) {
                     this._toggleOverflowAnchor();
@@ -30812,6 +30824,13 @@ function pad(number, digits, end) {
             Widget.fn.setOptions.call(this, options);
 
             this._templates();
+
+            if (this.selectable) {
+                this.selectable.destroy();
+                this.selectable = null;
+            }
+
+            this._selectable();
         },
 
         _templates: function() {
@@ -44341,7 +44360,7 @@ function pad(number, digits, end) {
         var siblings = centerElement.siblings(),
             noTitle = !!centerElement.children("ul")[0],
             showTitle = (!!siblings[0] && $.trim(centerElement.text()) === ""),
-            android = kendo.mobile.application && kendo.mobile.application.element.is(".km-android");
+            android = !!(kendo.mobile.application && kendo.mobile.application.element.is(".km-android"));
 
         centerElement.prevAll().toggleClass("km-absolute", noTitle);
         centerElement.toggleClass("km-show-title", showTitle);

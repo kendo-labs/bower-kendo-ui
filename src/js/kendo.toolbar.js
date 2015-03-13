@@ -430,6 +430,10 @@
                              .wrap('<div class="km-popup-wrapper k-popup"></div>').parent();
         }
 
+        function preventClick(e) {
+            e.preventDefault();
+        }
+
         var ToolBar = Widget.extend({
             init: function(element, options) {
                 var that = this;
@@ -491,6 +495,11 @@
                     press: toggleActive,
                     release: toggleActive
                 });
+
+                that.element.on(CLICK, "." + STATE_DISABLED, preventClick);
+                if (options.resizable) {
+                    that.popup.element.on(CLICK, + "." + STATE_DISABLED, preventClick);
+                }
 
                 if (options.resizable) {
                     this._toggleOverflowAnchor();

@@ -35,7 +35,7 @@
         var siblings = centerElement.siblings(),
             noTitle = !!centerElement.children("ul")[0],
             showTitle = (!!siblings[0] && $.trim(centerElement.text()) === ""),
-            android = kendo.mobile.application && kendo.mobile.application.element.is(".km-android");
+            android = !!(kendo.mobile.application && kendo.mobile.application.element.is(".km-android"));
 
         centerElement.prevAll().toggleClass("km-absolute", noTitle);
         centerElement.toggleClass("km-show-title", showTitle);

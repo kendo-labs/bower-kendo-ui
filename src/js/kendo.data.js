@@ -1905,6 +1905,9 @@
                 dest.splice(idx--, 1);
             } else if (group.hasSubgroups && items.length) {
                 mergeGroups(group, items, skip, take);
+                if (!group.items.length) {
+                    dest.splice(idx--, 1);
+                }
             } else {
                 items = items.slice(skip, skip + take);
                 group.items = items;

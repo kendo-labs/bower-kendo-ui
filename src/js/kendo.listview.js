@@ -103,6 +103,13 @@
             Widget.fn.setOptions.call(this, options);
 
             this._templates();
+
+            if (this.selectable) {
+                this.selectable.destroy();
+                this.selectable = null;
+            }
+
+            this._selectable();
         },
 
         _templates: function() {

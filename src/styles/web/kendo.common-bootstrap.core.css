@@ -1569,6 +1569,7 @@ input.k-checkbox,
   opacity: 0;
   width: 0;
   margin: 0;
+  position: absolute;
 }
 .k-checkbox-label {
   position: relative;
@@ -4558,4 +4559,7 @@ span.k-tooltip {
 .k-slider-vertical .k-slider-track,
 .k-slider-vertical .k-slider-selection {
   margin-left: -5px;
+}
+input.k-textbox {
+  height: 2.43em;
 }
