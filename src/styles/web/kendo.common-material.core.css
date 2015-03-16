@@ -3554,11 +3554,11 @@ body .k-datetimepicker .k-select {
 .k-textbox {
   outline: 0;
   padding: 2px .3em;
-  line-height: 1.6em;
 }
 input.k-textbox {
   height: 2.694em;
   text-indent: 0.8em;
+  line-height: 1.6em;
 }
 .k-ie input.k-textbox {
   text-indent: 0.4em;
