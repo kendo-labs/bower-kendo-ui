@@ -41,7 +41,7 @@
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
-                symbol: "N"
+                symbol: "₦"
             }
         },
         calendars: {
@@ -52,8 +52,8 @@
                     namesShort: ["L","L","T","L","A","J","A"]
                 },
                 months: {
-                    names: ["Januwaru","Febreru","Maris","Afrilu","Mayu","Yuni","Yuli","Agusta","Satumba","Oktocba","Nuwamba","Disamba",""],
-                    namesAbbr: ["Jan","Feb","Mar","Afr","May","Yun","Yul","Agu","Sat","Okt","Nuw","Dis",""]
+                    names: ["Janairu","Fabrairu","Maris","Afrilu","Mayu","Yuni","Yuli","Agusta","Satumba","Oktoba","Nuwamba","Disamba",""],
+                    namesAbbr: ["Jan","Fab","Mar","Afr","May","Yun","Yul","Agu","Sat","Okt","Nuw","Dis",""]
                 },
                 AM: ["Safe","safe","SAFE"],
                 PM: ["Yamma","yamma","YAMMA"],
@@ -63,8 +63,8 @@
                     F: "dddd, MMMM dd, yyyy h:mm:ss tt",
                     g: "d/M/yyyy h:mm tt",
                     G: "d/M/yyyy h:mm:ss tt",
-                    m: "MMMM dd",
-                    M: "MMMM dd",
+                    m: "d MMMM",
+                    M: "d MMMM",
                     s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
                     t: "h:mm tt",
                     T: "h:mm:ss tt",

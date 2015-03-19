@@ -672,6 +672,90 @@ button.km-button {
   font-size: 1.2em;
   font-weight: bold;
 }
+.km-collapsible {
+  margin: 1em 0;
+}
+.km-collapsible.km-collapsibleinset {
+  margin: 1em;
+}
+.km-collapsible + .km-collapsible {
+  margin-top: -1em;
+}
+.km-collapsible-header {
+  position: relative;
+  border-style: solid;
+  border-width: 1px 0;
+  padding: .4em 20px;
+}
+.km-collapsibleinset > .km-collapsible-header {
+  border-width: 1px;
+}
+.km-collapsible + .km-collapsible > .km-collapsible-header {
+  border-top-width: 0;
+}
+.km-collapsibleinset.km-collapsed > .km-collapsible-header {
+  border-radius: .5em;
+}
+.km-collapsibleinset.km-expanded > .km-collapsible-header {
+  border-radius: .5em .5em 0 0;
+}
+.km-collapsible-header .km-icon {
+  display: inline-block;
+  font-size: .8em;
+  margin-right: .3em;
+}
+.km-collapsible-header > h1,
+.km-collapsible-header > h2,
+.km-collapsible-header > h3,
+.km-collapsible-header > h4,
+.km-collapsible-header > h5,
+.km-collapsible-header > h6 {
+  margin: 0;
+}
+.km-collapsible-content {
+  border-style: solid;
+  border-width: 1px 0;
+  border-top: 0;
+  padding: .4em;
+  overflow: hidden;
+}
+.km-collapsible-header .km-arrow-s,
+.km-collapsible-header .km-arrow-n {
+  position: absolute;
+  top: .4em;
+}
+.km-icon-left .km-arrow-s,
+.km-icon-left .km-arrow-n {
+  left: .2em;
+}
+.km-icon-right .km-arrow-s,
+.km-icon-right .km-arrow-n {
+  left: auto;
+  right: .2em;
+}
+.km-icon-top .km-arrow-s,
+.km-icon-top .km-arrow-n {
+  position: static;
+  display: block;
+  margin: 0 auto;
+  width: 1em;
+}
+.km-collapsibleinset > .km-collapsible-content {
+  border-radius: 0 0 .5em .5em;
+  border-width: 1px;
+}
+.km-collapsed > .km-collapsible-content.km-animated {
+  transform: translateY(-0.8em);
+  border-color: transparent;
+  border-bottom: none;
+  visibility: hidden;
+}
+.km-animated {
+  -webkit-transition: -webkit-all 0.2s ease-in-out;
+  -ms-transition: -ms-all 0.2s ease-in-out;
+  -o-transition: -o-all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
 .km-hide-title {
   display: none;
 }
@@ -1455,7 +1539,7 @@ button.km-button {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 10000;
+  z-index: 10002;
 }
 .km-popup-arrow,
 .km-popup-arrow:after,
@@ -2479,6 +2563,14 @@ body:before {
 .km-add:before {
   content: "\e0cb";
 }
+.km-arrow-n:after,
+.km-arrow-n:before {
+  content: "\e001";
+}
+.km-arrow-s:after,
+.km-arrow-s:before {
+  content: "\e002";
+}
 .km-battery:after,
 .km-battery:before {
   content: "\e0ce";
@@ -2553,6 +2645,10 @@ body:before {
 .km-about:before {
   content: "\e0de";
 }
+.km-minus:after,
+.km-minus:before {
+  content: "\e033";
+}
 .km-more:after,
 .km-more:before {
   content: "\e0e0";
@@ -2576,6 +2672,10 @@ body:before {
 .km-play:after,
 .km-play:before {
   content: "\e0e5";
+}
+.km-plus:after,
+.km-plus:before {
+  content: "\e032";
 }
 .km-recents:after,
 .km-recents:before {
@@ -3610,6 +3710,18 @@ html .km-android .km-navbar .km-notext {
   box-shadow: 0 0 10px rgba(102, 102, 102, 0.5) 0 0 2px rgba(34, 34, 34, 0.7);
   -webkit-box-shadow: 0 0 10px rgba(102, 102, 102, 0.5) 0 0 2px rgba(34, 34, 34, 0.7);
   border-color: #fcfcfc;
+}
+/* Collapsible */
+.km-android .km-collapsible-header,
+.km-android .km-collapsible-content {
+  border-color: rgba(102, 102, 102, 0.5);
+}
+.km-android-light .km-collapsible-header,
+.km-android-light .km-collapsible-content {
+  border-color: rgba(204, 204, 204, 0.5);
+}
+.km-android .km-collapsible-header .km-icon {
+  color: #999999;
 }
 /* Tablet Styles */
 .km-tablet .km-android *:not(.km-actionsheet-phone) > .km-actionsheet {

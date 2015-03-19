@@ -36,12 +36,12 @@
                 symbol: "%"
             },
             currency: {
-                pattern: ["-n$","n$"],
+                pattern: ["-n $","n $"],
                 decimals: 2,
                 ",": " ",
                 ".": ",",
                 groupSize: [3],
-                symbol: "р."
+                symbol: "₽"
             }
         },
         calendars: {
@@ -63,8 +63,8 @@
                     F: "d MMMM yyyy 'г.' H:mm:ss",
                     g: "dd.MM.yyyy H:mm",
                     G: "dd.MM.yyyy H:mm:ss",
-                    m: "MMMM dd",
-                    M: "MMMM dd",
+                    m: "d MMMM",
+                    M: "d MMMM",
                     s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
                     t: "H:mm",
                     T: "H:mm:ss",

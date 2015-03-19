@@ -28,7 +28,7 @@
             ".": ".",
             groupSize: [3],
             percent: {
-                pattern: ["-%n","%n"],
+                pattern: ["-n %","n %"],
                 decimals: 2,
                 ",": ",",
                 ".": ".",
@@ -47,9 +47,9 @@
         calendars: {
             standard: {
                 days: {
-                    names: ["intichaw","killachaw","atipachaw","quyllurchaw","Ch\u0027 askachaw","Illapachaw","k\u0027uychichaw"],
-                    namesAbbr: ["int","kil","ati","quy","Ch\u0027","Ill","k\u0027u"],
-                    namesShort: ["d","k","a","m","h","b","k"]
+                    names: ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"],
+                    namesAbbr: ["Dom","Lun","Mar","Mié","Jue","Vie","Sab"],
+                    namesShort: ["D","L","M","X","J","V","S"]
                 },
                 months: {
                     names: ["Qulla puquy","Hatun puquy","Pauqar waray","ayriwa","Aymuray","Inti raymi","Anta Sitwa","Qhapaq Sitwa","Uma raymi","Kantaray","Ayamarq\u0027a","Kapaq Raymi",""],
@@ -59,12 +59,12 @@
                 PM: ["p.m.","p.m.","P.M."],
                 patterns: {
                     d: "dd/MM/yyyy",
-                    D: "dddd, dd' de 'MMMM' de 'yyyy",
-                    F: "dddd, dd' de 'MMMM' de 'yyyy hh:mm:ss tt",
+                    D: "dddd, d MMMM, yyyy",
+                    F: "dddd, d MMMM, yyyy hh:mm:ss tt",
                     g: "dd/MM/yyyy hh:mm tt",
                     G: "dd/MM/yyyy hh:mm:ss tt",
-                    m: "MMMM dd",
-                    M: "MMMM dd",
+                    m: "d MMMM",
+                    M: "d MMMM",
                     s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
                     t: "hh:mm tt",
                     T: "hh:mm:ss tt",
@@ -74,7 +74,7 @@
                 },
                 "/": "/",
                 ":": ":",
-                firstDay: 0
+                firstDay: 1
             }
         }
     }

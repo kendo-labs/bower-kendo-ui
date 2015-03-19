@@ -85,6 +85,7 @@
             that.dataSource = kendo.data.DataSource.create(options.dataSource);
             that.linkTemplate = kendo.template(that.options.linkTemplate);
             that.selectTemplate = kendo.template(that.options.selectTemplate);
+            that.currentPageTemplate = kendo.template(that.options.currentPageTemplate);
 
             page = that.page();
             totalPages = that.totalPages();
@@ -181,6 +182,8 @@
                 .on(CLICK + NS , "a", proxy(that._click, that))
                 .addClass("k-pager-wrap k-widget");
 
+            that.element.on(CLICK + NS , ".k-current-page", proxy(that._toggleActive, that));
+
             if (options.autoBind) {
                 that.refresh();
             }
@@ -208,6 +211,7 @@
         options: {
             name: "Pager",
             selectTemplate: '<li><span class="k-state-selected">#=text#</span></li>',
+            currentPageTemplate: '<li class="k-current-page"><span class="k-link k-pager-nav">#=text#</span></li>',
             linkTemplate: '<li><a tabindex="-1" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
             buttonCount: 10,
             autoBind: true,
@@ -249,9 +253,9 @@
                 idx,
                 end,
                 start = 1,
-                html = "",
                 reminder,
                 page = that.page(),
+                html = "",
                 options = that.options,
                 pageSize = that.pageSize(),
                 total = that.dataSource.total(),
@@ -264,6 +268,7 @@
             }
 
             if (options.numeric) {
+
                 if (page > buttonCount) {
                     reminder = (page % buttonCount);
 
@@ -288,7 +293,9 @@
                     html = that.selectTemplate({ text: 0 });
                 }
 
-                that.list.html(html);
+                html = this.currentPageTemplate({ text: page }) + html;
+
+                that.list.removeClass("k-state-expanded").html(html);
             }
 
             if (options.info) {
@@ -363,6 +370,10 @@
             if (!isNaN(pageSize)){
                this.dataSource.pageSize(pageSize);
             }
+        },
+
+        _toggleActive: function(e) {
+            this.list.toggleClass("k-state-expanded");
         },
 
         _click: function(e) {

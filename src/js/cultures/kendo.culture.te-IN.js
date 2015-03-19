@@ -41,7 +41,7 @@
                 ",": ",",
                 ".": ".",
                 groupSize: [3,2],
-                symbol: "రూ"
+                symbol: "₹"
             }
         },
         calendars: {
@@ -63,8 +63,8 @@
                     F: "dd MMMM yyyy HH:mm:ss",
                     g: "dd-MM-yy HH:mm",
                     G: "dd-MM-yy HH:mm:ss",
-                    m: "dd MMMM",
-                    M: "dd MMMM",
+                    m: "MMMM d",
+                    M: "MMMM d",
                     s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
                     t: "HH:mm",
                     T: "HH:mm:ss",

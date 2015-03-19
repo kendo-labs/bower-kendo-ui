@@ -722,7 +722,7 @@
                 groupedMode = groups && groups[0],
                 item;
 
-            if (action === "itemchange") {
+            if (action === "itemchange" && !listView._hasBindingTarget()) {
                 item = listView.findByDataItem(dataItems)[0];
                 if (item) {
                     listView.setDataItem(item, dataItems[0]);
@@ -870,7 +870,7 @@
                 value = this.searchInput.val(),
                 expr = value.length ? {
                     field: options.field,
-                    operator: options.operator || "startsWith",
+                    operator: options.operator || "startswith",
                     ignoreCase: options.ignoreCase,
                     value: value
                 } : null;

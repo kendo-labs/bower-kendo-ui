@@ -41,7 +41,7 @@
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
-                symbol: "د.م.‏"
+                symbol: "د.م.‏‏"
             }
         },
         calendars: {

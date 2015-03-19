@@ -17,6 +17,10 @@
     define([ "./kendo.core", "./kendo.data.odata", "./kendo.data.xml" ], f);
 })(function(){
 
+var A = 0;
+
+
+
 /*jshint eqnull: true, loopfunc: true, evil: true */
 (function($, undefined) {
     var extend = $.extend,
@@ -194,7 +198,7 @@
                 });
 
                 for (i = 0, len = result.length; i < len; i++) {
-                    if (result[i].children) {
+                    if (result[i] && result[i].children) {
                         result[i].unbind(CHANGE);
                     }
                 }
@@ -1884,6 +1888,34 @@
         }
     });
 
+    function cloneGroups(groups) {
+        var result = [];
+        var item;
+        var group;
+
+        for (var idx = 0, length = groups.length; idx < length; idx++) {
+            item = groups[idx];
+            if (!("field" in item && "items" in item && "value" in item)) {
+                break;
+            }
+
+            group = {};
+            for (var field in item) {
+                var shouldSerialize = item.shouldSerialize ? item.shouldSerialize : item.hasOwnProperty;
+                if (shouldSerialize.call(item, field)) {
+                    group[field] = item[field];
+                }
+            }
+
+            result.push(group);
+
+            if (group.hasSubgroups) {
+                result = result.concat(cloneGroups(group.items));
+            }
+        }
+        return result;
+    }
+
     function mergeGroups(target, dest, skip, take) {
         var group,
             idx = 0,
@@ -3493,7 +3525,6 @@
             data = that._findRange(skip, math.min(skip + take, that.total()));
 
             if (data.length) {
-
                 that._skipRequestsInProgress = true;
                 that._pending = undefined;
 
@@ -3613,6 +3644,7 @@
 
         _mergeGroups: function(data, range, skip, take) {
             if (this._isServerGrouped()) {
+                //var temp = cloneGroups(range),
                 var temp = range.toJSON(),
                     prevGroup;
 
@@ -3640,7 +3672,7 @@
             return this._take || this._pageSize;
         },
 
-        _prefetchSuccessHandler: function (skip, size, callback) {
+        _prefetchSuccessHandler: function (skip, size, callback, force) {
             var that = this;
 
             return function(data) {
@@ -3676,7 +3708,7 @@
                 that._ranges.sort( function(x, y) { return x.start - y.start; } );
                 that._total = that.reader.total(data);
 
-                if (!that._skipRequestsInProgress) {
+                if (force || !that._skipRequestsInProgress) {
                     if (callback && temp.length) {
                         callback();
                     } else {
@@ -3715,6 +3747,32 @@
                         }
                     });
                 }, 100);
+            } else if (callback) {
+                callback();
+            }
+        },
+
+        _multiplePrefetch: function(skip, take, callback) {
+            var that = this,
+                size = math.min(skip + take, that.total()),
+                options = {
+                    take: take,
+                    skip: skip,
+                    page: skip / take + 1,
+                    pageSize: take,
+                    sort: that._sort,
+                    filter: that._filter,
+                    group: that._group,
+                    aggregate: that._aggregate
+                };
+
+            if (!that._rangeExists(skip, size)) {
+                if (!that.trigger(REQUESTSTART, { type: "read" })) {
+                    that.transport.read({
+                        data: that._params(options),
+                        success: that._prefetchSuccessHandler(skip, size, callback, true)
+                    });
+                }
             } else if (callback) {
                 callback();
             }

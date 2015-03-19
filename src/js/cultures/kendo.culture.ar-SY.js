@@ -41,7 +41,7 @@
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
-                symbol: "ل.س.‏"
+                symbol: "ل.س.‏‏"
             }
         },
         calendars: {

@@ -135,6 +135,8 @@
                     }
                 });
                 that.trigger("init", {view: that});
+            } else {
+                this._invokeNgController();
             }
 
             that.trigger("show", {view: that});

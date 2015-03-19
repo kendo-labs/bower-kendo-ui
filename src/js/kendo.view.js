@@ -83,14 +83,15 @@
             return true;
         },
 
+        triggerBeforeHide: function() {
+            return true;
+        },
+
         showStart: function() {
             this.element.css("display", "");
         },
 
         showEnd: function() {
-        },
-
-        hideStart: function() {
         },
 
         hideEnd: function() {
@@ -167,7 +168,14 @@
             } else {
                 element = content;
                 if (that._evalTemplate) {
-                    element.html(kendo.template(element.html())(that.model || {}));
+                    var result = $(kendo.template($("<div />").append(element.clone(true)).html())(that.model || {}));
+
+                    // template uses DOM
+                    if ($.contains(document, element[0])) {
+                        element.replaceWith(result);
+                    }
+
+                    element = result;
                 }
                 if (that._wrap) {
                     element = element.wrapAll(wrapper).parent();
@@ -188,8 +196,6 @@
 
             view.element.parent().append(this.element);
         },
-
-        hideStart: $.noop,
 
         hideEnd: function() {
             this.element.remove();
@@ -291,7 +297,7 @@
         },
 
         show: function(view, transition, locationID) {
-            if (!view.triggerBeforeShow()) {
+            if (!view.triggerBeforeShow() || (this.view && !this.view.triggerBeforeHide())) {
                 this.trigger("after");
                 return false;
             }
@@ -333,8 +339,6 @@
                 that.after();
                 return true;
             }
-
-            current.hideStart();
 
             if (!theTransition || !kendo.effects.enabled) {
                 view.showStart();

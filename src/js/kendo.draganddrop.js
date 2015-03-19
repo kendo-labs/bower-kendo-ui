@@ -861,6 +861,7 @@
                     x: e.x,
                     y: e.y,
                     currentTarget: that.currentTarget,
+                    initialTarget: e.touch ? e.touch.initialTouch : null,
                     dropTarget: e.dropTarget
                 }
             ));

@@ -1444,7 +1444,7 @@ button.km-button {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 10000;
+  z-index: 10002;
 }
 .km-popup-arrow,
 .km-popup-arrow:after,
@@ -2644,6 +2644,14 @@ body:before {
 .km-add:before {
   content: "\e0cb";
 }
+.km-arrow-n:after,
+.km-arrow-n:before {
+  content: "\e001";
+}
+.km-arrow-s:after,
+.km-arrow-s:before {
+  content: "\e002";
+}
 .km-battery:after,
 .km-battery:before {
   content: "\e0ce";
@@ -2718,6 +2726,10 @@ body:before {
 .km-about:before {
   content: "\e0de";
 }
+.km-minus:after,
+.km-minus:before {
+  content: "\e033";
+}
 .km-more:after,
 .km-more:before {
   content: "\e0e0";
@@ -2741,6 +2753,10 @@ body:before {
 .km-play:after,
 .km-play:before {
   content: "\e0e5";
+}
+.km-plus:after,
+.km-plus:before {
+  content: "\e032";
 }
 .km-recents:after,
 .km-recents:before {

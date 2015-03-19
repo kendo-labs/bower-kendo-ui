@@ -83,7 +83,7 @@
                 options = that.options;
 
             if (options.isMaximized || options.isMinimized) {
-                return;
+                return that;
             }
 
             that.restoreOptions = {

@@ -505,6 +505,14 @@ html body .k-button-bare.k-upload-button:hover
     background-position: 0 -16px;
 }
 
+/* Dropdown icon in k-scheduler-views */
+
+.k-pager-numbers .k-current-page .k-link:after,
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after {
+    .sprite-hoverable(0, 2);
+}
+
+
 /* Colors */
 
 html .k-success-colored
@@ -732,7 +740,7 @@ a.k-button:hover
     background-clip: border-box;
 }
 
-// styled checkboxes 
+// styled checkboxes
 // changes here may reflect in treeview span.k-checkbox>input[type=checkbox]
 input.k-checkbox,
 .k-radio {
@@ -778,7 +786,7 @@ input.k-checkbox,
   width: 1em;
   height: 1em;
   position: absolute;
-  top: 0; 
+  top: 0;
   left: 0;
   border-width: 1px;
   border-style: solid;
@@ -813,7 +821,7 @@ input.k-checkbox,
   width: 10px;
   height: 10px;
   position: absolute;
-  top: 3px; 
+  top: 3px;
   left: 3px
 }
 
@@ -842,14 +850,14 @@ input.k-checkbox,
 
 /* RTL for checkboxes and radio buttons */
 .k-rtl .k-checkbox-label,
-.k-rtl .k-radio-label {      
-    padding-right: 1.5em;       
+.k-rtl .k-radio-label {
+    padding-right: 1.5em;
 }
 
 .k-rtl .k-checkbox-label:before,
 .k-rtl .k-checkbox-label:after,
 .k-rtl .k-radio-label:before {
-    right: 0;           
+    right: 0;
 }
 
 .k-rtl .k-radio:checked + .k-radio-label:after {
@@ -860,4 +868,11 @@ input.k-checkbox,
 input.k-checkbox + label{
     -webkit-user-select:none;
     user-select:none;
+}
+
+/* Off-screen container used during export */
+.k-pdf-export-shadow {
+    position: absolute;
+    overflow: visible;
+    left: -10000px;
 }

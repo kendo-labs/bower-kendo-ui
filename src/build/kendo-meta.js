@@ -6,7 +6,7 @@ var U2    = require("uglify-js");
 (function(){
     function tryDir(dir) {
         try {
-            var filename = PATH.join(dir, "cultures", "kendo.culture.en-US.js");
+            var filename = PATH.join(__dirname, "..", dir, "cultures", "kendo.culture.en-US.js");
             FS.statSync(filename);
             global.KENDO_SRC_DIR = dir;
             return true;
