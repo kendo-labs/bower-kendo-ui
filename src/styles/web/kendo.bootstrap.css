@@ -517,8 +517,8 @@ html .km-pane-wrapper .k-header {
   border-color: #428bca;
 }
 .k-virtual-item.k-first,
-.k-list > .k-item.k-first {
-  border-bottom-color: #999999;
+.k-static-header + .k-list > .k-item.k-first {
+  border-top-color: #999999;
 }
 .k-marquee-text {
   color: #ffffff;

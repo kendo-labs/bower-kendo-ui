@@ -517,8 +517,8 @@ html .km-pane-wrapper .k-header {
   border-color: #ffffff;
 }
 .k-virtual-item.k-first,
-.k-list > .k-item.k-first {
-  border-bottom-color: #999999;
+.k-static-header + .k-list > .k-item.k-first {
+  border-top-color: #999999;
 }
 .k-marquee-text {
   color: #3f51b5;
@@ -2143,15 +2143,13 @@ td.k-state-focused.k-state-selected {
   border-color: #5c6bc0;
 }
 /* TabStrip */
-.k-tabstrip-items > .k-item {
-  border-bottom-color: #3f51b5;
+.k-tabstrip > .k-tabstrip-items > .k-item {
   border-radius: 0;
 }
 .k-tabstrip-items .k-state-active {
   background-color: #3f51b5;
   background-image: none;
-  border-color: #3f51b5;
-  border-bottom-color: #00b0ff;
+  border-color: #00b0ff;
 }
 .k-tabstrip .k-content.k-state-active {
   border-color: transparent;

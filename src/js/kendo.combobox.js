@@ -304,11 +304,14 @@
         _listBound: function() {
             var that = this;
             var options  = that.options;
-            var data = that.listView.data();
-            var length = data.length;
-            var isActive = that.input[0] === activeElement();
+            var initialIndex = that._initialIndex;
             var filtered = that._state === STATE_FILTER;
-            var current;
+            var isActive = that.input[0] === activeElement();
+
+            var listView = that.listView;
+            var focusedItem = listView.focus();
+            var data = this.dataSource.flatView();
+            var length = data.length;
             var value;
 
             that._angularItems("compile");
@@ -345,28 +348,29 @@
             that._makeUnselectable();
 
             if (!filtered && !that._fetch) {
-                if (!this.listView.value().length) {
-                    if (this._initialIndex > -1 && this._initialIndex !== null) {
-                        this.select(this._initialIndex);
-                    } else if (this._accessor()) {
-                        this.listView.value(this._accessor());
+                if (!listView.value().length) {
+                    if (initialIndex !== null && initialIndex > -1) {
+                        that.select(initialIndex);
+                    } else if (that._accessor()) {
+                        listView.value(that._accessor());
                     }
                 }
 
-                this._initialIndex = null;
-            } else if (filtered) {
-                current = this.listView.focus();
-                if (current) {
-                    current.removeClass("k-state-selected");
-                }
+                that._initialIndex = null;
+            } else if (filtered && focusedItem) {
+                focusedItem.removeClass("k-state-selected");
             }
 
             if (length) {
                 if (options.highlightFirst) {
-                    that.listView.first();
+                    if (!focusedItem) {
+                        listView.focus(0);
+                    }
+                } else {
+                    listView.focus(-1);
                 }
 
-                if (options.suggest && isActive) {
+                if (options.suggest && isActive && that.input.val()) {
                     that.suggest(data[0]);
                 }
             }
@@ -402,7 +406,7 @@
             var data, found, idx;
 
             if (typeof candidate === "function") {
-                data = this.listView.data();
+                data = this.dataSource.flatView();
 
                 for (idx = 0; idx < data.length; idx++) {
                     if (candidate(data[idx])) {
@@ -428,13 +432,12 @@
                 this._accessor("");
             }
 
+            this.listView.select(candidate);
+
             if (!keepState && this._state === STATE_FILTER) {
                 this.listView.filter(false);
-                this.listView.clearIndices();
                 this._state = STATE_ACCEPT;
             }
-
-            this.listView.select(candidate);
         },
 
         _selectValue: function(dataItem) {
@@ -579,7 +582,6 @@
         value: function(value) {
             var that = this;
             var options = that.options;
-            var index;
 
             if (value === undefined) {
                 value = that._accessor() || that.listView.value()[0];
@@ -596,22 +598,20 @@
                 return;
             }
 
-            that.input.val(value);
             that._accessor(value);
+            that.input.val(value);
 
-            that.listView.value(value);
-            that._triggerCascade();
+            that.listView.value(value).done(function() {
+                that._triggerCascade();
 
-            index = that.listView.select()[0];
-            if (index === undefined) {
-                index = -1;
-            }
+                that._selectValue(that.listView.selectedDataItems()[0]);
 
-            that._old = that._accessor();
-            that._oldIndex = that.selectedIndex = index;
+                that._old = that._accessor();
+                that._oldIndex = that.selectedIndex;
 
-            that._prev = that.input.val();
-            that._state = STATE_ACCEPT;
+                that._prev = that.input.val();
+                that._state = STATE_ACCEPT;
+            });
 
             that._fetchData();
         },
@@ -830,8 +830,8 @@
             var custom = hasValue && parent.selectedIndex === -1;
 
             if (isFiltered || !hasValue || custom) {
-                that.value("");
                 that.options.value = "";
+                that.value("");
             }
         }
     });

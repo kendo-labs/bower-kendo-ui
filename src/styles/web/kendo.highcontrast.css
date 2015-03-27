@@ -489,8 +489,8 @@ html .km-pane-wrapper .k-header {
   border-color: #870074;
 }
 .k-virtual-item.k-first,
-.k-list > .k-item.k-first {
-  border-bottom-color: #a17e9c;
+.k-static-header + .k-list > .k-item.k-first {
+  border-top-color: #a17e9c;
 }
 .k-marquee-text {
   color: #ffffff;

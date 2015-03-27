@@ -1433,6 +1433,9 @@ html .k-error-colored {
 .k-loading-text {
   position: absolute;
 }
+.k-loading-mask {
+  z-index: 100;
+}
 .k-loading-text {
   text-indent: -4000px;
   text-align: center;
@@ -2951,6 +2954,9 @@ body .k-datetimepicker .k-select {
 }
 .k-textbox {
   outline: 0;
+}
+input.k-textbox,
+textarea.k-textbox {
   padding: 2px .3em;
 }
 input.k-textbox {
@@ -4215,7 +4221,7 @@ span.k-tooltip {
   margin: 0;
   padding: 0;
 }
-.k-virtual-list {
+.k-virtual-content {
   overflow-y: scroll;
   /* has to be scroll, not auto */
   -webkit-overflow-scrolling: touch;
@@ -4249,16 +4255,25 @@ span.k-tooltip {
 .k-popup .k-item.k-first {
   position: relative;
 }
+.k-popup .k-item > .k-group,
+.k-popup > .k-static-header {
+  text-transform: uppercase;
+  font-size: .857em;
+}
 .k-popup .k-item > .k-group {
   background: none;
   position: absolute;
-  top: 0;
-  right: .3em;
+  top: .1em;
+  right: 4px;
 }
-.k-popup .k-item.k-first,
+.k-popup .k-state-hover > .k-group {
+  right: 3px;
+}
+.k-static-header + .k-list > .k-item.k-first,
 .k-virtual-item.k-first {
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  padding-top: 0;
 }
 .k-popup > .k-static-header {
   text-align: right;
