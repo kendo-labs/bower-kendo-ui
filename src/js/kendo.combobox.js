@@ -351,6 +351,7 @@
                 if (!listView.value().length) {
                     if (initialIndex !== null && initialIndex > -1) {
                         that.select(initialIndex);
+                        focusedItem = listView.focus();
                     } else if (that._accessor()) {
                         listView.value(that._accessor());
                     }
@@ -396,10 +397,6 @@
 
         _listChange: function() {
             this._selectValue(this.listView.selectedDataItems()[0]);
-
-            if (this._old && this._oldIndex === -1) {
-                this._oldIndex = this.selectedIndex;
-            }
         },
 
         _get: function(candidate) {
@@ -706,6 +703,7 @@
             }
 
             input[0].style.cssText = element.style.cssText;
+            input[0].title = element.title;
 
             if (element.maxLength > -1) {
                 input[0].maxLength = element.maxLength;

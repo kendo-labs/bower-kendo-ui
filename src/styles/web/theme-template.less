@@ -753,6 +753,7 @@ html .km-pane-wrapper .k-header
 }
 
 .k-virtual-item.k-first,
+.k-group-header + .k-list > .k-item.k-first,
 .k-static-header + .k-list > .k-item.k-first
 {
     border-top-color: @disabled-text-color;
@@ -1442,7 +1443,9 @@ div.k-filebrowser-dropzone em
     border-radius: @main-border-radius 0 0 @main-border-radius;
 }
 
-.k-rtl .k-tool.k-group-start
+.k-rtl .k-tool.k-group-start,
+.k-rtl .k-toolbar .k-split-button .k-button,
+.k-rtl .k-toolbar .k-button-group .k-group-start
 {
     border-radius: 0 @main-border-radius @main-border-radius 0;
 }
@@ -1454,7 +1457,9 @@ div.k-filebrowser-dropzone em
     border-radius: 0 @main-border-radius @main-border-radius 0;
 }
 
-.k-rtl .k-tool.k-group-end
+.k-rtl .k-tool.k-group-end,
+.k-rtl .k-toolbar .k-button-group .k-group-end,
+.k-rtl .k-toolbar .k-split-button .k-split-button-arrow
 {
     border-radius: @main-border-radius 0 0 @main-border-radius;
 }

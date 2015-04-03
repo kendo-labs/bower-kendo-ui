@@ -328,10 +328,16 @@
 
         _removeTag: function(tag) {
             var that = this;
+            var state = that._state;
             var position = tag.index();
             var listView = that.listView;
-            var customIndex = that._customOptions[listView.value()[position]];
+            var value = listView.value()[position];
+            var customIndex = that._customOptions[value];
             var option;
+
+            if (customIndex === undefined && (state === ACCEPT || state === FILTER)) {
+                customIndex = that._optionsMap[value];
+            }
 
             if (customIndex !== undefined) {
                 option = that.element[0].children[customIndex];
@@ -1046,6 +1052,7 @@
             if (!wrapper[0]) {
                 wrapper = element.wrap('<div class="k-widget k-multiselect k-header" unselectable="on" />').parent();
                 wrapper[0].style.cssText = element[0].style.cssText;
+                wrapper[0].title = element[0].title;
 
                 $('<div class="k-multiselect-wrap k-floatwrap" unselectable="on" />').insertBefore(element);
             }

@@ -503,6 +503,7 @@ html .km-pane-wrapper .k-header {
   border-color: #10c4b2;
 }
 .k-virtual-item.k-first,
+.k-group-header + .k-list > .k-item.k-first,
 .k-static-header + .k-list > .k-item.k-first {
   border-top-color: #c1c1c1;
 }
@@ -1025,7 +1026,9 @@ div.k-filebrowser-dropzone em {
 .k-toolbar .k-button-group .k-group-start {
   border-radius: 3px 0 0 3px;
 }
-.k-rtl .k-tool.k-group-start {
+.k-rtl .k-tool.k-group-start,
+.k-rtl .k-toolbar .k-split-button .k-button,
+.k-rtl .k-toolbar .k-button-group .k-group-start {
   border-radius: 0 3px 3px 0;
 }
 .k-tool.k-group-end,
@@ -1033,7 +1036,9 @@ div.k-filebrowser-dropzone em {
 .k-toolbar .k-split-button .k-split-button-arrow {
   border-radius: 0 3px 3px 0;
 }
-.k-rtl .k-tool.k-group-end {
+.k-rtl .k-tool.k-group-end,
+.k-rtl .k-toolbar .k-button-group .k-group-end,
+.k-rtl .k-toolbar .k-split-button .k-split-button-arrow {
   border-radius: 3px 0 0 3px;
 }
 .k-group-start.k-group-end.k-tool {

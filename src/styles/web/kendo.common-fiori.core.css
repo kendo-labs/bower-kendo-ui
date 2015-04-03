@@ -3613,12 +3613,14 @@ body .k-datetimepicker .k-select {
 .k-popup .k-list .k-item,
 .k-fieldselector .k-list .k-item,
 .k-list-optionlabel,
-.k-popup > .k-static-header {
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
   padding: 1px 5px 1px 5px;
   line-height: 1.8em;
   min-height: 1.8em;
 }
-.k-popup > .k-static-header {
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
   padding-right: 22px;
 }
 .k-overflow-container .k-item {
@@ -5030,7 +5032,8 @@ span.k-tooltip {
   position: relative;
 }
 .k-popup .k-item > .k-group,
-.k-popup > .k-static-header {
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
   text-transform: uppercase;
   font-size: .857em;
 }
@@ -5043,13 +5046,15 @@ span.k-tooltip {
 .k-popup .k-state-hover > .k-group {
   right: 3px;
 }
-.k-static-header + .k-list > .k-item.k-first,
-.k-virtual-item.k-first {
+.k-virtual-item.k-first,
+.k-group-header + .k-list > .k-item.k-first,
+.k-static-header + .k-list > .k-item.k-first {
   border-top-style: solid;
   border-top-width: 1px;
   padding-top: 0;
 }
-.k-popup > .k-static-header {
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
   text-align: right;
 }
 /* animation classes */

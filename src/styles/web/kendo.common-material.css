@@ -3849,6 +3849,7 @@ html .k-grid-edit-row .k-tooltip {
 /* Remove Grid scrollbar during built-in export */
 .k-pdf-export-shadow .k-grid {
   float: left;
+  width: auto !important;
 }
 /* Remove all sizes and scrolling */
 .k-pdf-export-shadow .k-grid,
@@ -5211,12 +5212,14 @@ body .k-datetimepicker .k-select {
 .k-popup .k-list .k-item,
 .k-fieldselector .k-list .k-item,
 .k-list-optionlabel,
-.k-popup > .k-static-header {
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
   padding: 1px 5px 1px 5px;
   line-height: 1.8em;
   min-height: 1.8em;
 }
-.k-popup > .k-static-header {
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
   padding-right: 22px;
 }
 .k-overflow-container .k-item {
@@ -10880,7 +10883,8 @@ html .k-upload-empty {
   position: relative;
 }
 .k-popup .k-item > .k-group,
-.k-popup > .k-static-header {
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
   text-transform: uppercase;
   font-size: .857em;
 }
@@ -10893,13 +10897,15 @@ html .k-upload-empty {
 .k-popup .k-state-hover > .k-group {
   right: 3px;
 }
-.k-static-header + .k-list > .k-item.k-first,
-.k-virtual-item.k-first {
+.k-virtual-item.k-first,
+.k-group-header + .k-list > .k-item.k-first,
+.k-static-header + .k-list > .k-item.k-first {
   border-top-style: solid;
   border-top-width: 1px;
   padding-top: 0;
 }
-.k-popup > .k-static-header {
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
   text-align: right;
 }
 /* Default fonts for PDF export */

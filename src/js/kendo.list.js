@@ -459,7 +459,7 @@
         _calculateGroupPadding: function(height) {
             var ul = this.ul;
             var li = $(ul[0].firstChild);
-            var groupHeader = ul.prev(".k-static-header");
+            var groupHeader = ul.prev(".k-group-header");
             var padding = 0;
 
             if (groupHeader[0] && groupHeader[0].style.display !== "none") {
@@ -522,7 +522,7 @@
         _triggerCascade: function() {
             var that = this;
 
-            if (!that._cascadeTriggered || that._old !== that.value()) {
+            if (!that._cascadeTriggered || that._old !== that.value() || that._oldIndex !== that.selectedIndex) {
                 that._cascadeTriggered = true;
                 that.trigger("cascade", { userTriggered: that._userTriggered });
             }
@@ -1070,7 +1070,7 @@
                         .on("mouseleave" + STATIC_LIST_NS, "li", function() { $(this).removeClass(HOVER); });
 
 
-            this.header = this.element.before('<div class="k-static-header" style="display:none"></div>').prev();
+            this.header = this.element.before('<div class="k-group-header" style="display:none"></div>').prev();
 
             this._bound = false;
 

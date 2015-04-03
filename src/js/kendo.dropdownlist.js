@@ -54,6 +54,8 @@
             options = that.options;
             element = that.element.on("focus" + ns, proxy(that._focusHandler, that));
 
+            that._clickHandler = $.proxy(that._click, that);
+
             that._focusInputHandler = $.proxy(that._focusInput, that);
             that._inputTemplate();
 
@@ -61,6 +63,7 @@
 
             that._prev = "";
             that._word = "";
+            that.optionLabel = $();
 
             that._wrapper();
 
@@ -160,11 +163,16 @@
 
             this.listView.setOptions(options);
 
+            this._optionLabel();
             this._inputTemplate();
             this._accessors();
             this._filterHeader();
             this._enable();
             this._aria();
+
+            if (!this.value() && this.optionLabel[0]) {
+                this.select(0);
+            }
         },
 
         destroy: function() {
@@ -195,6 +203,7 @@
 
                 if (that.filterInput) {
                     that.filterInput.val("");
+                    that._prev = "";
                 }
 
                 that._filterSource();
@@ -243,7 +252,7 @@
                     groupTemplate: options.groupTemplate || "#:data#",
                     fixedGroupTemplate: options.fixedGroupTemplate || "#:data#",
                     template: options.template || "#:" + kendo.expr(options.dataTextField, "data") + "#",
-                    click: $.proxy(that._click, that),
+                    click: that._clickHandler,
                     change: $.proxy(that._listChange, that),
                     activate: $.proxy(that._activateItem, that),
                     deactivate: $.proxy(that._deactivateItem, that),
@@ -262,7 +271,7 @@
                     groupTemplate: options.groupTemplate || "#:data#",
                     fixedGroupTemplate: options.fixedGroupTemplate || "#:data#",
                     template: options.template || "#:" + kendo.expr(options.dataTextField, "data") + "#",
-                    click: $.proxy(that._click, that),
+                    click: that._clickHandler,
                     change: $.proxy(that._listChange, that),
                     activate: $.proxy(that._activateItem, that),
                     deactivate: $.proxy(that._deactivateItem, that),
@@ -295,25 +304,27 @@
 
         dataItem: function(index) {
             var that = this;
-            var dataItem;
+            var dataItem = null;
+            var hasOptionLabel = !!that.optionLabel[0];
 
             if (index === undefined) {
                 dataItem = that.listView.selectedDataItems()[0];
-
-                if (!dataItem && this.optionLabel[0]) {
-                    dataItem = {};
-                    assign(dataItem, that.options.dataTextField.split("."), that._optionLabelText());
-                    assign(dataItem, that.options.dataValueField.split("."), "");
+            } else {
+                if (typeof index !== "number") {
+                    index = $(that.items()).index(index);
+                } else if (hasOptionLabel) {
+                    index -= 1;
                 }
 
-                return dataItem;
+                dataItem = that.dataSource.flatView()[index];
             }
 
-            if (typeof index !== "number") {
-                index = $(that.items()).index(index);
+
+            if (!dataItem && hasOptionLabel) {
+                dataItem = that._assignInstance(that._optionLabelText(), "");
             }
 
-            return that.dataSource.flatView()[index];
+            return dataItem;
         },
 
         refresh: function() {
@@ -383,6 +394,7 @@
             var template = options.optionLabelTemplate;
 
             if (!optionLabel) {
+                that.optionLabel.off().remove();
                 that.optionLabel = $();
                 return;
             }
@@ -404,10 +416,15 @@
             }
 
             that.optionLabelTemplate = template;
-            that.optionLabel = $('<div class="k-list-optionlabel">' + template(optionLabel) + '</div>')
-                                .prependTo(that.list)
-                                .click($.proxy(that._click, that))
-                                .on(HOVEREVENTS, that._toggleHover);
+
+            if (!that.optionLabel[0]) {
+                that.optionLabel = $('<div class="k-list-optionlabel"></div>').prependTo(that.list);
+            }
+
+            that.optionLabel.html(template(optionLabel))
+                            .off()
+                            .click(that._clickHandler)
+                            .on(HOVEREVENTS, that._toggleHover);
 
             that.angular("compile", function(){
                 return { elements: that.optionLabel };
@@ -602,12 +619,23 @@
             var key = e.keyCode;
             var altKey = e.altKey;
             var ul = that.ul[0];
+            var isInputActive;
             var handled;
+
+            if (that.filterInput) {
+                isInputActive = that.filterInput[0] === activeElement();
+            }
 
             if (key === keys.LEFT) {
                 key = keys.UP;
+                handled = true;
             } else if (key === keys.RIGHT) {
                 key = keys.DOWN;
+                handled = true;
+            }
+
+            if (handled && isInputActive) {
+                return;
             }
 
             e.keyCode = key;
@@ -1090,6 +1118,7 @@
             if (!wrapper.is("span.k-widget")) {
                 wrapper = element.wrap("<span />").parent();
                 wrapper[0].style.cssText = DOMelement.style.cssText;
+                wrapper[0].title = DOMelement.title;
             }
 
             element.hide();
@@ -1140,13 +1169,7 @@
                 }
 
                 if (dataItem === undefined) {
-                    if (options.dataTextField) {
-                        dataItem = {};
-                        assign(dataItem, options.dataTextField.split("."), text);
-                        assign(dataItem, options.dataValueField.split("."), this._accessor());
-                    } else {
-                        dataItem = text;
-                    }
+                    dataItem = this._assignInstance(text, this._accessor());
                 }
 
                 var getElements = function(){
@@ -1161,6 +1184,21 @@
             } else {
                 return span.text();
             }
+        },
+
+        _assignInstance: function(text, value) {
+            var dataTextField = this.options.dataTextField;
+            var dataItem = {};
+
+            if (dataTextField) {
+                assign(dataItem, dataTextField.split("."), text);
+                assign(dataItem, this.options.dataValueField.split("."), value);
+                dataItem = new kendo.data.ObservableObject(dataItem);
+            } else {
+                dataItem = text;
+            }
+
+            return dataItem;
         }
     });
 

@@ -210,9 +210,9 @@
 
             options = that.options;
 
-            that.element.addClass(LIST + " " + VIRTUALLIST);
+            that.element.addClass(LIST + " " + VIRTUALLIST).attr("role", "listbox");
             that.content = that.element.wrap("<div class='" + CONTENT + "'></div>").parent();
-            that.wrapper = that.content.wrap("<div class='" + WRAPPER + "' role='listbox'></div>").parent();
+            that.wrapper = that.content.wrap("<div class='" + WRAPPER + "'></div>").parent();
             that.header = that.content.before("<div class='" + HEADER + "'></div>").prev();
 
             that.element.on("mouseenter" + VIRTUAL_LIST_NS, "li", function() { $(this).addClass(HOVER); })
@@ -848,6 +848,7 @@
             );
 
             that._renderItems();
+            that._calculateGroupPadding(that.screenHeight);
         },
 
         _setHeight: function(height) {
@@ -1302,6 +1303,22 @@
 
         _buildValueGetter: function() {
             this._valueGetter = kendo.getter(this.options.dataValueField);
+        },
+
+        _calculateGroupPadding: function(height) {
+            var firstItem = this.items().first(),
+                groupHeader = this.header,
+                padding = 0;
+
+            if (groupHeader[0] && groupHeader[0].style.display !== "none") {
+                if (height !== "auto") {
+                    padding = kendo.support.scrollbar();
+                }
+
+                padding += parseFloat(firstItem.css("border-right-width"), 10) + parseFloat(firstItem.children(".k-group").css("right"), 10);
+
+                groupHeader.css("padding-right", padding);
+            }
         }
 
     });
