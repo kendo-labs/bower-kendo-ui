@@ -310,6 +310,32 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
 });
 }
 
+/* FileBrowser and ImageBrowser messages */
+
+var browserMessages = {
+  "uploadFile" : "Wyślij",
+  "orderBy" : "Sortuj wg",
+  "orderByName" : "Nazwy",
+  "orderBySize" : "Rozmiaru",
+  "directoryNotFound" : "Folder o podanej nazwie nie został odnaleziony.",
+  "emptyFolder" : "Pusty folder",
+  "invalidFileType" : "Wybrany plik \"{0}\" jest nieprawidłowy. Obsługiwane pliki {1}.",
+  "deleteFile" : 'Czy napewno chcesz usunąć plik "{0}"?',
+  "overwriteFile" : 'Plik o nazwie "{0}" już istnieje w bieżącym folderze. Czy zastąpić?',
+  "dropFilesHere" : "umieść pliki tutaj, aby je wysłać",
+  "search" : "Szukaj"
+};
+
+if (kendo.ui.FileBrowser) {
+kendo.ui.FileBrowser.prototype.options.messages =
+$.extend(true, kendo.ui.FileBrowser.prototype.options.messages, browserMessages);
+}
+
+if (kendo.ui.ImageBrowser) {
+kendo.ui.ImageBrowser.prototype.options.messages =
+$.extend(true, kendo.ui.ImageBrowser.prototype.options.messages, browserMessages);
+}
+
 /* Upload messages */
 
 if (kendo.ui.Upload) {
@@ -336,7 +362,9 @@ kendo.ui.Scheduler.prototype.options.messages =
 $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   "allDay": "all day",
   "cancel": "Anuluj",
-  "confirmation": "Are you sure you want to delete this event?",
+  "editable": {
+    "confirmation": "Are you sure you want to delete this event?"
+  },
   "date": "Date",
   "destroy": "Delete",
   "editor": {

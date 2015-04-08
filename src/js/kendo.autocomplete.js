@@ -456,6 +456,7 @@
                 that._touchScroller.reset();
             }
 
+            that._hideBusy();
             that._makeUnselectable();
             that._hideBusy();
 

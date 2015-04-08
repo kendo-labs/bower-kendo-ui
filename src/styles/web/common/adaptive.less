@@ -638,14 +638,6 @@
     text-align: center;
 }
 
-.km-pane-wrapper .k-scheduler-views li a,
-.km-pane-wrapper .k-mobile-list .k-scheduler-navigation li a
-{
-    padding-left: 0;
-    padding-right: 0;
-    width: 100%;
-}
-
 .km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-field .k-check
 {
     margin: 0;
@@ -767,11 +759,6 @@
         margin-left: 1em;
     }
 
-    .km-pane-wrapper .k-scheduler-views
-    {
-        width: 15em;
-    }
-
     .km-pane-wrapper .k-nav-today a
     {
         padding-left: .6em;
@@ -879,3 +866,88 @@
     bottom: 2px;
 }
 
+/* Responsive styles  */
+@media only screen and (max-width: 1024px) {
+    .k-scheduler-toolbar > ul.k-scheduler-views
+    {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        z-index: 10000;
+    }
+
+    .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views {
+        right: auto;
+        left: 6px;
+    }
+
+    .k-scheduler-toolbar > ul.k-scheduler-views > li:not(.k-current-view)
+    {
+        display: none;
+    }
+
+    .k-scheduler-toolbar li.k-nav-current .k-lg-date-format
+    {
+        display: none;
+    }
+
+    .k-scheduler-toolbar li.k-nav-current .k-sm-date-format
+    {
+        display: inline;
+    }
+
+    .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view
+    {
+        display: block;
+        border-width:1px;
+    }
+
+    .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
+        text-align: left;
+        padding-left: 1em;
+    }
+
+    .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link
+    {
+        display: block;
+        position: relative;
+        padding-right: 2.5em;
+        padding-left: 1em;
+        box-sizing: border-box;
+    }
+
+    .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link
+    {
+        padding-left: 0;
+    }
+
+    .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after
+    {
+        display: block;
+        content: "";
+        position: absolute;
+        top: 50%;
+        margin-top: -0.6em;
+        right: 0.333em;
+        width: 1.333em;
+        height: 1.333em;
+    }
+
+    .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
+    .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li:first-child + li{
+        display: block;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
+        border: 1px solid #c5c5c5;
+        background-color: #fff;
+        background-image: none;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.3);
+    }
+
+    .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
+        text-align: left;
+    }
+}

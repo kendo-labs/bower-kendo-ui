@@ -21,7 +21,7 @@
     var kendo = window.kendo,
         ui = kendo.ui,
         Select = ui.Select,
-        os = kendo.support.mobileOS,
+        support = kendo.support,
         activeElement = kendo._activeElement,
         keys = kendo.keys,
         ns = ".kendoDropDownList",
@@ -44,7 +44,7 @@
         init: function(element, options) {
             var that = this;
             var index = options && options.index;
-            var optionLabel, useOptionLabel, text;
+            var optionLabel, text;
 
             that.ns = ns;
             options = $.isArray(options) ? { dataSource: options } : options;
@@ -103,16 +103,11 @@
                 text = options.text || "";
                 if (!text) {
                     optionLabel = options.optionLabel;
-                    useOptionLabel = optionLabel && options.index === 0;
 
-                    if (that._isSelect) {
-                        if (useOptionLabel) {
-                            text = optionLabel;
-                        } else {
-                            text = element.children(":selected").text();
-                        }
-                    } else if (!element[0].value && useOptionLabel) {
+                    if (optionLabel && options.index === 0) {
                         text = optionLabel;
+                    } else if (that._isSelect) {
+                        text = element.children(":selected").text();
                     }
                 }
 
@@ -377,8 +372,14 @@
                 value = "";
             }
 
+            that._initialIndex = null;
+
             that.listView.value(value.toString()).done(function() {
                 that._triggerCascade();
+
+                if (that.selectedIndex === -1 && that.text()) {
+                    that.text("");
+                }
 
                 that._old = that._accessor();
                 that._oldIndex = that.selectedIndex;
@@ -501,6 +502,7 @@
                 }
             }
 
+            that._hideBusy();
             that.trigger("dataBound");
         },
 
@@ -533,7 +535,7 @@
                     that._select(that._focus(), !that.dataSource.view().length);
                 }
 
-                if (kendo.support.mobileOS.ios && isIFrame) {
+                if (support.mobileOS.ios && isIFrame) {
                     that._change();
                 } else {
                     that._blur();
@@ -800,6 +802,11 @@
             var wrapper = this.wrapper;
             var filterInput = this.filterInput;
             var compareElement = element === filterInput ? wrapper : filterInput;
+            var touchEnabled = support.mobileOS && (support.touch || support.MSPointers || support.pointers);
+
+            if (filterInput && filterInput[0] === element[0] && touchEnabled) {
+                return;
+            }
 
             if (filterInput && compareElement[0] === active) {
                 this._prevent = true;
@@ -876,7 +883,9 @@
 
             if (this.optionLabel[0]) {
                 if (typeof candidate === "number") {
-                    candidate -= 1;
+                    if (candidate > -1) {
+                        candidate -= 1;
+                    }
                 } else if (candidate instanceof jQuery && candidate.hasClass("k-list-optionlabel")) {
                     candidate = -1;
                 }
@@ -1050,10 +1059,11 @@
         _mobile: function() {
             var that = this,
                 popup = that.popup,
+                mobileOS = support.mobileOS,
                 root = popup.element.parents(".km-root").eq(0);
 
-            if (root.length && os) {
-                popup.options.animation.open.effects = (os.android || os.meego) ? "fadeIn" : (os.ios || os.wp) ? "slideIn:up" : popup.options.animation.open.effects;
+            if (root.length && mobileOS) {
+                popup.options.animation.open.effects = (mobileOS.android || mobileOS.meego) ? "fadeIn" : (mobileOS.ios || mobileOS.wp) ? "slideIn:up" : popup.options.animation.open.effects;
             }
         },
 

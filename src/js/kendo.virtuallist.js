@@ -179,8 +179,9 @@
         element.toggleClass(FOCUSED, data.current);
         element.toggleClass(SELECTED, data.selected);
         element.toggleClass("k-first", data.newGroup);
+        element.toggleClass("k-loading-item", !data.item);
 
-        if (data.newGroup) {
+        if (data.index !== 0 && data.newGroup) {
             $("<div class=" + GROUPITEM + "></div>")
                 .appendTo(element)
                 .html(templates.groupTemplate({ group: data.group }));
@@ -211,11 +212,11 @@
             options = that.options;
 
             that.element.addClass(LIST + " " + VIRTUALLIST).attr("role", "listbox");
-            that.content = that.element.wrap("<div class='" + CONTENT + "'></div>").parent();
+            that.content = that.element.wrap("<div unselectable='on' class='" + CONTENT + "'></div>").parent();
             that.wrapper = that.content.wrap("<div class='" + WRAPPER + "'></div>").parent();
             that.header = that.content.before("<div class='" + HEADER + "'></div>").prev();
 
-            that.element.on("mouseenter" + VIRTUAL_LIST_NS, "li", function() { $(this).addClass(HOVER); })
+            that.element.on("mouseenter" + VIRTUAL_LIST_NS, "li:not(.k-loading-item)", function() { $(this).addClass(HOVER); })
                         .on("mouseleave" + VIRTUAL_LIST_NS, "li", function() { $(this).removeClass(HOVER); });
 
             that._values = toArray(that.options.value);
@@ -479,14 +480,13 @@
 
             if (isEmptyList) {
                 $.when.apply($, that._promisesList).done(function() {
-                    //that._renderItems(true);
                     that._activeDeferred.resolve();
                     that._activeDeferred = null;
                     that._promisesList = [];
                 });
             }
 
-            return this._activeDeferred;
+            return that._activeDeferred;
         },
 
         _findDataItem: function(index) {
@@ -618,20 +618,38 @@
 
         prev: function() {
             var index = this._focusedIndex;
+            var current;
 
             if (!isNaN(index) && index > 0) {
-                this.focus(index - 1);
-                return index - 1;
+                index -= 1;
+                this.focus(index);
+
+                current = this.focus();
+                if (current && current.hasClass("k-loading-item")) {
+                    index += 1;
+                    this.focus(index);
+                }
+
+                return index;
             }
         },
 
         next: function() {
-            var index = this._focusedIndex,
-                lastIndex = this.dataSource.total() - 1; /* data offset index starts from 0*/
+            var index = this._focusedIndex;
+            var lastIndex = this.dataSource.total() - 1;
+            var current;
 
             if (!isNaN(index) && index < lastIndex) {
-                this.focus(index + 1);
-                return index + 1;
+                index += 1;
+                this.focus(index);
+
+                current = this.focus();
+                if (current && current.hasClass("k-loading-item")) {
+                    index -= 1;
+                    this.focus(index);
+                }
+
+                return index;
             }
         },
 
@@ -833,6 +851,12 @@
             that._setHeight(options.itemHeight * dataSource.total());
             that.options.type = !!dataSource.group().length ? "group" : "flat";
 
+            if (that.options.type === "flat") {
+                that.header.hide();
+            } else {
+                that.header.show();
+            }
+
             that.getter = that._getter(function() {
                 that._renderItems(true);
             });
@@ -888,8 +912,12 @@
                         lastRangeStart = rangeStart;
                         this._fetching = true;
                         this.deferredRange(rangeStart).then(function() {
-                            that._fetching = true;
-                            dataSource.range(rangeStart, pageSize);
+                            var firstItemIndex = that._indexConstraint(that.content[0].scrollTop);
+
+                            if (rangeStart <= firstItemIndex && firstItemIndex <= (rangeStart + pageSize)) {
+                                that._fetching = true;
+                                dataSource.range(rangeStart, pageSize);
+                            }
                         });
                     }
 
@@ -1147,7 +1175,8 @@
                 selectedIndexes = this._selectedIndexes,
                 position = 0,
                 selectable = this.options.selectable,
-                removedindexesCounter = 0;
+                removedindexesCounter = 0,
+                item;
 
             if (indexes[position] === -1) { //deselect everything
                 for (var idx = 0; idx < selectedIndexes.length; idx++) {
@@ -1191,7 +1220,13 @@
                     selectedIndex = selectedIndexes[position];
 
                     if (selectedIndex !== undefined) {
-                        this._getElementByIndex(selectedIndex).removeClass(SELECTED);
+                        item = this._getElementByIndex(selectedIndex);
+
+                        if (!item.hasClass("k-state-selected")) {
+                            continue;
+                        }
+
+                        item.removeClass(SELECTED);
                         this._values.splice(position, 1);
                         this._selectedIndexes.splice(position, 1);
                         dataItem = this._selectedDataItems.splice(position, 1);
@@ -1296,8 +1331,10 @@
         },
 
         _clickHandler: function(e) {
-            if (!e.isDefaultPrevented()) {
-                this.trigger(CLICK, { item: $(e.currentTarget) });
+            var item = $(e.currentTarget);
+
+            if (!e.isDefaultPrevented() && item.data("uid")) {
+                this.trigger(CLICK, { item: item });
             }
         },
 

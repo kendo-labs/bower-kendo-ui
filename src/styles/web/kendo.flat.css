@@ -505,7 +505,17 @@ html .km-pane-wrapper .k-header {
 .k-virtual-item.k-first,
 .k-group-header + .k-list > .k-item.k-first,
 .k-static-header + .k-list > .k-item.k-first {
-  border-top-color: #c1c1c1;
+  border-top-color: #2eb3a6;
+}
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header {
+  background: #2eb3a6;
+  color: #ffffff;
+}
+.k-popup .k-item > .k-group {
+  background: #2eb3a6;
+  color: #ffffff;
+  border-bottom-left-radius: 1.8px;
 }
 .k-marquee-text {
   color: #ffffff;

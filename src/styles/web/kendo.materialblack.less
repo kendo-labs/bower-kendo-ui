@@ -656,13 +656,6 @@ border-color: @selected-background-color;
 	.box-shadow(none);
 }
 
-.k-list>.k-state-hover,
-.k-list>.k-state-selected.k-state-hover
-{
-background-color: @hover-background-color;
-border-color: @hover-background-color;
-}
-
 .k-list-container
 {
 border-color: @form-widgets-border-color;
@@ -1231,8 +1224,8 @@ table.k-editor {
 
 .k-list > .k-state-hover {
 	color: @widget-text-color;
-	background-color: @hover-background-color;
-	border-color: @hover-background-color;
+	background-color: @select-hover-background-color;
+    border-color: @select-hover-background-color;
 	.box-shadow(none);
 	cursor: pointer;
 }
@@ -1349,6 +1342,26 @@ div.k-scheduler-marquee:after {
 
 .k-notification.k-group {
     color: @secondary-text-color;
+}
+
+.k-virtual-item.k-first,
+.k-group-header + .k-list > .k-item.k-first,
+.k-static-header + .k-list > .k-item.k-first
+{
+    border-top-color: @alt-background-color;
+}
+
+.k-popup > .k-group-header,
+.k-popup > .k-virtual-wrap > .k-group-header
+{
+    background: @alt-background-color;
+    color: @widget-text-color;
+}
+
+.k-popup .k-item > .k-group
+{
+    background: @alt-background-color;
+    color: @widget-text-color;
 }
 
 /* Responsive styles */

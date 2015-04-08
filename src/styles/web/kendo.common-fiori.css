@@ -3894,6 +3894,11 @@ html .k-grid-edit-row .k-tooltip {
   white-space: nowrap !important;
 }
 @media only screen and (max-width: 1024px) {
+  .k-webkit .k-pager-wrap,
+  .k-ff .k-pager-wrap,
+  .k-ie11 .k-pager-wrap {
+    overflow: visible;
+  }
   .k-webkit .k-pager-wrap .k-pager-nav,
   .k-ff .k-pager-wrap .k-pager-nav,
   .k-ie11 .k-pager-wrap .k-pager-nav,
@@ -5253,8 +5258,8 @@ body .k-datetimepicker .k-select {
 }
 .k-list-filter > .k-icon {
   position: absolute;
-  right: 4px;
-  top: 3px;
+  right: 6px;
+  top: 1px;
 }
 /* MultiSelect */
 .k-multiselect-wrap {
@@ -10176,12 +10181,6 @@ html .k-upload-empty {
   display: table-cell;
   text-align: center;
 }
-.km-pane-wrapper .k-scheduler-views li a,
-.km-pane-wrapper .k-mobile-list .k-scheduler-navigation li a {
-  padding-left: 0;
-  padding-right: 0;
-  width: 100%;
-}
 .km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-field .k-check {
   margin: 0;
   padding-left: 1em;
@@ -10271,9 +10270,6 @@ html .k-upload-empty {
   .km-pane-wrapper .k-mobile-list .k-edit-field > .k-timezone-button {
     margin-left: 1em;
   }
-  .km-pane-wrapper .k-scheduler-views {
-    width: 15em;
-  }
   .km-pane-wrapper .k-nav-today a {
     padding-left: .6em;
     padding-right: .6em;
@@ -10361,6 +10357,71 @@ html .k-upload-empty {
   width: 100%;
   left: 2px;
   bottom: 2px;
+}
+/* Responsive styles  */
+@media only screen and (max-width: 1024px) {
+  .k-scheduler-toolbar > ul.k-scheduler-views {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+    z-index: 10000;
+  }
+  .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views {
+    right: auto;
+    left: 6px;
+  }
+  .k-scheduler-toolbar > ul.k-scheduler-views > li:not(.k-current-view) {
+    display: none;
+  }
+  .k-scheduler-toolbar li.k-nav-current .k-lg-date-format {
+    display: none;
+  }
+  .k-scheduler-toolbar li.k-nav-current .k-sm-date-format {
+    display: inline;
+  }
+  .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
+    display: block;
+    border-width: 1px;
+  }
+  .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
+    text-align: left;
+    padding-left: 1em;
+  }
+  .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link {
+    display: block;
+    position: relative;
+    padding-right: 2.5em;
+    padding-left: 1em;
+    box-sizing: border-box;
+  }
+  .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link {
+    padding-left: 0;
+  }
+  .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after {
+    display: block;
+    content: "";
+    position: absolute;
+    top: 50%;
+    margin-top: -0.6em;
+    right: 0.333em;
+    width: 1.333em;
+    height: 1.333em;
+  }
+  .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
+  .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li:first-child + li {
+    display: block;
+    border: 0;
+    border-radius: 0;
+  }
+  .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
+    border: 1px solid #c5c5c5;
+    background-color: #fff;
+    background-image: none;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
+  }
+  .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
+    text-align: left;
+  }
 }
 /* animation classes */
 .k-fx-end .k-fx-next,
@@ -10844,9 +10905,8 @@ html .k-upload-empty {
 .k-virtual-wrap {
   position: relative;
 }
-.k-virtual-wrap > .k-list {
-  margin: 0;
-  padding: 0;
+.k-virtual-wrap .k-list.k-virtual-list {
+  height: auto;
 }
 .k-virtual-content {
   overflow-y: scroll;
@@ -10871,16 +10931,13 @@ html .k-upload-empty {
 .k-virtual-wrap > .k-virtual-header {
   text-align: right;
 }
-.k-popup .k-list .k-item.k-virtual-item {
-  /*padding: 1px 0;*/
+.k-popup .k-item.k-first {
+  position: relative;
 }
-.k-virtual-list .k-virtual-item {
+.k-virtual-content > .k-virtual-list > .k-virtual-item {
   position: absolute;
   width: 100%;
   box-sizing: border-box;
-}
-.k-popup .k-item.k-first {
-  position: relative;
 }
 .k-popup .k-item > .k-group,
 .k-popup > .k-group-header,
@@ -10889,13 +10946,14 @@ html .k-upload-empty {
   font-size: .857em;
 }
 .k-popup .k-item > .k-group {
-  background: none;
   position: absolute;
-  top: .1em;
-  right: 4px;
+  top: 0;
+  right: 0;
+  padding: 0 .5em;
+  line-height: 1.8;
 }
 .k-popup .k-state-hover > .k-group {
-  right: 3px;
+  right: -1px;
 }
 .k-virtual-item.k-first,
 .k-group-header + .k-list > .k-item.k-first,

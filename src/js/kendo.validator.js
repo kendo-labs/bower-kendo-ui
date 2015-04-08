@@ -153,7 +153,8 @@
                 step: "{0} is not valid",
                 email: "{0} is not valid email",
                 url: "{0} is not valid URL",
-                date: "{0} is not valid date"
+                date: "{0} is not valid date",
+                dateCompare: "End date should be greater than or equal to the start date"
             },
             rules: {
                 required: function(input) {

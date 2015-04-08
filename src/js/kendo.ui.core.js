@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.1.403";
+    kendo.version = "2015.1.408";
 
     function Class() {}
 
@@ -4002,16 +4002,12 @@ function pad(number, digits, end) {
         return start;
     };
 
-    kendo.compileMobileDirective = function(element, scopeSetup) {
+    kendo.compileMobileDirective = function(element, scope) {
         var angular = window.angular;
 
         element.attr("data-" + kendo.ns + "role", element[0].tagName.toLowerCase().replace('kendo-mobile-', '').replace('-', ''));
 
         angular.element(element).injector().invoke(["$compile", function($compile) {
-            var scope = angular.element(element).scope();
-            if (scopeSetup) {
-                scopeSetup(scope);
-            }
             $compile(element)(scope);
 
             if (!/^\$(digest|apply)$/.test(scope.$$phase)) {
@@ -14534,7 +14530,8 @@ var A = 0;
                 step: "{0} is not valid",
                 email: "{0} is not valid email",
                 url: "{0} is not valid URL",
-                date: "{0} is not valid date"
+                date: "{0} is not valid date",
+                dateCompare: "End date should be greater than or equal to the start date"
             },
             rules: {
                 required: function(input) {
@@ -15570,9 +15567,15 @@ var A = 0;
 
                 that.angular("compile", function(){
                     that.hint.removeAttr("ng-repeat");
+                    var scopeTarget = $(e.target);
+
+                    while (!scopeTarget.data("$$kendoScope") && scopeTarget.length) {
+                        scopeTarget = scopeTarget.parent();
+                    }
+
                     return {
                         elements: that.hint.get(),
-                        scopeFrom: e.target
+                        scopeFrom: scopeTarget.data("$$kendoScope")
                     };
                 });
             }
@@ -21001,7 +21004,7 @@ var A = 0;
 
         _calculateGroupPadding: function(height) {
             var ul = this.ul;
-            var li = $(ul[0].firstChild);
+            var li = ul.children(".k-first:first");
             var groupHeader = ul.prev(".k-group-header");
             var padding = 0;
 
@@ -21879,7 +21882,7 @@ var A = 0;
                 indices = [];
             }
 
-            if (this.filter() && !singleSelection && this._deselectFiltered(indices)) {
+            if (this._filtered && !singleSelection && this._deselectFiltered(indices)) {
                 return;
             }
 
@@ -22200,18 +22203,19 @@ var A = 0;
             var scrollTop = element.scrollTop;
             var itemHeight = $(element.children[0]).height();
             var itemIndex = Math.floor(scrollTop / itemHeight) || 0;
-            var item = element.children[itemIndex];
-            var forward = item.offsetTop < scrollTop;
+            var item = element.children[itemIndex] || element.lastChild;
+            var offsetHeight = this._offsetHeight();
+            var forward = (item.offsetTop - offsetHeight) < scrollTop;
 
             while (item) {
                 if (forward) {
-                    if (item.offsetTop >= scrollTop || !item.nextSibling) {
+                    if ((item.offsetTop + itemHeight - offsetHeight) > scrollTop || !item.nextSibling) {
                         break;
                     }
 
                     item = item.nextSibling;
                 } else {
-                    if (item.offsetTop <= scrollTop || !item.previousSibling) {
+                    if ((item.offsetTop - offsetHeight) <= scrollTop || !item.previousSibling) {
                         break;
                     }
 
@@ -22249,9 +22253,10 @@ var A = 0;
             var item = '<li tabindex="-1" role="option" unselectable="on" class="k-item';
 
             var dataItem = context.item;
+            var notFirstItem = context.index !== 0;
             var found = this._filtered && this._dataItemPosition(dataItem, values) !== -1;
 
-            if (context.newGroup) {
+            if (notFirstItem && context.newGroup) {
                 item += ' k-first';
             }
 
@@ -22263,7 +22268,7 @@ var A = 0;
 
             item += this.templates.template(dataItem);
 
-            if (context.newGroup) {
+            if (notFirstItem && context.newGroup) {
                 item += '<div class="k-group">' + this.templates.groupTemplate(context.group) + '</div>';
             }
 
@@ -24800,6 +24805,7 @@ var A = 0;
                 that._touchScroller.reset();
             }
 
+            that._hideBusy();
             that._makeUnselectable();
             that._hideBusy();
 
@@ -25028,7 +25034,7 @@ var A = 0;
     var kendo = window.kendo,
         ui = kendo.ui,
         Select = ui.Select,
-        os = kendo.support.mobileOS,
+        support = kendo.support,
         activeElement = kendo._activeElement,
         keys = kendo.keys,
         ns = ".kendoDropDownList",
@@ -25051,7 +25057,7 @@ var A = 0;
         init: function(element, options) {
             var that = this;
             var index = options && options.index;
-            var optionLabel, useOptionLabel, text;
+            var optionLabel, text;
 
             that.ns = ns;
             options = $.isArray(options) ? { dataSource: options } : options;
@@ -25110,16 +25116,11 @@ var A = 0;
                 text = options.text || "";
                 if (!text) {
                     optionLabel = options.optionLabel;
-                    useOptionLabel = optionLabel && options.index === 0;
 
-                    if (that._isSelect) {
-                        if (useOptionLabel) {
-                            text = optionLabel;
-                        } else {
-                            text = element.children(":selected").text();
-                        }
-                    } else if (!element[0].value && useOptionLabel) {
+                    if (optionLabel && options.index === 0) {
                         text = optionLabel;
+                    } else if (that._isSelect) {
+                        text = element.children(":selected").text();
                     }
                 }
 
@@ -25384,8 +25385,14 @@ var A = 0;
                 value = "";
             }
 
+            that._initialIndex = null;
+
             that.listView.value(value.toString()).done(function() {
                 that._triggerCascade();
+
+                if (that.selectedIndex === -1 && that.text()) {
+                    that.text("");
+                }
 
                 that._old = that._accessor();
                 that._oldIndex = that.selectedIndex;
@@ -25508,6 +25515,7 @@ var A = 0;
                 }
             }
 
+            that._hideBusy();
             that.trigger("dataBound");
         },
 
@@ -25540,7 +25548,7 @@ var A = 0;
                     that._select(that._focus(), !that.dataSource.view().length);
                 }
 
-                if (kendo.support.mobileOS.ios && isIFrame) {
+                if (support.mobileOS.ios && isIFrame) {
                     that._change();
                 } else {
                     that._blur();
@@ -25807,6 +25815,11 @@ var A = 0;
             var wrapper = this.wrapper;
             var filterInput = this.filterInput;
             var compareElement = element === filterInput ? wrapper : filterInput;
+            var touchEnabled = support.mobileOS && (support.touch || support.MSPointers || support.pointers);
+
+            if (filterInput && filterInput[0] === element[0] && touchEnabled) {
+                return;
+            }
 
             if (filterInput && compareElement[0] === active) {
                 this._prevent = true;
@@ -25883,7 +25896,9 @@ var A = 0;
 
             if (this.optionLabel[0]) {
                 if (typeof candidate === "number") {
-                    candidate -= 1;
+                    if (candidate > -1) {
+                        candidate -= 1;
+                    }
                 } else if (candidate instanceof jQuery && candidate.hasClass("k-list-optionlabel")) {
                     candidate = -1;
                 }
@@ -26057,10 +26072,11 @@ var A = 0;
         _mobile: function() {
             var that = this,
                 popup = that.popup,
+                mobileOS = support.mobileOS,
                 root = popup.element.parents(".km-root").eq(0);
 
-            if (root.length && os) {
-                popup.options.animation.open.effects = (os.android || os.meego) ? "fadeIn" : (os.ios || os.wp) ? "slideIn:up" : popup.options.animation.open.effects;
+            if (root.length && mobileOS) {
+                popup.options.animation.open.effects = (mobileOS.android || mobileOS.meego) ? "fadeIn" : (mobileOS.ios || mobileOS.wp) ? "slideIn:up" : popup.options.animation.open.effects;
             }
         },
 
@@ -26609,6 +26625,7 @@ var A = 0;
                 that._touchScroller.reset();
             }
 
+            that._hideBusy();
             that.trigger("dataBound");
         },
 
@@ -27513,6 +27530,7 @@ var A = 0;
                 that._touchScroller.reset();
             }
 
+            that._hideBusy();
             that._makeUnselectable();
 
             that._hideBusy();
@@ -41623,8 +41641,9 @@ var A = 0;
         element.toggleClass(FOCUSED, data.current);
         element.toggleClass(SELECTED, data.selected);
         element.toggleClass("k-first", data.newGroup);
+        element.toggleClass("k-loading-item", !data.item);
 
-        if (data.newGroup) {
+        if (data.index !== 0 && data.newGroup) {
             $("<div class=" + GROUPITEM + "></div>")
                 .appendTo(element)
                 .html(templates.groupTemplate({ group: data.group }));
@@ -41655,11 +41674,11 @@ var A = 0;
             options = that.options;
 
             that.element.addClass(LIST + " " + VIRTUALLIST).attr("role", "listbox");
-            that.content = that.element.wrap("<div class='" + CONTENT + "'></div>").parent();
+            that.content = that.element.wrap("<div unselectable='on' class='" + CONTENT + "'></div>").parent();
             that.wrapper = that.content.wrap("<div class='" + WRAPPER + "'></div>").parent();
             that.header = that.content.before("<div class='" + HEADER + "'></div>").prev();
 
-            that.element.on("mouseenter" + VIRTUAL_LIST_NS, "li", function() { $(this).addClass(HOVER); })
+            that.element.on("mouseenter" + VIRTUAL_LIST_NS, "li:not(.k-loading-item)", function() { $(this).addClass(HOVER); })
                         .on("mouseleave" + VIRTUAL_LIST_NS, "li", function() { $(this).removeClass(HOVER); });
 
             that._values = toArray(that.options.value);
@@ -41923,14 +41942,13 @@ var A = 0;
 
             if (isEmptyList) {
                 $.when.apply($, that._promisesList).done(function() {
-                    //that._renderItems(true);
                     that._activeDeferred.resolve();
                     that._activeDeferred = null;
                     that._promisesList = [];
                 });
             }
 
-            return this._activeDeferred;
+            return that._activeDeferred;
         },
 
         _findDataItem: function(index) {
@@ -42062,20 +42080,38 @@ var A = 0;
 
         prev: function() {
             var index = this._focusedIndex;
+            var current;
 
             if (!isNaN(index) && index > 0) {
-                this.focus(index - 1);
-                return index - 1;
+                index -= 1;
+                this.focus(index);
+
+                current = this.focus();
+                if (current && current.hasClass("k-loading-item")) {
+                    index += 1;
+                    this.focus(index);
+                }
+
+                return index;
             }
         },
 
         next: function() {
-            var index = this._focusedIndex,
-                lastIndex = this.dataSource.total() - 1; /* data offset index starts from 0*/
+            var index = this._focusedIndex;
+            var lastIndex = this.dataSource.total() - 1;
+            var current;
 
             if (!isNaN(index) && index < lastIndex) {
-                this.focus(index + 1);
-                return index + 1;
+                index += 1;
+                this.focus(index);
+
+                current = this.focus();
+                if (current && current.hasClass("k-loading-item")) {
+                    index -= 1;
+                    this.focus(index);
+                }
+
+                return index;
             }
         },
 
@@ -42277,6 +42313,12 @@ var A = 0;
             that._setHeight(options.itemHeight * dataSource.total());
             that.options.type = !!dataSource.group().length ? "group" : "flat";
 
+            if (that.options.type === "flat") {
+                that.header.hide();
+            } else {
+                that.header.show();
+            }
+
             that.getter = that._getter(function() {
                 that._renderItems(true);
             });
@@ -42332,8 +42374,12 @@ var A = 0;
                         lastRangeStart = rangeStart;
                         this._fetching = true;
                         this.deferredRange(rangeStart).then(function() {
-                            that._fetching = true;
-                            dataSource.range(rangeStart, pageSize);
+                            var firstItemIndex = that._indexConstraint(that.content[0].scrollTop);
+
+                            if (rangeStart <= firstItemIndex && firstItemIndex <= (rangeStart + pageSize)) {
+                                that._fetching = true;
+                                dataSource.range(rangeStart, pageSize);
+                            }
                         });
                     }
 
@@ -42591,7 +42637,8 @@ var A = 0;
                 selectedIndexes = this._selectedIndexes,
                 position = 0,
                 selectable = this.options.selectable,
-                removedindexesCounter = 0;
+                removedindexesCounter = 0,
+                item;
 
             if (indexes[position] === -1) { //deselect everything
                 for (var idx = 0; idx < selectedIndexes.length; idx++) {
@@ -42635,7 +42682,13 @@ var A = 0;
                     selectedIndex = selectedIndexes[position];
 
                     if (selectedIndex !== undefined) {
-                        this._getElementByIndex(selectedIndex).removeClass(SELECTED);
+                        item = this._getElementByIndex(selectedIndex);
+
+                        if (!item.hasClass("k-state-selected")) {
+                            continue;
+                        }
+
+                        item.removeClass(SELECTED);
                         this._values.splice(position, 1);
                         this._selectedIndexes.splice(position, 1);
                         dataItem = this._selectedDataItems.splice(position, 1);
@@ -42740,8 +42793,10 @@ var A = 0;
         },
 
         _clickHandler: function(e) {
-            if (!e.isDefaultPrevented()) {
-                this.trigger(CLICK, { item: $(e.currentTarget) });
+            var item = $(e.currentTarget);
+
+            if (!e.isDefaultPrevented() && item.data("uid")) {
+                this.trigger(CLICK, { item: item });
             }
         },
 
@@ -43243,10 +43298,16 @@ var A = 0;
 
             collection = container.children(that._locate("modalview drawer"));
             if (that.$angular) {
+
+                that.$angular[0].viewOptions = {
+                    defaultTransition: that.transition,
+                    loader: that.loader,
+                    container: that.container,
+                    getLayout: that.getLayoutProxy
+                };
+
                 collection.each(function(idx, element) {
-                    compileMobileDirective($(element), function(scope) {
-                        //pass the options?
-                    });
+                    compileMobileDirective($(element), options.$angular[0]);
                 });
             } else {
                 initWidgets(collection);
@@ -43388,16 +43449,7 @@ var A = 0;
 
         _createView: function(element) {
             if (this.$angular) {
-                var that = this;
-
-                return compileMobileDirective(element, function(scope) {
-                    scope.viewOptions = {
-                        defaultTransition: that.transition,
-                        loader: that.loader,
-                        container: that.container,
-                        getLayout: that.getLayoutProxy
-                    };
-                });
+                return compileMobileDirective(element, this.$angular[0]);
             } else {
                 return kendo.initWidget(element, {
                     defaultTransition: this.transition,
@@ -43460,7 +43512,7 @@ var A = 0;
 
             element.children(that._locate("layout")).each(function() {
                 if (that.$angular) {
-                    layout = compileMobileDirective($(this));
+                    layout = compileMobileDirective($(this), that.$angular[0]);
                 } else {
                     layout = kendo.initWidget($(this), {}, ui.roles);
                 }
@@ -44778,7 +44830,7 @@ var A = 0;
                 kendo.mobile.init(modalViews);
             } else {
                 modalViews.each(function(idx, element) {
-                    kendo.compileMobileDirective($(element));
+                    kendo.compileMobileDirective($(element), options.$angular[0]);
                 });
             }
 
@@ -44792,7 +44844,7 @@ var A = 0;
                 });
             } else {
                 that.element.children(kendo.directiveSelector("pane")).each(function() {
-                    pane = kendo.compileMobileDirective($(this));
+                    pane = kendo.compileMobileDirective($(this), options.$angular[0]);
                     that.panes.push(pane);
                 });
             }
@@ -48950,7 +49002,7 @@ var A = 0;
 
             if (attrs.kNgDisabled) {
                 var kNgDisabled = attrs.kNgDisabled;
-                var isDisabled = scope[kNgDisabled];
+                var isDisabled = scope.$eval(kNgDisabled);
                 if (isDisabled) {
                     object.enable(!isDisabled);
                 }
@@ -48959,7 +49011,7 @@ var A = 0;
 
             if (attrs.kNgReadonly) {
                 var kNgReadonly = attrs.kNgReadonly;
-                var isReadonly = scope[kNgReadonly];
+                var isReadonly = scope.$eval(kNgReadonly);
                 if (isReadonly) {
                     object.readonly(isReadonly);
                 }
@@ -49531,6 +49583,7 @@ var A = 0;
             // prevent leaks. https://github.com/kendo-labs/angular-kendo/issues/237
             $(el)
                 .removeData("$scope")
+                .removeData("$$kendoScope")
                 .removeData("$isolateScope")
                 .removeData("$isolateScopeNoTemplate")
                 .removeClass("ng-scope");
@@ -49601,7 +49654,7 @@ var A = 0;
             return;
         }
 
-        var scope = self.$angular_scope; //  || angular.element(self.element).scope();
+        var scope = self.$angular_scope;
 
         if (scope) {
             withoutTimeout(function(){
@@ -49611,7 +49664,8 @@ var A = 0;
 
                       case "cleanup":
                         angular.forEach(elements, function(el){
-                            var itemScope = angular.element(el).scope();
+                            var itemScope = $(el).data("$$kendoScope");
+
                             if (itemScope && itemScope !== scope && itemScope.$$kendoScope) {
                                 destroyScope(itemScope, el);
                             }
@@ -49627,16 +49681,19 @@ var A = 0;
                         angular.forEach(elements, function(el, i){
                             var itemScope;
                             if (x.scopeFrom) {
-                                itemScope = angular.element(x.scopeFrom).scope();
+                                itemScope = x.scopeFrom;
                             } else {
                                 var vars = data && data[i];
                                 if (vars !== undefined) {
                                     itemScope = $.extend(scope.$new(), vars);
                                     itemScope.$$kendoScope = true;
+                                } else {
+                                    itemScope = scope;
                                 }
                             }
 
-                            compile(el)(itemScope || scope);
+                            $(el).data("$$kendoScope", itemScope);
+                            compile(el)(itemScope);
                         });
                         digest(scope);
                         break;

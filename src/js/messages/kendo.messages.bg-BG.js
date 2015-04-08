@@ -29,7 +29,8 @@ $.extend(true, kendo.ui.Validator.prototype.options.messages,{
   "step": "{0} не е валидно",
   "email": "{0} не е валиден email",
   "url": "{0} не е валиден URL",
-  "date": "{0} не е валидна дата"
+  "date": "{0} не е валидна дата",
+  "dateCompare": "Крайната дата трябва да бъде по-голяма от началната дата"
 });
 }
 
@@ -483,9 +484,11 @@ kendo.ui.Scheduler.prototype.options.messages =
 $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   "allDay": "цял ден",
   "cancel": "Откажи",
-  "confirmation": "Сигурен ли сте че искате да изтриете това събитие?",
   "date": "Дата",
   "destroy": "Изтрий",
+  "editable": {
+    "confirmation": "Сигурен ли сте че искате да изтриете това събитие?"
+  },
   "editor": {
     "allDayEvent": "Целодневно събитие",
     "description": "Описание",
