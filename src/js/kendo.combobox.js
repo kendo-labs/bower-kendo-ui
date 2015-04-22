@@ -87,7 +87,7 @@
             that._cascade();
 
             if (options.autoBind) {
-                that._filterSource(); //TODO: diff when just bind and actually filter
+                that._filterSource();
             } else {
                 text = options.text;
 
@@ -129,10 +129,8 @@
             ignoreCase: true,
             animation: {},
             template: null,
-            valueTemplate: null,
-            optionLabelTemplate: null,
-            groupTemplate: null,
-            fixedGroupTemplate: null
+            groupTemplate: "#:data#",
+            fixedGroupTemplate: "#:data#"
         },
 
         events:[
@@ -253,52 +251,6 @@
                 that.popup.open();
                 that._focusItem();
             }
-        },
-
-        _initList: function() {
-            var that = this;
-            var options = this.options;
-            var listOptions = {
-                autoBind: false,
-                selectable: true,
-                height: options.height,
-                dataValueField: options.dataValueField,
-                dataSource: this.dataSource,
-                groupTemplate: options.groupTemplate || "#:data#",
-                fixedGroupTemplate: options.fixedGroupTemplate || "#:data#",
-                template: options.template || "#:" + kendo.expr(options.dataTextField, "data") + "#",
-                activate: function() {
-                    var current = this.focus();
-                    if (current) {
-                        that._focused.add(that.filterInput).attr("aria-activedescendant", current.attr("id"));
-                    }
-                },
-                click: $.proxy(this._click, this),
-                change: $.proxy(this._listChange, this),
-                deactivate: function() {
-                    that._focused.add(that.filterInput).removeAttr("aria-activedescendant");
-                },
-                dataBinding: function() {
-                    that.trigger("dataBinding"); //TODO: make preventable
-                    that._angularItems("cleanup");
-                },
-                listBound: $.proxy(this._listBound, this),
-                dataBound: $.proxy(this._listBound, this)
-            };
-
-            if (options.virtual) {
-                if (typeof options.virtual === "object") {
-                    $.extend(listOptions, {
-                        listBound: $.proxy(this._listBound, this)
-                    }, options.virtual);
-                }
-
-                this.listView = new kendo.ui.VirtualList(this.ul, listOptions);
-            } else {
-                this.listView = new kendo.ui.StaticList(this.ul, listOptions);
-            }
-
-            this.listView.value(this.options.value);
         },
 
         _listBound: function() {
@@ -597,19 +549,25 @@
             }
 
             that._accessor(value);
-            that.input.val(value);
 
-            that.listView.value(value).done(function() {
-                that._triggerCascade();
+            that.listView
+                .value(value)
+                .done(function() {
+                    that._triggerCascade();
 
-                that._selectValue(that.listView.selectedDataItems()[0]);
+                    that._selectValue(that.listView.selectedDataItems()[0]);
 
-                that._old = that._accessor();
-                that._oldIndex = that.selectedIndex;
+                    if (that.selectedIndex === -1) {
+                        that._accessor(value);
+                        that.input.val(value);
+                    }
 
-                that._prev = that.input.val();
-                that._state = STATE_ACCEPT;
-            });
+                    that._old = that._accessor();
+                    that._oldIndex = that.selectedIndex;
+
+                    that._prev = that.input.val();
+                    that._state = STATE_ACCEPT;
+                });
 
             that._fetchData();
         },
@@ -832,6 +790,11 @@
                 that.options.value = "";
                 that.value("");
             }
+        },
+
+        _preselect: function(value, text) {
+            this._accessor(value);
+            this.input.val(text);
         }
     });
 

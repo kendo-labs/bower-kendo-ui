@@ -2905,9 +2905,10 @@ body .k-datetimepicker .k-select {
 }
 .k-multiselect-wrap li {
   margin: 1px 0 1px 1px;
-  padding: .1em .15em .1em .4em;
+  padding: .1em 1.6em .1em .4em;
   line-height: 1.5em;
   float: left;
+  position: relative;
 }
 .k-autocomplete .k-loading,
 .k-multiselect .k-loading {
@@ -2917,6 +2918,13 @@ body .k-datetimepicker .k-select {
 }
 .k-multiselect .k-loading-hidden {
   visibility: hidden;
+}
+.k-multiselect-wrap .k-select {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding: .1em .2em;
 }
 /* Date/Time Pickers */
 .k-datetimepicker .k-picker-wrap {
@@ -4253,13 +4261,13 @@ span.k-tooltip {
   width: 100%;
   box-sizing: border-box;
 }
-.k-popup .k-item > .k-group,
+.k-popup .k-list .k-item > .k-group,
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
   text-transform: uppercase;
   font-size: .857em;
 }
-.k-popup .k-item > .k-group {
+.k-popup .k-list .k-item > .k-group {
   position: absolute;
   top: 0;
   right: 0;

@@ -17,6 +17,7 @@
     define([], f);
 })(function(){
 
+(function ($, undefined) {
 /* FlatColorPicker messages */
 
 if (kendo.ui.FlatColorPicker) {
@@ -554,6 +555,7 @@ $.extend(true, kendo.ui.Validator.prototype.options.messages,{
   "date": "{0} não é uma data válida"
 });
 }
+})(window.kendo.jQuery);
 
 
 return window.kendo;

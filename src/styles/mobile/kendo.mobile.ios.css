@@ -1663,6 +1663,10 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-auto-height .km-content {
   -ms-flex: auto;
 }
+.km-native-scrolling .km-view.km-modalview {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+}
 .km-modalview-root:before,
 .km-modalview-wrapper:before {
   vertical-align: middle;

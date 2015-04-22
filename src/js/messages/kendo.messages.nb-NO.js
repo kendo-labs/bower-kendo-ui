@@ -17,6 +17,7 @@
     define([], f);
 })(function(){
 
+(function ($, undefined) {
 /* Filter cell operator messages */
 
 if (kendo.ui.FilterCell) {
@@ -381,6 +382,8 @@ if (kendo.ui.Scheduler) {
         "showWorkDay": "Vis arbeidstimer"
     });
 }
+})(window.kendo.jQuery);
+
 
 return window.kendo;
 

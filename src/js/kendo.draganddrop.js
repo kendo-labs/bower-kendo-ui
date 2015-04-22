@@ -93,7 +93,7 @@
 
             for (i = 0; i < areaLen; i ++) {
                 theFilter = areas[i];
-                if (support.matchesSelector.call(target, theFilter.options.filter)) {
+                if ($.contains(theFilter.element[0], target) && support.matchesSelector.call(target, theFilter.options.filter)) {
                     return { target: theFilter, targetElement: target };
                 }
             }

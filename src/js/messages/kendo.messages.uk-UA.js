@@ -17,8 +17,7 @@
     define([], f);
 })(function(){
 
-
-
+(function ($, undefined) {
 /* Filter cell operator messages */
 
 if (kendo.ui.FilterCell) {
@@ -387,6 +386,7 @@ $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "uploadSelectedFiles": "Upload files"
 });
 }
+})(window.kendo.jQuery);
 
 
 return window.kendo;

@@ -17,6 +17,7 @@
     define([], f);
 })(function(){
 
+(function ($, undefined) {
 /* FlatColorPicker messages */
 
 if (kendo.ui.FlatColorPicker) {
@@ -520,6 +521,7 @@ $.extend(true, kendo.ui.Validator.prototype.options.messages,{
   "date": "{0} 不是合法的日期"
 });
 }
+})(window.kendo.jQuery);
 
 
 return window.kendo;

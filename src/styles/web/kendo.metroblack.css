@@ -516,7 +516,7 @@ html .km-pane-wrapper .k-header {
   background: #00aba9;
   color: #ffffff;
 }
-.k-popup .k-item > .k-group {
+.k-popup .k-list .k-item > .k-group {
   background: #00aba9;
   color: #ffffff;
   border-bottom-left-radius: 0;

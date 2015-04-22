@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.1.408";
+    kendo.version = "2015.1.422";
 
     function Class() {}
 
@@ -2663,7 +2663,7 @@ function pad(number, digits, end) {
             var size = this.getSize(),
                 currentSize = this._size;
 
-            if (force || !currentSize || size.width !== currentSize.width || size.height !== currentSize.height) {
+            if (force || (size.width > 0 || size.height > 0) && (!currentSize || size.width !== currentSize.width || size.height !== currentSize.height)) {
                 this._size = size;
                 this._resize(size);
                 this.trigger("resize", size);
@@ -3885,7 +3885,9 @@ function pad(number, digits, end) {
     };
 
     kendo.elementUnderCursor = function(e) {
-        return document.elementFromPoint(e.x.client, e.y.client);
+        if (typeof e.x.client != "undefined") {
+            return document.elementFromPoint(e.x.client, e.y.client);
+        }
     };
 
     kendo.wheelDeltaY = function(jQueryEvent) {
@@ -8586,9 +8588,14 @@ var A = 0;
                 }
 
                 var promises = [];
-                promises.push.apply(promises, that._send("create", created));
-                promises.push.apply(promises, that._send("update", updated));
-                promises.push.apply(promises, that._send("destroy", destroyed));
+
+                if (that.options.batch && that.transport.submit) {
+                    promises = that._sendSubmit(created, updated, destroyed);
+                } else {
+                    promises.push.apply(promises, that._send("create", created));
+                    promises.push.apply(promises, that._send("update", updated));
+                    promises.push.apply(promises, that._send("destroy", destroyed));
+                }
 
                 promise = $.when
                  .apply(null, promises)
@@ -8770,6 +8777,73 @@ var A = 0;
                     }
                 }
             });
+        },
+
+        _submit: function(promises, data) {
+            var that = this;
+
+            that.trigger(REQUESTSTART, { type: "submit" });
+
+            that.transport.submit(extend({
+                success: function(response, type) {
+                    var promise = $.grep(promises, function(x) {
+                        return x.type == type;
+                    })[0];
+
+                    if (promise) {
+                        promise.resolve({
+                            response: response,
+                            models: promise.models,
+                            type: type
+                        });
+                    }
+                },
+                error: function(response, status, error) {
+                    for (var idx = 0; idx < promises.length; idx++) {
+                        promises[idx].reject(response);
+                    }
+
+                    that.error(response, status, error);
+                }
+            }, data));
+        },
+
+        _sendSubmit: function(created, updated, destroyed) {
+            var that = this,
+                promises = [];
+
+            if (that.options.batch) {
+                if (created.length) {
+                    promises.push($.Deferred(function(deferred) {
+                        deferred.type = "create";
+                        deferred.models = created;
+                    }));
+                }
+
+                if (updated.length) {
+                    promises.push($.Deferred(function(deferred) {
+                        deferred.type = "update";
+                        deferred.models = updated;
+                    }));
+                }
+
+                if (destroyed.length) {
+                    promises.push($.Deferred(function(deferred) {
+                        deferred.type = "destroy";
+                        deferred.models = destroyed;
+                    }));
+                }
+
+                that._submit(promises, {
+                    data: {
+                        created: that.reader.serialize(toJSON(created)),
+                        updated: that.reader.serialize(toJSON(updated)),
+                        destroyed: that.reader.serialize(toJSON(destroyed))
+                    }
+                });
+            }
+
+            return promises;
         },
 
         _promise: function(data, models, type) {
@@ -10643,7 +10717,6 @@ var A = 0;
         binders = {},
         slice = Array.prototype.slice,
         Class = kendo.Class,
-        innerText,
         proxy = $.proxy,
         VALUE = "value",
         SOURCE = "source",
@@ -10654,12 +10727,6 @@ var A = 0;
 
     (function() {
         var a = document.createElement("a");
-
-        if (a.innerText !== undefined) {
-            innerText = "innerText";
-        } else if (a.textContent !== undefined) {
-            innerText = "textContent";
-        }
 
         try {
             delete a.test;
@@ -10910,7 +10977,7 @@ var A = 0;
 
     var TypedBinder = Binder.extend({
         dataType: function() {
-            var dataType = this.element.getAttribute("data-type") || this.element.type || "text"; 
+            var dataType = this.element.getAttribute("data-type") || this.element.type || "text";
             return dataType.toLowerCase();
         },
 
@@ -11017,7 +11084,7 @@ var A = 0;
                 text = "";
             }
 
-            this.element[innerText] = text;
+            $(this.element).text(text);
         }
     });
 
@@ -11116,7 +11183,7 @@ var A = 0;
                     that.add(e.index, e.items);
                 } else if (e.action == "remove") {
                     that.remove(e.index, e.items);
-                } else if (e.action != "itemchange") {
+                } else if (e.action == "itemchange" || e.action === undefined) {
                     that.render();
                 }
             } else {
@@ -11157,7 +11224,6 @@ var A = 0;
                 } else {
                     template = "#:data#";
                 }
-
                 template = kendo.template(template);
             }
 
@@ -11327,6 +11393,29 @@ var A = 0;
     };
 
     binders.select = {
+        source: binders.source.extend({
+            refresh: function(e) {
+                var that = this,
+                    source = that.bindings.source.get();
+
+                if (source instanceof ObservableArray || source instanceof kendo.data.DataSource) {
+                    e = e || {};
+
+                    if (e.action == "add") {
+                        that.add(e.index, e.items);
+                    } else if (e.action == "remove") {
+                        that.remove(e.index, e.items);
+                    } else if (e.action == "itemchange" || e.action === undefined) {
+                        that.render();
+                        if(that.bindings.value){
+                            that.bindings.value.source.trigger("change", {field: that.bindings.value.path});
+                        }
+                    }
+                } else {
+                    that.render();
+                }
+            }
+        }),
         value: TypedBinder.extend({
             init: function(target, bindings, options) {
                 TypedBinder.fn.init.call(this, target, bindings, options);
@@ -11536,6 +11625,10 @@ var A = 0;
                             widget[setter](source._dataSource);
                         } else {
                             widget[fieldName].data(source);
+
+                            if (that.bindings.value && widget instanceof kendo.ui.Select) {
+                                that.bindings.value.source.trigger("change", { field: that.bindings.value.path });
+                            }
                         }
                     }
                 }
@@ -11757,28 +11850,36 @@ var A = 0;
             },
 
             refresh: function() {
-
                 if (!this._initChange) {
-                    var field = this.options.dataValueField || this.options.dataTextField,
-                        value = this.bindings.value.get(),
-                              idx = 0, length,
-                              values = [];
+                    var widget = this.widget;
+                    var textField = this.options.dataTextField;
+                    var valueField = this.options.dataValueField || textField;
+                    var value = this.bindings.value.get();
+                    var text = this.options.text || "";
+                    var idx = 0, length;
+                    var values = [];
 
                     if (value === undefined) {
                         value = null;
                     }
 
-                    if (field) {
+                    if (valueField) {
                         if (value instanceof ObservableArray) {
                             for (length = value.length; idx < length; idx++) {
-                                values[idx] = value[idx].get(field);
+                                values[idx] = value[idx].get(valueField);
                             }
                             value = values;
                         } else if (value instanceof ObservableObject) {
-                            value = value.get(field);
+                            text = value.get(textField);
+                            value = value.get(valueField);
                         }
                     }
-                    this.widget.value(value);
+
+                    if (widget.options.autoBind === false) {
+                        widget._preselect(value, text);
+                    } else {
+                        widget.value(value);
+                    }
                 }
 
                 this._initChange = false;
@@ -11887,6 +11988,7 @@ var A = 0;
                     if (!this._initChange) {
                         var field = this.options.dataValueField || this.options.dataTextField,
                             value = this.bindings.value.get(),
+                            data = value,
                             idx = 0, length,
                             values = [],
                             selectedValue;
@@ -11907,7 +12009,11 @@ var A = 0;
                             }
                         }
 
-                        this.widget.value(value);
+                        if (this.options.autoBind === false && this.options.valuePrimitive !== true) {
+                            this.widget._preselect(data, value);
+                        } else {
+                            this.widget.value(value);
+                        }
                     }
                 },
 
@@ -14907,7 +15013,7 @@ var A = 0;
 
             for (i = 0; i < areaLen; i ++) {
                 theFilter = areas[i];
-                if (support.matchesSelector.call(target, theFilter.options.filter)) {
+                if ($.contains(theFilter.element[0], target) && support.matchesSelector.call(target, theFilter.options.filter)) {
                     return { target: theFilter, targetElement: target };
                 }
             }
@@ -20669,6 +20775,76 @@ var A = 0;
             });
         },
 
+        _listOptions: function(options) {
+            var currentOptions = this.options;
+
+            options = options || {};
+            options = {
+                height: options.height || currentOptions.height,
+                dataValueField: options.dataValueField || currentOptions.dataValueField,
+                dataTextField: options.dataTextField || currentOptions.dataTextField,
+                groupTemplate: options.groupTemplate || currentOptions.groupTemplate,
+                fixedGroupTemplate: options.fixedGroupTemplate || currentOptions.fixedGroupTemplate,
+                template: options.template || currentOptions.template
+            };
+
+            if (!options.template) {
+                options.template = "#:" + kendo.expr(options.dataTextField, "data") + "#";
+            }
+
+            return options;
+        },
+
+        _initList: function() {
+            var that = this;
+            var options = that.options;
+            var virtual = options.virtual;
+            var hasVirtual = !!virtual;
+            var value = options.value;
+
+            var listBoundHandler = proxy(that._listBound, that);
+
+            var listOptions = {
+                autoBind: false,
+                selectable: true,
+                dataSource: that.dataSource,
+                click: proxy(that._click, that),
+                change: proxy(that._listChange, that),
+                activate: proxy(that._activateItem, that),
+                deactivate: proxy(that._deactivateItem, that),
+                dataBinding: function() {
+                    that.trigger("dataBinding");
+                    that._angularItems("cleanup");
+                },
+                dataBound: listBoundHandler,
+                listBound: listBoundHandler,
+                selectedItemChange: proxy(that._listChange, that)
+            };
+
+            listOptions = $.extend(that._listOptions(), listOptions, typeof virtual === "object" ? virtual : {});
+
+            if (!hasVirtual) {
+                that.listView = new kendo.ui.StaticList(that.ul, listOptions);
+            } else {
+                that.listView = new kendo.ui.VirtualList(that.ul, listOptions);
+            }
+
+            if (value !== undefined) {
+                that.listView.value(value).done(function() {
+                    var text = options.text;
+
+                    if (that.input && that.selectedIndex === -1) {
+                        if (text === undefined || text === null) {
+                            text = value;
+                        }
+
+                        that._accessor(value);
+                        that.input.val(text);
+                    }
+                });
+            }
+        },
+
         _listMousedown: function(e) {
             if (!this.filterInput || this.filterInput[0] !== e.target) {
                 e.preventDefault();
@@ -20796,6 +20972,17 @@ var A = 0;
             }
 
             return that.dataSource.flatView()[index];
+        },
+
+        _activateItem: function() {
+            var current = this.listView.focus();
+            if (current) {
+                this._focused.add(this.filterInput).attr("aria-activedescendant", current.attr("id"));
+            }
+        },
+
+        _deactivateItem: function() {
+            this._focused.add(this.filterInput).removeAttr("aria-activedescendant");
         },
 
         _accessors: function() {
@@ -21399,7 +21586,7 @@ var A = 0;
                     }
 
                     that._select(current);
-                } else {
+                } else if (that.input) {
                     that._accessor(that.input.val());
                     that.listView.value(that.input.val());
                 }
@@ -21666,7 +21853,8 @@ var A = 0;
            "activate",
            "deactivate",
            "dataBinding",
-           "dataBound"
+           "dataBound",
+           "selectedItemChange"
         ],
 
         setDataSource: function(source) {
@@ -21699,6 +21887,10 @@ var A = 0;
             this._fixedHeader();
             this._getter();
             this._templates();
+
+            this._mute = true;
+            this.refresh();
+            this._mute = false;
         },
 
         destroy: function() {
@@ -21856,12 +22048,16 @@ var A = 0;
             that.trigger("activate");
         },
 
-        filter: function(filter) {
+        filter: function(filter, skipValueUpdate) {
             if (filter === undefined) {
                 return this._filtered;
             }
 
             this._filtered = filter;
+        },
+
+        skipUpdate: function(skipUpdate) {
+            this._skipUpdate = skipUpdate;
         },
 
         select: function(indices) {
@@ -21954,6 +22150,8 @@ var A = 0;
                 deferred.resolve();
             }
 
+            that._skipUpdate = false;
+
             return deferred;
         },
 
@@ -21977,9 +22175,8 @@ var A = 0;
             return index;
         },
 
-        _valueIndices: function(values) {
+        _updateIndices: function(indices, values) {
             var data = this._view;
-            var indices = [];
             var idx = 0;
             var index;
 
@@ -21996,6 +22193,11 @@ var A = 0;
             }
 
             return this._normalizeIndices(indices);
+        },
+
+        _valueIndices: function(values) {
+            var indices = [];
+            return this._updateIndices(indices, values);
         },
 
         _getter: function() {
@@ -22138,7 +22340,7 @@ var A = 0;
             if (typeof candidate === "number") {
                 candidate = [candidate];
             } else if (!isArray(candidate)) {
-                candidate = $(candidate).data("index");
+                candidate = $(candidate).data("offset-index");
 
                 if (candidate === undefined) {
                     candidate = -1;
@@ -22223,7 +22425,7 @@ var A = 0;
                 }
             }
 
-            return this._view[$(item).data("index")];
+            return this._view[$(item).data("offset-index")];
         },
 
         _fixedHeader: function() {
@@ -22249,22 +22451,22 @@ var A = 0;
             }
         },
 
-        _renderItem: function(context, values) {
+        _renderItem: function(context) {
             var item = '<li tabindex="-1" role="option" unselectable="on" class="k-item';
 
             var dataItem = context.item;
             var notFirstItem = context.index !== 0;
-            var found = this._filtered && this._dataItemPosition(dataItem, values) !== -1;
+            var selected = context.selected;
 
             if (notFirstItem && context.newGroup) {
                 item += ' k-first';
             }
 
-            if (found) {
+            if (selected) {
                 item += ' k-state-selected';
             }
 
-            item += '"' + (found ? ' aria-selected="true"' : "") + ' data-index="' + context.index + '">';
+            item += '"' + (selected ? ' aria-selected="true"' : "") + ' data-offset-index="' + context.index + '">';
 
             item += this.templates.template(dataItem);
 
@@ -22294,21 +22496,26 @@ var A = 0;
                     newGroup = true;
 
                     for (j = 0; j < group.items.length; j++) {
-                        context = { item: group.items[j], group: group.value, newGroup: newGroup, index: idx };
+                        context = {
+                            selected: this._selected(group.items[j], values),
+                            item: group.items[j],
+                            group: group.value,
+                            newGroup: newGroup,
+                            index: idx };
                         dataContext[idx] = context;
                         idx += 1;
 
-                        html += this._renderItem(context, values);
+                        html += this._renderItem(context);
                         newGroup = false;
                     }
                 }
             } else {
                 for (i = 0; i < view.length; i++) {
-                    context = { item: view[i], index: i };
+                    context = { selected: this._selected(view[i], values), item: view[i], index: i };
 
                     dataContext[i] = context;
 
-                    html += this._renderItem(context, values);
+                    html += this._renderItem(context);
                 }
             }
 
@@ -22321,8 +22528,15 @@ var A = 0;
             }
         },
 
+        _selected: function(dataItem, values) {
+            var select = !this._filtered || this.options.selectable === "multiple";
+            return select && this._dataItemPosition(dataItem, values) !== -1;
+        },
+
         refresh: function(e) {
             var that = this;
+            var changedItems;
+            var action = e && e.action;
 
             that.trigger("dataBinding");
 
@@ -22330,9 +22544,20 @@ var A = 0;
 
             that._bound = true;
 
-            if (that._filtered) {
+            if (action === "itemchange") {
+                changedItems = findChangedItems(that._dataItems, e.items);
+                if (changedItems.length) {
+                    that.trigger("selectedItemChange", {
+                        items: changedItems
+                    });
+                }
+            } else if (that._filtered || that._skipUpdate) {
                 that.focus(0);
-            } else if (!e || !e.action) {
+                if (that._skipUpdate) {
+                    that._skipUpdate = false;
+                    that._updateIndices(that._selectedIndices, that._values);
+                }
+            } else if (!action) {
                 that.value(that._values);
             }
 
@@ -22340,7 +22565,9 @@ var A = 0;
                 that._valueDeferred.resolve();
             }
 
-            that.trigger("dataBound");
+            if (!that._mute) {
+                that.trigger("dataBound");
+            }
         },
 
         isBound: function() {
@@ -22350,20 +22577,26 @@ var A = 0;
 
     ui.plugin(StaticList);
 
-    function inArray(node, parentNode) {
-        var idx, length, siblings = parentNode.children;
+    function findChangedItems(selected, changed) {
+        var changedLength = changed.length;
+        var result = [];
+        var dataItem;
+        var i, j;
 
-        if (!node || node.parentNode !== parentNode) {
-            return -1;
-        }
+        for (i = 0; i < selected.length; i++) {
+            dataItem = selected[i];
 
-        for (idx = 0, length = siblings.length; idx < length; idx++) {
-            if (node === siblings[idx]) {
-                return idx;
+            for (j = 0; j < changedLength; j++) {
+                if (dataItem === changed[j]) {
+                    result.push({
+                        index: i,
+                        item: dataItem
+                    });
+                }
             }
         }
 
-        return -1;
+        return result;
     }
 
     function removeFiltersForField(expression, field) {
@@ -24479,6 +24712,8 @@ var A = 0;
             enabled: true,
             suggest: false,
             template: "",
+            groupTemplate: "#:data#",
+            fixedGroupTemplate: "#:data#",
             dataTextField: "",
             minLength: 1,
             delay: 200,
@@ -24506,7 +24741,6 @@ var A = 0;
                 .bind("progress", that._progressHandler);
         },
 
-        //TODO: Use Select.setDataSource method here
         setDataSource: function(dataSource) {
             this.options.dataSource = dataSource;
             this._dataSource();
@@ -24525,10 +24759,13 @@ var A = 0;
         ],
 
         setOptions: function(options) {
+            var listOptions = this._listOptions(options);
+
             List.fn.setOptions.call(this, options);
 
-            this.listView.setOptions(options);
+            listOptions.dataValueField = listOptions.dataTextField;
 
+            this.listView.setOptions(listOptions);
             this._accessors();
             this._aria();
         },
@@ -24708,50 +24945,38 @@ var A = 0;
 
         _initList: function() {
             var that = this;
-            var options = this.options;
-            var template = options.template || options.itemTemplate || "#:" + kendo.expr(options.dataTextField, "data") + "#";
+            var virtual = that.options.virtual;
+            var hasVirtual = !!virtual;
+
+            var listBoundHandler = proxy(that._listBound, that);
 
             var listOptions = {
                 autoBind: false,
-                height: options.height,
-                dataValueField: options.dataValueField,
-                dataSource: this.dataSource,
-                groupTemplate: options.groupTemplate || "#:data#",
-                fixedGroupTemplate: options.fixedGroupTemplate || "#:data#",
-                template: template,
                 selectable: true,
-                activate: function() {
-                    var current = this.focus();
-                    if (current) {
-                        that._focused.add(that.filterInput).attr("aria-activedescendant", current.attr("id"));
-                    }
-                },
-                click: $.proxy(this._click, this),
-                change: $.proxy(this._listChange, this),
-                deactivate: function() {
-                    that._focused.add(that.filterInput).removeAttr("aria-activedescendant");
-                },
+                dataSource: that.dataSource,
+                click: $.proxy(that._click, this),
+                change: $.proxy(that._listChange, this),
+                activate: proxy(that._activateItem, that),
+                deactivate: proxy(that._deactivateItem, that),
                 dataBinding: function() {
-                    that.trigger("dataBinding"); //TODO: make preventable
+                    that.trigger("dataBinding");
                     that._angularItems("cleanup");
                 },
-                listBound: $.proxy(this._listBound, this),
-                dataBound: $.proxy(this._listBound, this)
+                dataBound: listBoundHandler,
+                listBound: listBoundHandler
             };
 
-            if (options.virtual) {
-                if (typeof options.virtual === "object") {
-                    $.extend(listOptions, {
-                        listBound: $.proxy(this._listBound, this)
-                    }, options.virtual);
-                }
+            listOptions = $.extend(that._listOptions(), listOptions, typeof virtual === "object" ? virtual : {});
 
-                this.listView = new kendo.ui.VirtualList(this.ul, listOptions);
+            listOptions.dataValueField = listOptions.dataTextField;
+
+            if (!hasVirtual) {
+                that.listView = new kendo.ui.StaticList(that.ul, listOptions);
             } else {
-                this.listView = new kendo.ui.StaticList(this.ul, listOptions);
+                that.listView = new kendo.ui.VirtualList(that.ul, listOptions);
             }
 
-            this.listView.value(this.options.value);
+            that.listView.value(that.options.value);
         },
 
         _listBound: function() {
@@ -25036,6 +25261,7 @@ var A = 0;
         Select = ui.Select,
         support = kendo.support,
         activeElement = kendo._activeElement,
+        ObservableObject = kendo.data.ObservableObject,
         keys = kendo.keys,
         ns = ".kendoDropDownList",
         DISABLED = "disabled",
@@ -25066,8 +25292,6 @@ var A = 0;
 
             options = that.options;
             element = that.element.on("focus" + ns, proxy(that._focusHandler, that));
-
-            that._clickHandler = $.proxy(that._click, that);
 
             that._focusInputHandler = $.proxy(that._focusInput, that);
             that._inputTemplate();
@@ -25152,9 +25376,10 @@ var A = 0;
             template: null,
             valueTemplate: null,
             optionLabelTemplate: null,
-            groupTemplate: null,
-            fixedGroupTemplate: null
+            groupTemplate: "#:data#",
+            fixedGroupTemplate: "#:data#"
         },
+
         events: [
             "open",
             "close",
@@ -25169,7 +25394,7 @@ var A = 0;
         setOptions: function(options) {
             Select.fn.setOptions.call(this, options);
 
-            this.listView.setOptions(options);
+            this.listView.setOptions(this._listOptions(options));
 
             this._optionLabel();
             this._inputTemplate();
@@ -25234,66 +25459,6 @@ var A = 0;
             return this.optionLabel[0] || this.filterInput || this.dataSource.view().length;
         },
 
-        _activateItem: function() {
-            var current = this.listView.focus();
-            if (current) {
-                this._focused.add(this.filterInput).attr("aria-activedescendant", current.attr("id"));
-            }
-        },
-
-        _deactivateItem: function() {
-            this._focused.add(this.filterInput).removeAttr("aria-activedescendant");
-        },
-
-        _initList: function() {
-            var that = this;
-            var options = this.options;
-            var virtualOptions;
-
-            if (options.virtual) {
-                virtualOptions = {
-                    autoBind: false, //dropdownlist fetches the data
-                    dataValueField: options.dataValueField,
-                    dataSource: this.dataSource,
-                    selectable: true,
-                    height: this.options.height,
-                    groupTemplate: options.groupTemplate || "#:data#",
-                    fixedGroupTemplate: options.fixedGroupTemplate || "#:data#",
-                    template: options.template || "#:" + kendo.expr(options.dataTextField, "data") + "#",
-                    click: that._clickHandler,
-                    change: $.proxy(that._listChange, that),
-                    activate: $.proxy(that._activateItem, that),
-                    deactivate: $.proxy(that._deactivateItem, that),
-                    listBound: $.proxy(that._listBound, that)
-                };
-
-                if (typeof options.virtual === "object") {
-                    $.extend(virtualOptions, options.virtual);
-                }
-
-                that.listView = new kendo.ui.VirtualList(that.ul, virtualOptions);
-            } else {
-                that.listView = new kendo.ui.StaticList(that.ul, {
-                    dataValueField: options.dataValueField,
-                    dataSource: that.dataSource,
-                    groupTemplate: options.groupTemplate || "#:data#",
-                    fixedGroupTemplate: options.fixedGroupTemplate || "#:data#",
-                    template: options.template || "#:" + kendo.expr(options.dataTextField, "data") + "#",
-                    click: that._clickHandler,
-                    change: $.proxy(that._listChange, that),
-                    activate: $.proxy(that._activateItem, that),
-                    deactivate: $.proxy(that._deactivateItem, that),
-                    dataBinding: function() {
-                        that.trigger("dataBinding");
-                        that._angularItems("cleanup");
-                    },
-                    dataBound: $.proxy(that._listBound, that)
-                });
-            }
-
-            that.listView.value(that.options.value);
-        },
-
         current: function(candidate) {
             var current;
 
@@ -25314,12 +25479,17 @@ var A = 0;
             var that = this;
             var dataItem = null;
             var hasOptionLabel = !!that.optionLabel[0];
+            var optionLabel = that.options.optionLabel;
 
             if (index === undefined) {
                 dataItem = that.listView.selectedDataItems()[0];
             } else {
                 if (typeof index !== "number") {
-                    index = $(that.items()).index(index);
+                    if (index.hasClass("k-list-optionlabel")) {
+                        index = -1;
+                    } else {
+                        index = $(that.items()).index(index);
+                    }
                 } else if (hasOptionLabel) {
                     index -= 1;
                 }
@@ -25327,9 +25497,8 @@ var A = 0;
                 dataItem = that.dataSource.flatView()[index];
             }
 
-
             if (!dataItem && hasOptionLabel) {
-                dataItem = that._assignInstance(that._optionLabelText(), "");
+                dataItem = $.isPlainObject(optionLabel) ? new ObservableObject(optionLabel) : that._assignInstance(that._optionLabelText(), "");
             }
 
             return dataItem;
@@ -25437,7 +25606,7 @@ var A = 0;
 
             that.optionLabel.html(template(optionLabel))
                             .off()
-                            .click(that._clickHandler)
+                            .click(proxy(that._click, that))
                             .on(HOVEREVENTS, that._toggleHover);
 
             that.angular("compile", function(){
@@ -25508,7 +25677,7 @@ var A = 0;
                         }
 
                         that._initialIndex = null;
-                    } else if (that._textAccessor() !== optionLabel) {
+                    } else if (that._textAccessor() !== that._optionLabelText()) {
                         that.listView.value("");
                         that._selectValue(null);
                     }
@@ -26177,21 +26346,21 @@ var A = 0;
         },
 
         _textAccessor: function(text) {
-            var dataItem = this.listView.selectedDataItems()[0];
+            var dataItem = null;
             var template = this.valueTemplate;
             var options = this.options;
             var optionLabel = options.optionLabel;
             var span = this.span;
 
             if (text !== undefined) {
-                if ($.isPlainObject(text) || text instanceof kendo.data.ObservableObject) {
+                if ($.isPlainObject(text) || text instanceof ObservableObject) {
                     dataItem = text;
                 } else if (optionLabel && this._optionLabelText() === text) {
                     dataItem = optionLabel;
                     template = this.optionLabelTemplate;
                 }
 
-                if (dataItem === undefined) {
+                if (!dataItem) {
                     dataItem = this._assignInstance(text, this._accessor());
                 }
 
@@ -26209,6 +26378,11 @@ var A = 0;
             }
         },
 
+        _preselect: function(value, text) {
+            this._accessor(value);
+            this._textAccessor(text);
+        },
+
         _assignInstance: function(text, value) {
             var dataTextField = this.options.dataTextField;
             var dataItem = {};
@@ -26216,7 +26390,7 @@ var A = 0;
             if (dataTextField) {
                 assign(dataItem, dataTextField.split("."), text);
                 assign(dataItem, this.options.dataValueField.split("."), value);
-                dataItem = new kendo.data.ObservableObject(dataItem);
+                dataItem = new ObservableObject(dataItem);
             } else {
                 dataItem = text;
             }
@@ -26320,7 +26494,7 @@ var A = 0;
             that._cascade();
 
             if (options.autoBind) {
-                that._filterSource(); //TODO: diff when just bind and actually filter
+                that._filterSource();
             } else {
                 text = options.text;
 
@@ -26362,10 +26536,8 @@ var A = 0;
             ignoreCase: true,
             animation: {},
             template: null,
-            valueTemplate: null,
-            optionLabelTemplate: null,
-            groupTemplate: null,
-            fixedGroupTemplate: null
+            groupTemplate: "#:data#",
+            fixedGroupTemplate: "#:data#"
         },
 
         events:[
@@ -26486,52 +26658,6 @@ var A = 0;
                 that.popup.open();
                 that._focusItem();
             }
-        },
-
-        _initList: function() {
-            var that = this;
-            var options = this.options;
-            var listOptions = {
-                autoBind: false,
-                selectable: true,
-                height: options.height,
-                dataValueField: options.dataValueField,
-                dataSource: this.dataSource,
-                groupTemplate: options.groupTemplate || "#:data#",
-                fixedGroupTemplate: options.fixedGroupTemplate || "#:data#",
-                template: options.template || "#:" + kendo.expr(options.dataTextField, "data") + "#",
-                activate: function() {
-                    var current = this.focus();
-                    if (current) {
-                        that._focused.add(that.filterInput).attr("aria-activedescendant", current.attr("id"));
-                    }
-                },
-                click: $.proxy(this._click, this),
-                change: $.proxy(this._listChange, this),
-                deactivate: function() {
-                    that._focused.add(that.filterInput).removeAttr("aria-activedescendant");
-                },
-                dataBinding: function() {
-                    that.trigger("dataBinding"); //TODO: make preventable
-                    that._angularItems("cleanup");
-                },
-                listBound: $.proxy(this._listBound, this),
-                dataBound: $.proxy(this._listBound, this)
-            };
-
-            if (options.virtual) {
-                if (typeof options.virtual === "object") {
-                    $.extend(listOptions, {
-                        listBound: $.proxy(this._listBound, this)
-                    }, options.virtual);
-                }
-
-                this.listView = new kendo.ui.VirtualList(this.ul, listOptions);
-            } else {
-                this.listView = new kendo.ui.StaticList(this.ul, listOptions);
-            }
-
-            this.listView.value(this.options.value);
         },
 
         _listBound: function() {
@@ -26830,19 +26956,25 @@ var A = 0;
             }
 
             that._accessor(value);
-            that.input.val(value);
 
-            that.listView.value(value).done(function() {
-                that._triggerCascade();
+            that.listView
+                .value(value)
+                .done(function() {
+                    that._triggerCascade();
 
-                that._selectValue(that.listView.selectedDataItems()[0]);
+                    that._selectValue(that.listView.selectedDataItems()[0]);
 
-                that._old = that._accessor();
-                that._oldIndex = that.selectedIndex;
+                    if (that.selectedIndex === -1) {
+                        that._accessor(value);
+                        that.input.val(value);
+                    }
 
-                that._prev = that.input.val();
-                that._state = STATE_ACCEPT;
-            });
+                    that._old = that._accessor();
+                    that._oldIndex = that.selectedIndex;
+
+                    that._prev = that.input.val();
+                    that._state = STATE_ACCEPT;
+                });
 
             that._fetchData();
         },
@@ -27065,6 +27197,11 @@ var A = 0;
                 that.options.value = "";
                 that.value("");
             }
+        },
+
+        _preselect: function(value, text) {
+            this._accessor(value);
+            this.input.val(text);
         }
     });
 
@@ -27123,7 +27260,7 @@ var A = 0;
 
     var MultiSelect = List.extend({
         init: function(element, options) {
-            var that = this, id, data;
+            var that = this, id;
 
             that.ns = ns;
             List.fn.init.call(that, element, options);
@@ -27141,7 +27278,6 @@ var A = 0;
 
             element = that.element.attr("multiple", "multiple").hide();
             options = that.options;
-            data = options.value;
 
             if (!options.placeholder) {
                 options.placeholder = element.data("placeholder");
@@ -27170,19 +27306,25 @@ var A = 0;
 
             if (options.autoBind) {
                 that.dataSource.fetch();
-            } else if (data) { //TODO: work with VirtualList
-                if (!isArray(data)) {
-                    data = [data];
-                }
-
-                if ($.isPlainObject(data[0]) || !options.dataValueField) {
-                    that._retrieveData = true;
-                    that.dataSource.data(data);
-                    that.value(that._initialValues);
-                }
+            } else if (options.value) {
+                that._preselect(options.value);
             }
 
             kendo.notify(that);
+        },
+
+        _preselect: function(data, value) {
+            var that = this;
+
+            if (!isArray(data)) {
+                data = [data];
+            }
+
+            if ($.isPlainObject(data[0]) || data[0] instanceof kendo.data.ObservableObject || !that.options.dataValueField) {
+                that._retrieveData = true;
+                that.dataSource.data(data);
+                that.value(value || that._initialValues);
+            }
         },
 
         options: {
@@ -27199,11 +27341,13 @@ var A = 0;
             delay: 100,
             value: null,
             maxSelectedItems: null,
-            itemTemplate: "",
-            tagTemplate: "",
             placeholder: "",
             height: 200,
-            animation: {}
+            animation: {},
+            itemTemplate: "",
+            tagTemplate: "",
+            groupTemplate: "#:data#",
+            fixedGroupTemplate: "#:data#"
         },
 
         events: [
@@ -27216,7 +27360,6 @@ var A = 0;
             "dataBound"
         ],
 
-        //TODO: Consolidate with ui.Select
         setDataSource: function(dataSource) {
             this.options.dataSource = dataSource;
 
@@ -27230,9 +27373,13 @@ var A = 0;
         },
 
         setOptions: function(options) {
+            var listOptions = this._listOptions(options);
+
             List.fn.setOptions.call(this, options);
 
-            this.listView.setOptions(options);
+            this._normalizeOptions(listOptions);
+
+            this.listView.setOptions(listOptions);
 
             this._accessors();
             this._aria(this.tagList.attr(ID));
@@ -27282,54 +27429,57 @@ var A = 0;
             List.fn.destroy.call(that);
         },
 
+        _activateItem: function() {
+            List.fn._activateItem.call(this);
+            this.currentTag(null);
+        },
+
+        _normalizeOptions: function(options) {
+            var itemTemplate = this.options.itemTemplate || this.options.template;
+            var template = options.itemTemplate || itemTemplate || options.template;
+
+            if (!template) {
+                template = "#:" + kendo.expr(options.dataTextField, "data") + "#";
+            }
+
+            options.template = template;
+        },
+
         _initList: function() {
             var that = this;
-            var options = this.options;
-            var template = options.template || options.itemTemplate || "#:" + kendo.expr(options.dataTextField, "data") + "#";
+            var virtual = that.options.virtual;
+            var hasVirtual = !!virtual;
+
+            var listBoundHandler = proxy(that._listBound, that);
 
             var listOptions = {
                 autoBind: false,
                 selectable: "multiple",
-                height: options.height,
-                dataSource: this.dataSource,
-                dataValueField: options.dataValueField,
-                groupTemplate: options.groupTemplate || "#:data#",
-                fixedGroupTemplate: options.fixedGroupTemplate || "#:data#",
-                template: template,
-                activate: function() {
-                    var current = this.focus();
-                    if (current) {
-                        that._focused.add(that.filterInput).attr("aria-activedescendant", current.attr("id"));
-                    }
-
-                    that.currentTag(null);
-                },
-                click: $.proxy(this._click, this),
-                change: $.proxy(this._listChange, this),
-                deactivate: function() {
-                    that._focused.add(that.filterInput).removeAttr("aria-activedescendant");
-                },
+                dataSource: that.dataSource,
+                click: proxy(that._click, that),
+                change: proxy(that._listChange, that),
+                activate: proxy(that._activateItem, that),
+                deactivate: proxy(that._deactivateItem, that),
                 dataBinding: function() {
-                    that.trigger("dataBinding"); //TODO: make preventable
+                    that.trigger("dataBinding");
                     that._angularItems("cleanup");
                 },
-                listBound: $.proxy(this._listBound, this),
-                dataBound: $.proxy(this._listBound, this)
+                dataBound: listBoundHandler,
+                listBound: listBoundHandler,
+                selectedItemChange: proxy(that._selectedItemChange, that)
             };
 
-            if (options.virtual) {
-                if (typeof options.virtual === "object") {
-                    $.extend(listOptions, {
-                        listBound: $.proxy(this._listBound, this)
-                    }, options.virtual);
-                }
+            listOptions = $.extend(that._listOptions(), listOptions, typeof virtual === "object" ? virtual : {});
 
-                this.listView = new kendo.ui.VirtualList(this.ul, listOptions);
+            that._normalizeOptions(listOptions);
+
+            if (!hasVirtual) {
+                that.listView = new kendo.ui.StaticList(that.ul, listOptions);
             } else {
-                this.listView = new kendo.ui.StaticList(this.ul, listOptions);
+                that.listView = new kendo.ui.VirtualList(that.ul, listOptions);
             }
 
-            this.listView.value(this._initialValues || this.options.value);
+            that.listView.value(that._initialValues || that.options.value);
         },
 
         _listChange: function(e) {
@@ -27339,6 +27489,17 @@ var A = 0;
             }
 
             this._selectValue(e.added, e.removed);
+        },
+
+        _selectedItemChange: function(e) {
+            var items = e.items;
+            var context;
+            var idx;
+
+            for (idx = 0; idx < items.length; idx++) {
+                context = items[idx];
+                this.tagList.children().eq(context.index).children("span:first").html(this.tagTextTemplate(context.item));
+            }
         },
 
         _wrapperMousedown: function(e) {
@@ -27379,6 +27540,7 @@ var A = 0;
             if (that._state === FILTER) {
                 that._state = ACCEPT;
                 that.listView.filter(false);
+                that.listView.skipUpdate(true);
             }
 
             that.element.blur();
@@ -27483,7 +27645,9 @@ var A = 0;
                 that._open = true;
                 that._state = REBIND;
                 that._retrieveData = false;
+
                 that.listView.filter(false);
+                that.listView.skipUpdate(true);
 
                 that._filterSource();
             } else if (that._allowSelection()) {
@@ -28038,6 +28202,7 @@ var A = 0;
             if (that._state === FILTER) {
                 that._state = ACCEPT;
                 that.listView.filter(false);
+                that.listView.skipUpdate(true);
             }
         },
 
@@ -28083,6 +28248,7 @@ var A = 0;
 
             tagTemplate = tagTemplate ? kendo.template(tagTemplate) : kendo.template("#:" + kendo.expr(options.dataTextField, "data") + "#", { useWithBlock: false });
 
+            that.tagTextTemplate = tagTemplate;
             that.tagTemplate = function(data) {
                 return '<li class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" class="k-icon k-delete">delete</span></li>';
             };
@@ -31944,19 +32110,18 @@ var A = 0;
                 values = {},
                 bindAttribute = kendo.attr("bind"),
                 fieldName = e.field.replace(nameSpecialCharRegExp, "\\$1"),
-                checkedBinding = 'checked:' + fieldName,
-                valueBinding = 'value:' + fieldName;
+                bindingRegex = new RegExp("(value|checked)\\s*:\\s*" + fieldName + "\\s*(,|$)");
 
             values[e.field] = e.value;
 
-            input = $(':input[' + bindAttribute + '*="' + valueBinding + '"],:input[' + bindAttribute + '*="' + checkedBinding + '"]', that.element)
-                .filter("[" + kendo.attr("validate") + "!='false']");
+            input = $(':input[' + bindAttribute + '*="' + fieldName + '"]', that.element)
+                .filter("[" + kendo.attr("validate") + "!='false']").filter(function(element) {
+                   return bindingRegex.test($(this).attr(bindAttribute));
+                });
             if (input.length > 1) {
                 input = input.filter(function () {
                     var element = $(this);
-                    var bindings = element.attr(bindAttribute).split(",");
-                    var matchesBinding = inArray(valueBinding, bindings) >= 0 || inArray(checkedBinding, bindings) >= 0;
-                    return matchesBinding && (!element.is(":radio") || element.val() == value);
+                    return !element.is(":radio") || element.val() == value;
                 });
             }
 
@@ -36268,7 +36433,7 @@ var A = 0;
             this.element
                 .addClass("k-rpanel k-rpanel-" + this.options.orientation);
 
-            this._resizeHandler = proxy(this.resize, this);
+            this._resizeHandler = proxy(this.resize, this, false);
             $(window).on("resize" + NS, this._resizeHandler);
         },
         _mediaQuery:
@@ -37991,11 +38156,17 @@ var A = 0;
 
         _click: function(e) {
             var that = this,
-                li = $(e.currentTarget);
+                li = $(e.currentTarget),
+                date = li.text(),
+                dates = that.options.dates;
+
+            if (dates && dates.length > 0) {
+                date = dates[li.index()];
+            }
 
             if (!e.isDefaultPrevented()) {
                 that.select(li);
-                that.options.change(li.text(), true);
+                that.options.change(date, true);
                 that.close();
             }
         },
@@ -39428,7 +39599,7 @@ var A = 0;
                 .end();
 
             $(window)
-                .on("resize" + NS + that._marker, proxy(that.resize, that))
+                .on("resize" + NS + that._marker, proxy(that.resize, that, false))
                 .on("mouseup" + NS + that._marker, proxy(that._removeOverlays, that));
         },
 
@@ -41658,6 +41829,28 @@ var A = 0;
         });
     }
 
+    function findChangedItems(selected, changed) {
+        var changedLength = changed.length;
+        var result = [];
+        var dataItem;
+        var i, j;
+
+        for (i = 0; i < selected.length; i++) {
+            dataItem = selected[i];
+
+            for (j = 0; j < changedLength; j++) {
+                if (dataItem === changed[j]) {
+                    result.push({
+                        index: i,
+                        item: dataItem
+                    });
+                }
+            }
+        }
+
+        return result;
+    }
+
     var VirtualList = DataBoundWidget.extend({
         init: function(element, options) {
             var that = this;
@@ -41780,12 +41973,14 @@ var A = 0;
 
         refresh: function(e) {
             var that = this;
+            var action = e && e.action;
+            var changedItems;
 
             if (that._mute) { return; }
 
             if (!that._fetching) {
                 that._createList();
-                if ((!e || !e.action) && that._values.length && !that._filter) {
+                if (!action && that._values.length && !that._filter) {
                     that.value(that._values, true).done(function() {
                         that._listCreated = true;
                         that.trigger(LISTBOUND);
@@ -41797,6 +41992,15 @@ var A = 0;
             } else {
                 if (that._renderItems) {
                     that._renderItems(true);
+                }
+            }
+
+            if (action === "itemchange") {
+                changedItems = findChangedItems(that._selectedDataItems, e.items);
+                if (changedItems.length) {
+                    that.trigger("selectedItemChange", {
+                        items: changedItems
+                    });
                 }
             }
 
@@ -42193,9 +42397,7 @@ var A = 0;
             this._filter = filter;
         },
 
-        clearIndices: function() {
-            this._selectedIndexes = [];
-        },
+        skipUpdate: $.noop,
 
         _getElementByIndex: function(index) {
             return this.items().filter(function(idx, element) {
@@ -43644,14 +43846,10 @@ var A = 0;
         SAME_VIEW_REQUESTED = "sameViewRequested",
         OS = kendo.support.mobileOS,
         SKIP_TRANSITION_ON_BACK_BUTTON = OS.ios && !OS.appMode && OS.flatVersion >= 700,
-
         WIDGET_RELS = /popover|actionsheet|modalview|drawer/,
         BACK = "#:back",
 
-        attrValue = kendo.attrValue,
-        // navigation element roles
-        buttonRoles = "button backbutton detailbutton listview-link",
-        linkRoles = "tab";
+        attrValue = kendo.attrValue;
 
     var Pane = Widget.extend({
         init: function(element, options) {
@@ -43888,13 +44086,18 @@ var A = 0;
         },
 
         _setupAppLinks: function() {
-            var that = this;
+            var that = this,
+                linkRoles = "tab",
+                pressedButtonSelector = "[data-" + kendo.ns + "navigate-on-press]",
+                buttonSelector = roleSelector("button") + ":not(" + pressedButtonSelector + ")",
+                buttonSelectors = roleSelector("backbutton detailbutton listview-link") + "," + buttonSelector;
+
             this.element.handler(this)
-                .on("down", roleSelector(linkRoles)+",[data-navigate-on-press]", "_mouseup")
-                .on("click", roleSelector(linkRoles + " " + buttonRoles), "_appLinkClick");
+                .on("down", roleSelector(linkRoles) + "," + pressedButtonSelector, "_mouseup")
+                .on("click", roleSelector(linkRoles) + " " + buttonSelectors, "_appLinkClick");
 
             this.userEvents = new kendo.UserEvents(this.element, {
-                filter: roleSelector(buttonRoles),
+                filter: buttonSelectors,
                 tap: function(e) {
                     e.event.currentTarget = e.touch.currentTarget;
                     that._mouseup(e.event);
@@ -44846,6 +45049,10 @@ var A = 0;
                 that.element.children(kendo.directiveSelector("pane")).each(function() {
                     pane = kendo.compileMobileDirective($(this), options.$angular[0]);
                     that.panes.push(pane);
+                });
+
+                that.element.children(kendo.directiveSelector("header footer")).each(function() {
+                    kendo.compileMobileDirective($(this), options.$angular[0]);
                 });
             }
 
@@ -49178,6 +49385,8 @@ var A = 0;
             return;
         }
 
+        var form  = $(widget.element).parents("form");
+        var ngForm = scope[form.attr("name")];
         var getter = $parse(kNgModel);
         var setter = getter.assign;
         var updating = false;
@@ -49210,6 +49419,11 @@ var A = 0;
 
         widget.first("change", function(){
             updating = true;
+
+            if (ngForm && ngForm.$pristine) {
+                ngForm.$setDirty();
+            }
+
             scope.$apply(function(){
                 setter(scope, widget.$angular_getLogicValue());
             });

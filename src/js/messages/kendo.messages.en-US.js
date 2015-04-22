@@ -17,6 +17,7 @@
     define([], f);
 })(function(){
 
+(function ($, undefined) {
 /* FlatColorPicker messages */
 
 if (kendo.ui.FlatColorPicker) {
@@ -555,6 +556,7 @@ $.extend(true, kendo.ui.Validator.prototype.options.messages,{
   "dateCompare": "End date should be greater than or equal to the start date"
 });
 }
+})(window.kendo.jQuery);
 
 
 return window.kendo;

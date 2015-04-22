@@ -17,8 +17,7 @@
     define([], f);
 })(function(){
 
-
-
+(function ($, undefined) {
 /* Filter menu operator messages */
 
 if (kendo.ui.FilterCell) {
@@ -383,6 +382,7 @@ $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "uploadSelectedFiles": "seçilen dosyaları Yükle"
 });
 }
+})(window.kendo.jQuery);
 
 
 return window.kendo;

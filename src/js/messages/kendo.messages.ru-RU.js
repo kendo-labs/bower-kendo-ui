@@ -17,8 +17,7 @@
     define([], f);
 })(function(){
 
-
-
+(function ($, undefined) {
 /* Filter menu operator messages */
 
 if (kendo.ui.FilterCell) {
@@ -400,6 +399,7 @@ $.extend(true, kendo.ui.Validator.prototype.options.messages,{
   "date": "{0} не корректная дата"
 });
 }
+})(window.kendo.jQuery);
 
 
 return window.kendo;

@@ -5283,9 +5283,10 @@ body .k-datetimepicker .k-select {
 }
 .k-multiselect-wrap li {
   margin: 1px 0 1px 1px;
-  padding: .1em .15em .1em .4em;
+  padding: .1em 1.6em .1em .4em;
   line-height: 2.064em;
   float: left;
+  position: relative;
 }
 .k-autocomplete .k-loading,
 .k-multiselect .k-loading {
@@ -5295,6 +5296,13 @@ body .k-datetimepicker .k-select {
 }
 .k-multiselect .k-loading-hidden {
   visibility: hidden;
+}
+.k-multiselect-wrap .k-select {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding: .1em .2em;
 }
 /* Date/Time Pickers */
 .k-datetimepicker .k-picker-wrap {
@@ -5744,12 +5752,20 @@ table.k-editor {
 .k-state-selected .k-bold {
   background-position: -240px 0;
 }
+.k-state-hover .k-bold,
+.k-state-selected .k-bold {
+  background-position: -240px 0;
+}
 .k-italic {
   background-position: -240px -24px;
 }
 .k-state-hover .k-italic,
 .k-state-selected .k-italic {
   background-position: -264px -24px;
+}
+.k-state-hover .k-italic,
+.k-state-selected .k-italic {
+  background-position: -240px -24px;
 }
 .k-state-hover .k-italic,
 .k-state-selected .k-italic {
@@ -5766,12 +5782,20 @@ table.k-editor {
 .k-state-selected .k-underline {
   background-position: -240px -48px;
 }
+.k-state-hover .k-underline,
+.k-state-selected .k-underline {
+  background-position: -240px -48px;
+}
 .k-strikethrough {
   background-position: -240px -72px;
 }
 .k-state-hover .k-strikethrough,
 .k-state-selected .k-strikethrough {
   background-position: -264px -72px;
+}
+.k-state-hover .k-strikethrough,
+.k-state-selected .k-strikethrough {
+  background-position: -240px -72px;
 }
 .k-state-hover .k-strikethrough,
 .k-state-selected .k-strikethrough {
@@ -5788,12 +5812,20 @@ table.k-editor {
 .k-state-selected .k-foreColor {
   background-position: -240px -96px;
 }
+.k-state-hover .k-foreColor,
+.k-state-selected .k-foreColor {
+  background-position: -240px -96px;
+}
 .k-backColor {
   background-position: -240px -120px;
 }
 .k-state-hover .k-backColor,
 .k-state-selected .k-backColor {
   background-position: -264px -120px;
+}
+.k-state-hover .k-backColor,
+.k-state-selected .k-backColor {
+  background-position: -240px -120px;
 }
 .k-state-hover .k-backColor,
 .k-state-selected .k-backColor {
@@ -5816,12 +5848,20 @@ table.k-editor {
 .k-state-selected .k-justifyLeft {
   background-position: -240px -144px;
 }
+.k-state-hover .k-justifyLeft,
+.k-state-selected .k-justifyLeft {
+  background-position: -240px -144px;
+}
 .k-justifyCenter {
   background-position: -240px -168px;
 }
 .k-state-hover .k-justifyCenter,
 .k-state-selected .k-justifyCenter {
   background-position: -264px -168px;
+}
+.k-state-hover .k-justifyCenter,
+.k-state-selected .k-justifyCenter {
+  background-position: -240px -168px;
 }
 .k-state-hover .k-justifyCenter,
 .k-state-selected .k-justifyCenter {
@@ -5838,12 +5878,20 @@ table.k-editor {
 .k-state-selected .k-justifyRight {
   background-position: -240px -192px;
 }
+.k-state-hover .k-justifyRight,
+.k-state-selected .k-justifyRight {
+  background-position: -240px -192px;
+}
 .k-justifyFull {
   background-position: -240px -216px;
 }
 .k-state-hover .k-justifyFull,
 .k-state-selected .k-justifyFull {
   background-position: -264px -216px;
+}
+.k-state-hover .k-justifyFull,
+.k-state-selected .k-justifyFull {
+  background-position: -240px -216px;
 }
 .k-state-hover .k-justifyFull,
 .k-state-selected .k-justifyFull {
@@ -5860,12 +5908,20 @@ table.k-editor {
 .k-state-selected .k-insertUnorderedList {
   background-position: -240px -264px;
 }
+.k-state-hover .k-insertUnorderedList,
+.k-state-selected .k-insertUnorderedList {
+  background-position: -240px -264px;
+}
 .k-insertOrderedList {
   background-position: -240px -288px;
 }
 .k-state-hover .k-insertOrderedList,
 .k-state-selected .k-insertOrderedList {
   background-position: -264px -288px;
+}
+.k-state-hover .k-insertOrderedList,
+.k-state-selected .k-insertOrderedList {
+  background-position: -240px -288px;
 }
 .k-state-hover .k-insertOrderedList,
 .k-state-selected .k-insertOrderedList {
@@ -5880,6 +5936,12 @@ table.k-editor {
 .k-state-selected .k-indent,
 .k-state-selected .k-rtl .k-outdent {
   background-position: -312px 0;
+}
+.k-state-hover .k-indent,
+.k-state-hover .k-rtl .k-outdent,
+.k-state-selected .k-indent,
+.k-state-selected .k-rtl .k-outdent {
+  background-position: -288px 0;
 }
 .k-state-hover .k-indent,
 .k-state-hover .k-rtl .k-outdent,
@@ -5903,12 +5965,22 @@ table.k-editor {
 .k-state-selected .k-rtl .k-indent {
   background-position: -288px -24px;
 }
+.k-state-hover .k-outdent,
+.k-state-hover .k-rtl .k-indent,
+.k-state-selected .k-outdent,
+.k-state-selected .k-rtl .k-indent {
+  background-position: -288px -24px;
+}
 .k-createLink {
   background-position: -288px -48px;
 }
 .k-state-hover .k-createLink,
 .k-state-selected .k-createLink {
   background-position: -312px -48px;
+}
+.k-state-hover .k-createLink,
+.k-state-selected .k-createLink {
+  background-position: -288px -48px;
 }
 .k-state-hover .k-createLink,
 .k-state-selected .k-createLink {
@@ -5925,12 +5997,20 @@ table.k-editor {
 .k-state-selected .k-unlink {
   background-position: -288px -72px;
 }
+.k-state-hover .k-unlink,
+.k-state-selected .k-unlink {
+  background-position: -288px -72px;
+}
 .k-insertImage {
   background-position: -288px -96px;
 }
 .k-state-hover .k-insertImage,
 .k-state-selected .k-insertImage {
   background-position: -312px -96px;
+}
+.k-state-hover .k-insertImage,
+.k-state-selected .k-insertImage {
+  background-position: -288px -96px;
 }
 .k-state-hover .k-insertImage,
 .k-state-selected .k-insertImage {
@@ -5947,12 +6027,20 @@ table.k-editor {
 .k-state-selected .k-insertFile {
   background-position: -288px -216px;
 }
+.k-state-hover .k-insertFile,
+.k-state-selected .k-insertFile {
+  background-position: -288px -216px;
+}
 .k-subscript {
   background-position: -288px -144px;
 }
 .k-state-hover .k-subscript,
 .k-state-selected .k-subscript {
   background-position: -312px -144px;
+}
+.k-state-hover .k-subscript,
+.k-state-selected .k-subscript {
+  background-position: -288px -144px;
 }
 .k-state-hover .k-subscript,
 .k-state-selected .k-subscript {
@@ -5969,12 +6057,20 @@ table.k-editor {
 .k-state-selected .k-superscript {
   background-position: -288px -168px;
 }
+.k-state-hover .k-superscript,
+.k-state-selected .k-superscript {
+  background-position: -288px -168px;
+}
 .k-cleanFormatting {
   background-position: -288px -192px;
 }
 .k-state-hover .k-cleanFormatting,
 .k-state-selected .k-cleanFormatting {
   background-position: -312px -192px;
+}
+.k-state-hover .k-cleanFormatting,
+.k-state-selected .k-cleanFormatting {
+  background-position: -288px -192px;
 }
 .k-state-hover .k-cleanFormatting,
 .k-state-selected .k-cleanFormatting {
@@ -5991,12 +6087,20 @@ table.k-editor {
 .k-state-selected .k-createTable {
   background-position: -192px 0;
 }
+.k-state-hover .k-createTable,
+.k-state-selected .k-createTable {
+  background-position: -192px 0;
+}
 .k-addColumnLeft {
   background-position: -192px -24px;
 }
 .k-state-hover .k-addColumnLeft,
 .k-state-selected .k-addColumnLeft {
   background-position: -216px -24px;
+}
+.k-state-hover .k-addColumnLeft,
+.k-state-selected .k-addColumnLeft {
+  background-position: -192px -24px;
 }
 .k-state-hover .k-addColumnLeft,
 .k-state-selected .k-addColumnLeft {
@@ -6013,12 +6117,20 @@ table.k-editor {
 .k-state-selected .k-addColumnRight {
   background-position: -192px -48px;
 }
+.k-state-hover .k-addColumnRight,
+.k-state-selected .k-addColumnRight {
+  background-position: -192px -48px;
+}
 .k-addRowAbove {
   background-position: -192px -72px;
 }
 .k-state-hover .k-addRowAbove,
 .k-state-selected .k-addRowAbove {
   background-position: -216px -72px;
+}
+.k-state-hover .k-addRowAbove,
+.k-state-selected .k-addRowAbove {
+  background-position: -192px -72px;
 }
 .k-state-hover .k-addRowAbove,
 .k-state-selected .k-addRowAbove {
@@ -6035,12 +6147,20 @@ table.k-editor {
 .k-state-selected .k-addRowBelow {
   background-position: -192px -96px;
 }
+.k-state-hover .k-addRowBelow,
+.k-state-selected .k-addRowBelow {
+  background-position: -192px -96px;
+}
 .k-deleteRow {
   background-position: -192px -120px;
 }
 .k-state-hover .k-deleteRow,
 .k-state-selected .k-deleteRow {
   background-position: -216px -120px;
+}
+.k-state-hover .k-deleteRow,
+.k-state-selected .k-deleteRow {
+  background-position: -192px -120px;
 }
 .k-state-hover .k-deleteRow,
 .k-state-selected .k-deleteRow {
@@ -6057,12 +6177,20 @@ table.k-editor {
 .k-state-selected .k-deleteColumn {
   background-position: -192px -144px;
 }
+.k-state-hover .k-deleteColumn,
+.k-state-selected .k-deleteColumn {
+  background-position: -192px -144px;
+}
 .k-mergeCells {
   background-position: -192px -168px;
 }
 .k-state-hover .k-mergeCells,
 .k-state-selected .k-mergeCells {
   background-position: -216px -168px;
+}
+.k-state-hover .k-mergeCells,
+.k-state-selected .k-mergeCells {
+  background-position: -192px -168px;
 }
 .k-state-hover .k-mergeCells,
 .k-state-selected .k-mergeCells {
@@ -6079,12 +6207,20 @@ table.k-editor {
 .k-state-selected .k-pdf {
   background-position: -288px -240px;
 }
+.k-state-hover .k-pdf,
+.k-state-selected .k-pdf {
+  background-position: -288px -240px;
+}
 .k-print {
   background-position: -288px -264px;
 }
 .k-state-hover .k-print,
 .k-state-selected .k-print {
   background-position: -312px -264px;
+}
+.k-state-hover .k-print,
+.k-state-selected .k-print {
+  background-position: -288px -264px;
 }
 .k-state-hover .k-print,
 .k-state-selected .k-print {
@@ -10939,13 +11075,13 @@ html .k-upload-empty {
   width: 100%;
   box-sizing: border-box;
 }
-.k-popup .k-item > .k-group,
+.k-popup .k-list .k-item > .k-group,
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
   text-transform: uppercase;
   font-size: .857em;
 }
-.k-popup .k-item > .k-group {
+.k-popup .k-list .k-item > .k-group {
   position: absolute;
   top: 0;
   right: 0;
