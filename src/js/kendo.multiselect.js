@@ -310,12 +310,13 @@
         _wrapperMousedown: function(e) {
             var that = this;
             var notInput = e.target.nodeName.toLowerCase() !== "input";
+            var closeButton = $(e.target).hasClass("k-select") || $(e.target).parent().hasClass("k-select");
 
-            if (notInput) {
+            if (notInput && !(closeButton && kendo.support.mobileOS)) {
                 e.preventDefault();
             }
 
-            if (e.target.className.indexOf("k-delete") === -1) {
+            if (!closeButton) {
                 if (that.input[0] !== activeElement() && notInput) {
                     that.input.focus();
                 }
@@ -411,7 +412,7 @@
                 tagList
                     .on(MOUSEENTER, LI, function() { $(this).addClass(HOVERCLASS); })
                     .on(MOUSELEAVE, LI, function() { $(this).removeClass(HOVERCLASS); })
-                    .on(CLICK, ".k-delete", proxy(that._tagListClick, that));
+                    .on(CLICK, "li.k-button .k-select", proxy(that._tagListClick, that));
             } else {
                 if (disable) {
                     wrapper.addClass(STATEDISABLED);
@@ -890,28 +891,38 @@
         },
 
         _render: function(data) {
-            var values = this.listView.value().slice(0);
+            var selectedItems = this.listView.selectedDataItems();
             var length = data.length;
+            var selectedIndex;
             var options = "";
             var dataItem;
-            var idx = 0;
             var value;
+            var idx;
 
             var custom = {};
             var optionsMap = {};
 
-            for (; idx < length; idx++) {
+            for (idx = 0; idx < length; idx++) {
                 dataItem = data[idx];
+                selectedIndex = this._selectedIndex(dataItem, selectedItems);
+
+                if (selectedIndex !== -1) {
+                    selectedItems.splice(selectedIndex, 1);
+                }
+
                 optionsMap[this._value(dataItem)] = idx;
-                options += this._option(dataItem, this._selected(dataItem, values));
+                options += this._option(dataItem, selectedIndex !== -1);
             }
 
-            if (values.length) {
-                for (idx = 0; idx < values.length; idx++) {
-                    value = values[idx];
+            if (selectedItems.length) {
+                for (idx = 0; idx < selectedItems.length; idx++) {
+                    dataItem = selectedItems[idx];
+
+                    value = this._value(dataItem);
                     custom[value] = idx + length;
                     optionsMap[value] = idx + length;
-                    options += '<option selected="selected" value="' + value + '"></option>';
+
+                    options += '<option selected="selected" value="' + value + '">' + this._text(dataItem) + '</option>';
                 }
             }
 
@@ -921,28 +932,18 @@
             this.element.html(options);
         },
 
-        _selected: function(dataItem, values) {
-            var that = this;
-            var value = that._value(dataItem);
-            var selected = false;
+        _selectedIndex: function(dataItem, selectedItems) {
+            var valueGetter = this._value;
+            var value = valueGetter(dataItem);
             var idx = 0;
 
-            if (value === undefined) {
-                value = that._text(dataItem);
-            }
-
-            for (; idx < values.length; idx++) {
-                if (value === values[idx]) {
-                    selected = true;
-                    break;
+            for (; idx < selectedItems.length; idx++) {
+                if (value === valueGetter(selectedItems[idx])) {
+                    return idx;
                 }
             }
 
-            if (selected) {
-                values.splice(idx, 1);
-            }
-
-            return selected;
+            return -1;
         },
 
         _search: function() {
@@ -1055,7 +1056,7 @@
 
             that.tagTextTemplate = tagTemplate;
             that.tagTemplate = function(data) {
-                return '<li class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" class="k-icon k-delete">delete</span></li>';
+                return '<li class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" class="k-select"><span unselectable="on" class="k-icon k-i-close">delete</span></span></li>';
             };
         },
 

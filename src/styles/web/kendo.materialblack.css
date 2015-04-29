@@ -2867,6 +2867,23 @@ div.k-scheduler-marquee:after {
     -webkit-transform: translatey(-100%);
     -moz-transform: translatey(-100%);
     transform: translatey(-100%);
+    overflow: visible;
+    height: auto;
+  }
+  .k-webkit .km-pane-wrapper .k-pager-numbers .k-link,
+  .k-ff .km-pane-wrapper .k-pager-numbers .k-link,
+  .k-ie11 .km-pane-wrapper .k-pager-numbers .k-link,
+  .k-webkit .km-pane-wrapper .k-pager-numbers .k-state-selected,
+  .k-ff .km-pane-wrapper .k-pager-numbers .k-state-selected,
+  .k-ie11 .km-pane-wrapper .k-pager-numbers .k-state-selected,
+  .k-webkit .km-pane-wrapper .k-pager-wrap > .k-link,
+  .k-ff .km-pane-wrapper .k-pager-wrap > .k-link,
+  .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-link,
+  .k-webkit .km-pane-wrapper .k-pager-wrap > .k-pager-info,
+  .k-ff .km-pane-wrapper .k-pager-wrap > .k-pager-info,
+  .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-pager-info {
+    padding-top: 0;
+    padding-bottom: 0;
   }
   .k-webkit .k-rtl .k-pager-numbers,
   .k-ff .k-rtl .k-pager-numbers,

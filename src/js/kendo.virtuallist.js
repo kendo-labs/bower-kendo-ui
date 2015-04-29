@@ -346,6 +346,10 @@
             if (that._mute) { return; }
 
             if (!that._fetching) {
+                if (that._filter) {
+                    that.focus(0);
+                }
+
                 that._createList();
                 if (!action && that._values.length && !that._filter) {
                     that.value(that._values, true).done(function() {
@@ -382,6 +386,14 @@
                 position: position,
                 dataItem: this._selectedDataItems.splice(position, 1)[0]
             };
+        },
+
+        setValue: function(value) {
+            if (value === "" || value === null) {
+                value = [];
+            }
+
+            this._values = toArray(value);
         },
 
         value: function(value, _forcePrefetch) {
@@ -761,6 +773,7 @@
             if (filter === undefined) {
                 return this._filter;
             }
+
             this._filter = filter;
         },
 
@@ -959,6 +972,7 @@
                         this._fetching = true;
                         dataSource.range(rangeStart, pageSize);
                         lastRangeStart = rangeStart;
+                        this._fetching = false;
                         this._mute = false;
                     }
 
@@ -1148,7 +1162,7 @@
                 itemHeight = this.options.itemHeight,
                 total = this.dataSource.total();
 
-            return Math.min(total - itemCount, Math.max(0, Math.floor(position / itemHeight )));
+            return Math.min(Math.max(total - itemCount, 0), Math.max(0, Math.floor(position / itemHeight )));
         },
 
         _listIndex: function(scrollTop, lastScrollTop) {
@@ -1212,6 +1226,8 @@
             if (indexes[position] === -1) { //deselect everything
                 for (var idx = 0; idx < selectedIndexes.length; idx++) {
                     selectedIndex = selectedIndexes[idx];
+
+                    this._getElementByIndex(selectedIndex).removeClass(SELECTED);
 
                     removed.push({
                         index: selectedIndex,

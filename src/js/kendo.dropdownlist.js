@@ -396,6 +396,8 @@
 
             that._angularItems("compile");
 
+            that._presetValue = false;
+
             if (!that.options.virtual) {
                 height = that._height(filtered ? (length || 1) : length);
                 that._calculateGroupPadding(height);
@@ -453,7 +455,7 @@
         _listChange: function() {
             this._selectValue(this.listView.selectedDataItems()[0]);
 
-            if (this._old && this._oldIndex === -1) {
+            if (this._presetValue || (this._old && this._oldIndex === -1)) {
                 this._oldIndex = this.selectedIndex;
             }
         },
@@ -471,12 +473,13 @@
             var that = this;
             var filtered = that._state === STATE_FILTER;
             var isIFrame = window.self !== window.top;
+            var focusedItem = that._focus();
 
             if (!that._prevent) {
                 clearTimeout(that._typing);
 
-                if (filtered && that._focus()) {
-                    that._select(that._focus(), !that.dataSource.view().length);
+                if (filtered && focusedItem && !that.trigger("select", { item: focusedItem })) {
+                    that._select(focusedItem, !that.dataSource.view().length);
                 }
 
                 if (support.mobileOS.ios && isIFrame) {
@@ -1143,6 +1146,14 @@
         _preselect: function(value, text) {
             this._accessor(value);
             this._textAccessor(text);
+
+            this._old = this._accessor();
+            this._oldIndex = this.selectedIndex;
+
+            this.listView.setValue(value);
+
+            this._initialIndex = null;
+            this._presetValue = true;
         },
 
         _assignInstance: function(text, value) {

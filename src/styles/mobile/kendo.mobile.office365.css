@@ -3788,49 +3788,52 @@ body:before {
 .km-office365 .km-loading-right:after {
   content: " ";
   background-color: #fff;
-  animation: rotate_left_sector 4s linear 0 infinite;
-  -webkit-animation: rotate_left_sector 4s linear 0 infinite;
+  animation: rotate_left_sector 4s linear infinite;
+  -webkit-animation: rotate_left_sector 4s linear infinite;
 }
 .km-office365 .km-loading-right {
   left: 0;
+  -moz-transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
   transform: rotate(180deg);
 }
 .km-office365 .km-loading-right:after {
-  animation: rotate_right_sector 4s linear 0 infinite;
-  -webkit-animation: rotate_right_sector 4s linear 0 infinite;
+  animation: rotate_right_sector 4s linear infinite;
+  -webkit-animation: rotate_right_sector 4s linear infinite;
 }
-@-webkit-keyframes rotate_left_sector {
+@-moz-keyframes rotate_left_sector {
   0% {
-    transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
   }
   25% {
-    transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
   }
   50% {
-    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
   }
   75% {
-    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
   }
   100% {
-    transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
   }
 }
-@-webkit-keyframes rotate_right_sector {
+@-moz-keyframes rotate_right_sector {
   0% {
-    transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
   }
   25% {
-    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
   }
   50% {
-    transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
   }
   75% {
-    transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
   }
   100% {
-    transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
   }
 }
 @-webkit-keyframes rotate_left_sector {
@@ -3904,34 +3907,44 @@ body:before {
 @keyframes rotate_left_sector {
   0% {
     -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   25% {
     -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   50% {
     -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
   }
   75% {
     -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
   }
   100% {
     -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 @keyframes rotate_right_sector {
   0% {
+    -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
   25% {
+    -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
   }
   50% {
+    -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
   }
   75% {
+    -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
   100% {
+    -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
