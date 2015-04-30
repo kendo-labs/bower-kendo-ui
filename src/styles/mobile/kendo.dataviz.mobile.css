@@ -4831,8 +4831,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 /* Revert box/clip for Web widgets */
 .km-ios7 [class^=k-],
-.km-ios7 .k-calendar th,
-.km-ios7 .k-calendar td {
+.km-ios7 [class^=k-] * {
   -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
   box-sizing: content-box;

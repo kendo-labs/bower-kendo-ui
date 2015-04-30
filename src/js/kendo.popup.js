@@ -476,6 +476,10 @@
             viewportWidth = isWindow ? window.innerWidth : viewport.width();
             viewportHeight = isWindow ? window.innerHeight : viewport.height();
 
+            if (isWindow && document.documentElement.offsetWidth - document.documentElement.clientWidth > 0) {
+                viewportWidth -= kendo.support.scrollbar();
+            }
+
             siblingContainer = anchor.parents().filter(wrapper.siblings());
 
             if (siblingContainer[0]) {
