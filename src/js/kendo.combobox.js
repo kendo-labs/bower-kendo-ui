@@ -265,6 +265,7 @@
             var data = this.dataSource.flatView();
             var page = this.dataSource.page();
             var length = data.length;
+            var dataItem;
             var value;
 
             that._angularItems("compile");
@@ -313,6 +314,11 @@
                 }
 
                 that._initialIndex = null;
+
+                dataItem = that.listView.selectedDataItems()[0];
+                if (dataItem && that.text() && that.text() !== that._text(dataItem)) {
+                    that._selectValue(dataItem);
+                }
             } else if (filtered && focusedItem) {
                 focusedItem.removeClass("k-state-selected");
             }
@@ -571,6 +577,7 @@
                     if (that.selectedIndex === -1) {
                         that._accessor(value);
                         that.input.val(value);
+                        that._placeholder(true);
                     }
 
                     that._old = that._accessor();

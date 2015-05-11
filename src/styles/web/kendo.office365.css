@@ -2296,7 +2296,7 @@ input.k-textbox:focus {
 .k-panelbar > .k-item > .k-link {
   border-color: #ffffff;
 }
-.k-window .k-header {
+.k-window > .k-header {
   border-color: transparent;
 }
 .k-window-titlebar .k-state-hover {

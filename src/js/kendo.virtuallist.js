@@ -570,7 +570,7 @@
         },
 
         selectedDataItems: function() {
-            return this._selectedDataItems;
+            return this._selectedDataItems.slice();
         },
 
         scrollTo: function(y) {

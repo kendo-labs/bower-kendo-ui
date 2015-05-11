@@ -1414,32 +1414,38 @@
         },
 
         select: function(indices) {
-            var selectable = this.options.selectable;
+            var that = this;
+            var selectable = that.options.selectable;
             var singleSelection = selectable !== "multiple" && selectable !== false;
+            var selectedIndices = that._selectedIndices;
 
             var added = [];
             var removed = [];
             var result;
 
             if (indices === undefined) {
-                return this._selectedIndices.slice();
+                return selectedIndices.slice();
             }
 
-            indices = this._get(indices);
+            indices = that._get(indices);
 
             if (indices.length === 1 && indices[0] === -1) {
                 indices = [];
             }
 
-            if (this._filtered && !singleSelection && this._deselectFiltered(indices)) {
+            if (that._filtered && !singleSelection && that._deselectFiltered(indices)) {
                 return;
             }
 
-            if (singleSelection && !this._filtered && $.inArray(indices[indices.length - 1], this._selectedIndices) !== -1) {
+            if (singleSelection && !that._filtered && $.inArray(indices[indices.length - 1], selectedIndices) !== -1) {
+                if (that._dataItems.length && that._view.length) {
+                    that._dataItems = [that._view[selectedIndices[0]].item];
+                }
+
                 return;
             }
 
-            result = this._deselect(indices);
+            result = that._deselect(indices);
 
             removed = result.removed;
             indices = result.indices;
@@ -1449,11 +1455,11 @@
                     indices = [indices[indices.length - 1]];
                 }
 
-                added = this._select(indices);
+                added = that._select(indices);
             }
 
             if (added.length || removed.length) {
-                this.trigger("change", {
+                that.trigger("change", {
                     added: added,
                     removed: removed
                 });
@@ -1914,7 +1920,7 @@
                     that._skipUpdate = false;
                     that._updateIndices(that._selectedIndices, that._values);
                 }
-            } else if (!action) {
+            } else if (!action || action === "add") {
                 that.value(that._values);
             }
 

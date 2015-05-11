@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.1.430";
+    kendo.version = "2015.1.511";
 
     function Class() {}
 
@@ -8175,7 +8175,7 @@ var A = 0;
 
             Observable.fn.init.call(that);
 
-            that.transport = Transport.create(options, data);
+            that.transport = Transport.create(options, data, that);
 
             if (isFunction(that.transport.push)) {
                 that.transport.push({
@@ -8567,6 +8567,38 @@ var A = 0;
             return model;
         },
 
+        destroyed: function() {
+            return this._destroyed;
+        },
+
+        created: function() {
+            var idx,
+                length,
+                result = [],
+                data = this._flatData(this._data);
+
+            for (idx = 0, length = data.length; idx < length; idx++) {
+                if (data[idx].isNew && data[idx].isNew()) {
+                    result.push(data[idx]);
+                }
+            }
+            return result;
+        },
+
+        updated: function() {
+            var idx,
+                length,
+                result = [],
+                data = this._flatData(this._data);
+
+            for (idx = 0, length = data.length; idx < length; idx++) {
+                if ((data[idx].isNew && !data[idx].isNew()) && data[idx].dirty) {
+                    result.push(data[idx]);
+                }
+            }
+            return result;
+        },
+
         sync: function() {
             var that = this,
                 idx,
@@ -8584,13 +8616,8 @@ var A = 0;
                     return promise;
                 }
 
-                for (idx = 0, length = data.length; idx < length; idx++) {
-                    if (data[idx].isNew()) {
-                        created.push(data[idx]);
-                    } else if (data[idx].dirty) {
-                        updated.push(data[idx]);
-                    }
-                }
+                created = that.created();
+                updated = that.updated();
 
                 var promises = [];
 
@@ -8649,7 +8676,7 @@ var A = 0;
         hasChanges: function() {
             var idx,
                 length,
-                data = this._data;
+                data = this._flatData(this._data);
 
             if (this._destroyed.length) {
                 return true;
@@ -9158,6 +9185,16 @@ var A = 0;
             return false;
         },
 
+        _shouldWrap: function(data) {
+            var model = this.reader.model;
+
+            if (model && data.length) {
+                return !(data[0] instanceof model);
+            }
+
+            return false;
+        },
+
         _observe: function(data) {
             var that = this,
                 model = that.reader.model,
@@ -9165,13 +9202,9 @@ var A = 0;
 
             that._shouldDetachObservableParents = true;
 
-            if (model && data.length) {
-                wrap = !(data[0] instanceof model);
-            }
-
             if (data instanceof ObservableArray) {
                 that._shouldDetachObservableParents = false;
-                if (wrap) {
+                if (that._shouldWrap(data)) {
                     data.type = that.reader.model;
                     data.wrapAll(data, data);
                 }
@@ -9886,12 +9919,16 @@ var A = 0;
 
     var Transport = {};
 
-    Transport.create = function(options, data) {
+    Transport.create = function(options, data, dataSource) {
         var transport,
             transportOptions = options.transport;
 
         if (transportOptions) {
             transportOptions.read = typeof transportOptions.read === STRING ? { url: transportOptions.read } : transportOptions.read;
+
+            if (dataSource) {
+                transportOptions.dataSource = dataSource;
+            }
 
             if (options.type) {
                 kendo.data.transports = kendo.data.transports || {};
@@ -22108,32 +22145,38 @@ var A = 0;
         },
 
         select: function(indices) {
-            var selectable = this.options.selectable;
+            var that = this;
+            var selectable = that.options.selectable;
             var singleSelection = selectable !== "multiple" && selectable !== false;
+            var selectedIndices = that._selectedIndices;
 
             var added = [];
             var removed = [];
             var result;
 
             if (indices === undefined) {
-                return this._selectedIndices.slice();
+                return selectedIndices.slice();
             }
 
-            indices = this._get(indices);
+            indices = that._get(indices);
 
             if (indices.length === 1 && indices[0] === -1) {
                 indices = [];
             }
 
-            if (this._filtered && !singleSelection && this._deselectFiltered(indices)) {
+            if (that._filtered && !singleSelection && that._deselectFiltered(indices)) {
                 return;
             }
 
-            if (singleSelection && !this._filtered && $.inArray(indices[indices.length - 1], this._selectedIndices) !== -1) {
+            if (singleSelection && !that._filtered && $.inArray(indices[indices.length - 1], selectedIndices) !== -1) {
+                if (that._dataItems.length && that._view.length) {
+                    that._dataItems = [that._view[selectedIndices[0]].item];
+                }
+
                 return;
             }
 
-            result = this._deselect(indices);
+            result = that._deselect(indices);
 
             removed = result.removed;
             indices = result.indices;
@@ -22143,11 +22186,11 @@ var A = 0;
                     indices = [indices[indices.length - 1]];
                 }
 
-                added = this._select(indices);
+                added = that._select(indices);
             }
 
             if (added.length || removed.length) {
-                this.trigger("change", {
+                that.trigger("change", {
                     added: added,
                     removed: removed
                 });
@@ -22608,7 +22651,7 @@ var A = 0;
                     that._skipUpdate = false;
                     that._updateIndices(that._selectedIndices, that._values);
                 }
-            } else if (!action) {
+            } else if (!action || action === "add") {
                 that.value(that._values);
             }
 
@@ -25602,7 +25645,9 @@ var A = 0;
                 value = "";
             }
 
-            that._initialIndex = null;
+            if (value) {
+                that._initialIndex = null;
+            }
 
             that.listView.value(value.toString()).done(function() {
                 that._triggerCascade();
@@ -25676,6 +25721,7 @@ var A = 0;
 
             var data = that.dataSource.flatView();
             var length = data.length;
+            var dataItem;
 
             var height;
             var value;
@@ -25727,6 +25773,10 @@ var A = 0;
                         }
 
                         that._initialIndex = null;
+                        dataItem = that.listView.selectedDataItems()[0];
+                        if (dataItem && that.text() !== that._text(dataItem)) {
+                            that._selectValue(dataItem);
+                        }
                     } else if (that._textAccessor() !== that._optionLabelText()) {
                         that.listView.value("");
                         that._selectValue(null);
@@ -26113,13 +26163,14 @@ var A = 0;
 
         _get: function(candidate) {
             var data, found, idx;
+            var jQueryCandidate = $(candidate);
 
             if (this.optionLabel[0]) {
                 if (typeof candidate === "number") {
                     if (candidate > -1) {
                         candidate -= 1;
                     }
-                } else if (candidate instanceof jQuery && candidate.hasClass("k-list-optionlabel")) {
+                } else if (jQueryCandidate.hasClass("k-list-optionlabel")) {
                     candidate = -1;
                 }
             }
@@ -26430,6 +26481,10 @@ var A = 0;
         },
 
         _preselect: function(value, text) {
+            if (!value && !text) {
+                text = this._optionLabelText();
+            }
+
             this._accessor(value);
             this._textAccessor(text);
 
@@ -26731,6 +26786,7 @@ var A = 0;
             var data = this.dataSource.flatView();
             var page = this.dataSource.page();
             var length = data.length;
+            var dataItem;
             var value;
 
             that._angularItems("compile");
@@ -26779,6 +26835,11 @@ var A = 0;
                 }
 
                 that._initialIndex = null;
+
+                dataItem = that.listView.selectedDataItems()[0];
+                if (dataItem && that.text() && that.text() !== that._text(dataItem)) {
+                    that._selectValue(dataItem);
+                }
             } else if (filtered && focusedItem) {
                 focusedItem.removeClass("k-state-selected");
             }
@@ -27037,6 +27098,7 @@ var A = 0;
                     if (that.selectedIndex === -1) {
                         that._accessor(value);
                         that.input.val(value);
+                        that._placeholder(true);
                     }
 
                     that._old = that._accessor();
@@ -36578,13 +36640,13 @@ var A = 0;
             var head = $("head,body")[0];
             var style = document.createElement('style');
 
+            head.appendChild(style);
+
             if (style.styleSheet){
                 style.styleSheet.cssText = cssText;
             } else {
                 style.appendChild(document.createTextNode(cssText));
             }
-
-            head.appendChild(style);
         },
         options: {
             name: "ResponsivePanel",
@@ -42307,7 +42369,7 @@ var A = 0;
         },
 
         selectedDataItems: function() {
-            return this._selectedDataItems;
+            return this._selectedDataItems.slice();
         },
 
         scrollTo: function(y) {
@@ -44235,7 +44297,7 @@ var A = 0;
 
             this.element.handler(this)
                 .on("down", roleSelector(linkRoles) + "," + pressedButtonSelector, "_mouseup")
-                .on("click", roleSelector(linkRoles) + " " + buttonSelectors, "_appLinkClick");
+                .on("click", roleSelector(linkRoles) + "," + buttonSelectors + "," + pressedButtonSelector, "_appLinkClick");
 
             this.userEvents = new kendo.UserEvents(this.element, {
                 filter: buttonSelectors,

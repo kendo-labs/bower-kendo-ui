@@ -2221,7 +2221,7 @@ var A = 0;
 
             Observable.fn.init.call(that);
 
-            that.transport = Transport.create(options, data);
+            that.transport = Transport.create(options, data, that);
 
             if (isFunction(that.transport.push)) {
                 that.transport.push({
@@ -2613,6 +2613,38 @@ var A = 0;
             return model;
         },
 
+        destroyed: function() {
+            return this._destroyed;
+        },
+
+        created: function() {
+            var idx,
+                length,
+                result = [],
+                data = this._flatData(this._data);
+
+            for (idx = 0, length = data.length; idx < length; idx++) {
+                if (data[idx].isNew && data[idx].isNew()) {
+                    result.push(data[idx]);
+                }
+            }
+            return result;
+        },
+
+        updated: function() {
+            var idx,
+                length,
+                result = [],
+                data = this._flatData(this._data);
+
+            for (idx = 0, length = data.length; idx < length; idx++) {
+                if ((data[idx].isNew && !data[idx].isNew()) && data[idx].dirty) {
+                    result.push(data[idx]);
+                }
+            }
+            return result;
+        },
+
         sync: function() {
             var that = this,
                 idx,
@@ -2630,13 +2662,8 @@ var A = 0;
                     return promise;
                 }
 
-                for (idx = 0, length = data.length; idx < length; idx++) {
-                    if (data[idx].isNew()) {
-                        created.push(data[idx]);
-                    } else if (data[idx].dirty) {
-                        updated.push(data[idx]);
-                    }
-                }
+                created = that.created();
+                updated = that.updated();
 
                 var promises = [];
 
@@ -2695,7 +2722,7 @@ var A = 0;
         hasChanges: function() {
             var idx,
                 length,
-                data = this._data;
+                data = this._flatData(this._data);
 
             if (this._destroyed.length) {
                 return true;
@@ -3204,6 +3231,16 @@ var A = 0;
             return false;
         },
 
+        _shouldWrap: function(data) {
+            var model = this.reader.model;
+
+            if (model && data.length) {
+                return !(data[0] instanceof model);
+            }
+
+            return false;
+        },
+
         _observe: function(data) {
             var that = this,
                 model = that.reader.model,
@@ -3211,13 +3248,9 @@ var A = 0;
 
             that._shouldDetachObservableParents = true;
 
-            if (model && data.length) {
-                wrap = !(data[0] instanceof model);
-            }
-
             if (data instanceof ObservableArray) {
                 that._shouldDetachObservableParents = false;
-                if (wrap) {
+                if (that._shouldWrap(data)) {
                     data.type = that.reader.model;
                     data.wrapAll(data, data);
                 }
@@ -3932,12 +3965,16 @@ var A = 0;
 
     var Transport = {};
 
-    Transport.create = function(options, data) {
+    Transport.create = function(options, data, dataSource) {
         var transport,
             transportOptions = options.transport;
 
         if (transportOptions) {
             transportOptions.read = typeof transportOptions.read === STRING ? { url: transportOptions.read } : transportOptions.read;
+
+            if (dataSource) {
+                transportOptions.dataSource = dataSource;
+            }
 
             if (options.type) {
                 kendo.data.transports = kendo.data.transports || {};
