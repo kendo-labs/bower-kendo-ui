@@ -251,9 +251,9 @@
 
             that.setDataSource(options.dataSource);
 
-            that.content.on("scroll" + VIRTUAL_LIST_NS, function() {
+            that.content.on("scroll" + VIRTUAL_LIST_NS, kendo.throttle(function() {
                 that._renderItems();
-            });
+            }, options.delay));
 
             that._selectable();
         },
@@ -261,6 +261,7 @@
         options: {
             name: "VirtualList",
             autoBind: true,
+            delay: 100,
             height: null,
             listScreens: 4,
             threshold: 0.5,
@@ -404,10 +405,6 @@
         },
 
         setValue: function(value) {
-            if (value === "" || value === null) {
-                value = [];
-            }
-
             this._values = toArray(value);
         },
 
@@ -419,17 +416,17 @@
                 return that._values.slice();
             }
 
+            value = toArray(value);
+
+            if (that.options.selectable === "multiple" && that.select().length && value.length) {
+                that.select(-1);
+            }
+
             if (!that._valueDeferred || that._valueDeferred.state() === "resolved") {
                 that._valueDeferred = $.Deferred();
             }
 
-            if (value === "" || value === null) {
-                value = [];
-            }
-
-            value = toArray(value);
-
-            if (!value.length || that.options.selectable === "multiple") {
+            if (!value.length) {
                 that.select(-1);
             }
 
@@ -475,7 +472,13 @@
                     value: (this.options.selectable === "multiple") ? value : value[0],
                     success: function(indexes) {
                         that._values = [];
-                        that.select(toArray(indexes));
+                        indexes = toArray(indexes);
+
+                        if (!indexes.length) {
+                            indexes = [-1];
+                        }
+
+                        that.select(indexes);
                     }
                 });
             } else {
@@ -969,9 +972,17 @@
                     if (lastRequestedRange !== rangeStart) {
                         lastRequestedRange = rangeStart;
                         lastRangeStart = rangeStart;
-                        this._fetching = true;
-                        this.deferredRange(rangeStart).then(function() {
+                        that._fetching = true;
+
+                        if (that._getterDeferred) {
+                            that._getterDeferred.reject();
+                        }
+
+                        that._getterDeferred = that.deferredRange(rangeStart);
+                        that._getterDeferred.then(function() {
                             var firstItemIndex = that._indexConstraint(that.content[0].scrollTop);
+
+                            that._getterDeferred = null;
 
                             if (rangeStart <= firstItemIndex && firstItemIndex <= (rangeStart + pageSize)) {
                                 that._fetching = true;

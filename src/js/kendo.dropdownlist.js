@@ -45,7 +45,7 @@
         init: function(element, options) {
             var that = this;
             var index = options && options.index;
-            var optionLabel, text;
+            var optionLabel, text, disabled;
 
             that.ns = ns;
             options = $.isArray(options) ? { dataSource: options } : options;
@@ -111,6 +111,12 @@
                 }
 
                 that._textAccessor(text);
+            }
+
+            disabled = $(that.element).parents("fieldset").is(':disabled');
+
+            if (disabled) {
+                that.enable(false);
             }
 
             kendo.notify(that);
@@ -312,19 +318,16 @@
                 return value === undefined || value === null ? "" : value;
             }
 
-            if (value === null) {
-                value = "";
-            }
-
             if (value) {
                 that._initialIndex = null;
             }
 
-            that.listView.value(value.toString()).done(function() {
+            that.listView.value(value).done(function() {
                 that._triggerCascade();
 
                 if (that.selectedIndex === -1 && that.text()) {
                     that.text("");
+                    that._accessor("", -1);
                 }
 
                 that._old = that._accessor();
@@ -406,9 +409,7 @@
                 that._calculateGroupPadding(height);
             }
 
-            if (that.popup.visible()) {
-                that.popup._position();
-            }
+            that.popup.position();
 
             if (that._isSelect) {
                 value = that.value();
@@ -422,9 +423,6 @@
                 }
 
                 that._options(data, optionLabel, value);
-                if (element.selectedIndex === -1) {
-                    element.selectedIndex = 0;
-                }
             }
 
             that._hideBusy();
@@ -451,6 +449,7 @@
                     } else if (that._textAccessor() !== that._optionLabelText()) {
                         that.listView.value("");
                         that._selectValue(null);
+                        that._oldIndex = that.selectedIndex;
                     }
                 }
             }
@@ -578,6 +577,8 @@
             var isInputActive;
             var handled;
 
+            var isPopupVisible = that.popup.visible();
+
             if (that.filterInput) {
                 isInputActive = that.filterInput[0] === activeElement();
             }
@@ -600,13 +601,18 @@
                 that._focusElement(that.wrapper);
             }
 
+            if (key === keys.ENTER && that._typing && that.filterInput && isPopupVisible) {
+                e.preventDefault();
+                return;
+            }
+
             handled = that._move(e);
 
             if (handled) {
                 return;
             }
 
-            if (!that.popup.visible() || !that.filterInput) {
+            if (!isPopupVisible || !that.filterInput) {
                 if (key === keys.HOME) {
                     handled = true;
                     that._firstItem();

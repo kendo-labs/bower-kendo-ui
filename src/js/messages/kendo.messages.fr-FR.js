@@ -235,6 +235,17 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
 });
 }
 
+/* FilterMultiCheck messages */
+
+if (kendo.ui.FilterMultiCheck) {
+kendo.ui.FilterMultiCheck.prototype.options.messages =
+$.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages,{
+  "checkAll": "Choisir toutes",
+  "clear": "Effacer filtre",
+  "filter": "Filtrer"
+});
+}
+
 /* Groupable messages */
 
 if (kendo.ui.Groupable) {
