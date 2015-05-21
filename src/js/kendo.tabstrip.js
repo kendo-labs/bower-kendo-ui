@@ -183,13 +183,13 @@
 
             that._updateClasses();
 
-            that._tabPosition();
-
             that._dataSource();
 
             if (options.dataSource) {
                 that.dataSource.fetch();
             }
+
+            that._tabPosition();
 
             if (that.options.contentUrls) {
                 that.wrapper.find(".k-tabstrip-items > .k-item")

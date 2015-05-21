@@ -2470,8 +2470,9 @@ input.k-checkbox + label {
 /* Off-screen container used during export */
 .k-pdf-export-shadow {
   position: absolute;
-  overflow: visible;
-  left: -10000px;
+  overflow: hidden;
+  left: -15000px;
+  width: 14400px;
 }
 /* responsive panel */
 .k-rpanel-left {
@@ -3345,6 +3346,8 @@ div.k-grid-footer {
   overflow-x: auto;
   overflow-y: scroll;
   zoom: 1;
+  min-height: 0%;
+  /* IE9 bug workaround - expanding Grid on hover */
 }
 .k-mobile .k-grid tbody {
   -webkit-backface-visibility: hidden;
@@ -10963,6 +10966,7 @@ html .k-upload-empty {
   position: absolute;
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .k-popup .k-list .k-item > .k-group,
 .k-popup > .k-group-header,

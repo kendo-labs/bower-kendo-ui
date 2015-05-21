@@ -472,6 +472,7 @@
             }
 
             if (word) {
+                word = word.toString();
                 idx = word.toLowerCase().indexOf(value.toLowerCase());
                 if (idx > -1) {
                     value += word.substring(idx + value.length);
@@ -645,7 +646,7 @@
 
             if (current) {
                 if (options.suggest) {
-                    this.suggest(current);
+                    that.suggest(current);
                 }
 
                 this.open();

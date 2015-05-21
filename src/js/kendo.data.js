@@ -2208,7 +2208,7 @@
                             return JSON.parse(localStorage.getItem(key));
                         },
                         setItem: function(item) {
-                            localStorage.setItem(key, stringify(item));
+                            localStorage.setItem(key, stringify(that.reader.serialize(item)));
                         }
                     };
                 } else {
