@@ -127,7 +127,7 @@
         _preselect: function(data, value) {
             var that = this;
 
-            if (!isArray(data)) {
+            if (!isArray(data) && !(data instanceof kendo.data.ObservableArray)) {
                 data = [data];
             }
 
@@ -591,7 +591,7 @@
             var hasItems = !!that.dataSource.view().length;
             var isEmptyArray = that.listView.value().length === 0;
 
-            if (isEmptyArray) {
+            if (isEmptyArray || that.element[0].disabled || that._request) {
                 return;
             }
 

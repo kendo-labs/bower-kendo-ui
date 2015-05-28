@@ -296,14 +296,6 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-state-selected .k-i-arrow-n,
 .k-textbox:hover .k-state-selected .k-i-arrow-n,
 .k-button:active .k-state-selected .k-i-arrow-n {
-  background-position: -32px 0px;
-}
-.k-link:not(.k-state-disabled):hover > .k-state-selected .k-i-arrow-n,
-.k-state-hover > .k-state-selected .k-i-arrow-n,
-.k-state-hover > * > .k-state-selected .k-i-arrow-n,
-.k-button:not(.k-state-disabled):hover .k-state-selected .k-i-arrow-n,
-.k-textbox:hover .k-state-selected .k-i-arrow-n,
-.k-button:active .k-state-selected .k-i-arrow-n {
   background-position: -16px 0px;
 }
 .k-numerictextbox .k-link.k-state-selected span.k-i-arrow-n,
@@ -312,14 +304,6 @@ html body .k-button-bare.k-upload-button:hover {
 }
 .k-state-selected .k-i-arrow-s {
   background-position: -16px -32px;
-}
-.k-link:not(.k-state-disabled):hover > .k-state-selected .k-i-arrow-s,
-.k-state-hover > .k-state-selected .k-i-arrow-s,
-.k-state-hover > * > .k-state-selected .k-i-arrow-s,
-.k-button:not(.k-state-disabled):hover .k-state-selected .k-i-arrow-s,
-.k-textbox:hover .k-state-selected .k-i-arrow-s,
-.k-button:active .k-state-selected .k-i-arrow-s {
-  background-position: -32px -32px;
 }
 .k-link:not(.k-state-disabled):hover > .k-state-selected .k-i-arrow-s,
 .k-state-hover > .k-state-selected .k-i-arrow-s,
@@ -360,26 +344,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-arrow-n,
 .k-textbox:hover .k-i-arrow-n,
 .k-button:active .k-i-arrow-n {
-  background-position: -16px 0px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-arrow-n,
-.k-state-hover > .k-i-arrow-n,
-.k-state-hover > * > .k-i-arrow-n,
-.k-button:not(.k-state-disabled):hover .k-i-arrow-n,
-.k-textbox:hover .k-i-arrow-n,
-.k-button:active .k-i-arrow-n {
   background-position: 0px 0px;
 }
 .k-i-arrow-e {
   background-position: 0px -16px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-arrow-e,
-.k-state-hover > .k-i-arrow-e,
-.k-state-hover > * > .k-i-arrow-e,
-.k-button:not(.k-state-disabled):hover .k-i-arrow-e,
-.k-textbox:hover .k-i-arrow-e,
-.k-button:active .k-i-arrow-e {
-  background-position: -16px -16px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-arrow-e,
 .k-state-hover > .k-i-arrow-e,
@@ -417,26 +385,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-arrow-s,
 .k-textbox:hover .k-i-arrow-s,
 .k-button:active .k-i-arrow-s {
-  background-position: -16px -32px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-arrow-s,
-.k-state-hover > .k-i-arrow-s,
-.k-state-hover > * > .k-i-arrow-s,
-.k-button:not(.k-state-disabled):hover .k-i-arrow-s,
-.k-textbox:hover .k-i-arrow-s,
-.k-button:active .k-i-arrow-s {
   background-position: 0px -32px;
 }
 .k-i-arrow-w {
   background-position: 0px -48px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-arrow-w,
-.k-state-hover > .k-i-arrow-w,
-.k-state-hover > * > .k-i-arrow-w,
-.k-button:not(.k-state-disabled):hover .k-i-arrow-w,
-.k-textbox:hover .k-i-arrow-w,
-.k-button:active .k-i-arrow-w {
-  background-position: -16px -48px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-arrow-w,
 .k-state-hover > .k-i-arrow-w,
@@ -474,26 +426,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-seek-n,
 .k-textbox:hover .k-i-seek-n,
 .k-button:active .k-i-seek-n {
-  background-position: -16px -64px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-seek-n,
-.k-state-hover > .k-i-seek-n,
-.k-state-hover > * > .k-i-seek-n,
-.k-button:not(.k-state-disabled):hover .k-i-seek-n,
-.k-textbox:hover .k-i-seek-n,
-.k-button:active .k-i-seek-n {
   background-position: 0px -64px;
 }
 .k-i-seek-e {
   background-position: 0px -80px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-seek-e,
-.k-state-hover > .k-i-seek-e,
-.k-state-hover > * > .k-i-seek-e,
-.k-button:not(.k-state-disabled):hover .k-i-seek-e,
-.k-textbox:hover .k-i-seek-e,
-.k-button:active .k-i-seek-e {
-  background-position: -16px -80px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-seek-e,
 .k-state-hover > .k-i-seek-e,
@@ -531,26 +467,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-seek-s,
 .k-textbox:hover .k-i-seek-s,
 .k-button:active .k-i-seek-s {
-  background-position: -16px -96px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-seek-s,
-.k-state-hover > .k-i-seek-s,
-.k-state-hover > * > .k-i-seek-s,
-.k-button:not(.k-state-disabled):hover .k-i-seek-s,
-.k-textbox:hover .k-i-seek-s,
-.k-button:active .k-i-seek-s {
   background-position: 0px -96px;
 }
 .k-i-seek-w {
   background-position: 0px -112px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-seek-w,
-.k-state-hover > .k-i-seek-w,
-.k-state-hover > * > .k-i-seek-w,
-.k-button:not(.k-state-disabled):hover .k-i-seek-w,
-.k-textbox:hover .k-i-seek-w,
-.k-button:active .k-i-seek-w {
-  background-position: -16px -112px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-seek-w,
 .k-state-hover > .k-i-seek-w,
@@ -599,14 +519,6 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-si-arrow-e,
 .k-textbox:hover .k-si-arrow-e,
 .k-button:active .k-si-arrow-e {
-  background-position: -16px -144px;
-}
-.k-link:not(.k-state-disabled):hover > .k-si-arrow-e,
-.k-state-hover > .k-si-arrow-e,
-.k-state-hover > * > .k-si-arrow-e,
-.k-button:not(.k-state-disabled):hover .k-si-arrow-e,
-.k-textbox:hover .k-si-arrow-e,
-.k-button:active .k-si-arrow-e {
   background-position: 0px -144px;
 }
 .k-si-arrow-s {
@@ -629,26 +541,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-si-arrow-w,
 .k-textbox:hover .k-si-arrow-w,
 .k-button:active .k-si-arrow-w {
-  background-position: -16px -176px;
-}
-.k-link:not(.k-state-disabled):hover > .k-si-arrow-w,
-.k-state-hover > .k-si-arrow-w,
-.k-state-hover > * > .k-si-arrow-w,
-.k-button:not(.k-state-disabled):hover .k-si-arrow-w,
-.k-textbox:hover .k-si-arrow-w,
-.k-button:active .k-si-arrow-w {
   background-position: 0px -176px;
 }
 .k-i-arrowhead-n {
   background-position: 0px -256px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-arrowhead-n,
-.k-state-hover > .k-i-arrowhead-n,
-.k-state-hover > * > .k-i-arrowhead-n,
-.k-button:not(.k-state-disabled):hover .k-i-arrowhead-n,
-.k-textbox:hover .k-i-arrowhead-n,
-.k-button:active .k-i-arrowhead-n {
-  background-position: -16px -256px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-arrowhead-n,
 .k-state-hover > .k-i-arrowhead-n,
@@ -667,26 +563,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-arrowhead-e,
 .k-textbox:hover .k-i-arrowhead-e,
 .k-button:active .k-i-arrowhead-e {
-  background-position: -16px -272px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-arrowhead-e,
-.k-state-hover > .k-i-arrowhead-e,
-.k-state-hover > * > .k-i-arrowhead-e,
-.k-button:not(.k-state-disabled):hover .k-i-arrowhead-e,
-.k-textbox:hover .k-i-arrowhead-e,
-.k-button:active .k-i-arrowhead-e {
   background-position: 0px -272px;
 }
 .k-i-arrowhead-s {
   background-position: 0px -288px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-arrowhead-s,
-.k-state-hover > .k-i-arrowhead-s,
-.k-state-hover > * > .k-i-arrowhead-s,
-.k-button:not(.k-state-disabled):hover .k-i-arrowhead-s,
-.k-textbox:hover .k-i-arrowhead-s,
-.k-button:active .k-i-arrowhead-s {
-  background-position: -16px -288px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-arrowhead-s,
 .k-state-hover > .k-i-arrowhead-s,
@@ -705,40 +585,12 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-arrowhead-w,
 .k-textbox:hover .k-i-arrowhead-w,
 .k-button:active .k-i-arrowhead-w {
-  background-position: -16px -304px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-arrowhead-w,
-.k-state-hover > .k-i-arrowhead-w,
-.k-state-hover > * > .k-i-arrowhead-w,
-.k-button:not(.k-state-disabled):hover .k-i-arrowhead-w,
-.k-textbox:hover .k-i-arrowhead-w,
-.k-button:active .k-i-arrowhead-w {
   background-position: 0px -304px;
 }
 .k-i-expand,
 .k-plus,
 .k-plus-disabled {
   background-position: 0px -192px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-expand,
-.k-link:not(.k-state-disabled):hover > .k-plus,
-.k-link:not(.k-state-disabled):hover > .k-plus-disabled,
-.k-state-hover > .k-i-expand,
-.k-state-hover > .k-plus,
-.k-state-hover > .k-plus-disabled,
-.k-state-hover > * > .k-i-expand,
-.k-state-hover > * > .k-plus,
-.k-state-hover > * > .k-plus-disabled,
-.k-button:not(.k-state-disabled):hover .k-i-expand,
-.k-button:not(.k-state-disabled):hover .k-plus,
-.k-button:not(.k-state-disabled):hover .k-plus-disabled,
-.k-textbox:hover .k-i-expand,
-.k-textbox:hover .k-plus,
-.k-textbox:hover .k-plus-disabled,
-.k-button:active .k-i-expand,
-.k-button:active .k-plus,
-.k-button:active .k-plus-disabled {
-  background-position: -16px -192px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-expand,
 .k-link:not(.k-state-disabled):hover > .k-plus,
@@ -790,58 +642,12 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:active .k-rtl .k-i-expand,
 .k-button:active .k-rtl .k-plus,
 .k-button:active .k-rtl .k-plus-disabled {
-  background-position: -16px -208px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-expand-w,
-.k-link:not(.k-state-disabled):hover > .k-rtl .k-i-expand,
-.k-link:not(.k-state-disabled):hover > .k-rtl .k-plus,
-.k-link:not(.k-state-disabled):hover > .k-rtl .k-plus-disabled,
-.k-state-hover > .k-i-expand-w,
-.k-state-hover > .k-rtl .k-i-expand,
-.k-state-hover > .k-rtl .k-plus,
-.k-state-hover > .k-rtl .k-plus-disabled,
-.k-state-hover > * > .k-i-expand-w,
-.k-state-hover > * > .k-rtl .k-i-expand,
-.k-state-hover > * > .k-rtl .k-plus,
-.k-state-hover > * > .k-rtl .k-plus-disabled,
-.k-button:not(.k-state-disabled):hover .k-i-expand-w,
-.k-button:not(.k-state-disabled):hover .k-rtl .k-i-expand,
-.k-button:not(.k-state-disabled):hover .k-rtl .k-plus,
-.k-button:not(.k-state-disabled):hover .k-rtl .k-plus-disabled,
-.k-textbox:hover .k-i-expand-w,
-.k-textbox:hover .k-rtl .k-i-expand,
-.k-textbox:hover .k-rtl .k-plus,
-.k-textbox:hover .k-rtl .k-plus-disabled,
-.k-button:active .k-i-expand-w,
-.k-button:active .k-rtl .k-i-expand,
-.k-button:active .k-rtl .k-plus,
-.k-button:active .k-rtl .k-plus-disabled {
   background-position: 0px -208px;
 }
 .k-i-collapse,
 .k-minus,
 .k-minus-disabled {
   background-position: 0px -224px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-collapse,
-.k-link:not(.k-state-disabled):hover > .k-minus,
-.k-link:not(.k-state-disabled):hover > .k-minus-disabled,
-.k-state-hover > .k-i-collapse,
-.k-state-hover > .k-minus,
-.k-state-hover > .k-minus-disabled,
-.k-state-hover > * > .k-i-collapse,
-.k-state-hover > * > .k-minus,
-.k-state-hover > * > .k-minus-disabled,
-.k-button:not(.k-state-disabled):hover .k-i-collapse,
-.k-button:not(.k-state-disabled):hover .k-minus,
-.k-button:not(.k-state-disabled):hover .k-minus-disabled,
-.k-textbox:hover .k-i-collapse,
-.k-textbox:hover .k-minus,
-.k-textbox:hover .k-minus-disabled,
-.k-button:active .k-i-collapse,
-.k-button:active .k-minus,
-.k-button:active .k-minus-disabled {
-  background-position: -16px -224px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-collapse,
 .k-link:not(.k-state-disabled):hover > .k-minus,
@@ -893,51 +699,11 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:active .k-rtl .k-i-collapse,
 .k-button:active .k-rtl .k-minus,
 .k-button:active .k-rtl .k-minus-disabled {
-  background-position: -16px -240px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-collapse-w,
-.k-link:not(.k-state-disabled):hover > .k-rtl .k-i-collapse,
-.k-link:not(.k-state-disabled):hover > .k-rtl .k-minus,
-.k-link:not(.k-state-disabled):hover > .k-rtl .k-minus-disabled,
-.k-state-hover > .k-i-collapse-w,
-.k-state-hover > .k-rtl .k-i-collapse,
-.k-state-hover > .k-rtl .k-minus,
-.k-state-hover > .k-rtl .k-minus-disabled,
-.k-state-hover > * > .k-i-collapse-w,
-.k-state-hover > * > .k-rtl .k-i-collapse,
-.k-state-hover > * > .k-rtl .k-minus,
-.k-state-hover > * > .k-rtl .k-minus-disabled,
-.k-button:not(.k-state-disabled):hover .k-i-collapse-w,
-.k-button:not(.k-state-disabled):hover .k-rtl .k-i-collapse,
-.k-button:not(.k-state-disabled):hover .k-rtl .k-minus,
-.k-button:not(.k-state-disabled):hover .k-rtl .k-minus-disabled,
-.k-textbox:hover .k-i-collapse-w,
-.k-textbox:hover .k-rtl .k-i-collapse,
-.k-textbox:hover .k-rtl .k-minus,
-.k-textbox:hover .k-rtl .k-minus-disabled,
-.k-button:active .k-i-collapse-w,
-.k-button:active .k-rtl .k-i-collapse,
-.k-button:active .k-rtl .k-minus,
-.k-button:active .k-rtl .k-minus-disabled {
   background-position: 0px -240px;
 }
 .k-i-pencil,
 .k-edit {
   background-position: -32px 0px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-pencil,
-.k-link:not(.k-state-disabled):hover > .k-edit,
-.k-state-hover > .k-i-pencil,
-.k-state-hover > .k-edit,
-.k-state-hover > * > .k-i-pencil,
-.k-state-hover > * > .k-edit,
-.k-button:not(.k-state-disabled):hover .k-i-pencil,
-.k-button:not(.k-state-disabled):hover .k-edit,
-.k-textbox:hover .k-i-pencil,
-.k-textbox:hover .k-edit,
-.k-button:active .k-i-pencil,
-.k-button:active .k-edit {
-  background-position: -48px 0px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-pencil,
 .k-link:not(.k-state-disabled):hover > .k-edit,
@@ -976,38 +742,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:active .k-i-close,
 .k-button:active .k-delete,
 .k-button:active .k-group-delete {
-  background-position: -48px -16px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-close,
-.k-link:not(.k-state-disabled):hover > .k-delete,
-.k-link:not(.k-state-disabled):hover > .k-group-delete,
-.k-state-hover > .k-i-close,
-.k-state-hover > .k-delete,
-.k-state-hover > .k-group-delete,
-.k-state-hover > * > .k-i-close,
-.k-state-hover > * > .k-delete,
-.k-state-hover > * > .k-group-delete,
-.k-button:not(.k-state-disabled):hover .k-i-close,
-.k-button:not(.k-state-disabled):hover .k-delete,
-.k-button:not(.k-state-disabled):hover .k-group-delete,
-.k-textbox:hover .k-i-close,
-.k-textbox:hover .k-delete,
-.k-textbox:hover .k-group-delete,
-.k-button:active .k-i-close,
-.k-button:active .k-delete,
-.k-button:active .k-group-delete {
   background-position: -32px -16px;
 }
 .k-si-close {
   background-position: -160px -80px;
-}
-.k-link:not(.k-state-disabled):hover > .k-si-close,
-.k-state-hover > .k-si-close,
-.k-state-hover > * > .k-si-close,
-.k-button:not(.k-state-disabled):hover .k-si-close,
-.k-textbox:hover .k-si-close,
-.k-button:active .k-si-close {
-  background-position: -176px -80px;
 }
 .k-link:not(.k-state-disabled):hover > .k-si-close,
 .k-state-hover > .k-si-close,
@@ -1027,26 +765,6 @@ html body .k-button-bare.k-upload-button:hover {
 .k-insert,
 .k-update {
   background-position: -32px -32px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-tick,
-.k-link:not(.k-state-disabled):hover > .k-insert,
-.k-link:not(.k-state-disabled):hover > .k-update,
-.k-state-hover > .k-i-tick,
-.k-state-hover > .k-insert,
-.k-state-hover > .k-update,
-.k-state-hover > * > .k-i-tick,
-.k-state-hover > * > .k-insert,
-.k-state-hover > * > .k-update,
-.k-button:not(.k-state-disabled):hover .k-i-tick,
-.k-button:not(.k-state-disabled):hover .k-insert,
-.k-button:not(.k-state-disabled):hover .k-update,
-.k-textbox:hover .k-i-tick,
-.k-textbox:hover .k-insert,
-.k-textbox:hover .k-update,
-.k-button:active .k-i-tick,
-.k-button:active .k-insert,
-.k-button:active .k-update {
-  background-position: -48px -32px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-tick,
 .k-link:not(.k-state-disabled):hover > .k-insert,
@@ -1091,52 +809,12 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:active .k-check:checked,
 .k-button:active .k-mobile-list .k-edit-field [type=checkbox],
 .k-button:active .k-mobile-list .k-edit-field [type=radio] {
-  background-position: -48px -32px;
-}
-.k-link:not(.k-state-disabled):hover > .k-check:checked,
-.k-link:not(.k-state-disabled):hover > .k-mobile-list .k-edit-field [type=checkbox],
-.k-link:not(.k-state-disabled):hover > .k-mobile-list .k-edit-field [type=radio],
-.k-state-hover > .k-check:checked,
-.k-state-hover > .k-mobile-list .k-edit-field [type=checkbox],
-.k-state-hover > .k-mobile-list .k-edit-field [type=radio],
-.k-state-hover > * > .k-check:checked,
-.k-state-hover > * > .k-mobile-list .k-edit-field [type=checkbox],
-.k-state-hover > * > .k-mobile-list .k-edit-field [type=radio],
-.k-button:not(.k-state-disabled):hover .k-check:checked,
-.k-button:not(.k-state-disabled):hover .k-mobile-list .k-edit-field [type=checkbox],
-.k-button:not(.k-state-disabled):hover .k-mobile-list .k-edit-field [type=radio],
-.k-textbox:hover .k-check:checked,
-.k-textbox:hover .k-mobile-list .k-edit-field [type=checkbox],
-.k-textbox:hover .k-mobile-list .k-edit-field [type=radio],
-.k-button:active .k-check:checked,
-.k-button:active .k-mobile-list .k-edit-field [type=checkbox],
-.k-button:active .k-mobile-list .k-edit-field [type=radio] {
   background-position: -32px -32px;
 }
 .k-i-cancel,
 .k-cancel,
 .k-denied {
   background-position: -32px -48px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-cancel,
-.k-link:not(.k-state-disabled):hover > .k-cancel,
-.k-link:not(.k-state-disabled):hover > .k-denied,
-.k-state-hover > .k-i-cancel,
-.k-state-hover > .k-cancel,
-.k-state-hover > .k-denied,
-.k-state-hover > * > .k-i-cancel,
-.k-state-hover > * > .k-cancel,
-.k-state-hover > * > .k-denied,
-.k-button:not(.k-state-disabled):hover .k-i-cancel,
-.k-button:not(.k-state-disabled):hover .k-cancel,
-.k-button:not(.k-state-disabled):hover .k-denied,
-.k-textbox:hover .k-i-cancel,
-.k-textbox:hover .k-cancel,
-.k-textbox:hover .k-denied,
-.k-button:active .k-i-cancel,
-.k-button:active .k-cancel,
-.k-button:active .k-denied {
-  background-position: -48px -48px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-cancel,
 .k-link:not(.k-state-disabled):hover > .k-cancel,
@@ -1174,39 +852,11 @@ html body .k-button-bare.k-upload-button:hover {
 .k-textbox:hover .k-add,
 .k-button:active .k-i-plus,
 .k-button:active .k-add {
-  background-position: -48px -64px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-plus,
-.k-link:not(.k-state-disabled):hover > .k-add,
-.k-state-hover > .k-i-plus,
-.k-state-hover > .k-add,
-.k-state-hover > * > .k-i-plus,
-.k-state-hover > * > .k-add,
-.k-button:not(.k-state-disabled):hover .k-i-plus,
-.k-button:not(.k-state-disabled):hover .k-add,
-.k-textbox:hover .k-i-plus,
-.k-textbox:hover .k-add,
-.k-button:active .k-i-plus,
-.k-button:active .k-add {
   background-position: -32px -64px;
 }
 .k-i-funnel,
 .k-filter {
   background-position: -32px -80px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-funnel,
-.k-link:not(.k-state-disabled):hover > .k-filter,
-.k-state-hover > .k-i-funnel,
-.k-state-hover > .k-filter,
-.k-state-hover > * > .k-i-funnel,
-.k-state-hover > * > .k-filter,
-.k-button:not(.k-state-disabled):hover .k-i-funnel,
-.k-button:not(.k-state-disabled):hover .k-filter,
-.k-textbox:hover .k-i-funnel,
-.k-textbox:hover .k-filter,
-.k-button:active .k-i-funnel,
-.k-button:active .k-filter {
-  background-position: -48px -80px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-funnel,
 .k-link:not(.k-state-disabled):hover > .k-filter,
@@ -1238,32 +888,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-textbox:hover .k-clear-filter,
 .k-button:active .k-i-funnel-clear,
 .k-button:active .k-clear-filter {
-  background-position: -48px -96px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-funnel-clear,
-.k-link:not(.k-state-disabled):hover > .k-clear-filter,
-.k-state-hover > .k-i-funnel-clear,
-.k-state-hover > .k-clear-filter,
-.k-state-hover > * > .k-i-funnel-clear,
-.k-state-hover > * > .k-clear-filter,
-.k-button:not(.k-state-disabled):hover .k-i-funnel-clear,
-.k-button:not(.k-state-disabled):hover .k-clear-filter,
-.k-textbox:hover .k-i-funnel-clear,
-.k-textbox:hover .k-clear-filter,
-.k-button:active .k-i-funnel-clear,
-.k-button:active .k-clear-filter {
   background-position: -32px -96px;
 }
 .k-i-lock {
   background-position: -64px 0px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-lock,
-.k-state-hover > .k-i-lock,
-.k-state-hover > * > .k-i-lock,
-.k-button:not(.k-state-disabled):hover .k-i-lock,
-.k-textbox:hover .k-i-lock,
-.k-button:active .k-i-lock {
-  background-position: -80px 0px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-lock,
 .k-state-hover > .k-i-lock,
@@ -1282,26 +910,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-unlock,
 .k-textbox:hover .k-i-unlock,
 .k-button:active .k-i-unlock {
-  background-position: -80px -16px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-unlock,
-.k-state-hover > .k-i-unlock,
-.k-state-hover > * > .k-i-unlock,
-.k-button:not(.k-state-disabled):hover .k-i-unlock,
-.k-textbox:hover .k-i-unlock,
-.k-button:active .k-i-unlock {
   background-position: -64px -16px;
 }
 .k-i-refresh {
   background-position: -32px -112px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-refresh,
-.k-state-hover > .k-i-refresh,
-.k-state-hover > * > .k-i-refresh,
-.k-button:not(.k-state-disabled):hover .k-i-refresh,
-.k-textbox:hover .k-i-refresh,
-.k-button:active .k-i-refresh {
-  background-position: -48px -112px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-refresh,
 .k-state-hover > .k-i-refresh,
@@ -1320,26 +932,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-exception,
 .k-textbox:hover .k-i-exception,
 .k-button:active .k-i-exception {
-  background-position: -176px -304px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-exception,
-.k-state-hover > .k-i-exception,
-.k-state-hover > * > .k-i-exception,
-.k-button:not(.k-state-disabled):hover .k-i-exception,
-.k-textbox:hover .k-i-exception,
-.k-button:active .k-i-exception {
   background-position: -160px -304px;
 }
 .k-i-restore {
   background-position: -32px -128px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-restore,
-.k-state-hover > .k-i-restore,
-.k-state-hover > * > .k-i-restore,
-.k-button:not(.k-state-disabled):hover .k-i-restore,
-.k-textbox:hover .k-i-restore,
-.k-button:active .k-i-restore {
-  background-position: -48px -128px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-restore,
 .k-state-hover > .k-i-restore,
@@ -1358,26 +954,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-maximize,
 .k-textbox:hover .k-i-maximize,
 .k-button:active .k-i-maximize {
-  background-position: -48px -144px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-maximize,
-.k-state-hover > .k-i-maximize,
-.k-state-hover > * > .k-i-maximize,
-.k-button:not(.k-state-disabled):hover .k-i-maximize,
-.k-textbox:hover .k-i-maximize,
-.k-button:active .k-i-maximize {
   background-position: -32px -144px;
 }
 .k-i-minimize {
   background-position: -64px -288px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-minimize,
-.k-state-hover > .k-i-minimize,
-.k-state-hover > * > .k-i-minimize,
-.k-button:not(.k-state-disabled):hover .k-i-minimize,
-.k-textbox:hover .k-i-minimize,
-.k-button:active .k-i-minimize {
-  background-position: -80px -288px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-minimize,
 .k-state-hover > .k-i-minimize,
@@ -1396,26 +976,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-pin,
 .k-textbox:hover .k-i-pin,
 .k-button:active .k-i-pin {
-  background-position: -176px -256px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-pin,
-.k-state-hover > .k-i-pin,
-.k-state-hover > * > .k-i-pin,
-.k-button:not(.k-state-disabled):hover .k-i-pin,
-.k-textbox:hover .k-i-pin,
-.k-button:active .k-i-pin {
   background-position: -160px -256px;
 }
 .k-i-unpin {
   background-position: -160px -272px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-unpin,
-.k-state-hover > .k-i-unpin,
-.k-state-hover > * > .k-i-unpin,
-.k-button:not(.k-state-disabled):hover .k-i-unpin,
-.k-textbox:hover .k-i-unpin,
-.k-button:active .k-i-unpin {
-  background-position: -176px -272px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-unpin,
 .k-state-hover > .k-i-unpin,
@@ -1434,26 +998,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-resize-se,
 .k-textbox:hover .k-resize-se,
 .k-button:active .k-resize-se {
-  background-position: -48px -160px;
-}
-.k-link:not(.k-state-disabled):hover > .k-resize-se,
-.k-state-hover > .k-resize-se,
-.k-state-hover > * > .k-resize-se,
-.k-button:not(.k-state-disabled):hover .k-resize-se,
-.k-textbox:hover .k-resize-se,
-.k-button:active .k-resize-se {
   background-position: -32px -160px;
 }
 .k-i-calendar {
   background-position: -32px -176px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-calendar,
-.k-state-hover > .k-i-calendar,
-.k-state-hover > * > .k-i-calendar,
-.k-button:not(.k-state-disabled):hover .k-i-calendar,
-.k-textbox:hover .k-i-calendar,
-.k-button:active .k-i-calendar {
-  background-position: -48px -176px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-calendar,
 .k-state-hover > .k-i-calendar,
@@ -1472,26 +1020,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-clock,
 .k-textbox:hover .k-i-clock,
 .k-button:active .k-i-clock {
-  background-position: -48px -192px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-clock,
-.k-state-hover > .k-i-clock,
-.k-state-hover > * > .k-i-clock,
-.k-button:not(.k-state-disabled):hover .k-i-clock,
-.k-textbox:hover .k-i-clock,
-.k-button:active .k-i-clock {
   background-position: -32px -192px;
 }
 .k-si-plus {
   background-position: -32px -208px;
-}
-.k-link:not(.k-state-disabled):hover > .k-si-plus,
-.k-state-hover > .k-si-plus,
-.k-state-hover > * > .k-si-plus,
-.k-button:not(.k-state-disabled):hover .k-si-plus,
-.k-textbox:hover .k-si-plus,
-.k-button:active .k-si-plus {
-  background-position: -48px -208px;
 }
 .k-link:not(.k-state-disabled):hover > .k-si-plus,
 .k-state-hover > .k-si-plus,
@@ -1510,26 +1042,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-si-minus,
 .k-textbox:hover .k-si-minus,
 .k-button:active .k-si-minus {
-  background-position: -48px -224px;
-}
-.k-link:not(.k-state-disabled):hover > .k-si-minus,
-.k-state-hover > .k-si-minus,
-.k-state-hover > * > .k-si-minus,
-.k-button:not(.k-state-disabled):hover .k-si-minus,
-.k-textbox:hover .k-si-minus,
-.k-button:active .k-si-minus {
   background-position: -32px -224px;
 }
 .k-i-search {
   background-position: -32px -240px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-search,
-.k-state-hover > .k-i-search,
-.k-state-hover > * > .k-i-search,
-.k-button:not(.k-state-disabled):hover .k-i-search,
-.k-textbox:hover .k-i-search,
-.k-button:active .k-i-search {
-  background-position: -48px -240px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-search,
 .k-state-hover > .k-i-search,
@@ -1572,20 +1088,6 @@ html body .k-button-bare.k-upload-button:hover {
 .k-textbox:hover .k-insert-top,
 .k-button:active .k-i-insert-n,
 .k-button:active .k-insert-top {
-  background-position: -176px -32px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-insert-n,
-.k-link:not(.k-state-disabled):hover > .k-insert-top,
-.k-state-hover > .k-i-insert-n,
-.k-state-hover > .k-insert-top,
-.k-state-hover > * > .k-i-insert-n,
-.k-state-hover > * > .k-insert-top,
-.k-button:not(.k-state-disabled):hover .k-i-insert-n,
-.k-button:not(.k-state-disabled):hover .k-insert-top,
-.k-textbox:hover .k-i-insert-n,
-.k-textbox:hover .k-insert-top,
-.k-button:active .k-i-insert-n,
-.k-button:active .k-insert-top {
   background-position: -160px -32px;
 }
 .k-i-insert-m,
@@ -1604,39 +1106,11 @@ html body .k-button-bare.k-upload-button:hover {
 .k-textbox:hover .k-insert-middle,
 .k-button:active .k-i-insert-m,
 .k-button:active .k-insert-middle {
-  background-position: -176px -48px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-insert-m,
-.k-link:not(.k-state-disabled):hover > .k-insert-middle,
-.k-state-hover > .k-i-insert-m,
-.k-state-hover > .k-insert-middle,
-.k-state-hover > * > .k-i-insert-m,
-.k-state-hover > * > .k-insert-middle,
-.k-button:not(.k-state-disabled):hover .k-i-insert-m,
-.k-button:not(.k-state-disabled):hover .k-insert-middle,
-.k-textbox:hover .k-i-insert-m,
-.k-textbox:hover .k-insert-middle,
-.k-button:active .k-i-insert-m,
-.k-button:active .k-insert-middle {
   background-position: -160px -48px;
 }
 .k-i-insert-s,
 .k-insert-bottom {
   background-position: -160px -64px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-insert-s,
-.k-link:not(.k-state-disabled):hover > .k-insert-bottom,
-.k-state-hover > .k-i-insert-s,
-.k-state-hover > .k-insert-bottom,
-.k-state-hover > * > .k-i-insert-s,
-.k-state-hover > * > .k-insert-bottom,
-.k-button:not(.k-state-disabled):hover .k-i-insert-s,
-.k-button:not(.k-state-disabled):hover .k-insert-bottom,
-.k-textbox:hover .k-i-insert-s,
-.k-textbox:hover .k-insert-bottom,
-.k-button:active .k-i-insert-s,
-.k-button:active .k-insert-bottom {
-  background-position: -176px -64px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-insert-s,
 .k-link:not(.k-state-disabled):hover > .k-insert-bottom,
@@ -1671,32 +1145,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-textbox:hover .k-warning,
 .k-button:active .k-i-note,
 .k-button:active .k-warning {
-  background-position: -176px -240px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-note,
-.k-link:not(.k-state-disabled):hover > .k-warning,
-.k-state-hover > .k-i-note,
-.k-state-hover > .k-warning,
-.k-state-hover > * > .k-i-note,
-.k-state-hover > * > .k-warning,
-.k-button:not(.k-state-disabled):hover .k-i-note,
-.k-button:not(.k-state-disabled):hover .k-warning,
-.k-textbox:hover .k-i-note,
-.k-textbox:hover .k-warning,
-.k-button:active .k-i-note,
-.k-button:active .k-warning {
   background-position: -160px -240px;
 }
 .k-i-sort-asc {
   background-position: -112px -240px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-sort-asc,
-.k-state-hover > .k-i-sort-asc,
-.k-state-hover > * > .k-i-sort-asc,
-.k-button:not(.k-state-disabled):hover .k-i-sort-asc,
-.k-textbox:hover .k-i-sort-asc,
-.k-button:active .k-i-sort-asc {
-  background-position: -128px -240px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-sort-asc,
 .k-state-hover > .k-i-sort-asc,
@@ -1715,26 +1167,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-sort-desc,
 .k-textbox:hover .k-i-sort-desc,
 .k-button:active .k-i-sort-desc {
-  background-position: -128px -256px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-sort-desc,
-.k-state-hover > .k-i-sort-desc,
-.k-state-hover > * > .k-i-sort-desc,
-.k-button:not(.k-state-disabled):hover .k-i-sort-desc,
-.k-textbox:hover .k-i-sort-desc,
-.k-button:active .k-i-sort-desc {
   background-position: -112px -256px;
 }
 .k-i-group {
   background-position: -112px -272px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-group,
-.k-state-hover > .k-i-group,
-.k-state-hover > * > .k-i-group,
-.k-button:not(.k-state-disabled):hover .k-i-group,
-.k-textbox:hover .k-i-group,
-.k-button:active .k-i-group {
-  background-position: -128px -272px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-group,
 .k-state-hover > .k-i-group,
@@ -1753,26 +1189,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-ungroup,
 .k-textbox:hover .k-i-ungroup,
 .k-button:active .k-i-ungroup {
-  background-position: -128px -288px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-ungroup,
-.k-state-hover > .k-i-ungroup,
-.k-state-hover > * > .k-i-ungroup,
-.k-button:not(.k-state-disabled):hover .k-i-ungroup,
-.k-textbox:hover .k-i-ungroup,
-.k-button:active .k-i-ungroup {
   background-position: -112px -288px;
 }
 .k-i-columns {
   background-position: -112px -304px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-columns,
-.k-state-hover > .k-i-columns,
-.k-state-hover > * > .k-i-columns,
-.k-button:not(.k-state-disabled):hover .k-i-columns,
-.k-textbox:hover .k-i-columns,
-.k-button:active .k-i-columns {
-  background-position: -128px -304px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-columns,
 .k-state-hover > .k-i-columns,
@@ -1791,26 +1211,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-hbars,
 .k-textbox:hover .k-i-hbars,
 .k-button:active .k-i-hbars {
-  background-position: -80px -32px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-hbars,
-.k-state-hover > .k-i-hbars,
-.k-state-hover > * > .k-i-hbars,
-.k-button:not(.k-state-disabled):hover .k-i-hbars,
-.k-textbox:hover .k-i-hbars,
-.k-button:active .k-i-hbars {
   background-position: -64px -32px;
 }
 .k-i-vbars {
   background-position: -64px -48px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-vbars,
-.k-state-hover > .k-i-vbars,
-.k-state-hover > * > .k-i-vbars,
-.k-button:not(.k-state-disabled):hover .k-i-vbars,
-.k-textbox:hover .k-i-vbars,
-.k-button:active .k-i-vbars {
-  background-position: -80px -48px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-vbars,
 .k-state-hover > .k-i-vbars,
@@ -1829,26 +1233,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-sum,
 .k-textbox:hover .k-i-sum,
 .k-button:active .k-i-sum {
-  background-position: -80px -64px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-sum,
-.k-state-hover > .k-i-sum,
-.k-state-hover > * > .k-i-sum,
-.k-button:not(.k-state-disabled):hover .k-i-sum,
-.k-textbox:hover .k-i-sum,
-.k-button:active .k-i-sum {
   background-position: -64px -64px;
 }
 .k-i-pdf {
   background-position: -64px -80px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-pdf,
-.k-state-hover > .k-i-pdf,
-.k-state-hover > * > .k-i-pdf,
-.k-button:not(.k-state-disabled):hover .k-i-pdf,
-.k-textbox:hover .k-i-pdf,
-.k-button:active .k-i-pdf {
-  background-position: -80px -80px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-pdf,
 .k-state-hover > .k-i-pdf,
@@ -1867,26 +1255,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-excel,
 .k-textbox:hover .k-i-excel,
 .k-button:active .k-i-excel {
-  background-position: -80px -96px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-excel,
-.k-state-hover > .k-i-excel,
-.k-state-hover > * > .k-i-excel,
-.k-button:not(.k-state-disabled):hover .k-i-excel,
-.k-textbox:hover .k-i-excel,
-.k-button:active .k-i-excel {
   background-position: -64px -96px;
 }
 .k-i-rotatecw {
   background-position: -64px -112px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-rotatecw,
-.k-state-hover > .k-i-rotatecw,
-.k-state-hover > * > .k-i-rotatecw,
-.k-button:not(.k-state-disabled):hover .k-i-rotatecw,
-.k-textbox:hover .k-i-rotatecw,
-.k-button:active .k-i-rotatecw {
-  background-position: -80px -112px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-rotatecw,
 .k-state-hover > .k-i-rotatecw,
@@ -1905,26 +1277,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-rotateccw,
 .k-textbox:hover .k-i-rotateccw,
 .k-button:active .k-i-rotateccw {
-  background-position: -80px -128px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-rotateccw,
-.k-state-hover > .k-i-rotateccw,
-.k-state-hover > * > .k-i-rotateccw,
-.k-button:not(.k-state-disabled):hover .k-i-rotateccw,
-.k-textbox:hover .k-i-rotateccw,
-.k-button:active .k-i-rotateccw {
   background-position: -64px -128px;
 }
 .k-i-undo {
   background-position: -64px -160px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-undo,
-.k-state-hover > .k-i-undo,
-.k-state-hover > * > .k-i-undo,
-.k-button:not(.k-state-disabled):hover .k-i-undo,
-.k-textbox:hover .k-i-undo,
-.k-button:active .k-i-undo {
-  background-position: -80px -160px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-undo,
 .k-state-hover > .k-i-undo,
@@ -1943,26 +1299,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-redo,
 .k-textbox:hover .k-i-redo,
 .k-button:active .k-i-redo {
-  background-position: -80px -144px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-redo,
-.k-state-hover > .k-i-redo,
-.k-state-hover > * > .k-i-redo,
-.k-button:not(.k-state-disabled):hover .k-i-redo,
-.k-textbox:hover .k-i-redo,
-.k-button:active .k-i-redo {
   background-position: -64px -144px;
 }
 .k-i-shape {
   background-position: -64px -176px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-shape,
-.k-state-hover > .k-i-shape,
-.k-state-hover > * > .k-i-shape,
-.k-button:not(.k-state-disabled):hover .k-i-shape,
-.k-textbox:hover .k-i-shape,
-.k-button:active .k-i-shape {
-  background-position: -80px -176px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-shape,
 .k-state-hover > .k-i-shape,
@@ -1981,26 +1321,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-connector,
 .k-textbox:hover .k-i-connector,
 .k-button:active .k-i-connector {
-  background-position: -80px -192px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-connector,
-.k-state-hover > .k-i-connector,
-.k-state-hover > * > .k-i-connector,
-.k-button:not(.k-state-disabled):hover .k-i-connector,
-.k-textbox:hover .k-i-connector,
-.k-button:active .k-i-connector {
   background-position: -64px -192px;
 }
 .k-i-kpi {
   background-position: -64px -208px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-kpi,
-.k-state-hover > .k-i-kpi,
-.k-state-hover > * > .k-i-kpi,
-.k-button:not(.k-state-disabled):hover .k-i-kpi,
-.k-textbox:hover .k-i-kpi,
-.k-button:active .k-i-kpi {
-  background-position: -80px -208px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-kpi,
 .k-state-hover > .k-i-kpi,
@@ -2019,26 +1343,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:not(.k-state-disabled):hover .k-i-dimension,
 .k-textbox:hover .k-i-dimension,
 .k-button:active .k-i-dimension {
-  background-position: -80px -224px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-dimension,
-.k-state-hover > .k-i-dimension,
-.k-state-hover > * > .k-i-dimension,
-.k-button:not(.k-state-disabled):hover .k-i-dimension,
-.k-textbox:hover .k-i-dimension,
-.k-button:active .k-i-dimension {
   background-position: -64px -224px;
 }
 .k-file {
   background-position: 0px 0px;
-}
-.k-link:not(.k-state-disabled):hover > .k-file,
-.k-state-hover > .k-file,
-.k-state-hover > * > .k-file,
-.k-button:not(.k-state-disabled):hover .k-file,
-.k-textbox:hover .k-file,
-.k-button:active .k-file {
-  background-position: -16px 0px;
 }
 .k-link:not(.k-state-disabled):hover > .k-file,
 .k-state-hover > .k-file,
@@ -2051,20 +1359,6 @@ html body .k-button-bare.k-upload-button:hover {
 .k-i-folder-add,
 .k-addfolder {
   background-position: -32px -272px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-folder-add,
-.k-link:not(.k-state-disabled):hover > .k-addfolder,
-.k-state-hover > .k-i-folder-add,
-.k-state-hover > .k-addfolder,
-.k-state-hover > * > .k-i-folder-add,
-.k-state-hover > * > .k-addfolder,
-.k-button:not(.k-state-disabled):hover .k-i-folder-add,
-.k-button:not(.k-state-disabled):hover .k-addfolder,
-.k-textbox:hover .k-i-folder-add,
-.k-textbox:hover .k-addfolder,
-.k-button:active .k-i-folder-add,
-.k-button:active .k-addfolder {
-  background-position: -48px -272px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-folder-add,
 .k-link:not(.k-state-disabled):hover > .k-addfolder,
@@ -2096,32 +1390,10 @@ html body .k-button-bare.k-upload-button:hover {
 .k-textbox:hover .k-goup,
 .k-button:active .k-i-folder-up,
 .k-button:active .k-goup {
-  background-position: -48px -288px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-folder-up,
-.k-link:not(.k-state-disabled):hover > .k-goup,
-.k-state-hover > .k-i-folder-up,
-.k-state-hover > .k-goup,
-.k-state-hover > * > .k-i-folder-up,
-.k-state-hover > * > .k-goup,
-.k-button:not(.k-state-disabled):hover .k-i-folder-up,
-.k-button:not(.k-state-disabled):hover .k-goup,
-.k-textbox:hover .k-i-folder-up,
-.k-textbox:hover .k-goup,
-.k-button:active .k-i-folder-up,
-.k-button:active .k-goup {
   background-position: -32px -288px;
 }
 .k-i-more {
   background-position: -64px -32px;
-}
-.k-link:not(.k-state-disabled):hover > .k-i-more,
-.k-state-hover > .k-i-more,
-.k-state-hover > * > .k-i-more,
-.k-button:not(.k-state-disabled):hover .k-i-more,
-.k-textbox:hover .k-i-more,
-.k-button:active .k-i-more {
-  background-position: -80px -32px;
 }
 .k-link:not(.k-state-disabled):hover > .k-i-more,
 .k-state-hover > .k-i-more,
@@ -2147,20 +1419,6 @@ html body .k-button-bare.k-upload-button:hover {
 .k-pager-numbers .k-current-page .k-link:after,
 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after {
   background-position: 0px -32px;
-}
-.k-link:not(.k-state-disabled):hover > .k-pager-numbers .k-current-page .k-link:after,
-.k-link:not(.k-state-disabled):hover > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
-.k-state-hover > .k-pager-numbers .k-current-page .k-link:after,
-.k-state-hover > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
-.k-state-hover > * > .k-pager-numbers .k-current-page .k-link:after,
-.k-state-hover > * > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
-.k-button:not(.k-state-disabled):hover .k-pager-numbers .k-current-page .k-link:after,
-.k-button:not(.k-state-disabled):hover .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
-.k-textbox:hover .k-pager-numbers .k-current-page .k-link:after,
-.k-textbox:hover .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
-.k-button:active .k-pager-numbers .k-current-page .k-link:after,
-.k-button:active .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after {
-  background-position: -16px -32px;
 }
 .k-link:not(.k-state-disabled):hover > .k-pager-numbers .k-current-page .k-link:after,
 .k-link:not(.k-state-disabled):hover > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,

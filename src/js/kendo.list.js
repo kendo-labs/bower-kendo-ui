@@ -183,13 +183,17 @@
                 that.listView.value(value).done(function() {
                     var text = options.text;
 
-                    if (that.input && that.selectedIndex === -1) {
-                        if (text === undefined || text === null) {
-                            text = value;
-                        }
+                    if (!that.listView.filter() && that.input) {
+                        if (that.selectedIndex === -1) {
+                            if (text === undefined || text === null) {
+                                text = value;
+                            }
 
-                        that._accessor(value);
-                        that.input.val(text);
+                            that._accessor(value);
+                            that.input.val(text);
+                        } else if (that._oldIndex === -1) {
+                            that._oldIndex = that.selectedIndex;
+                        }
                     }
                 });
             }
@@ -725,6 +729,9 @@
             if (value === undefined) {
                 return element.value;
             } else {
+                if (value === null) {
+                    value = "";
+                }
                 element.value = value;
             }
         },
@@ -786,6 +793,7 @@
 
             custom.text(value);
             custom[0].setAttribute(SELECTED, SELECTED);
+            custom[0].selected = true;
         },
 
         _hideBusy: function () {
@@ -1543,38 +1551,44 @@
 
         _valueExpr: function(type, values) {
             var that = this;
-            var selectedValue;
-            var index = -1;
+            var value;
             var idx = 0;
 
-            var body = "";
+            var body;
+            var comparer;
+            var normalized = [];
 
             if (!that._valueComparer  || that._valueType !== type) {
                 that._valueType = type;
 
                 for (; idx < values.length; idx++) {
-                    selectedValue = values[idx];
+                    value = values[idx];
 
-                    if (selectedValue === undefined || selectedValue === "") {
-                        selectedValue = '""';
-                    } else if (selectedValue !== null) {
-                        if ((type !== "boolean" && type !== "number") || typeof selectedValue === "object") {
-                            selectedValue = '"' + selectedValue + '"';
-                        } else if (type === "number" && isNaN(selectedValue)) {
-                            continue;
+                    if (value !== undefined && value !== "" && value !== null) {
+                        if (type === "boolean") {
+                            value = Boolean(value);
+                        } else if (type === "number") {
+                            value = Number(value);
+                        } else if (type === "string") {
+                            value = value.toString();
                         }
                     }
 
-                    if (body) {
-                        body += " else ";
-                    }
-
-                    body += "if (value === " + selectedValue + ") { return " + idx + "; }";
+                    normalized.push(value);
                 }
 
-                body += " return -1;";
+                body = "for (var idx = 0; idx < " + normalized.length + "; idx++) {" +
+                        " if (current === values[idx]) {" +
+                        "   return idx;" +
+                        " }" +
+                        "} " +
+                        "return -1;";
 
-                that._valueComparer = new Function("value", body);
+                comparer = new Function(["current", "values"], body);
+
+                that._valueComparer = function(current) {
+                    return comparer(current, normalized);
+                };
             }
 
             return that._valueComparer;
