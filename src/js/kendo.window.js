@@ -392,6 +392,7 @@
 
         setOptions: function(options) {
             Widget.fn.setOptions.call(this, options);
+            this.restore();
             this._animations();
             this._dimensions();
             this._position();

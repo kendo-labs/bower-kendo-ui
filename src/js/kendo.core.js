@@ -45,7 +45,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.1.528";
+    kendo.version = "2015.1.609";
 
     function Class() {}
 
@@ -1266,6 +1266,10 @@ function pad(number, digits, end) {
                     count = lookAhead("d");
                     if (!calendar._lowerDays) {
                         calendar._lowerDays = lowerLocalInfo(calendar.days);
+                    }
+
+                    if (day !== null && count > 2) {
+                        continue;
                     }
 
                     day = count < 3 ? getNumber(2) : getIndexByName(calendar._lowerDays[count == 3 ? "namesAbbr" : "names"], true);

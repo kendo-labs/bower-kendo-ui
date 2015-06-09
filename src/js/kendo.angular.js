@@ -615,9 +615,15 @@
                 scope: false,
 
                 controller: [ '$scope', '$attrs', '$element', function($scope, $attrs, $element) {
-                    this.template = function(key, value) {
+                    var that = this;
+                    that.template = function(key, value) {
                         $attrs[key] = kendo.stringify(value);
                     };
+
+                    $scope.$on("$destroy", function() {
+                        that.template = null;
+                        that = null;
+                    });
                 }],
 
                 link: function(scope, element, attrs, controllers) {
@@ -958,10 +964,16 @@
     });
 
     defadvice("ui.Select", "$angular_getLogicValue", function(){
-        var item = this.self.dataItem();
+        var item = this.self.dataItem(),
+            valueField = this.self.options.dataValueField;
+
         if (item) {
             if (this.self.options.valuePrimitive) {
-                return item[this.self.options.dataValueField];
+                if (!!valueField) {
+                    return item[valueField];
+                } else {
+                    return item;
+                }
             } else {
                 return item.toJSON();
             }

@@ -1782,9 +1782,11 @@ html .km-pane-wrapper .km-widget,
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-webkit .k-pager-numbers .k-current-page .k-link,
   .k-ff .k-pager-numbers .k-current-page .k-link,
-  .k-ie11 .k-pager-numbers .k-current-page .k-link {
+  .k-ie11 .k-pager-numbers .k-current-page .k-link,
+  .k-safari .k-pager-numbers .k-current-page .k-link {
     background-image: url("textures/brushed-metal.png");
     background-image: url("textures/brushed-metal.png"), -webkit-linear-gradient(top, #2f3640 0%, #212a33 100%);
     background-image: url("textures/brushed-metal.png"), -moz-linear-gradient(top, #2f3640 0%, #212a33 100%);
@@ -1796,52 +1798,64 @@ html .km-pane-wrapper .km-widget,
   }
   .k-webkit .k-pager-numbers .k-current-page .k-link,
   .k-ff .k-pager-numbers .k-current-page .k-link,
-  .k-ie11 .k-pager-numbers .k-current-page .k-link {
+  .k-ie11 .k-pager-numbers .k-current-page .k-link,
+  .k-safari .k-pager-numbers .k-current-page .k-link {
     border-color: #171e28;
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
     border-radius: 2px;
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li {
     border-radius: 0;
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li.k-current-view,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li.k-current-view,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li.k-current-view {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li.k-current-view,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li.k-current-view {
     border-radius: 1px 1px 0 0;
   }
   .k-webkit .k-scheduler-toolbar > ul li:first-child,
   .k-ff .k-scheduler-toolbar > ul li:first-child,
   .k-ie11 .k-scheduler-toolbar > ul li:first-child,
+  .k-safari .k-scheduler-toolbar > ul li:first-child,
   .k-webkit .k-scheduler-toolbar > ul li:first-child .k-link,
   .k-ff .k-scheduler-toolbar > ul li:first-child .k-link,
   .k-ie11 .k-scheduler-toolbar > ul li:first-child .k-link,
+  .k-safari .k-scheduler-toolbar > ul li:first-child .k-link,
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views li,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views li,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views li,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views li,
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views li .k-link,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views li .k-link,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views li .k-link {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views li .k-link,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views li .k-link {
     border-radius: 0;
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views li:last-child,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views li:last-child,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views li:last-child,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views li:last-child,
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views li:last-child .k-link,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views li:last-child .k-link,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views li:last-child .k-link {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views li:last-child .k-link,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views li:last-child .k-link {
     border-radius: 0 0 1px 1px;
   }
   .k-webkit .k-pager-numbers .k-current-page .k-link:hover,
   .k-ff .k-pager-numbers .k-current-page .k-link:hover,
   .k-ie11 .k-pager-numbers .k-current-page .k-link:hover,
+  .k-safari .k-pager-numbers .k-current-page .k-link:hover,
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover {
     border-color: #212a33;
     background-image: url("textures/brushed-metal.png");
     background-image: url("textures/brushed-metal.png"), -webkit-linear-gradient(top, #5b5f6b 0%, #40444f 100%);
@@ -1852,21 +1866,25 @@ html .km-pane-wrapper .km-widget,
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link {
     color: #ffffff;
     min-width: 75px;
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover > .k-link,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover > .k-link,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover > .k-link {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover > .k-link,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover > .k-link {
     color: #ffffff;
   }
   .k-webkit .k-pager-numbers .k-current-page .k-link:after,
   .k-ff .k-pager-numbers .k-current-page .k-link:after,
   .k-ie11 .k-pager-numbers .k-current-page .k-link:after,
+  .k-safari .k-pager-numbers .k-current-page .k-link:after,
   .k-webkit .k-scheduler-views > li.k-state-selected > .k-link:after,
   .k-ff .k-scheduler-views > li.k-state-selected > .k-link:after,
-  .k-ie11 .k-scheduler-views > li.k-state-selected > .k-link:after {
+  .k-ie11 .k-scheduler-views > li.k-state-selected > .k-link:after,
+  .k-safari .k-scheduler-views > li.k-state-selected > .k-link:after {
     display: block;
     content: "";
     position: absolute;
@@ -1879,9 +1897,11 @@ html .km-pane-wrapper .km-widget,
   .k-webkit .k-pager-numbers.k-state-expanded,
   .k-ff .k-pager-numbers.k-state-expanded,
   .k-ie11 .k-pager-numbers.k-state-expanded,
+  .k-safari .k-pager-numbers.k-state-expanded,
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
     border-width: 1px 1px 0 1px;
     border-style: solid;
     border-color: #171e28;
@@ -1892,7 +1912,8 @@ html .km-pane-wrapper .km-widget,
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
-  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
+  .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
     border-width: 1px;
     background-image: none;
     border-radius: 2px;
@@ -1900,9 +1921,11 @@ html .km-pane-wrapper .km-widget,
   .k-webkit .k-pager-numbers .k-state-selected,
   .k-ff .k-pager-numbers .k-state-selected,
   .k-ie11 .k-pager-numbers .k-state-selected,
+  .k-safari .k-pager-numbers .k-state-selected,
   .k-webkit .k-pager-numbers .k-link,
   .k-ff .k-pager-numbers .k-link,
-  .k-ie11 .k-pager-numbers .k-link {
+  .k-ie11 .k-pager-numbers .k-link,
+  .k-safari .k-pager-numbers .k-link {
     border-radius: 1px;
   }
 }

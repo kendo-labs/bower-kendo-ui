@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.1.528";
+    kendo.version = "2015.1.609";
 
     function Class() {}
 
@@ -1268,6 +1268,10 @@ function pad(number, digits, end) {
                     count = lookAhead("d");
                     if (!calendar._lowerDays) {
                         calendar._lowerDays = lowerLocalInfo(calendar.days);
+                    }
+
+                    if (day !== null && count > 2) {
+                        continue;
                     }
 
                     day = count < 3 ? getNumber(2) : getIndexByName(calendar._lowerDays[count == 3 ? "namesAbbr" : "names"], true);
@@ -5456,7 +5460,10 @@ function pad(number, digits, end) {
             page: $.noop,
             filter: function(params, filter, useVersionFour) {
                 if (filter) {
-                    params.$filter = toOdataFilter(filter, useVersionFour);
+                    filter = toOdataFilter(filter, useVersionFour);
+                    if (filter) {
+                        params.$filter = filter;
+                    }
                 }
             },
             sort: function(params, orderby) {
@@ -9949,6 +9956,10 @@ function pad(number, digits, end) {
                 data = inferTable(table, fields);
             } else if (select) {
                 data = inferSelect(select, fields);
+
+                if (dataSource.group === undefined && data[0] && data[0].optgroup !== undefined) {
+                    dataSource.group = "optgroup";
+                }
             }
         }
 
@@ -9966,6 +9977,9 @@ function pad(number, digits, end) {
         }
 
         dataSource.data = data;
+
+        select = null;
+        dataSource.select = null;
         table = null;
         dataSource.table = null;
 
@@ -9973,22 +9987,33 @@ function pad(number, digits, end) {
     };
 
     function inferSelect(select, fields) {
-        var options = $(select)[0].children,
-            idx,
-            length,
-            data = [],
-            record,
-            firstField = fields[0],
-            secondField = fields[1],
-            value,
-            option;
+        select = $(select)[0];
+        var options = select.options;
+        var firstField = fields[0];
+        var secondField = fields[1];
+
+        var data = [];
+        var idx, length;
+        var optgroup;
+        var option;
+        var record;
+        var value;
 
         for (idx = 0, length = options.length; idx < length; idx++) {
             record = {};
             option = options[idx];
+            optgroup = option.parentNode;
 
-            if (option.disabled) {
+            if (optgroup === select) {
+                optgroup = null;
+            }
+
+            if (option.disabled || (optgroup && optgroup.disabled)) {
                 continue;
+            }
+
+            if (optgroup) {
+                record.optgroup = optgroup.label;
             }
 
             record[firstField.field] = option.text;
@@ -21934,8 +21959,6 @@ function pad(number, digits, end) {
                     that._renderHeader();
                 }, 50);
             }, this);
-
-            this._fixedHeader();
         },
 
         options: {
@@ -21985,7 +22008,6 @@ function pad(number, digits, end) {
         setOptions: function(options) {
             Widget.fn.setOptions.call(this, options);
 
-            this._fixedHeader();
             this._getter();
             this._templates();
             this._render();
@@ -22577,7 +22599,7 @@ function pad(number, digits, end) {
         },
 
         _fixedHeader: function() {
-            if (this.dataSource.group().length && this.templates.fixedGroupTemplate) {
+            if (this.isGrouped() && this.templates.fixedGroupTemplate) {
                 this.header.show();
                 this.element.scroll(this._onScroll);
             } else {
@@ -22636,7 +22658,7 @@ function pad(number, digits, end) {
             var values = this.value();
 
             var group, newGroup, j;
-            var isGrouped = this.dataSource.group().length;
+            var isGrouped = this.isGrouped();
 
             if (isGrouped) {
                 for (i = 0; i < view.length; i++) {
@@ -22688,6 +22710,8 @@ function pad(number, digits, end) {
 
             that.trigger("dataBinding");
 
+            that._fixedHeader();
+
             that._render();
 
             that._bound = true;
@@ -22718,6 +22742,10 @@ function pad(number, digits, end) {
 
         isBound: function() {
             return this._bound;
+        },
+
+        isGrouped: function() {
+            return (this.dataSource.group() || []).length;
         }
     });
 
@@ -28740,12 +28768,12 @@ function pad(number, digits, end) {
             color.match = [ m[1] ];
             return color;
         }
-        if ((m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(color))) {
+        if ((m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})\b/i.exec(color))) {
             ret = new _Bytes(parseInt(m[1], 16),
                              parseInt(m[2], 16),
                              parseInt(m[3], 16), 1);
         }
-        else if ((m = /^#?([0-9a-f])([0-9a-f])([0-9a-f])/i.exec(color))) {
+        else if ((m = /^#?([0-9a-f])([0-9a-f])([0-9a-f])\b/i.exec(color))) {
             ret = new _Bytes(parseInt(m[1] + m[1], 16),
                              parseInt(m[2] + m[2], 16),
                              parseInt(m[3] + m[3], 16), 1);
@@ -40856,6 +40884,7 @@ function pad(number, digits, end) {
 
         setOptions: function(options) {
             Widget.fn.setOptions.call(this, options);
+            this.restore();
             this._animations();
             this._dimensions();
             this._position();
@@ -42487,7 +42516,7 @@ function pad(number, digits, end) {
             if (this.options.type === "group") {
                 for (var i = 0; i < view.length; i++) {
                     group = view[i].items;
-                    if (group.length < index) {
+                    if (group.length <= index) {
                         index = index - group.length;
                     } else {
                         return group[index];
@@ -42738,8 +42767,23 @@ function pad(number, digits, end) {
             this.element.empty();
         },
 
+        _height: function() {
+            var hasData = !!this.dataSource.view().length,
+                height = this.options.height,
+                itemHeight = this.options.itemHeight,
+                total = this.dataSource.total();
+
+            if (!hasData) {
+                height = 0;
+            } else if (height/itemHeight > total) {
+                height = total * itemHeight;
+            }
+
+            return height;
+        },
+
         _screenHeight: function() {
-            var height = this.options.height,
+            var height = this._height(),
                 element = this.element,
                 content = this.content;
 
@@ -42841,7 +42885,7 @@ function pad(number, digits, end) {
             that._items = that._generateItems(that.element[0], that.itemCount);
 
             that._setHeight(options.itemHeight * dataSource.total());
-            that.options.type = !!dataSource.group().length ? "group" : "flat";
+            that.options.type = (dataSource.group() || []).length ? "group" : "flat";
 
             if (that.options.type === "flat") {
                 that.header.hide();
@@ -44434,8 +44478,10 @@ function pad(number, digits, end) {
             var that = this,
                 linkRoles = "tab",
                 pressedButtonSelector = "[data-" + kendo.ns + "navigate-on-press]",
-                buttonSelector = roleSelector("button") + ":not(" + pressedButtonSelector + ")",
-                buttonSelectors = roleSelector("backbutton detailbutton listview-link") + "," + buttonSelector;
+
+                buttonSelectors = $.map(["button", "backbutton", "detailbutton", "listview-link"] , function(role) {
+                    return roleSelector(role) + ":not(" + pressedButtonSelector + ")";
+                }).join(",");
 
             this.element.handler(this)
                 .on("down", roleSelector(linkRoles) + "," + pressedButtonSelector, "_mouseup")
@@ -46158,6 +46204,7 @@ function pad(number, digits, end) {
             that.enable(that.options.enable);
 
             that._userEvents = new kendo.UserEvents(that.element, {
+                allowSelection: !useTap,
                 press: function(e) {
                     that._activate(e);
                 },
@@ -49941,9 +49988,15 @@ function pad(number, digits, end) {
                 scope: false,
 
                 controller: [ '$scope', '$attrs', '$element', function($scope, $attrs, $element) {
-                    this.template = function(key, value) {
+                    var that = this;
+                    that.template = function(key, value) {
                         $attrs[key] = kendo.stringify(value);
                     };
+
+                    $scope.$on("$destroy", function() {
+                        that.template = null;
+                        that = null;
+                    });
                 }],
 
                 link: function(scope, element, attrs, controllers) {
@@ -50284,10 +50337,16 @@ function pad(number, digits, end) {
     });
 
     defadvice("ui.Select", "$angular_getLogicValue", function(){
-        var item = this.self.dataItem();
+        var item = this.self.dataItem(),
+            valueField = this.self.options.dataValueField;
+
         if (item) {
             if (this.self.options.valuePrimitive) {
-                return item[this.self.options.dataValueField];
+                if (!!valueField) {
+                    return item[valueField];
+                } else {
+                    return item;
+                }
             } else {
                 return item.toJSON();
             }
