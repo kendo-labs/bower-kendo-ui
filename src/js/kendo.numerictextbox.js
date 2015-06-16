@@ -361,11 +361,15 @@
             if (that._old != value) {
                 that._old = value;
 
-                // trigger the DOM change event so any subscriber gets notified
-                that.element.trigger(CHANGE);
+                if (!that._typing) {
+                    // trigger the DOM change event so any subscriber gets notified
+                    that.element.trigger(CHANGE);
+                }
 
                 that.trigger(CHANGE);
             }
+
+            that._typing = false;
         },
 
         _culture: function(culture) {
@@ -446,7 +450,10 @@
                 that._step(1);
             } else if (key == keys.ENTER) {
                 that._change(that.element.val());
+            } else {
+                that._typing = true;
             }
+
         },
 
         _keypress: function(e) {
@@ -567,6 +574,7 @@
             value += that.options.step * step;
 
             that._update(that._adjust(value));
+            that._typing = false;
 
             that.trigger(SPIN);
         },

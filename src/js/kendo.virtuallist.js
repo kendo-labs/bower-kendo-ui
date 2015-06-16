@@ -793,6 +793,7 @@
             }
 
             this._filter = filter;
+            this._rangeChange = true;
         },
 
         skipUpdate: $.noop,
@@ -806,6 +807,7 @@
         _clean: function() {
             this.result = undefined;
             this._lastScrollTop = undefined;
+            this._lastPage = undefined;
             $(this.heightContainer).remove();
             this.heightContainer = undefined;
             this.element.empty();

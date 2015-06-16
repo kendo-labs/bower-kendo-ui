@@ -186,8 +186,8 @@
             var that = this;
 
             that._inputWrapper.removeClass(FOCUSED);
-            clearTimeout(that._typing);
-            that._typing = null;
+            clearTimeout(that._typingTimeout);
+            that._typingTimeout = null;
 
             if (that.options.text !== that.input.val()) {
                 that.text(that.text());
@@ -344,13 +344,13 @@
             if (that._open) {
                 that._open = false;
 
-                if (that._typing && !isActive) {
+                if (that._typingTimeout && !isActive) {
                     that.popup.close();
                 } else {
                     that.toggle(!!length);
                 }
 
-                that._typing = null;
+                that._typingTimeout = null;
             }
 
             if (that._touchScroller) {
@@ -728,8 +728,8 @@
 
             that._last = key;
 
-            clearTimeout(that._typing);
-            that._typing = null;
+            clearTimeout(that._typingTimeout);
+            that._typingTimeout = null;
 
             if (key != keys.TAB && !that._move(e)) {
                that._search();
@@ -774,7 +774,7 @@
         _search: function() {
             var that = this;
 
-            that._typing = setTimeout(function() {
+            that._typingTimeout = setTimeout(function() {
                 var value = that.text();
 
                 if (that._prev !== value) {
@@ -782,7 +782,7 @@
                     that.search(value);
                 }
 
-                that._typing = null;
+                that._typingTimeout = null;
             }, that.options.delay);
         },
 

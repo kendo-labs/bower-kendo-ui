@@ -988,7 +988,9 @@
         var valueField = options.dataValueField;
         var text = options.text || "";
 
-        val = val || "";
+        if (val === undefined) {
+            val = "";
+        }
 
         if (valueField && !options.valuePrimitive && val) {
             text = val[options.dataTextField] || "";
