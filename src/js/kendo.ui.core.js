@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.1.616";
+    kendo.version = "2015.1.624";
 
     function Class() {}
 
@@ -22177,6 +22177,10 @@ function pad(number, digits, end) {
             that.trigger("activate");
         },
 
+        focusIndex: function() {
+            return this.focus() ? this.focus().index() : undefined;
+        },
+
         filter: function(filter, skipValueUpdate) {
             if (filter === undefined) {
                 return this._filtered;
@@ -25660,12 +25664,12 @@ function pad(number, digits, end) {
             this._focusElement(this.filterInput);
         },
 
-        toggle: function(toggle) {
-            this._toggle(toggle, true);
-        },
-
         _allowOpening: function(length) {
             return this.optionLabel[0] || this.filterInput || this.dataSource.view().length;
+        },
+
+        toggle: function(toggle) {
+            this._toggle(toggle, true);
         },
 
         current: function(candidate) {
@@ -25753,6 +25757,7 @@ function pad(number, digits, end) {
 
         value: function(value) {
             var that = this;
+            var dataSource = that.dataSource;
 
             if (value === undefined) {
                 value = that._accessor() || that.listView.value()[0];
@@ -25763,9 +25768,18 @@ function pad(number, digits, end) {
                 that._initialIndex = null;
             }
 
-            that.listView.value(value).done(function() {
-                that._triggerCascade();
+            if (that._request && that.options.cascadeFrom && that.listView.isBound()) {
+                if (that._valueSetter) {
+                    dataSource.unbind(CHANGE, that._valueSetter);
+                }
 
+                that._valueSetter = proxy(function() { that.value(value); }, that);
+
+                dataSource.one(CHANGE, that._valueSetter);
+                return;
+            }
+
+            that.listView.value(value).done(function() {
                 if (that.selectedIndex === -1 && that.text()) {
                     that.text("");
                     that._accessor("", -1);
@@ -26968,7 +26982,7 @@ function pad(number, digits, end) {
 
             if (length && (page === undefined || page === 1)) {
                 if (options.highlightFirst) {
-                    if (!focusedItem) {
+                    if (!focusedItem && !listView.focusIndex()) {
                         listView.focus(0);
                     }
                 } else {
@@ -27208,8 +27222,6 @@ function pad(number, digits, end) {
             that.listView
                 .value(value)
                 .done(function() {
-                    that._triggerCascade();
-
                     that._selectValue(that.listView.selectedDataItems()[0]);
 
                     if (that.selectedIndex === -1) {
@@ -42340,7 +42352,7 @@ function pad(number, digits, end) {
             var that = this;
             var page = that.dataSource.page();
 
-            if (that._rangeChange === true && that._lastPage !== page) {
+            if (that.isBound() && that._rangeChange === true && that._lastPage !== page) {
                 that._lastPage = page;
                 that.trigger(LISTBOUND);
             }
@@ -42466,6 +42478,9 @@ function pad(number, digits, end) {
                     value: (this.options.selectable === "multiple") ? value : value[0],
                     success: function(indexes) {
                         that._values = [];
+                        that._selectedIndexes = [];
+                        that._selectedDataItems = [];
+
                         indexes = toArray(indexes);
 
                         if (!indexes.length) {
@@ -42662,6 +42677,10 @@ function pad(number, digits, end) {
             }
         },
 
+        focusIndex: function() {
+            return this._focusedIndex;
+        },
+
         first: function() {
             this.scrollTo(0);
             this.focus(0);
@@ -42748,15 +42767,15 @@ function pad(number, digits, end) {
 
                 that.focus(indices);
 
-                if (that._valueDeferred) {
-                    that._valueDeferred.resolve();
-                }
-
                 if (added.length || removed.length) {
                     that.trigger(CHANGE, {
                         added: added,
                         removed: removed
                     });
+                }
+
+                if (that._valueDeferred) {
+                    that._valueDeferred.resolve();
                 }
             };
 
@@ -43063,10 +43082,9 @@ function pad(number, digits, end) {
             return list;
         },
 
-        _itemMapper: function(item, index) {
+        _itemMapper: function(item, index, value) {
             var listType = this.options.type,
                 itemHeight = this.options.itemHeight,
-                value = this._values,
                 currentIndex = this._focusedIndex,
                 selected = false,
                 current = false,
@@ -43090,6 +43108,7 @@ function pad(number, digits, end) {
                 for (var i = 0; i < value.length; i++) {
                     match = isPrimitive(item) ? value[i] === item : value[i] === valueGetter(item);
                     if (match) {
+                        value.splice(i , 1);
                         selected = true;
                         break;
                     }
@@ -43113,6 +43132,7 @@ function pad(number, digits, end) {
 
         _range: function(index) {
             var itemCount = this.itemCount,
+                value = this._values.slice(),
                 items = [],
                 item;
 
@@ -43120,7 +43140,7 @@ function pad(number, digits, end) {
             this._currentGroup = null;
 
             for (var i = index, length = index + itemCount; i < length; i++) {
-                item = this._itemMapper(this.getter(i, index), i);
+                item = this._itemMapper(this.getter(i, index), i, value);
                 items.push(item);
                 this._view[item.index] = item;
             }

@@ -1427,6 +1427,10 @@
             that.trigger("activate");
         },
 
+        focusIndex: function() {
+            return this.focus() ? this.focus().index() : undefined;
+        },
+
         filter: function(filter, skipValueUpdate) {
             if (filter === undefined) {
                 return this._filtered;

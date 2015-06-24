@@ -329,7 +329,7 @@
 
             if (length && (page === undefined || page === 1)) {
                 if (options.highlightFirst) {
-                    if (!focusedItem) {
+                    if (!focusedItem && !listView.focusIndex()) {
                         listView.focus(0);
                     }
                 } else {
@@ -569,8 +569,6 @@
             that.listView
                 .value(value)
                 .done(function() {
-                    that._triggerCascade();
-
                     that._selectValue(that.listView.selectedDataItems()[0]);
 
                     if (that.selectedIndex === -1) {
