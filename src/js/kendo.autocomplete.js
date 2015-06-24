@@ -454,7 +454,6 @@
 
             that._hideBusy();
             that._makeUnselectable();
-            that._hideBusy();
 
             that.trigger("dataBound");
         },

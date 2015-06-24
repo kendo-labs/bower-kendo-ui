@@ -456,8 +456,7 @@
             return $(this.options.anchor)
                        .parentsUntil("body")
                        .filter(function(index, element) {
-                            var computedStyle = kendo.getComputedStyles(element, ["overflow"]);
-                            return computedStyle.overflow != "visible";
+                           return kendo.isScrollable(element);
                        });
         },
 

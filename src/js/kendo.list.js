@@ -38,7 +38,7 @@
         CLOSE = "close",
         SELECT = "select",
         SELECTED = "selected",
-        PROGRESS = "progress",
+        REQUESTSTART = "requestStart",
         REQUESTEND = "requestEnd",
         WIDTH = "width",
         extend = $.extend,
@@ -174,7 +174,6 @@
 
             if (!hasVirtual) {
                 that.listView = new kendo.ui.StaticList(that.ul, listOptions);
-                that.listView.setTouchScroller(that._touchScroller);
             } else {
                 that.listView = new kendo.ui.VirtualList(that.ul, listOptions);
             }
@@ -303,10 +302,6 @@
 
             that.listView.destroy();
             that.list.off(ns);
-
-            if (that._touchScroller) {
-                that._touchScroller.destroy();
-            }
 
             that.popup.destroy();
 
@@ -445,6 +440,23 @@
             return value;
         },
 
+        _offsetHeight: function() {
+            var offsetHeight = 0;
+            var siblings = this.listView.content.prevAll(":visible");
+
+            siblings.each(function() {
+                var element = $(this);
+
+                if (element.hasClass("k-list-filter")) {
+                    offsetHeight += element.children().outerHeight();
+                } else {
+                    offsetHeight += element.outerHeight();
+                }
+            });
+
+            return offsetHeight;
+        },
+
         _height: function(length) {
             var that = this;
             var list = that.list;
@@ -456,19 +468,19 @@
             if (length) {
                 popups = list.add(list.parent(".k-animation-container")).show();
 
-                height = that.ul[0].scrollHeight > height ? height : "auto";
+                height = that.listView.content[0].scrollHeight > height ? height : "auto";
 
                 popups.height(height);
 
                 if (height !== "auto") {
-                    offsetTop = that.ul[0].offsetTop;
+                    offsetTop = that._offsetHeight();
 
                     if (offsetTop) {
-                        height = list.height() - offsetTop;
+                        height -= offsetTop;
                     }
                 }
 
-                that.ul.height(height);
+                that.listView.content.height(height);
 
                 if (!visible) {
                     popups.hide();
@@ -549,9 +561,8 @@
         },
 
         _calculateGroupPadding: function(height) {
-            var ul = this.ul;
-            var li = ul.children(".k-first:first");
-            var groupHeader = ul.prev(".k-group-header");
+            var li = this.ul.children(".k-first:first");
+            var groupHeader = this.listView.content.prev(".k-group-header");
             var padding = 0;
 
             if (groupHeader[0] && groupHeader[0].style.display !== "none") {
@@ -584,8 +595,6 @@
             if (!that.options.virtual) {
                 that.popup.one(OPEN, proxy(that._firstOpen, that));
             }
-
-            that._touchScroller = kendo.touchScroller(that.popup.element);
         },
 
         _makeUnselectable: function() {
@@ -625,7 +634,7 @@
         _unbindDataSource: function() {
             var that = this;
 
-            that.dataSource.unbind(PROGRESS, that._progressHandler)
+            that.dataSource.unbind(REQUESTSTART, that._requestStartHandler)
                            .unbind(REQUESTEND, that._requestEndHandler)
                            .unbind("error", that._errorHandler);
         }
@@ -763,7 +772,7 @@
                     idx = -1;
                 }
 
-                if (value !== "" && idx == -1) {
+                if (value !== null && value !== "" && idx == -1) {
                     this._custom(value);
                 } else {
                     if (value) {
@@ -827,6 +836,7 @@
 
         _requestEnd: function() {
             this._request = false;
+            this._hideBusy();
         },
 
         _dataSource: function() {
@@ -852,13 +862,13 @@
             if (that.dataSource) {
                 that._unbindDataSource();
             } else {
-                that._progressHandler = proxy(that._showBusy, that);
+                that._requestStartHandler = proxy(that._showBusy, that);
                 that._requestEndHandler = proxy(that._requestEnd, that);
                 that._errorHandler = proxy(that._hideBusy, that);
             }
 
             that.dataSource = kendo.data.DataSource.create(dataSource)
-                                   .bind(PROGRESS, that._progressHandler)
+                                   .bind(REQUESTSTART, that._requestStartHandler)
                                    .bind(REQUESTEND, that._requestEndHandler)
                                    .bind("error", that._errorHandler);
         },
@@ -1176,13 +1186,18 @@
             Widget.fn.init.call(this, element, options);
 
             this.element.attr("role", "listbox")
-                        .css({ overflow: support.kineticScrollNeeded ? "": "auto" })
                         .on("click" + STATIC_LIST_NS, "li", proxy(this._click, this))
                         .on("mouseenter" + STATIC_LIST_NS, "li", function() { $(this).addClass(HOVER); })
                         .on("mouseleave" + STATIC_LIST_NS, "li", function() { $(this).removeClass(HOVER); });
 
-
-            this.header = this.element.before('<div class="k-group-header" style="display:none"></div>').prev();
+            this.content = this.element
+                        .wrap("<div unselectable='on'></div>")
+                        .parent()
+                        .css({
+                            "overflow": "auto",
+                            "position": "relative"
+                        });
+            this.header = this.content.before('<div class="k-group-header" style="display:none"></div>').prev();
 
             this._bound = false;
 
@@ -1285,28 +1300,6 @@
             }
         },
 
-        _offsetHeight: function() {
-            var offsetHeight = 0;
-            var siblings = this.element.prevAll();
-
-            siblings.each(function() {
-                var element = $(this);
-                if (element.is(":visible")) {
-                    if (element.hasClass("k-list-filter")) {
-                        offsetHeight += element.children().height();
-                    } else {
-                        offsetHeight += element.outerHeight();
-                    }
-                }
-            });
-
-            return offsetHeight;
-        },
-
-        setTouchScroller: function (touchScroller) {
-            this._touchScroller = touchScroller;
-        },
-
         scroll: function (item) {
             if (!item) {
                 return;
@@ -1316,34 +1309,21 @@
                 item = item[0];
             }
 
-            var ul = this.element[0],
+            var content = this.content[0],
                 itemOffsetTop = item.offsetTop,
                 itemOffsetHeight = item.offsetHeight,
-                ulScrollTop = ul.scrollTop,
-                ulOffsetHeight = ul.clientHeight,
+                contentScrollTop = content.scrollTop,
+                contentOffsetHeight = content.clientHeight,
                 bottomDistance = itemOffsetTop + itemOffsetHeight,
-                touchScroller = this._touchScroller,
                 yDimension, offsetHeight;
 
-            if (touchScroller) {
-                yDimension = touchScroller.dimensions.y;
-                yDimension.update(true);
-
-                if (yDimension.enabled && itemOffsetTop > yDimension.size) {
-                    itemOffsetTop = itemOffsetTop - yDimension.size + itemOffsetHeight + 4;
-
-                    touchScroller.scrollTo(0, -itemOffsetTop);
-                }
-            } else {
-                offsetHeight = this._offsetHeight();
-                if (ulScrollTop > (itemOffsetTop - offsetHeight)) {
-                    ulScrollTop = (itemOffsetTop - offsetHeight);
-                } else if (bottomDistance > (ulScrollTop + ulOffsetHeight + offsetHeight)) {
-                    ulScrollTop = (bottomDistance - ulOffsetHeight - offsetHeight);
+                if (contentScrollTop > itemOffsetTop) {
+                    contentScrollTop = itemOffsetTop;
+                } else if (bottomDistance > (contentScrollTop + contentOffsetHeight)) {
+                    contentScrollTop = (bottomDistance - contentOffsetHeight);
                 }
 
-                ul.scrollTop = ulScrollTop;
-           }
+                content.scrollTop = contentScrollTop;
         },
 
         selectedDataItems: function(dataItems) {
@@ -1830,22 +1810,22 @@
 
         _firstVisibleItem: function() {
             var element = this.element[0];
-            var scrollTop = element.scrollTop;
+            var content = this.content[0];
+            var scrollTop = content.scrollTop;
             var itemHeight = $(element.children[0]).height();
             var itemIndex = Math.floor(scrollTop / itemHeight) || 0;
             var item = element.children[itemIndex] || element.lastChild;
-            var offsetHeight = this._offsetHeight();
-            var forward = (item.offsetTop - offsetHeight) < scrollTop;
+            var forward = item.offsetTop < scrollTop;
 
             while (item) {
                 if (forward) {
-                    if ((item.offsetTop + itemHeight - offsetHeight) > scrollTop || !item.nextSibling) {
+                    if ((item.offsetTop + itemHeight) > scrollTop || !item.nextSibling) {
                         break;
                     }
 
                     item = item.nextSibling;
                 } else {
-                    if ((item.offsetTop - offsetHeight) <= scrollTop || !item.previousSibling) {
+                    if (item.offsetTop <= scrollTop || !item.previousSibling) {
                         break;
                     }
 
@@ -1859,10 +1839,10 @@
         _fixedHeader: function() {
             if (this.isGrouped() && this.templates.fixedGroupTemplate) {
                 this.header.show();
-                this.element.scroll(this._onScroll);
+                this.content.scroll(this._onScroll);
             } else {
                 this.header.hide();
-                this.element.off("scroll", this._onScroll);
+                this.content.off("scroll", this._onScroll);
             }
         },
 

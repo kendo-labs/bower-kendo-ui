@@ -304,7 +304,6 @@
                 }
             }
 
-            that._hideBusy();
             that._makeUnselectable();
 
             if (!filtered && !that._fetch) {
@@ -653,8 +652,6 @@
             if (this.options.highlightFirst && !word) {
                 this.listView.first();
             }
-
-            that._hideBusy();
         },
 
         _input: function() {

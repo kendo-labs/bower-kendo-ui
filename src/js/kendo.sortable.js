@@ -90,6 +90,7 @@
             cursorOffset: null,
             axis: null,
             ignore: null,
+            autoScroll: false,
             cursor: "auto"
         },
 
@@ -111,6 +112,7 @@
                 cursorOffset: options.cursorOffset,
                 axis: options.axis,
                 ignore: options.ignore,
+                autoScroll: options.autoScroll,
                 dragstart: $.proxy(that._dragstart, that),
                 dragcancel: $.proxy(that._dragcancel, that),
                 drag: $.proxy(that._drag, that),

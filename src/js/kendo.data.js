@@ -273,6 +273,41 @@
             return result;
         },
 
+        reduce: function(callback, initialValue) {
+            var idx = 0,
+                result,
+                length = this.length;
+
+            if (arguments.length == 2) {
+                result = arguments[1];
+            } else if (idx < length) {
+                result = this[idx++];
+            }
+
+            for (; idx < length; idx++) {
+                result = callback(result, this[idx], idx, this);
+            }
+
+            return result;
+        },
+
+        reduceRight: function(callback, initialValue) {
+            var idx = this.length - 1,
+                result;
+
+            if (arguments.length == 2) {
+                result = arguments[1];
+            } else if (idx > 0) {
+                result = this[idx--];
+            }
+
+            for (; idx >= 0; idx--) {
+                result = callback(result, this[idx], idx, this);
+            }
+
+            return result;
+        },
+
         filter: function(callback) {
             var idx = 0,
                 result = [],
@@ -2929,7 +2964,7 @@
                         that.transport.read({
                             data: params,
                             success: function(data) {
-                                that.success(data);
+                                that.success(data, params);
 
                                 deferred.resolve();
                             },
@@ -2942,7 +2977,7 @@
                             }
                         });
                     } else if (that.options.offlineStorage != null){
-                        that.success(that.offlineData());
+                        that.success(that.offlineData(), params);
 
                         deferred.resolve();
                     }
@@ -2985,13 +3020,23 @@
                 data = that._readData(data);
 
                 var items = [];
+                var itemIds = {};
+                var model = that.reader.model;
+                var idField = model ? model.idField : "id";
+                var idx;
 
-                for (var idx = 0; idx < data.length; idx++) {
+                for (idx = 0; idx < this._destroyed.length; idx++) {
+                    var id = this._destroyed[idx][idField];
+                    itemIds[id] = id;
+                }
+
+                for (idx = 0; idx < data.length; idx++) {
                     var item = data[idx];
                     var state = item.__state__;
-
                     if (state == "destroy") {
-                       this._destroyed.push(this._createNewModel(item));
+                        if (!itemIds[item[idField]]) {
+                            this._destroyed.push(this._createNewModel(item));
+                        }
                     } else {
                         items.push(item);
                     }
@@ -3092,7 +3137,7 @@
                 start = that._skip || 0,
                 end = start + that._flatData(data, true).length;
 
-            that._ranges.push({ start: start, end: end, data: data });
+            that._ranges.push({ start: start, end: end, data: data, timestamp: new Date().getTime() });
             that._ranges.sort( function(x, y) { return x.start - y.start; } );
         },
 
@@ -3611,7 +3656,14 @@
             this._skipRequestsInProgress = false;
         },
 
+        _timeStamp: function() {
+            return new Date().getTime();
+        },
+
         range: function(skip, take) {
+            this._currentRequestTimeStamp = this._timeStamp();
+            this._skipRequestsInProgress = true;
+
             skip = math.min(skip || 0, this.total());
 
             var that = this,
@@ -3619,12 +3671,10 @@
                 size = math.min(pageSkip + take, that.total()),
                 data;
 
-            that._skipRequestsInProgress = false;
-
             data = that._findRange(skip, math.min(skip + take, that.total()));
 
             if (data.length) {
-                that._skipRequestsInProgress = true;
+
                 that._pending = undefined;
 
                 that._skip = skip > that.skip() ? math.min(size, (that.totalPages() - 1) * that.take()) : pageSkip;
@@ -3772,10 +3822,11 @@
 
         _prefetchSuccessHandler: function (skip, size, callback, force) {
             var that = this;
+            var timestamp = that._timeStamp();
 
             return function(data) {
                 var found = false,
-                    range = { start: skip, end: size, data: [] },
+                    range = { start: skip, end: size, data: [], timestamp: that._timeStamp() },
                     idx,
                     length,
                     temp;
@@ -3789,6 +3840,7 @@
                 temp = that._readData(data);
 
                 if (temp.length) {
+
                     for (idx = 0, length = that._ranges.length; idx < length; idx++) {
                         if (that._ranges[idx].start === skip) {
                             found = true;
@@ -3806,7 +3858,7 @@
                 that._ranges.sort( function(x, y) { return x.start - y.start; } );
                 that._total = that.reader.total(data);
 
-                if (force || !that._skipRequestsInProgress) {
+                if (force || (timestamp >= that._currentRequestTimeStamp || !that._skipRequestsInProgress)) {
                     if (callback && temp.length) {
                         callback();
                     } else {

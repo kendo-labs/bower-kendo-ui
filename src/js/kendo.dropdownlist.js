@@ -76,6 +76,7 @@
             that._mobile();
 
             that._dataSource();
+
             that._ignoreCase();
 
             that._filterHeader();
@@ -435,7 +436,6 @@
                 that._options(data, optionLabel, value);
             }
 
-            that._hideBusy();
             that._makeUnselectable();
 
             if (!filtered) {

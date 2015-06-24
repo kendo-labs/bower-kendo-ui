@@ -165,7 +165,7 @@
 
         refresh: function(e) {
             var url = e.view.element.attr(kendo.attr("url"));
-            if (!this.switchTo(e.view.id) && url) {
+            if (url && !this.switchTo(e.view.id)) {
                 this.switchTo(url);
             }
         },

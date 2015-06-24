@@ -27,6 +27,7 @@
         DEFAULT_OS = "ios7",
         OS = support.mobileOS,
         BERRYPHONEGAP = OS.device == "blackberry" && OS.flatVersion >= 600 && OS.flatVersion < 1000 && OS.appMode,
+        FONT_SIZE_COEF = 0.93,
         VERTICAL = "km-vertical",
         CHROME =  OS.browser === "chrome",
         BROKEN_WEBVIEW_RESIZE = OS.ios && OS.flatVersion >= 700 && OS.flatVersion < 800 && (OS.appMode || CHROME),
@@ -42,13 +43,12 @@
             wp: { wp: true, browser: "default", device: "wp", flatVersion: "800", majorVersion: "8", minorVersion: "0.0", name: "wp", tablet: false }
         },
 
-        viewportTemplate = kendo.template('<meta content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no#=data.height#" name="viewport" />', {usedWithBlock: false}),
+        viewportTemplate = kendo.template('<meta content="initial-scale=#: data.scale #, maximum-scale=#: data.scale #, user-scalable=no#=data.height#" name="viewport" />', {usedWithBlock: false}),
         systemMeta = kendo.template('<meta name="apple-mobile-web-app-capable" content="#= data.webAppCapable === false ? \'no\' : \'yes\' #" /> ' +
                      '<meta name="apple-mobile-web-app-status-bar-style" content="#=data.statusBarStyle#" /> ' +
                      '<meta name="msapplication-tap-highlight" content="no" /> ', {usedWithBlock: false}),
         clipTemplate = kendo.template('<style>.km-view { clip: rect(0 #= data.width #px #= data.height #px 0); }</style>', {usedWithBlock: false}),
         ENABLE_CLIP = OS.android && OS.browser != "chrome" || OS.blackberry,
-        viewportMeta = viewportTemplate({ height: "" }),
 
         iconMeta = kendo.template('<link rel="apple-touch-icon' + (OS.android ? '-precomposed' : '') + '" # if(data.size) { # sizes="#=data.size#" #}# href="#=data.icon#" />', {usedWithBlock: false}),
 
@@ -128,7 +128,7 @@
 
     function applyViewportHeight() {
         $("meta[name=viewport]").remove();
-        HEAD.append(viewportTemplate({
+            HEAD.append(viewportTemplate({
             height: ", width=device-width" +  // width=device-width was removed for iOS6, but this should stay for BB PhoneGap.
                         (isOrientationHorizontal() ?
                             ", height=" + window.innerHeight + "px"  :
@@ -190,6 +190,7 @@
             modelScope: window,
             statusBarStyle: "black",
             transition: "",
+            retina: false,
             platform: null,
             skin: null,
             updateDocumentTitle: true,
@@ -390,6 +391,11 @@
                 element.parent().css("font-size", support.wpDevicePixelRatio + "em");
             }
 
+            if (this.options.retina) {
+                element.parent().addClass("km-retina");
+                element.parent().css("font-size", (support.devicePixelRatio * FONT_SIZE_COEF) + "em");
+            }
+
             if (BERRYPHONEGAP) {
                 applyViewportHeight();
             }
@@ -438,7 +444,7 @@
             this._clearExistingMeta();
 
             if (!BERRYPHONEGAP) {
-                HEAD.prepend(viewportMeta);
+                HEAD.prepend(viewportTemplate({ height: "", scale : this.options.retina ? 1 / support.devicePixelRatio : "1.0" }));
             }
 
             HEAD.prepend(systemMeta(options));

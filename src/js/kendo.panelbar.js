@@ -540,7 +540,7 @@
 
             that.element.removeAttr("aria-activedescendant");
 
-            if (focused) {
+            if (focused && focused.length) {
                 if (focused[0].id === id) {
                     focused.removeAttr("id");
                 }
