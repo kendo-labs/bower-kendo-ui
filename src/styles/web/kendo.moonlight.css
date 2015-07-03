@@ -274,9 +274,6 @@ textarea.k-textbox:hover,
   background-position: 50% 50%;
   background-color: #1f2a35;
 }
-.k-widget.k-tooltip {
-  background-image: url('textures/highlight.png');
-}
 .k-block,
 .k-header,
 .k-grid-header,
@@ -792,9 +789,17 @@ div.k-filebrowser-dropzone em {
 }
 /* Tooltip */
 .k-widget.k-tooltip {
-  border-color: #e5a403;
-  background-color: #f4af03;
-  color: #171e28;
+  background-image: url("textures/brushed-metal.png");
+  background-image: url("textures/brushed-metal.png"), -webkit-linear-gradient(top, rgba(255,255,255,.2) 0%, rgba(255,255,255,.1) 100%);
+  background-image: url("textures/brushed-metal.png"), -moz-linear-gradient(top, rgba(255,255,255,.2) 0%, rgba(255,255,255,.1) 100%);
+  background-image: url("textures/brushed-metal.png"), -o-linear-gradient(top, rgba(255,255,255,.2) 0%, rgba(255,255,255,.1) 100%);
+  background-image: url("textures/brushed-metal.png"), linear-gradient(to bottom, rgba(255,255,255,.2) 0%, rgba(255,255,255,.1) 100%);
+  background-position: 50% 50%;
+  background-color: #1f2a35;
+  color: #dedede;
+  border-color: transparent;
+  -webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 .k-widget.k-tooltip-validation {
   border-color: #ffffff;
@@ -809,16 +814,16 @@ div.k-filebrowser-dropzone em {
   top: 3px;
 }
 .k-callout-n {
-  border-bottom-color: #e5a403;
+  border-bottom-color: #1f2a35;
 }
 .k-callout-w {
-  border-right-color: #e5a403;
+  border-right-color: #1f2a35;
 }
 .k-callout-s {
-  border-top-color: #e5a403;
+  border-top-color: #1f2a35;
 }
 .k-callout-e {
-  border-left-color: #e5a403;
+  border-left-color: #1f2a35;
 }
 .k-tooltip-validation .k-callout-n {
   border-bottom-color: #ffffff;

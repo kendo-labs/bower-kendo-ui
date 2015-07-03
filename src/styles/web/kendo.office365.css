@@ -459,18 +459,6 @@ html .km-pane-wrapper .k-header {
   border-color: #005b9d;
   background-color: #005b9d;
 }
-.k-button[disabled],
-.k-button.k-state-disabled,
-.k-state-disabled .k-button,
-.k-state-disabled .k-button:hover,
-.k-button.k-state-disabled:hover,
-.k-state-disabled .k-button:active,
-.k-button.k-state-disabled:active {
-  color: #aaaaaa;
-  border-color: #f4f4f4;
-  background-color: #f4f4f4;
-  background-image: none;
-}
 .k-button:focus:not(.k-state-disabled):not([disabled]) {
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -2203,6 +2191,14 @@ input.k-textbox:focus {
 .k-toolbar .k-toggle-button:active:hover,
 .k-toolbar .k-toggle-button.k-state-active:hover {
   color: #333333;
+}
+.k-toolbar .k-toggle-button.k-state-disabled,
+.k-toolbar .k-toggle-button.k-state-disabled:active,
+.k-toolbar .k-toggle-button.k-state-disabled:active:hover {
+  color: #aaaaaa;
+  border-color: #f4f4f4;
+  background-color: #f4f4f4;
+  background-image: none;
 }
 .k-toolbar .k-overflow-anchor {
   background-color: #ffffff;

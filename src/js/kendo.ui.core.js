@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.2.624";
+    kendo.version = "2015.2.703";
 
     function Class() {}
 
@@ -1847,7 +1847,8 @@ function pad(number, digits, end) {
     }
 
     function isScrollable(element) {
-        return getComputedStyles(element, ["overflow"]).overflow != "visible";
+        var overflow = getComputedStyles(element, ["overflow"]).overflow;
+        return overflow == "auto" || overflow == "scroll";
     }
 
     (function () {
@@ -11915,7 +11916,7 @@ function pad(number, digits, end) {
                         value = null;
                     } else {
                         if (!source || source instanceof kendo.data.DataSource) {
-                            source = this.widget.dataSource.view();
+                            source = this.widget.dataSource.flatView();
                         }
 
                         if (isArray) {
@@ -11988,7 +11989,7 @@ function pad(number, digits, end) {
                             text = value;
                         }
 
-                        if (!text && value && options.valuePrimitive) {
+                        if (!text && (value || value === 0) && options.valuePrimitive) {
                             widget.value(value);
                         } else {
                             widget._preselect(value, text);
@@ -18480,7 +18481,7 @@ function pad(number, digits, end) {
 
             if (!isNaN(pageSize)){
                 dataSource.pageSize(pageSize);
-            } else if (value == "all") {
+            } else if ((value + "").toLowerCase() == "all") {
                 dataSource.pageSize(dataSource.total());
             }
         },
@@ -18500,7 +18501,7 @@ function pad(number, digits, end) {
         },
 
         totalPages: function() {
-            return Math.ceil((this.dataSource.total() || 0) / this.pageSize());
+            return Math.ceil((this.dataSource.total() || 0) / (this.pageSize() || 1));
         },
 
         pageSize: function() {
@@ -20279,7 +20280,6 @@ function pad(number, digits, end) {
                     this._addGraphics();
                 }
 
-                this.attributes();
                 this.addUidAttr();
                 this.addOverflowAttr();
                 this.enable(options.enable);
@@ -21989,7 +21989,7 @@ function pad(number, digits, end) {
             parent = that._parentWidget();
 
             if (parent) {
-                parent.trigger("cascade");
+                that._cascadeSelect(parent);
             }
         },
 
@@ -22412,75 +22412,76 @@ function pad(number, digits, end) {
                 }
 
                 options.autoBind = false;
-                valueField = options.cascadeFromField || parent.options.dataValueField;
-
-                change = function() {
-                    that.dataSource.unbind(CHANGE, change);
-
-                    var value = that._accessor();
-
-                    if (that._userTriggered) {
-                        that._clearSelection(parent, true);
-                    } else if (value) {
-                        if (value !== that.listView.value()[0]) {
-                            that.value(value);
-                        }
-
-                        if (!that.dataSource.view()[0] || that.selectedIndex === -1) {
-                            that._clearSelection(parent, true);
-                        }
-                    } else if (that.dataSource.flatView().length) {
-                        that.select(options.index);
-                    }
-
-                    that.enable();
-                    that._triggerCascade();
-                    that._userTriggered = false;
-                };
-                select = function() {
-                    var dataItem = parent.dataItem(),
-                        filterValue = dataItem ? parent._value(dataItem) : null,
-                        expressions, filters;
-
-                    if (filterValue || filterValue === 0) {
-                        expressions = that.dataSource.filter() || {};
-                        removeFiltersForField(expressions, valueField);
-                        filters = expressions.filters || [];
-
-                        filters.push({
-                            field: valueField,
-                            operator: "eq",
-                            value: filterValue
-                        });
-
-                        var handler = function() {
-                            that.unbind("dataBound", handler);
-                            change.apply(that, arguments);
-                        };
-
-                        that.first("dataBound", handler);
-
-                        that.dataSource.filter(filters);
-
-                    } else {
-                        that.enable(false);
-                        that._clearSelection(parent);
-                        that._triggerCascade();
-                        that._userTriggered = false;
-                    }
-                };
 
                 parent.first("cascade", function(e) {
                     that._userTriggered = e.userTriggered;
-                    select();
+                    that._cascadeSelect(parent);
                 });
 
                 //refresh was called
                 if (parent.listView.isBound()) {
-                    select();
+                    that._cascadeSelect(parent);
                 } else if (!parent.value()) {
                     that.enable(false);
                 }
+            }
+        },
+
+        _cascadeChange: function(parent) {
+            var that = this;
+            var value = that._accessor();
+
+            if (that._userTriggered) {
+                that._clearSelection(parent, true);
+            } else if (value) {
+                if (value !== that.listView.value()[0]) {
+                    that.value(value);
+                }
+
+                if (!that.dataSource.view()[0] || that.selectedIndex === -1) {
+                    that._clearSelection(parent, true);
+                }
+            } else if (that.dataSource.flatView().length) {
+                that.select(that.options.index);
+            }
+
+            that.enable();
+            that._triggerCascade();
+            that._userTriggered = false;
+        },
+
+        _cascadeSelect: function(parent) {
+            var that = this;
+            var dataItem = parent.dataItem();
+            var filterValue = dataItem ? parent._value(dataItem) : null;
+            var valueField = that.options.cascadeFromField || parent.options.dataValueField;
+            var expressions, filters;
+
+            if (filterValue || filterValue === 0) {
+                expressions = that.dataSource.filter() || {};
+                removeFiltersForField(expressions, valueField);
+                filters = expressions.filters || [];
+
+                filters.push({
+                    field: valueField,
+                    operator: "eq",
+                    value: filterValue
+                });
+
+                var handler = function() {
+                    that.unbind("dataBound", handler);
+                    that._cascadeChange(parent);
+                };
+
+                that.first("dataBound", handler);
+
+                that.dataSource.filter(filters);
+
+            } else {
+                that.enable(false);
+                that._clearSelection(parent);
+                that._triggerCascade();
+                that._userTriggered = false;
             }
         }
     });
@@ -28003,6 +28004,7 @@ function pad(number, digits, end) {
             this._oldIndex = this.selectedIndex;
 
             this.listView.setValue(value);
+            this._placeholder();
 
             this._initialIndex = null;
             this._presetValue = true;
@@ -33646,48 +33648,40 @@ function pad(number, digits, end) {
            return this.dataSource.getByUid(uid);
        },
 
-       _closeEditable: function(validate) {
+       _closeEditable: function() {
            var that = this,
                editable = that.editable,
                data,
                item,
                index,
-               template = that.template,
-               valid = true;
+               template = that.template;
 
            if (editable) {
-               if (validate) {
-                   valid = editable.end();
+               if (editable.element.index() % 2) {
+                   template = that.altTemplate;
                }
 
-               if (valid) {
-                   if (editable.element.index() % 2) {
-                       template = that.altTemplate;
-                   }
+               that.angular("cleanup", function() {
+                   return { elements: [ editable.element ]};
+               });
 
-                   that.angular("cleanup", function() {
-                       return { elements: [ editable.element ]};
-                   });
+               data = that._modelFromElement(editable.element);
+               that._destroyEditable();
 
-                   data = that._modelFromElement(editable.element);
-                   that._destroyEditable();
+               index = editable.element.index();
+               editable.element.replaceWith(template(data));
+               item = that.items().eq(index);
+               item.attr(kendo.attr("uid"), data.uid);
 
-                   index = editable.element.index();
-                   editable.element.replaceWith(template(data));
-                   item = that.items().eq(index);
-                   item.attr(kendo.attr("uid"), data.uid);
-
-                   if (that._hasBindingTarget()) {
-                        kendo.bind(item, data);
-                   }
-
-                   that.angular("compile", function() {
-                       return { elements: [ item ], data: [ { dataItem: data } ]};
-                   });
+               if (that._hasBindingTarget()) {
+                   kendo.bind(item, data);
                }
+
+               that.angular("compile", function() {
+                   return { elements: [ item ], data: [ { dataItem: data } ]};
+               });
            }
-
-           return valid;
+           return true;
        },
 
        edit: function(item) {
@@ -33722,10 +33716,11 @@ function pad(number, digits, end) {
                return;
            }
 
-           editable = editable.element;
-           model = that._modelFromElement(editable);
+           var container = editable.element;
+           model = that._modelFromElement(container);
 
-           if (!that.trigger(SAVE, { model: model, item: editable }) && that._closeEditable(true)) {
+           if (editable.end() && !that.trigger(SAVE, { model: model, item: container }))  {
+               that._closeEditable();
                that.dataSource.sync();
            }
        },
@@ -33737,7 +33732,7 @@ function pad(number, digits, end) {
 
            if (that.editable) {
                dataSource.cancelChanges(that._modelFromElement(that.editable.element));
-               that._closeEditable(false);
+               that._closeEditable();
            }
 
            if (!that.trigger(REMOVE, { model: data, item: item })) {
@@ -33771,7 +33766,7 @@ function pad(number, digits, end) {
 
                if (!that.trigger(CANCEL, { model: model, container: container})) {
                    dataSource.cancelChanges(model);
-                   that._closeEditable(false);
+                   that._closeEditable();
                }
            }
        },
@@ -37030,7 +37025,7 @@ function pad(number, digits, end) {
                     if (options.type === PROGRESSTYPE.VALUE) {
                         that.progressStatus.text(initialStatusValue);
                     } else {
-                        that.progressStatus.text(that._calculatePercentage(initialStatusValue) + "%");
+                        that.progressStatus.text(that._calculatePercentage(initialStatusValue).toFixed() + "%");
                     }
                 }
             }
@@ -37183,6 +37178,7 @@ function pad(number, digits, end) {
             var that = this;
             var options = that.options;
             var progressWrapperSize = parseFloat(that.progressWrapper[0].style[that._progressProperty]);
+            var progressValue;
 
             if (options.type !== PROGRESSTYPE.CHUNK && progressWrapperSize > 98) {
                 that.progressWrapper.addClass(KPROGRESSBARCOMPLETE);
@@ -37190,10 +37186,13 @@ function pad(number, digits, end) {
 
             if (options.showStatus) {
                 if (options.type === PROGRESSTYPE.VALUE) {
-                    that.progressStatus.text(currentValue);
+                    progressValue = currentValue;
+                } else if (options.type == PROGRESSTYPE.PERCENT) {
+                    progressValue = that._calculatePercentage(currentValue).toFixed() + "%";
                 } else {
-                    that.progressStatus.text(math.floor(that._calculatePercentage(currentValue)) + "%");
+                    progressValue = math.floor(that._calculatePercentage(currentValue)) + "%";
                 }
+                that.progressStatus.text(progressValue);
             }
 
             if (currentValue === options.min) {
@@ -38049,7 +38048,13 @@ function pad(number, digits, end) {
             each(inserted.tabs, function (idx) {
                 var contents = inserted.contents[idx];
                 that.tabGroup.append(this);
-                that.wrapper.append(contents);
+                if (that.options.tabPosition == "bottom") {
+                    that.tabGroup.before(contents);
+                } else if (that._scrollableModeActive) {
+                    that._scrollPrevButton.before(contents);
+                } else {
+                    that.wrapper.append(contents);
+                }
                 that.angular("compile", function(){ return { elements: [ contents ] }; });
             });
 
@@ -40668,9 +40673,8 @@ function pad(number, digits, end) {
                     .children(".k-expand-next, .k-expand-prev").on(CLICK + NS, that._arrowClick(EXPAND)).end()
                 .end();
 
-            $(window)
-                .on("resize" + NS + that._marker, proxy(that.resize, that, false))
-                .on("mouseup" + NS + that._marker, proxy(that._removeOverlays, that));
+            $(window).on("resize" + NS + that._marker, proxy(that.resize, that, false));
+            $(document).on("mouseup" + NS + that._marker, proxy(that._removeOverlays, that));
         },
 
         _detachEvents: function() {
@@ -40681,7 +40685,8 @@ function pad(number, digits, end) {
                 .children(".k-splitbar").off("dblclick" + NS)
                     .children(".k-collapse-next, .k-collapse-prev, .k-expand-next, .k-expand-prev").off(NS);
 
-            $(window).off("resize" + NS + that._marker);
+            $(window).off(NS + that._marker);
+            $(document).off(NS + that._marker);
         },
 
         options: {
@@ -41837,8 +41842,13 @@ function pad(number, digits, end) {
 
         _object: function(element) {
             var content = element.children(KWINDOWCONTENT);
+            var widget = kendo.widgetInstance(content);
 
-            return content.data("kendoWindow") || content.data("kendo" + this.options.name);
+            if (widget instanceof Window) {
+                return widget;
+            }
+
+            return undefined;
         },
 
         center: function () {
@@ -42075,12 +42085,15 @@ function pad(number, digits, end) {
             }
         },
 
-        _deactivate: function() {
-            this.wrapper.hide().css("opacity","");
-            this.trigger(DEACTIVATE);
-            var lastModal = this._object(this._modals().last());
-            if (lastModal) {
-                lastModal.toFront();
+        _deactivate: function () {
+            var that = this;
+            that.wrapper.hide().css("opacity", "");
+            that.trigger(DEACTIVATE);
+            if (that.options.modal) {
+                var lastModal = that._object(that._modals().last());
+                if (lastModal) {
+                    lastModal.toFront();
+                }
             }
         },
 
@@ -50439,12 +50452,10 @@ function pad(number, digits, end) {
             $log.warn("k-ng-disabled specified on a widget that does not have the enable() method: " + (widget.options.name));
             return;
         }
-        scope.$apply(function() {
-            scope.$watch(kNgDisabled, function(newValue, oldValue) {
-                if (newValue != oldValue) {
-                    widget.enable(!newValue);
-                }
-            });
+        scope.$watch(kNgDisabled, function(newValue, oldValue) {
+            if (newValue != oldValue) {
+                widget.enable(!newValue);
+            }
         });
     }
 
@@ -50453,14 +50464,11 @@ function pad(number, digits, end) {
             $log.warn("k-ng-readonly specified on a widget that does not have the readonly() method: " + (widget.options.name));
             return;
         }
-        scope.$apply(function() {
-            scope.$watch(kNgReadonly, function(newValue, oldValue) {
-                if (newValue != oldValue) {
-                    widget.readonly(newValue);
-                }
-            });
+        scope.$watch(kNgReadonly, function(newValue, oldValue) {
+            if (newValue != oldValue) {
+                widget.readonly(newValue);
+            }
         });
-
     }
 
     function exposeWidget(widget, scope, attrs, kendoWidget, origAttr) {

@@ -1734,12 +1734,18 @@ input.k-checkbox + label {
 }
 /* responsive panel */
 .k-rpanel-left {
+  -webkit-transform: translateX(-100%);
+  -ms-transform: translateX(-100%);
+  transform: translateX(-100%);
   -webkit-transform: translateX(-100%) translateZ(0);
   -ms-transform: translateX(-100%) translateZ(0);
   transform: translateX(-100%) translateZ(0);
   left: 0;
 }
 .k-rpanel-right {
+  -webkit-transform: translateX(100%);
+  -ms-transform: translateX(100%);
+  transform: translateX(100%);
   -webkit-transform: translateX(100%) translateZ(0);
   -ms-transform: translateX(100%) translateZ(0);
   transform: translateX(100%) translateZ(0);
@@ -1756,6 +1762,9 @@ input.k-checkbox + label {
 }
 .k-rpanel-left.k-rpanel-expanded,
 .k-rpanel-right.k-rpanel-expanded {
+  -webkit-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
   -webkit-transform: translateX(0) translateZ(0);
   -ms-transform: translateX(0) translateZ(0);
   transform: translateX(0) translateZ(0);
@@ -2641,21 +2650,25 @@ div.k-grid-footer {
   position: absolute;
   visibility: hidden;
   height: 1px;
+  margin-top: -1px;
 }
 .k-grid-norecords {
   width: 100%;
   height: 100%;
+  text-align: center;
 }
 .k-grid-norecords-template {
   width: 20em;
   height: 4em;
+  line-height: 4em;
+  vertical-align: middle;
+  margin: 0 auto;
+}
+.k-grid-content > .k-grid-norecords > .k-grid-norecords-template {
   top: 50%;
   left: 50%;
   margin-left: -10em;
   margin-top: -2em;
-  line-height: 4em;
-  vertical-align: middle;
-  text-align: center;
   position: absolute;
 }
 @media print {
@@ -3154,9 +3167,14 @@ html .k-grid-edit-row .k-tooltip {
 }
 /* Remove all sizes and scrolling */
 .k-pdf-export-shadow .k-grid,
-.k-pdf-export-shadow .k-grid-content {
+.k-pdf-export-shadow .k-grid-content,
+.k-pdf-export-shadow .k-grid-content-locked {
   height: auto !important;
   overflow: visible;
+}
+.k-pdf-export-shadow .k-grid-header-locked + .k-grid-header-wrap,
+.k-pdf-export-shadow .k-grid-content-locked + .k-grid-content {
+  width: auto !important;
 }
 /* Remove empty space reserved above the scrollbar */
 .k-pdf-export-shadow .k-grid-header {
@@ -7167,8 +7185,8 @@ div[name="recurrenceRule"] > .k-dropdown {
   position: absolute;
   z-index: 12000;
   border-style: solid;
-  border-width: 1px;
-  padding: 4px 5px 4px 6px;
+  border-width: 0;
+  padding: 5px 5px 5px 6px;
   background-repeat: repeat-x;
   min-width: 20px;
   /*slider tooltip only*/
@@ -7203,20 +7221,20 @@ span.k-tooltip {
   border-color: transparent;
 }
 .k-callout-n {
-  top: -13px;
+  top: -12px;
   left: 50%;
 }
 .k-callout-w {
   top: 50%;
-  left: -13px;
+  left: -12px;
 }
 .k-callout-s {
   left: 50%;
-  bottom: -13px;
+  bottom: -12px;
 }
 .k-callout-e {
   top: 50%;
-  right: -13px;
+  right: -12px;
 }
 .k-slider-tooltip .k-callout-n,
 .k-slider-tooltip .k-callout-s {

@@ -459,18 +459,6 @@ html .km-pane-wrapper .k-header {
   border-color: #5c6bc0;
   background-color: #5c6bc0;
 }
-.k-button[disabled],
-.k-button.k-state-disabled,
-.k-state-disabled .k-button,
-.k-state-disabled .k-button:hover,
-.k-button.k-state-disabled:hover,
-.k-state-disabled .k-button:active,
-.k-button.k-state-disabled:active {
-  color: #999999;
-  border-color: #fafafa;
-  background-color: #fafafa;
-  background-image: none;
-}
 .k-button:focus:not(.k-state-disabled):not([disabled]) {
   -webkit-box-shadow: 0 6px 17px 0 #c4c4c4;
   box-shadow: 0 6px 17px 0 #c4c4c4;
@@ -1979,20 +1967,6 @@ div.k-splitbar.k-state-focused .k-icon,
   border-color: #ebebeb;
   background-color: #ebebeb;
 }
-.k-button[disabled],
-.k-button.k-state-disabled,
-.k-state-disabled .k-button,
-.k-state-disabled .k-button:hover,
-.k-button.k-state-disabled:hover,
-.k-state-disabled .k-button:active,
-.k-button.k-state-disabled:active {
-  color: #999999;
-  border-color: #fafafa;
-  background-color: #fafafa;
-  background-image: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
 .k-primary:active,
 .k-primary.k-state-active,
 .k-primary:focus,
@@ -2046,6 +2020,21 @@ div.k-splitbar.k-state-focused .k-icon,
   color: #444444;
   border-color: #ebebeb;
   background-color: #ebebeb;
+}
+.k-button[disabled],
+.k-button.k-state-disabled,
+.k-state-disabled .k-button,
+.k-state-disabled .k-button:hover,
+.k-button.k-state-disabled:hover,
+.k-state-disabled .k-button:active,
+.k-button.k-state-disabled:active,
+.k-button.k-state-disabled:active:hover {
+  color: #999999;
+  border-color: #fafafa;
+  background-color: #fafafa;
+  background-image: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 .k-dropdown .k-state-default {
   border-color: #fafafa;

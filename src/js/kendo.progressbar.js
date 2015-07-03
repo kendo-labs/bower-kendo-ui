@@ -176,7 +176,7 @@
                     if (options.type === PROGRESSTYPE.VALUE) {
                         that.progressStatus.text(initialStatusValue);
                     } else {
-                        that.progressStatus.text(that._calculatePercentage(initialStatusValue) + "%");
+                        that.progressStatus.text(that._calculatePercentage(initialStatusValue).toFixed() + "%");
                     }
                 }
             }
@@ -329,6 +329,7 @@
             var that = this;
             var options = that.options;
             var progressWrapperSize = parseFloat(that.progressWrapper[0].style[that._progressProperty]);
+            var progressValue;
 
             if (options.type !== PROGRESSTYPE.CHUNK && progressWrapperSize > 98) {
                 that.progressWrapper.addClass(KPROGRESSBARCOMPLETE);
@@ -336,10 +337,13 @@
 
             if (options.showStatus) {
                 if (options.type === PROGRESSTYPE.VALUE) {
-                    that.progressStatus.text(currentValue);
+                    progressValue = currentValue;
+                } else if (options.type == PROGRESSTYPE.PERCENT) {
+                    progressValue = that._calculatePercentage(currentValue).toFixed() + "%";
                 } else {
-                    that.progressStatus.text(math.floor(that._calculatePercentage(currentValue)) + "%");
+                    progressValue = math.floor(that._calculatePercentage(currentValue)) + "%";
                 }
+                that.progressStatus.text(progressValue);
             }
 
             if (currentValue === options.min) {

@@ -273,12 +273,10 @@
             $log.warn("k-ng-disabled specified on a widget that does not have the enable() method: " + (widget.options.name));
             return;
         }
-        scope.$apply(function() {
-            scope.$watch(kNgDisabled, function(newValue, oldValue) {
-                if (newValue != oldValue) {
-                    widget.enable(!newValue);
-                }
-            });
+        scope.$watch(kNgDisabled, function(newValue, oldValue) {
+            if (newValue != oldValue) {
+                widget.enable(!newValue);
+            }
         });
     }
 
@@ -287,14 +285,11 @@
             $log.warn("k-ng-readonly specified on a widget that does not have the readonly() method: " + (widget.options.name));
             return;
         }
-        scope.$apply(function() {
-            scope.$watch(kNgReadonly, function(newValue, oldValue) {
-                if (newValue != oldValue) {
-                    widget.readonly(newValue);
-                }
-            });
+        scope.$watch(kNgReadonly, function(newValue, oldValue) {
+            if (newValue != oldValue) {
+                widget.readonly(newValue);
+            }
         });
-
     }
 
     function exposeWidget(widget, scope, attrs, kendoWidget, origAttr) {

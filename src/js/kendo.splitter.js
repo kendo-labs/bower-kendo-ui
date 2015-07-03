@@ -151,9 +151,8 @@
                     .children(".k-expand-next, .k-expand-prev").on(CLICK + NS, that._arrowClick(EXPAND)).end()
                 .end();
 
-            $(window)
-                .on("resize" + NS + that._marker, proxy(that.resize, that, false))
-                .on("mouseup" + NS + that._marker, proxy(that._removeOverlays, that));
+            $(window).on("resize" + NS + that._marker, proxy(that.resize, that, false));
+            $(document).on("mouseup" + NS + that._marker, proxy(that._removeOverlays, that));
         },
 
         _detachEvents: function() {
@@ -164,7 +163,8 @@
                 .children(".k-splitbar").off("dblclick" + NS)
                     .children(".k-collapse-next, .k-collapse-prev, .k-expand-next, .k-expand-prev").off(NS);
 
-            $(window).off("resize" + NS + that._marker);
+            $(window).off(NS + that._marker);
+            $(document).off(NS + that._marker);
         },
 
         options: {

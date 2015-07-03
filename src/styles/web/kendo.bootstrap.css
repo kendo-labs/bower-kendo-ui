@@ -459,18 +459,6 @@ html .km-pane-wrapper .k-header {
   border-color: #285e8e;
   background-color: #3276b1;
 }
-.k-button[disabled],
-.k-button.k-state-disabled,
-.k-state-disabled .k-button,
-.k-state-disabled .k-button:hover,
-.k-button.k-state-disabled:hover,
-.k-state-disabled .k-button:active,
-.k-button.k-state-disabled:active {
-  color: #a1a1a1;
-  border-color: #cccccc;
-  background-color: #ffffff;
-  background-image: none;
-}
 .k-button:focus:not(.k-state-disabled):not([disabled]) {
   -webkit-box-shadow: 0 0 7px 0 #76abd9;
   box-shadow: 0 0 7px 0 #76abd9;
@@ -2327,6 +2315,19 @@ td.k-state-focused.k-state-selected,
   color: #333333;
   border-color: #aeaeae;
   background-color: #ebebeb;
+}
+.k-button[disabled],
+.k-button.k-state-disabled,
+.k-state-disabled .k-button,
+.k-state-disabled .k-button:hover,
+.k-button.k-state-disabled:hover,
+.k-state-disabled .k-button:active,
+.k-button.k-state-disabled:active,
+.k-button.k-state-disabled:active:hover {
+  color: #a1a1a1;
+  border-color: #cccccc;
+  background-color: #ffffff;
+  background-image: none;
 }
 /* Responsive styles  */
 @media only screen and (max-width: 1024px) {

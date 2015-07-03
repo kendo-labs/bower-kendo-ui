@@ -1139,7 +1139,7 @@
                         value = null;
                     } else {
                         if (!source || source instanceof kendo.data.DataSource) {
-                            source = this.widget.dataSource.view();
+                            source = this.widget.dataSource.flatView();
                         }
 
                         if (isArray) {
@@ -1212,7 +1212,7 @@
                             text = value;
                         }
 
-                        if (!text && value && options.valuePrimitive) {
+                        if (!text && (value || value === 0) && options.valuePrimitive) {
                             widget.value(value);
                         } else {
                             widget._preselect(value, text);

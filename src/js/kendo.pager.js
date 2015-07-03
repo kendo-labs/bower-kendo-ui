@@ -385,7 +385,7 @@
 
             if (!isNaN(pageSize)){
                 dataSource.pageSize(pageSize);
-            } else if (value == "all") {
+            } else if ((value + "").toLowerCase() == "all") {
                 dataSource.pageSize(dataSource.total());
             }
         },
@@ -405,7 +405,7 @@
         },
 
         totalPages: function() {
-            return Math.ceil((this.dataSource.total() || 0) / this.pageSize());
+            return Math.ceil((this.dataSource.total() || 0) / (this.pageSize() || 1));
         },
 
         pageSize: function() {

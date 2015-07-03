@@ -269,7 +269,6 @@
                     this._addGraphics();
                 }
 
-                this.attributes();
                 this.addUidAttr();
                 this.addOverflowAttr();
                 this.enable(options.enable);

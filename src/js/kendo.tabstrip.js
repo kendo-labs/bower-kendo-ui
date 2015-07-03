@@ -616,7 +616,13 @@
             each(inserted.tabs, function (idx) {
                 var contents = inserted.contents[idx];
                 that.tabGroup.append(this);
-                that.wrapper.append(contents);
+                if (that.options.tabPosition == "bottom") {
+                    that.tabGroup.before(contents);
+                } else if (that._scrollableModeActive) {
+                    that._scrollPrevButton.before(contents);
+                } else {
+                    that.wrapper.append(contents);
+                }
                 that.angular("compile", function(){ return { elements: [ contents ] }; });
             });
 

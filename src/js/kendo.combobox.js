@@ -815,6 +815,7 @@
             this._oldIndex = this.selectedIndex;
 
             this.listView.setValue(value);
+            this._placeholder();
 
             this._initialIndex = null;
             this._presetValue = true;

@@ -274,9 +274,6 @@ textarea.k-textbox:hover,
   background-position: 50% 50%;
   background-color: #f3f3f4;
 }
-.k-widget.k-tooltip {
-  background-image: url('textures/highlight.png');
-}
 .k-block,
 .k-header,
 .k-grid-header,
@@ -792,9 +789,17 @@ div.k-filebrowser-dropzone em {
 }
 /* Tooltip */
 .k-widget.k-tooltip {
-  border-color: #1b8dd6;
-  background-color: #1984c8;
-  color: #ffffff;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
+  background-position: 50% 50%;
+  background-color: #f3f3f4;
+  color: #535b6a;
+  border-color: transparent;
+  -webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 .k-widget.k-tooltip-validation {
   border-color: #ffe5a6;
@@ -809,16 +814,16 @@ div.k-filebrowser-dropzone em {
   top: 3px;
 }
 .k-callout-n {
-  border-bottom-color: #1b8dd6;
+  border-bottom-color: #f3f3f4;
 }
 .k-callout-w {
-  border-right-color: #1b8dd6;
+  border-right-color: #f3f3f4;
 }
 .k-callout-s {
-  border-top-color: #1b8dd6;
+  border-top-color: #f3f3f4;
 }
 .k-callout-e {
-  border-left-color: #1b8dd6;
+  border-left-color: #f3f3f4;
 }
 .k-tooltip-validation .k-callout-n {
   border-bottom-color: #ffe5a6;
