@@ -704,7 +704,6 @@ div.k-filebrowser-dropzone em {
 .k-state-disabled {
   opacity: .7;
 }
-.k-ie7 .k-state-disabled,
 .k-ie8 .k-state-disabled {
   filter: alpha(opacity=70);
 }
@@ -936,22 +935,22 @@ div.k-filebrowser-dropzone em {
 /* Notification */
 .k-widget.k-notification.k-notification-info {
   background-color: #bbdefb;
-  color: #6d6d6d;
+  color: #2b98f3;
   border-color: #bbdefb;
 }
 .k-widget.k-notification.k-notification-success {
   background-color: #c8e6c9;
-  color: #7a7a7a;
+  color: #5fb662;
   border-color: #c8e6c9;
 }
 .k-widget.k-notification.k-notification-warning {
   background-color: #fdefba;
-  color: #8e8e8e;
+  color: #f9cd25;
   border-color: #fdefba;
 }
 .k-widget.k-notification.k-notification-error {
   background-color: #ffcdd2;
-  color: #777777;
+  color: #ff3448;
   border-color: #ffcdd2;
 }
 /* Gantt */
@@ -2885,7 +2884,6 @@ div.k-scheduler-marquee:after {
   .k-ff .k-pager-input,
   .k-ie11 .k-pager-input,
   .k-safari .k-pager-input {
-    float: none;
     display: inline-block;
     vertical-align: top;
   }
@@ -2904,11 +2902,20 @@ div.k-scheduler-marquee:after {
     display: inline-flex;
     -webkit-flex-direction: column-reverse;
     flex-direction: column-reverse;
+    overflow: visible;
+    height: auto;
+  }
+  .k-webkit .k-pager-numbers.k-state-expanded,
+  .k-ff .k-pager-numbers.k-state-expanded,
+  .k-ie11 .k-pager-numbers.k-state-expanded,
+  .k-safari .k-pager-numbers.k-state-expanded,
+  .k-webkit .k-grid .k-pager-numbers.k-state-expanded,
+  .k-ff .k-grid .k-pager-numbers.k-state-expanded,
+  .k-ie11 .k-grid .k-pager-numbers.k-state-expanded,
+  .k-safari .k-grid .k-pager-numbers.k-state-expanded {
     -webkit-transform: translatey(-100%);
     -moz-transform: translatey(-100%);
     transform: translatey(-100%);
-    overflow: visible;
-    height: auto;
   }
   .k-webkit .km-pane-wrapper .k-pager-numbers .k-link,
   .k-ff .km-pane-wrapper .k-pager-numbers .k-link,
@@ -2950,9 +2957,6 @@ div.k-scheduler-marquee:after {
   .k-safari .k-grid .k-pager-numbers .k-current-page {
     display: block;
     border-left: 0;
-    -webkit-transform: translatey(100%);
-    -moz-transform: translatey(100%);
-    transform: translatey(100%);
   }
   .k-webkit .k-pager-numbers li:not(.k-current-page),
   .k-ff .k-pager-numbers li:not(.k-current-page),

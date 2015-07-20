@@ -716,7 +716,6 @@ div.k-filebrowser-dropzone em {
 .k-state-disabled {
   opacity: .7;
 }
-.k-ie7 .k-state-disabled,
 .k-ie8 .k-state-disabled {
   filter: alpha(opacity=70);
 }
@@ -948,22 +947,22 @@ div.k-filebrowser-dropzone em {
 /* Notification */
 .k-widget.k-notification.k-notification-info {
   background-color: #e5f5fa;
-  color: #0c9083;
-  border-color: #b6e3f1;
+  color: #2498bc;
+  border-color: #bae5f2;
 }
 .k-widget.k-notification.k-notification-success {
   background-color: #eaf7ec;
-  color: #269388;
-  border-color: #c1e8c7;
+  color: #3ea44e;
+  border-color: #c5e9cb;
 }
 .k-widget.k-notification.k-notification-warning {
   background-color: #fff4d9;
-  color: #ff704f;
-  border-color: #fff0ca;
+  color: #d99a00;
+  border-color: #ffe5a6;
 }
 .k-widget.k-notification.k-notification-error {
   background-color: #ffe0d9;
-  color: #6b7579;
+  color: #ff6340;
   border-color: #ffb6a6;
 }
 /* Gantt */

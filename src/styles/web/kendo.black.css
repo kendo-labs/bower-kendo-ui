@@ -745,7 +745,6 @@ div.k-filebrowser-dropzone em {
 .k-state-disabled {
   opacity: .7;
 }
-.k-ie7 .k-state-disabled,
 .k-ie8 .k-state-disabled {
   filter: alpha(opacity=70);
 }
@@ -995,8 +994,8 @@ div.k-filebrowser-dropzone em {
 }
 .k-widget.k-notification.k-notification-warning {
   background-color: #be9938;
-  color: #ffffff;
-  border-color: #c29c39;
+  color: #000000;
+  border-color: #b28f35;
 }
 .k-widget.k-notification.k-notification-error {
   background-color: #be5138;

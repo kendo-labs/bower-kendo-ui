@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.2.703";
+    kendo.version = "2015.2.720";
 
     function Class() {}
 
@@ -3220,9 +3220,10 @@ function pad(number, digits, end) {
     }
 
     function visible(element) {
-        return !$(element).parents().addBack().filter(function() {
-            return $.css(this,"visibility") === "hidden" || $.expr.filters.hidden(this);
-        }).length;
+        return $.expr.filters.visible(element) &&
+            !$(element).parents().addBack().filter(function() {
+                return $.css(this,"visibility") === "hidden";
+            }).length;
     }
 
     $.extend($.expr[ ":" ], {
@@ -8034,11 +8035,7 @@ function pad(number, digits, end) {
     function indexOfPristineModel(data, model) {
         if (model) {
             return indexOf(data, function(item) {
-                if (item.uid) {
-                    return item.uid == model.uid;
-                }
-
-                return item[model.idField] === model.id;
+                return (item.uid && item.uid == model.uid) || (item[model.idField] === model.id && model.id !== model._defaultId);
             });
         }
         return -1;
@@ -8213,6 +8210,10 @@ function pad(number, digits, end) {
             serverGrouping: false,
             serverAggregates: false,
             batch: false
+        },
+
+        clone: function() {
+            return this;
         },
 
         online: function(value) {
@@ -15849,14 +15850,14 @@ function pad(number, digits, end) {
                 that.boundaries = containerBoundaries(container, that.hint);
             }
 
+            $(document).on(KEYUP, that._captureEscape);
+
             if (that._trigger(DRAGSTART, e)) {
                 that.userEvents.cancel();
                 that._afterEnd();
             }
 
             that.userEvents.capture();
-
-            $(document).on(KEYUP, that._captureEscape);
         },
 
         _hold: function(e) {
@@ -18281,7 +18282,7 @@ function pad(number, digits, end) {
 
             that.element
                 .on(CLICK + NS , "a", proxy(that._click, that))
-                .addClass("k-pager-wrap k-widget");
+                .addClass("k-pager-wrap k-widget k-floatwrap");
 
             that.element.on(CLICK + NS , ".k-current-page", proxy(that._toggleActive, that));
 
@@ -19194,7 +19195,7 @@ function pad(number, digits, end) {
             that._compileTemplates(options.templates);
             that._guid = "_" + kendo.guid();
             that._isRtl = kendo.support.isRtl(element);
-            that._compileStacking(options.stacking, options.position.top);
+            that._compileStacking(options.stacking, options.position.top, options.position.left);
 
             kendo.notify(that);
         },
@@ -19255,15 +19256,16 @@ function pad(number, digits, end) {
             return type ? that._compiled[type] || defaultCompiled : defaultCompiled;
         },
 
-        _compileStacking: function(stacking, top) {
+        _compileStacking: function(stacking, top, left) {
             var that = this,
                 paddings = { paddingTop: 0, paddingRight: 0, paddingBottom: 0, paddingLeft: 0 },
+                horizontalAlignment = left !== null ? LEFT : RIGHT,
                 origin, position;
 
             switch (stacking) {
                 case "down":
-                    origin = BOTTOM + " " + LEFT;
-                    position = TOP + " " + LEFT;
+                    origin = BOTTOM + " " + horizontalAlignment;
+                    position = TOP + " " + horizontalAlignment;
                     delete paddings.paddingBottom;
                 break;
                 case RIGHT:
@@ -19277,18 +19279,18 @@ function pad(number, digits, end) {
                     delete paddings.paddingLeft;
                 break;
                 case UP:
-                    origin = TOP + " " + LEFT;
-                    position = BOTTOM + " " + LEFT;
+                    origin = TOP + " " + horizontalAlignment;
+                    position = BOTTOM + " " + horizontalAlignment;
                     delete paddings.paddingTop;
                 break;
                 default:
                     if (top !== null) {
-                        origin = BOTTOM + " " + LEFT;
-                        position = TOP + " " + LEFT;
+                        origin = BOTTOM + " " + horizontalAlignment;
+                        position = TOP + " " + horizontalAlignment;
                         delete paddings.paddingBottom;
                     } else {
-                        origin = TOP + " " + LEFT;
-                        position = BOTTOM + " " + LEFT;
+                        origin = TOP + " " + horizontalAlignment;
+                        position = BOTTOM + " " + horizontalAlignment;
                         delete paddings.paddingTop;
                     }
                 break;
@@ -19306,8 +19308,17 @@ function pad(number, digits, end) {
                 closeIcon;
 
             function attachClick(target) {
-                target.on(CLICK + NS, function() {
-                    popup.close();
+                target.on(CLICK + NS, function () {
+                    that._hidePopup(popup);
+                });
+            }
+
+            if (popup.options.anchor !== document.body && popup.options.origin.indexOf(RIGHT) > 0) {
+                popup.bind("open", function (e) {
+                    var shadows = kendo.getShadows(popup.element);
+                    setTimeout(function () {
+                        popup.wrapper.css("left", parseFloat(popup.wrapper.css("left")) + shadows.left + shadows.right);
+                    });
                 });
             }
 
@@ -19341,7 +19352,7 @@ function pad(number, digits, end) {
                 allowHideAfter = options.allowHideAfter,
                 popup, openPopup, attachClick, closeIcon;
 
-            openPopup = $("." + that._guid).last();
+            openPopup = $("." + that._guid + ":not(.k-hiding)").last();
 
             popup = new kendo.ui.Popup(wrapper, {
                 anchor: openPopup[0] ? openPopup : document.body,
@@ -19389,10 +19400,15 @@ function pad(number, digits, end) {
             }
 
             if (autoHideAfter > 0) {
-                setTimeout(function(){
-                    popup.close();
+                setTimeout(function () {
+                    that._hidePopup(popup);
                 }, autoHideAfter);
             }
+        },
+
+        _hidePopup: function (popup) {
+            popup.wrapper.addClass("k-hiding");
+            popup.close();
         },
 
         _togglePin: function(wrapper, pin) {
@@ -19548,7 +19564,7 @@ function pad(number, digits, end) {
                 openedNotifications.each(function(idx, element){
                     var popup = $(element).data("kendoPopup");
                     if (popup) {
-                        popup.close();
+                        that._hidePopup(popup);
                     }
                 });
             }
@@ -19580,7 +19596,7 @@ function pad(number, digits, end) {
             }
 
             if (newOptions.stacking !== undefined || newOptions.position !== undefined) {
-                that._compileStacking(options.stacking, options.position.top);
+                that._compileStacking(options.stacking, options.position.top, options.position.left);
             }
         },
 
@@ -20511,6 +20527,7 @@ function pad(number, digits, end) {
                 this.popup = this.popupElement.kendoPopup({
                     appendTo: options.mobile ? $(options.mobile).children(".km-pane") : null,
                     anchor: element,
+                    isRtl: this.toolbar._isRtl,
                     copyAnchorStyles: false,
                     animation: options.animation,
                     open: adjustPopupWidth
@@ -20775,6 +20792,7 @@ function pad(number, digits, end) {
                 element.addClass(TOOLBAR + " k-widget");
 
                 this.uid = kendo.guid();
+                this._isRtl = kendo.support.isRtl(element);
                 this._groups = {};
                 element.attr(KENDO_UID_ATTR, this.uid);
 
@@ -21064,13 +21082,15 @@ function pad(number, digits, end) {
                     item = element.data("button");
 
                 if (item.options.togglable) {
-                    item.toggle(checked ? checked : !item.options.selectable, true);
+                    item.toggle(checked ? checked : !item.options.selected, true);
                 }
             },
 
             _renderOverflow: function() {
                 var that = this,
-                    overflowContainer = components.overflowContainer;
+                    overflowContainer = components.overflowContainer,
+                    isRtl = that._isRtl,
+                    horizontalDirection = isRtl ? "left" : "right";
 
                 that.overflowAnchor = $(components.overflowAnchor).addClass(BUTTON);
 
@@ -21084,9 +21104,10 @@ function pad(number, digits, end) {
                 }
 
                 that.popup = new kendo.ui.Popup(overflowContainer, {
-                    origin: "bottom right",
-                    position: "top right",
+                    origin: "bottom " + horizontalDirection,
+                    position: "top " + horizontalDirection,
                     anchor: that.overflowAnchor,
+                    isRtl: isRtl,
                     animation: that.animation,
                     appendTo: that.isMobile ? $(that.isMobile).children(".km-pane") : null,
                     copyAnchorStyles: false,
@@ -21095,7 +21116,7 @@ function pad(number, digits, end) {
                             .addClass("k-overflow-wrapper");
 
                         if (!that.isMobile) {
-                            wrapper.css("margin-left", (wrapper.outerWidth() - wrapper.width()) / 2 + 1);
+                            wrapper.css("margin-left", (isRtl ? -1 : 1) * ((wrapper.outerWidth() - wrapper.width()) / 2 + 1));
                         } else {
                             that.popup.container.css("max-height", (parseFloat($(".km-content:visible").innerHeight()) - 15) + "px");
                         }
@@ -21118,7 +21139,6 @@ function pad(number, digits, end) {
                 }
 
                 that.popup.container.attr(KENDO_UID_ATTR, this.uid);
-                that.popup.element.toggleClass("k-rtl", kendo.support.isRtl(that.element));
             },
 
             _toggleOverflowAnchor: function() {
@@ -29617,6 +29637,10 @@ function pad(number, digits, end) {
 
             options.tooltip.format = options.tooltip.enabled ? options.tooltip.format || "{0}" : "{0}";
 
+            if (options.smallStep <= 0) {
+                throw new Error('Kendo UI Slider smallStep must be a positive number.');
+            }
+
             that._createHtml();
             that.wrapper = that.element.closest(".k-slider");
             that._trackDiv = that.wrapper.find(TRACK_SELECTOR);
@@ -37328,6 +37352,8 @@ function pad(number, digits, end) {
         init: function(element, options) {
             Widget.fn.init.call(this, element, options);
 
+            this._guid = "_" + kendo.guid();
+
             this._toggleHandler = proxy(this._toggleButtonClick, this);
             this._closeHandler = proxy(this._close, this);
 
@@ -37336,20 +37362,23 @@ function pad(number, digits, end) {
             this._registerBreakpoint();
 
             this.element
-                .addClass("k-rpanel k-rpanel-" + this.options.orientation);
+                .addClass("k-rpanel k-rpanel-" + this.options.orientation + " " + this._guid);
 
             this._resizeHandler = proxy(this.resize, this, false);
             $(window).on("resize" + NS, this._resizeHandler);
         },
         _mediaQuery:
             "@media (max-width: #= breakpoint-1 #px) {" +
-                ".k-rpanel-animate.k-rpanel-left," +
-                ".k-rpanel-animate.k-rpanel-right {" +
+                ".#= guid #.k-rpanel-animate.k-rpanel-left," +
+                ".#= guid #.k-rpanel-animate.k-rpanel-right {" +
                     "-webkit-transition: -webkit-transform .2s ease-out;" +
                     "-ms-transition: -ms-transform .2s ease-out;" +
                     "transition: transform .2s ease-out;" +
                 "} " +
-                ".k-rpanel-animate.k-rpanel-top {" +
+                ".#= guid #.k-rpanel-top {" +
+                    "overflow: hidden;" +
+                "}" +
+                ".#= guid #.k-rpanel-animate.k-rpanel-top {" +
                     "-webkit-transition: max-height .2s linear;" +
                     "-ms-transition: max-height .2s linear;" +
                     "transition: max-height .2s linear;" +
@@ -37357,22 +37386,23 @@ function pad(number, digits, end) {
             "} " +
             "@media (min-width: #= breakpoint #px) {" +
                 "#= toggleButton # { display: none; } " +
-                ".k-rpanel-left { float: left; } " +
-                ".k-rpanel-right { float: right; } " +
-                ".k-rpanel-left, .k-rpanel-right {" +
+                ".#= guid #.k-rpanel-left { float: left; } " +
+                ".#= guid #.k-rpanel-right { float: right; } " +
+                ".#= guid #.k-rpanel-left, .#= guid #.k-rpanel-right {" +
                     "position: relative;" +
                     "-webkit-transform: translateX(0) translateZ(0);" +
                     "-ms-transform: translateX(0) translateZ(0);" +
                     "transform: translateX(0) translateZ(0);" +
                 "} " +
-                ".k-rpanel-top { max-height: none; }" +
+                ".#= guid #.k-rpanel-top { max-height: none; }" +
             "}",
         _registerBreakpoint: function() {
             var options = this.options;
 
             this._registerStyle(kendo.template(this._mediaQuery)({
                 breakpoint: options.breakpoint,
-                toggleButton: options.toggleButton
+                toggleButton: options.toggleButton,
+                guid: this._guid
             }));
         },
         _registerStyle: function(cssText) {
@@ -38446,9 +38476,13 @@ function pad(number, digits, end) {
                 } else if (that._scrollableModeActive && tabGroupScrollWidth <= wrapperOffsetWidth) {
                     that._scrollableModeActive = false;
 
+                    that.wrapper.removeClass("k-tabstrip-scrollable");
+
                     that._scrollPrevButton.off().remove();
                     that._scrollNextButton.off().remove();
                     that.tabGroup.css({ marginLeft: "", marginRight: "" });
+                } else if (!that._scrollableModeActive) {
+                    that.wrapper.removeClass("k-tabstrip-scrollable");
                 }
             }
         },
@@ -50728,15 +50762,6 @@ function pad(number, digits, end) {
             if (newValue !== oldValue) {
                 unregister(); // this watcher will be re-added if we compile again!
 
-                /****************************************************************
-                // XXX: this is a gross hack that might not even work with all
-                // widgets.  we need to destroy the current widget and get its
-                // wrapper element out of the DOM, then make the original element
-                // visible so we can initialize a new widget on it.
-                //
-                // kRebind is probably impossible to get right at the moment.
-                ****************************************************************/
-
                 var templateOptions = WIDGET_TEMPLATE_OPTIONS[widget.options.name];
 
                 if (templateOptions) {
@@ -51088,8 +51113,6 @@ function pad(number, digits, end) {
 
                       case "compile":
                         var injector = self.element.injector();
-                        // gross gross gross hack :(. Works for popups that may be out of the ng-app directive.
-                        // they don't have injectors. Same thing happens in our tests, too.
                         var compile = injector ? injector.get("$compile") : $defaultCompile;
 
                         angular.forEach(elements, function(el, i){

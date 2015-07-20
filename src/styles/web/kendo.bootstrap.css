@@ -704,7 +704,6 @@ div.k-filebrowser-dropzone em {
 .k-state-disabled {
   opacity: .7;
 }
-.k-ie7 .k-state-disabled,
 .k-ie8 .k-state-disabled {
   filter: alpha(opacity=70);
 }
@@ -936,22 +935,22 @@ div.k-filebrowser-dropzone em {
 /* Notification */
 .k-widget.k-notification.k-notification-info {
   background-color: #e5f5fa;
-  color: #3174ad;
-  border-color: #b6e3f1;
+  color: #2498bc;
+  border-color: #bae5f2;
 }
 .k-widget.k-notification.k-notification-success {
   background-color: #eaf7ec;
-  color: #707070;
-  border-color: #c1e8c7;
+  color: #3ea44e;
+  border-color: #c5e9cb;
 }
 .k-widget.k-notification.k-notification-warning {
   background-color: #fff4d9;
-  color: #3174ad;
-  border-color: #fff0ca;
+  color: #d99a00;
+  border-color: #ffe5a6;
 }
 .k-widget.k-notification.k-notification-error {
   background-color: #ffe0d9;
-  color: #737373;
+  color: #d92800;
   border-color: #ffb6a6;
 }
 /* Gantt */
@@ -2339,7 +2338,6 @@ td.k-state-focused.k-state-selected,
   .k-ff .k-pager-input,
   .k-ie11 .k-pager-input,
   .k-safari .k-pager-input {
-    float: none;
     display: inline-block;
     vertical-align: top;
   }
@@ -2357,12 +2355,21 @@ td.k-state-focused.k-state-selected,
     display: inline-flex;
     -webkit-flex-direction: column-reverse;
     flex-direction: column-reverse;
-    -webkit-transform: translatey(-100%);
-    -moz-transform: translatey(-100%);
-    transform: translatey(-100%);
     margin-left: .3em;
     overflow: visible;
     height: auto;
+  }
+  .k-webkit .k-pager-numbers.k-state-expanded,
+  .k-ff .k-pager-numbers.k-state-expanded,
+  .k-ie11 .k-pager-numbers.k-state-expanded,
+  .k-safari .k-pager-numbers.k-state-expanded,
+  .k-webkit .k-grid .k-pager-numbers.k-state-expanded,
+  .k-ff .k-grid .k-pager-numbers.k-state-expanded,
+  .k-ie11 .k-grid .k-pager-numbers.k-state-expanded,
+  .k-safari .k-grid .k-pager-numbers.k-state-expanded {
+    -webkit-transform: translatey(-100%);
+    -moz-transform: translatey(-100%);
+    transform: translatey(-100%);
   }
   .k-webkit .km-pane-wrapper .k-pager-numbers .k-link,
   .k-ff .km-pane-wrapper .k-pager-numbers .k-link,

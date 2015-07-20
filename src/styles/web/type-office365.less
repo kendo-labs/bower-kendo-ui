@@ -1047,7 +1047,6 @@ div.k-filebrowser-dropzone em
     opacity:.7;
 }
 
-.k-ie7 .k-state-disabled,
 .k-ie8 .k-state-disabled
 {
     filter:alpha(opacity=70);
@@ -3259,7 +3258,6 @@ input.k-textbox:focus {
     
         .k-pager-wrap .k-pager-nav,
         .k-pager-input {
-            float:none;
             display: inline-block;
             vertical-align: top;
         }
@@ -3273,11 +3271,15 @@ input.k-textbox:focus {
             display: inline-flex;
             -webkit-flex-direction: column-reverse;
             flex-direction: column-reverse;
+            overflow: visible;
+            height: auto;
+        }
+        
+        .k-pager-numbers.k-state-expanded,
+        .k-grid .k-pager-numbers.k-state-expanded {
             -webkit-transform: translatey(-100%);
             -moz-transform: translatey(-100%);
             transform: translatey(-100%);
-            overflow: visible;
-            height: auto;
         }
         
         .km-pane-wrapper .k-pager-numbers .k-link,

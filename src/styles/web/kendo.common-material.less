@@ -58,7 +58,7 @@
     margin-top: 12px;
 }
 
-.k-panelbar .k-sprite {
+.k-panelbar .k-link > .k-sprite {
     margin-top: 16px;
 }
 
@@ -101,7 +101,7 @@
     border-top-width: 2px;
 }
 
-.k-tabstrip-items .k-link {
+.k-tabstrip .k-tabstrip-items .k-link {
     padding: 1.071em;
 }
 
@@ -117,9 +117,12 @@
 }
 
 .k-grid-header th.k-header,
-.k-filter-row th
-{
-    padding: .429em .6em .571em .6em;
+.k-filter-row th {
+    padding: 0.35em .6em;
+}
+
+.k-grid-header th.k-header {
+  padding-left: 1.286em;
 }
 
 .k-filtercell > span {
@@ -158,9 +161,10 @@
 }
 
 .k-grid-header th.k-header>.k-link {
-    font-size: 0.929em;
-    padding: 0.462em 1.286em;
-    margin-top: 0;
+    padding-left: 0;
+    margin: 0;
+    min-height: 16px;
+    line-height: inherit;
 }
 
 .k-grouping-header

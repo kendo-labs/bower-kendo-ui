@@ -4690,6 +4690,9 @@ body:before {
   font-size: 2rem;
   margin-bottom: .29rem;
 }
+.km-nova .km-tabstrip .km-icon {
+  margin: 0 auto .1em;
+}
 /* Badges */
 .km-nova .km-tabstrip .km-badge {
   margin-left: .5em;
