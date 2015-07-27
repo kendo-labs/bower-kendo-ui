@@ -3493,6 +3493,9 @@ html .k-grid-edit-row .k-tooltip {
 .k-gantt-tables {
   position: relative;
 }
+.k-gantt .k-timeline .k-grid-content {
+  overflow-x: scroll;
+}
 .k-gantt .k-gantt-timeline th {
   text-align: center;
 }
@@ -4381,6 +4384,13 @@ span.k-dropdown,
 .k-space-right .k-icon {
   right: 3px;
 }
+/*prevent missing bottom border at some zoom levels*/
+span.k-textbox:after {
+  content: "\a0";
+  display: block;
+  height: .4px;
+  overflow: hidden;
+}
 .k-autocomplete,
 .k-dropdown-wrap.k-state-focused,
 .k-dropdown-wrap.k-state-hover,
@@ -4950,6 +4960,7 @@ table.k-editor {
   border-width: 2px;
   padding: .3em .5em;
   word-wrap: break-word;
+  overflow: auto;
 }
 .k-editortoolbar-dragHandle {
   cursor: move;
@@ -5822,13 +5833,16 @@ table.k-editor {
 }
 .k-progressbar-horizontal .k-item.k-first {
   margin-left: 0;
+  border-right-width: 0;
 }
 .k-progressbar-horizontal .k-item.k-last {
   border-right-width: 0;
+  border-left-width: 0;
+  margin-left: -2px;
 }
 .k-progressbar-horizontal .k-item,
 .k-rtl .k-progressbar-horizontal.k-progressbar-reverse .k-item {
-  border-width: 1px 1px 1px 0;
+  border-width: 1px;
 }
 .k-progressbar-horizontal.k-progressbar-reverse .k-item,
 .k-rtl .k-progressbar-horizontal .k-item {

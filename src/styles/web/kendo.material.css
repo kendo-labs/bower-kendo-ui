@@ -2697,7 +2697,6 @@ table.k-editor {
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.k-filter-menu .k-button,
 .k-edit-form-container .k-button,
 .k-popup .k-button,
 .k-popup .k-primary:active,
@@ -2711,9 +2710,19 @@ table.k-editor {
 }
 .k-popup .k-primary,
 .k-edit-form-container .k-primary {
-  color: #3f51b5;
+  color: #00b0ff;
   background-color: #fafafa;
   border-color: #fafafa;
+}
+.k-filter-menu .k-button {
+  background: transparent;
+  border-color: transparent;
+}
+.k-filter-menu .k-primary {
+  border-left-color: #f0f0f0;
+}
+.k-filter-menu > div > div:last-child {
+  border-color: #f0f0f0;
 }
 .k-popup .k-button:focus:active:not(.k-state-disabled):not([disabled]),
 .k-edit-form-container .k-button:focus:active:not(.k-state-disabled):not([disabled]) {

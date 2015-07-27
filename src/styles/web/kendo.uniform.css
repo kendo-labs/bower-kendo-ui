@@ -34,10 +34,10 @@
 }
 .ktb-var-normal-gradient {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
 }
 .ktb-var-normal-text-color {
   color: #676767;
@@ -60,10 +60,10 @@
 }
 .ktb-var-selected-gradient {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
 }
 .ktb-var-selected-text-color {
   color: #454545;
@@ -267,10 +267,10 @@ textarea.k-textbox:hover,
 .k-panelbar .k-tabstrip-items .k-item,
 .km-pane-wrapper > .km-pane > .km-view > .km-content {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
   background-position: 50% 50%;
   background-color: #ffffff;
 }
@@ -483,10 +483,10 @@ html .km-pane-wrapper .k-header {
   border-color: #dbdbdb;
   background-color: #ffffff;
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
 }
 .k-button:focus:not(.k-state-disabled):not([disabled]) {
   -webkit-box-shadow: inset 0 0 3px 1px #cccccc;
@@ -573,7 +573,7 @@ html .km-pane-wrapper .k-header {
   background: #cccccc;
   color: #454545;
 }
-.k-popup .k-item > .k-group {
+.k-popup .k-list .k-item > .k-group {
   background: #cccccc;
   color: #454545;
   border-bottom-left-radius: 5px;
@@ -693,10 +693,10 @@ div.k-filebrowser-dropzone em,
 .k-button.k-state-active,
 .k-draghandle.k-state-selected:hover {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
 }
 .k-button:active,
 .k-button.k-state-active,
@@ -789,10 +789,10 @@ div.k-filebrowser-dropzone em {
 /* Tooltip */
 .k-widget.k-tooltip {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
   background-position: 50% 50%;
   background-color: #ffffff;
   color: #464646;
@@ -1383,10 +1383,10 @@ html .km-pane-wrapper .km-widget,
 .k-numeric-wrap.k-state-default,
 .k-dropdown-wrap.k-state-default {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
   background-position: 50% 50%;
   background-color: #e8e8e8;
   border-color: #dbdbdb;
@@ -1539,10 +1539,10 @@ html .km-pane-wrapper .km-widget,
   color: #646464;
   border-color: #e6e6e6;
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
   background-position: 50% 50%;
   background-color: #ffffff;
   -webkit-box-shadow: none;
@@ -1581,10 +1581,10 @@ html .km-pane-wrapper .km-widget,
   color: #454545;
   border-color: #cdcdcd;
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
   background-color: #eeeeee;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -1600,10 +1600,10 @@ html .km-pane-wrapper .km-widget,
   border-color: #2b2b2b;
   background-color: #ffffff;
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.13) 100%);
   -webkit-box-shadow: none;
   box-shadow: none;
 }
@@ -1838,10 +1838,10 @@ html .km-pane-wrapper .km-widget,
   .k-ie11 .k-pager-numbers .k-current-page .k-link,
   .k-safari .k-pager-numbers .k-current-page .k-link {
     background-image: url('textures/highlight.png');
-    background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-    background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-    background-image: none, -o-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-    background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+    background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+    background-image: none, -moz-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+    background-image: none, -o-linear-gradient(top, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
+    background-image: none, linear-gradient(to bottom, rgba(0,0,0,.08) 0%, rgba(0,0,0,.01) 100%);
     background-position: 50% 50%;
     background-color: #e8e8e8;
     border-color: #dbdbdb;

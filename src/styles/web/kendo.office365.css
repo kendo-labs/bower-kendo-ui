@@ -1345,13 +1345,13 @@ html .km-pane-wrapper .km-widget,
   background-color: #eaeaea;
   background-image: none;
   background-position: 50% 50%;
-  border-color: #62b865;
+  border-color: #8b8b8b;
 }
 .k-multiselect.k-header {
   border-color: #bababa;
 }
 .k-multiselect.k-header.k-state-hover {
-  border-color: #62b865;
+  border-color: #8b8b8b;
 }
 .k-autocomplete.k-state-focused,
 .k-picker-wrap.k-state-focused,
@@ -1377,7 +1377,7 @@ html .km-pane-wrapper .km-widget,
   border-color: #bababa;
 }
 .k-state-hover > .k-select {
-  border-color: #62b865;
+  border-color: #8b8b8b;
 }
 .k-state-focused > .k-select {
   border-color: #0072c6;
@@ -1447,6 +1447,9 @@ html .km-pane-wrapper .km-widget,
 }
 .k-grid-filter.k-state-active {
   background-color: #ffffff;
+}
+.k-grid-filter.k-state-active .k-icon {
+  opacity: 1;
 }
 .k-grouping-row td,
 .k-group-footer td,

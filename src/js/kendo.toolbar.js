@@ -1155,7 +1155,7 @@
                     item = target.parent("li").data("button");
                 }
 
-                if (!item.options.enable) {
+                if (!item || !item.options.enable) {
                     return;
                 }
 

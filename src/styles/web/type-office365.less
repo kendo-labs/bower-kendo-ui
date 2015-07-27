@@ -109,7 +109,7 @@
 @tabstrip-tabs-color: @normal-text-color;
 @form-widget-color: @normal-text-color;
 @drop-down-border-color: darken(@background, 27%);
-@drop-down-hover-border-color: darken(@success, 29%);
+@drop-down-hover-border-color: darken(@hover-background, 41%);
 @drop-down-focused-border-color: @base;
 @drop-down-background: @background;
 @drop-down-text-color: @normal-text-color;
@@ -2064,6 +2064,10 @@ html .km-pane-wrapper .km-widget,
 .k-grid-filter.k-state-active
 {
     background-color: @active-filter-background-color;
+}
+
+.k-grid-filter.k-state-active .k-icon {
+    opacity: 1;
 }
 
 .k-grouping-row td,
