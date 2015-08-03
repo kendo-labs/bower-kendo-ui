@@ -45,7 +45,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.2.727";
+    kendo.version = "2015.2.803";
 
     function Class() {}
 
@@ -2719,7 +2719,9 @@ function pad(number, digits, end) {
             that.element.removeData("handler");
             that.unbind();
         },
-
+        _destroy: function() {
+            this.destroy();
+        },
         angular: function(){}
     });
 

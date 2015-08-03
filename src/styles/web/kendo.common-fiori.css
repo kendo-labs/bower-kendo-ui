@@ -1580,8 +1580,8 @@ a.k-button:hover {
   text-decoration: none;
 }
 /* override iOS styles in mobile Kendo */
-.k-widget,
-.k-widget * {
+.km-widget,
+.km-widget * {
   -moz-background-clip: border-box;
   -webkit-background-clip: border-box;
   background-clip: border-box;

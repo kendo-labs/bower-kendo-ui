@@ -190,6 +190,7 @@
 
                             that._accessor(value);
                             that.input.val(text);
+                            that._placeholder();
                         } else if (that._oldIndex === -1) {
                             that._oldIndex = that.selectedIndex;
                         }
@@ -1109,6 +1110,11 @@
 
                 parent.first("cascade", function(e) {
                     that._userTriggered = e.userTriggered;
+
+                    if (that.listView.isBound()) {
+                        that._clearSelection(parent, true);
+                    }
+
                     that._cascadeSelect(parent);
                 });
 

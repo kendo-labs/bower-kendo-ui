@@ -850,22 +850,22 @@ div.k-filebrowser-dropzone em {
   border-color: #c5c5c5;
 }
 .k-file-progress {
-  color: #545454;
+  color: #1a1a1a;
 }
 .k-file-progress .k-progress {
-  background-color: #e6e6e6;
+  background-color: #e3f6fc;
 }
 .k-file-success {
-  color: #525252;
+  color: #1a1a1a;
 }
 .k-file-success .k-progress {
-  background-color: #ebe8e7;
+  background-color: #e9f8eb;
 }
 .k-file-error {
   color: #3b3b3b;
 }
 .k-file-error .k-progress {
-  background-color: #e6e6e6;
+  background-color: #ffe0d9;
 }
 /* ImageBrowser */
 .k-tile {

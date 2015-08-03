@@ -66,6 +66,9 @@
                 ".#= guid #.k-rpanel-right { float: right; } " +
                 ".#= guid #.k-rpanel-left, .#= guid #.k-rpanel-right {" +
                     "position: relative;" +
+                    "-webkit-transform: translateX(0);" +
+                    "-ms-transform: translateX(0);" +
+                    "transform: translateX(0);" +
                     "-webkit-transform: translateX(0) translateZ(0);" +
                     "-ms-transform: translateX(0) translateZ(0);" +
                     "transform: translateX(0) translateZ(0);" +
