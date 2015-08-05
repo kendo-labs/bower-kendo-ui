@@ -715,7 +715,7 @@
                     .on("focus" + NS, function () { innerWrapper.addClass("k-state-focused"); })
                     .on("blur" + NS, function () { innerWrapper.removeClass("k-state-focused"); })
                     .on(KEYDOWN_NS, bind(that._keydown, that))
-                    .on(CLICK_NS, ".k-icon", bind(that.toggle, that))
+                    .on(CLICK_NS, ".k-select", bind(that.toggle, that))
                     .on(CLICK_NS, that.options.toolIcon ? ".k-tool-icon" : ".k-selected-color", function(){
                         that.trigger("activate");
                     });

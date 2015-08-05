@@ -4750,7 +4750,7 @@ span.k-numerictextbox {
   bottom: -3px;
   border-radius: 0 !important;
 }
-.k-colorpicker .k-icon {
+.k-colorpicker .k-select {
   cursor: pointer;
 }
 .k-disabled-overlay {
@@ -8360,6 +8360,9 @@ div.k-navigator .k-navigator-w {
   display: block;
   width: 90%;
 }
+.k-ie7 .k-multicheck-wrap {
+  position: relative;
+}
 /*IE7 Menu*/
 .k-ie7 .k-menu .k-item .k-item {
   zoom: normal;
@@ -11141,14 +11144,14 @@ div.k-window-content {
 .k-pivot .k-link:not(.k-state-disabled):hover > .k-i-arrow-n {
   background-position: 0 -192px;
 }
-.k-panelbar .k-i-arrow-s,
-.k-pivot .k-i-arrow-s,
+.k-panelbar .k-item > .k-link .k-i-arrow-s,
+.k-pivot .k-item > .k-link .k-i-arrow-s,
 .k-panelbar .k-link:not(.k-state-disabled):hover > .k-i-arrow-s,
 .k-pivot .k-link:not(.k-state-disabled):hover > .k-i-arrow-s {
   background-position: 0 -224px;
 }
-.k-panelbar .k-i-arrow-e,
-.k-pivot .k-i-arrow-e,
+.k-panelbar .k-item > .k-link .k-i-arrow-e,
+.k-pivot .k-item > .k-link .k-i-arrow-e,
 .k-panelbar .k-link.k-state-selected .k-i-arrow-e,
 .k-pivot .k-link.k-state-selected .k-i-arrow-e,
 .k-panelbar .k-link:not(.k-state-disabled):hover > .k-i-arrow-e,

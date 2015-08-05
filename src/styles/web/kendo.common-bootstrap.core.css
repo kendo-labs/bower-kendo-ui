@@ -3014,7 +3014,7 @@ span.k-numerictextbox {
   bottom: -3px;
   border-radius: 0 !important;
 }
-.k-colorpicker .k-icon {
+.k-colorpicker .k-select {
   cursor: pointer;
 }
 .k-disabled-overlay {
@@ -4305,6 +4305,9 @@ span.k-tooltip {
 .k-ie7 .k-grid-edit-row > td > .text-box {
   display: block;
   width: 90%;
+}
+.k-ie7 .k-multicheck-wrap {
+  position: relative;
 }
 /*IE7 Menu*/
 .k-ie7 .k-menu .k-item .k-item {

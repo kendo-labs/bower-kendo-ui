@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.2.803";
+    kendo.version = "2015.2.805";
 
     function Class() {}
 
@@ -2033,6 +2033,7 @@ function pad(number, digits, end) {
                     webkit: /(chrome)[ \/]([\w.]+)/i,
                     safari: /(webkit)[ \/]([\w.]+)/i,
                     opera: /(opera)(?:.*version|)[ \/]([\w.]+)/i,
+                    edge: /(edge)[ \/]([\w.]+)/i,
                     msie: /(msie\s|trident.*? rv:)([\w.]+)/i,
                     mozilla: /(mozilla)(?:.*? rv:([\w.]+)|)/i
                 };
@@ -32006,7 +32007,7 @@ function pad(number, digits, end) {
                     .on("focus" + NS, function () { innerWrapper.addClass("k-state-focused"); })
                     .on("blur" + NS, function () { innerWrapper.removeClass("k-state-focused"); })
                     .on(KEYDOWN_NS, bind(that._keydown, that))
-                    .on(CLICK_NS, ".k-icon", bind(that.toggle, that))
+                    .on(CLICK_NS, ".k-select", bind(that.toggle, that))
                     .on(CLICK_NS, that.options.toolIcon ? ".k-tool-icon" : ".k-selected-color", function(){
                         that.trigger("activate");
                     });

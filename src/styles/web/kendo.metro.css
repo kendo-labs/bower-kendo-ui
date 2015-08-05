@@ -451,6 +451,9 @@ html .km-pane-wrapper .k-header {
   border-color: #8ebc00;
   background-color: #8ebc00;
 }
+.k-tabstrip-scrollable .k-button-bare:hover {
+  background: #8ebc00 !important;
+}
 .k-button:active,
 .k-button.k-state-active {
   color: #ffffff;

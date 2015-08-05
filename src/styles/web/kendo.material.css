@@ -1376,10 +1376,10 @@ html .km-pane-wrapper .km-widget,
 .k-state-default > .k-select {
   border-color: #f0f0f0;
 }
-.k-state-hover > .k-select {
+.k-state-focused > .k-select {
   border-color: #f5f5f5;
 }
-.k-state-focused > .k-select {
+.k-state-hover > .k-select {
   border-color: #f5f5f5;
 }
 .k-tabstrip:focus {
