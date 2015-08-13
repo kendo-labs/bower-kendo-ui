@@ -177,11 +177,11 @@ td.k-group-cell,
 .k-separator,
 .k-resource.k-alt,
 .k-pivot-layout > tbody > tr:first-child > td:first-child {
-  background-color: #525252;
+  background-color: #555555;
 }
 .k-pivot-rowheaders .k-alt .k-alt,
 .k-header.k-alt {
-  background-color: #3e3e3e;
+  background-color: #404040;
 }
 .k-textbox,
 .k-autocomplete.k-header,
@@ -384,10 +384,10 @@ html .km-pane-wrapper .k-header {
   background-color: #2f2f2f;
 }
 .k-gantt .k-nonwork-hour {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(39, 39, 39, 0.2);
 }
 .k-gantt .k-header.k-nonwork-hour {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(39, 39, 39, 0.15);
 }
 .k-scheduler-table .k-today,
 .k-today > .k-scheduler-datecolumn,
@@ -402,8 +402,8 @@ html .km-pane-wrapper .k-header {
 }
 .k-event,
 .k-task-complete {
-  border-color: #575757;
-  background: #575757 0 -257px url('textures/highlight.png') repeat-x;
+  border-color: #75baff;
+  background: #75baff 0 -257px url('textures/highlight.png') repeat-x;
   color: #ffffff;
 }
 .k-event-inverse {
@@ -1004,10 +1004,10 @@ div.k-filebrowser-dropzone em {
 }
 /* Gantt */
 .k-gantt .k-treelist {
-  background: #525252;
+  background: #555555;
 }
 .k-gantt .k-treelist .k-alt {
-  background-color: #393939;
+  background-color: #616161;
 }
 .k-gantt .k-treelist .k-state-selected,
 .k-gantt .k-treelist .k-state-selected td,
@@ -1041,8 +1041,8 @@ div.k-filebrowser-dropzone em {
   background: #0066cc;
 }
 .k-task-single {
-  background-color: #686868;
-  border-color: #575757;
+  background-color: #99ccff;
+  border-color: #75baff;
   color: #ffffff;
 }
 .k-state-selected.k-task-single {
@@ -1104,7 +1104,8 @@ div.k-filebrowser-dropzone em {
 .k-tile,
 .k-slider-track,
 .k-slider-selection,
-.k-upload {
+.k-upload,
+.k-split-button {
   border-radius: 4px;
 }
 .k-tool {
@@ -1620,8 +1621,16 @@ html .km-pane-wrapper .km-widget,
 .k-scheduler-table .k-state-hover .k-icon {
   background-color: transparent;
 }
-.k-button:focus {
+.k-button:focus,
+.k-split-button:focus {
   outline: none;
+}
+.k-split-button:focus {
+  box-shadow: inset 0 0 4px 2px #2a2a2a;
+}
+.k-split-button:focus > .k-button {
+  background: transparent;
+  border-color: #2a2a2a;
 }
 .k-editor .k-tool:focus {
   outline: 0;

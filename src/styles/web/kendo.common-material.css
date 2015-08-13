@@ -2598,7 +2598,6 @@ div.k-grid-footer {
   position: absolute;
   visibility: hidden;
   height: 1px;
-  margin-top: -1px;
 }
 .k-grid-norecords {
   width: 100%;
@@ -3088,7 +3087,8 @@ html .k-grid-edit-row .k-tooltip {
   overflow: visible;
 }
 .k-pdf-export-shadow .k-grid-header-locked + .k-grid-header-wrap,
-.k-pdf-export-shadow .k-grid-content-locked + .k-grid-content {
+.k-pdf-export-shadow .k-grid-content-locked + .k-grid-content,
+.k-pdf-export-shadow .k-grid-footer-locked + .k-grid-footer-wrap {
   width: auto !important;
 }
 /* Remove empty space reserved above the scrollbar */
@@ -4968,6 +4968,9 @@ table.k-editor {
   padding-right: 3px;
   box-shadow: none !important;
 }
+.k-editor-widget > .k-window-content {
+  overflow: hidden;
+}
 .k-editor .k-editor-toolbar-wrap {
   border: 0;
   padding: 0;
@@ -5833,16 +5836,13 @@ table.k-editor {
 }
 .k-progressbar-horizontal .k-item.k-first {
   margin-left: 0;
-  border-right-width: 0;
 }
 .k-progressbar-horizontal .k-item.k-last {
   border-right-width: 0;
-  border-left-width: 0;
-  margin-left: -2px;
 }
 .k-progressbar-horizontal .k-item,
 .k-rtl .k-progressbar-horizontal.k-progressbar-reverse .k-item {
-  border-width: 1px;
+  border-width: 1px 0 1px 1px;
 }
 .k-progressbar-horizontal.k-progressbar-reverse .k-item,
 .k-rtl .k-progressbar-horizontal .k-item {
@@ -5851,15 +5851,20 @@ table.k-editor {
 .k-progressbar-horizontal .k-first,
 .k-rtl .k-progressbar-horizontal .k-last,
 .k-rtl .k-progressbar-horizontal.k-progressbar-reverse .k-last {
-  border-radius: 4px 0 0 4px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
   border-left-width: 1px;
 }
 .k-progressbar-horizontal .k-last,
 .k-rtl .k-progressbar-horizontal .k-first {
-  border-radius: 0 4px 4px 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 .k-progressbar-horizontal.k-progressbar-reverse .k-last,
 .k-rtl .k-progressbar-horizontal .k-first {
+  border-right-width: 1px;
+}
+.k-progressbar-horizontal .k-last.k-state-selected {
   border-right-width: 1px;
 }
 .k-progressbar-vertical .k-item {
@@ -5875,10 +5880,12 @@ table.k-editor {
   border-bottom-width: 0;
 }
 .k-progressbar-vertical .k-first {
-  border-radius: 4px 4px 0 0;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
 }
 .k-progressbar-vertical .k-last {
-  border-radius: 0 0 4px 4px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
   border-bottom-width: 1px;
 }
 .k-progressbar-vertical.k-progressbar-reverse .k-item {

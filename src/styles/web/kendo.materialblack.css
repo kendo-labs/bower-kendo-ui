@@ -1539,8 +1539,19 @@ html .km-pane-wrapper .km-widget,
 .k-scheduler-table .k-state-hover .k-icon {
   background-color: transparent;
 }
-.k-button:focus {
+.k-button:focus,
+.k-split-button:focus {
   outline: none;
+}
+.k-split-button:focus {
+  background-color: #717171;
+}
+.k-split-button:focus > .k-button {
+  background: transparent;
+  border-color: #717171;
+}
+.k-split-button:focus > .k-button.k-split-button-arrow {
+  border-left-color: #5a5a5a;
 }
 .k-editor .k-tool:focus {
   outline: 0;

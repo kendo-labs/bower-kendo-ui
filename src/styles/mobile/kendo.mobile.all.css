@@ -14605,6 +14605,9 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-nova .km-collapsible-header h5,
 .km-nova .km-collapsible-header h6 {
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .km-nova .km-collapsible-header h1 {
   line-height: 2.85em;

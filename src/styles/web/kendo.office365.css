@@ -1542,8 +1542,19 @@ html .km-pane-wrapper .km-widget,
 .k-scheduler-table .k-state-hover .k-icon {
   background-color: transparent;
 }
-.k-button:focus {
+.k-button:focus,
+.k-split-button:focus {
   outline: none;
+}
+.k-split-button:focus {
+  box-shadow: 0 0 0px 1px #0072c6;
+}
+.k-split-button:focus > .k-button {
+  background: transparent;
+  border-color: transparent;
+}
+.k-split-button:focus > .k-button.k-split-button-arrow {
+  border-left-color: #0072c6;
 }
 .k-editor .k-tool:focus {
   outline: 0;
@@ -2539,15 +2550,6 @@ input.k-textbox:focus {
     flex-direction: column-reverse;
     overflow: visible;
     height: auto;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded,
-  .k-ff .k-pager-numbers.k-state-expanded,
-  .k-ie11 .k-pager-numbers.k-state-expanded,
-  .k-safari .k-pager-numbers.k-state-expanded,
-  .k-webkit .k-grid .k-pager-numbers.k-state-expanded,
-  .k-ff .k-grid .k-pager-numbers.k-state-expanded,
-  .k-ie11 .k-grid .k-pager-numbers.k-state-expanded,
-  .k-safari .k-grid .k-pager-numbers.k-state-expanded {
     -webkit-transform: translatey(-100%);
     -moz-transform: translatey(-100%);
     transform: translatey(-100%);

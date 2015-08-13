@@ -1055,7 +1055,8 @@ div.k-filebrowser-dropzone em {
 .k-tile,
 .k-slider-track,
 .k-slider-selection,
-.k-upload {
+.k-upload,
+.k-split-button {
   border-radius: 4px;
 }
 .k-tool {
@@ -1539,8 +1540,17 @@ html .km-pane-wrapper .km-widget,
 .k-scheduler-table .k-state-hover .k-icon {
   background-color: transparent;
 }
-.k-button:focus {
+.k-button:focus,
+.k-split-button:focus {
   outline: none;
+}
+.k-split-button:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 8px 0 #76abd9;
+}
+.k-split-button:focus > .k-button {
+  background: transparent;
+  border-color: #76abd9;
 }
 .k-editor .k-tool:focus {
   outline: 0;
@@ -2358,15 +2368,6 @@ td.k-state-focused.k-state-selected,
     margin-left: .3em;
     overflow: visible;
     height: auto;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded,
-  .k-ff .k-pager-numbers.k-state-expanded,
-  .k-ie11 .k-pager-numbers.k-state-expanded,
-  .k-safari .k-pager-numbers.k-state-expanded,
-  .k-webkit .k-grid .k-pager-numbers.k-state-expanded,
-  .k-ff .k-grid .k-pager-numbers.k-state-expanded,
-  .k-ie11 .k-grid .k-pager-numbers.k-state-expanded,
-  .k-safari .k-grid .k-pager-numbers.k-state-expanded {
     -webkit-transform: translatey(-100%);
     -moz-transform: translatey(-100%);
     transform: translatey(-100%);

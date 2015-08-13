@@ -2183,9 +2183,23 @@ html .km-pane-wrapper .km-widget,
     background-color: transparent;
 }
 
-.k-button:focus
+.k-button:focus,
+.k-split-button:focus
 {
     outline:none;
+}
+
+.k-split-button:focus {
+    box-shadow: 0 0 0px 1px @button-focused-border-color;
+}
+
+.k-split-button:focus > .k-button {
+    background: transparent;
+    border-color: transparent;
+}
+
+.k-split-button:focus > .k-button.k-split-button-arrow {
+    border-left-color: @button-focused-border-color;
 }
 
 .k-editor .k-tool:focus
@@ -3277,10 +3291,6 @@ input.k-textbox:focus {
             flex-direction: column-reverse;
             overflow: visible;
             height: auto;
-        }
-        
-        .k-pager-numbers.k-state-expanded,
-        .k-grid .k-pager-numbers.k-state-expanded {
             -webkit-transform: translatey(-100%);
             -moz-transform: translatey(-100%);
             transform: translatey(-100%);

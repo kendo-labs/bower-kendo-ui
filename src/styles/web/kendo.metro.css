@@ -656,7 +656,8 @@ td.k-state-focused.k-state-selected {
 .k-pager-wrap .k-link:hover,
 .k-other-month.k-state-hover .k-link,
 div.k-filebrowser-dropzone em,
-.k-draghandle:hover {
+.k-draghandle:hover,
+.k-split-button:focus {
   background-image: url('textures/highlight.png');
   background-image: none, -webkit-linear-gradient(top, #8ebc00 0%, #8ebc00 100%);
   background-image: none, -moz-linear-gradient(top, #8ebc00 0%, #8ebc00 100%);
@@ -1591,8 +1592,17 @@ html .km-pane-wrapper .km-widget,
 .k-scheduler-table .k-state-hover .k-icon {
   background-color: transparent;
 }
-.k-button:focus {
+.k-button:focus,
+.k-split-button:focus {
   outline: none;
+}
+.k-split-button:focus {
+  -webkit-box-shadow: inset 0 0 0 1px #8ebc00;
+  box-shadow: inset 0 0 0 1px #8ebc00;
+}
+.k-split-button:focus > .k-button {
+  background: transparent;
+  border-color: transparent;
 }
 .k-editor .k-tool:focus {
   outline: 0;
