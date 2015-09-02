@@ -53,9 +53,9 @@
 @tooltip-text-color: @header-text-color;
 @tooltip-background-color: @header-background-color;
 @tooltip-border-color: @secondary-border-color;
-@validation-text-color: contrast(@base, lighten(@accent, 1%), darken(@accent, 23%), 0.5);
-@validation-background-color: contrast(@base, lighten(@background, 1%), darken(@background, 5%), 0.5);
-@validation-border-color: contrast(@base, lighten(@warning, 14%), darken(@warning, 10%), 0.5);
+@validation-text-color: contrast(@validation-background-color, lighten(@warning, 80%), darken(@warning, 60%), 0.5);
+@validation-background-color: @warning;
+@validation-border-color: @warning;
 @splitbar-background-color: saturate(@base, 1%);
 @draghandle-border-radius: 7px;
 @draghandle-border-color: darken(@success, 20%);
@@ -76,12 +76,12 @@
 @event-inverse-text-color: contrast(@normal-text-color, @background, darken(@background, 10%), 0.5);
 @scheduler-nonwork-background-color: contrast(@selected-background, lighten(@base, 3%), darken(@base, 5%), 0.5);
 @resize-background-color: contrast(@hover-background, lighten(@normal-text-color, 29%), darken(@normal-text-color, 1%), 0.5);
-@upload-progress-background-color: saturate(@info, 10%);
-@upload-progress-text-color: contrast(@upload-progress-background-color, lighten(@hover-text-color, 15%), darken(@hover-text-color, 8%), 0.5);
-@upload-success-background-color: saturate(@success, 10%);
-@upload-success-text-color: contrast(@upload-success-background-color, lighten(@hover-text-color, 14%), darken(@hover-text-color, 8%), 0.5);
-@upload-error-background-color: saturate(@error, 10%);
-@upload-error-text-color: contrast(@selected-background, lighten(@hover-text-color, 5%), darken(@hover-text-color, 17%), 0.5);
+@upload-progress-background-color: @info;
+@upload-progress-text-color: contrast(@upload-progress-background-color, lighten(@info, 70%), darken(@info, 50%), 0.5);
+@upload-success-background-color: @success;
+@upload-success-text-color: contrast(@upload-success-background-color, lighten(@success, 70%), darken(@success, 50%), 0.5);
+@upload-error-background-color: @error;
+@upload-error-text-color: contrast(@upload-error-background-color, lighten(@error, 70%), darken(@error, 50%), 0.5);
 @task-summary-color: lighten(@widget-text-color, 25%);
 @task-summary-selected-color: lighten(@selected-background-color, 25%);
 @loading-panel-color: contrast(@selected-background, lighten(@background, 5%), darken(@background, 1%), 0.5);
@@ -1052,11 +1052,15 @@ div.k-filebrowser-dropzone em
 .k-other-month,
 .k-other-month .k-link,
 .k-dropzone em,
-.k-dropzone .k-upload-status,
 .k-tile-empty strong,
 .k-slider .k-draghandle
 {
     color: @disabled-text-color;
+}
+
+.k-dropzone .k-upload-status
+{
+    color: @normal-text-color;
 }
 
 /* Progressbar */
@@ -1268,6 +1272,7 @@ div.k-filebrowser-dropzone em
     .box-shadow(@hover-shadow);
 }
 
+.k-textbox:focus,
 .k-autocomplete.k-state-focused,
 .k-dropdown-wrap.k-state-focused,
 .k-picker-wrap.k-state-focused,
@@ -1872,11 +1877,7 @@ html .km-pane-wrapper .km-widget,
     color: #fff;
     border-color: @error-border-color;
     background-color: red;
-    background-image: ~"-webkit-gradient(linear, 50% 0, 50% 100%, from(rgba(255,255,255,.3)), to(rgba(255,255,255,.15)))";
-    background-image: ~"-webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,.15))";
-    background-image: ~"-moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,.15))";
-    background-image: ~"-ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,.15))";
-    background-image: ~"linear-gradient(to bottom, rgba(255,255,255,.3), rgba(255,255,255,.15))";
+    background-image: linear-gradient(to bottom, rgba(255,255,255,.3), rgba(255,255,255,.15));
 }
 
 .km-actionsheet .k-grid-delete:active,
@@ -2073,7 +2074,6 @@ html .km-pane-wrapper .km-widget,
 
 .k-grid td.k-state-focused
 {
-    -webkit-box-shadow: inset 0 0 0 1px @focused-item-shadow;
     box-shadow: inset 0 0 0 1px @focused-item-shadow;
 }
 
@@ -2546,46 +2546,32 @@ html .km-pane-wrapper .km-widget,
 .k-chart .k-mask {
     background-color: @background;
     filter: alpha(opacity=68);
-    -moz-opacity: 0.68;
     opacity: 0.68;
 }
 
 .k-chart .k-selection {
     border-color: rgba(0,0,0,.2);
-    -moz-box-shadow: inset 0 1px 8px rgba(0,0,0,.1);
-    -webkit-box-shadow: inset 0 1px 8px rgba(0,0,0,.1);
     box-shadow: inset 0 1px 8px rgba(0,0,0,.1);
     transition: box-shadow .2s linear, border-color .2s linear;
-    -moz-transition: box-shadow .2s linear, border-color .2s linear;
-    -webkit-transition: box-shadow .2s linear, border-color .2s linear;
-    -o-transition: box-shadow .2s linear, border-color .2s linear;
 }
 
 .k-chart .k-selection:hover {
     border-color: rgba(0,0,0,.3);
-    -moz-box-shadow: inset 0 3px 8px rgba(0,0,0,.2);
-    -webkit-box-shadow: inset 0 3px 8px rgba(0,0,0,.2);
     box-shadow: inset 0 3px 8px rgba(0,0,0,.2);
 }
 
 .k-chart .k-handle {
     background-color: #fcfcfc;
-    -moz-box-shadow: 0 0 0 1px rgba(0,0,0,.1);
-    -webkit-box-shadow: 0 0 0 1px rgba(0,0,0,.1);
     box-shadow: 0 0 0 1px rgba(0,0,0,.1);
 }
 
 .k-chart .k-handle:hover {
     background-color: #ffffff;
     border-color: #b8b8b8;
-    -moz-box-shadow: 0 0 0 2px rgba(111,101,96,.5);
-    -webkit-box-shadow: 0 0 0 2px rgba(111,101,96,.5);
     box-shadow: 0 0 0 2px rgba(111,101,96,.5);
 }
 .k-chart .k-navigator-hint .k-tooltip {
     border: 3px solid #ffffff;
-    -moz-box-shadow: 0 0 0 3px rgba(0,0,0,.2);
-    -webkit-box-shadow: 0 0 0 3px rgba(0,0,0,.2);
     box-shadow: 0 0 0 3px rgba(0,0,0,.2);
     background: #ffffff;
     color: #242424;

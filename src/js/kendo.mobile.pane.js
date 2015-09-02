@@ -161,6 +161,8 @@
             if (initial) {
                 this.navigate(initial);
             }
+
+            return initial;
         },
 
         options: {

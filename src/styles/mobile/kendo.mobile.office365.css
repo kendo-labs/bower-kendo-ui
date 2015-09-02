@@ -53,8 +53,8 @@
   -ms-user-select: none;
   -webkit-user-select: none;
   -webkit-text-size-adjust: none;
-  -moz-text-size-adjust: none;
-  text-size-adjust: none;
+      -ms-text-size-adjust: none;
+          text-size-adjust: none;
   overflow-x: hidden;
 }
 .km-pane-wrapper {
@@ -72,19 +72,15 @@
   position: absolute;
   z-index: 2 !important;
   -webkit-transition: -webkit-transform 350ms ease-out;
-  -ms-transition: -ms-transform 350ms ease-out;
-  -o-transition: -o-transform 350ms ease-out;
-  transition: transform 350ms ease-out;
+          transition: transform 350ms ease-out;
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .km-vertical .km-expanded-splitview .km-collapsible-pane {
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .km-expanded-pane-shim {
   position: absolute;
@@ -114,23 +110,24 @@
   top: 0;
   left: 0;
   position: absolute;
-  display: -moz-box;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   height: 100%;
   width: 100%;
-  -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
   -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: stretch;
   -webkit-align-items: stretch;
-  -ms-align-items: stretch;
-  align-items: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
   -webkit-align-content: stretch;
-  align-content: stretch;
+      -ms-flex-line-pack: stretch;
+          align-content: stretch;
   vertical-align: top;
 }
 .k-ff .km-view,
@@ -148,19 +145,17 @@
   position: relative;
 }
 .k-ff .km-view {
-  display: -moz-inline-box;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
 }
 .km-content {
   min-height: 1px;
-  -moz-box-flex: 1;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  -moz-box-align: stretch;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
+      -ms-flex: 1;
+          flex: 1;
   flex-align: stretch;
   width: auto;
   overflow: hidden;
@@ -180,7 +175,11 @@
 .km-footer {
   display: block;
   display: -moz-box;
-  -moz-box-orient: vertical;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
   width: 100%;
 }
 .km-header {
@@ -234,7 +233,8 @@ kendo-mobile-drawer {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-origin: border-box;
+  -webkit-background-origin: border-box;
+          background-origin: border-box;
   position: relative;
   display: inline-block;
   padding: .4em .7em;
@@ -250,9 +250,8 @@ kendo-mobile-drawer {
   margin: 0;
   width: 100%;
   border-width: 0;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-native-scroller {
   overflow: auto;
@@ -272,9 +271,8 @@ kendo-mobile-drawer {
   height: 100% !important;
   background: rgba(0, 0, 0, 0.6);
   z-index: 10001;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-root .km-shim {
   position: absolute;
@@ -287,8 +285,8 @@ kendo-mobile-drawer {
   vertical-align: middle;
 }
 .km-shim .k-animation-container {
-  box-shadow: none;
   -webkit-box-shadow: none;
+          box-shadow: none;
   border: 0;
   width: auto;
 }
@@ -303,9 +301,8 @@ kendo-mobile-drawer {
   position: absolute;
   margin-top: -70px;
   margin-left: -90px;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.5);
 }
 .km-loader h1 {
@@ -317,8 +314,8 @@ kendo-mobile-drawer {
 .km-loader .km-loading,
 .km-load-more .km-icon,
 .km-scroller-refresh .km-icon {
-  animation: km-spin 1s infinite linear;
   -webkit-animation: km-spin 1s infinite linear;
+          animation: km-spin 1s infinite linear;
   display: block;
   margin: 0 auto;
   width: 35px;
@@ -341,30 +338,6 @@ kendo-mobile-drawer {
     -webkit-transform: rotate(360deg);
   }
 }
-@-moz-keyframes km-spin {
-  from {
-    -moz-transform: rotate(0deg);
-  }
-  to {
-    -moz-transform: rotate(360deg);
-  }
-}
-@-ms-keyframes km-spin {
-  from {
-    -ms-transform: rotate(0deg);
-  }
-  to {
-    -ms-transform: rotate(360deg);
-  }
-}
-@-o-keyframes km-spin {
-  from {
-    -o-transform: rotate(0deg);
-  }
-  to {
-    -o-transform: rotate(360deg);
-  }
-}
 @-webkit-keyframes km-ios-spin {
   from {
     -webkit-transform: rotate(0deg);
@@ -381,41 +354,28 @@ kendo-mobile-drawer {
     -webkit-transform: rotate(225deg);
   }
 }
-@-moz-keyframes km-ios-spin {
-  from {
-    -moz-transform: rotate(0deg);
-  }
-  to {
-    -moz-transform: rotate(360deg);
-  }
-}
-@-moz-keyframes km-ios-spin1 {
-  from {
-    -moz-transform: rotate(-135deg);
-  }
-  to {
-    -moz-transform: rotate(225deg);
-  }
-}
 @keyframes km-ios-spin {
   from {
-    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
   }
   to {
-    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
   }
 }
 @keyframes km-ios-spin1 {
   from {
-    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+            transform: rotate(-135deg);
   }
   to {
-    transform: rotate(225deg);
+    -webkit-transform: rotate(225deg);
+            transform: rotate(225deg);
   }
 }
 /* Stretched View */
 .km-stretched-view {
-  display: -moz-box;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -539,7 +499,6 @@ kendo-mobile-drawer {
   margin-left: .5em;
   min-width: .9em;
   padding: 0 .55em;
-  -moz-background-clip: padding-box;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
@@ -558,9 +517,8 @@ kendo-mobile-drawer {
   width: 1.3rem;
   height: 1.3rem;
   font-size: 1rem;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-widget .km-detaildisclose {
   font-size: .8em;
@@ -620,8 +578,8 @@ button.km-button {
 .km-root .km-pane .k-button:focus,
 .km-root .km-pane .k-button:active,
 .km-root .km-pane .k-button:focus:active {
-  box-shadow: none;
   -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .km-buttongroup {
   padding: .4rem .7rem;
@@ -750,16 +708,16 @@ button.km-button {
   border-width: 1px;
 }
 .km-collapsed > .km-collapsible-content.km-animated {
-  transform: translateY(-0.8em);
+  -webkit-transform: translateY(-0.8em);
+      -ms-transform: translateY(-0.8em);
+          transform: translateY(-0.8em);
   border-color: transparent;
   border-bottom: none;
   visibility: hidden;
 }
 .km-animated {
-  -webkit-transition: -webkit-all 0.2s ease-in-out;
-  -ms-transition: -ms-all 0.2s ease-in-out;
-  -o-transition: -o-all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+          transition: all 0.2s ease-in-out;
 }
 .km-hide-title {
   display: none;
@@ -791,11 +749,10 @@ button.km-button {
 .km-root .k-toolbar,
 .km-navbar {
   padding: 0;
-  -moz-box-flex: 1;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   position: relative;
   overflow: hidden;
   display: block;
@@ -837,7 +794,8 @@ button.km-button {
 /* Navbar */
 .km-on-ios.km-black-translucent-status-bar.km-app .km-header .km-navbar {
   padding-top: 1.4em;
-  background-clip: border-box;
+  -webkit-background-clip: border-box;
+          background-clip: border-box;
 }
 .km-on-ios.km-ios5.km-cordova .km-header .km-navbar,
 .km-on-ios.km-ios6.km-cordova .km-header .km-navbar {
@@ -889,14 +847,13 @@ button.km-button {
   text-align: right;
   line-height: 2.2em;
   border-style: solid;
-  box-shadow: none;
   -webkit-box-shadow: none;
+          box-shadow: none;
   padding: .55em 3.4em .55em .5em;
 }
 .km-root .km-widget.k-toolbar {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-root .k-toolbar span.km-icon {
   vertical-align: middle;
@@ -1035,15 +992,12 @@ button.km-button {
   padding: .2rem .7rem;
 }
 .km-tabstrip {
-  -moz-box-orient: horizontal;
-  -webkit-box-orient: horizontal;
-  -moz-box-align: start;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
   flex-align: start;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
   -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
   -moz-box-pack: start;
   padding: 0;
   text-align: center;
@@ -1051,8 +1005,8 @@ button.km-button {
 }
 .km-tabstrip .km-button {
   word-spacing: normal;
-  box-shadow: none;
   -webkit-box-shadow: none;
+          box-shadow: none;
   vertical-align: bottom;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
@@ -1114,9 +1068,8 @@ button.km-button {
   width: 100%;
   overflow: hidden;
   background: transparent;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-checkbox {
   width: 1.8rem;
@@ -1170,9 +1123,8 @@ button.km-button {
   border-style: solid;
   border-width: .24rem .24rem 0 0;
   -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
 }
 .km-listview-wrapper > ul:not(.km-listview) {
   margin: 0 auto;
@@ -1214,9 +1166,8 @@ button.km-button {
   position: relative;
   list-style-type: none;
   vertical-align: middle;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   padding: .5em .7em;
 }
 .km-list > li {
@@ -1280,9 +1231,8 @@ button.km-button {
   border: 1px solid transparent;
   border-width: 1px 0;
   -webkit-transform: translatez(0);
-  -ms-transform: translatez(0);
-  -o-transform: translatez(0);
-  transform: translatez(0);
+      -ms-transform: translatez(0);
+          transform: translatez(0);
 }
 .km-filter-wrap {
   position: relative;
@@ -1309,9 +1259,8 @@ button.km-button {
 }
 .km-filter-wrap input {
   width: 100%;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   border: 0;
   background: transparent;
   -moz-appearance: none;
@@ -1355,9 +1304,7 @@ button.km-button {
   font-size: 1.4em;
   text-align: center;
   -webkit-transform: translate3d(0, -3em, 0);
-  -ms-transform: translate3d(0, -3em, 0);
-  -o-transform: translate3d(0, -3em, 0);
-  transform: translate3d(0, -3em, 0);
+          transform: translate3d(0, -3em, 0);
 }
 .km-scroller-pull .km-template {
   display: inline-block;
@@ -1373,25 +1320,19 @@ button.km-button {
   width: 2rem;
   font-size: 2rem;
   -webkit-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+          transform: rotate(0deg);
   -webkit-transition: -webkit-transform 300ms linear;
-  -ms-transition: -ms-transform 300ms linear;
-  -o-transition: -o-transform 300ms linear;
-  transition: transform 300ms linear;
+          transition: transform 300ms linear;
 }
 .km-widget .km-scroller-release .km-icon {
   -webkit-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  -o-transform: rotate(180deg);
-  transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
 }
 .km-widget .km-scroller-refresh .km-icon {
   -webkit-transition: none;
-  -ms-transition: none;
-  -o-transition: none;
-  transition: none;
+          transition: none;
 }
 /* Scroller */
 .km-touch-scrollbar {
@@ -1403,13 +1344,10 @@ button.km-button {
   background-color: #333;
   opacity: 0;
   -webkit-transform-origin: 0 0;
-  -ms-transform-origin: 0 0;
-  -o-transform-origin: 0 0;
-  transform-origin: 0 0;
+      -ms-transform-origin: 0 0;
+          transform-origin: 0 0;
   -webkit-transition: opacity 0.3s linear;
-  -ms-transition: opacity 0.3s linear;
-  -o-transition: opacity 0.3s linear;
-  transition: opacity 0.3s linear;
+          transition: opacity 0.3s linear;
 }
 .km-vertical-scrollbar {
   height: 100%;
@@ -1423,10 +1361,9 @@ button.km-button {
 }
 .km-scrollview,
 .km-scroll-container {
-  -moz-user-select: none;
   -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   -moz-user-select: -moz-none;
   -webkit-margin-collapse: separate;
   margin-collapse: separate;
@@ -1486,9 +1423,8 @@ button.km-button {
   list-style-type: none;
   padding: inherit 1em;
   border-bottom: 1px solid #555;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-widget.km-actionsheet > li {
   line-height: 2em;
@@ -1510,8 +1446,8 @@ button.km-button {
 }
 .km-widget.km-actionsheet-wrapper {
   width: 100%;
-  box-shadow: none;
   -webkit-box-shadow: none;
+          box-shadow: none;
   border: 0;
 }
 .km-actionsheet-root.km-shim .k-animation-container {
@@ -1535,8 +1471,8 @@ button.km-button {
   position: relative;
   background: none;
   border: 0;
-  box-shadow: none;
   -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .km-popup-overlay {
   position: absolute;
@@ -1580,9 +1516,8 @@ button.km-button {
   right: 0;
 }
 .km-popup.km-pane {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   width: 100%;
   height: 100%;
   min-height: 100px;
@@ -1597,37 +1532,33 @@ button.km-button {
 /* SplitView */
 div.km-splitview > .km-content,
 kendo-mobile-split-view.km-splitview > .km-content {
-  -moz-box-orient: horizontal;
   -webkit-box-orient: horizontal;
-  -moz-box-direction: normal;
   -webkit-box-direction: normal;
   -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
 }
 div.km-split-vertical > .km-content,
 kendo-mobile-split-view.km-split-vertical > .km-content {
-  -moz-box-orient: vertical;
   -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
   -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 div.km-split-content > .km-pane {
-  -moz-box-flex: 2;
   -webkit-box-flex: 2;
   -webkit-flex: 2;
-  -ms-flex: 2;
-  flex: 2;
+      -ms-flex: 2;
+          flex: 2;
   width: auto;
   height: auto;
 }
 div.km-split-content > .km-pane:first-child {
-  -moz-box-flex: 1;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
+      -ms-flex: 1;
+          flex: 1;
 }
 div.km-split-horizontal > .km-content > .km-pane {
   top: 0;
@@ -1652,7 +1583,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-modalview-wrapper:before {
   overflow: hidden;
   position: relative;
-  display: -moz-inline-box;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -1670,6 +1600,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-native-scrolling .km-view.km-modalview {
   display: -webkit-inline-flex;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
   display: inline-flex;
 }
 .km-modalview-root:before,
@@ -1742,14 +1674,15 @@ div.km-split-horizontal > .km-content > .km-pane {
   width: auto !important;
 }
 .km-widget .k-slider .k-slider-track {
-  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+          background-clip: padding-box;
 }
 .km-widget .k-slider-track,
 .km-widget .k-slider-selection {
   margin-top: 0;
   border-radius: 5px;
-  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
+          box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
 }
 .km-widget .k-slider-horizontal .k-slider-selection {
   top: 0;
@@ -1803,10 +1736,10 @@ div.km-split-horizontal > .km-content > .km-pane {
   font-size: 1.3em;
   text-align: center;
   padding: .44em;
-  -moz-user-select: none;
   -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 /* Form elements */
 .km-list input[type=text]:not(.k-input),
@@ -1828,9 +1761,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-list .k-dropdown,
 .km-list textarea {
   width: 50%;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   font-size: 1.2em;
   position: absolute;
   top: 50%;
@@ -1847,7 +1779,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-list textarea {
   position: relative;
   width: -webkit-calc(50% + .7em);
-  width: -moz-calc(50% + .7em);
   width: calc(50% + .7em);
   margin-right: -0.7em;
 }
@@ -1870,18 +1801,18 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-widget input,
 .km-widget textarea {
-  -moz-user-select: text;
   -webkit-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
+     -moz-user-select: text;
+      -ms-user-select: text;
+          user-select: text;
 }
 .km-widget input[readonly],
 .km-widget input[type=image],
 .km-widget select:not([multiple]) {
-  -moz-user-select: none;
   -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .km-list textarea {
   top: 0;
@@ -1925,9 +1856,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-end .k-fx-next,
 .k-fx-end .k-fx-current {
   -webkit-transition: all 350ms ease-out;
-  -ms-transition: all 350ms ease-out;
-  -o-transition: all 350ms ease-out;
-  transition: all 350ms ease-out;
+          transition: all 350ms ease-out;
 }
 .k-fx {
   position: relative;
@@ -1951,34 +1880,29 @@ div.km-split-horizontal > .km-content > .km-pane {
 /* Zoom */
 .k-fx-zoom.k-fx-start .k-fx-next {
   -webkit-transform: scale(0) !important;
-  -ms-transform: scale(0) !important;
-  -o-transform: scale(0) !important;
-  transform: scale(0) !important;
+      -ms-transform: scale(0) !important;
+          transform: scale(0) !important;
 }
 .k-fx-zoom.k-fx-end .k-fx-next {
   -webkit-transform: scale(1) !important;
-  -ms-transform: scale(1) !important;
-  -o-transform: scale(1) !important;
-  transform: scale(1) !important;
+      -ms-transform: scale(1) !important;
+          transform: scale(1) !important;
 }
 .k-fx-zoom.k-fx-reverse.k-fx-start .k-fx-next,
 .k-fx-zoom.k-fx-reverse.k-fx-end .k-fx-next {
   -webkit-transform: scale(1) !important;
-  -ms-transform: scale(1) !important;
-  -o-transform: scale(1) !important;
-  transform: scale(1) !important;
+      -ms-transform: scale(1) !important;
+          transform: scale(1) !important;
 }
 .k-fx-zoom.k-fx-reverse.k-fx-start .k-fx-current {
   -webkit-transform: scale(1) !important;
-  -ms-transform: scale(1) !important;
-  -o-transform: scale(1) !important;
-  transform: scale(1) !important;
+      -ms-transform: scale(1) !important;
+          transform: scale(1) !important;
 }
 .k-fx-zoom.k-fx-reverse.k-fx-end .k-fx-current {
   -webkit-transform: scale(0) !important;
-  -ms-transform: scale(0) !important;
-  -o-transform: scale(0) !important;
-  transform: scale(0) !important;
+      -ms-transform: scale(0) !important;
+          transform: scale(0) !important;
 }
 /* Fade */
 .k-fx-fade.k-fx-start .k-fx-next {
@@ -2008,16 +1932,13 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-slide.k-fx-end .k-fx-current .km-header,
 .k-fx-slide.k-fx-end .k-fx-current .km-footer {
   -webkit-transition: all 350ms ease-out;
-  -ms-transition: all 350ms ease-out;
-  -o-transition: all 350ms ease-out;
-  transition: all 350ms ease-out;
+          transition: all 350ms ease-out;
 }
 .k-fx-slide.k-fx-start .k-fx-next .km-content {
   will-change: transform;
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-slide.k-fx-start .k-fx-next .km-header,
 .k-fx-slide.k-fx-start .k-fx-next .km-footer {
@@ -2026,9 +1947,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .k-fx-slide.k-fx-end .k-fx-current .km-content {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-slide.k-fx-end .k-fx-next .km-header,
 .k-fx-slide.k-fx-end .k-fx-next .km-footer {
@@ -2037,27 +1957,23 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-slide.k-fx-reverse.k-fx-start .k-fx-current .km-content {
   will-change: transform;
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .k-fx-slide.k-fx-reverse.k-fx-end .k-fx-current .km-content {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-slide.k-fx-reverse.k-fx-start .k-fx-next .km-content {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-slide.k-fx-reverse.k-fx-end .k-fx-next .km-content {
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .k-fx-slide.k-fx-reverse.k-fx-start .k-fx-current .km-header,
 .k-fx-slide.k-fx-reverse.k-fx-start .k-fx-current .km-footer {
@@ -2081,39 +1997,33 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .k-fx-slide.k-fx-right.k-fx-start .k-fx-next .km-content {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-slide.k-fx-right.k-fx-end .k-fx-current .km-content {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-slide.k-fx-right.k-fx-reverse.k-fx-start .k-fx-current .km-content {
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .k-fx-slide.k-fx-right.k-fx-reverse.k-fx-end .k-fx-current .km-content {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-slide.k-fx-right.k-fx-reverse.k-fx-start .k-fx-next .km-content {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-slide.k-fx-right.k-fx-reverse.k-fx-end .k-fx-next .km-content {
   -webkit-transform: translatex(0%);
-  -ms-transform: translatex(0%);
-  -o-transform: translatex(0%);
-  transform: translatex(0%);
+      -ms-transform: translatex(0%);
+          transform: translatex(0%);
 }
 /* Tile */
 .k-fx-tile {
@@ -2124,79 +2034,67 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-tile.k-fx-start .k-fx-next {
   will-change: transform;
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-tile.k-fx-end .k-fx-current {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-tile.k-fx-reverse.k-fx-start .k-fx-current {
   will-change: transform;
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .k-fx-tile.k-fx-reverse.k-fx-end .k-fx-current {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-tile.k-fx-reverse.k-fx-start .k-fx-next {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-tile.k-fx-reverse.k-fx-end .k-fx-next {
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .k-fx-tile.k-fx-right {
   /* right reverse */
 }
 .k-fx-tile.k-fx-right.k-fx-start .k-fx-next {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-tile.k-fx-right.k-fx-end .k-fx-current {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-tile.k-fx-right.k-fx-reverse.k-fx-start .k-fx-current {
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .k-fx-tile.k-fx-right.k-fx-reverse.k-fx-end .k-fx-current {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-tile.k-fx-right.k-fx-reverse.k-fx-start .k-fx-next {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-tile.k-fx-right.k-fx-reverse.k-fx-end .k-fx-next {
   -webkit-transform: translatex(0%);
-  -ms-transform: translatex(0%);
-  -o-transform: translatex(0%);
-  transform: translatex(0%);
+      -ms-transform: translatex(0%);
+          transform: translatex(0%);
 }
 /* Tile */
 .k-fx-tile {
@@ -2207,144 +2105,122 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-tile.k-fx-start .k-fx-next {
   will-change: transform;
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-tile.k-fx-end .k-fx-current {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-tile.k-fx-reverse.k-fx-start .k-fx-current {
   will-change: transform;
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .k-fx-tile.k-fx-reverse.k-fx-end .k-fx-current {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-tile.k-fx-reverse.k-fx-start .k-fx-next {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-tile.k-fx-reverse.k-fx-end .k-fx-next {
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .k-fx-tile.k-fx-right {
   /* right reverse */
 }
 .k-fx-tile.k-fx-right.k-fx-start .k-fx-next {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-tile.k-fx-right.k-fx-end .k-fx-current {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-tile.k-fx-right.k-fx-reverse.k-fx-start .k-fx-current {
   -webkit-transform: translatex(0);
-  -ms-transform: translatex(0);
-  -o-transform: translatex(0);
-  transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
 }
 .k-fx-tile.k-fx-right.k-fx-reverse.k-fx-end .k-fx-current {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx-tile.k-fx-right.k-fx-reverse.k-fx-start .k-fx-next {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx-tile.k-fx-right.k-fx-reverse.k-fx-end .k-fx-next {
   -webkit-transform: translatex(0%);
-  -ms-transform: translatex(0%);
-  -o-transform: translatex(0%);
-  transform: translatex(0%);
+      -ms-transform: translatex(0%);
+          transform: translatex(0%);
 }
 /* Overlay */
 .k-fx.k-fx-overlay.k-fx-start .k-fx-next,
 .k-fx.k-fx-overlay.k-fx-left.k-fx-start .k-fx-next {
   will-change: transform;
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx.k-fx-overlay.k-fx-right.k-fx-start .k-fx-next {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx.k-fx-overlay.k-fx-up.k-fx-start .k-fx-next {
   -webkit-transform: translatey(100%);
-  -ms-transform: translatey(100%);
-  -o-transform: translatey(100%);
-  transform: translatey(100%);
+      -ms-transform: translatey(100%);
+          transform: translatey(100%);
 }
 .k-fx.k-fx-overlay.k-fx-down.k-fx-start .k-fx-next {
   -webkit-transform: translatey(-100%);
-  -ms-transform: translatey(-100%);
-  -o-transform: translatey(-100%);
-  transform: translatey(-100%);
+      -ms-transform: translatey(-100%);
+          transform: translatey(-100%);
 }
 .k-fx.k-fx-overlay.k-fx-reverse.k-fx-start .k-fx-next {
   -webkit-transform: none;
-  -ms-transform: none;
-  -o-transform: none;
-  transform: none;
+      -ms-transform: none;
+          transform: none;
 }
 .k-fx.k-fx-overlay.k-fx-reverse.k-fx-start .k-fx-current {
   will-change: transform;
   -webkit-transform: none;
-  -ms-transform: none;
-  -o-transform: none;
-  transform: none;
+      -ms-transform: none;
+          transform: none;
 }
 .k-fx.k-fx-overlay.k-fx-reverse.k-fx-end .k-fx-current,
 .k-fx.k-fx-overlay.k-fx-reverse.k-fx-left.k-fx-end .k-fx-current {
   -webkit-transform: translatex(100%);
-  -ms-transform: translatex(100%);
-  -o-transform: translatex(100%);
-  transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
 }
 .k-fx.k-fx-overlay.k-fx-reverse.k-fx-right.k-fx-end .k-fx-current {
   -webkit-transform: translatex(-100%);
-  -ms-transform: translatex(-100%);
-  -o-transform: translatex(-100%);
-  transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
 }
 .k-fx.k-fx-overlay.k-fx-reverse.k-fx-up.k-fx-end .k-fx-current {
   -webkit-transform: translatey(100%);
-  -ms-transform: translatey(100%);
-  -o-transform: translatey(100%);
-  transform: translatey(100%);
+      -ms-transform: translatey(100%);
+          transform: translatey(100%);
 }
 .k-fx.k-fx-overlay.k-fx-reverse.k-fx-down.k-fx-end .k-fx-current {
   -webkit-transform: translatey(-100%);
-  -ms-transform: translatey(-100%);
-  -o-transform: translatey(-100%);
-  transform: translatey(-100%);
+      -ms-transform: translatey(-100%);
+          transform: translatey(-100%);
 }
 /* Platform specific workarounds */
 .km-on-wp .km-view,
@@ -2355,7 +2231,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-on-wp .km-filter-reset,
 .km-on-wp .km-shim .k-animation-container,
 .km-on-wp .km-scroll-container {
-  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
 }
 .km-ios,
 .km-blackberry,
@@ -2427,7 +2304,8 @@ div.km-split-horizontal > .km-content > .km-pane {
   margin-right: 0.3em;
   vertical-align: baseline;
   display: inline-block;
-  background-size: auto 100%;
+  -webkit-background-size: auto 100%;
+          background-size: auto 100%;
 }
 html .km-widget .km-view .km-notext {
   margin-left: 0;
@@ -2478,7 +2356,8 @@ body:before {
 }
 .km-root .km-pane .km-view .km-icon {
   -webkit-background-clip: text;
-  background-size: 0 0;
+  -webkit-background-size: 0 0;
+          background-size: 0 0;
 }
 .km-icon {
   position: relative;
@@ -2502,7 +2381,8 @@ body:before {
   height: 100%;
   text-align: left;
   vertical-align: middle;
-  background-size: auto;
+  -webkit-background-size: auto auto;
+          background-size: auto;
   font: 1em/1em "Kendo UI";
 }
 .km-icon:before,
@@ -3007,7 +2887,8 @@ body:before {
 .km-on-wp.km-app .km-state-active .km-icon:after {
   color: transparent;
   background-image: url("images/wp8_icons.png");
-  background-size: auto 100%;
+  -webkit-background-size: auto 100%;
+          background-size: auto 100%;
   height: 1em;
   margin-top: 0;
   vertical-align: middle;
@@ -3151,7 +3032,9 @@ body:before {
   content: "\a0";
 }
 .km-on-wp.km-app .km-filter-reset .km-clear:after {
-  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
 }
 .km-office365 {
   font: normal 1.14em "HelveticaNeue Light", "Roboto Light", "Slate Light", "Segoe WP", sans-serif;
@@ -3168,18 +3051,15 @@ body:before {
 }
 .km-office365,
 .km-office365 * {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  -moz-background-clip: border-box;
+          box-sizing: border-box;
   -webkit-background-clip: border-box;
-  background-clip: border-box;
+          background-clip: border-box;
 }
 /* Revert box/clip for Web widgets */
 .km-office365 [class^=k-] {
-  -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
-  box-sizing: content-box;
+          box-sizing: content-box;
 }
 .km-office365 .km-tabstrip .km-button {
   background: none;
@@ -3195,18 +3075,16 @@ body:before {
   border-radius: 0;
   border-width: 0 0 1px;
   border-style: solid;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-office365 .km-popup {
   left: 0 !important;
   top: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-office365 .km-popup .k-list-container {
   width: 100% !important;
@@ -3223,9 +3101,8 @@ body:before {
   border-width: 1px 0 0;
   border-style: solid;
   border-radius: 0;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-office365 .km-shim .k-animation-container {
   left: 0;
@@ -3298,12 +3175,14 @@ body:before {
   background: #ffffff;
   color: #333333;
   border-top-color: #e5e5e5;
-  border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
-  border-image: -moz-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
-  border-image: -ms-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+  -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+  -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+          border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+          border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
 }
 .km-office365 .km-actionsheet > li:nth-last-child(2) > a {
-  border-image: none;
+  -webkit-border-image: none;
+          border-image: none;
 }
 .km-office365 .km-footer .km-tabstrip .km-button:hover,
 .km-office365 .km-actionsheet > li > a:active {
@@ -3331,7 +3210,8 @@ body:before {
   color: #004578;
 }
 .km-office365 .km-buttongroup .km-button.km-state-active {
-  box-shadow: 0 0 0 1px #0072c6;
+  -webkit-box-shadow: 0 0 0 1px #0072c6;
+          box-shadow: 0 0 0 1px #0072c6;
   z-index: 1;
 }
 .km-office365 .km-widget.km-navbar .km-buttongroup .km-button {
@@ -3343,7 +3223,8 @@ body:before {
 .km-office365 .km-widget.km-navbar .km-buttongroup .km-state-active {
   color: #0072c6;
   background-color: #ffffff;
-  box-shadow: 0 0 0 1px #ffffff;
+  -webkit-box-shadow: 0 0 0 1px #ffffff;
+          box-shadow: 0 0 0 1px #ffffff;
 }
 .km-office365 .km-button:hover,
 .km-office365 .km-footer .km-tabstrip .km-button:hover {
@@ -3385,9 +3266,10 @@ body:before {
   background: #ffffff;
   border-color: #f4f4f4;
   border-top-color: #e5e5e5;
-  border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
-  border-image: -moz-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
-  border-image: -ms-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+  -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+  -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+          border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+          border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
 }
 .km-office365 .km-list > li:hover {
   background-color: #ffffff;
@@ -3401,8 +3283,8 @@ body:before {
   border-color: #f4f4f4;
 }
 .km-office365 .km-list > li:last-child {
-  box-shadow: inset 0 -1px 0 #bababa;
   -webkit-box-shadow: inset 0 -1px 0 #bababa;
+          box-shadow: inset 0 -1px 0 #bababa;
 }
 .km-office365 .km-listview-link:after,
 .km-office365 .km-state-active .km-listview-link:after {
@@ -3483,7 +3365,8 @@ body:before {
 /* PopUp */
 .km-office365 .km-popup {
   background: rgba(64, 70, 75, 0.48);
-  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.18);
+  -webkit-box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.18);
+          box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.18);
 }
 .km-office365 .km-actionsheet-wrapper,
 .km-office365 .km-popup .k-list-container {
@@ -3509,8 +3392,8 @@ body:before {
 }
 /* Active States */
 .km-office365 .km-state-active[style*=background] {
-  box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+          box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
 }
 /* Active States */
 .km-office365 .km-badge,
@@ -3631,8 +3514,8 @@ body:before {
   background: none;
 }
 .km-office365 .km-loader .km-loading {
-  animation: none;
   -webkit-animation: none;
+          animation: none;
   display: none;
 }
 .km-office365 .km-loading-left,
@@ -3675,7 +3558,8 @@ body:before {
 }
 .km-root .km-office365 .km-scroller-pull .km-icon {
   -webkit-background-clip: inherit;
-  background-size: inherit;
+  -webkit-background-size: inherit inherit;
+          background-size: inherit;
   border-radius: 50%;
 }
 .km-office365 .km-loading:after {
@@ -3733,40 +3617,30 @@ body:before {
 .km-office365 .km-load-more .km-icon,
 .km-office365 .km-scroller-pull .km-icon {
   -webkit-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  transform: rotate(0deg);
-  -webkit-transition: -webkit-none;
-  -ms-transition: -ms-none;
-  -o-transition: -o-none;
-  transition: none;
+      -ms-transform: rotate(0deg);
+          transform: rotate(0deg);
+  -webkit-transition: none;
+          transition: none;
 }
 .km-office365 .km-load-more .km-icon:after,
 .km-office365 .km-scroller-pull .km-icon:after {
   -webkit-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+          transform: rotate(0deg);
   -webkit-transform-origin: 62% 50%;
-  -ms-transform-origin: 62% 50%;
-  -o-transform-origin: 62% 50%;
-  transform-origin: 62% 50%;
+      -ms-transform-origin: 62% 50%;
+          transform-origin: 62% 50%;
   -webkit-transition: -webkit-transform 300ms linear;
-  -ms-transition: -ms-transform 300ms linear;
-  -o-transition: -o-transform 300ms linear;
-  transition: transform 300ms linear;
+          transition: transform 300ms linear;
 }
 .km-office365 .km-scroller-release .km-icon:after {
   -webkit-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  -o-transform: rotate(180deg);
-  transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
 }
 .km-office365 .km-scroller-refresh .km-icon:after {
   -webkit-transition: none;
-  -ms-transition: none;
-  -o-transition: none;
-  transition: none;
+          transition: none;
 }
 .km-office365 .km-loading-left:before,
 .km-office365 .km-loading-right:before {
@@ -3797,53 +3671,18 @@ body:before {
 .km-office365 .km-loading-right:after {
   content: " ";
   background-color: #fff;
-  animation: rotate_left_sector 4s linear infinite;
   -webkit-animation: rotate_left_sector 4s linear infinite;
+          animation: rotate_left_sector 4s linear infinite;
 }
 .km-office365 .km-loading-right {
   left: 0;
-  -moz-transform: rotate(180deg);
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
 }
 .km-office365 .km-loading-right:after {
-  animation: rotate_right_sector 4s linear infinite;
   -webkit-animation: rotate_right_sector 4s linear infinite;
-}
-@-moz-keyframes rotate_left_sector {
-  0% {
-    -moz-transform: rotate(0deg);
-  }
-  25% {
-    -moz-transform: rotate(0deg);
-  }
-  50% {
-    -moz-transform: rotate(180deg);
-  }
-  75% {
-    -moz-transform: rotate(180deg);
-  }
-  100% {
-    -moz-transform: rotate(360deg);
-  }
-}
-@-moz-keyframes rotate_right_sector {
-  0% {
-    -moz-transform: rotate(0deg);
-  }
-  25% {
-    -moz-transform: rotate(180deg);
-  }
-  50% {
-    -moz-transform: rotate(180deg);
-  }
-  75% {
-    -moz-transform: rotate(360deg);
-  }
-  100% {
-    -moz-transform: rotate(360deg);
-  }
+          animation: rotate_right_sector 4s linear infinite;
 }
 @-webkit-keyframes rotate_left_sector {
   0% {
@@ -3877,40 +3716,6 @@ body:before {
   }
   100% {
     -webkit-transform: rotate(360deg);
-  }
-}
-@-ms-keyframes rotate_left_sector {
-  0% {
-    -ms-transform: rotate(0deg);
-  }
-  25% {
-    -ms-transform: rotate(0deg);
-  }
-  50% {
-    -ms-transform: rotate(180deg);
-  }
-  75% {
-    -ms-transform: rotate(180deg);
-  }
-  100% {
-    -ms-transform: rotate(360deg);
-  }
-}
-@-ms-keyframes rotate_right_sector {
-  0% {
-    -ms-transform: rotate(0deg);
-  }
-  25% {
-    -ms-transform: rotate(180deg);
-  }
-  50% {
-    -ms-transform: rotate(180deg);
-  }
-  75% {
-    -ms-transform: rotate(360deg);
-  }
-  100% {
-    -ms-transform: rotate(360deg);
   }
 }
 @keyframes rotate_left_sector {
@@ -4019,8 +3824,8 @@ body:before {
 .km-office365 .k-toolbar .km-button {
   background: transparent;
   border-color: transparent;
-  box-shadow: none;
   -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .km-office365 .km-buttongroup .km-button {
   padding: .625em 1.875em;
@@ -4037,11 +3842,11 @@ body:before {
   width: .875em;
   height: .875em;
   border-width: 0;
-  box-shadow: inset 0.25rem -0.25rem 0 currentcolor;
+  -webkit-box-shadow: inset 0.25rem -0.25rem 0 currentcolor;
+          box-shadow: inset 0.25rem -0.25rem 0 currentcolor;
   -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
   margin-top: -1px;
   margin-left: 1px;
   line-height: 3.125em;
@@ -4260,11 +4065,11 @@ html .km-office365 .k-overflow-container.km-actionsheet > li {
 }
 .km-office365 .km-switch-container,
 .km-office365 .km-switch-wrapper {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
   border-style: solid;
-  background-clip: content-box;
+  -webkit-background-clip: content-box;
+          background-clip: content-box;
 }
 .km-office365 .km-switch-wrapper {
   border-width: 3px;
@@ -4417,9 +4222,9 @@ html .km-office365 .k-overflow-container.km-actionsheet > li {
 .km-office365 .km-list select:not([multiple]),
 .km-office365 .km-list .k-dropdown-wrap,
 .km-office365 .km-list textarea {
-  appearance: none;
-  -moz-appearance: none;
   -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   font-size: 1.1rem;
   min-width: 6em;
   border-width: 1px;
@@ -4450,8 +4255,8 @@ html .km-office365 .k-overflow-container.km-actionsheet > li {
   display: block;
   border-radius: 0;
   background: transparent;
-  box-shadow: none;
   -webkit-box-shadow: none;
+          box-shadow: none;
 }
 /* Checkboxes and Radios */
 .km-office365 .km-listview-label input[type=checkbox] {
@@ -4477,13 +4282,11 @@ html .km-office365 .k-overflow-container.km-actionsheet > li {
   width: 90%;
   height: 76%;
   -webkit-transform: scale(0.9, 1);
-  -ms-transform: scale(0.9, 1);
-  -o-transform: scale(0.9, 1);
-  transform: scale(0.9, 1);
+      -ms-transform: scale(0.9, 1);
+          transform: scale(0.9, 1);
   -webkit-transform-origin: 10% 50%;
-  -ms-transform-origin: 10% 50%;
-  -o-transform-origin: 10% 50%;
-  transform-origin: 10% 50%;
+      -ms-transform-origin: 10% 50%;
+          transform-origin: 10% 50%;
 }
 .km-office365 .km-listview-label input[type=radio]:checked:after {
   margin: .21em 0 0 .2em;
@@ -4510,14 +4313,13 @@ html .km-office365 .k-overflow-container.km-actionsheet > li {
 .km-office365 .k-slider .k-draghandle:hover {
   border: 0;
   border-radius: 0;
-  box-shadow: none;
   -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .km-office365 .k-slider-track {
   margin: -0.5em 0.5em 0 0;
-  -moz-box-sizing: content-box;
   -webkit-box-sizing: content-box;
-  box-sizing: content-box;
+          box-sizing: content-box;
   background-color: #ffffff;
 }
 .km-office365 .k-slider-selection {
@@ -4614,9 +4416,8 @@ html .km-office365 .k-overflow-container.km-actionsheet > li {
 /* Scroller */
 .km-office365 .km-touch-scrollbar {
   border: 0;
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+          box-sizing: border-box;
 }
 .km-android4.km-office365 .km-scroller-pull .km-icon:after {
   margin-left: -6px;

@@ -1021,6 +1021,8 @@
                     that.tabGroup.css({ marginLeft: "", marginRight: "" });
                 } else if (!that._scrollableModeActive) {
                     that.wrapper.removeClass("k-tabstrip-scrollable");
+                } else {
+                    that._toggleScrollButtons();
                 }
             }
         },

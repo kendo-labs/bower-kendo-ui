@@ -722,6 +722,7 @@
                 groupedMode = groups && groups[0],
                 item;
 
+
             if (action === "itemchange" && !listView._hasBindingTarget()) {
                 item = listView.findByDataItem(dataItems)[0];
                 if (item) {
@@ -1094,6 +1095,7 @@
             this.options.type = "flat";
             this._angularItems("cleanup");
             this.element.empty();
+            this._userEvents.cancel();
             this._style();
             return this.insertAt(dataItems, 0);
         },

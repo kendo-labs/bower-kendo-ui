@@ -47,7 +47,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.2.813";
+    kendo.version = "2015.2.902";
 
     function Class() {}
 
@@ -2092,6 +2092,8 @@ function pad(number, digits, end) {
                 cssClass = "webkit";
             } else if (browser.opera) {
                 cssClass = "opera";
+            } else if (browser.edge) {
+                cssClass = "edge";
             }
 
             if (cssClass) {
@@ -9962,7 +9964,7 @@ function pad(number, digits, end) {
         if (transportOptions) {
             transportOptions.read = typeof transportOptions.read === STRING ? { url: transportOptions.read } : transportOptions.read;
 
-            if (dataSource) {
+            if (options.type === "jsdo") {
                 transportOptions.dataSource = dataSource;
             }
 
@@ -10362,7 +10364,12 @@ function pad(number, digits, end) {
         },
 
         _find: function(method, value) {
-            var idx, length, node, data, children;
+            var idx, length, node, children;
+            var data = this._data;
+
+            if (!data) {
+                return;
+            }
 
             node = DataSource.fn[method].call(this, value);
 
@@ -10371,10 +10378,6 @@ function pad(number, digits, end) {
             }
 
             data = this._flatData(this._data);
-
-            if (!data) {
-                return;
-            }
 
             for (idx = 0, length = data.length; idx < length; idx++) {
                 children = data[idx].children;
@@ -11086,7 +11089,7 @@ function pad(number, digits, end) {
             return this._parseValue(this.element.value, this.dataType());
         },
 
-        _parseValue : function (value, dataType){
+        _parseValue: function (value, dataType){
             if (dataType == "date") {
                 value = kendo.parseDate(value, "yyyy-MM-dd");
             } else if (dataType == "datetime-local") {
@@ -11518,7 +11521,6 @@ function pad(number, digits, end) {
 
                 if (source instanceof ObservableArray || source instanceof kendo.data.DataSource) {
                     e = e || {};
-
                     if (e.action == "add") {
                         that.add(e.index, e.items);
                     } else if (e.action == "remove") {
@@ -11578,7 +11580,21 @@ function pad(number, digits, end) {
                     idx,
                     length;
 
-                values = this.parsedValue();
+                for (idx = 0, length = element.options.length; idx < length; idx++) {
+                    option = element.options[idx];
+
+                    if (option.selected) {
+                        value = option.attributes.value;
+
+                        if (value && value.specified) {
+                            value = option.value;
+                        } else {
+                            value = option.text;
+                        }
+
+                        values.push(this._parseValue(value, this.dataType()));
+                    }
+                }
 
                 if (field) {
                     source = this.bindings.source.get();
@@ -11588,7 +11604,8 @@ function pad(number, digits, end) {
 
                     for (valueIndex = 0; valueIndex < values.length; valueIndex++) {
                         for (idx = 0, length = source.length; idx < length; idx++) {
-                            var match = valuePrimitive ? (this._parseValue(values[valueIndex], this.dataType()) === source[idx].get(field)) : (this._parseValue(source[idx].get(field), this.dataType()).toString() === values[valueIndex]);
+                            var sourceValue = this._parseValue(source[idx].get(field), this.dataType());
+                            var match = (String(sourceValue) === values[valueIndex]);
                             if (match) {
                                 values[valueIndex] = source[idx];
                                 break;
@@ -17102,7 +17119,8 @@ function pad(number, digits, end) {
             axis: null,
             ignore: null,
             autoScroll: false,
-            cursor: "auto"
+            cursor: "auto",
+            moveOnDragEnter: false
         },
 
         destroy: function() {
@@ -17175,6 +17193,7 @@ function pad(number, digits, end) {
                 sibling,
                 getSibling,
                 axis = this.options.axis,
+                moveOnDragEnter= this.options.moveOnDragEnter,
                 eventData = { item: draggedElement, list: this, draggableEvent: e };
 
             if(axis === "x" || axis === "y") {
@@ -17202,15 +17221,15 @@ function pad(number, digits, end) {
                 }
 
                 if(this._isFloating(target.element)) { //horizontal
-                    if(axisDelta.x < 0 && offsetDelta.left < 0) {
+                    if(axisDelta.x < 0 && (moveOnDragEnter || offsetDelta.left < 0)) {
                         direction = "prev";
-                    } else if(axisDelta.x > 0 && offsetDelta.left > 0) {
+                    } else if(axisDelta.x > 0 && (moveOnDragEnter || offsetDelta.left > 0)) {
                         direction = "next";
                     }
                 } else { //vertical
-                    if(axisDelta.y < 0 && offsetDelta.top < 0) {
+                    if(axisDelta.y < 0 && (moveOnDragEnter || offsetDelta.top < 0)) {
                         direction = "prev";
-                    } else if(axisDelta.y > 0 && offsetDelta.top > 0) {
+                    } else if(axisDelta.y > 0 && (moveOnDragEnter || offsetDelta.top > 0)) {
                         direction = "next";
                     }
                 }
@@ -21097,7 +21116,10 @@ function pad(number, digits, end) {
                     item = element.data("button");
 
                 if (item.options.togglable) {
-                    item.toggle(checked ? checked : !item.options.selected, true);
+                    if (checked === undefined) {
+                        checked = true;
+                    }
+                    item.toggle(checked, true);
                 }
             },
 
@@ -22401,6 +22423,9 @@ function pad(number, digits, end) {
 
             if (value !== undefined) {
                 element[0].value = value;
+                if (element[0].value && !value) {
+                    element[0].selectedIndex = -1;
+                }
             }
         },
 
@@ -25456,6 +25481,7 @@ function pad(number, digits, end) {
                 .on("keydown" + ns, proxy(that._keydown, that))
                 .on("paste" + ns, proxy(that._search, that))
                 .on("focus" + ns, function () {
+                    that._active = true;
                     that._prev = that._accessor();
                     that._placeholder(false);
                     wrapper.addClass(FOCUSED);
@@ -25463,6 +25489,7 @@ function pad(number, digits, end) {
                 .on("focusout" + ns, function () {
                     that._change();
                     that._placeholder();
+                    that._active = false;
                     wrapper.removeClass(FOCUSED);
                 })
                 .attr({
@@ -25719,6 +25746,8 @@ function pad(number, digits, end) {
             var item = e.item;
             var element = this.element;
 
+            this._active = true;
+
             if (this.trigger("select", { item: item })) {
                 this.close();
                 return;
@@ -25777,9 +25806,10 @@ function pad(number, digits, end) {
 
             that._angularItems("compile");
 
-            //reset list value
-            that.listView.value([]);
-            that.listView.focus(-1);
+            if (that._open) {
+                that.listView.value([]);
+                that.listView.focus(-1);
+            }
 
             that.listView.filter(false);
 
@@ -25822,7 +25852,7 @@ function pad(number, digits, end) {
         },
 
         _listChange: function() {
-            if (!this.listView.filter()) {
+            if (!this.listView.filter() && this._active) {
                 this._selectValue(this.listView.selectedDataItems()[0]);
             }
         },
@@ -29368,27 +29398,55 @@ function pad(number, digits, end) {
     ];
 
     Color.namedColors = {
-        aqua: "00ffff", azure: "f0ffff", beige: "f5f5dc",
-        black: "000000", blue: "0000ff", brown: "a52a2a",
-        coral: "ff7f50", cyan: "00ffff", darkblue: "00008b",
-        darkcyan: "008b8b", darkgray: "a9a9a9", darkgreen: "006400",
-        darkorange: "ff8c00", darkred: "8b0000", dimgray: "696969",
-        fuchsia: "ff00ff", gold: "ffd700", goldenrod: "daa520",
-        gray: "808080", green: "008000", greenyellow: "adff2f",
+        aliceblue: "f0f8ff", antiquewhite: "faebd7", aqua: "00ffff",
+        aquamarine: "7fffd4", azure: "f0ffff", beige: "f5f5dc",
+        bisque: "ffe4c4", black: "000000", blanchedalmond: "ffebcd",
+        blue: "0000ff", blueviolet: "8a2be2", brown: "a52a2a",
+        burlywood: "deb887", cadetblue: "5f9ea0", chartreuse: "7fff00",
+        chocolate: "d2691e", coral: "ff7f50", cornflowerblue: "6495ed",
+        cornsilk: "fff8dc", crimson: "dc143c", cyan: "00ffff",
+        darkblue: "00008b", darkcyan: "008b8b", darkgoldenrod: "b8860b",
+        darkgray: "a9a9a9", darkgrey: "a9a9a9", darkgreen: "006400",
+        darkkhaki: "bdb76b", darkmagenta: "8b008b", darkolivegreen: "556b2f",
+        darkorange: "ff8c00", darkorchid: "9932cc", darkred: "8b0000",
+        darksalmon: "e9967a", darkseagreen: "8fbc8f", darkslateblue: "483d8b",
+        darkslategray: "2f4f4f", darkslategrey: "2f4f4f", darkturquoise: "00ced1",
+        darkviolet: "9400d3", deeppink: "ff1493", deepskyblue: "00bfff",
+        dimgray: "696969", dimgrey: "696969", dodgerblue: "1e90ff",
+        firebrick: "b22222", floralwhite: "fffaf0", forestgreen: "228b22",
+        fuchsia: "ff00ff", gainsboro: "dcdcdc", ghostwhite: "f8f8ff",
+        gold: "ffd700", goldenrod: "daa520", gray: "808080",
+        grey: "808080", green: "008000", greenyellow: "adff2f",
+        honeydew: "f0fff0", hotpink: "ff69b4", indianred: "cd5c5c",
         indigo: "4b0082", ivory: "fffff0", khaki: "f0e68c",
-        lightblue: "add8e6", lightgrey: "d3d3d3", lightgreen: "90ee90",
-        lightpink: "ffb6c1", lightyellow: "ffffe0", lime: "00ff00",
-        limegreen: "32cd32", linen: "faf0e6", magenta: "ff00ff",
-        maroon: "800000", mediumblue: "0000cd", navy: "000080",
-        olive: "808000", orange: "ffa500", orangered: "ff4500",
-        orchid: "da70d6", pink: "ffc0cb", plum: "dda0dd",
-        purple: "800080", red: "ff0000", royalblue: "4169e1",
-        salmon: "fa8072", silver: "c0c0c0", skyblue: "87ceeb",
-        slateblue: "6a5acd", slategray: "708090", snow: "fffafa",
+        lavender: "e6e6fa", lavenderblush: "fff0f5", lawngreen: "7cfc00",
+        lemonchiffon: "fffacd", lightblue: "add8e6", lightcoral: "f08080",
+        lightcyan: "e0ffff", lightgoldenrodyellow: "fafad2", lightgray: "d3d3d3",
+        lightgrey: "d3d3d3", lightgreen: "90ee90", lightpink: "ffb6c1",
+        lightsalmon: "ffa07a", lightseagreen: "20b2aa", lightskyblue: "87cefa",
+        lightslategray: "778899", lightslategrey: "778899", lightsteelblue: "b0c4de",
+        lightyellow: "ffffe0", lime: "00ff00", limegreen: "32cd32",
+        linen: "faf0e6", magenta: "ff00ff", maroon: "800000",
+        mediumaquamarine: "66cdaa", mediumblue: "0000cd", mediumorchid: "ba55d3",
+        mediumpurple: "9370d8", mediumseagreen: "3cb371", mediumslateblue: "7b68ee",
+        mediumspringgreen: "00fa9a", mediumturquoise: "48d1cc", mediumvioletred: "c71585",
+        midnightblue: "191970", mintcream: "f5fffa", mistyrose: "ffe4e1",
+        moccasin: "ffe4b5", navajowhite: "ffdead", navy: "000080",
+        oldlace: "fdf5e6", olive: "808000", olivedrab: "6b8e23",
+        orange: "ffa500", orangered: "ff4500", orchid: "da70d6",
+        palegoldenrod: "eee8aa", palegreen: "98fb98", paleturquoise: "afeeee",
+        palevioletred: "d87093", papayawhip: "ffefd5", peachpuff: "ffdab9",
+        peru: "cd853f", pink: "ffc0cb", plum: "dda0dd",
+        powderblue: "b0e0e6", purple: "800080", red: "ff0000",
+        rosybrown: "bc8f8f", royalblue: "4169e1", saddlebrown: "8b4513",
+        salmon: "fa8072", sandybrown: "f4a460", seagreen: "2e8b57",
+        seashell: "fff5ee", sienna: "a0522d", silver: "c0c0c0",
+        skyblue: "87ceeb", slateblue: "6a5acd", slategray: "708090",
+        slategrey: "708090", snow: "fffafa", springgreen: "00ff7f",
         steelblue: "4682b4", tan: "d2b48c", teal: "008080",
-        tomato: "ff6347", turquoise: "40e0d0", violet: "ee82ee",
-        wheat: "f5deb3", white: "ffffff", whitesmoke: "f5f5f5",
-        yellow: "ffff00", yellowgreen: "9acd32"
+        thistle: "d8bfd8", tomato: "ff6347", turquoise: "40e0d0",
+        violet: "ee82ee", wheat: "f5deb3", white: "ffffff",
+        whitesmoke: "f5f5f5", yellow: "ffff00", yellowgreen: "9acd32"
     };
 
     // Tools from ColorPicker =================================================
@@ -38518,6 +38576,8 @@ function pad(number, digits, end) {
                     that.tabGroup.css({ marginLeft: "", marginRight: "" });
                 } else if (!that._scrollableModeActive) {
                     that.wrapper.removeClass("k-tabstrip-scrollable");
+                } else {
+                    that._toggleScrollButtons();
                 }
             }
         },
@@ -45214,6 +45274,8 @@ function pad(number, digits, end) {
             if (initial) {
                 this.navigate(initial);
             }
+
+            return initial;
         },
 
         options: {
@@ -45636,7 +45698,6 @@ function pad(number, digits, end) {
             });
 
             that.pane = new ui.Pane(that.element, $.extend(this.options.pane, { $angular: this.options.$angular }));
-            that.pane.navigateToInitial();
 
             kendo.notify(that, ui);
         },
@@ -45656,7 +45717,10 @@ function pad(number, digits, end) {
             this.popup.show(target);
 
             if (!this.initialOpen) {
-                this.pane.navigate("");
+                if (!this.pane.navigateToInitial()) {
+                    this.pane.navigate("");
+                }
+
                 this.popup.popup._position();
                 this.initialOpen = true;
             } else {
@@ -48308,6 +48372,7 @@ function pad(number, digits, end) {
                 groupedMode = groups && groups[0],
                 item;
 
+
             if (action === "itemchange" && !listView._hasBindingTarget()) {
                 item = listView.findByDataItem(dataItems)[0];
                 if (item) {
@@ -48680,6 +48745,7 @@ function pad(number, digits, end) {
             this.options.type = "flat";
             this._angularItems("cleanup");
             this.element.empty();
+            this._userEvents.cancel();
             this._style();
             return this.insertAt(dataItems, 0);
         },
@@ -48948,11 +49014,7 @@ function pad(number, digits, end) {
 
         refresh: function(e) {
             var view = e.view;
-            if (view.options.title) {
-                this.title(view.options.title);
-            } else {
-                toggleTitle(this.centerElement);
-            }
+            this.title(view.options.title);
         },
 
         destroy: function() {
@@ -50247,7 +50309,8 @@ function pad(number, digits, end) {
         },
 
         refresh: function(e) {
-            var url = e.view.element.attr(kendo.attr("url"));
+            var url = e.view.id;
+
             if (url && !this.switchTo(e.view.id)) {
                 this.switchTo(url);
             }
@@ -50645,7 +50708,9 @@ function pad(number, digits, end) {
         var currentVal = value();
 
         // if the model value is undefined, then we set the widget value to match ( == null/undefined )
-        if (currentVal != ngModel.$viewValue) {
+        // In telerik/kendo-ui-core#1027 we discovered that after the timeout the $viewValue arives as NaN in some weird, default form.
+        // Hence the check below.
+        if (!isNaN(ngModel.$viewValue) && currentVal != ngModel.$viewValue) {
             if (!ngModel.$isEmpty(ngModel.$viewValue)) {
                 widget.value(ngModel.$viewValue);
             } else if (currentVal != null && currentVal !== "" && currentVal != ngModel.$viewValue) {

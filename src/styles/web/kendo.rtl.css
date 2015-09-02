@@ -80,7 +80,7 @@
 .k-webkit .k-rtl .k-dropdown-wrap .k-input,
 .k-webkit .k-rtl .k-numeric-wrap .k-input
 {
-    margin-right:-1px;
+    margin-right: -1px;
 }
 
 .k-rtl .k-datetimepicker .k-picker-wrap .k-icon
@@ -297,8 +297,8 @@
 .k-rtl .k-edit-label,
 .k-rtl .k-edit-form-container .editor-label
 {
-    float:right;
-    clear:both;
+    float: right;
+    clear: both;
     margin-left: 0;
     margin-right: 2%;
     text-align: left;
@@ -307,8 +307,8 @@
 .k-rtl .k-edit-field,
 .k-rtl .k-edit-form-container .editor-field
 {
-    float:left;
-    clear:left;
+    float: left;
+    clear: left;
     margin-right: 0;
     margin-left: 2%;
 }
@@ -428,7 +428,7 @@
 
 .k-rtl .k-task-single
 {
-    text-align:right;
+    text-align: right;
 }
 
 .k-rtl .k-task-actions
@@ -582,23 +582,23 @@
 
 .k-rtl .k-scheduler-toolbar > ul
 {
-    float:left;
+    float: left;
 }
 
 .k-rtl .k-scheduler-toolbar > ul:first-child
 {
-    float:right;
+    float: right;
 }
 
 .k-rtl .k-scheduler-toolbar > ul > li,
 .k-rtl .k-scheduler-footer > ul > li
 {
-    border-width:1px 0 1px 1px;
+    border-width: 1px 0 1px 1px;
 }
 
 .k-rtl .k-scheduler-toolbar > ul > li:first-child
 {
-    border-right-width:1px;
+    border-right-width: 1px;
 }
 
 .k-rtl .k-scheduler div.k-scheduler-footer ul li
@@ -660,20 +660,20 @@
 
 .k-rtl .k-scheduler-now-arrow
 {
-    left:auto;
-    right:0;
+    left: auto;
+    right: 0;
 }
 
 .k-rtl .k-scheduler-now-line
 {
-    left:0;
-    right:5px;
+    left: 0;
+    right: 5px;
 }
 
 .k-rtl .k-event,
 .k-rtl .k-more-events
 {
-    text-align:right;
+    text-align: right;
 }
 
 .k-rtl .k-event-template
@@ -687,7 +687,7 @@
 .k-rtl .k-task > .k-link
 {
     right: auto;
-    left:4px;
+    left: 4px;
 }
 
 .k-rtl .k-scheduler-agendaview .k-task > .k-link
@@ -792,7 +792,7 @@
 .k-rtl .k-scheduler-agendaday
 {
     float: right;
-    margin:0 0 0 .2em;
+    margin: 0 0 0 .2em;
 }
 
 .k-rtl .k-scheduler-edit-form > .k-edit-box:first-child .k-datetimepicker

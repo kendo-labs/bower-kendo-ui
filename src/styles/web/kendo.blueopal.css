@@ -34,10 +34,9 @@
 }
 .ktb-var-normal-gradient {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
 }
 .ktb-var-normal-text-color {
   color: #003f59;
@@ -47,9 +46,8 @@
 }
 .ktb-var-hover-gradient {
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
 }
 .ktb-var-hover-text-color {
@@ -60,9 +58,8 @@
 }
 .ktb-var-selected-gradient {
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.0)), to(rgba(255,255,255,.23)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
 }
 .ktb-var-selected-text-color {
@@ -72,7 +69,7 @@
   color: #ffe0d9;
 }
 .ktb-var-warning {
-  color: #fff4d9;
+  color: #ffe79e;
 }
 .ktb-var-success {
   color: #eaf7ec;
@@ -267,10 +264,9 @@ textarea.k-textbox:hover,
 .k-panelbar .k-tabstrip-items .k-item,
 .km-pane-wrapper > .km-pane > .km-view > .km-content {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   background-color: #d9ecf5;
 }
@@ -351,13 +347,13 @@ html .km-pane-wrapper .k-header {
   border-color: #a0dba9;
   background-color: #ffffff;
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-draghandle:hover {
   border-color: #95d79f;
   background-color: #7cd1f5;
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 /* Scheduler */
 .k-scheduler {
@@ -483,18 +479,17 @@ html .km-pane-wrapper .k-header {
   border-color: #a3d0e4;
   background-color: #daecf4;
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
 }
 .k-button:focus:not(.k-state-disabled):not([disabled]) {
   -webkit-box-shadow: inset 0 0 3px 1px #8bc4dd;
-  box-shadow: inset 0 0 3px 1px #8bc4dd;
+          box-shadow: inset 0 0 3px 1px #8bc4dd;
 }
 .k-button:focus:active:not(.k-state-disabled):not([disabled]) {
   -webkit-box-shadow: inset 0 0 3px 1px #0e4a64;
-  box-shadow: inset 0 0 3px 1px #0e4a64;
+          box-shadow: inset 0 0 3px 1px #0e4a64;
 }
 .k-menu .k-state-hover > .k-state-active {
   background-color: transparent;
@@ -588,14 +583,14 @@ html .km-pane-wrapper .k-header {
 td.k-state-focused,
 .k-button.k-state-focused {
   -webkit-box-shadow: inset 0 0 3px 1px #8bc4dd;
-  box-shadow: inset 0 0 3px 1px #8bc4dd;
+          box-shadow: inset 0 0 3px 1px #8bc4dd;
 }
 .k-state-focused.k-state-selected,
 .k-list > .k-state-focused.k-state-selected,
 .k-listview > .k-state-focused.k-state-selected,
 td.k-state-focused.k-state-selected {
   -webkit-box-shadow: inset 0 0 3px 1px #0e4a64;
-  box-shadow: inset 0 0 3px 1px #0e4a64;
+          box-shadow: inset 0 0 3px 1px #0e4a64;
 }
 .k-ie8 .k-panelbar span.k-state-focused,
 .k-ie8 .k-menu li.k-state-focused,
@@ -618,7 +613,7 @@ td.k-state-focused.k-state-selected {
 .k-list > .k-state-selected.k-state-focused,
 .k-list-optionlabel.k-state-selected.k-state-focused {
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-state-selected > .k-link,
 .k-panelbar > li > .k-state-selected,
@@ -668,9 +663,8 @@ td.k-state-focused.k-state-selected {
 div.k-filebrowser-dropzone em,
 .k-draghandle:hover {
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
 }
 .k-pager-wrap {
@@ -693,9 +687,8 @@ div.k-filebrowser-dropzone em,
 .k-button.k-state-active,
 .k-draghandle.k-state-selected:hover {
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.0)), to(rgba(255,255,255,.23)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
 }
 .k-button:active,
@@ -721,9 +714,8 @@ div.k-filebrowser-dropzone em {
 .k-dropdown-wrap.k-state-focused {
   background-color: #7ad2f7;
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   border-color: #8bc4dd;
@@ -760,10 +752,12 @@ div.k-filebrowser-dropzone em {
 .k-other-month,
 .k-other-month .k-link,
 .k-dropzone em,
-.k-dropzone .k-upload-status,
 .k-tile-empty strong,
 .k-slider .k-draghandle {
   color: #68b1d2;
+}
+.k-dropzone .k-upload-status {
+  color: #003f59;
 }
 /* Progressbar */
 .k-progressbar-indeterminate {
@@ -789,21 +783,20 @@ div.k-filebrowser-dropzone em {
 /* Tooltip */
 .k-widget.k-tooltip {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   background-color: #d9ecf5;
   color: #00435e;
   border-color: transparent;
   -webkit-box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 .k-widget.k-tooltip-validation {
-  border-color: #ffe5a6;
-  background-color: #f2f2f2;
-  color: #051b25;
+  border-color: #ffe79e;
+  background-color: #ffe79e;
+  color: #6b5100;
 }
 /* Bootstrap theme fix */
 .input-prepend .k-tooltip-validation,
@@ -825,16 +818,16 @@ div.k-filebrowser-dropzone em {
   border-left-color: #d9ecf5;
 }
 .k-tooltip-validation .k-callout-n {
-  border-bottom-color: #ffe5a6;
+  border-bottom-color: #ffe79e;
 }
 .k-tooltip-validation .k-callout-w {
-  border-right-color: #ffe5a6;
+  border-right-color: #ffe79e;
 }
 .k-tooltip-validation .k-callout-s {
-  border-top-color: #ffe5a6;
+  border-top-color: #ffe79e;
 }
 .k-tooltip-validation .k-callout-e {
-  border-left-color: #ffe5a6;
+  border-left-color: #ffe79e;
 }
 /* Splitter */
 .k-splitbar {
@@ -850,19 +843,19 @@ div.k-filebrowser-dropzone em {
   border-color: #a3d0e4;
 }
 .k-file-progress {
-  color: #002230;
+  color: #2498bc;
 }
 .k-file-progress .k-progress {
-  background-color: #e3f6fc;
+  background-color: #e5f5fa;
 }
 .k-file-success {
-  color: #002230;
+  color: #3ea44e;
 }
 .k-file-success .k-progress {
-  background-color: #e9f8eb;
+  background-color: #eaf7ec;
 }
 .k-file-error {
-  color: #005172;
+  color: #d92800;
 }
 .k-file-error .k-progress {
   background-color: #ffe0d9;
@@ -881,7 +874,8 @@ div.k-filebrowser-dropzone em {
 .k-filebrowser .k-tile .k-folder,
 .k-filebrowser .k-tile .k-file {
   background-image: url('BlueOpal/imagebrowser.png');
-  background-size: auto auto;
+  -webkit-background-size: auto auto;
+          background-size: auto auto;
 }
 /* TreeMap */
 .k-leaf,
@@ -896,32 +890,33 @@ div.k-filebrowser-dropzone em {
 .k-widget,
 .k-button {
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-slider,
 .k-treeview,
 .k-upload {
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-state-hover {
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
+.k-textbox:focus,
 .k-autocomplete.k-state-focused,
 .k-dropdown-wrap.k-state-focused,
 .k-picker-wrap.k-state-focused,
 .k-numeric-wrap.k-state-focused {
   -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
 }
 .k-state-selected {
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-state-active {
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-grid td.k-state-selected.k-state-focused {
   background-color: #157299;
@@ -939,23 +934,23 @@ div.k-filebrowser-dropzone em {
 .k-filebrowser .k-image,
 .k-tooltip {
   -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
 .k-treemap-tile.k-state-hover {
   -webkit-box-shadow: inset 0 0 0 3px #bbdceb;
-  box-shadow: inset 0 0 0 3px #bbdceb;
+          box-shadow: inset 0 0 0 3px #bbdceb;
 }
 /* Window */
 .k-window {
   border-color: rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 7px 1px rgba(128, 128, 128, 0.3);
-  box-shadow: 1px 1px 7px 1px rgba(128, 128, 128, 0.3);
+          box-shadow: 1px 1px 7px 1px rgba(128, 128, 128, 0.3);
   background-color: #ffffff;
 }
 .k-window.k-state-focused {
   border-color: rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 7px 1px rgba(0, 0, 0, 0.3);
-  box-shadow: 1px 1px 7px 1px rgba(0, 0, 0, 0.3);
+          box-shadow: 1px 1px 7px 1px rgba(0, 0, 0, 0.3);
 }
 .k-window.k-window-maximized,
 .k-window-maximized .k-window-titlebar,
@@ -964,13 +959,18 @@ div.k-filebrowser-dropzone em {
 }
 .k-shadow {
   -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 }
 .k-inset {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3);
 }
 /* Selection */
+.k-editor-inline ::-moz-selection {
+  background-color: #146b90;
+  text-shadow: none;
+  color: #fff;
+}
 .k-editor-inline ::selection {
   background-color: #146b90;
   text-shadow: none;
@@ -993,9 +993,9 @@ div.k-filebrowser-dropzone em {
   border-color: #c5e9cb;
 }
 .k-widget.k-notification.k-notification-warning {
-  background-color: #fff4d9;
-  color: #008ec9;
-  border-color: #fff0ca;
+  background-color: #ffe79e;
+  color: #9e7700;
+  border-color: #ffe38f;
 }
 .k-widget.k-notification.k-notification-error {
   background-color: #ffe0d9;
@@ -1324,7 +1324,8 @@ html .km-pane-wrapper .km-widget,
   }
   .km-pane-wrapper .k-icon {
     background-image: url('BlueOpal/sprite_2x.png');
-    background-size: 21.2em 21em;
+    -webkit-background-size: 21.2em 21em;
+            background-size: 21.2em 21em;
   }
 }
 .km-pane-wrapper .k-mobile-list .k-item,
@@ -1345,7 +1346,7 @@ html .km-pane-wrapper .km-widget,
 }
 .km-pane-wrapper .k-mobile-list .k-item:last-child {
   -webkit-box-shadow: inset 0 -1px 0 #a3d0e4;
-  box-shadow: inset 0 -1px 0 #a3d0e4;
+          box-shadow: inset 0 -1px 0 #a3d0e4;
 }
 .km-pane-wrapper .k-mobile-list > ul > li > .k-link,
 .km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-label:nth-child(3),
@@ -1357,7 +1358,7 @@ html .km-pane-wrapper .km-widget,
 }
 .km-pane-wrapper .k-mobile-list .k-edit-field {
   -webkit-box-shadow: 0 1px 1px #a3d0e4;
-  box-shadow: 0 1px 1px #a3d0e4;
+          box-shadow: 0 1px 1px #a3d0e4;
 }
 .km-actionsheet .k-grid-delete,
 .km-actionsheet .k-scheduler-delete,
@@ -1366,11 +1367,9 @@ html .km-pane-wrapper .km-widget,
   color: #fff;
   border-color: #ff6745;
   background-color: red;
-  background-image: -webkit-gradient(linear, 50% 0, 50% 100%, from(rgba(255,255,255,.3)), to(rgba(255,255,255,.15)));
-  background-image: -webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,.15));
-  background-image: -moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,.15));
-  background-image: -ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,.15));
-  background-image: linear-gradient(to bottom, rgba(255,255,255,.3), rgba(255,255,255,.15));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), to(rgba(255, 255, 255, 0.15)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
 }
 .km-actionsheet .k-grid-delete:active,
 .km-actionsheet .k-scheduler-delete:active,
@@ -1384,10 +1383,9 @@ html .km-pane-wrapper .km-widget,
 .k-numeric-wrap.k-state-default,
 .k-dropdown-wrap.k-state-default {
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   background-color: #deeef5;
   border-color: #a3d0e4;
@@ -1398,9 +1396,8 @@ html .km-pane-wrapper .km-widget,
 .k-dropdown-wrap.k-state-hover {
   background-color: #7ad2f7;
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   border-color: #8bc4dd;
@@ -1418,14 +1415,13 @@ html .km-pane-wrapper .km-widget,
 .k-multiselect.k-header.k-state-focused {
   background-color: #7ad2f7;
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   border-color: #bdbdbd;
   -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
 }
 .k-list-container {
   color: #003f59;
@@ -1446,7 +1442,7 @@ html .km-pane-wrapper .km-widget,
 }
 .k-tabstrip:focus {
   -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
 }
 .k-tabstrip-items .k-state-default .k-link,
 .k-panelbar > li.k-state-default > .k-link {
@@ -1460,7 +1456,7 @@ html .km-pane-wrapper .km-widget,
 .k-panelbar .k-state-focused.k-state-hover {
   background: #7bd2f6;
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-tabstrip-items .k-state-default,
 .k-ie7 .k-tabstrip-items .k-state-default .k-loading {
@@ -1491,14 +1487,17 @@ html .km-pane-wrapper .km-widget,
   border-color: #a3d0e4;
 }
 .k-overflow-container .k-overflow-group {
-  box-shadow: inset 0 1px 0 #ffffff, 0 1px 0 #ffffff;
+  -webkit-box-shadow: inset 0 1px 0 #ffffff, 0 1px 0 #ffffff;
+          box-shadow: inset 0 1px 0 #ffffff, 0 1px 0 #ffffff;
 }
 .k-toolbar-first-visible.k-overflow-group,
 .k-overflow-container .k-overflow-group + .k-overflow-group {
-  box-shadow: 0 1px 0 #ffffff;
+  -webkit-box-shadow: 0 1px 0 #ffffff;
+          box-shadow: 0 1px 0 #ffffff;
 }
 .k-toolbar-last-visible.k-overflow-group {
-  box-shadow: inset 0 1px 0 #ffffff;
+  -webkit-box-shadow: inset 0 1px 0 #ffffff;
+          box-shadow: inset 0 1px 0 #ffffff;
 }
 .k-column-menu .k-separator {
   border-color: #a3d0e4;
@@ -1522,7 +1521,7 @@ html .km-pane-wrapper .km-widget,
 }
 .k-grid td.k-state-focused {
   -webkit-box-shadow: inset 0 0 0 1px inset 0 0 3px 1px #8bc4dd;
-  box-shadow: inset 0 0 0 1px inset 0 0 3px 1px #8bc4dd;
+          box-shadow: inset 0 0 0 1px inset 0 0 3px 1px #8bc4dd;
 }
 .k-header,
 .k-grid-header-wrap,
@@ -1540,55 +1539,51 @@ html .km-pane-wrapper .km-widget,
   color: #ffffff;
   border-color: #115e7f;
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.0)), to(rgba(255,255,255,.23)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   background-position: 50% 50%;
   background-color: #177fab;
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-primary:focus,
 .k-primary.k-state-focused {
   color: #ffffff;
   border-color: #115e7f;
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   -webkit-box-shadow: 0 0 3px 0 #13688c;
-  box-shadow: 0 0 3px 0 #13688c;
+          box-shadow: 0 0 3px 0 #13688c;
 }
 .k-primary:hover {
   color: #ffffff;
   border-color: #1cb1ef;
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-color: #157299;
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-primary:focus:active:not(.k-state-disabled):not([disabled]),
 .k-primary:focus:not(.k-state-disabled):not([disabled]) {
   -webkit-box-shadow: 0 0 3px 0 #13688c;
-  box-shadow: 0 0 3px 0 #13688c;
+          box-shadow: 0 0 3px 0 #13688c;
 }
 .k-primary:active {
   color: #ffffff;
   border-color: #146b90;
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.0)), to(rgba(255,255,255,.23)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   background-color: #14688b;
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-primary.k-state-disabled,
 .k-state-disabled .k-primary,
@@ -1601,12 +1596,11 @@ html .km-pane-wrapper .km-widget,
   border-color: #e6e6e6;
   background-color: #1883b0;
   background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.0)), to(rgba(255,255,255,.23)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, -o-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   -webkit-box-shadow: none;
-  box-shadow: none;
+          box-shadow: none;
 }
 .k-pager-numbers .k-link,
 .k-treeview .k-in {
@@ -1626,7 +1620,8 @@ html .km-pane-wrapper .km-widget,
   outline: none;
 }
 .k-split-button:focus {
-  box-shadow: inset 0 0 4px 2px #8bc4dd;
+  -webkit-box-shadow: inset 0 0 4px 2px #8bc4dd;
+          box-shadow: inset 0 0 4px 2px #8bc4dd;
 }
 .k-split-button:focus > .k-button {
   background: transparent;
@@ -1636,7 +1631,7 @@ html .km-pane-wrapper .km-widget,
   outline: 0;
   border-color: #a3d0e4;
   -webkit-box-shadow: inset 0 0 3px 1px #8bc4dd;
-  box-shadow: inset 0 0 3px 1px #8bc4dd;
+          box-shadow: inset 0 0 3px 1px #8bc4dd;
 }
 .k-checkbox-label:before {
   border-color: transparent;
@@ -1650,7 +1645,8 @@ html .km-pane-wrapper .km-widget,
 .k-checkbox-label:hover:after,
 .k-checkbox:checked + .k-checkbox-label:hover:after {
   border-color: #7cbcd8;
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-checkbox:checked + .k-checkbox-label:after {
   background-color: #ffffff;
@@ -1659,7 +1655,8 @@ html .km-pane-wrapper .km-widget,
   color: #146b90;
 }
 .k-checkbox-label:active:before {
-  box-shadow: 0 0 3px 0 #13688c;
+  -webkit-box-shadow: 0 0 3px 0 #13688c;
+          box-shadow: 0 0 3px 0 #13688c;
   border-color: #72c9e4;
   border-radius: 3px;
 }
@@ -1671,7 +1668,8 @@ html .km-pane-wrapper .km-widget,
   border-color: #146b90;
 }
 .k-checkbox:checked + .k-checkbox-label:active:before {
-  box-shadow: 0 0 3px 0 #13688c;
+  -webkit-box-shadow: 0 0 3px 0 #13688c;
+          box-shadow: 0 0 3px 0 #13688c;
   border-radius: 3px;
 }
 .k-checkbox:disabled + .k-checkbox-label {
@@ -1679,7 +1677,8 @@ html .km-pane-wrapper .km-widget,
 }
 .k-checkbox:disabled + .k-checkbox-label:hover:after,
 .k-checkbox:disabled + .k-checkbox-label:active:before {
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-checkbox:checked:disabled + .k-checkbox-label:after {
   background: #dff4fd;
@@ -1702,7 +1701,8 @@ html .km-pane-wrapper .km-widget,
 .k-radio-label:hover:before,
 .k-radio:checked + .k-radio-label:hover:before {
   border-color: #7cbcd8;
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-radio:checked + .k-radio-label:before {
   border-color: #8bc4dd;
@@ -1712,12 +1712,14 @@ html .km-pane-wrapper .km-widget,
   border-radius: 50%;
 }
 .k-radio-label:active:before {
-  box-shadow: 0 0 3px 0 #13688c;
+  -webkit-box-shadow: 0 0 3px 0 #13688c;
+          box-shadow: 0 0 3px 0 #13688c;
   border-radius: 50%;
   border-color: #146b90;
 }
 .k-radio:checked + .k-radio-label:active:before {
-  box-shadow: 0 0 3px 0 #13688c;
+  -webkit-box-shadow: 0 0 3px 0 #13688c;
+          box-shadow: 0 0 3px 0 #13688c;
   border-radius: 50%;
   border-color: #146b90;
 }
@@ -1728,7 +1730,8 @@ html .km-pane-wrapper .km-widget,
   border-color: #bfbfbf;
 }
 .k-radio:disabled + .k-radio-label:active:before {
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
   background: #e9f7fd;
 }
 .k-radio:disabled + .k-radio-label:before {
@@ -1736,12 +1739,14 @@ html .km-pane-wrapper .km-widget,
 }
 .k-radio:disabled + .k-radio-label:hover:after,
 .k-radio:disabled + .k-radio-label:hover:before {
-  box-shadow: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-checkbox:focus + .k-checkbox-label:after,
 .k-radio:focus + .k-radio-label:before {
   border-color: #146b90;
-  box-shadow: 0 0 3px 0 #13688c;
+  -webkit-box-shadow: 0 0 3px 0 #13688c;
+          box-shadow: 0 0 3px 0 #13688c;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
   .k-icon:not(.k-loading),
@@ -1759,7 +1764,8 @@ html .km-pane-wrapper .km-widget,
   .k-mobile-list .k-edit-field [type=checkbox]:checked,
   .k-mobile-list .k-edit-field [type=radio]:checked {
     background-image: url('BlueOpal/sprite_2x.png');
-    background-size: 340px 336px;
+    -webkit-background-size: 340px 336px;
+            background-size: 340px 336px;
   }
   .k-dropdown-wrap .k-input,
   .k-picker-wrap .k-input,
@@ -1773,7 +1779,8 @@ html .km-pane-wrapper .km-widget,
   .k-i-kpi-increase,
   .k-i-kpi-open {
     background-image: url('BlueOpal/sprite_kpi_2x.png');
-    background-size: 96px 16px;
+    -webkit-background-size: 96px 16px;
+            background-size: 96px 16px;
   }
 }
 @media screen and (-ms-high-contrast: active) {
@@ -1847,10 +1854,9 @@ html .km-pane-wrapper .km-widget,
   .k-ie11 .k-pager-numbers .k-current-page .k-link,
   .k-safari .k-pager-numbers .k-current-page .k-link {
     background-image: url('textures/highlight.png');
-    background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-    background-image: none, -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-    background-image: none, -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
-    background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.45) 100%);
+    background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,.0)));
+    background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
+    background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
     background-position: 50% 50%;
     background-color: #deeef5;
     border-color: #bbdceb;
@@ -1917,9 +1923,8 @@ html .km-pane-wrapper .km-widget,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover {
     border-color: #8bc4dd;
     background-image: url('textures/highlight.png');
+    background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
     background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-    background-image: none, -moz-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-    background-image: none, -o-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
     background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
     background-color: #7bd2f6;
   }
@@ -1967,7 +1972,7 @@ html .km-pane-wrapper .km-widget,
     background-color: #d9ecf5;
     border-radius: 4px 4px 0 0;
     -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.3);
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
@@ -1991,43 +1996,35 @@ html .km-pane-wrapper .km-widget,
 .k-chart .k-mask {
   background-color: #ffffff;
   filter: alpha(opacity=68);
-  -moz-opacity: 0.68;
   opacity: 0.68;
 }
 .k-chart .k-selection {
   border-color: rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.1);
-  box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s linear, border-color 0.2s linear;
-  -moz-transition: box-shadow 0.2s linear, border-color 0.2s linear;
-  -webkit-transition: box-shadow 0.2s linear, border-color 0.2s linear;
-  -o-transition: box-shadow 0.2s linear, border-color 0.2s linear;
+          box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.1);
+  -webkit-transition: -webkit-box-shadow 0.2s linear, border-color 0.2s linear;
+          transition: box-shadow 0.2s linear, border-color 0.2s linear;
 }
 .k-chart .k-selection:hover {
   border-color: rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.2);
-  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.2);
+          box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 .k-chart .k-handle {
   background-color: #fcfcfc;
-  -moz-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 .k-chart .k-handle:hover {
   background-color: #ffffff;
   border-color: #b8b8b8;
-  -moz-box-shadow: 0 0 0 2px rgba(111, 101, 96, 0.5);
   -webkit-box-shadow: 0 0 0 2px rgba(111, 101, 96, 0.5);
-  box-shadow: 0 0 0 2px rgba(111, 101, 96, 0.5);
+          box-shadow: 0 0 0 2px rgba(111, 101, 96, 0.5);
 }
 .k-chart .k-navigator-hint .k-tooltip {
   border: 3px solid #ffffff;
-  -moz-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
   background: #ffffff;
   color: #242424;
 }

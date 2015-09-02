@@ -54,9 +54,9 @@
 @tooltip-text-color: @normal-text-color;
 @tooltip-background-color: @background;
 @tooltip-border-color: darken(@background, 25%);
-@validation-text-color: @normal-text-color;
+@validation-text-color: contrast(@validation-background-color, lighten(@warning, 80%), darken(@warning, 60%), 0.5);
 @validation-background-color: @warning;
-@validation-border-color: darken(@error, 15%);
+@validation-border-color: @warning;
 @splitbar-background-color: darken(@background, 5%);
 @draghandle-border-radius: @border-radius;
 @draghandle-border-color: lighten(@normal-text-color, 24%);
@@ -77,12 +77,12 @@
 @event-inverse-text-color: @normal-text-color;
 @scheduler-nonwork-background-color: darken(@hover-background, 2%);
 @resize-background-color: @background;
-@upload-progress-background-color: lighten(@accent, 5%);
-@upload-progress-text-color: @normal-text-color;
-@upload-success-background-color: lighten(@warning, 2%);
-@upload-success-text-color: @normal-text-color;
-@upload-error-background-color: lighten(@error, 1%);
-@upload-error-text-color: @normal-text-color;
+@upload-progress-background-color: @info;
+@upload-progress-text-color: darken(@info, 50%);
+@upload-success-background-color: @success;
+@upload-success-text-color: darken(@success, 50%);
+@upload-error-background-color: @error;
+@upload-error-text-color: darken(@error, 50%);
 @task-summary-color: darken(@background, 20%);
 @task-summary-selected-color: lighten(@info, 4%);
 @loading-panel-color: @background;
@@ -1287,6 +1287,7 @@ div.k-filebrowser-dropzone em
     .box-shadow(@hover-shadow);
 }
 
+.k-textbox:focus,
 .k-autocomplete.k-state-focused,
 .k-dropdown-wrap.k-state-focused,
 .k-picker-wrap.k-state-focused,
@@ -1889,11 +1890,7 @@ html .km-pane-wrapper .km-widget,
     color: #fff;
     border-color: @error-border-color;
     background-color: red;
-    background-image: ~"-webkit-gradient(linear, 50% 0, 50% 100%, from(rgba(255,255,255,.3)), to(rgba(255,255,255,.15)))";
-    background-image: ~"-webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,.15))";
-    background-image: ~"-moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,.15))";
-    background-image: ~"-ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,.15))";
-    background-image: ~"linear-gradient(to bottom, rgba(255,255,255,.3), rgba(255,255,255,.15))";
+    background-image: linear-gradient(to bottom, rgba(255,255,255,.3), rgba(255,255,255,.15));
 }
 
 .km-actionsheet .k-grid-delete:active,
@@ -2090,7 +2087,6 @@ html .km-pane-wrapper .km-widget,
 
 .k-grid td.k-state-focused
 {
-    -webkit-box-shadow: inset 0 0 0 1px @focused-item-shadow;
     box-shadow: inset 0 0 0 1px @focused-item-shadow;
 }
 
@@ -3015,16 +3011,11 @@ div.k-window.k-state-focused
         .k-grid .k-pager-numbers {
             position: absolute;
             left: 5em;
-            display: -moz-inline-flex;
-            display: -webkit-inline-flex;
             display: inline-flex;
-            -webkit-flex-direction: column-reverse;
             flex-direction: column-reverse;
             margin-top: 6px;
             overflow: visible;
             height: auto;
-            -webkit-transform: translatey(-100%);
-            -moz-transform: translatey(-100%);
             transform: translatey(-100%);
         }
         
@@ -3047,8 +3038,6 @@ div.k-window.k-state-focused
         .k-grid .k-pager-numbers .k-current-page {
             display: block;
             border-left: 0;
-            -webkit-transform: translatey(100%);
-            -moz-transform: translatey(100%);
             transform: translatey(100%);
         }
         
@@ -3181,8 +3170,6 @@ div.k-window.k-state-focused
     width: 15px;
     height: 15px;
     background-color: #00b0ff;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
     border-radius: 10px;
 }
 
@@ -3201,8 +3188,6 @@ div.k-window.k-state-focused
 
 .k-chart .k-navigator-hint .k-tooltip {
     border: 3px solid #ffffff;
-    -moz-box-shadow: 0 0 0 3px rgba(0,0,0,.2);
-    -webkit-box-shadow: 0 0 0 3px rgba(0,0,0,.2);
     box-shadow: 0 0 0 3px rgba(0,0,0,.2);
     background: #ffffff;
     color: #242424;

@@ -33,8 +33,6 @@ span.k-sparkline,
 }
 
 .k-chart-tooltip {
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
     border-radius: 4px;
     padding: 6px;
     white-space: nowrap;
@@ -100,8 +98,6 @@ span.k-sparkline,
     height: 26px;
     cursor: e-resize;
     z-index: 1;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
     border-radius: 6px;
     position: absolute;
 }
@@ -135,7 +131,6 @@ span.k-sparkline,
     height: 100%;
     background-color: #fff;
     filter: alpha(opacity=80);
-    -moz-opacity: 0.80;
     opacity: 0.80;
 }
 
@@ -157,8 +152,6 @@ span.k-sparkline,
 .k-navigator-hint .k-scroll {
     position: absolute;
     height: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
     border-radius: 4px;
     background: #d2d2d2;
 }
@@ -179,8 +172,6 @@ span.k-sparkline,
 .k-sparkline,
 .k-sparkline span {
     display: inline-block;
-    *display: inline;
-    zoom: 1;
     vertical-align: top;
 }
 
@@ -199,9 +190,7 @@ span.k-sparkline,
 .k-map .km-scroll-wrapper,
 .k-diagram .km-scroll-wrapper {
     padding-bottom: 0;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+    user-select: none;
 }
 
 .k-map .km-scroll-wrapper,
@@ -564,8 +553,6 @@ div.k-navigator .k-navigator-w
     top: 0;
     right: 1.23em;
     transform-origin: right;
-    -webkit-transform-origin: right;
-    -webkit-transform: rotate(-90deg);
     transform: rotate(-90deg);
 }
 

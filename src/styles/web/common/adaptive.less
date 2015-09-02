@@ -8,8 +8,7 @@
     height: 100%;
     -ms-touch-action: none;
     -ms-content-zooming: none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
+    user-select: none;
     .text-size-adjust(none); // Disables zoom on Desktop too.
 }
 
@@ -39,7 +38,6 @@
     .flexbox();
     height: 100%;
     width: 100%;
-    .box-orient(vertical);
     .flex-direction(column);
     .flex-align-items(stretch);
     .flex-align-content(stretch);
@@ -272,7 +270,6 @@
 
 .km-pane-wrapper .km-pane *
 {
-    -webkit-background-clip: border-box;
     background-clip: border-box;
 }
 
@@ -448,8 +445,6 @@
 .k-mobile-list .k-edit-field [type=radio]
 {
     appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
     background-color: transparent;
 }
 
@@ -598,8 +593,6 @@
 .km-pane-wrapper .k-mobile-list .k-widget,
 .km-pane-wrapper .k-mobile-list .k-edit-field > *
 {
-    -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
     float: right;
     z-index: 1;
@@ -681,7 +674,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    line-height: auto;
+    line-height: normal;
 }
 
 .km-pane-wrapper .k-mobile-list .k-datepicker .k-select:before,
