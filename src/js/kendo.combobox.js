@@ -17,6 +17,10 @@
     define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -38,12 +42,10 @@
         STATEDISABLED = "k-state-disabled",
         ARIA_DISABLED = "aria-disabled",
         ARIA_READONLY = "aria-readonly",
-        STATE_SELECTED = "k-state-selected",
         STATE_FILTER = "filter",
         STATE_ACCEPT = "accept",
         STATE_REBIND = "rebind",
         HOVEREVENTS = "mouseenter" + ns + " mouseleave" + ns,
-        NULL = null,
         proxy = $.proxy;
 
     var ComboBox = Select.extend({
@@ -241,8 +243,6 @@
         open: function() {
             var that = this;
             var state = that._state;
-            var focusedItem;
-            var index;
 
             if (that.popup.visible()) {
                 return;
@@ -272,7 +272,6 @@
             var page = this.dataSource.page();
             var length = data.length;
             var dataItem;
-            var value;
 
             that._angularItems("compile");
 
@@ -650,7 +649,7 @@
             }
 
             if (this.options.highlightFirst && !word) {
-                this.listView.first();
+                this.listView.focusFirst();
             }
         },
 
@@ -824,6 +823,10 @@
 
     ui.plugin(ComboBox);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

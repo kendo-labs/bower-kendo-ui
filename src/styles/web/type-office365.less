@@ -512,7 +512,8 @@ html .km-pane-wrapper .k-header
 .k-grid-mobile .k-resize-handle-inner:before,
 .k-grid-mobile .k-resize-handle-inner:after,
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after
 {
     background-image: @sprite-image;
     border-color: transparent;
@@ -633,9 +634,10 @@ html .km-pane-wrapper .k-header
     color: @event-inverse-text-color;
 }
 
-.k-event.k-state-selected
+.k-scheduler-content .k-event.k-state-selected
 {
     background-position: 0 0;
+    box-shadow: 0 0 0 2px @normal-text-color, inset 4px 0 0 0 rgba(255, 255, 255, .5);
 }
 
 .k-ie7 .k-event .k-resize-handle,
@@ -3094,7 +3096,7 @@ input.k-textbox:focus {
 }
 
 .k-scheduler-content .k-event {
-    box-shadow: inset 4px 0 0 0 rgba(255, 255, 255, .5);
+    .box-shadow(inset 4px 0 0 0 rgba(255, 255, 255, .5));
 }
 
 .k-scheduler-times tr,
@@ -3490,4 +3492,21 @@ input.k-textbox:focus {
 
 .k-map .k-attribution {
     color: #666666;
+}
+
+@import "themes/spreadsheet.less";
+
+@spreadsheet-cell-border: #c8c8c8;
+@spreadsheet-selection-background: fadeout(@base, 80%);
+@spreadsheet-selection-border: @base;
+@spreadsheet-header-background: @background;
+@spreadsheet-header-border: #dadada;
+@spreadsheet-pane-border: #c8c8c8;
+
+.k-spreadsheet-sheets-bar {
+    background-color: #f4f4f4;
+
+    .k-item, .k-item.k-state-active {
+        border-color: @spreadsheet-header-border;
+    }
 }

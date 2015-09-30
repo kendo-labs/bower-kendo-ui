@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         CHANGE = "change",
@@ -498,7 +502,7 @@
             }
         },
 
-        _same: function(e) {
+        _same: function() {
             this.trigger(SAME);
         },
 
@@ -534,6 +538,10 @@
     });
 
     kendo.Router = Router;
+})();
+
+
+
 })();
 
 return window.kendo;

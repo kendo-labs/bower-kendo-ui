@@ -17,13 +17,16 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
         Widget = ui.Widget,
         support = kendo.support,
         getOffset = kendo.getOffset,
-        activeElement = kendo._activeElement,
         OPEN = "open",
         CLOSE = "close",
         DEACTIVATE = "deactivate",
@@ -637,6 +640,10 @@
 
     ui.plugin(Popup);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

@@ -963,12 +963,27 @@ span.k-tooltip
 .k-pivot {
     .k-header,
     .k-button:not(.k-state-disabled):hover {
+        .k-setting-sort {
+            background-position: -112px -240px;
+        }
+    }
+
+    .k-button:active,
+    .k-button:active:hover {
         .k-i-arrowhead-s {
             background-position: -16px -288px;
-        }
+        }      
 
         .k-si-close {
             background-position: -176px -80px;
+        }
+
+        .k-i-sort-asc {
+            background-position: -128px -240px;
+        }
+
+        .k-setting-sort {
+            background-position: -128px -240px;
         }
     }
 }
@@ -1032,4 +1047,38 @@ span.k-tooltip
 .k-rtl .k-panel > .k-item > .k-link {
     padding-left: 1em;
     padding-right: 2.4em;
+}
+
+.k-spreadsheet {
+    .k-button-group .k-button {
+        border-width: 1px;
+    }
+
+    .k-spreadsheet-sheets-bar {
+        height: 36px;
+
+        .k-button {
+            padding: 5px;
+        }
+
+        .k-spreadsheet-sheets-remove {
+            margin-left: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .k-tabstrip-items .k-item {
+            background-color: transparent;
+        }
+    }
+
+    .k-spreadsheet-quick-access-toolbar {
+        .k-button {
+            margin: 0 2px;
+        }
+    }
+
+    .k-tabstrip-items  .k-link {
+        padding-top: .4em;
+    }
 }

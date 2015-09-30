@@ -17,6 +17,10 @@
     define([ "./kendo.core", "./kendo.popup" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
@@ -432,6 +436,8 @@
                 popup.destroy();
             }
 
+            clearTimeout(this.timeout);
+
             this.element.off(NS);
 
             DOCUMENT.off("keydown" + NS, this._documentKeyDownHandler);
@@ -442,6 +448,10 @@
 
     kendo.ui.plugin(Tooltip);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

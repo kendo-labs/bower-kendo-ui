@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         extend = $.extend,
@@ -308,6 +312,10 @@
     });
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

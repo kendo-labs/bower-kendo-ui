@@ -1343,6 +1343,17 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:active .k-i-more {
   background-position: -64px -32px;
 }
+.k-i-gantt-toggle {
+  background-position: -64px -240px;
+}
+.k-link:not(.k-state-disabled):hover > .k-i-gantt-toggle,
+.k-state-hover > .k-i-gantt-toggle,
+.k-state-hover > * > .k-i-gantt-toggle,
+.k-button:not(.k-state-disabled):hover .k-i-gantt-toggle,
+.k-textbox:hover .k-i-gantt-toggle,
+.k-button:active .k-i-gantt-toggle {
+  background-position: -64px -240px;
+}
 .k-file > .k-icon {
   background-position: -115px -91px;
 }
@@ -1357,21 +1368,28 @@ html body .k-button-bare.k-upload-button:hover {
 }
 /* Dropdown icon in k-scheduler-views */
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after {
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after {
   background-position: 0px -32px;
 }
 .k-link:not(.k-state-disabled):hover > .k-pager-numbers .k-current-page .k-link:after,
 .k-link:not(.k-state-disabled):hover > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-link:not(.k-state-disabled):hover > .k-gantt-views > .k-current-view > .k-link:after,
 .k-state-hover > .k-pager-numbers .k-current-page .k-link:after,
 .k-state-hover > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-state-hover > .k-gantt-views > .k-current-view > .k-link:after,
 .k-state-hover > * > .k-pager-numbers .k-current-page .k-link:after,
 .k-state-hover > * > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-state-hover > * > .k-gantt-views > .k-current-view > .k-link:after,
 .k-button:not(.k-state-disabled):hover .k-pager-numbers .k-current-page .k-link:after,
 .k-button:not(.k-state-disabled):hover .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-button:not(.k-state-disabled):hover .k-gantt-views > .k-current-view > .k-link:after,
 .k-textbox:hover .k-pager-numbers .k-current-page .k-link:after,
 .k-textbox:hover .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-textbox:hover .k-gantt-views > .k-current-view > .k-link:after,
 .k-button:active .k-pager-numbers .k-current-page .k-link:after,
-.k-button:active .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after {
+.k-button:active .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-button:active .k-gantt-views > .k-current-view > .k-link:after {
   background-position: 0px -32px;
 }
 /* Colors */
@@ -1667,6 +1685,13 @@ input.k-checkbox + label {
   left: -15000px;
   width: 14400px;
 }
+.km-native-scroller {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-touch-action: pan-x pan-y;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  -ms-scroll-snap-type: proximity;
+}
 /* responsive panel */
 .k-rpanel-left {
   -webkit-transform: translateX(-100%) translateZ(0);
@@ -1927,6 +1952,21 @@ div.k-window-iframecontent {
   background-color: #fff;
   filter: alpha(opacity=0);
   opacity: 0;
+}
+.k-action-buttons {
+  clear: both;
+  text-align: right;
+  border-width: 1px 0 0;
+  border-style: solid;
+  position: relative;
+  bottom: -1em;
+  padding: .6em;
+  margin: 0 -1em;
+}
+.k-action-buttons .k-button {
+  display: inline-block;
+  margin: 0 0 0 6px;
+  min-width: 75px;
 }
 /* TabStrip */
 .k-tabstrip {
@@ -3012,12 +3052,19 @@ span.k-numerictextbox {
   overflow: hidden;
   -ms-high-contrast-adjust: none;
 }
-.k-colorpalette .k-item.k-state-selected {
+.k-colorpalette .k-item.k-state-selected,
+.k-colorpalette .k-item.k-state-selected:hover {
   z-index: 100;
   background: transparent;
-  -webkit-box-shadow: 0 1px 4px #000, inset 0 0 3px #fff;
-          box-shadow: 0 1px 4px #000, inset 0 0 3px #fff;
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.45);
   position: relative;
+}
+.k-colorpalette .k-item:hover {
+  z-index: 101;
+  position: relative;
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 .k-flatcolorpicker {
   position: relative;
@@ -4807,7 +4854,8 @@ span.k-tooltip {
       -ms-transform: translatey(-100%);
           transform: translatey(-100%);
 }
-.k-button {
+.k-button,
+.k-toolbar .k-button {
   line-height: 1.143em;
   padding: 9px 14px;
 }
@@ -4979,7 +5027,7 @@ span.k-tooltip {
 }
 .k-pager-wrap .k-pager-numbers .k-state-selected {
   margin-top: -0.4em;
-  padding-top: .4em;
+  padding-top: .35em;
   min-width: 2.429em;
 }
 .k-pager-wrap input.k-textbox {
@@ -5102,6 +5150,7 @@ span.k-tooltip {
 }
 .k-popup.k-calendar-container {
   padding: 0;
+  border: 0;
 }
 .k-multiselect-wrap .k-input {
   height: 2.214em;
@@ -5159,6 +5208,16 @@ table.k-editor {
 .k-editor .k-editor-toolbar-wrap {
   padding-left: 10px;
 }
+.k-toolbar {
+  line-height: 3.42em;
+}
+.k-toolbar .k-button-group {
+  line-height: 3.286em;
+}
+.k-toolbar .k-button-group .k-button {
+  line-height: inherit;
+  padding: 0 .857em;
+}
 .k-toolbar .k-input {
   height: 2.214em;
   line-height: 2.214em;
@@ -5168,16 +5227,33 @@ table.k-editor {
   margin: 0;
 }
 .k-toolbar .k-overflow-anchor {
-  border-width: 1px;
-  line-height: inherit;
+  border-width: 0;
+  line-height: 3.286em;
+  width: 3.42em;
+  height: 3.42em;
+  padding: 0;
 }
 .k-button-group .k-tool {
   margin: 6px 0;
+}
+.k-toolbar .k-split-button-arrow {
+  padding-left: .4em;
+  padding-right: .4em;
 }
 .k-editor-toolbar .k-button-group .k-tool-icon,
 .k-toolbar .k-button-group .k-tool-icon {
   width: 24px;
   height: 24px;
+}
+.k-editor-toolbar li.k-tool-group,
+.k-editor-toolbar li.k-overflow-tools {
+  padding: 0;
+}
+.k-editor-toolbar .k-button-group .k-tool {
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  margin: 0;
 }
 .k-editor-toolbar .k-tool,
 .k-editor-toolbar .k-button-group .k-tool.k-group-end {
@@ -5185,9 +5261,6 @@ table.k-editor {
 }
 .k-editor-toolbar .k-state-selected {
   font-weight: bold;
-}
-.k-editor-toolbar .k-tool.k-state-hover {
-  border-radius: 50%;
 }
 .k-filebrowser .k-filebrowser-toolbar {
   line-height: 3.5em;
@@ -5376,10 +5449,20 @@ div.editorToolbarWindow.k-window-content {
   border-width: 0 0 2px 0;
 }
 .k-gantt-toolbar li .k-link,
-.k-scheduler-toolbar li .k-link {
+.k-scheduler-toolbar li .k-link,
+.k-gantt-toggle {
   vertical-align: middle;
-  line-height: 44px;
-  padding-top: 2px;
+  line-height: 46px;
+}
+.k-gantt-toggle {
+  padding: 0;
+}
+.k-gantt-actions {
+  vertical-align: middle;
+  line-height: 48px;
+}
+.k-gantt-actions > .k-button {
+  vertical-align: middle;
 }
 .k-gantt-toolbar,
 .k-scheduler-toolbar,
@@ -5390,9 +5473,20 @@ div.editorToolbarWindow.k-window-content {
 .k-scheduler-footer {
   padding: 0;
 }
+.k-popup-edit-form .k-primary {
+  float: right;
+}
+.k-popup-edit-form:after {
+  content: " ";
+  display: block;
+  clear: both;
+}
 .k-gantt-toolbar,
 .k-scheduler-toolbar {
   padding: 0 1.286em;
+}
+.k-scheduler-navigation {
+  margin-left: -0.786em;
 }
 .k-drag-clue {
   font-size: 1em;
@@ -5449,12 +5543,14 @@ div.editorToolbarWindow.k-window-content {
   background-position: -48px -128px;
 }
 .k-calendar .k-icon.k-i-arrow-w,
-.k-calendar .k-state-hover .k-icon.k-i-arrow-w {
+.k-calendar .k-state-hover .k-icon.k-i-arrow-w,
+.k-calendar .k-link:not(.k-state-disabled):hover > .k-i-arrow-w {
   background-position: -16px -48px;
   opacity: 1;
 }
 .k-calendar .k-icon.k-i-arrow-e,
-.k-calendar .k-state-hover .k-icon.k-i-arrow-e {
+.k-calendar .k-state-hover .k-icon.k-i-arrow-e,
+.k-calendar .k-link:not(.k-state-disabled):hover > .k-i-arrow-e {
   background-position: -16px -16px;
   opacity: 1;
 }
@@ -5585,6 +5681,10 @@ div.editorToolbarWindow.k-window-content {
 }
 .k-gantt .k-i-expand {
   background-position: 0 0;
+}
+.k-gantt .k-i-gantt-toggle,
+.k-gantt .k-button:not(.k-state-disabled):hover .k-i-gantt-toggle {
+  background-position: -80px -240px;
 }
 .k-i-arrowhead-s {
   background-position: 0 -288px;

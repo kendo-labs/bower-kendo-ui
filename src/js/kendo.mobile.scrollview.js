@@ -17,6 +17,10 @@
     define([ "./kendo.fx", "./kendo.data", "./kendo.draganddrop" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         mobile = kendo.mobile,
@@ -704,6 +708,7 @@
             content.page = that.page;
 
             content.bind("reset", function() {
+                this._pendingPageRefresh = false;
                 that._syncWithContent();
                 that.trigger(REFRESH, { pageCount: content.pageCount, page: content.page });
             });
@@ -902,6 +907,10 @@
     ui.plugin(ScrollView);
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

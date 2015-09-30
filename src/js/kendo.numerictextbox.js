@@ -17,6 +17,10 @@
     define([ "./kendo.core", "./kendo.userevents" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         caret = kendo.caret,
@@ -77,7 +81,7 @@
              if (!kendo.support.mobileOS) {
                  that._text.on(FOCUS + ns, proxy(that._click, that));
              } else {
-                 that._text.on(TOUCHEND + ns + " " + FOCUS + ns, function(e) {
+                 that._text.on(TOUCHEND + ns + " " + FOCUS + ns, function() {
                     that._toggleText(false);
                     element.focus();
                  });
@@ -686,6 +690,10 @@
 
     ui.plugin(NumericTextBox);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

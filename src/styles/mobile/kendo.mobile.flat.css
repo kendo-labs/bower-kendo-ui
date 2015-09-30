@@ -384,6 +384,12 @@ kendo-mobile-drawer {
 .km-stretched-view > * {
   width: 100%;
 }
+.km-stretched-view > .km-pane-wrapper {
+  position: static;
+}
+.km-stretched-view > .km-pane-wrapper > .km-pane {
+  position: static;
+}
 .km-overlay {
   position: absolute;
   top: 0;
@@ -3326,9 +3332,9 @@ body:before {
 }
 .km-flat .km-switch-background,
 .km-flat .k-slider-selection {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #bababa #bababa);
-  background-image: linear-gradient(to bottom #bababa #bababa);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bababa), to(#bababa));
+  background-image: -webkit-linear-gradient(top, #bababa, #bababa);
+  background-image: linear-gradient(to bottom, #bababa, #bababa);
 }
 .km-flat .km-switch-handle {
   background: #f4f4f4;

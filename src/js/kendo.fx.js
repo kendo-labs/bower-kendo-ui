@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         fx = kendo.effects,
@@ -60,7 +64,6 @@
         PERSPECTIVE = cssPrefix + "perspective",
         DEFAULT_PERSPECTIVE = "1500px",
         TRANSFORM_PERSPECTIVE = "perspective(" + DEFAULT_PERSPECTIVE + ")",
-        ios7 = support.mobileOS && support.mobileOS.majorVersion == 7,
         directions = {
             left: {
                 reverse: "right",
@@ -1584,6 +1587,10 @@
         return Math.max(inner.width / outer.width, inner.height / outer.height);
     };
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

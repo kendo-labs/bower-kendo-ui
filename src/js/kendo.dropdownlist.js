@@ -17,6 +17,10 @@
     define([ "./kendo.list", "./kendo.mobile.scroller" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -34,7 +38,6 @@
         STATEDISABLED = "k-state-disabled",
         ARIA_DISABLED = "aria-disabled",
         ARIA_READONLY = "aria-readonly",
-        SELECTED = "k-state-selected",
         HOVEREVENTS = "mouseenter" + ns + " mouseleave" + ns,
         TABINDEX = "tabindex",
         STATE_FILTER = "filter",
@@ -119,6 +122,8 @@
             if (disabled) {
                 that.enable(false);
             }
+
+            that.listView.bind("click", function(e) { e.preventDefault(); });
 
             kendo.notify(that);
         },
@@ -220,7 +225,7 @@
             this._focusElement(this.filterInput);
         },
 
-        _allowOpening: function(length) {
+        _allowOpening: function() {
             return this.optionLabel[0] || this.filterInput || this.dataSource.view().length;
         },
 
@@ -402,7 +407,6 @@
             var initialIndex = that._initialIndex;
             var optionLabel = that.options.optionLabel;
             var filtered = that._state === STATE_FILTER;
-            var element = that.element[0];
 
             var data = that.dataSource.flatView();
             var length = data.length;
@@ -583,7 +587,6 @@
             var that = this;
             var key = e.keyCode;
             var altKey = e.altKey;
-            var ul = that.ul[0];
             var isInputActive;
             var handled;
 
@@ -886,21 +889,21 @@
             if (this.optionLabel[0]) {
                 this._focus(this.optionLabel);
             } else {
-                this.listView.first();
+                this.listView.focusFirst();
             }
         },
 
         _lastItem: function() {
             this.optionLabel.removeClass("k-state-focused");
-            this.listView.last();
+            this.listView.focusLast();
         },
 
         _nextItem: function() {
             if (this.optionLabel.hasClass("k-state-focused")) {
                 this.optionLabel.removeClass("k-state-focused");
-                this.listView.first();
+                this.listView.focusFirst();
             } else {
-                this.listView.next();
+                this.listView.focusNext();
             }
         },
 
@@ -909,7 +912,7 @@
                 return;
             }
 
-            this.listView.prev();
+            this.listView.focusPrev();
             if (!this.listView.focus()) {
                 this.optionLabel.addClass("k-state-focused");
             }
@@ -966,7 +969,6 @@
 
         _select: function(candidate, keepState) {
             var that = this;
-            var optionLabel = that.optionLabel;
 
             candidate = that._get(candidate);
 
@@ -1221,6 +1223,10 @@
 
     ui.plugin(DropDownList);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

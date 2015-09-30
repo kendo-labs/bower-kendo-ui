@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 /*jshint  eqnull: true, boss: true */
 (function($, undefined) {
     var kendo = window.kendo,
@@ -267,6 +271,10 @@
         }
     });
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

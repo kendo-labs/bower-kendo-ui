@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -1094,6 +1098,10 @@
     kendo.ui.plugin(PanelBar);
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

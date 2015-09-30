@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function ($, undefined) {
     var proxy = $.proxy;
     var NS = ".kendoResponsivePanel";
@@ -153,6 +157,10 @@
 
     kendo.ui.plugin(ResponsivePanel);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

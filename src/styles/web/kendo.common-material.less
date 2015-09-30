@@ -26,7 +26,11 @@
 
 @import "common/all.less";
 
-.k-button {
+@spreadsheet-first-tool-offset: 0;
+@spreadsheet-popup-button-padding: .6em 1.2em .6em 1em;
+
+.k-button,
+.k-toolbar .k-button {
     line-height: 1.143em;
     padding: 9px 14px;
 }
@@ -251,7 +255,7 @@
 
 .k-pager-wrap .k-pager-numbers .k-state-selected {
     margin-top: -.4em;
-    padding-top: .4em;
+    padding-top: .35em;
     min-width: 2.429em;
 }
 
@@ -413,6 +417,7 @@
 
 .k-popup.k-calendar-container {
  	padding: 0;
+    border: 0;
 }
 
 .k-multiselect-wrap .k-input {
@@ -489,6 +494,19 @@ table.k-editor {
 	padding-left: 10px;
 }
 
+.k-toolbar {
+    line-height: 3.42em;
+}
+
+.k-toolbar .k-button-group {
+    line-height: 3.286em;
+}
+
+.k-toolbar .k-button-group .k-button {
+    line-height: inherit;
+    padding: 0 .857em;
+}
+
 .k-toolbar .k-input {
     height: @input-height;
     line-height: @input-height;
@@ -499,18 +517,38 @@ table.k-editor {
 }
 
 .k-toolbar .k-overflow-anchor {
-    border-width: 1px;    
-    line-height: inherit;
+    border-width: 0;    
+    line-height: 3.286em;
+    width: 3.42em;
+    height: 3.42em;
+    padding: 0;
 }
 
 .k-button-group .k-tool {
-	margin: 6px 0;
+    margin: 6px 0;
+}
+
+.k-toolbar .k-split-button-arrow {
+    padding-left: .4em;
+    padding-right: .4em;
 }
 
 .k-editor-toolbar .k-button-group .k-tool-icon,
 .k-toolbar .k-button-group .k-tool-icon {
     width: 24px;
     height: 24px;
+}
+
+.k-editor-toolbar li.k-tool-group,
+.k-editor-toolbar li.k-overflow-tools {
+    padding: 0;
+}
+
+.k-editor-toolbar .k-button-group .k-tool {
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    margin: 0;
 }
 
 .k-editor-toolbar .k-tool,
@@ -520,10 +558,6 @@ table.k-editor {
 
 .k-editor-toolbar .k-state-selected {
     font-weight: bold;  
-}
-
-.k-editor-toolbar .k-tool.k-state-hover {
-    border-radius: 50%;
 }
 
 .k-filebrowser {
@@ -784,10 +818,23 @@ div.editorToolbarWindow.k-window-content {
 }
 
 .k-gantt-toolbar li .k-link,
-.k-scheduler-toolbar li .k-link {
+.k-scheduler-toolbar li .k-link,
+.k-gantt-toggle {
     vertical-align: middle;
-    line-height: 44px;
-    padding-top: 2px;
+    line-height: 46px;
+}
+
+.k-gantt-toggle {
+    padding: 0
+}
+
+.k-gantt-actions {
+    vertical-align: middle;
+    line-height: 48px;
+}
+
+.k-gantt-actions > .k-button {
+    vertical-align: middle;
 }
 
 .k-gantt-toolbar,
@@ -801,9 +848,23 @@ div.editorToolbarWindow.k-window-content {
     padding: 0;
 }
 
+.k-popup-edit-form .k-primary {
+    float: right;
+}
+
+.k-popup-edit-form:after {
+    content: " ";
+    display: block; 
+    clear: both;
+}
+
 .k-gantt-toolbar,
 .k-scheduler-toolbar {
     padding: 0 1.286em;
+}
+
+.k-scheduler-navigation {
+    margin-left: -.786em;
 }
 
 .k-drag-clue {
@@ -880,13 +941,15 @@ div.editorToolbarWindow.k-window-content {
 }
 
 .k-calendar .k-icon.k-i-arrow-w,
-.k-calendar .k-state-hover .k-icon.k-i-arrow-w {
+.k-calendar .k-state-hover .k-icon.k-i-arrow-w,
+.k-calendar .k-link:not(.k-state-disabled):hover > .k-i-arrow-w {
      background-position: -16px -48px;
      opacity: 1;
 }
 
 .k-calendar .k-icon.k-i-arrow-e,
-.k-calendar .k-state-hover .k-icon.k-i-arrow-e {
+.k-calendar .k-state-hover .k-icon.k-i-arrow-e,
+.k-calendar .k-link:not(.k-state-disabled):hover > .k-i-arrow-e {
      background-position: -16px -16px;
      opacity: 1;
 }
@@ -1075,8 +1138,9 @@ div.editorToolbarWindow.k-window-content {
         background-position: 0 0;
     }
 
-    .k-si-close {
-        //background-position: -176px -80px;
+    .k-i-gantt-toggle,
+    .k-button:not(.k-state-disabled):hover .k-i-gantt-toggle {
+        background-position: -80px -240px;
     }
 }
 

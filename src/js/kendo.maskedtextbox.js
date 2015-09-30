@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo;
     var caret = kendo.caret;
@@ -156,7 +160,6 @@
         value: function(value) {
             var element = this.element;
             var emptyMask = this._emptyMask;
-            var options = this.options;
 
             if (value === undefined) {
                 return this.element.val();
@@ -570,6 +573,10 @@
     ui.plugin(MaskedTextBox);
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

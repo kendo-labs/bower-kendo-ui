@@ -17,6 +17,10 @@
     define([ "./kendo.data", "./kendo.editable", "./kendo.selectable" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         CHANGE = "change",
@@ -31,7 +35,6 @@
         FOCUSED = "k-state-focused",
         SELECTED = "k-state-selected",
         KEDITITEM = "k-edit-item",
-        STRING = "string",
         EDIT = "edit",
         REMOVE = "remove",
         SAVE = "save",
@@ -616,6 +619,7 @@
 
        add: function() {
            var that = this,
+               dataItem,
                dataSource = that.dataSource,
                index = dataSource.indexOf((dataSource.view() || [])[0]);
 
@@ -624,8 +628,8 @@
            }
 
            that.cancel();
-           dataSource.insert(index, {});
-           that.edit(that.element.children().first());
+           dataItem = dataSource.insert(index, {});
+           that.edit(that.element.find("[data-uid='" + dataItem.uid + "']"));
        },
 
        cancel: function() {
@@ -691,6 +695,10 @@
 
     kendo.ui.plugin(ListView);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

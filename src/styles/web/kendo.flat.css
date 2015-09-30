@@ -68,6 +68,24 @@
 .ktb-var-info {
   color: #0c779b;
 }
+.ktb-var-series-a {
+  color: #10c4b2;
+}
+.ktb-var-series-b {
+  color: #ff7663;
+}
+.ktb-var-series-c {
+  color: #ffb74f;
+}
+.ktb-var-series-d {
+  color: #a2df53;
+}
+.ktb-var-series-e {
+  color: #1c9ec4;
+}
+.ktb-var-series-f {
+  color: #ff63a5;
+}
 .k-grid-norecords-template {
   background-color: #ffffff;
   border: 1px solid #cccccc;
@@ -217,7 +235,8 @@ textarea.k-textbox:hover,
 .k-dropdown .k-input {
   color: #4c5356;
 }
-.k-inverse {
+.k-inverse,
+.k-toolbar label {
   color: #ffffff;
 }
 .k-block {
@@ -307,7 +326,8 @@ html .km-pane-wrapper .k-header {
 .k-grid-mobile .k-resize-handle-inner:before,
 .k-grid-mobile .k-resize-handle-inner:after,
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after {
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after {
   background-image: url('Flat/sprite.png');
   border-color: transparent;
 }
@@ -398,6 +418,8 @@ html .km-pane-wrapper .k-header {
 }
 .k-event.k-state-selected {
   background-position: 0 0;
+  -webkit-box-shadow: 0 0 0 2px #4c5356;
+          box-shadow: 0 0 0 2px #4c5356;
 }
 .k-ie7 .k-event .k-resize-handle,
 .k-event .k-resize-handle:after,
@@ -408,6 +430,10 @@ html .km-pane-wrapper .k-header {
 .k-scheduler-marquee:before,
 .k-scheduler-marquee:after {
   border-color: #10c4b2;
+}
+.k-scheduler-toolbar > ul > li,
+.k-scheduler-footer .k-scheduler-fullday {
+  border-color: #606572;
 }
 .k-panelbar .k-content,
 .k-panelbar .k-panel,
@@ -2077,4 +2103,246 @@ html .km-pane-wrapper .km-widget,
   .k-map .k-marker {
     background-image: url("Flat/markers_2x.png");
   }
+}
+.k-spreadsheet-top-corner,
+.k-spreadsheet-row-header td,
+.k-spreadsheet-column-header td {
+  background-color: #363940;
+  background-image: none;
+  color: #ffffff;
+  border-color: #606572;
+}
+.k-spreadsheet-top-corner {
+  border-color: #606572;
+}
+.k-spreadsheet-top-corner:after {
+  border-color: transparent #606572 #606572 transparent;
+}
+.k-spreadsheet-pane {
+  border-color: #070809;
+}
+.k-spreadsheet-pane td {
+  border-color: #e6e6e6;
+}
+.k-spreadsheet-pane .k-spreadsheet-column-header td,
+.k-spreadsheet-pane .k-spreadsheet-row-header td {
+  border-color: #606572;
+}
+.k-spreadsheet-pane .k-spreadsheet-merged-cell {
+  background-color: #ffffff;
+}
+.k-spreadsheet-pane .k-selection-partial,
+.k-spreadsheet-pane .k-selection-full {
+  border-color: rgba(16, 196, 178, 0.2);
+  background-color: rgba(16, 196, 178, 0.2);
+}
+.k-spreadsheet-column-header .k-selection-partial,
+.k-spreadsheet-column-header .k-selection-full {
+  border-bottom-color: #10c4b2;
+}
+.k-spreadsheet-row-header .k-selection-partial,
+.k-spreadsheet-row-header .k-selection-full {
+  border-right-color: #10c4b2;
+}
+.k-spreadsheet-pane .k-selection-partial {
+  background-color: rgba(16, 196, 178, 0.2);
+}
+.k-spreadsheet-selection {
+  background-color: rgba(16, 196, 178, 0.2);
+  border-color: #10c4b2;
+}
+.k-spreadsheet-cell-editor {
+  -webkit-box-shadow: inset 0 0 0 2px #10c4b2;
+          box-shadow: inset 0 0 0 2px #10c4b2;
+}
+.k-spreadsheet-active-cell {
+  -webkit-box-shadow: inset 0 0 0 1px #10c4b2;
+          box-shadow: inset 0 0 0 1px #10c4b2;
+  border-color: #10c4b2;
+}
+.k-spreadsheet-active-cell td {
+  background-color: #ffffff;
+  border-color: #10c4b2;
+  -webkit-box-shadow: inset 1px 1px 0 1px #10c4b2, inset 0 0 0 1px #10c4b2;
+          box-shadow: inset 1px 1px 0 1px #10c4b2, inset 0 0 0 1px #10c4b2;
+}
+.k-spreadsheet-active-cell.k-right td {
+  -webkit-box-shadow: inset 1px 1px 0 1px #10c4b2, inset -2px 0 0 1px #10c4b2;
+          box-shadow: inset 1px 1px 0 1px #10c4b2, inset -2px 0 0 1px #10c4b2;
+}
+.k-spreadsheet-active-cell.k-bottom td {
+  -webkit-box-shadow: inset 1px 1px 0 1px #10c4b2, inset 0 -2px 0 1px #10c4b2;
+          box-shadow: inset 1px 1px 0 1px #10c4b2, inset 0 -2px 0 1px #10c4b2;
+}
+.k-spreadsheet-active-cell.k-right.k-bottom td {
+  -webkit-box-shadow: inset 1px 1px 0 1px #10c4b2, inset -2px -2px 0 1px #10c4b2;
+          box-shadow: inset 1px 1px 0 1px #10c4b2, inset -2px -2px 0 1px #10c4b2;
+}
+.k-ff .k-spreadsheet-active-cell td {
+  -webkit-box-shadow: inset 0 0 0 1px #10c4b2;
+          box-shadow: inset 0 0 0 1px #10c4b2;
+}
+.k-spreadsheet-active-cell.k-single {
+  background-color: #fff;
+}
+.k-spreadsheet > .k-spreadsheet-formula-bar {
+  background-color: #ffffff;
+  border-color: #363940 #363940 #606572;
+}
+.k-spreadsheet > .k-spreadsheet-formula-bar:before {
+  border-color: #606572;
+}
+.k-spreadsheet > .k-spreadsheet-formula-bar:after {
+  border-color: #363940;
+}
+.k-spreadsheet .k-spreadsheet-formula-input {
+  background-color: #ffffff;
+  color: #4c5356;
+}
+.k-spreadsheet .k-resize-handle,
+.k-spreadsheet .k-resize-hint-handle,
+.k-spreadsheet .k-resize-hint-marker {
+  background-color: #10c4b2;
+}
+.k-spreadsheet .k-resize-hint-vertical .k-resize-hint-handle,
+.k-spreadsheet .k-resize-hint-vertical .k-resize-hint-marker {
+  background-color: #10c4b2;
+}
+.k-spreadsheet-format-cells .k-spreadsheet-preview {
+  border-color: #cccccc;
+}
+.k-spreadsheet-filter {
+  border-radius: 3px;
+  background-color: #ffffff;
+  -webkit-box-shadow: inset 0 0 0 1px #e6e6e6;
+          box-shadow: inset 0 0 0 1px #e6e6e6;
+}
+.k-spreadsheet-filter.k-state-active {
+  color: #ffffff;
+  background-color: #10c4b2;
+}
+.k-spreadsheet-filter:hover {
+  color: #ffffff;
+  background: #2eb3a6;
+  border-color: #269388;
+}
+.k-action-window .k-action-buttons {
+  border-color: #cccccc;
+}
+.k-spreadsheet-sample {
+  color: #97a0a4;
+}
+.k-state-selected .k-spreadsheet-sample {
+  color: inherit;
+}
+.k-spreadsheet-window .k-list-wrapper,
+.k-spreadsheet-window .k-list {
+  border-color: #cccccc;
+  border-radius: 3px;
+}
+.k-spreadsheet-toolbar.k-toolbar .k-button-group .k-button {
+  border-radius: 3px;
+}
+.k-spreadsheet-toolbar > .k-widget,
+.k-spreadsheet-toolbar > .k-button,
+.k-spreadsheet-toolbar > .k-button-group {
+  border-radius: 3px;
+}
+.k-spreadsheet-toolbar > .k-separator {
+  border-color: #cccccc;
+}
+.k-spreadsheet-toolbar .k-overflow-anchor {
+  border-radius: 0;
+}
+.k-spreadsheet-popup {
+  border-radius: 3px;
+}
+.k-spreadsheet-popup .k-separator {
+  background-color: #cccccc;
+}
+.k-spreadsheet-popup .k-button {
+  background-color: transparent;
+}
+.k-spreadsheet-popup .k-button:hover {
+  background-color: #2eb3a6;
+}
+.k-spreadsheet-popup .k-state-active {
+  background-color: #10c4b2;
+  color: #000000;
+}
+.k-spreadsheet-popup .k-state-active:hover {
+  background-color: #0c9587;
+}
+.k-spreadsheet-filter-menu .k-details {
+  border-color: #cccccc;
+}
+.k-spreadsheet-filter-menu .k-details-content .k-space-right {
+  background-color: #ffffff;
+}
+.k-spreadsheet-filter-menu .k-spreadsheet-value-treeview-wrapper {
+  background-color: #ffffff;
+  border-color: #cccccc;
+  border-radius: 3px 0 0 3px;
+}
+.k-syntax-ref {
+  color: #ff8822;
+}
+.k-syntax-num {
+  color: #0099ff;
+}
+.k-syntax-func {
+  font-weight: bold;
+}
+.k-syntax-str {
+  color: #38b714;
+}
+.k-syntax-error {
+  color: red;
+}
+.k-syntax-bool {
+  color: #a9169c;
+}
+.k-syntax-startexp {
+  font-weight: bold;
+}
+.k-syntax-paren-match {
+  background-color: #caf200;
+}
+.k-series-a {
+  border-color: #10c4b2;
+  background-color: rgba(16, 196, 178, 0.15);
+}
+.k-series-b {
+  border-color: #ff7663;
+  background-color: rgba(255, 118, 99, 0.15);
+}
+.k-series-c {
+  border-color: #ffb74f;
+  background-color: rgba(255, 183, 79, 0.15);
+}
+.k-series-d {
+  border-color: #a2df53;
+  background-color: rgba(162, 223, 83, 0.15);
+}
+.k-series-e {
+  border-color: #1c9ec4;
+  background-color: rgba(28, 158, 196, 0.15);
+}
+.k-series-f {
+  border-color: #ff63a5;
+  background-color: rgba(255, 99, 165, 0.15);
+}
+.k-spreadsheet-sheets-remove:hover .k-icon {
+  color: #cc2222;
+}
+.k-spreadsheet-formula-list .k-state-focused {
+  background-color: #10c4b2;
+  color: #ffffff;
+}
+.k-spreadsheet-pane .k-spreadsheet-column-header td.k-selection-partial,
+.k-spreadsheet-pane .k-spreadsheet-row-header td.k-selection-partial,
+.k-spreadsheet-pane .k-spreadsheet-column-header td.k-selection-full,
+.k-spreadsheet-pane .k-spreadsheet-row-header td.k-selection-full {
+  background-color: #10c4b2;
+  border-color: #0d9a8b;
 }

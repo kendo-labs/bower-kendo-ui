@@ -17,6 +17,10 @@
     define([ "./kendo.data" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($) {
     var transport = kendo.data.RemoteTransport.extend({
         init: function (options) {
@@ -113,6 +117,10 @@
     });
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

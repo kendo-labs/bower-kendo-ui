@@ -17,12 +17,15 @@
     define([ "./kendo.popup" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.mobile.ui,
         Popup = kendo.ui.Popup,
         SHIM = '<div class="km-shim"/>',
-        SHOW = "show",
         HIDE = "hide",
         Widget = ui.Widget;
 
@@ -133,6 +136,10 @@
 
     ui.plugin(Shim);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

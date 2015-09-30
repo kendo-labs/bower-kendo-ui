@@ -17,6 +17,10 @@
     define([ "./kendo.core", "./kendo.userevents" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
@@ -162,6 +166,10 @@
 
     kendo.ui.plugin(Touch);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

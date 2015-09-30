@@ -17,6 +17,10 @@
     define([ "./kendo.core", "./kendo.color", "./kendo.popup", "./kendo.slider", "./kendo.userevents" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, parseInt, undefined){
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
@@ -900,6 +904,10 @@
     ui.plugin(ColorPicker);
 
 })(jQuery, parseInt);
+
+
+
+})();
 
 return window.kendo;
 

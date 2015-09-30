@@ -336,7 +336,7 @@ if (kendo.ui.NumericTextBox) {
 kendo.ui.NumericTextBox.prototype.options =
 $.extend(true, kendo.ui.NumericTextBox.prototype.options,{
   "upArrowText": "Increase value",
-  "downArrowText": "Decreate value"
+  "downArrowText": "Decrease value"
 });
 }
 
@@ -345,6 +345,7 @@ $.extend(true, kendo.ui.NumericTextBox.prototype.options,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "All",
   "display": "{0} - {1} of {2} items",
   "empty": "No items to display",
   "page": "Page",

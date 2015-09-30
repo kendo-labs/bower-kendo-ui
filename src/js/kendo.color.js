@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+    
+
 (function ($, parseFloat, parseInt) {
     var Color = function(value) {
         var color = this,
@@ -401,6 +405,8 @@
     kendo.parseColor = parseColor;
 
 })(window.kendo.jQuery, parseFloat, parseInt);
+
+})();
 
 return window.kendo;
 

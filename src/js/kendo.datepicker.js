@@ -17,6 +17,10 @@
     define([ "./kendo.calendar", "./kendo.popup" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
     ui = kendo.ui,
@@ -32,7 +36,6 @@
     OPEN = "open",
     CLOSE = "close",
     CHANGE = "change",
-    DATEVIEW = "dateView",
     DISABLED = "disabled",
     READONLY = "readonly",
     DEFAULT = "k-state-default",
@@ -40,7 +43,6 @@
     SELECTED = "k-state-selected",
     STATEDISABLED = "k-state-disabled",
     HOVER = "k-state-hover",
-    KEYDOWN = "keydown" + ns,
     HOVEREVENTS = "mouseenter" + ns + " mouseleave" + ns,
     MOUSEDOWN = "mousedown" + ns,
     ID = "id",
@@ -691,6 +693,10 @@
     ui.plugin(DatePicker);
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

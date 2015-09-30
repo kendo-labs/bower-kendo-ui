@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function ($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -81,7 +85,7 @@
 
         setOptions: function(options) {
             var that = this;
-            
+
             Widget.fn.setOptions.call(that, options);
 
             if (options.hasOwnProperty("reverse")) {
@@ -386,7 +390,7 @@
             var html = "";
 
             if (options.chunkCount <= 1) {
-                options.chunkCount = DEFAULTCHUNKCOUNT;
+                options.chunkCount = 1;
             }
 
             html += "<ul class='k-reset'>";
@@ -463,6 +467,10 @@
 
     kendo.ui.plugin(ProgressBar);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

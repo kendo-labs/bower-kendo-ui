@@ -49,7 +49,9 @@ exports.afterTestFiles = [
     { pattern: 'src/kendo.aspnetmvc.js', included: false },
 
     'tests/diagram/common.js',
-    'demos/mvc/content/shared/js/kendo-dojo.js'
+    'demos/mvc/content/shared/js/kendo-dojo.js',
+
+    'src/kendo.webcomponents.js'
 ];
 
 exports.ciFiles = [ 'dist/js/kendo.all.min.js', 'dist/js/kendo.aspnetmvc.min.js'  ];

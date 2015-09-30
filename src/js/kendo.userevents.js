@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function ($, undefined) {
     var kendo = window.kendo,
         support = kendo.support,
@@ -592,6 +596,10 @@
     kendo.touchDelta = touchDelta;
     kendo.UserEvents = UserEvents;
  })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

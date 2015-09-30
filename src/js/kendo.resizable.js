@@ -17,6 +17,10 @@
     define([ "./kendo.core", "./kendo.draganddrop" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -197,6 +201,10 @@
     kendo.ui.plugin(Resizable);
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

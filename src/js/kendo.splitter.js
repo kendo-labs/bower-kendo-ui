@@ -17,6 +17,10 @@
     define([ "./kendo.resizable" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function ($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -747,6 +751,10 @@
     };
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

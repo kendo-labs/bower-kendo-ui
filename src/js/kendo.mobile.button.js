@@ -17,6 +17,10 @@
     define([ "./kendo.userevents" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         mobile = kendo.mobile,
@@ -268,6 +272,10 @@
     ui.plugin(BackButton);
     ui.plugin(DetailButton);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

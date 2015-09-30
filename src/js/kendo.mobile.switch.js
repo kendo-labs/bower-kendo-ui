@@ -17,6 +17,10 @@
     define([ "./kendo.fx", "./kendo.userevents" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.mobile.ui,
@@ -254,6 +258,10 @@
 
     ui.plugin(Switch);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

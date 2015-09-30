@@ -17,6 +17,10 @@
     define([ "./kendo.core", "./kendo.binder", "./kendo.fx" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         Observable = kendo.Observable,
@@ -75,7 +79,7 @@
             return that.element;
         },
 
-        clone: function(back) {
+        clone: function() {
             return new ViewClone(this);
         },
 
@@ -379,6 +383,10 @@
     kendo.ViewClone = ViewClone;
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

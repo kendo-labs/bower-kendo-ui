@@ -17,6 +17,10 @@
     define([ "./kendo.mobile.view", "./kendo.userevents" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         mobile = kendo.mobile,
@@ -87,7 +91,7 @@
             };
 
             if (this.options.swipeToOpen && SWIPE_TO_OPEN) {
-                userEvents.bind("press", function(e) { drawer.transition.cancel(); });
+                userEvents.bind("press", function() { drawer.transition.cancel(); });
                 userEvents.bind("start", function(e) { drawer._start(e); });
                 userEvents.bind("move", function(e) { drawer._update(e); });
                 userEvents.bind("end", function(e) { drawer._end(e); });
@@ -325,6 +329,10 @@
 
     ui.plugin(Drawer);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

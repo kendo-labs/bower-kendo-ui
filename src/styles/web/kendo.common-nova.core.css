@@ -1343,6 +1343,17 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:active .k-i-more {
   background-position: -64px -32px;
 }
+.k-i-gantt-toggle {
+  background-position: -64px -240px;
+}
+.k-link:not(.k-state-disabled):hover > .k-i-gantt-toggle,
+.k-state-hover > .k-i-gantt-toggle,
+.k-state-hover > * > .k-i-gantt-toggle,
+.k-button:not(.k-state-disabled):hover .k-i-gantt-toggle,
+.k-textbox:hover .k-i-gantt-toggle,
+.k-button:active .k-i-gantt-toggle {
+  background-position: -64px -240px;
+}
 .k-file > .k-icon {
   background-position: -115px -91px;
 }
@@ -1357,21 +1368,28 @@ html body .k-button-bare.k-upload-button:hover {
 }
 /* Dropdown icon in k-scheduler-views */
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after {
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after {
   background-position: 0px -32px;
 }
 .k-link:not(.k-state-disabled):hover > .k-pager-numbers .k-current-page .k-link:after,
 .k-link:not(.k-state-disabled):hover > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-link:not(.k-state-disabled):hover > .k-gantt-views > .k-current-view > .k-link:after,
 .k-state-hover > .k-pager-numbers .k-current-page .k-link:after,
 .k-state-hover > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-state-hover > .k-gantt-views > .k-current-view > .k-link:after,
 .k-state-hover > * > .k-pager-numbers .k-current-page .k-link:after,
 .k-state-hover > * > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-state-hover > * > .k-gantt-views > .k-current-view > .k-link:after,
 .k-button:not(.k-state-disabled):hover .k-pager-numbers .k-current-page .k-link:after,
 .k-button:not(.k-state-disabled):hover .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-button:not(.k-state-disabled):hover .k-gantt-views > .k-current-view > .k-link:after,
 .k-textbox:hover .k-pager-numbers .k-current-page .k-link:after,
 .k-textbox:hover .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-textbox:hover .k-gantt-views > .k-current-view > .k-link:after,
 .k-button:active .k-pager-numbers .k-current-page .k-link:after,
-.k-button:active .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after {
+.k-button:active .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-button:active .k-gantt-views > .k-current-view > .k-link:after {
   background-position: 0px -32px;
 }
 /* Colors */
@@ -1667,6 +1685,13 @@ input.k-checkbox + label {
   left: -15000px;
   width: 14400px;
 }
+.km-native-scroller {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-touch-action: pan-x pan-y;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  -ms-scroll-snap-type: proximity;
+}
 /* responsive panel */
 .k-rpanel-left {
   -webkit-transform: translateX(-100%) translateZ(0);
@@ -1927,6 +1952,21 @@ div.k-window-iframecontent {
   background-color: #fff;
   filter: alpha(opacity=0);
   opacity: 0;
+}
+.k-action-buttons {
+  clear: both;
+  text-align: right;
+  border-width: 1px 0 0;
+  border-style: solid;
+  position: relative;
+  bottom: -1em;
+  padding: .6em;
+  margin: 0 -1em;
+}
+.k-action-buttons .k-button {
+  display: inline-block;
+  margin: 0 0 0 6px;
+  min-width: 75px;
 }
 /* TabStrip */
 .k-tabstrip {
@@ -3012,12 +3052,19 @@ span.k-numerictextbox {
   overflow: hidden;
   -ms-high-contrast-adjust: none;
 }
-.k-colorpalette .k-item.k-state-selected {
+.k-colorpalette .k-item.k-state-selected,
+.k-colorpalette .k-item.k-state-selected:hover {
   z-index: 100;
   background: transparent;
-  -webkit-box-shadow: 0 1px 4px #000, inset 0 0 3px #fff;
-          box-shadow: 0 1px 4px #000, inset 0 0 3px #fff;
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.45);
   position: relative;
+}
+.k-colorpalette .k-item:hover {
+  z-index: 101;
+  position: relative;
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 .k-flatcolorpicker {
   position: relative;
@@ -4876,7 +4923,7 @@ span.k-tooltip {
 }
 .k-grid-header th.k-header,
 .k-filter-row th {
-  padding: .429em .6em .571em .6em;
+  padding: .786em .6em .786em 1.286em;
 }
 .k-filtercell > span {
   padding-right: 5.714em;
@@ -4884,12 +4931,37 @@ span.k-tooltip {
 .k-filtercell > span > .k-button {
   padding-left: .714em;
   padding-right: .714em;
-  line-height: 1.286em;
+  line-height: 1em;
   margin: 0;
+}
+.k-filtercell .k-numerictextbox {
+  margin-right: 8px;
 }
 .k-filter-row .k-dropdown-operator {
   width: 2.714em;
   right: 2.857em;
+}
+.k-filter-menu > div > div:last-child {
+  margin: 1em -0.5em -1.643em;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+.k-filter-menu .k-button {
+  margin: 0;
+  width: 50%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.k-edit-form-container .k-button {
+  margin: 0;
+  padding: 10px 11px;
+}
+.k-edit-form-container .k-primary {
+  margin-right: 11px;
+}
+.k-filter-menu .k-primary,
+.k-edit-form-container .k-primary {
+  float: right;
 }
 .k-grouping-header .k-group-indicator {
   padding: .5em .15em .429em .4em;
@@ -4955,7 +5027,7 @@ span.k-tooltip {
 }
 .k-pager-wrap .k-pager-numbers .k-state-selected {
   margin-top: -0.4em;
-  padding-top: .4em;
+  padding-top: .35em;
   min-width: 2.429em;
 }
 .k-pager-wrap input.k-textbox {
@@ -5195,6 +5267,27 @@ table.k-editor {
   width: 24px;
   height: 24px;
 }
+.k-editor-toolbar > li {
+  margin-right: 0;
+}
+.k-editor-toolbar .k-button-group .k-tool {
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  margin: 0;
+  text-align: center;
+}
+.k-editor-toolbar li.k-tool-group,
+.k-editor-toolbar li.k-overflow-tools {
+  padding: 0;
+}
+.k-editor-toolbar .k-tool-group:first-child {
+  border-right: 0;
+}
+.k-editor-toolbar li.k-tool-group:only-of-type {
+  padding-top: 5px;
+  padding-bottom: 6px;
+}
 .k-editor-toolbar .k-tool,
 .k-editor-toolbar .k-button-group .k-tool.k-group-end {
   border-width: 0;
@@ -5202,8 +5295,12 @@ table.k-editor {
 .k-editor-toolbar .k-state-selected {
   font-weight: bold;
 }
-.k-editor-toolbar .k-tool.k-state-hover {
-  border-radius: 50%;
+.k-editor-toolbar .k-tool,
+.k-editor-toolbar .k-button-group .k-tool.k-group-end {
+  border-width: 0;
+}
+.k-editor-toolbar .k-state-selected {
+  font-weight: bold;
 }
 .k-filebrowser .k-filebrowser-toolbar {
   line-height: 3.5em;
@@ -5235,7 +5332,15 @@ span.k-tooltip {
 }
 .k-block > .k-header,
 .k-window-titlebar {
-  padding: 0.5em 0 0.571em;
+  padding: 0.49em 0;
+  height: 2.362em;
+  border-width: 0;
+}
+.k-widget.k-tooltip-validation {
+  padding: 11px 20px 9px;
+}
+.k-tooltip-validation .k-warning {
+  margin-right: 10px;
 }
 .k-window-titlebar .k-window-actions {
   right: 0.929em;
@@ -5393,10 +5498,20 @@ div.editorToolbarWindow.k-window-content {
   border-width: 0 0 2px 0;
 }
 .k-gantt-toolbar li .k-link,
-.k-scheduler-toolbar li .k-link {
+.k-scheduler-toolbar li .k-link,
+.k-gantt-toggle {
   vertical-align: middle;
-  line-height: 44px;
-  padding-top: 2px;
+  line-height: 46px;
+}
+.k-gantt-toggle {
+  padding: 0;
+}
+.k-gantt-actions {
+  vertical-align: middle;
+  line-height: 48px;
+}
+.k-gantt-actions > .k-button {
+  vertical-align: middle;
 }
 .k-gantt-toolbar,
 .k-scheduler-toolbar,
@@ -5530,8 +5645,8 @@ div.editorToolbarWindow.k-window-content {
 }
 .k-grid-header .k-grid-filter,
 .k-grid-header .k-header-column-menu {
-  padding: .357em .6em .5em .6em;
-  margin: 0 0 -0.4em -0.6em;
+  padding: .714em;
+  margin: -0.786em -0.6em;
 }
 .k-grid-header .k-header-column-menu .k-i-arrowhead-s {
   background-position: -64px -32px;
@@ -5602,6 +5717,10 @@ div.editorToolbarWindow.k-window-content {
 }
 .k-gantt .k-i-expand {
   background-position: 0 0;
+}
+.k-gantt .k-i-gantt-toggle,
+.k-gantt .k-button:not(.k-state-disabled):hover .k-i-gantt-toggle {
+  background-position: -80px -240px;
 }
 .k-i-arrowhead-s {
   background-position: 0 -288px;

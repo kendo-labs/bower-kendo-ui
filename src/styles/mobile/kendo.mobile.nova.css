@@ -384,6 +384,12 @@ kendo-mobile-drawer {
 .km-stretched-view > * {
   width: 100%;
 }
+.km-stretched-view > .km-pane-wrapper {
+  position: static;
+}
+.km-stretched-view > .km-pane-wrapper > .km-pane {
+  position: static;
+}
 .km-overlay {
   position: absolute;
   top: 0;
@@ -4226,9 +4232,9 @@ body:before {
 .km-nova .km-badge,
 .km-nova .km-detail {
   border: 0;
-  min-width: 1.8em;
-  height: 1.8em;
-  line-height: 1.8em;
+  min-width: 1.812em;
+  height: 1.812em;
+  line-height: 2em;
   border-radius: 5em;
 }
 .km-nova .km-button-right {

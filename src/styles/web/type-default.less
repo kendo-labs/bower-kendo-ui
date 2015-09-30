@@ -485,7 +485,8 @@ html .km-pane-wrapper .k-header
 .k-grid-mobile .k-resize-handle-inner:before,
 .k-grid-mobile .k-resize-handle-inner:after,
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after
 {
     background-image: @sprite-image;
     border-color: transparent;
@@ -609,6 +610,7 @@ html .km-pane-wrapper .k-header
 .k-event.k-state-selected
 {
     background-position: 0 0;
+    .box-shadow(0 0 0 2px @normal-text-color);
 }
 
 .k-ie7 .k-event .k-resize-handle,
@@ -835,6 +837,12 @@ html .km-pane-wrapper .k-header
     background: @hover-border-color;
     color: @selected-text-color;
     border-bottom-left-radius: @inner-border-radius;
+}
+
+.k-popup .k-treeview .k-item > .k-group
+{
+    background: transparent;
+    color: @widget-text-color;
 }
 
 .k-marquee-text
@@ -1513,6 +1521,8 @@ div.k-filebrowser-dropzone em
 .k-slider-selection,
 .k-upload,
 .k-split-button
+.k-gantt-views,
+.k-gantt-views > .k-current-view
 {
     border-radius: @main-border-radius;
 }
@@ -1593,7 +1603,9 @@ div.k-filebrowser-dropzone em
 .k-multiselect.k-state-border-down,
 .k-dropdown-wrap.k-state-border-down,
 .k-picker-wrap.k-state-border-down,
-.k-numeric-wrap.k-state-border-down
+.k-numeric-wrap.k-state-border-down,
+.k-gantt-views.k-state-expanded,
+.k-gantt-views.k-state-expanded > .k-current-view
 {
     border-radius: @main-border-radius @main-border-radius 0 0;
 }
@@ -2598,3 +2610,33 @@ html .km-pane-wrapper .km-widget,
 .k-map .k-attribution {
     color: #666666;
 }
+
+@import "themes/spreadsheet.less";
+
+.k-spreadsheet {
+    .k-widget {
+        &[data-property='fontSize'] { width: 60px; }
+        &[data-property='format'] { width: 100px; }
+        &[data-property='fontFamily'] { width: 130px; }
+    }
+
+    .k-spreadsheet-sheets-remove {
+        margin: .5em .5em .5em -.5em;
+    }
+}
+
+.k-spreadsheet-toolbar .k-combobox {
+    .k-input {
+        color: @normal-text-color;
+    }
+
+    .k-state-hover,
+    .k-state-active,
+    .k-state-focused
+    {
+        .k-input {
+            color: @input-text-color;
+        }
+    }
+}
+

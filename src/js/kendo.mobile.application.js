@@ -17,6 +17,10 @@
     define([ "./kendo.mobile.pane", "./kendo.router" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         mobile = kendo.mobile,
@@ -503,6 +507,10 @@
     kendo.mobile.Application = Application;
     kendo.ui.plugin(Application, kendo.mobile, 'Mobile');
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

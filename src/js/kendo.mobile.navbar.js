@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         mobile = kendo.mobile,
@@ -82,6 +86,10 @@
 
     ui.plugin(NavBar);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

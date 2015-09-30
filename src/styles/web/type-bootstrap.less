@@ -508,7 +508,8 @@ html .km-pane-wrapper .k-header
 .k-grid-mobile .k-resize-handle-inner:before,
 .k-grid-mobile .k-resize-handle-inner:after,
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after
 {
     background-image: @sprite-image;
     border-color: transparent;
@@ -632,6 +633,7 @@ html .km-pane-wrapper .k-header
 .k-event.k-state-selected
 {
     background-position: 0 0;
+    .box-shadow(0 0 0 2px @normal-text-color);
 }
 
 .k-ie7 .k-event .k-resize-handle,
@@ -1549,6 +1551,20 @@ div.k-filebrowser-dropzone em
 .k-rtl .k-toolbar .k-split-button .k-split-button-arrow
 {
     border-radius: @main-border-radius 0 0 @main-border-radius;
+}
+
+.k-toolbar:not(.k-spreadsheet-toolbar) .k-button-group {
+    .k-button {
+        border-left-color: transparent;
+    }
+
+    .k-group-start {
+        border-left-color: @button-border-color;
+    }
+
+    .k-button:focus {
+        border-left-color: @button-focused-border-color;
+    }
 }
 
 .k-group-start.k-group-end.k-tool
@@ -3343,5 +3359,14 @@ td.k-state-focused.k-state-selected,
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
     .k-map .k-marker {
         background-image: url("@{image-folder}/markers_2x.png");
+    }
+}
+@import "themes/spreadsheet.less";
+
+.k-spreadsheet {
+    .k-widget {
+        &[data-property='fontSize'] { width: 70px; }
+        &[data-property='format'] { width: 100px; }
+        &[data-property='fontFamily'] { width: 130px; }
     }
 }

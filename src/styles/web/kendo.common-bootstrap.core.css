@@ -1339,6 +1339,17 @@ html body .k-button-bare.k-upload-button:hover {
 .k-button:active .k-i-more {
   background-position: -80px -32px;
 }
+.k-i-gantt-toggle {
+  background-position: -64px -240px;
+}
+.k-link:not(.k-state-disabled):hover > .k-i-gantt-toggle,
+.k-state-hover > .k-i-gantt-toggle,
+.k-state-hover > * > .k-i-gantt-toggle,
+.k-button:not(.k-state-disabled):hover .k-i-gantt-toggle,
+.k-textbox:hover .k-i-gantt-toggle,
+.k-button:active .k-i-gantt-toggle {
+  background-position: -80px -240px;
+}
 .k-file > .k-icon {
   background-position: -115px -91px;
 }
@@ -1353,21 +1364,28 @@ html body .k-button-bare.k-upload-button:hover {
 }
 /* Dropdown icon in k-scheduler-views */
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after {
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after {
   background-position: 0px -32px;
 }
 .k-link:not(.k-state-disabled):hover > .k-pager-numbers .k-current-page .k-link:after,
 .k-link:not(.k-state-disabled):hover > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-link:not(.k-state-disabled):hover > .k-gantt-views > .k-current-view > .k-link:after,
 .k-state-hover > .k-pager-numbers .k-current-page .k-link:after,
 .k-state-hover > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-state-hover > .k-gantt-views > .k-current-view > .k-link:after,
 .k-state-hover > * > .k-pager-numbers .k-current-page .k-link:after,
 .k-state-hover > * > .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-state-hover > * > .k-gantt-views > .k-current-view > .k-link:after,
 .k-button:not(.k-state-disabled):hover .k-pager-numbers .k-current-page .k-link:after,
 .k-button:not(.k-state-disabled):hover .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-button:not(.k-state-disabled):hover .k-gantt-views > .k-current-view > .k-link:after,
 .k-textbox:hover .k-pager-numbers .k-current-page .k-link:after,
 .k-textbox:hover .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-textbox:hover .k-gantt-views > .k-current-view > .k-link:after,
 .k-button:active .k-pager-numbers .k-current-page .k-link:after,
-.k-button:active .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after {
+.k-button:active .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view .k-link:after,
+.k-button:active .k-gantt-views > .k-current-view > .k-link:after {
   background-position: -16px -32px;
 }
 /* Colors */
@@ -1663,6 +1681,13 @@ input.k-checkbox + label {
   left: -15000px;
   width: 14400px;
 }
+.km-native-scroller {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-touch-action: pan-x pan-y;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  -ms-scroll-snap-type: proximity;
+}
 /* responsive panel */
 .k-rpanel-left {
   -webkit-transform: translateX(-100%) translateZ(0);
@@ -1923,6 +1948,21 @@ div.k-window-iframecontent {
   background-color: #fff;
   filter: alpha(opacity=0);
   opacity: 0;
+}
+.k-action-buttons {
+  clear: both;
+  text-align: right;
+  border-width: 1px 0 0;
+  border-style: solid;
+  position: relative;
+  bottom: -1em;
+  padding: .6em;
+  margin: 0 -1em;
+}
+.k-action-buttons .k-button {
+  display: inline-block;
+  margin: 0 0 0 6px;
+  min-width: 75px;
 }
 /* TabStrip */
 .k-tabstrip {
@@ -3008,12 +3048,19 @@ span.k-numerictextbox {
   overflow: hidden;
   -ms-high-contrast-adjust: none;
 }
-.k-colorpalette .k-item.k-state-selected {
+.k-colorpalette .k-item.k-state-selected,
+.k-colorpalette .k-item.k-state-selected:hover {
   z-index: 100;
   background: transparent;
-  -webkit-box-shadow: 0 1px 4px #000, inset 0 0 3px #fff;
-          box-shadow: 0 1px 4px #000, inset 0 0 3px #fff;
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.45);
   position: relative;
+}
+.k-colorpalette .k-item:hover {
+  z-index: 101;
+  position: relative;
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 }
 .k-flatcolorpicker {
   position: relative;
@@ -4875,6 +4922,9 @@ input.k-textbox {
 }
 .k-pager-sizes .k-dropdown-wrap .k-input {
   line-height: 2em;
+}
+.k-toolbar .k-button-group .k-button {
+  margin: 0;
 }
 .k-checkbox-label:before,
 .k-checkbox-label:after,

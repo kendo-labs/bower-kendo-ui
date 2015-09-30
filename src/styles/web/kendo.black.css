@@ -34,9 +34,9 @@
 }
 .ktb-var-normal-gradient {
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
 }
 .ktb-var-normal-text-color {
   color: #ffffff;
@@ -46,9 +46,9 @@
 }
 .ktb-var-hover-gradient {
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(51%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
 }
 .ktb-var-hover-text-color {
   color: #ffffff;
@@ -58,9 +58,9 @@
 }
 .ktb-var-selected-gradient {
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
 }
 .ktb-var-selected-text-color {
   color: #ffffff;
@@ -76,6 +76,24 @@
 }
 .ktb-var-info {
   color: #0c779b;
+}
+.ktb-var-series-a {
+  color: #008fd3;
+}
+.ktb-var-series-b {
+  color: #99d101;
+}
+.ktb-var-series-c {
+  color: #f39b02;
+}
+.ktb-var-series-d {
+  color: #f05662;
+}
+.ktb-var-series-e {
+  color: #c03c53;
+}
+.ktb-var-series-f {
+  color: #acacac;
 }
 .k-grid-norecords-template {
   background-color: #4d4d4d;
@@ -264,9 +282,9 @@ textarea.k-textbox:hover,
 .k-panelbar .k-tabstrip-items .k-item,
 .km-pane-wrapper > .km-pane > .km-view > .km-content {
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   background-color: #292525;
 }
@@ -316,7 +334,8 @@ html .km-pane-wrapper .k-header {
 .k-grid-mobile .k-resize-handle-inner:before,
 .k-grid-mobile .k-resize-handle-inner:after,
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after {
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after {
   background-image: url('Black/sprite.png');
   border-color: transparent;
 }
@@ -407,6 +426,8 @@ html .km-pane-wrapper .k-header {
 }
 .k-event.k-state-selected {
   background-position: 0 0;
+  -webkit-box-shadow: 0 0 0 2px #ffffff;
+          box-shadow: 0 0 0 2px #ffffff;
 }
 .k-ie7 .k-event .k-resize-handle,
 .k-event .k-resize-handle:after,
@@ -479,9 +500,9 @@ html .km-pane-wrapper .k-header {
   border-color: #2a2a2a;
   background-color: #272727;
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
 }
 .k-button:focus:not(.k-state-disabled):not([disabled]) {
   -webkit-box-shadow: inset 0 0 3px 1px #2a2a2a;
@@ -573,6 +594,10 @@ html .km-pane-wrapper .k-header {
   color: #ffffff;
   border-bottom-left-radius: 3px;
 }
+.k-popup .k-treeview .k-item > .k-group {
+  background: transparent;
+  color: #ffffff;
+}
 .k-marquee-text {
   color: #ffffff;
 }
@@ -663,9 +688,9 @@ td.k-state-focused.k-state-selected {
 div.k-filebrowser-dropzone em,
 .k-draghandle:hover {
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(51%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
 }
 .k-pager-wrap {
   background-color: #292525;
@@ -687,9 +712,9 @@ div.k-filebrowser-dropzone em,
 .k-button.k-state-active,
 .k-draghandle.k-state-selected:hover {
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
 }
 .k-button:active,
 .k-button.k-state-active,
@@ -714,9 +739,9 @@ div.k-filebrowser-dropzone em {
 .k-dropdown-wrap.k-state-focused {
   background-color: #3e3c3c;
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(51%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   border-color: #2a2a2a;
 }
@@ -783,9 +808,9 @@ div.k-filebrowser-dropzone em {
 /* Tooltip */
 .k-widget.k-tooltip {
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   background-color: #292525;
   color: #ffffff;
@@ -1105,7 +1130,8 @@ div.k-filebrowser-dropzone em {
 .k-slider-track,
 .k-slider-selection,
 .k-upload,
-.k-split-button {
+.k-split-button .k-gantt-views,
+.k-gantt-views > .k-current-view {
   border-radius: 4px;
 }
 .k-tool {
@@ -1167,7 +1193,9 @@ div.k-filebrowser-dropzone em {
 .k-multiselect.k-state-border-down,
 .k-dropdown-wrap.k-state-border-down,
 .k-picker-wrap.k-state-border-down,
-.k-numeric-wrap.k-state-border-down {
+.k-numeric-wrap.k-state-border-down,
+.k-gantt-views.k-state-expanded,
+.k-gantt-views.k-state-expanded > .k-current-view {
   border-radius: 4px 4px 0 0;
 }
 .k-split-button.k-state-border-down > .k-button {
@@ -1383,9 +1411,9 @@ html .km-pane-wrapper .km-widget,
 .k-numeric-wrap.k-state-default,
 .k-dropdown-wrap.k-state-default {
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   background-color: #2a2a2a;
   border-color: #2a2a2a;
@@ -1396,9 +1424,9 @@ html .km-pane-wrapper .km-widget,
 .k-dropdown-wrap.k-state-hover {
   background-color: #3e3c3c;
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(51%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   border-color: #2a2a2a;
 }
@@ -1415,9 +1443,9 @@ html .km-pane-wrapper .km-widget,
 .k-multiselect.k-header.k-state-focused {
   background-color: #3e3c3c;
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(51%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   border-color: #505050;
   -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
@@ -1539,9 +1567,9 @@ html .km-pane-wrapper .km-widget,
   color: #ffffff;
   border-color: #006edb;
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
   background-color: #0078f0;
   -webkit-box-shadow: none;
@@ -1552,9 +1580,9 @@ html .km-pane-wrapper .km-widget,
   color: #ffffff;
   border-color: #005ebd;
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(51%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   -webkit-box-shadow: 0 0 3px 0 #0066cc;
           box-shadow: 0 0 3px 0 #0066cc;
 }
@@ -1562,9 +1590,9 @@ html .km-pane-wrapper .km-widget,
   color: #ffffff;
   border-color: #404040;
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(51%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-color: #006edb;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -1578,9 +1606,9 @@ html .km-pane-wrapper .km-widget,
   color: #ffffff;
   border-color: #0069d1;
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-color: #0166cb;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -1596,9 +1624,9 @@ html .km-pane-wrapper .km-widget,
   border-color: #e6e6e6;
   background-color: #007af5;
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -1854,9 +1882,9 @@ html .km-pane-wrapper .km-widget,
   .k-ie11 .k-pager-numbers .k-current-page .k-link,
   .k-safari .k-pager-numbers .k-current-page .k-link {
     background-image: url('textures/glass.png');
-    background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.20)), color-stop(50%, rgba(255,255,255,.15)), to(rgba(255,255,255,.07)));
-    background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
-    background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.20) 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.07) 100%);
+    background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+    background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+    background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
     background-position: 50% 50%;
     background-color: #2a2a2a;
     border-color: #2a2a2a;
@@ -1923,9 +1951,9 @@ html .km-pane-wrapper .km-widget,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover {
     border-color: #2a2a2a;
     background-image: url('textures/glass.png');
-    background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(51%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
-    background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
-    background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 51%, rgba(255,255,255,.0) 100%);
+    background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+    background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+    background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
     background-color: #3d3d3d;
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
@@ -2043,4 +2071,259 @@ html .km-pane-wrapper .km-widget,
 }
 .k-map .k-attribution {
   color: #666666;
+}
+.k-spreadsheet-top-corner,
+.k-spreadsheet-row-header td,
+.k-spreadsheet-column-header td {
+  background-color: #272727;
+  background-image: none;
+  color: #ffffff;
+  border-color: #000000;
+}
+.k-spreadsheet-top-corner {
+  border-color: #000000;
+}
+.k-spreadsheet-top-corner:after {
+  border-color: transparent #000000 #000000 transparent;
+}
+.k-spreadsheet-pane {
+  border-color: #000000;
+}
+.k-spreadsheet-pane td {
+  border-color: #0e0e0e;
+}
+.k-spreadsheet-pane .k-spreadsheet-column-header td,
+.k-spreadsheet-pane .k-spreadsheet-row-header td {
+  border-color: #000000;
+}
+.k-spreadsheet-pane .k-spreadsheet-merged-cell {
+  background-color: #4d4d4d;
+}
+.k-spreadsheet-pane .k-selection-partial,
+.k-spreadsheet-pane .k-selection-full {
+  border-color: rgba(0, 102, 204, 0.2);
+  background-color: rgba(0, 102, 204, 0.2);
+}
+.k-spreadsheet-column-header .k-selection-partial,
+.k-spreadsheet-column-header .k-selection-full {
+  border-bottom-color: #0066cc;
+}
+.k-spreadsheet-row-header .k-selection-partial,
+.k-spreadsheet-row-header .k-selection-full {
+  border-right-color: #0066cc;
+}
+.k-spreadsheet-pane .k-selection-partial {
+  background-color: rgba(0, 102, 204, 0.2);
+}
+.k-spreadsheet-selection {
+  background-color: rgba(0, 102, 204, 0.2);
+  border-color: #0066cc;
+}
+.k-spreadsheet-cell-editor {
+  -webkit-box-shadow: inset 0 0 0 2px #0066cc;
+          box-shadow: inset 0 0 0 2px #0066cc;
+}
+.k-spreadsheet-active-cell {
+  -webkit-box-shadow: inset 0 0 0 1px #0066cc;
+          box-shadow: inset 0 0 0 1px #0066cc;
+  border-color: #0066cc;
+}
+.k-spreadsheet-active-cell td {
+  background-color: #4d4d4d;
+  border-color: #0066cc;
+  -webkit-box-shadow: inset 1px 1px 0 1px #0066cc, inset 0 0 0 1px #0066cc;
+          box-shadow: inset 1px 1px 0 1px #0066cc, inset 0 0 0 1px #0066cc;
+}
+.k-spreadsheet-active-cell.k-right td {
+  -webkit-box-shadow: inset 1px 1px 0 1px #0066cc, inset -2px 0 0 1px #0066cc;
+          box-shadow: inset 1px 1px 0 1px #0066cc, inset -2px 0 0 1px #0066cc;
+}
+.k-spreadsheet-active-cell.k-bottom td {
+  -webkit-box-shadow: inset 1px 1px 0 1px #0066cc, inset 0 -2px 0 1px #0066cc;
+          box-shadow: inset 1px 1px 0 1px #0066cc, inset 0 -2px 0 1px #0066cc;
+}
+.k-spreadsheet-active-cell.k-right.k-bottom td {
+  -webkit-box-shadow: inset 1px 1px 0 1px #0066cc, inset -2px -2px 0 1px #0066cc;
+          box-shadow: inset 1px 1px 0 1px #0066cc, inset -2px -2px 0 1px #0066cc;
+}
+.k-ff .k-spreadsheet-active-cell td {
+  -webkit-box-shadow: inset 0 0 0 1px #0066cc;
+          box-shadow: inset 0 0 0 1px #0066cc;
+}
+.k-spreadsheet-active-cell.k-single {
+  background-color: #fff;
+}
+.k-spreadsheet > .k-spreadsheet-formula-bar {
+  background-color: #4d4d4d;
+  border-color: #272727 #272727 #000000;
+}
+.k-spreadsheet > .k-spreadsheet-formula-bar:before {
+  border-color: #000000;
+}
+.k-spreadsheet > .k-spreadsheet-formula-bar:after {
+  border-color: #272727;
+}
+.k-spreadsheet .k-spreadsheet-formula-input {
+  background-color: #4d4d4d;
+  color: #ffffff;
+}
+.k-spreadsheet .k-resize-handle,
+.k-spreadsheet .k-resize-hint-handle,
+.k-spreadsheet .k-resize-hint-marker {
+  background-color: #0066cc;
+}
+.k-spreadsheet .k-resize-hint-vertical .k-resize-hint-handle,
+.k-spreadsheet .k-resize-hint-vertical .k-resize-hint-marker {
+  background-color: #0066cc;
+}
+.k-spreadsheet-format-cells .k-spreadsheet-preview {
+  border-color: #2a2a2a;
+}
+.k-spreadsheet-filter {
+  border-radius: 4px;
+  background-color: #4d4d4d;
+  -webkit-box-shadow: inset 0 0 0 1px #0e0e0e;
+          box-shadow: inset 0 0 0 1px #0e0e0e;
+}
+.k-spreadsheet-filter.k-state-active {
+  color: #ffffff;
+  background-color: #0066cc;
+}
+.k-spreadsheet-filter:hover {
+  color: #ffffff;
+  background: #3d3d3d;
+  border-color: #292929;
+}
+.k-action-window .k-action-buttons {
+  border-color: #2a2a2a;
+}
+.k-spreadsheet-sample {
+  color: #ffffff;
+}
+.k-state-selected .k-spreadsheet-sample {
+  color: inherit;
+}
+.k-spreadsheet-window .k-list-wrapper,
+.k-spreadsheet-window .k-list {
+  border-color: #2a2a2a;
+  border-radius: 4px;
+}
+.k-spreadsheet-toolbar.k-toolbar .k-button-group .k-button {
+  border-radius: 4px;
+}
+.k-spreadsheet-toolbar > .k-widget,
+.k-spreadsheet-toolbar > .k-button,
+.k-spreadsheet-toolbar > .k-button-group {
+  border-radius: 4px;
+}
+.k-spreadsheet-toolbar > .k-separator {
+  border-color: #2a2a2a;
+}
+.k-spreadsheet-toolbar .k-overflow-anchor {
+  border-radius: 0;
+}
+.k-spreadsheet-popup {
+  border-radius: 4px;
+}
+.k-spreadsheet-popup .k-separator {
+  background-color: #2a2a2a;
+}
+.k-spreadsheet-popup .k-button {
+  background-color: transparent;
+}
+.k-spreadsheet-popup .k-button:hover {
+  background-color: #3d3d3d;
+}
+.k-spreadsheet-popup .k-state-active {
+  background-color: #0066cc;
+  color: #000000;
+}
+.k-spreadsheet-popup .k-state-active:hover {
+  background-color: #004c99;
+}
+.k-spreadsheet-filter-menu .k-details {
+  border-color: #2a2a2a;
+}
+.k-spreadsheet-filter-menu .k-details-content .k-space-right {
+  background-color: #4d4d4d;
+}
+.k-spreadsheet-filter-menu .k-spreadsheet-value-treeview-wrapper {
+  background-color: #4d4d4d;
+  border-color: #2a2a2a;
+  border-radius: 4px 0 0 4px;
+}
+.k-syntax-ref {
+  color: #ff8822;
+}
+.k-syntax-num {
+  color: #0099ff;
+}
+.k-syntax-func {
+  font-weight: bold;
+}
+.k-syntax-str {
+  color: #38b714;
+}
+.k-syntax-error {
+  color: red;
+}
+.k-syntax-bool {
+  color: #a9169c;
+}
+.k-syntax-startexp {
+  font-weight: bold;
+}
+.k-syntax-paren-match {
+  background-color: #caf200;
+}
+.k-series-a {
+  border-color: #008fd3;
+  background-color: rgba(0, 143, 211, 0.15);
+}
+.k-series-b {
+  border-color: #99d101;
+  background-color: rgba(153, 209, 1, 0.15);
+}
+.k-series-c {
+  border-color: #f39b02;
+  background-color: rgba(243, 155, 2, 0.15);
+}
+.k-series-d {
+  border-color: #f05662;
+  background-color: rgba(240, 86, 98, 0.15);
+}
+.k-series-e {
+  border-color: #c03c53;
+  background-color: rgba(192, 60, 83, 0.15);
+}
+.k-series-f {
+  border-color: #acacac;
+  background-color: rgba(172, 172, 172, 0.15);
+}
+.k-spreadsheet-sheets-remove:hover .k-icon {
+  color: #cc2222;
+}
+.k-spreadsheet-formula-list .k-state-focused {
+  background-color: #0066cc;
+  color: #ffffff;
+}
+.k-spreadsheet .k-widget[data-property='fontSize'] {
+  width: 60px;
+}
+.k-spreadsheet .k-widget[data-property='format'] {
+  width: 100px;
+}
+.k-spreadsheet .k-widget[data-property='fontFamily'] {
+  width: 130px;
+}
+.k-spreadsheet .k-spreadsheet-sheets-remove {
+  margin: 0.5em 0.5em 0.5em -0.5em;
+}
+.k-spreadsheet-toolbar .k-combobox .k-input {
+  color: #ffffff;
+}
+.k-spreadsheet-toolbar .k-combobox .k-state-hover .k-input,
+.k-spreadsheet-toolbar .k-combobox .k-state-active .k-input,
+.k-spreadsheet-toolbar .k-combobox .k-state-focused .k-input {
+  color: #001c38;
 }

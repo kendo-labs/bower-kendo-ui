@@ -17,6 +17,10 @@
     define([ "./kendo.data", "./kendo.popup" ], f);
 })(function(){
 
+(function(){
+
+
+
 /*jshint evil: true*/
 (function($, undefined) {
     var kendo = window.kendo,
@@ -28,9 +32,7 @@
         activeElement = kendo._activeElement,
         ObservableArray = kendo.data.ObservableArray,
         ID = "id",
-        LI = "li",
         CHANGE = "change",
-        CHARACTER = "character",
         FOCUSED = "k-state-focused",
         HOVER = "k-state-hover",
         LOADING = "k-loading",
@@ -218,18 +220,21 @@
             }
 
             if (filter) {
-                expression = expression.filters || [];
-                expression.push(filter);
+                expression = {
+                    filters: expression.filters || [],
+                    logic: "and"
+                };
+
+                expression.filters.push(filter);
             }
 
             if (!force) {
                 dataSource.filter(expression);
             } else {
-                dataSource.read(expression);
+                dataSource.read({ filter: expression });
             }
         },
 
-        //TODO: refactor
         _header: function() {
             var that = this;
             var template = that.options.headerTemplate;
@@ -875,25 +880,24 @@
         },
 
         _firstItem: function() {
-            this.listView.first();
+            this.listView.focusFirst();
         },
 
         _lastItem: function() {
-            this.listView.last();
+            this.listView.focusLast();
         },
 
         _nextItem: function() {
-            this.listView.next();
+            this.listView.focusNext();
         },
 
         _prevItem: function() {
-            this.listView.prev();
+            this.listView.focusPrev();
         },
 
         _move: function(e) {
             var that = this;
             var key = e.keyCode;
-            var ul = that.ul[0];
             var down = key === keys.DOWN;
             var dataItem;
             var pressed;
@@ -1099,8 +1103,7 @@
             var that = this,
                 options = that.options,
                 cascade = options.cascadeFrom,
-                select, valueField,
-                parent, change;
+                parent;
 
             if (cascade) {
                 parent = that._parentWidget();
@@ -1243,6 +1246,7 @@
         options: {
             name: "StaticList",
             dataValueField: null,
+            valuePrimitive: false,
             selectable: true,
             template: null,
             groupTemplate: null,
@@ -1324,8 +1328,7 @@
                 itemOffsetHeight = item.offsetHeight,
                 contentScrollTop = content.scrollTop,
                 contentOffsetHeight = content.clientHeight,
-                bottomDistance = itemOffsetTop + itemOffsetHeight,
-                yDimension, offsetHeight;
+                bottomDistance = itemOffsetTop + itemOffsetHeight;
 
                 if (contentScrollTop > itemOffsetTop) {
                     contentScrollTop = itemOffsetTop;
@@ -1350,7 +1353,7 @@
             });
         },
 
-        next: function() {
+        focusNext: function() {
             var current = this.focus();
 
             if (!current) {
@@ -1362,7 +1365,7 @@
             this.focus(current);
         },
 
-        prev: function() {
+        focusPrev: function() {
             var current = this.focus();
 
             if (!current) {
@@ -1374,11 +1377,11 @@
             this.focus(current);
         },
 
-        first: function() {
+        focusFirst: function() {
             this.focus(this.element[0].children[0]);
         },
 
-        last: function() {
+        focusLast: function() {
             this.focus(this.element[0].children[this.element[0].children.length - 1]);
         },
 
@@ -1421,7 +1424,7 @@
             return this.focus() ? this.focus().index() : undefined;
         },
 
-        filter: function(filter, skipValueUpdate) {
+        filter: function(filter) {
             if (filter === undefined) {
                 return this._filtered;
             }
@@ -1538,9 +1541,15 @@
             return deferred;
         },
 
+        items: function() {
+            return this.element.children(".k-item");
+        },
+
         _click: function(e) {
             if (!e.isDefaultPrevented()) {
-                this.trigger("click", { item: $(e.currentTarget) });
+                if (!this.trigger("click", { item: $(e.currentTarget) })) {
+                    this.select(e.currentTarget);
+                }
             }
         },
 
@@ -2046,6 +2055,10 @@
         return found;
     }
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

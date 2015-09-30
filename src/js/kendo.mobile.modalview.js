@@ -17,6 +17,10 @@
     define([ "./kendo.mobile.shim", "./kendo.mobile.view" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.mobile.ui,
@@ -30,7 +34,7 @@
 
     var ModalView = ui.View.extend({
         init: function(element, options) {
-            var that = this, width, height;
+            var that = this;
 
             Widget.fn.init.call(that, element, options);
 
@@ -132,6 +136,10 @@
 
     ui.plugin(ModalView);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

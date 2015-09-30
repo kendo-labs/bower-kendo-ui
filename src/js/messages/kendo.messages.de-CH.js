@@ -307,7 +307,8 @@ $.extend(true, kendo.ui.Grid.prototype.options.messages,{
     "confirmation": "Sind Sie sicher, dass Sie diesen Datensatz löschen wollen?",
     "cancelDelete": "Abbrechen",
     "confirmDelete": "Löschen"
-  }
+  },
+  "noRecords": "Keine Aufzeichnungen zur Verfügung."
 });
 }
 
@@ -335,6 +336,7 @@ $.extend(true, kendo.ui.NumericTextBox.prototype.options,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "All",
   "display": "Anzeigen der Elemente {0} - {1} von {2}",
   "empty": "keine Daten",
   "first": "Gehen Sie zur ersten Seite",
@@ -378,14 +380,16 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   "cancel": "Abbrechen",
   "date": "Datum",
   "destroy": "Löschen",
+  "pdf": "Exportieren als PDF",
   "editable": {
-    "confirmation": "Möchten Sie diesen Termin wirklich löschen?"
+    "confirmation": "Möchten Sie diesen Termin wirklich löschen?"
   },
   "editor": {
     "allDayEvent": "Ganztägiger Termin",
     "description": "Beschreibung",
     "editorTitle": "Termin",
     "end": "Beenden",
+    "timezoneTitle": "Zeitzone",
     "endTimezone": "Zeitzone Ende",
     "repeat": "Wiederholen",
     "separateTimezones": "Unterschiedliche Start- und Endzeitzonen benutzen",
@@ -399,11 +403,11 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   },
   "event": "Termin",
   "recurrenceMessages": {
-    "deleteRecurring": "Möchten Sie nur diesen Termin oder alle Wiederholungen löschen?",
+    "deleteRecurring": "Möchten Sie nur diesen Termin oder alle Wiederholungen löschen?",
     "deleteWindowOccurrence": "Diesen Termin löschen",
     "deleteWindowSeries": "Alle Wiederholungen des Termins löschen",
     "deleteWindowTitle": "Diesen Termin und alle Wiederholungen löschen",
-    "editRecurring": "Möchten Sie nur diesen Termin oder alle Wiederholungen bearbeiten?",
+    "editRecurring": "Möchten Sie nur diesen Termin oder alle Wiederholungen bearbeiten?",
     "editWindowOccurrence": "Aktuelles Ereignis bearbeiten",
     "editWindowSeries": "Serie bearbeiten",
     "editWindowTitle": "Wiederholungs-Eintrag bearbeiten"
@@ -416,11 +420,17 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
     "day": "Tag",
     "month": "Monat",
     "week": "Woche",
-    "workWeek": "Arbeitswoche"
+    "workWeek": "Arbeitswoche",
+    "timeline": "Zeitstrahl",
+    "timelineWeek": "Zeitstrahl Woche",
+    "timelineWorkWeek": "Zeitstrahl Arbeitswoche",
+    "timelineMonth": "Zeitstrahl Monat"
   },
   "deleteWindowTitle": "Termin löschen",
   "showFullDay": "Ganzen Tag anzeigen",
-  "showWorkDay": "Geschäftszeiten anzeigen"
+  "showWorkDay": "Geschäftszeiten anzeigen",
+  "ariaSlotLabel": "Ausgewählt von {0:t} bis {1:t}",
+  "ariaEventLabel": "{0} am {1:D} um {2:t}"
 });
 }
 

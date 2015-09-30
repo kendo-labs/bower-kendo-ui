@@ -148,10 +148,10 @@ var getKendoFile = (function() {
                 var replacements = [];
                 replacements.push(
                     { begin : 0,
-                      end   : ast.body[0].start.pos,
+                      end   : ast.start.pos,
                       text  : ""
                     },
-                    { begin : ast.body[ast.body.length - 1].end.endpos,
+                    { begin : ast.end.endpos,
                       end   : my_code.length,
                       text  : "" }
                 );
@@ -179,7 +179,7 @@ var getKendoFile = (function() {
 
                 my_code = replaceInString(my_code, replacements);
             }
-            return my_code;
+            return "(" + my_code + ")();";
         }),
 
         // Generates the complete (readable) source of this component.
@@ -215,30 +215,11 @@ var getKendoFile = (function() {
         buildMinAST_noAMD: cachedProperty("buildMinAST_noAMD", function(){
             var ast = this.buildMinAST();
             var f = walkAST(ast, findDefine).factory;
-            var stats = [];
-            walkAST(f, function(node){
-                if (node !== f) {
-                    if (node instanceof U2.AST_Return) {
-                        var p = node.value;
-                        while (p instanceof U2.AST_Seq) {
-                            stats.push(new U2.AST_SimpleStatement({ body: p.car }));
-                            p = p.cdr;
-                        }
-                        if (p && p.has_side_effects(U2.Compressor({ unsafe: true, pure_getters: true }))) {
-                            stats.push(new U2.AST_SimpleStatement({ body: p }));
-                        }
-                        this.exit();
-                    }
-                    else if (node instanceof U2.AST_Statement) {
-                        stats.push(node);
-                        return true;
-                    }
-                }
+            return new U2.AST_Toplevel({
+                body: [ new U2.AST_SimpleStatement({
+                    body: new U2.AST_Call({ expression: f, args: [] })
+                }) ]
             });
-            if (stats.length == 0) {
-                throw new Error("Can't find main code for " + this.filename());
-            }
-            return new U2.AST_Toplevel({ body: stats });
         }),
 
         buildMinSource_noAMD: cachedProperty("buildMinSource_noAMD", function(){
@@ -272,10 +253,12 @@ var getKendoFile = (function() {
                     deps.forEach(function(f){
                         var comp = getKendoFile(f);
                         var f = comp.getAMDFactory().factory;
-                        f.body.forEach(function(stat){
-                            if (!isReturnKendo(stat))
-                                node.body.push(stat);
-                        });
+                        node.body.push(new U2.AST_SimpleStatement({
+                            body: new U2.AST_Call({
+                                expression: f,
+                                args: []
+                            })
+                        }));
                     });
                     return node;
                 }
@@ -728,7 +711,16 @@ function bundleFiles_getMinAST(files) {
     loadComponents(files).forEach(function(f){
         var comp = getKendoFile(f);
         var ast = comp.getFullAST_noDeps();
-        code.push.apply(code, ast.body);
+        // must be an IIFE.
+        if (!(ast instanceof U2.AST_Lambda)) {
+            console.log("Got wrong node!", ast.TYPE);
+            throw new Error("BAD AST NOTE IN BUILD");
+        }
+        code.push(new U2.AST_SimpleStatement({
+            body: new U2.AST_Call({
+                expression: ast, args: []
+            })
+        }));
     });
     var min = minify(new U2.AST_Toplevel({ body: code }));
     return get_wrapper().wrap([], min);

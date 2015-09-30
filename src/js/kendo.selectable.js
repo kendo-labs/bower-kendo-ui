@@ -17,12 +17,15 @@
     define([ "./kendo.core", "./kendo.userevents" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function ($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
         proxy = $.proxy,
         abs = Math.abs,
-        shift = Array.prototype.shift,
         ARIASELECTED = "aria-selected",
         SELECTED = "k-state-selected",
         ACTIVE = "k-state-selecting",
@@ -426,6 +429,10 @@
     kendo.ui.plugin(Selectable);
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

@@ -17,6 +17,10 @@
     define([ "./kendo.mobile.view", "./kendo.mobile.loader" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         mobile = kendo.mobile,
@@ -111,7 +115,7 @@
                     that.closeActiveDialogs();
                 },
 
-                after: function(e) {
+                after: function() {
                     that.loader.transitionDone();
                 },
 
@@ -369,6 +373,10 @@
     };
     ui.plugin(Pane);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

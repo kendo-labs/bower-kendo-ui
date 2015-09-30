@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.mobile.ui,
@@ -34,8 +38,6 @@
 
         //icon position
         LEFT = "left",
-        RIGHT = "right",
-        TOP = "top",
 
         //events
         EXAPND = "expand",
@@ -191,6 +193,10 @@
 
     ui.plugin(Collapsible);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

@@ -384,6 +384,12 @@ kendo-mobile-drawer {
 .km-stretched-view > * {
   width: 100%;
 }
+.km-stretched-view > .km-pane-wrapper {
+  position: static;
+}
+.km-stretched-view > .km-pane-wrapper > .km-pane {
+  position: static;
+}
 .km-overlay {
   position: absolute;
   top: 0;
@@ -3388,9 +3394,9 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 .km-ios .km-tabstrip,
 .km-ios .km-popup .k-item,
 .km-ios .km-actionsheet > li > a {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.45) 6% rgba(255, 255, 255, 0.2) 50% rgba(255, 255, 255, 0.15) 50% rgba(100, 100, 100, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.45) 6% rgba(255, 255, 255, 0.2) 50% rgba(255, 255, 255, 0.15) 50% rgba(100, 100, 100, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(6%, rgba(255, 255, 255, 0.45)), color-stop(50%, rgba(255, 255, 255, 0.2)), color-stop(50%, rgba(255, 255, 255, 0.15)), to(rgba(100, 100, 100, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.45) 6%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.15) 50%, rgba(100, 100, 100, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.45) 6%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.15) 50%, rgba(100, 100, 100, 0));
   border-color: #2f3740 #394d68 #375073;
   background-color: #7185a2;
 }
@@ -3415,9 +3421,9 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 .km-ios .km-button {
   border-bottom-color: rgba(255, 255, 255, 0.5);
   background: transparent, #496b9a;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0) 50% rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0) 50% rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.35)), color-stop(50%, rgba(255, 255, 255, 0.1)), color-stop(50%, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0));
 }
 .km-ios .km-button,
 .km-ios .k-toolbar .km-buttongroup {
@@ -3444,21 +3450,21 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 .km-ios .km-switch-background,
 .km-ios .k-slider-selection {
   background-color: #007EE9;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #dbdbdb #eeeeee 50%);
-  background-image: linear-gradient(to bottom #dbdbdb #eeeeee 50%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#dbdbdb), color-stop(50%, #eeeeee));
+  background-image: -webkit-linear-gradient(top, #dbdbdb, #eeeeee 50%);
+  background-image: linear-gradient(to bottom, #dbdbdb, #eeeeee 50%);
 }
 .km-ios .km-switch-background:after {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.14) 0 rgba(255, 255, 255, 0.4));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.14) 0 rgba(255, 255, 255, 0.4));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255, 255, 255, 0.14)), to(rgba(255, 255, 255, 0.4)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.14) 0, rgba(255, 255, 255, 0.4));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.14) 0, rgba(255, 255, 255, 0.4));
 }
 .km-ios .km-switch-container {
   -webkit-box-shadow: inset 0 2px 2px 0 rgba(0,0,0,.3), inset 0 -1px 1px 0 rgba(0,0,0,.2);
           box-shadow: inset 0 2px 2px 0 rgba(0,0,0,.3), inset 0 -1px 1px 0 rgba(0,0,0,.2);
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) 95% rgba(0, 0, 0, 0.2));
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) 95% rgba(0, 0, 0, 0.2));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), color-stop(95%, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.2)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.2));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.2));
 }
 .km-ios .km-checkbox {
   border-color: #e5e5e5;
@@ -3466,9 +3472,9 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 .km-ios .km-checkbox-checked {
   border-color: #fff;
   background-color: #BB0000;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #f1969b rgba(230, 70, 78, 0.5) 50% rgba(222, 11, 21, 0.5) 50% rgba(183, 0, 0, 0));
-  background-image: linear-gradient(to bottom #f1969b rgba(230, 70, 78, 0.5) 50% rgba(222, 11, 21, 0.5) 50% rgba(183, 0, 0, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f1969b), color-stop(50%, rgba(230, 70, 78, 0.5)), color-stop(50%, rgba(222, 11, 21, 0.5)), to(rgba(183, 0, 0, 0)));
+  background-image: -webkit-linear-gradient(top, #f1969b, rgba(230, 70, 78, 0.5) 50%, rgba(222, 11, 21, 0.5) 50%, rgba(183, 0, 0, 0));
+  background-image: linear-gradient(to bottom, #f1969b, rgba(230, 70, 78, 0.5) 50%, rgba(222, 11, 21, 0.5) 50%, rgba(183, 0, 0, 0));
   -webkit-box-shadow: 0 2px 3px #333333;
           box-shadow: 0 2px 3px #333333;
 }
@@ -3476,9 +3482,9 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
   border-color: rgba(102, 102, 102, 0.8);
   -webkit-box-shadow: inset 0 0 0 1px #fff;
           box-shadow: inset 0 0 0 1px #fff;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #ffffff #d7d7d7 5% #ffffff);
-  background-image: linear-gradient(to bottom #ffffff #d7d7d7 5% #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(5%, #d7d7d7), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #ffffff, #d7d7d7 5%, #ffffff);
+  background-image: linear-gradient(to bottom, #ffffff, #d7d7d7 5%, #ffffff);
 }
 .km-ios .km-switch-label-off {
   color: #7f7f7f;
@@ -3489,9 +3495,9 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 }
 .km-ios .km-badge,
 .km-ios .km-detail {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.2) 50% rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.2) 50% rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.2)), color-stop(50%, rgba(255, 255, 255, 0.1)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   color: #FFF;
   background-color: #bc0404;
 }
@@ -3506,9 +3512,9 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 /* Filter box */
 .km-ios .km-filter-form {
   color: #b1b3b8;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.3));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.3));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.6)), to(rgba(255, 255, 255, 0.3)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
 }
 .km-ios .km-filter-wrap:before,
 .km-ios .km-filter-reset .km-clear {
@@ -3548,9 +3554,9 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 .km-ios .km-footer > .km-buttongroup .km-button,
 .km-ios .km-content .km-buttongroup .km-button {
   background-color: #fff;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.12) 50% rgba(0, 0, 0, 0.25));
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.12) 50% rgba(0, 0, 0, 0.25));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, 0.12)), to(rgba(0, 0, 0, 0.25)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.25));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.25));
 }
 .km-root .km-ios .km-buttongroup .km-state-active {
   -webkit-box-shadow: 0 1px 0 0 rgba(255,255,255,.4), inset 0 0 0 1000px rgba(0,0,0,.2);
@@ -3562,17 +3568,17 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
   color: #fff;
   border-color: rgba(0, 0, 0, 0.4);
   background-color: #3D7EEB;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0) 50% rgba(255, 255, 255, 0.05) 50% rgba(255, 255, 255, 0.25));
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0) 50% rgba(255, 255, 255, 0.05) 50% rgba(255, 255, 255, 0.25));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.3)), color-stop(50%, rgba(0, 0, 0, 0)), color-stop(50%, rgba(255, 255, 255, 0.05)), to(rgba(255, 255, 255, 0.25)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.25));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.25));
   -webkit-box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.3);
           box-shadow: inset -1px 0 2px rgba(0, 0, 0, 0.3);
 }
 .km-ios .km-navbar,
 .km-ios .k-toolbar {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.65) rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.65) rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.65)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0));
   background-color: #506D93;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
           box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -3584,15 +3590,16 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 /* TabStrip */
 .km-ios .km-tabstrip {
   border-top-color: rgba(255, 255, 255, 0.2);
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(46, 46, 46, 0.8) rgba(21, 21, 21, 0.5) 50% rgba(0, 0, 0, 0.8) 50% rgba(0, 0, 0, 0.8));
-  background-image: linear-gradient(to bottom rgba(46, 46, 46, 0.8) rgba(21, 21, 21, 0.5) 50% rgba(0, 0, 0, 0.8) 50% rgba(0, 0, 0, 0.8));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(46, 46, 46, 0.8)), color-stop(50%, rgba(21, 21, 21, 0.5)), color-stop(50%, rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0.8)));
+  background-image: -webkit-linear-gradient(top, rgba(46, 46, 46, 0.8), rgba(21, 21, 21, 0.5) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8));
+  background-image: linear-gradient(to bottom, rgba(46, 46, 46, 0.8), rgba(21, 21, 21, 0.5) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8));
   -webkit-box-shadow: 0 -1px 0 0 #000000;
           box-shadow: 0 -1px 0 0 #000000;
   background-color: #1A1A1A;
   text-shadow: 0 1px 1px #000;
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.18) rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.18) rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.18)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
 }
 html .km-ios .km-tabstrip .km-button {
   color: #d1d1d1;
@@ -3607,9 +3614,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
   background-color: #1A1A1A;
   -webkit-box-shadow: 0 0 2px rgba(255,255,255,.4);
           box-shadow: 0 0 2px rgba(255,255,255,.4);
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0) rgba(255, 255, 255, 0.18) to left rgba(0, 0, 0, 0.6) rgba(0, 0, 0, 0) 3% rgba(0, 0, 0, 0) 97% rgba(0, 0, 0, 0.6));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0) rgba(255, 255, 255, 0.18) to right rgba(0, 0, 0, 0.6) rgba(0, 0, 0, 0) 3% rgba(0, 0, 0, 0) 97% rgba(0, 0, 0, 0.6));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), color-stop(rgba(255, 255, 255, 0.18)), color-stop(right, to), color-stop(rgba(0, 0, 0, 0.6)), color-stop(3%, rgba(0, 0, 0, 0)), color-stop(97%, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.6)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.18), to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 3%, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.6));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.18), to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 3%, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.6));
 }
 /* ListView */
 .km-ios .km-listinset > li:first-child,
@@ -3638,9 +3645,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 .km-ios li.km-state-active .km-listview-label {
   color: #fff;
   background: #0260E8;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.28) rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.28)), color-stop(50%, rgba(255, 255, 255, 0.1)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
 }
 .km-ios .km-listview-link:after {
   color: #7b7b7b;
@@ -3654,9 +3661,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
   border-top-color: rgba(255, 255, 255, 0.2);
   border-bottom-color: rgba(0, 0, 0, 0);
   background-color: #94A3AE;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0) rgba(255, 255, 255, 0.3));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0) rgba(255, 255, 255, 0.3));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.3)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3));
   -webkit-box-shadow: 0 -1px 0 #86929a;
           box-shadow: 0 -1px 0 #86929a;
 }
@@ -3733,21 +3740,21 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 .km-ios .k-slider .k-draghandle,
 .km-ios .k-slider .k-draghandle:hover {
   background-color: #fff;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #cccccc #ffffff);
-  background-image: linear-gradient(to bottom #cccccc #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #cccccc, #ffffff);
+  background-image: linear-gradient(to bottom, #cccccc, #ffffff);
   -webkit-box-shadow: inset 0 0 0 1px #f9f9f9, 1px 1px 3px rgba(0,0,0,.3);
           box-shadow: inset 0 0 0 1px #f9f9f9, 1px 1px 3px rgba(0,0,0,.3);
 }
 .km-ios .k-slider-selection {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0) 15% rgba(0, 0, 0, 0) 90% rgba(0, 0, 0, 0.4) to top #2a5db2 #6da9f7);
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0) 15% rgba(0, 0, 0, 0) 90% rgba(0, 0, 0, 0.4) to bottom #2a5db2 #6da9f7);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.5)), color-stop(15%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(0, 0, 0, 0)), color-stop(rgba(0, 0, 0, 0.4)), color-stop(bottom, to), color-stop(#2a5db2), to(#6da9f7));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 15%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0.4), to bottom, #2a5db2, #6da9f7);
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 15%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0.4), to bottom, #2a5db2, #6da9f7);
 }
 .km-ios .k-slider-track {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0) 30% rgba(0, 0, 0, 0) 90% rgba(0, 0, 0, 0.4) to top #dbdbdb #ffffff);
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0) 30% rgba(0, 0, 0, 0) 90% rgba(0, 0, 0, 0.4) to bottom #dbdbdb #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.3)), color-stop(30%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(0, 0, 0, 0)), color-stop(rgba(0, 0, 0, 0.4)), color-stop(bottom, to), color-stop(#dbdbdb), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0.4), to bottom, #dbdbdb, #ffffff);
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0.4), to bottom, #dbdbdb, #ffffff);
 }
 /* Dialog */
 .km-ios .km-dialog {
@@ -3757,9 +3764,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
           box-shadow: 3px 3px 5px #111111;
 }
 .km-ios .km-dialog-title {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0) 60%);
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0) 60%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), color-stop(60%, rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%);
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%);
   text-shadow: 0 -1px #333333;
 }
 .km-ios .km-dialog:before {
@@ -3838,9 +3845,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
           box-shadow: inset 0 1px 1px rgba(255,255,255,.5), 0 1px 1px rgba(255,255,255,.3);
   border-color: rgba(40, 40, 40, 0.9);
   background: #fff;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.2) 50% rgba(0, 0, 0, 0.25) 85% rgba(0, 0, 0, 0.15));
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.2) 50% rgba(0, 0, 0, 0.25) 85% rgba(0, 0, 0, 0.15));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, 0.2)), color-stop(85%, rgba(0, 0, 0, 0.25)), to(rgba(0, 0, 0, 0.15)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.25) 85%, rgba(0, 0, 0, 0.15));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.25) 85%, rgba(0, 0, 0, 0.15));
 }
 .km-root .km-ios .km-popup .k-item {
   border-color: rgba(0, 0, 0, 0.8);
@@ -3860,16 +3867,16 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 .km-ios li.km-actionsheet-cancel > a {
   color: #fff;
   background: #1537c6;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.45) rgba(255, 255, 255, 0.1) 60% rgba(255, 255, 255, 0) 80% rgba(255, 255, 255, 0.15));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.45) rgba(255, 255, 255, 0.1) 60% rgba(255, 255, 255, 0) 80% rgba(255, 255, 255, 0.15));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.45)), color-stop(60%, rgba(255, 255, 255, 0.1)), color-stop(80%, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.15)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0) 80%, rgba(255, 255, 255, 0.15));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0) 80%, rgba(255, 255, 255, 0.15));
   text-shadow: 0 1px rgba(0, 0, 0, 0.3);
 }
 .km-ios li.km-actionsheet-cancel > a {
   background-color: #2b3038;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0) 60% rgba(255, 255, 255, 0) 85% rgba(255, 255, 255, 0.08));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0) 60% rgba(255, 255, 255, 0) 85% rgba(255, 255, 255, 0.08));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), color-stop(60%, rgba(255, 255, 255, 0)), color-stop(85%, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.08)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0) 85%, rgba(255, 255, 255, 0.08));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0) 85%, rgba(255, 255, 255, 0.08));
 }
 .km-ios .km-popup {
   background: rgba(0, 0, 0, 0.6);
@@ -3881,9 +3888,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
   color: #fff;
   border-top: 1px solid rgba(255, 255, 255, 0.5);
   background: rgba(23, 37, 64, 0.6);
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.2) 10% rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.2) 10% rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(10%, rgba(255, 255, 255, 0.2)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2) 10%, rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2) 10%, rgba(255, 255, 255, 0));
 }
 .km-phone .km-ios .km-actionsheet-wrapper,
 .km-phone .km-ios .km-popup .k-list-container {
@@ -3921,9 +3928,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 .km-ios .k-toolbar .km-buttongroup .km-button,
 .km-ios *:not(.km-tabstrip):not(.km-buttongroup) > .km-button,
 .km-tablet .km-ios *:not(.km-tabstrip):not(.km-buttongroup) > .km-button {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
 }
 .km-ios .k-toolbar .km-buttongroup .km-button,
 .km-ios *:not(.km-tabstrip):not(.km-buttongroup) > .km-button {
@@ -3933,9 +3940,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 .km-tablet .km-ios .k-toolbar,
 .km-tablet .km-ios .km-modalview .km-header {
   background: #A8ACB9;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.9) rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.9) rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.9)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
 }
 .km-tablet .km-ios .km-content {
   background: #D7D9DF none;
@@ -3965,9 +3972,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 }
 .km-ios .km-modalview .km-header,
 .km-ios .km-popup.km-pane .km-header {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0) 50% rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0) 50% rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.35)), color-stop(50%, rgba(255, 255, 255, 0.1)), color-stop(50%, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0));
 }
 .km-ios .km-popup.km-pane,
 .km-ios .k-split-wrapper .km-actionsheet-wrapper,
@@ -4939,9 +4946,9 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-switch-background,
 .km-ios7 .k-slider-selection {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #ffffff #ffffff);
-  background-image: linear-gradient(to bottom #ffffff #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, #ffffff, #ffffff);
+  background-image: linear-gradient(to bottom, #ffffff, #ffffff);
 }
 .km-ios7 .km-switch-handle {
   background: #ffffff;
@@ -4999,9 +5006,9 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-filter-form {
   color: #efeff4;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.3));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0.3));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.6)), to(rgba(255, 255, 255, 0.3)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3));
 }
 .km-ios7 .km-filter-wrap > input {
   text-shadow: 0 0 0 rgba(0, 0, 0, 0.4);
@@ -6149,18 +6156,18 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-badge,
 .km-android .km-detail,
 .km-android .km-rowdelete {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.5) rgba(204, 204, 204, 0.5) 50% rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.5) rgba(204, 204, 204, 0.5) 50% rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.1)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   border-color: #ffffff;
   background-color: #B01B1A;
 }
 .km-android-light .km-badge,
 .km-android-light .km-detail,
 .km-android-light .km-rowdelete {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(34, 34, 34, 0.5) rgba(204, 204, 204, 0.5) 50% rgba(34, 34, 34, 0.1) 50% rgba(34, 34, 34, 0));
-  background-image: linear-gradient(to bottom rgba(34, 34, 34, 0.5) rgba(204, 204, 204, 0.5) 50% rgba(34, 34, 34, 0.1) 50% rgba(34, 34, 34, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(34, 34, 34, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(34, 34, 34, 0.1)), to(rgba(34, 34, 34, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(34, 34, 34, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(34, 34, 34, 0.1) 50%, rgba(34, 34, 34, 0));
+  background-image: linear-gradient(to bottom, rgba(34, 34, 34, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(34, 34, 34, 0.1) 50%, rgba(34, 34, 34, 0));
   border-color: #222222;
 }
 .km-android .km-detail .km-text {
@@ -6229,18 +6236,18 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-item label:before {
   border-color: #000000;
   background-color: #363636;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #363636 #2b2b2b);
-  background-image: linear-gradient(to bottom #363636 #2b2b2b);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#363636), to(#2b2b2b));
+  background-image: -webkit-linear-gradient(top, #363636, #2b2b2b);
+  background-image: linear-gradient(to bottom, #363636, #2b2b2b);
   -webkit-box-shadow: 0 0 1px 2px #808080;
           box-shadow: 0 0 1px 2px #808080;
 }
 .km-android-light .km-item label:before {
   border-color: #fcfcfc;
   background-color: #c6c6c6;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #c6c6c6 #d1d1d1);
-  background-image: linear-gradient(to bottom #c6c6c6 #d1d1d1);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#c6c6c6), to(#d1d1d1));
+  background-image: -webkit-linear-gradient(top, #c6c6c6, #d1d1d1);
+  background-image: linear-gradient(to bottom, #c6c6c6, #d1d1d1);
   -webkit-box-shadow: 0 0 1px 2px #999999;
           box-shadow: 0 0 1px 2px #999999;
 }
@@ -6485,7 +6492,7 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-state-active .km-listview-link,
 .km-android .km-state-active .km-listview-label {
   color: #ffffff;
-  background: inherit;
+  background: #33b5e5;
 }
 .km-android li.km-actionsheet-cancel > a:focus,
 .km-android li.km-actionsheet-cancel > a:active,
@@ -7698,17 +7705,17 @@ html .km-android .k-toolbar .km-state-active {
 .km-blackberry input[type=file] {
   color: #000000;
   background-color: #e6e6e6;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.7) rgba(255, 255, 255, 0) 70%);
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.7) rgba(255, 255, 255, 0) 70%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.7)), color-stop(70%, rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 70%);
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 70%);
   -webkit-box-shadow: 0 1px 4px 0 rgba(0,0,0,.3);
           box-shadow: 0 1px 4px 0 rgba(0,0,0,.3);
 }
 .km-blackberry .km-button,
 .km-blackberry .km-buttongroup {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.1));
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.1));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.1)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
   border-color: rgba(0, 0, 0, 0.2);
 }
 .km-blackberry .km-button:after,
@@ -7720,9 +7727,9 @@ html .km-android .k-toolbar .km-state-active {
 .km-blackberry .km-navbar .km-button,
 .km-blackberry .k-toolbar .km-button {
   color: #ffffff;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.2)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
 }
 .km-blackberry .km-view-title {
   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
@@ -7757,17 +7764,17 @@ html .km-android .k-toolbar .km-state-active {
 .km-blackberry .km-navbar,
 .km-blackberry .km-popup.km-pane .km-header {
   background-color: #015e98;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.2) 40% rgba(255, 255, 255, 0) right rgba(255, 255, 255, 0) 0 rgba(255, 255, 255, 0.3));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.2) 40% rgba(255, 255, 255, 0) left rgba(255, 255, 255, 0) 0 rgba(255, 255, 255, 0.3));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(40%, rgba(255, 255, 255, 0.2)), color-stop(rgba(255, 255, 255, 0)), color-stop(left), color-stop(0, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.3)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.2) 40%, rgba(255, 255, 255, 0), left, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.3));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 40%, rgba(255, 255, 255, 0), left, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.3));
 }
 .km-blackberry .km-tabstrip {
   -webkit-box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.3);
           box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.3);
   background-color: #1A1A1A;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.18) rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.18) rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.18)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
 }
 .km-blackberry .km-tabstrip .km-button {
   color: #d1d1d1;
@@ -7783,9 +7790,9 @@ html .km-android .k-toolbar .km-state-active {
 }
 .km-blackberry .km-switch-handle {
   background: rgba(255, 255, 255, 0.9);
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.15));
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.15));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.15)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
   -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), 0 0 0 1px rgba(27, 27, 27, 0.3);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), 0 0 0 1px rgba(27, 27, 27, 0.3);
 }
@@ -7846,9 +7853,9 @@ html .km-android .k-toolbar .km-state-active {
 .km-blackberry .k-slider .k-draghandle,
 .km-blackberry .k-slider .k-draghandle:hover {
   background-color: #eee;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.6) rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.6)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0));
   -webkit-box-shadow: inset 0 0 0 1px #fff, 0 0 1px 1px rgba(0,0,0,.3);
           box-shadow: inset 0 0 0 1px #fff, 0 0 1px 1px rgba(0,0,0,.3);
 }
@@ -7939,9 +7946,9 @@ html .km-android .k-toolbar .km-state-active {
 .km-blackberry select:not([multiple]),
 .km-blackberry .k-dropdown-wrap {
   background: transparent 100% 0 no-repeat;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.1));
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.1));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.1)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
   -webkit-background-size: 1.8em 100%, auto;
           background-size: 1.8em 100%, auto;
   background: -webkit-calc(100% - 5px) 50% no-repeat url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAADICAQAAADrJAMDAAABG2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS4xLjIiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIi8+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgo8P3hwYWNrZXQgZW5kPSJyIj8+MahxaQAAA/RJREFUeF7t1OlqVVcYh/HnIiz0LrYedWs8UXGc5yGKsxXtVVjwSryOFnoFxYq1TgQVhwQVT+KE0fihhRJ6IHkXGc7Jztr7PO/z8f9l82Oz+KeSrGcAE1pooU1ooU1ooYU2oYU2oYUW2oQW2oQWWmgTWmgTWmihTWihTWihhTahhTahhRbahBbahBZaaBNaaBNaaKFNaKFNaKGFNqGFNqGFFtqEFtqEFlpoE1poE1pooU1ooU1ooYU2oYVmFTf4lRusmlmo13W/H8gXmhE6M8MYW2sIvZWxGYAOI9lC8wOd7sD0f9T1Yv7eBaDDj7lC/zJrmGZLjaC3MD0L4Gau0L/NGb6xmXrcZr7NAfg9/z+621eGyf+G+RoA3Mz3jR4PhimGa8n8Jos3Oo5t4TBFm3yvzVQIsA1yhU5Tf8mWus2XFHM20HFsD4fPWVK3+RwCbIesoOPYEQ6fsqNu8yk02QF1gE5Tf8yKus3HUGQnZAkdx85w+MAm8rhNfEgxZwsdx65weM9QBsxDvA81dkF10M2nHmIytNgN2UPHsTscJtnIyt3GBPMeyB46HXvCYYINrMxtYCLFXBvoOPaGQ2dFqEs6ocJeqD90mrqsnPldirkJ0Gnqd5QZMO+D5kDDvnB8Wxl1ydtQYD80Cxr2h/ObSqhLXqeYmwadpn697NQl46HAAWgmNBwIqccpq2fmIDQXGg6G1GOsZ3luPWOhwCFoNjQcqpB6Ha9SzE2HTlO/Yh39vbW8DAUOw2BAw+EQ4CVrK2A+AoMDDUdChBd9o27xIhQ4CoMFnaZu9YX5eYp58KDhaIjxvGfqFs9CgWMwmNBwLAR51hN1i6ehwHEYXGg4HqI8XTJ1iyehwAkYZOg09ZMlUbcYTTELDSdCnNFFU7d4HAqcBKEB4GQI9HhR1Gt4FAqcAqG7nUpR98g8AkIvhPoRa5j/VvNwocxCw0iI9ZDV83gUPAgFToPQcadDsAdpaqDgfihwBoROdyZBXSSZ/w4FzoLQS6G+H1IX3AsFzoHQ83c2xLs3h7rgbi/MQsO5EPCvLjVQcCcUOA9CL7zzIeLd/6kL/gwFLoDQ/aC+QwEU3A7XiyD04rsQYt6m4I9+MgsNF2PqUOASCL30LgWkUZdB6OWnvgJC997lapiFhitpZq7StxMafkowX6OvJzRcDZiv0/cTGq7NYv6ZZTmh4Xo1zEJDyS1GuUUJQluV0Ca00EKb0EKb0EILbUILbUILLbQJLbQJLbTQJrTQJrTQQpvQQpvQQgttQgttQgsttAkttAkttNAmtNAmtNBCm9BCm9BCC21CC21CCy20CS20CS200Ca00Ca00EKb0EKb0EILbUILbf8CmhlC4QhCFjcAAAAASUVORK5CYII="), -webkit-gradient(linear, 0 0, 0 100%, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.1))) transparent;
@@ -7988,9 +7995,9 @@ html .km-android .k-toolbar .km-state-active {
 .km-blackberry .km-popup .k-state-selected {
   color: #ffffff;
   background: #00aae7;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.2));
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0) rgba(0, 0, 0, 0.2));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.2)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
 }
 .km-blackberry .km-popup .k-state-hover {
   background-color: rgba(0, 170, 231, 0.8);
@@ -8000,14 +8007,14 @@ html .km-android .k-toolbar .km-state-active {
   border-color: #777;
 }
 .km-blackberry .k-dropdown.k-state-border-up {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #777777 #777777 10% transparent 10% bottom #777777 #777777 10% transparent 10% bottom #ffffff #ffffff 10% transparent 10%);
-  background-image: linear-gradient(to bottom #777777 #777777 10% transparent 10% top #777777 #777777 10% transparent 10% top #ffffff #ffffff 10% transparent 10%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#777777), color-stop(10%, #777777), color-stop(10%, transparent), color-stop(top), color-stop(#777777), color-stop(10%, #777777), color-stop(10%, transparent), color-stop(top), color-stop(#ffffff), color-stop(10%, #ffffff), color-stop(10%, transparent));
+  background-image: -webkit-linear-gradient(top, #777777, #777777 10%, transparent 10%, top, #777777, #777777 10%, transparent 10%, top, #ffffff, #ffffff 10%, transparent 10%);
+  background-image: linear-gradient(to bottom, #777777, #777777 10%, transparent 10%, top, #777777, #777777 10%, transparent 10%, top, #ffffff, #ffffff 10%, transparent 10%);
 }
 .km-blackberry .k-dropdown.k-state-border-down {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top transparent 90% #777777 90% #777777 bottom transparent 90% #777777 90% #777777 bottom transparent 90% #ffffff 90% #ffffff);
-  background-image: linear-gradient(to bottom transparent 90% #777777 90% #777777 top transparent 90% #777777 90% #777777 top transparent 90% #ffffff 90% #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(90%, transparent), color-stop(90%, #777777), color-stop(#777777), color-stop(top), color-stop(90%, transparent), color-stop(90%, #777777), color-stop(#777777), color-stop(top), color-stop(90%, transparent), color-stop(90%, #ffffff), to(#ffffff));
+  background-image: -webkit-linear-gradient(top, transparent 90%, #777777 90%, #777777, top, transparent 90%, #777777 90%, #777777, top, transparent 90%, #ffffff 90%, #ffffff);
+  background-image: linear-gradient(to bottom, transparent 90%, #777777 90%, #777777, top, transparent 90%, #777777 90%, #777777, top, transparent 90%, #ffffff 90%, #ffffff);
 }
 .km-blackberry .km-popup .k-state-border-up {
   -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,.3);
@@ -8034,9 +8041,9 @@ html .km-android .k-toolbar .km-state-active {
 }
 .km-root .km-blackberry.km-pane .km-listview-label input[type=radio]:checked:after {
   -webkit-background-clip: inherit;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #ffffff #f9f9f9 10% #eeeeee);
-  background-image: linear-gradient(to bottom #ffffff #f9f9f9 10% #eeeeee);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(10%, #f9f9f9), to(#eeeeee));
+  background-image: -webkit-linear-gradient(top, #ffffff, #f9f9f9 10%, #eeeeee);
+  background-image: linear-gradient(to bottom, #ffffff, #f9f9f9 10%, #eeeeee);
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
           box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
 }
@@ -8083,9 +8090,9 @@ html .km-android .k-toolbar .km-state-active {
 .km-blackberry .k-overflow-container.km-actionsheet,
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet,
 .km-blackberry .km-popup.km-pane .km-content {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0) 10%);
-  background-image: linear-gradient(to bottom rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0) 10%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.2)), color-stop(10%, rgba(0, 0, 0, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 10%);
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0) 10%);
   border-color: rgba(255, 255, 255, 0.7);
 }
 /* ModalView */
@@ -8155,9 +8162,9 @@ html .km-android .k-toolbar .km-state-active {
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > .km-state-active {
   color: #ffffff;
   background: #00aae7;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
 }
 /* Active States */
 .km-blackberry .km-button,
@@ -10449,9 +10456,9 @@ html .km-wp .k-overflow-container.km-actionsheet > li {
 }
 .km-flat .km-switch-background,
 .km-flat .k-slider-selection {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #bababa #bababa);
-  background-image: linear-gradient(to bottom #bababa #bababa);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bababa), to(#bababa));
+  background-image: -webkit-linear-gradient(top, #bababa, #bababa);
+  background-image: linear-gradient(to bottom, #bababa, #bababa);
 }
 .km-flat .km-switch-handle {
   background: #f4f4f4;
@@ -14098,9 +14105,9 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-nova .km-badge,
 .km-nova .km-detail {
   border: 0;
-  min-width: 1.8em;
-  height: 1.8em;
-  line-height: 1.8em;
+  min-width: 1.812em;
+  height: 1.812em;
+  line-height: 2em;
   border-radius: 5em;
 }
 .km-nova .km-button-right {

@@ -17,6 +17,10 @@
     define([ "./kendo.mobile.pane" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.mobile.ui,
@@ -149,6 +153,10 @@
 
     ui.plugin(SplitView);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

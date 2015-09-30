@@ -17,6 +17,10 @@
     define([ "./kendo.core" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function ($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
@@ -59,12 +63,12 @@
 
             kendo.notify(that);
         },
-        
+
         destroy: function() {
 			var that = this;
-			
+
 			that.wrapper.off(NS);
-			
+
 			Widget.fn.destroy.call(that);
 		},
 
@@ -191,6 +195,10 @@
     kendo.ui.plugin(Button);
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

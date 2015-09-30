@@ -17,6 +17,10 @@
     define([ "./kendo.data" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -390,7 +394,7 @@
             }
         },
 
-        _toggleActive: function(e) {
+        _toggleActive: function() {
             this.list.toggleClass("k-state-expanded");
         },
 
@@ -429,6 +433,10 @@
 
     ui.plugin(Pager);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

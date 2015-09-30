@@ -17,6 +17,7 @@
     define([], f);
 })(function(){
 
+(function ($, undefined) {
 /* FlatColorPicker messages */
 
 if (kendo.ui.FlatColorPicker) {
@@ -332,6 +333,7 @@ $.extend(true, kendo.ui.NumericTextBox.prototype.options,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "All",
   "display": "{0} - {1} ({2} 項目中)",
   "empty": "表示する項目がありません",
   "page": "ページ",
@@ -554,6 +556,7 @@ $.extend(true, kendo.ui.Validator.prototype.options.messages,{
   "date": "{0} は無効な日付です"
 });
 }
+})(window.kendo.jQuery);
 
 
 return window.kendo;

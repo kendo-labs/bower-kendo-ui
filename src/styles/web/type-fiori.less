@@ -507,7 +507,8 @@ html .km-pane-wrapper .k-header
 .k-grid-mobile .k-resize-handle-inner:before,
 .k-grid-mobile .k-resize-handle-inner:after,
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after
+.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
+.k-gantt-views > .k-current-view > .k-link:after
 {
     background-image: @sprite-image;
     border-color: transparent;
@@ -631,6 +632,7 @@ html .km-pane-wrapper .k-header
 .k-event.k-state-selected
 {
     background-position: 0 0;
+    .box-shadow(0 0 0 2px @normal-text-color);
 }
 
 .k-ie7 .k-event .k-resize-handle,
@@ -3217,3 +3219,8 @@ div.k-window.k-state-focused
 .k-map .k-attribution {
     color: #666666;
 }
+
+@import "themes/spreadsheet.less";
+
+@spreadsheet-cell-border: darken(@background, 13%);
+

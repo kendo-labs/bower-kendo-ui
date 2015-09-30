@@ -17,6 +17,10 @@
     define([ "./kendo.draganddrop" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
@@ -131,6 +135,10 @@
             this._maxSelection = this._trackDiv[this._sizeFn]();
             this._sliderItemsInit();
             this._refresh();
+
+            if (this.options.enabled) {
+                this.enable(true);
+            }
         },
 
         _sliderItemsInit: function() {
@@ -668,7 +676,7 @@
 
             dragHandle = that.wrapper.find(DRAG_HANDLE);
 
-            new Slider.Selection(dragHandle, that, options);
+            this._selection = new Slider.Selection(dragHandle, that, options);
             that._drag = new Slider.Drag(dragHandle, "", that, options);
         },
 
@@ -1348,7 +1356,7 @@
 
             var dragHandles = that.wrapper.find(DRAG_HANDLE);
 
-            new RangeSlider.Selection(dragHandles, that, options);
+            this._selection = new RangeSlider.Selection(dragHandles, that, options);
             that._firstHandleDrag = new Slider.Drag(dragHandles.eq(0), "firstHandle", that, options);
             that._lastHandleDrag = new Slider.Drag(dragHandles.eq(1), "lastHandle" , that, options);
         },
@@ -1712,6 +1720,10 @@
     kendo.ui.plugin(RangeSlider);
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

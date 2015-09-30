@@ -17,6 +17,10 @@
     define([ "./kendo.draganddrop" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
@@ -65,7 +69,7 @@
                 that.options.hint = defaultHint;
             }
 
-            that._draggable = that._createDraggable();
+            that.draggable = that._createDraggable();
         },
 
         events: [
@@ -96,7 +100,7 @@
         },
 
         destroy: function() {
-            this._draggable.destroy();
+            this.draggable.destroy();
             Widget.fn.destroy.call(this);
         },
 
@@ -123,7 +127,6 @@
 
         _dragstart: function(e) {
             var draggedElement = this.draggedElement = e.currentTarget,
-                target = e.target || kendo.elementUnderCursor(e),
                 disabled = this.options.disabled,
                 handler = this.options.handler,
                 _placeholder = this.options.placeholder,
@@ -147,7 +150,7 @@
             }
         },
 
-        _dragcancel: function(e) {
+        _dragcancel: function() {
             this._cancel();
             this.trigger(CANCEL, { item: this.draggedElement });
 
@@ -267,7 +270,7 @@
             placeholder.replaceWith(draggedElement);
 
             draggedElement.show();
-            this._draggable.dropped = true;
+            this.draggable.dropped = true;
 
             eventData = {
                 action: this.indexOf(draggedElement) != MISSING_INDEX ? ACTION_SORT : ACTION_REMOVE,
@@ -314,10 +317,7 @@
 
         _findElementUnderCursor: function(e) {
             var elementUnderCursor = kendo.elementUnderCursor(e),
-                draggable = e.sender,
-                disabled = this.options.disabled,
-                filter = this.options.filter,
-                items = this.items();
+                draggable = e.sender;
 
             if(containsOrEqualTo(draggable.hint[0], elementUnderCursor)) {
                 draggable.hint.hide();
@@ -518,6 +518,10 @@
 
     kendo.ui.plugin(Sortable);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

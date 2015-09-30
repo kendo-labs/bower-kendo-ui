@@ -384,6 +384,12 @@ kendo-mobile-drawer {
 .km-stretched-view > * {
   width: 100%;
 }
+.km-stretched-view > .km-pane-wrapper {
+  position: static;
+}
+.km-stretched-view > .km-pane-wrapper > .km-pane {
+  position: static;
+}
 .km-overlay {
   position: absolute;
   top: 0;
@@ -3348,18 +3354,18 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-badge,
 .km-android .km-detail,
 .km-android .km-rowdelete {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(255, 255, 255, 0.5) rgba(204, 204, 204, 0.5) 50% rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0));
-  background-image: linear-gradient(to bottom rgba(255, 255, 255, 0.5) rgba(204, 204, 204, 0.5) 50% rgba(255, 255, 255, 0.1) 50% rgba(255, 255, 255, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.1)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   border-color: #ffffff;
   background-color: #B01B1A;
 }
 .km-android-light .km-badge,
 .km-android-light .km-detail,
 .km-android-light .km-rowdelete {
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top rgba(34, 34, 34, 0.5) rgba(204, 204, 204, 0.5) 50% rgba(34, 34, 34, 0.1) 50% rgba(34, 34, 34, 0));
-  background-image: linear-gradient(to bottom rgba(34, 34, 34, 0.5) rgba(204, 204, 204, 0.5) 50% rgba(34, 34, 34, 0.1) 50% rgba(34, 34, 34, 0));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(34, 34, 34, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(34, 34, 34, 0.1)), to(rgba(34, 34, 34, 0)));
+  background-image: -webkit-linear-gradient(top, rgba(34, 34, 34, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(34, 34, 34, 0.1) 50%, rgba(34, 34, 34, 0));
+  background-image: linear-gradient(to bottom, rgba(34, 34, 34, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(34, 34, 34, 0.1) 50%, rgba(34, 34, 34, 0));
   border-color: #222222;
 }
 .km-android .km-detail .km-text {
@@ -3428,18 +3434,18 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-item label:before {
   border-color: #000000;
   background-color: #363636;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #363636 #2b2b2b);
-  background-image: linear-gradient(to bottom #363636 #2b2b2b);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#363636), to(#2b2b2b));
+  background-image: -webkit-linear-gradient(top, #363636, #2b2b2b);
+  background-image: linear-gradient(to bottom, #363636, #2b2b2b);
   -webkit-box-shadow: 0 0 1px 2px #808080;
           box-shadow: 0 0 1px 2px #808080;
 }
 .km-android-light .km-item label:before {
   border-color: #fcfcfc;
   background-color: #c6c6c6;
-  background-image: -webkit-gradient(linear, );
-  background-image: -webkit-linear-gradient(top #c6c6c6 #d1d1d1);
-  background-image: linear-gradient(to bottom #c6c6c6 #d1d1d1);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#c6c6c6), to(#d1d1d1));
+  background-image: -webkit-linear-gradient(top, #c6c6c6, #d1d1d1);
+  background-image: linear-gradient(to bottom, #c6c6c6, #d1d1d1);
   -webkit-box-shadow: 0 0 1px 2px #999999;
           box-shadow: 0 0 1px 2px #999999;
 }
@@ -3684,7 +3690,7 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-state-active .km-listview-link,
 .km-android .km-state-active .km-listview-label {
   color: #ffffff;
-  background: inherit;
+  background: #33b5e5;
 }
 .km-android li.km-actionsheet-cancel > a:focus,
 .km-android li.km-actionsheet-cancel > a:active,

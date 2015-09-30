@@ -17,6 +17,10 @@
     define([ "./kendo.data" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function ($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -872,8 +876,7 @@
 
         _tabPosition: function() {
             var that = this,
-                tabPosition = that.options.tabPosition,
-                tabGroup = that.tabGroup;
+                tabPosition = that.options.tabPosition;
 
             that.wrapper.addClass("k-floatwrap k-tabstrip-" + tabPosition);
 
@@ -967,7 +970,7 @@
 
             return prevent;
         },
-        
+
         _scrollable: function() {
             var that = this,
                 options = that.options,
@@ -1444,6 +1447,10 @@
     kendo.ui.plugin(TabStrip);
 
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

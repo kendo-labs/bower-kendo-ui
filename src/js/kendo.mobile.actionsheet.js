@@ -17,6 +17,10 @@
     define([ "./kendo.mobile.popover", "./kendo.mobile.shim" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         support = kendo.support,
@@ -161,6 +165,10 @@
 
     ui.plugin(ActionSheet);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 

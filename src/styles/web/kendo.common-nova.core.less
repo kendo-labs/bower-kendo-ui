@@ -119,7 +119,7 @@
 .k-grid-header th.k-header,
 .k-filter-row th
 {
-    padding: .429em .6em .571em .6em;
+    padding: .786em .6em .786em 1.286em;
 }
 
 .k-filtercell > span {
@@ -129,13 +129,44 @@
 .k-filtercell > span > .k-button {
     padding-left: .714em;
     padding-right: .714em;
-    line-height: 1.286em;
+    line-height: 1em;
     margin: 0;
+}
+
+.k-filtercell .k-numerictextbox {
+    margin-right: 8px;
 }
 
 .k-filter-row .k-dropdown-operator {
     width: 2.714em;
     right: 2.857em;
+}
+
+.k-filter-menu>div>div:last-child {
+    margin: 1em -0.5em -1.643em;
+    border-top-width: 1px;
+    border-top-style: solid;
+}
+
+.k-filter-menu .k-button {
+    margin: 0;
+    width: 50%;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.k-edit-form-container .k-button {
+    margin: 0;
+    padding: 10px 11px;
+}
+
+.k-edit-form-container .k-primary {
+    margin-right: 11px;
+}
+
+.k-filter-menu .k-primary,
+.k-edit-form-container .k-primary {
+    float: right;
 }
 
 .k-grouping-header .k-group-indicator
@@ -222,7 +253,7 @@
 
 .k-pager-wrap .k-pager-numbers .k-state-selected {
     margin-top: -.4em;
-    padding-top: .4em;
+    padding-top: .35em;
     min-width: 2.429em;
 }
 
@@ -534,17 +565,49 @@ table.k-editor {
     height: 24px;
 }
 
-.k-editor-toolbar .k-tool,
-.k-editor-toolbar .k-button-group .k-tool.k-group-end {
-    border-width: 0;
-}
+.k-editor-toolbar {
+    > li {
+        margin-right: 0;
+    }   
+    .k-button-group .k-tool {
+        width: 48px;
+        height: 48px;
+        line-height: 48px;
+        margin: 0;
+        text-align: center;
+    }
 
-.k-editor-toolbar .k-state-selected {
-    font-weight: bold;  
-}
+    li.k-tool-group,
+    li.k-overflow-tools {
+        padding: 0;
+    }
 
-.k-editor-toolbar .k-tool.k-state-hover {
-    border-radius: 50%;
+    .k-tool-group:first-child {
+        border-right: 0;
+    }
+
+    li.k-tool-group:only-of-type {
+        padding-top: 5px;
+        padding-bottom: 6px;
+    }
+
+    .k-tool,
+    .k-button-group .k-tool.k-group-end {
+        border-width: 0;
+    }
+
+    .k-state-selected {
+        font-weight: bold;  
+    }    
+
+    .k-tool,
+    .k-button-group .k-tool.k-group-end {
+        border-width: 0;
+    }
+
+    .k-state-selected {
+        font-weight: bold;  
+    }
 }
 
 .k-filebrowser {
@@ -590,7 +653,17 @@ span.k-tooltip
 
 .k-block > .k-header, 
 .k-window-titlebar {
-    padding: 0.5em 0 0.571em;
+    padding: 0.49em 0;
+    height: 2.362em;
+    border-width: 0;
+}
+
+.k-widget.k-tooltip-validation {
+    padding: 11px 20px 9px;
+}
+
+.k-tooltip-validation .k-warning {
+    margin-right: 10px;
 }
 
 .k-window-titlebar .k-window-actions {
@@ -805,10 +878,23 @@ div.editorToolbarWindow.k-window-content {
 }
 
 .k-gantt-toolbar li .k-link,
-.k-scheduler-toolbar li .k-link {
+.k-scheduler-toolbar li .k-link,
+.k-gantt-toggle {
     vertical-align: middle;
-    line-height: 44px;
-    padding-top: 2px;
+    line-height: 46px;
+}
+
+.k-gantt-toggle {
+    padding: 0
+}
+
+.k-gantt-actions {
+    vertical-align: middle;
+    line-height: 48px;
+}
+
+.k-gantt-actions > .k-button {
+     vertical-align: middle;
 }
 
 .k-gantt-toolbar,
@@ -994,8 +1080,8 @@ div.editorToolbarWindow.k-window-content {
 
 .k-grid-header .k-grid-filter,
 .k-grid-header .k-header-column-menu {
-    padding: .357em .6em .5em .6em;
-    margin: 0 0 -.4em -.6em;
+    padding: .714em;
+    margin: -.786em -.6em;
 }
 
 .k-grid-header .k-header-column-menu .k-i-arrowhead-s {
@@ -1094,6 +1180,11 @@ div.editorToolbarWindow.k-window-content {
 
     .k-i-expand {
         background-position: 0 0;
+    }
+
+    .k-i-gantt-toggle,
+    .k-button:not(.k-state-disabled):hover .k-i-gantt-toggle {
+        background-position: -80px -240px;
     }
 }
 

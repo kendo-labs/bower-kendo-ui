@@ -17,6 +17,10 @@
     define([ "./kendo.data", "./kendo.userevents", "./kendo.mobile.button" ], f);
 })(function(){
 
+(function(){
+
+
+
 (function($, undefined) {
     var kendo = window.kendo,
         Node = window.Node,
@@ -723,10 +727,12 @@
                 item;
 
 
-            if (action === "itemchange" && !listView._hasBindingTarget()) {
-                item = listView.findByDataItem(dataItems)[0];
-                if (item) {
-                    listView.setDataItem(item, dataItems[0]);
+            if (action === "itemchange") {
+                if(!listView._hasBindingTarget()) {
+                    item = listView.findByDataItem(dataItems)[0];
+                    if (item) {
+                        listView.setDataItem(item, dataItems[0]);
+                    }
                 }
                 return;
             }
@@ -1138,6 +1144,7 @@
                 replaceItem = function(items) {
                     var newItem = $(items[0]);
                     kendo.destroy(item);
+                    listView.angular("cleanup", function(){ return { elements: [ $(item) ] }; });
                     $(item).replaceWith(newItem);
                     listView.trigger(ITEM_CHANGE, { item: newItem, data: dataItem, ns: ui });
                 };
@@ -1152,7 +1159,9 @@
         _renderItems: function(dataItems, callback) {
             var items = $(kendo.render(this.template, dataItems));
 
-            this.angular("compile", function(){
+            callback(items);
+
+            this.angular("compile", function() {
                 return {
                     elements: items,
                     data: dataItems.map(function(data){
@@ -1161,7 +1170,6 @@
                 };
             });
 
-            callback(items);
             mobile.init(items);
             this._enhanceItems(items);
 
@@ -1305,6 +1313,10 @@
 
     ui.plugin(ListView);
 })(window.kendo.jQuery);
+
+
+
+})();
 
 return window.kendo;
 
