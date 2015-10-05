@@ -423,6 +423,7 @@
 
                 if (formattedValue !== value) {
                     that.element.val(date === null ? value : formattedValue);
+                    that.element.trigger(CHANGE);
                 }
 
                 return date;
@@ -753,7 +754,7 @@
         options.format = extractFormat(options.format || patterns.g);
         options.timeFormat = timeFormat = extractFormat(options.timeFormat || patterns.t);
         kendo.DateView.normalize(options);
-        
+
         if (parseFormats) {
            options.parseFormats.unshift("yyyy-MM-ddTHH:mm:ss");
         }

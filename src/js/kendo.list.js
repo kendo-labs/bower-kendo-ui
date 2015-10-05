@@ -1987,7 +1987,7 @@
                     that._skipUpdate = false;
                     that._selectedIndices = that._valueIndices(that._values, that._selectedIndices);
                 }
-            } else if (!action || action === "add") {
+            } else if (!that.options.skipUpdateOnBind && (!action || action === "add")) {
                 that.value(that._values);
             }
 

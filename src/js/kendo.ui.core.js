@@ -49,7 +49,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.3.930";
+    kendo.version = "2015.3.1005";
 
     function Class() {}
 
@@ -23745,7 +23745,7 @@ function pad(number, digits, end) {
                     that._skipUpdate = false;
                     that._selectedIndices = that._valueIndices(that._values, that._selectedIndices);
                 }
-            } else if (!action || action === "add") {
+            } else if (!that.options.skipUpdateOnBind && (!action || action === "add")) {
                 that.value(that._values);
             }
 
@@ -25934,6 +25934,8 @@ function pad(number, digits, end) {
 
             that.listView.bind("click", function(e) { e.preventDefault(); });
 
+            that._resetFocusItemHandler = $.proxy(that._resetFocusItem, that);
+
             kendo.notify(that);
         },
 
@@ -26077,6 +26079,8 @@ function pad(number, digits, end) {
                 that._open = true;
 
                 that.listView.filter(true);
+                that.listView.value([]);
+
                 that._filterSource({
                     value: ignoreCase ? word.toLowerCase() : word,
                     operator: options.filter,
@@ -26195,7 +26199,8 @@ function pad(number, digits, end) {
                     that._angularItems("cleanup");
                 },
                 dataBound: listBoundHandler,
-                listBound: listBoundHandler
+                listBound: listBoundHandler,
+                skipUpdateOnBind: true
             };
 
             listOptions = $.extend(that._listOptions(), listOptions, typeof virtual === "object" ? virtual : {});
@@ -26211,6 +26216,16 @@ function pad(number, digits, end) {
             that.listView.value(that.options.value);
         },
 
+        _resetFocusItem: function() {
+            var index = this.options.highlightFirst ? 0 : -1;
+
+            if (this.options.virtual) {
+                this.listView.scrollTo(0);
+            }
+
+            this.listView.focus(index);
+        },
+
         _listBound: function() {
             var that = this;
             var popup = that.popup;
@@ -26222,24 +26237,11 @@ function pad(number, digits, end) {
 
             that._angularItems("compile");
 
-            if (that._open) {
-                that.listView.value([]);
-                that.listView.focus(-1);
-            }
-
-            that.listView.filter(false);
-
             that._calculateGroupPadding(that._height(length));
 
             popup.position();
 
             if (length) {
-                var current = this.listView.focus();
-
-                if (options.highlightFirst && !current) {
-                    that.listView.focusFirst();
-                }
-
                 if (options.suggest && isActive) {
                     that.suggest(data[0]);
                 }
@@ -26253,9 +26255,21 @@ function pad(number, digits, end) {
                     action = "close";
                 }
 
+                if (length) {
+                    if (!options.virtual) {
+                        that._resetFocusItem();
+                    } else {
+                        that.popup
+                            .unbind("activate", that._resetFocusItemHandler)
+                            .one("activate", that._resetFocusItemHandler);
+                    }
+                }
+
                 popup[action]();
                 that._typingTimeout = undefined;
             }
+
+            that.listView.filter(false);
 
             if (that._touchScroller) {
                 that._touchScroller.reset();
@@ -40811,6 +40825,7 @@ function pad(number, digits, end) {
 
                 if (formattedValue !== value) {
                     that.element.val(date === null ? value : formattedValue);
+                    that.element.trigger(CHANGE);
                 }
 
                 return date;
@@ -41141,7 +41156,7 @@ function pad(number, digits, end) {
         options.format = extractFormat(options.format || patterns.g);
         options.timeFormat = timeFormat = extractFormat(options.timeFormat || patterns.t);
         kendo.DateView.normalize(options);
-        
+
         if (parseFormats) {
            options.parseFormats.unshift("yyyy-MM-ddTHH:mm:ss");
         }
@@ -43739,7 +43754,7 @@ function pad(number, digits, end) {
                 }
 
                 that._createList();
-                if (!action && that._values.length && !that._filter) {
+                if (!action && that._values.length && !that._filter && !that.options.skipUpdateOnBind) {
                     that.value(that._values, true).done(function() {
                         that._lastPage = that.dataSource.page();
                         that._listCreated = true;
