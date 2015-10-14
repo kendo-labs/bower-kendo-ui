@@ -158,6 +158,7 @@
             separator: null,
             placeholder: "",
             animation: {},
+            virtual: false,
             value: null
         },
 

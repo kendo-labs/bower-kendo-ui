@@ -474,8 +474,6 @@ kendo-mobile-drawer {
 }
 .km-native-scrolling > .km-pane > .km-loader {
   position: fixed;
-  top: 50%;
-  margin-top: -2em;
 }
 .km-native-scrolling .km-header,
 .km-native-scrolling .km-footer {

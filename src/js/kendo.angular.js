@@ -409,6 +409,10 @@
 
             setTimeout(function(){
                 if (widget) { // might have been destroyed in between. :-(
+                    var kNgModel = scope[widget.element.attr("k-ng-model")];
+                    if (kNgModel) {
+                        val = kNgModel;
+                    }
                     widget.value(val);
                 }
             }, 0);
@@ -430,7 +434,6 @@
                 if (haveChangeOnElement) {
                     return;
                 }
-                haveChangeOnElement = false;
                 if (pristine && ngForm) {
                     formPristine = ngForm.$pristine;
                 }
@@ -494,6 +497,7 @@
             if (newValue === oldValue) {
                 return;
             }
+
             widget.$angular_setLogicValue(newValue);
         };
         if (kendo.ui.MultiSelect && widget instanceof kendo.ui.MultiSelect) {
@@ -742,6 +746,7 @@
 
     var SKIP_SHORTCUTS = [
         'MobileView',
+        'MobileDrawer',
         'MobileLayout',
         'MobileSplitView',
         'MobilePane',

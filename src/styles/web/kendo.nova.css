@@ -1602,6 +1602,31 @@ html .km-pane-wrapper .km-widget,
     -ms-transform: translatey(-100%);
         transform: translatey(-100%);
   }
+  .k-webkit .km-pane-wrapper .k-pager-numbers,
+  .k-ff .km-pane-wrapper .k-pager-numbers,
+  .k-ie11 .km-pane-wrapper .k-pager-numbers,
+  .k-safari .km-pane-wrapper .k-pager-numbers,
+  .k-webkit .km-pane-wrapper .k-grid .k-pager-numbers,
+  .k-ff .km-pane-wrapper .k-grid .k-pager-numbers,
+  .k-ie11 .km-pane-wrapper .k-grid .k-pager-numbers,
+  .k-safari .km-pane-wrapper .k-grid .k-pager-numbers {
+    left: 50%;
+    -ms-transform: translate(-50%, 0%);
+        transform: translate(-50%, 0%);
+    -webkit-transform: translate(-50%, 0%);
+  }
+  .k-webkit .km-pane-wrapper .k-pager-numbers.k-state-expanded,
+  .k-ff .km-pane-wrapper .k-pager-numbers.k-state-expanded,
+  .k-ie11 .km-pane-wrapper .k-pager-numbers.k-state-expanded,
+  .k-safari .km-pane-wrapper .k-pager-numbers.k-state-expanded,
+  .k-webkit .km-pane-wrapper .k-grid .k-pager-numbers.k-state-expanded,
+  .k-ff .km-pane-wrapper .k-grid .k-pager-numbers.k-state-expanded,
+  .k-ie11 .km-pane-wrapper .k-grid .k-pager-numbers.k-state-expanded,
+  .k-safari .km-pane-wrapper .k-grid .k-pager-numbers.k-state-expanded {
+    -webkit-transform: translate(-50%, -100%);
+    -ms-transform: translate(-50%, -100%);
+        transform: translate(-50%, -100%);
+  }
   .k-webkit .km-pane-wrapper .k-pager-numbers .k-link,
   .k-ff .km-pane-wrapper .k-pager-numbers .k-link,
   .k-ie11 .km-pane-wrapper .k-pager-numbers .k-link,
@@ -1861,6 +1886,10 @@ html .km-pane-wrapper .km-widget,
 .k-map .k-attribution {
   color: #666666;
 }
+.k-spreadsheet-row-header,
+.k-spreadsheet-column-header {
+  background-color: #ffffff;
+}
 .k-spreadsheet-top-corner,
 .k-spreadsheet-row-header td,
 .k-spreadsheet-column-header td {
@@ -1893,16 +1922,16 @@ html .km-pane-wrapper .km-widget,
   border-color: rgba(38, 198, 218, 0.2);
   background-color: rgba(38, 198, 218, 0.2);
 }
-.k-spreadsheet-column-header .k-selection-partial,
-.k-spreadsheet-column-header .k-selection-full {
+.k-spreadsheet-pane .k-filter-range {
+  border-color: #26c6da;
+}
+.k-spreadsheet-pane .k-spreadsheet-column-header .k-selection-partial,
+.k-spreadsheet-pane .k-spreadsheet-column-header .k-selection-full {
   border-bottom-color: #26c6da;
 }
-.k-spreadsheet-row-header .k-selection-partial,
-.k-spreadsheet-row-header .k-selection-full {
+.k-spreadsheet-pane .k-spreadsheet-row-header .k-selection-partial,
+.k-spreadsheet-pane .k-spreadsheet-row-header .k-selection-full {
   border-right-color: #26c6da;
-}
-.k-spreadsheet-pane .k-selection-partial {
-  background-color: rgba(38, 198, 218, 0.2);
 }
 .k-spreadsheet-selection {
   background-color: rgba(38, 198, 218, 0.2);

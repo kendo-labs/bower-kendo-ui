@@ -157,6 +157,7 @@
             placeholder: "",
             height: 200,
             animation: {},
+            virtual: false,
             itemTemplate: "",
             tagTemplate: "",
             groupTemplate: "#:data#",

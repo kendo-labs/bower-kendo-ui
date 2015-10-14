@@ -324,8 +324,6 @@
 
                 var element = this.element;
 
-                element.addClass(OVERFLOW_BUTTON + " " + BUTTON);
-
                 if (options.showText != "toolbar" && options.text) {
                     if (options.mobile) {
                         element.html('<span class="km-text">' + options.text + "</span>");
@@ -348,6 +346,8 @@
                 this.addUidAttr();
                 this.addOverflowAttr();
                 this.enable(options.enable);
+
+                element.addClass(OVERFLOW_BUTTON + " " + BUTTON);
 
                 if (options.hidden) {
                     this.hide();
@@ -527,7 +527,7 @@
                     } else if (e.keyCode === keys.UP) {
                         findFocusableSibling(li, "prev").focus();
                     } else if (e.keyCode === keys.SPACEBAR || e.keyCode === keys.ENTER) {
-                            that.toolbar.userEvents.trigger("tap", { target: $(e.target) });
+                        that.toolbar.userEvents.trigger("tap", { target: $(e.target) });
                     }
                 });
             },
@@ -817,8 +817,14 @@
             },
 
             select: function(button) {
+                var tmp;
                 for (var i = 0; i < this.buttons.length; i ++) {
-                    this.buttons[i].select(false);
+                    tmp = this.buttons[i];
+
+                    tmp.select(false);
+                    if (tmp.twin()) {
+                        tmp.twin().select(false);
+                    }
                 }
 
                 button.select(true);
@@ -1362,6 +1368,9 @@
                 }
 
                 if (keyCode === keys.SPACEBAR || keyCode === keys.ENTER) {
+
+                    e.preventDefault(); //prevent pspacebar to scroll the page down
+
                     if (target.is("." + SPLIT_BUTTON)) {
                         target = target.children().first();
                     }

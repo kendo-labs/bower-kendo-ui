@@ -1757,60 +1757,6 @@ html .km-pane-wrapper .km-widget,
     border-color: #fff;
   }
 }
-.ktb-checkbox-label-after {
-  border-color: #bfbfbf;
-  background: #ffffff;
-}
-.ktb-checkbox-label-hover-after,
-.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
-  border-color: #007cc0;
-}
-.ktb-checkbox-checked + .ktb-checkbox-label-after {
-  background-color: #ffffff;
-  border-color: #bfbfbf;
-  color: #007cc0;
-}
-.ktb-checkbox-label-hover-after,
-.ktb-checkbox-checked + .ktb-checkbox-label-hover-after {
-  border-color: #007cc0;
-}
-.ktb-checkbox-label-active-after {
-  border-color: #bfbfbf;
-}
-.ktb-checkbox-checked-disabled + .ktb-checkbox-label-after,
-.ktb-checkbox-disabled + .ktb-checkbox-label-after,
-.ktb-checkbox-checked-disabled + .ktb-checkbox-label-active-after,
-.ktb-checkbox-disabled + .ktb-checkbox-label-hover-before,
-.ktb-checkbox-checked-disabled + .ktb-checkbox-label-hover-after {
-  background: #f4f4f4;
-  color: #bababa;
-  border-color: #bfbfbf;
-}
-.ktb-radio-label-before {
-  border-color: #bfbfbf;
-  background-color: #ffffff;
-}
-.ktb-radio-checked + .ktb-radio-label-after {
-  background-color: #007cc0;
-}
-.ktb-radio-checked + .ktb-radio-label-before {
-  border-color: #007cc0;
-}
-.ktb-radio-label-hover-before,
-.ktb-radio-checked + .ktb-radio-label-hover-before {
-  border-color: #007cc0;
-}
-.ktb-radio-label-active-before {
-  border-color: #bfbfbf;
-}
-.ktb-radio-checked + .ktb-radio-label-after {
-  background-color: #007cc0;
-}
-.ktb-radio-disabled + .ktb-radio-label-before,
-.ktb-radio-disabled + .ktb-radio-label-active-before {
-  background: #ffffff;
-  border-color: #bfbfbf;
-}
 /* Responsive styles */
 @media only screen and (max-width: 1024px) {
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
@@ -2604,6 +2550,10 @@ div.k-window.k-state-focused {
 .k-map .k-attribution {
   color: #666666;
 }
+.k-spreadsheet-row-header,
+.k-spreadsheet-column-header {
+  background-color: #ffffff;
+}
 .k-spreadsheet-top-corner,
 .k-spreadsheet-row-header td,
 .k-spreadsheet-column-header td {
@@ -2636,16 +2586,16 @@ div.k-window.k-state-focused {
   border-color: rgba(0, 124, 192, 0.2);
   background-color: rgba(0, 124, 192, 0.2);
 }
-.k-spreadsheet-column-header .k-selection-partial,
-.k-spreadsheet-column-header .k-selection-full {
+.k-spreadsheet-pane .k-filter-range {
+  border-color: #007cc0;
+}
+.k-spreadsheet-pane .k-spreadsheet-column-header .k-selection-partial,
+.k-spreadsheet-pane .k-spreadsheet-column-header .k-selection-full {
   border-bottom-color: #007cc0;
 }
-.k-spreadsheet-row-header .k-selection-partial,
-.k-spreadsheet-row-header .k-selection-full {
+.k-spreadsheet-pane .k-spreadsheet-row-header .k-selection-partial,
+.k-spreadsheet-pane .k-spreadsheet-row-header .k-selection-full {
   border-right-color: #007cc0;
-}
-.k-spreadsheet-pane .k-selection-partial {
-  background-color: rgba(0, 124, 192, 0.2);
 }
 .k-spreadsheet-selection {
   background-color: rgba(0, 124, 192, 0.2);

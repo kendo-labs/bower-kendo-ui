@@ -327,7 +327,7 @@
 
             if (this.options.$angular) {
                 controller = this.element.controller();
-                scope = this.element.scope();
+                scope = this.$angular[0];
 
                 if (controller) {
                     var callback = $.proxy(this, '_callController', controller, scope);

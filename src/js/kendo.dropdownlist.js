@@ -259,6 +259,9 @@
                 dataItem = that.listView.selectedDataItems()[0];
             } else {
                 if (typeof index !== "number") {
+                    if (that.options.virtual) {
+                        return that.dataSource.getByUid($(index).data("uid"));
+                    }
                     if (index.hasClass("k-list-optionlabel")) {
                         index = -1;
                     } else {

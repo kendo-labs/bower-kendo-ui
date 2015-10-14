@@ -136,6 +136,7 @@
             cascadeFromField: "",
             ignoreCase: true,
             animation: {},
+            virtual: false,
             template: null,
             groupTemplate: "#:data#",
             fixedGroupTemplate: "#:data#"

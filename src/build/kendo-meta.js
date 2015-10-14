@@ -244,7 +244,7 @@ var getKendoFile = (function() {
         }),
 
         _getFullAST: function(withoutDeps){
-            var deps = withoutDeps ? [] : this.getCompFiles();
+            var deps = withoutDeps ? [] : this.getCompFiles().slice().reverse();
             var ast = this.getAMDFactory().factory;
             ast = cloneAST(ast);
             ast.transform(new U2.TreeTransformer(function(node, descend){
@@ -253,7 +253,7 @@ var getKendoFile = (function() {
                     deps.forEach(function(f){
                         var comp = getKendoFile(f);
                         var f = comp.getAMDFactory().factory;
-                        node.body.push(new U2.AST_SimpleStatement({
+                        node.body.unshift(new U2.AST_SimpleStatement({
                             body: new U2.AST_Call({
                                 expression: f,
                                 args: []

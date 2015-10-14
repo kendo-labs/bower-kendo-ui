@@ -2501,10 +2501,6 @@ ul.k-menu-vertical .k-separator,
 .k-grid .k-state-hover {
   cursor: pointer;
 }
-.k-grid-column-resizing th,
-.k-grid-column-resizing td {
-  -webkit-transform: translateZ(0);
-}
 .k-grid-column-resizing,
 .k-grid-column-resizing .k-grid-filter,
 .k-grid-column-resizing .k-link,
@@ -10961,6 +10957,7 @@ div.k-navigator .k-navigator-w {
 .k-spreadsheet .k-spreadsheet-pane table.k-spreadsheet-column-header td {
   border-top-width: 0;
 }
+.k-spreadsheet .k-filter-range,
 .k-spreadsheet .k-spreadsheet-selection,
 .k-spreadsheet .k-spreadsheet-active-cell {
   border-width: 1px;
@@ -11062,7 +11059,7 @@ div.k-navigator .k-navigator-w {
 }
 .k-spreadsheet .k-merged-cells-wrapper,
 .k-spreadsheet .k-selection-wrapper,
-.k-spreadsheet .k-filter-headers,
+.k-spreadsheet .k-filter-wrapper,
 .k-spreadsheet .k-spreadsheet-column-header {
   position: relative;
 }
@@ -11591,7 +11588,7 @@ div.k-navigator .k-navigator-w {
   right: 2.857em;
 }
 .k-filter-menu > div > div:last-child {
-  margin: 1em -0.5em -1.643em;
+  margin: 1em -0.5em -0.5em;
   border-top-width: 1px;
   border-top-style: solid;
 }
@@ -11626,9 +11623,10 @@ div.k-navigator .k-navigator-w {
   padding: 0.929em 1.286em;
 }
 .k-grid-header th.k-header > .k-link {
-  font-size: 0.929em;
-  padding: 0.462em 1.286em;
-  margin-top: 0;
+  padding: 0;
+  margin: 0;
+  min-height: 16px;
+  line-height: inherit;
 }
 .k-grouping-header {
   line-height: 2.6;
@@ -12476,8 +12474,8 @@ div.editorToolbarWindow.k-window-content {
 }
 .k-grid-header .k-grid-filter,
 .k-grid-header .k-header-column-menu {
-  padding: .714em;
-  margin: -0.786em -0.6em;
+  padding: .857em;
+  margin: -0.9em -0.6em -0.714em -0.6em;
 }
 .k-grid-header .k-header-column-menu .k-i-arrowhead-s {
   background-position: -64px -32px;

@@ -188,7 +188,7 @@
         if (data.index !== 0 && data.newGroup) {
             $("<div class=" + GROUPITEM + "></div>")
                 .appendTo(element)
-                .html(templates.groupTemplate({ group: data.group }));
+                .html(templates.groupTemplate(data.group));
         }
 
         if (data.top !== undefined) {
@@ -277,7 +277,7 @@
             dataValueField: null,
             template: "#:data#",
             placeholderTemplate: "loading...",
-            groupTemplate: "#:group#",
+            groupTemplate: "#:data#",
             fixedGroupTemplate: "fixed header template",
             valueMapper: null
         },
@@ -417,6 +417,10 @@
 
             if (value === undefined) {
                 return that._values.slice();
+            }
+
+            if (value === null) {
+                value = [];
             }
 
             value = toArray(value);
@@ -702,6 +706,10 @@
                 }
 
                 return index;
+            } else {
+                index = this.dataSource.total() - 1;
+                this.focus(index);
+                return index;
             }
         },
 
@@ -720,6 +728,10 @@
                     this.focus(index);
                 }
 
+                return index;
+            } else {
+                index = 0;
+                this.focus(index);
                 return index;
             }
         },
@@ -990,6 +1002,10 @@
                 type = this.options.type,
                 pageSize = this.itemCount,
                 flatGroups = {};
+
+            if (dataSource.pageSize() < pageSize) {
+                dataSource.pageSize(pageSize);
+            }
 
             return function(index, rangeStart) {
                 var that = this;
