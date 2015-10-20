@@ -11928,10 +11928,12 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   opacity: 1;
 }
 .km-material .km-buttongroup,
-.km-material .km-widget.km-navbar .km-buttongroup {
+.km-material .km-widget.km-navbar .km-buttongroup,
+.km-pane-wrapper .k-mobile-list .k-edit-field.k-scheduler-toolbar {
   border-color: rgba(0, 0, 0, 0.12);
 }
-.km-material .km-buttongroup .km-button {
+.km-material .km-buttongroup .km-button,
+.km-pane-wrapper .k-mobile-list .k-scheduler-toolbar .k-link {
   color: #333333;
 }
 .km-material-dark .km-buttongroup .km-button {
@@ -11947,12 +11949,26 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   color: #3f51b5;
   background-color: transparent;
   border-color: #3f51b5;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .km-root .km-material-dark .km-buttongroup > .km-state-active,
 .km-root .km-material .km-widget.km-navbar .km-buttongroup .km-state-active {
   color: #55c6ff;
   background-color: transparent;
   border-color: #55c6ff;
+}
+.km-pane-wrapper .k-mobile-list .k-edit-field.k-scheduler-toolbar {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.km-pane-wrapper .k-mobile-list .k-scheduler-toolbar ul li {
+  border-color: transparent;
+}
+.km-pane-wrapper .k-mobile-list .k-scheduler-toolbar ul li.k-state-selected {
+  border-bottom-color: #3f51b5;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .km-material .km-content,
 .km-material .km-tabstrip,

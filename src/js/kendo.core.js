@@ -49,7 +49,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.3.1014";
+    kendo.version = "2015.3.1020";
 
     function Class() {}
 

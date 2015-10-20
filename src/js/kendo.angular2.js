@@ -22,7 +22,7 @@
 
 
 (function (kendo, System) {
-    if (!System) {
+    if (!System || !System.register) {
         return;
     }
 

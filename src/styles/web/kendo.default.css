@@ -230,11 +230,11 @@ textarea.k-textbox:hover,
 .k-textbox > input,
 .k-multiselect-wrap {
   background-color: #ffffff;
-  color: #5f2200;
+  color: #2e2e2e;
 }
 .k-input[readonly] {
   background-color: #ffffff;
-  color: #5f2200;
+  color: #2e2e2e;
 }
 .k-block,
 .k-widget,
@@ -429,9 +429,7 @@ html .km-pane-wrapper .k-header {
   -webkit-box-shadow: 0 0 0 2px #2e2e2e;
           box-shadow: 0 0 0 2px #2e2e2e;
 }
-.k-ie7 .k-event .k-resize-handle,
 .k-event .k-resize-handle:after,
-.k-ie7 .k-task-single .k-resize-handle,
 .k-task-single .k-resize-handle:after {
   background-color: #787878;
 }
@@ -624,15 +622,7 @@ td.k-state-focused.k-state-selected {
 .k-ie8 td.k-state-focused,
 .k-ie8 .k-tool.k-state-hover,
 .k-ie8 .k-button:focus,
-.k-ie8 .k-button.k-state-focused,
-.k-ie7 .k-panelbar span.k-state-focused,
-.k-ie7 .k-menu li.k-state-focused,
-.k-ie7 .k-listview > .k-state-focused,
-.k-ie7 .k-grid-header th.k-state-focused,
-.k-ie7 td.k-state-focused,
-.k-ie7 .k-tool.k-state-hover,
-.k-ie7 .k-button:focus,
-.k-ie7 .k-button.k-state-focused {
+.k-ie8 .k-button.k-state-focused {
   background-color: #bcb4b0;
 }
 .k-list > .k-state-selected.k-state-focused,
@@ -668,7 +658,6 @@ td.k-state-focused.k-state-selected {
   background-color: #bcb4b0;
   border-color: #b6b6b6;
 }
-.k-ie7 .k-window-titlebar .k-state-hover,
 .k-ie8 .k-window-titlebar .k-state-hover {
   border-color: #b6b6b6;
 }
@@ -1430,6 +1419,8 @@ html .km-pane-wrapper .km-widget,
   background-position: 50% 50%;
   border-color: #b6b6b6;
 }
+input.k-textbox,
+textarea.k-textbox,
 .k-multiselect.k-header {
   border-color: #c5c5c5;
 }
@@ -1486,17 +1477,14 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-tabstrip-items .k-state-default,
-.k-ie7 .k-tabstrip-items .k-state-default .k-loading {
+.k-tabstrip-items .k-state-default {
   border-color: #c5c5c5;
 }
-.k-tabstrip-items .k-state-hover,
-.k-ie7 .k-tabstrip-items .k-state-hover .k-loading {
+.k-tabstrip-items .k-state-hover {
   border-color: #b6b6b6;
 }
 .k-tabstrip-items .k-state-active,
-.k-panelbar .k-tabstrip-items .k-state-active,
-.k-ie7 .k-tabstrip-items .k-state-active .k-loading {
+.k-panelbar .k-tabstrip-items .k-state-active {
   background-color: #ffffff;
   background-image: none;
   border-color: #9f9f9f;
@@ -2299,5 +2287,5 @@ html .km-pane-wrapper .km-widget,
 .k-spreadsheet-toolbar .k-combobox .k-state-hover .k-input,
 .k-spreadsheet-toolbar .k-combobox .k-state-active .k-input,
 .k-spreadsheet-toolbar .k-combobox .k-state-focused .k-input {
-  color: #5f2200;
+  color: #2e2e2e;
 }

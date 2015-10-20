@@ -169,6 +169,8 @@
             that.element.off(ns);
             that._inputWrapper.off(ns);
 
+            that._arrow.parent().off(CLICK + " " + MOUSEDOWN);
+
             Select.fn.destroy.call(that);
         },
 
