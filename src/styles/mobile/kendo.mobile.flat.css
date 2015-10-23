@@ -2613,7 +2613,9 @@ body:before {
   content: "\e0f0";
 }
 .km-drawer-icon:after,
-.km-drawer-icon:before {
+.km-drawer-icon:before,
+.km-hamburger:before,
+.km-hamburger:after {
   content: "\e105";
 }
 .km-root .km-pane .km-icon.km-check {
@@ -4028,9 +4030,9 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
           box-sizing: border-box;
   border-radius: 1em;
 }
-.km-android4.km-flat .km-scroller-pull .km-icon:after {
-  margin-left: -6px;
-  margin-top: -3px;
+.km-flat .km-scroller-pull .km-icon:after {
+  margin-left: -5px;
+  margin-top: -2px;
 }
 /* SplitView */
 .km-on-blackberry.km-blackberry6 .km-view .km-icon,

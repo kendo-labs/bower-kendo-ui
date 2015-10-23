@@ -1,3 +1,4 @@
+@sprite-image: url('@{image-folder}/sprite.png');
 @tooltip-texture: none;
 @widget-text-color: @normal-text-color;
 @inverse-text-color: @background;
@@ -2644,5 +2645,16 @@ html .km-pane-wrapper .km-widget,
             background-color: @selected-background;
             border-color: darken(@selected-background, 9%);
         }
+    }
+}
+
+.k-spreadsheet-toolbar .k-combobox {
+    .k-input {
+        color: @hover-text-color;
+    }
+
+    .k-state-hover .k-input,
+    .k-state-active .k-input {
+        color: @widget-text-color;
     }
 }

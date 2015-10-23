@@ -2701,6 +2701,29 @@ table.k-editor {
   background-color: #fafafa;
   border-color: #fafafa;
 }
+.k-split-wrapper .k-button,
+.k-overflow-container .k-button,
+.k-filter-menu .k-button {
+  background: transparent;
+  border-color: transparent;
+}
+.k-split-wrapper .k-button,
+.k-overflow-container .k-button {
+  text-transform: none;
+}
+.k-split-wrapper .k-button:hover,
+.k-overflow-container .k-button:hover {
+  background-color: #ebebeb;
+  border-color: #ebebeb;
+}
+.k-split-wrapper .k-button:focus,
+.k-overflow-container .k-button:focus,
+.k-split-wrapper .k-button:focus:not(.k-state-disabled):not([disabled]),
+.k-overflow-container .k-button:focus:not(.k-state-disabled):not([disabled]) {
+  color: #3f51b5;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
 .k-filter-menu .k-button {
   background: transparent;
   border-color: transparent;

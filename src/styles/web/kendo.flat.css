@@ -2282,3 +2282,10 @@ html .km-pane-wrapper .km-widget,
   background-color: #10c4b2;
   border-color: #0d9a8b;
 }
+.k-spreadsheet-toolbar .k-combobox .k-input {
+  color: #ffffff;
+}
+.k-spreadsheet-toolbar .k-combobox .k-state-hover .k-input,
+.k-spreadsheet-toolbar .k-combobox .k-state-active .k-input {
+  color: #4c5356;
+}

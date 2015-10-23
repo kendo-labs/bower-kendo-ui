@@ -103,6 +103,10 @@
   line-height: normal;
   outline: 0;
 }
+.k-widget ::-ms-clear {
+  width: 0;
+  height: 0;
+}
 /* Block */
 .k-block {
   padding: 2px;
@@ -4614,8 +4618,8 @@ span.k-tooltip {
   min-width: 2.429em;
 }
 .k-pager-wrap .k-pager-numbers .k-state-selected {
-  margin-top: -0.4em;
-  padding-top: .35em;
+  margin-top: -0.45em;
+  padding-top: .45em;
   min-width: 2.429em;
 }
 .k-pager-wrap input.k-textbox {
@@ -4787,6 +4791,12 @@ span.k-tooltip {
 .k-menu .k-animation-container .k-menu-group {
   padding: 1.143em 0;
 }
+.k-column-menu .k-menu .k-animation-container .k-menu-group {
+  padding: 0;
+}
+.k-column-menu .k-menu-vertical .k-separator {
+  height: 0;
+}
 .k-toolbar {
   line-height: 3.42em;
 }
@@ -4811,6 +4821,10 @@ span.k-tooltip {
   width: 3.42em;
   height: 3.42em;
   padding: 0;
+}
+.k-overflow-container .k-overflow-button,
+.k-split-container .k-button {
+  font-size: 1.2em;
 }
 .k-button-group .k-tool {
   margin: 6px 0;

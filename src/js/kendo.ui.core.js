@@ -49,7 +49,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.3.1020";
+    kendo.version = "2015.3.1023";
 
     function Class() {}
 
@@ -1858,7 +1858,7 @@ function pad(number, digits, end) {
     }
 
     function isScrollable(element) {
-        if (element.className.indexOf("k-auto-scrollable") > -1) {
+        if (element && element.className && typeof(element.className) === "string" && element.className.indexOf("k-auto-scrollable") > -1) {
             return true;
         }
 
@@ -11686,7 +11686,12 @@ function pad(number, digits, end) {
                         that.render();
                         if(that.bindings.value){
                             if (that.bindings.value) {
-                                that.element.value = retrievePrimitiveValues(that.bindings.value.get(), $(that.element).data("valueField"));
+                                var val = retrievePrimitiveValues(that.bindings.value.get(), $(that.element).data("valueField"));
+                                if(val === null) {
+                                    that.element.selectedIndex = -1;
+                                } else {
+                                    that.element.value = val;
+                                }
                             }
                         }
                     }

@@ -1,3 +1,4 @@
+@sprite-image: url('@{image-folder}/sprite.png');
 @tooltip-texture: none;
 @widget-text-color: @normal-text-color;
 @inverse-text-color: saturate(@background, 29%);
@@ -3424,6 +3425,32 @@ table.k-editor {
     color: @selected-background;
     background-color: @secondary-background-color;
     border-color: @secondary-background-color;
+}
+
+.k-split-wrapper .k-button,
+.k-overflow-container .k-button,
+.k-filter-menu .k-button {
+   background: transparent;
+   border-color: transparent;
+}
+
+.k-split-wrapper .k-button,
+.k-overflow-container .k-button {
+    text-transform: none;
+}
+
+.k-split-wrapper .k-button:hover,
+.k-overflow-container .k-button:hover {
+    background-color: @hover-background-color;
+    border-color: @hover-border-color;
+}
+
+.k-split-wrapper .k-button:focus,
+.k-overflow-container .k-button:focus,
+.k-split-wrapper .k-button:focus:not(.k-state-disabled):not([disabled]),
+.k-overflow-container .k-button:focus:not(.k-state-disabled):not([disabled]) {
+    color: @accent;
+    .box-shadow(none);
 }
 
 .k-filter-menu .k-button {

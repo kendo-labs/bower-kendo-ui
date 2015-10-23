@@ -742,7 +742,12 @@
                         that.render();
                         if(that.bindings.value){
                             if (that.bindings.value) {
-                                that.element.value = retrievePrimitiveValues(that.bindings.value.get(), $(that.element).data("valueField"));
+                                var val = retrievePrimitiveValues(that.bindings.value.get(), $(that.element).data("valueField"));
+                                if(val === null) {
+                                    that.element.selectedIndex = -1;
+                                } else {
+                                    that.element.value = val;
+                                }
                             }
                         }
                     }

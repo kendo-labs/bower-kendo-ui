@@ -2596,7 +2596,9 @@ body:before {
   content: "\e0f0";
 }
 .km-drawer-icon:after,
-.km-drawer-icon:before {
+.km-drawer-icon:before,
+.km-hamburger:before,
+.km-hamburger:after {
   content: "\e105";
 }
 .km-root .km-pane .km-icon.km-check {

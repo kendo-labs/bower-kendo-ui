@@ -330,6 +330,11 @@
 .k-spreadsheet-border-palette {
     width: 153px;
 
+    .k-button {
+        box-sizing: border-box;
+        width: 20%;
+    }
+
     .k-colorpalette {
         vertical-align: bottom;
     }
@@ -494,6 +499,10 @@
 
         .k-overflow-anchor + * {
             margin-left: @spreadsheet-first-tool-offset;
+        }
+
+        > .k-button-group {
+            border-width: 0;
         }
     }
 
