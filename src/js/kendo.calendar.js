@@ -881,9 +881,6 @@
                 adjustDST(today, 0);
                 today = +today;
 
-                start = new DATE(start.getFullYear(), start.getMonth(), start.getDate());
-                adjustDST(start, 0);
-
                 return view({
                     cells: 42,
                     perRow: 7,
@@ -895,6 +892,7 @@
                     empty: options.empty,
                     setter: that.setDate,
                     build: function(date) {
+
                         var cssClass = [],
                             day = date.getDay(),
                             linkClass = "",
@@ -1188,6 +1186,9 @@
             if (idx > 0 && idx % cellsPerRow === 0) {
                 html += '</tr><tr role="row">';
             }
+
+            start = new DATE(start.getFullYear(), start.getMonth(), start.getDate(), 0, 0, 0);
+            adjustDST(start, 0);
 
             data = build(start, idx);
 

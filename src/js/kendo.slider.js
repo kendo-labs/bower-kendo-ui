@@ -54,7 +54,6 @@
         STATE_FOCUSED = "k-state-focused",
         STATE_DEFAULT = "k-state-default",
         STATE_DISABLED = "k-state-disabled",
-        PRECISION = 3,
         DISABLED = "disabled",
         UNDEFINED = "undefined",
         TABINDEX = "tabindex",
@@ -625,9 +624,27 @@
         return (value + "").replace(".", kendo.cultures.current.numberFormat["."]);
     }
 
+    function calculatePrecision(value) {
+        var number = value.toString();
+        var precision = 0;
+
+        number = number.split(".");
+
+        if (number[1]) {
+            precision = number[1].length;
+        }
+
+        precision = precision > 10 ? 10 : precision;
+        return precision;
+    }
+
     function round(value) {
+        var precision, power;
+
         value = parseFloat(value, 10);
-        var power = math.pow(10, PRECISION || 0);
+        precision = calculatePrecision(value);
+        power = math.pow(10, precision || 0);
+
         return math.round(value * power) / power;
     }
 
@@ -746,6 +763,7 @@
                 .find(DRAG_HANDLE)
                 .attr(TABINDEX, 0)
                 .on(MOUSE_UP, function () {
+                    that._drag.draggable.userEvents.cancel();
                     that._setTooltipTimeout();
                 })
                 .on(CLICK, function (e) {
@@ -1121,7 +1139,6 @@
 
                 owner.trigger(SLIDE, slideParams);
             }
-
             that._updateTooltip(that.val);
         },
 
@@ -1130,6 +1147,10 @@
                 options = that.options,
                 tooltip = options.tooltip,
                 html = "";
+
+            if (that.val) {
+                val = that.val;
+            }
 
             if (!tooltip.enabled) {
                 return;
@@ -1448,6 +1469,7 @@
                 .attr(TABINDEX, 0)
                 .on(MOUSE_UP, function () {
                     that._setTooltipTimeout();
+                    that._drag.draggable.userEvents.cancel();
                 })
                 .on(CLICK, function (e) {
                     that._focusWithMouse(e.target);

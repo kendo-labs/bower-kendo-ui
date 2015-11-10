@@ -2859,8 +2859,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 /* Tablet Styles */
 .km-tablet .km-nova.km-horizontal .km-navbar .km-button,
 .km-tablet .km-nova.km-horizontal .km-toolbar .km-button {
-  margin-top: .2rem;
-  margin-bottom: .2rem;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .km-nova .km-icon:before,
 .km-nova .km-contactadd:before,
@@ -3416,13 +3416,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-nova .km-state-active .km-wifi:after {
   content: "\e325";
-}
-.km-nova .km-state-active .km-icon:before,
-.km-nova .km-state-active .km-contactadd:before,
-.km-nova .km-state-active .km-rowdelete:before,
-.km-nova .km-state-active .km-rowinsert:before,
-.km-nova .km-state-active .km-detaildisclose:before {
-  display: none;
 }
 /* Icon per-widget styles */
 .km-detail .km-icon,
@@ -4670,6 +4663,9 @@ body:before {
       transform: translateY(-50%);
   -webkit-transform: translateY(-50%);
   right: 4em;
+}
+.km-nova li.km-state-active {
+  background: #f5f6f6;
 }
 /* Filter box */
 .km-nova .km-filter-wrap {

@@ -170,7 +170,8 @@ body .k-split-button-arrow {
   padding-right: .8em;
 }
 .k-button-icontext .k-icon,
-.k-button-icontext .k-image {
+.k-button-icontext .k-image,
+.k-button-icontext .k-sprite {
   margin-right: 3px;
   margin-right: .3rem;
   margin-left: -3px;
@@ -1585,7 +1586,7 @@ input.k-checkbox,
 }
 .k-checkbox-label {
   position: relative;
-  padding-left: 1.5em;
+  padding-left: 1.857em;
   vertical-align: middle;
   line-height: 0.875em;
   cursor: pointer;
@@ -1595,31 +1596,16 @@ input.k-checkbox,
   position: absolute;
   top: 0;
   left: 0;
-  width: 1em;
-  height: 1em;
   border-width: 1px;
   border-style: solid;
-}
-.k-checkbox-label:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1em;
-  height: 1em;
-  border-width: 1px;
-  border-style: solid;
-}
-.k-checkbox:checked + .k-checkbox-label:after {
-  content: "\2713";
-  width: 1em;
-  height: 1em;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-width: 1px;
-  border-style: solid;
+  width: 1.357em;
+  height: 1.357em;
+  font-size: 1em;
+  line-height: 1.357em;
   text-align: center;
+}
+.k-checkbox:checked + .k-checkbox-label:before {
+  content: "\2713";
 }
 .k-checkbox:disabled + .k-checkbox-label {
   cursor: auto;
@@ -1661,7 +1647,6 @@ input.k-checkbox,
   padding-left: 0;
 }
 .k-ie8 .k-checkbox-label:before,
-.k-ie8 .k-checkbox-label:after,
 .k-ie8 .k-radio-label:before,
 .k-ie8 .k-radio-label:after {
   display: none;
@@ -1672,7 +1657,6 @@ input.k-checkbox,
   padding-right: 1.5em;
 }
 .k-rtl .k-checkbox-label:before,
-.k-rtl .k-checkbox-label:after,
 .k-rtl .k-radio-label:before {
   right: 0;
 }
@@ -6903,10 +6887,10 @@ div[name="recurrenceRule"] > .k-dropdown {
   }
 }
 @media only screen and (max-width: 480px) {
-  .k-webkit .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
-  .k-ff .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
-  .k-ie11 .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
-  .k-safari .k-scheduler-toolbar li.k-nav-current .k-sm-date-format {
+  .k-webkit .k-scheduler:not(.k-scheduler-mobile) .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
+  .k-ff .k-scheduler:not(.k-scheduler-mobile) .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
+  .k-ie11 .k-scheduler:not(.k-scheduler-mobile) .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
+  .k-safari .k-scheduler:not(.k-scheduler-mobile) .k-scheduler-toolbar li.k-nav-current .k-sm-date-format {
     display: none;
   }
   .k-webkit .k-scheduler-timecolumn,
@@ -7356,8 +7340,7 @@ html .k-upload {
 .k-upload-button {
   position: relative;
   min-width: 7.167em;
-  overflow: hidden !important;
-  /* important required by IE7 */
+  overflow: hidden;
   direction: ltr;
 }
 .k-upload-sync .k-upload-button,
@@ -7367,12 +7350,11 @@ html .k-upload {
 }
 .k-upload-button input {
   position: absolute;
-  top: 0;
+  bottom: 0;
   right: 0;
   z-index: 1;
   font: 170px monospace !important;
   /* critical for correct operation; larger values lead to ignoring or text layout problems in IE */
-  filter: alpha(opacity=0);
   opacity: 0;
   margin: 0;
   padding: 0;
@@ -10520,7 +10502,7 @@ div.k-navigator .k-navigator-w {
   border-width: 0 !important;
 }
 .k-spreadsheet .k-spreadsheet-formula-bar {
-  border-width: 1px;
+  border-width: 0 1px 1px;
   border-style: solid;
   padding-left: 31px;
   position: relative;
@@ -10622,6 +10604,35 @@ div.k-navigator .k-navigator-w {
   border-width: 4px;
   border-color: #f00 #f00 transparent transparent;
 }
+.k-spreadsheet .k-single-selection::after {
+  content: " ";
+  height: 6px;
+  width: 6px;
+  position: absolute;
+  display: block;
+  bottom: 0;
+  right: 0;
+  margin-bottom: -4px;
+  margin-right: -4px;
+  border-width: 1px;
+  border-style: solid;
+  z-index: 100;
+  cursor: crosshair;
+}
+.k-spreadsheet .k-auto-fill,
+.k-spreadsheet .k-auto-fill-punch {
+  position: absolute;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.k-spreadsheet .k-auto-fill {
+  border-width: 3px;
+  border-style: solid;
+  cursor: crosshair;
+}
+.k-spreadsheet .k-auto-fill-wrapper {
+  position: relative;
+}
 .k-font-icon,
 .k-font-icon.k-icon,
 .k-font-icon.k-tool-icon {
@@ -10652,7 +10663,7 @@ div.k-navigator .k-navigator-w {
 }
 .k-spreadsheet-clipboard-paste,
 .k-spreadsheet-clipboard {
-  position: absolute;
+  position: fixed;
   opacity: 0;
   top: 0;
   left: 0;
@@ -10896,7 +10907,9 @@ div.k-navigator .k-navigator-w {
   display: none;
 }
 .k-spreadsheet-toolbar.k-toolbar {
-  border-width: 0;
+  border-top-width: 0;
+  border-left-width: 0;
+  border-right-width: 0;
 }
 .k-spreadsheet-toolbar.k-toolbar .k-overflow-anchor + * {
   margin-left: 0.3em;
@@ -11727,6 +11740,9 @@ div.k-window-content {
 .k-treeview .k-plus {
   background-position: 0 -16px;
 }
+.k-treeview .k-loading {
+  background-position: 50%;
+}
 .k-header > .k-link > .k-i-arrow-n,
 .k-header > .k-link > .k-link:not(.k-state-disabled):hover > .k-i-arrow-n,
 .k-grid-header th > .k-link:hover span.k-i-arrow-n {
@@ -11843,16 +11859,9 @@ div.k-window-content {
 .k-filter-row .k-button:active .k-i-close {
   background-position: -48px -16px;
 }
-.k-checkbox-label,
 .k-radio-label {
   line-height: normal;
   padding-left: 2em;
-}
-.k-checkbox-label:before,
-.k-checkbox-label:after,
-.k-checkbox:checked + .k-checkbox-label:after {
-  width: 1.357em;
-  height: 1.357em;
 }
 .k-radio-label:before {
   width: 19px;

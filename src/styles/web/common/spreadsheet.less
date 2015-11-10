@@ -67,7 +67,7 @@
         &.k-left { border-left-width: 0; }
 
         td {
-            border-width: 0 !important;
+            border-width: 0 !important; // overrides model border
         }
     }
 
@@ -76,7 +76,7 @@
     @formula-input-padding: (@formula-bar-height - @formula-input-height) / 2;
 
     .k-spreadsheet-formula-bar {
-        border-width: 1px;
+        border-width: 0 1px 1px;
         border-style: solid;
         padding-left: 31px; // XXX: Move to code
         position: relative;
@@ -176,6 +176,38 @@
         border-width: 4px;
         border-color: #f00 #f00 transparent transparent;
     }
+
+    .k-single-selection::after {
+        content: " ";
+        height: 6px;
+        width: 6px;
+        position: absolute;
+        display: block;
+        bottom: 0;
+        right: 0;
+        margin-bottom: -4px;
+        margin-right: -4px;
+        border-width: 1px;
+        border-style: solid;
+        z-index: 100;
+        cursor: crosshair;
+    }
+
+    .k-auto-fill,
+    .k-auto-fill-punch {
+        position: absolute;
+        box-sizing: border-box;
+    }
+
+    .k-auto-fill {
+        border-width: 3px;
+        border-style: solid;
+        cursor: crosshair;
+    }
+
+    .k-auto-fill-wrapper {
+        position: relative;
+    }
 }
 
 .k-font-icon,
@@ -201,7 +233,7 @@
 
 .k-spreadsheet-clipboard-paste,
 .k-spreadsheet-clipboard {
-    position: absolute;
+    position: fixed;
     opacity: 0;
     top: 0;
     left: 0;
@@ -495,7 +527,9 @@
 
 .k-spreadsheet-toolbar {
     &.k-toolbar {
-        border-width: 0;
+        border-top-width: 0;
+        border-left-width: 0;
+        border-right-width: 0;
 
         .k-overflow-anchor + * {
             margin-left: @spreadsheet-first-tool-offset;

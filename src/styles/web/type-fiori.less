@@ -174,43 +174,7 @@
 @button-focused-shadow: none;
 @button-focused-active-shadow: none;
 @accent-color: @accent;
-@checkbox-border-color-before: transparent;
-@checkbox-border-color-after: darken(@background, 25%);
-@checkbox-border-radius-before: 1px;
-@checkbox-background-color: @background;
-@checkbox-hover-border-color: @accent;
-@checkbox-hover-box-shadow: none;
-@checkbox-checked-border-color-after: darken(@background, 25%);
-@checkbox-checked-border-radius-after: 1px;
-@checkbox-checked-background-color-after: @background;
-@checkbox-checked-color-after: @accent;
-@checkbox-active-border-color-before: transparent;
-@checkbox-active-border-color-after: darken(@background, 25%);
-@checkbox-active-border-radius: 1px;
-@checkbox-active-border-radius-after: 1px;
-@checkbox-active-box-shadow: none;
-@checkbox-checked-active-border-radius-before: @border-radius;
-@checkbox-checked-active-box-shadow: none;
-@checkbox-checked-disabled-color-after: darken(@background, 27%);
-@checkbox-disabled-background-color-after: lighten(@hover-background, 4%);
-@checkbox-disabled-color: darken(@background, 25%);
-@checkbox-disabled-box-shadow: none;
-@checkbox-disabled-border-color-before: darken(@background, 25%);
-@radio-border-color-before: darken(@background, 25%);
-@radio-background-color: @background;
-@radio-border-width-before: 2px;
-@radio-hover-border-color: @accent;
-@radio-hover-box-shadow: none;
-@radio-checked-border-color-before: @accent;
-@radio-checked-background-color-after: @accent;
-@radio-active-border-color-before: darken(@background, 25%);
-@radio-active-box-shadow: none;
-@radio-checked-active-border-color-before: @accent;
-@radio-checked-active-box-shadow: none;
-@radio-disabled-background-color-after: @background;
-@radio-disabled-color: darken(@background, 25%);
-@radio-disabled-box-shadow: none;
-@radio-disabled-background-color-before: @background;
+
 /* Kendo skin */
 
 @theme-name: ~"fiori";
@@ -2194,136 +2158,32 @@ html .km-pane-wrapper .km-widget,
    .box-shadow(@button-focused-shadow);
 }
 
-.k-checkbox-label:before {
-   border-color: @checkbox-border-color-before;
-   border-radius: @checkbox-border-radius-before;
-}
+@import "themes/checkbox.less";
 
-.k-checkbox-label:after{
-  border-color: @checkbox-border-color-after;
-  background: @checkbox-background-color;
-  border-radius: @checkbox-border-radius-before;
-}
+@checkbox-border-color: darken(@background, 25%);
+@checkbox-border-radius: 1px;
+@checkbox-hover-border-color: @accent;
+@checkbox-checked-border-color: darken(@background, 25%);
+@checkbox-active-border-color: @accent;
+@checkbox-active-box-shadow: none;
+@checkbox-disabled-background-color: lighten(@hover-background, 4%);
+@checkbox-disabled-color: darken(@background, 27%);
+@checkbox-disabled-border-color: darken(@background, 25%);
 
-.k-checkbox-label:hover:after,
-.k-checkbox:checked + .k-checkbox-label:hover:after  {
-   border-color: @checkbox-hover-border-color;
-   box-shadow: @checkbox-hover-box-shadow;
-}
+@import "themes/radiobutton.less";
 
-.k-checkbox:checked + .k-checkbox-label:after {
-  background-color: @checkbox-checked-background-color-after;
-  border-color: @checkbox-checked-border-color-after; 
-  border-radius: @checkbox-checked-border-radius-after;
-  color: @checkbox-checked-color-after;
-}
-
-.k-checkbox-label:active:before {
-   box-shadow: @checkbox-active-box-shadow;
-   border-color: @checkbox-active-border-color-before;
-   border-radius: @checkbox-active-border-radius;
-}
-
-.k-checkbox-label:active:after {
-   border-color: @checkbox-active-border-color-after;
-   border-radius: @checkbox-active-border-radius-after;
-}
-
-.k-checkbox:checked + .k-checkbox-label:active:after {
-    border-color: @checkbox-active-border-color-after;
-}   
-
-.k-checkbox:checked + .k-checkbox-label:active:before {
- box-shadow: @checkbox-checked-active-box-shadow;
- border-radius: @checkbox-checked-active-border-radius-before; 
-}
-
-.k-checkbox:disabled + .k-checkbox-label {
-   color: @checkbox-disabled-color;
-}
-
-.k-checkbox:disabled + .k-checkbox-label:hover:after,
-.k-checkbox:disabled + .k-checkbox-label:active:before {
-  box-shadow: @checkbox-disabled-box-shadow;
-}
-
-.k-checkbox:checked:disabled + .k-checkbox-label:after {
-    background: @checkbox-disabled-background-color-after;
-    color: @checkbox-checked-disabled-color-after;
-}
-
- 
-.k-checkbox:disabled + .k-checkbox-label:after,
-.k-checkbox:checked:disabled + .k-checkbox-label:active:after,
-.k-checkbox:disabled + .k-checkbox-label:hover:before,
-.k-checkbox:checked:disabled + .k-checkbox-label:hover:after  {
-    background: @checkbox-disabled-background-color-after;
-    border-color: @checkbox-disabled-border-color-before;
-    border-radius: @checkbox-border-radius-before;
-}
-
-//Radio buttons
-.k-radio-label:before {  
-  border-color: @radio-border-color-before;
-  border-radius: 50%;
-  background-color: @radio-background-color;
-  border-width: @radio-border-width-before;
-}
-
-.k-radio-label:hover:before,
-.k-radio:checked + .k-radio-label:hover:before  {
-   border-color: @radio-hover-border-color;
-   box-shadow: @radio-hover-box-shadow;
-}
-
-.k-radio:checked + .k-radio-label:before {
-   border-color: @radio-checked-border-color-before;
-}
-
-.k-radio:checked + .k-radio-label:after {
-  background-color: @radio-checked-background-color-after;
-  border-radius: 50%; 
-}
-
-.k-radio-label:active:before {
-  box-shadow: @radio-active-box-shadow; 
-  border-radius: 50%;
-  border-color: @radio-active-border-color-before;
-}
+@radio-border-color: darken(@background, 25%);
+@radio-border-width: 2px;
+@radio-hover-border-color: @accent;
+@radio-active-border-color: darken(@background, 25%);
+@radio-active-box-shadow: none;
+@radio-disabled-color: darken(@background, 25%);
+@radio-disabled-border-color: #bfbfbf;
 
 .k-radio:checked + .k-radio-label:active:before {
-  box-shadow: @radio-checked-active-box-shadow; 
-  border-radius: 50%;
-  border-color: @radio-checked-active-border-color-before;
+    border-color: @radio-hover-border-color;
 }
 
-.k-radio:disabled + .k-radio-label {
-   color: @radio-disabled-color;
-}
-
-.k-radio:disabled + .k-radio-label:before {       
-   border-color: #bfbfbf;
-}
-
-.k-radio:disabled + .k-radio-label:active:before {
-  box-shadow: @radio-disabled-box-shadow;
-  background: @radio-disabled-background-color-before;
-}
-
-.k-radio:disabled + .k-radio-label:before {
-    background: @radio-disabled-background-color-after;
-}
-
-.k-radio:disabled + .k-radio-label:hover:after,
-.k-radio:disabled + .k-radio-label:hover:before {
-  box-shadow: @radio-disabled-box-shadow;
-}
-
-.k-checkbox:focus + .k-checkbox-label:after,
-.k-radio:focus + .k-radio-label:before {
-  border-color: @checkbox-active-border-color-after;
-  box-shadow: @checkbox-active-box-shadow;
-}
 
 // Retina sprite
 @media only screen and (-webkit-min-device-pixel-ratio: 2),

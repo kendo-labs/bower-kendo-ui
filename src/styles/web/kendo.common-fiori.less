@@ -877,6 +877,10 @@ span.k-tooltip
 	.k-plus {
     	background-position: 0 -16px;
 	}
+
+	.k-loading {
+        background-position: 50%;
+	}
 }
 
 .k-splitbar-horizontal-hover {
@@ -992,9 +996,8 @@ span.k-tooltip
     background-position: -176px -240px;
 }
 
-.k-checkbox:checked + .k-checkbox-label:after {
-    content: "\2714";
-}
+@checkbox-tick-icon-content: "\2714";
+@checkbox-border-width: 2px;
 
 .k-radio:checked + .k-radio-label:after {
   top: 5px; 
@@ -1004,12 +1007,6 @@ span.k-tooltip
 .k-radio-label:before {
   width: 16px;
   height: 16px;
-}
-
-.k-checkbox-label:after,
-.k-checkbox:checked + .k-checkbox-label:after
-{
-    border-width: 2px;
 }
 
 .k-dropzone .k-upload-status

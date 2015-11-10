@@ -404,11 +404,12 @@
             this._callback = callback;
         },
 
-        callback: function(url) {
+        callback: function(url, back) {
             var params,
                 idx = 0,
                 length,
                 queryStringParams = kendo.parseQueryStringParams(url);
+                queryStringParams._back = back;
 
             url = stripUrl(url);
             params = this.route.exec(url).slice(1);
@@ -425,9 +426,9 @@
             this._callback.apply(null, params);
         },
 
-        worksWith: function(url) {
+        worksWith: function(url, back) {
             if (this.route.test(stripUrl(url))) {
-                this.callback(url);
+                this.callback(url, back);
                 return true;
             } else {
                 return false;
@@ -508,12 +509,13 @@
 
         _urlChanged: function(e) {
             var url = e.url;
+            var back = e.backButtonPressed;
 
             if (!url) {
                 url = "/";
             }
 
-            if (this.trigger(CHANGE, { url: e.url, params: kendo.parseQueryStringParams(e.url), backButtonPressed: e.backButtonPressed })) {
+            if (this.trigger(CHANGE, { url: e.url, params: kendo.parseQueryStringParams(e.url), backButtonPressed: back })) {
                 e.preventDefault();
                 return;
             }
@@ -526,12 +528,12 @@
             for (; idx < length; idx ++) {
                  route = routes[idx];
 
-                 if (route.worksWith(url)) {
+                 if (route.worksWith(url, back)) {
                     return;
                  }
             }
 
-            if (this.trigger(ROUTE_MISSING, { url: url, params: kendo.parseQueryStringParams(url), backButtonPressed: e.backButtonPressed })) {
+            if (this.trigger(ROUTE_MISSING, { url: url, params: kendo.parseQueryStringParams(url), backButtonPressed: back })) {
                 e.preventDefault();
             }
         }

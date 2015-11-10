@@ -49,7 +49,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.3.1023";
+    kendo.version = "2015.3.1110".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -2087,6 +2087,24 @@ function pad(number, digits, end) {
 
         support.browser = support.detectBrowser(navigator.userAgent);
 
+        support.detectClipboardAccess = function() {
+            var commands = {
+                copy: document.queryCommandSupported ? document.queryCommandSupported("copy") : false,
+                cut: document.queryCommandSupported ? document.queryCommandSupported("cut") : false,
+                paste : document.queryCommandSupported ? document.queryCommandSupported("paste") : false
+            };
+
+            if (support.browser.chrome && support.browser.version >= 43) {
+                //not using queryCommandSupported due to chromium issue #476508
+                commands.copy = true;
+                commands.cut = true;
+            }
+
+            return commands;
+        };
+
+        support.clipboard = support.detectClipboardAccess();
+
         support.zoomLevel = function() {
             try {
                 var browser = support.browser;
@@ -2509,7 +2527,7 @@ function pad(number, digits, end) {
         data: kendo.data || {},
         dataviz: kendo.dataviz || {},
         drawing: kendo.drawing || {},
-        spreadsheet: {},
+        spreadsheet: { messages: {} },
         keys: {
             INSERT: 45,
             DELETE: 46,
@@ -2543,7 +2561,7 @@ function pad(number, digits, end) {
         wrap: wrap,
         deepExtend: deepExtend,
         getComputedStyles: getComputedStyles,
-        webComponents: [],
+        webComponents: kendo.webComponents || [],
         isScrollable: isScrollable,
         scrollLeft: scrollLeft,
         size: size,
@@ -4636,11 +4654,12 @@ function pad(number, digits, end) {
             this._callback = callback;
         },
 
-        callback: function(url) {
+        callback: function(url, back) {
             var params,
                 idx = 0,
                 length,
                 queryStringParams = kendo.parseQueryStringParams(url);
+                queryStringParams._back = back;
 
             url = stripUrl(url);
             params = this.route.exec(url).slice(1);
@@ -4657,9 +4676,9 @@ function pad(number, digits, end) {
             this._callback.apply(null, params);
         },
 
-        worksWith: function(url) {
+        worksWith: function(url, back) {
             if (this.route.test(stripUrl(url))) {
-                this.callback(url);
+                this.callback(url, back);
                 return true;
             } else {
                 return false;
@@ -4740,12 +4759,13 @@ function pad(number, digits, end) {
 
         _urlChanged: function(e) {
             var url = e.url;
+            var back = e.backButtonPressed;
 
             if (!url) {
                 url = "/";
             }
 
-            if (this.trigger(CHANGE, { url: e.url, params: kendo.parseQueryStringParams(e.url), backButtonPressed: e.backButtonPressed })) {
+            if (this.trigger(CHANGE, { url: e.url, params: kendo.parseQueryStringParams(e.url), backButtonPressed: back })) {
                 e.preventDefault();
                 return;
             }
@@ -4758,12 +4778,12 @@ function pad(number, digits, end) {
             for (; idx < length; idx ++) {
                  route = routes[idx];
 
-                 if (route.worksWith(url)) {
+                 if (route.worksWith(url, back)) {
                     return;
                  }
             }
 
-            if (this.trigger(ROUTE_MISSING, { url: url, params: kendo.parseQueryStringParams(url), backButtonPressed: e.backButtonPressed })) {
+            if (this.trigger(ROUTE_MISSING, { url: url, params: kendo.parseQueryStringParams(url), backButtonPressed: back })) {
                 e.preventDefault();
             }
         }
@@ -10325,7 +10345,7 @@ function pad(number, digits, end) {
                 that._initChildren();
             }
 
-            that._loaded = !!(value && (value[childrenField] || value._loaded));
+            that._loaded = !!(value && value._loaded);
         },
 
         _initChildren: function() {
@@ -21589,6 +21609,10 @@ function pad(number, digits, end) {
                     that.trigger(CLICK, eventData);
                 }
 
+                if (item.options.url) {
+                    window.location.href = item.options.url;
+                }
+
                 if (target.hasClass(OVERFLOW_BUTTON)) {
                     that.popup.close();
                 }
@@ -24725,9 +24749,6 @@ function pad(number, digits, end) {
                 adjustDST(today, 0);
                 today = +today;
 
-                start = new DATE(start.getFullYear(), start.getMonth(), start.getDate());
-                adjustDST(start, 0);
-
                 return view({
                     cells: 42,
                     perRow: 7,
@@ -24739,6 +24760,7 @@ function pad(number, digits, end) {
                     empty: options.empty,
                     setter: that.setDate,
                     build: function(date) {
+
                         var cssClass = [],
                             day = date.getDay(),
                             linkClass = "",
@@ -25032,6 +25054,9 @@ function pad(number, digits, end) {
             if (idx > 0 && idx % cellsPerRow === 0) {
                 html += '</tr><tr role="row">';
             }
+
+            start = new DATE(start.getFullYear(), start.getMonth(), start.getDate(), 0, 0, 0);
+            adjustDST(start, 0);
 
             data = build(start, idx);
 
@@ -30201,7 +30226,6 @@ function pad(number, digits, end) {
         STATE_FOCUSED = "k-state-focused",
         STATE_DEFAULT = "k-state-default",
         STATE_DISABLED = "k-state-disabled",
-        PRECISION = 3,
         DISABLED = "disabled",
         UNDEFINED = "undefined",
         TABINDEX = "tabindex",
@@ -30772,9 +30796,27 @@ function pad(number, digits, end) {
         return (value + "").replace(".", kendo.cultures.current.numberFormat["."]);
     }
 
+    function calculatePrecision(value) {
+        var number = value.toString();
+        var precision = 0;
+
+        number = number.split(".");
+
+        if (number[1]) {
+            precision = number[1].length;
+        }
+
+        precision = precision > 10 ? 10 : precision;
+        return precision;
+    }
+
     function round(value) {
+        var precision, power;
+
         value = parseFloat(value, 10);
-        var power = math.pow(10, PRECISION || 0);
+        precision = calculatePrecision(value);
+        power = math.pow(10, precision || 0);
+
         return math.round(value * power) / power;
     }
 
@@ -30893,6 +30935,7 @@ function pad(number, digits, end) {
                 .find(DRAG_HANDLE)
                 .attr(TABINDEX, 0)
                 .on(MOUSE_UP, function () {
+                    that._drag.draggable.userEvents.cancel();
                     that._setTooltipTimeout();
                 })
                 .on(CLICK, function (e) {
@@ -31268,7 +31311,6 @@ function pad(number, digits, end) {
 
                 owner.trigger(SLIDE, slideParams);
             }
-
             that._updateTooltip(that.val);
         },
 
@@ -31277,6 +31319,10 @@ function pad(number, digits, end) {
                 options = that.options,
                 tooltip = options.tooltip,
                 html = "";
+
+            if (that.val) {
+                val = that.val;
+            }
 
             if (!tooltip.enabled) {
                 return;
@@ -31595,6 +31641,7 @@ function pad(number, digits, end) {
                 .attr(TABINDEX, 0)
                 .on(MOUSE_UP, function () {
                     that._setTooltipTimeout();
+                    that._drag.draggable.userEvents.cancel();
                 })
                 .on(CLICK, function (e) {
                     that._focusWithMouse(e.target);
@@ -33696,6 +33743,10 @@ function pad(number, digits, end) {
             kendo.destroy(that.element);
 
             that.element.removeData("kendoValidator");
+
+            if (that.element.is("[" + kendo.attr("role") + "=editable]")) {
+                that.element.removeAttr(kendo.attr("role"));
+            }
         },
 
         refresh: function() {
@@ -51313,7 +51364,7 @@ function pad(number, digits, end) {
 
 
         $.each(attrs, function(name, value) {
-            if (name === "source" || name === "kDataSource" || name === "kScopeField") {
+            if (name === "source" || name === "kDataSource" || name === "kScopeField" || name === "scopeField") {
                 return;
             }
 
@@ -51576,9 +51627,10 @@ function pad(number, digits, end) {
                 ngForm.$setDirty();
             }
 
-            scope.$apply(function(){
+            digest(scope, function(){
                 setter(scope, widget.$angular_getLogicValue());
             });
+
             updating = false;
         });
     }
@@ -51873,7 +51925,7 @@ function pad(number, digits, end) {
                         replace  : true,
                         template : function(element, attributes) {
                             var tag = TAGNAMES[className] || "div";
-                            var scopeField = attributes.kScopeField;
+                            var scopeField = attributes.kScopeField || attributes.scopeField;
 
                             return "<" + tag + " " + dashed + (scopeField ? ('="' + scopeField + '"') : "") + ">" + element.html() + "</" + tag + ">";
                         }

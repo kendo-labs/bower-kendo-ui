@@ -1607,63 +1607,51 @@ html .km-pane-wrapper .km-widget,
           box-shadow: inset 0 0 0 1px #00aba9;
 }
 .k-checkbox-label:before {
-  border-color: transparent;
-  border-radius: 0;
-}
-.k-checkbox-label:after {
   border-color: #555555;
   background: #0e0e0e;
   border-radius: 0;
 }
-.k-checkbox-label:hover:after,
-.k-checkbox:checked + .k-checkbox-label:hover:after {
+.k-checkbox-label:hover:before,
+.k-checkbox:checked + .k-checkbox-label:hover:before {
   border-color: #00aba9;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-checkbox:checked + .k-checkbox-label:after {
+.k-checkbox:checked + .k-checkbox-label:before {
   background-color: #0e0e0e;
   border-color: #555555;
-  border-radius: 0;
-  color: #00b0ae;
+  color: #00aba9;
 }
 .k-checkbox-label:active:before {
   -webkit-box-shadow: none;
           box-shadow: none;
-  border-color: transparent;
-  border-radius: 0;
-}
-.k-checkbox-label:active:after {
-  border-color: #00aba9;
-  border-radius: 0;
-}
-.k-checkbox:checked + .k-checkbox-label:active:after {
   border-color: #00aba9;
 }
 .k-checkbox:checked + .k-checkbox-label:active:before {
   -webkit-box-shadow: none;
           box-shadow: none;
-  border-radius: 0;
+  border-color: #00aba9;
 }
 .k-checkbox:disabled + .k-checkbox-label {
-  color: #34a448;
+  color: #5a5a5a;
 }
-.k-checkbox:disabled + .k-checkbox-label:hover:after,
-.k-checkbox:disabled + .k-checkbox-label:active:before {
+.k-checkbox:disabled + .k-checkbox-label:hover:before {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-checkbox:checked:disabled + .k-checkbox-label:after {
+.k-checkbox:disabled + .k-checkbox-label:before,
+.k-checkbox:checked:disabled + .k-checkbox-label:before,
+.k-checkbox:checked:disabled + .k-checkbox-label:active:before,
+.k-checkbox:checked:disabled + .k-checkbox-label:hover:before {
+  color: #5a5a5a;
   background: #0e0e0e;
-  color: #323232;
-}
-.k-checkbox:disabled + .k-checkbox-label:after,
-.k-checkbox:checked:disabled + .k-checkbox-label:active:after,
-.k-checkbox:disabled + .k-checkbox-label:hover:before,
-.k-checkbox:checked:disabled + .k-checkbox-label:hover:after {
-  background: #0e0e0e;
-  border-color: #323232;
+  border-color: #282828;
   border-radius: 0;
+}
+.k-checkbox:focus + .k-checkbox-label:before {
+  border-color: #00aba9;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-radio-label:before {
   border-color: #555555;
@@ -1677,45 +1665,32 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-radio:checked + .k-radio-label:before {
-  border-color: #555555;
-}
 .k-radio:checked + .k-radio-label:after {
-  background-color: #00b0ae;
+  background-color: #00aba9;
   border-radius: 50%;
 }
 .k-radio-label:active:before {
+  border-color: #00aba9;
   -webkit-box-shadow: none;
           box-shadow: none;
-  border-radius: 50%;
-  border-color: #00aba9;
 }
 .k-radio:checked + .k-radio-label:active:before {
   -webkit-box-shadow: none;
           box-shadow: none;
-  border-radius: 50%;
   border-color: #00aba9;
 }
 .k-radio:disabled + .k-radio-label {
-  color: #34a448;
+  color: #5a5a5a;
 }
-.k-radio:disabled + .k-radio-label:before {
-  border-color: #bfbfbf;
-}
-.k-radio:disabled + .k-radio-label:active:before {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-  background: #0e0e0e;
-}
-.k-radio:disabled + .k-radio-label:before {
-  background: #0e0e0e;
-}
+.k-radio:disabled + .k-radio-label:before,
+.k-radio:disabled + .k-radio-label:active:before,
 .k-radio:disabled + .k-radio-label:hover:after,
 .k-radio:disabled + .k-radio-label:hover:before {
+  background: #0e0e0e;
+  border-color: #282828;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-checkbox:focus + .k-checkbox-label:after,
 .k-radio:focus + .k-radio-label:before {
   border-color: #00aba9;
   -webkit-box-shadow: none;
@@ -2097,6 +2072,19 @@ html .km-pane-wrapper .km-widget,
 .k-spreadsheet .k-resize-hint-vertical .k-resize-hint-handle,
 .k-spreadsheet .k-resize-hint-vertical .k-resize-hint-marker {
   background-color: #008866;
+}
+.k-spreadsheet .k-single-selection::after {
+  background-color: #008866;
+  border-color: #0e0e0e;
+}
+.k-spreadsheet .k-auto-fill {
+  border-color: #008866;
+}
+.k-spreadsheet .k-auto-fill-punch {
+  background-color: rgba(14, 14, 14, 0.5);
+}
+.k-spreadsheet .k-single-selection.k-dim-auto-fill-handle::after {
+  background-color: rgba(0, 136, 102, 0.5);
 }
 .k-spreadsheet-format-cells .k-spreadsheet-preview {
   border-color: #323232;

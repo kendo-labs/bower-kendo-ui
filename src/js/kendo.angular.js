@@ -274,7 +274,7 @@
 
 
         $.each(attrs, function(name, value) {
-            if (name === "source" || name === "kDataSource" || name === "kScopeField") {
+            if (name === "source" || name === "kDataSource" || name === "kScopeField" || name === "scopeField") {
                 return;
             }
 
@@ -537,9 +537,10 @@
                 ngForm.$setDirty();
             }
 
-            scope.$apply(function(){
+            digest(scope, function(){
                 setter(scope, widget.$angular_getLogicValue());
             });
+
             updating = false;
         });
     }
@@ -834,7 +835,7 @@
                         replace  : true,
                         template : function(element, attributes) {
                             var tag = TAGNAMES[className] || "div";
-                            var scopeField = attributes.kScopeField;
+                            var scopeField = attributes.kScopeField || attributes.scopeField;
 
                             return "<" + tag + " " + dashed + (scopeField ? ('="' + scopeField + '"') : "") + ">" + element.html() + "</" + tag + ">";
                         }
