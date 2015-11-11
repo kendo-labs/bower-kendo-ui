@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                             css = css.replace(/\.\.\/mobile\//g, '');
 
                             grunt.file.write(cssFileInDir, css);
-                            var cssmin = CSSMIN(result.css);
+                            var cssmin = CSSMIN(css);
                             var cssMinFileInDir = PATH.join(destDir, f.replace(/\.less$/, ".min.css"));
                             grunt.log.writeln(cssMinFileInDir + " - saving...");
                             grunt.file.write(cssMinFileInDir, cssmin);
