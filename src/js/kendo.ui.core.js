@@ -49,7 +49,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.3.1111".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2015.3.1116".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -16116,34 +16116,11 @@ function pad(number, digits, end) {
         },
 
         _drag: function(e) {
-            var that = this;
-
             e.preventDefault();
 
             var cursorElement = this._elementUnderCursor(e);
-
-            that._withDropTarget(cursorElement, function(target, targetElement) {
-                if (!target) {
-                    if (lastDropTarget) {
-                        lastDropTarget._trigger(DRAGLEAVE, extend(e, { dropTarget: $(lastDropTarget.targetElement) }));
-                        lastDropTarget = null;
-                    }
-                    return;
-                }
-
-                if (lastDropTarget) {
-                    if (targetElement === lastDropTarget.targetElement) {
-                        return;
-                    }
-
-                    lastDropTarget._trigger(DRAGLEAVE, extend(e, { dropTarget: $(lastDropTarget.targetElement) }));
-                }
-
-                target._trigger(DRAGENTER, extend(e, { dropTarget: $(targetElement) }));
-                lastDropTarget = extend(target, { targetElement: targetElement });
-            });
-
-            that._trigger(DRAG, extend(e, { dropTarget: lastDropTarget, elementUnderCursor: cursorElement }));
+            this._lastEvent = e;
+            this._processMovement(e, cursorElement);
 
             if (this.options.autoScroll) {
                 if (this._cursorElement !== cursorElement) {
@@ -16168,9 +16145,34 @@ function pad(number, digits, end) {
                 }
             }
 
-            if (that.hint) {
-                that._updateHint(e);
+            if (this.hint) {
+                this._updateHint(e);
             }
+        },
+
+        _processMovement: function(e, cursorElement) {
+            this._withDropTarget(cursorElement, function(target, targetElement) {
+                if (!target) {
+                    if (lastDropTarget) {
+                        lastDropTarget._trigger(DRAGLEAVE, extend(e, { dropTarget: $(lastDropTarget.targetElement) }));
+                        lastDropTarget = null;
+                    }
+                    return;
+                }
+
+                if (lastDropTarget) {
+                    if (targetElement === lastDropTarget.targetElement) {
+                        return;
+                    }
+
+                    lastDropTarget._trigger(DRAGLEAVE, extend(e, { dropTarget: $(lastDropTarget.targetElement) }));
+                }
+
+                target._trigger(DRAGENTER, extend(e, { dropTarget: $(targetElement) }));
+                lastDropTarget = extend(target, { targetElement: targetElement });
+            });            
+
+            this._trigger(DRAG, extend(e, { dropTarget: lastDropTarget, elementUnderCursor: cursorElement }));
         },
 
         _autoScroll: function() {
@@ -16181,6 +16183,9 @@ function pad(number, digits, end) {
             if (!parent) {
                 return;
             }
+
+            var cursorElement = this._elementUnderCursor(this._lastEvent);
+            this._processMovement(this._lastEvent, cursorElement);
 
             var yIsScrollable, xIsScrollable;
 
@@ -23026,13 +23031,7 @@ function pad(number, digits, end) {
                         .on("mouseenter" + STATIC_LIST_NS, "li", function() { $(this).addClass(HOVER); })
                         .on("mouseleave" + STATIC_LIST_NS, "li", function() { $(this).removeClass(HOVER); });
 
-            this.content = this.element
-                        .wrap("<div unselectable='on'></div>")
-                        .parent()
-                        .css({
-                            "overflow": "auto",
-                            "position": "relative"
-                        });
+            this.content = this.element.wrap("<div class='k-list-scroller' unselectable='on'></div>").parent();
             this.header = this.content.before('<div class="k-group-header" style="display:none"></div>').prev();
 
             this._bound = false;
@@ -23413,7 +23412,7 @@ function pad(number, digits, end) {
                         "} " +
                         "return -1;";
 
-                comparer = new Function(["current", "values"], body);
+                comparer = new Function("current", "values", body);
 
                 that._valueComparer = function(current) {
                     return comparer(current, normalized);
@@ -30935,7 +30934,6 @@ function pad(number, digits, end) {
                 .find(DRAG_HANDLE)
                 .attr(TABINDEX, 0)
                 .on(MOUSE_UP, function () {
-                    that._drag.draggable.userEvents.cancel();
                     that._setTooltipTimeout();
                 })
                 .on(CLICK, function (e) {
@@ -31190,7 +31188,8 @@ function pad(number, digits, end) {
             this.owner._activeDragHandle = this;
             // HACK to initiate click on the line
             this.draggable.userEvents.cancel();
-            this.draggable.userEvents._start(e);
+            this._dragstart(e);
+            this.dragend();
         },
 
         _dragstart: function(e) {
@@ -31320,10 +31319,6 @@ function pad(number, digits, end) {
                 tooltip = options.tooltip,
                 html = "";
 
-            if (that.val) {
-                val = that.val;
-            }
-
             if (!tooltip.enabled) {
                 return;
             }
@@ -31361,6 +31356,7 @@ function pad(number, digits, end) {
                 that.draggable.userEvents._disposeAll();
             }
 
+            that.draggable.userEvents.cancel();
             return that._end();
         },
 
@@ -31641,7 +31637,6 @@ function pad(number, digits, end) {
                 .attr(TABINDEX, 0)
                 .on(MOUSE_UP, function () {
                     that._setTooltipTimeout();
-                    that._drag.draggable.userEvents.cancel();
                 })
                 .on(CLICK, function (e) {
                     that._focusWithMouse(e.target);
@@ -39708,7 +39703,7 @@ function pad(number, digits, end) {
                     .on("mouseenter" + ns, LI, function() { $(this).addClass(HOVER); })
                     .on("mouseleave" + ns, LI, function() { $(this).removeClass(HOVER); });
 
-        that.list = $("<div class='k-list-container'/>")
+        that.list = $("<div class='k-list-container k-list-scroller'/>")
                     .append(that.ul)
                     .on(MOUSEDOWN, preventDefault);
 
@@ -42706,7 +42701,7 @@ function pad(number, digits, end) {
                 titleBarHeight;
 
             if (!arguments.length) {
-                return title.text();
+                return title.html();
             }
 
             if (text === false) {
@@ -51502,10 +51497,18 @@ function pad(number, digits, end) {
             setTimeout(function(){
                 if (widget) { // might have been destroyed in between. :-(
                     var kNgModel = scope[widget.element.attr("k-ng-model")];
+
                     if (kNgModel) {
                         val = kNgModel;
                     }
-                    widget.value(val);
+
+                    if (widget.options.autoBind === false && !widget.listView.isBound()) {
+                        if (val) {
+                            widget.value(val);
+                        }
+                    } else {
+                        widget.value(val);
+                    }
                 }
             }, 0);
         };

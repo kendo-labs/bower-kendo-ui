@@ -1258,11 +1258,6 @@ div.k-filebrowser-dropzone em
     .box-shadow(@active-shadow);
 }
 
-.k-grid td.k-state-selected.k-state-focused
-{
-    background-color: lighten(@selected-background-color, 3%);
-}
-
 .k-popup,
 .k-menu .k-menu-group,
 .k-grid .k-filter-options,
@@ -2450,8 +2445,6 @@ div.k-window.k-state-focused
     color: #666;
 }
 
-.k-grid td.k-state-selected,
-.k-grid tr.k-state-selected,
 .k-list > .k-state-selected,
 .k-group > .k-item > .k-state-selected,
 .k-gantt .k-treelist .k-state-selected,
@@ -2461,6 +2454,27 @@ div.k-window.k-state-focused
 {
     background-color: @selected-secondary-background-color;
     color: @widget-text-color;
+}
+
+.k-grid tr:hover {
+    background-color: @hover-background-color;
+}
+
+.k-grid-header th.k-state-focused,
+.k-grid td.k-state-focused {
+    box-shadow: inset 0 0 0 1px @selected-background;
+}
+
+.k-grid tr.k-state-selected,
+.k-grid td.k-state-selected,
+.k-grid td.k-state-selected.k-state-focused {
+    color: @widget-text-color;
+    background-color: desaturate(@selected-secondary-background-color, 5%);
+}
+
+.k-grid tr:hover .k-state-selected,
+.k-grid tr.k-state-selected:hover td {
+    background-color: darken(@selected-secondary-background-color, 3%);
 }
 
 .k-gantt-treelist

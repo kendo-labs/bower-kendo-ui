@@ -77,7 +77,7 @@
                     .on("mouseenter" + ns, LI, function() { $(this).addClass(HOVER); })
                     .on("mouseleave" + ns, LI, function() { $(this).removeClass(HOVER); });
 
-        that.list = $("<div class='k-list-container'/>")
+        that.list = $("<div class='k-list-container k-list-scroller'/>")
                     .append(that.ul)
                     .on(MOUSEDOWN, preventDefault);
 

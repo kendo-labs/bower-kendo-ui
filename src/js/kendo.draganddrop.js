@@ -807,34 +807,11 @@
         },
 
         _drag: function(e) {
-            var that = this;
-
             e.preventDefault();
 
             var cursorElement = this._elementUnderCursor(e);
-
-            that._withDropTarget(cursorElement, function(target, targetElement) {
-                if (!target) {
-                    if (lastDropTarget) {
-                        lastDropTarget._trigger(DRAGLEAVE, extend(e, { dropTarget: $(lastDropTarget.targetElement) }));
-                        lastDropTarget = null;
-                    }
-                    return;
-                }
-
-                if (lastDropTarget) {
-                    if (targetElement === lastDropTarget.targetElement) {
-                        return;
-                    }
-
-                    lastDropTarget._trigger(DRAGLEAVE, extend(e, { dropTarget: $(lastDropTarget.targetElement) }));
-                }
-
-                target._trigger(DRAGENTER, extend(e, { dropTarget: $(targetElement) }));
-                lastDropTarget = extend(target, { targetElement: targetElement });
-            });
-
-            that._trigger(DRAG, extend(e, { dropTarget: lastDropTarget, elementUnderCursor: cursorElement }));
+            this._lastEvent = e;
+            this._processMovement(e, cursorElement);
 
             if (this.options.autoScroll) {
                 if (this._cursorElement !== cursorElement) {
@@ -859,9 +836,34 @@
                 }
             }
 
-            if (that.hint) {
-                that._updateHint(e);
+            if (this.hint) {
+                this._updateHint(e);
             }
+        },
+
+        _processMovement: function(e, cursorElement) {
+            this._withDropTarget(cursorElement, function(target, targetElement) {
+                if (!target) {
+                    if (lastDropTarget) {
+                        lastDropTarget._trigger(DRAGLEAVE, extend(e, { dropTarget: $(lastDropTarget.targetElement) }));
+                        lastDropTarget = null;
+                    }
+                    return;
+                }
+
+                if (lastDropTarget) {
+                    if (targetElement === lastDropTarget.targetElement) {
+                        return;
+                    }
+
+                    lastDropTarget._trigger(DRAGLEAVE, extend(e, { dropTarget: $(lastDropTarget.targetElement) }));
+                }
+
+                target._trigger(DRAGENTER, extend(e, { dropTarget: $(targetElement) }));
+                lastDropTarget = extend(target, { targetElement: targetElement });
+            });            
+
+            this._trigger(DRAG, extend(e, { dropTarget: lastDropTarget, elementUnderCursor: cursorElement }));
         },
 
         _autoScroll: function() {
@@ -872,6 +874,9 @@
             if (!parent) {
                 return;
             }
+
+            var cursorElement = this._elementUnderCursor(this._lastEvent);
+            this._processMovement(this._lastEvent, cursorElement);
 
             var yIsScrollable, xIsScrollable;
 

@@ -823,7 +823,6 @@ html .km-pane-wrapper .k-header
 .k-state-focused,
 .k-list>.k-state-focused,
 .k-listview>.k-state-focused,
-.k-grid-header th.k-state-focused,
 td.k-state-focused,
 .k-button.k-state-focused
 {
@@ -2030,11 +2029,6 @@ html .km-pane-wrapper .km-widget,
     color: @secondary-text-color;
 }
 
-.k-grid td.k-state-focused
-{
-    box-shadow: inset 0 0 0 1px @focused-item-shadow;
-}
-
 .k-header,
 .k-grid-header-wrap,
 .k-grid .k-grouping-header,
@@ -2590,9 +2584,14 @@ input.k-textbox:focus {
 	background-color: @selected-background-color;
 }
 
-.k-grid-content tr:hover,
+.k-grid tr:hover,
 .k-gantt .k-treelist tr:hover {
 	background-color: @hover-background-color;
+}
+
+.k-grid tr.k-state-selected:hover,
+.k-grid td.k-state-selected:hover {
+    background-color: desaturate(@selected-background-color, 35%);
 }
 
 .k-gantt .k-treelist .k-alt,
@@ -2600,6 +2599,7 @@ input.k-textbox:focus {
    background-color: @alt-background-color;
 }
 
+.k-grid-header th.k-state-focused,
 .k-grid td.k-state-focused {
 	.box-shadow(inset 0 0 0 1px @focused-border-color);
 }

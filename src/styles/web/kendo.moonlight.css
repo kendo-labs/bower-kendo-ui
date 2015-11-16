@@ -376,7 +376,7 @@ html .km-pane-wrapper .k-header {
 }
 /* Scheduler */
 .k-scheduler {
-  color: #ffffff;
+  color: #2d3b4f;
   background-color: #0d1114;
 }
 .k-scheduler-layout {
@@ -418,8 +418,8 @@ html .km-pane-wrapper .k-header {
 .k-event,
 .k-task-complete {
   border-color: #fee3a1;
-  background: #fee3a1 0 -257px url('textures/highlight.png') repeat-x;
-  color: #ffffff;
+  background: #fdcd56 0 -257px url('textures/highlight.png') repeat-x;
+  color: #2d3b4f;
 }
 .k-event-inverse {
   color: #0d1114;
@@ -605,8 +605,8 @@ html .km-pane-wrapper .k-header {
 .k-grid-header th.k-state-focused,
 td.k-state-focused,
 .k-button.k-state-focused {
-  -webkit-box-shadow: inset 0 0 3px 1px #232d36;
-          box-shadow: inset 0 0 3px 1px #232d36;
+  -webkit-box-shadow: inset 0 0 3px 1px #ffffff;
+          box-shadow: inset 0 0 3px 1px #ffffff;
 }
 .k-state-focused.k-state-selected,
 .k-list > .k-state-focused.k-state-selected,
@@ -1057,7 +1057,7 @@ div.k-filebrowser-dropzone em {
 .k-task-single {
   background-color: #feeec5;
   border-color: #fee3a1;
-  color: #ffffff;
+  color: #2d3b4f;
 }
 .k-state-selected.k-task-single {
   border-color: #f9b303;
@@ -1536,8 +1536,8 @@ textarea.k-textbox,
   color: #ffffff;
 }
 .k-grid td.k-state-focused {
-  -webkit-box-shadow: inset 0 0 0 1px inset 0 0 3px 1px #232d36;
-          box-shadow: inset 0 0 0 1px inset 0 0 3px 1px #232d36;
+  -webkit-box-shadow: inset 0 0 3px 1px #ffffff;
+          box-shadow: inset 0 0 3px 1px #ffffff;
 }
 .k-header,
 .k-grid-header-wrap,

@@ -10234,12 +10234,19 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-nova .km-list .k-dropdown {
   text-align: left;
 }
-.km-nova .km-list .k-dropdown .k-dropdown-wrap {
+.km-nova .km-list .km-label-above .k-dropdown-wrap {
   display: block;
   border-radius: 0;
   background: transparent;
   -webkit-box-shadow: none;
           box-shadow: none;
+  -ms-transform: translateY(0);
+      transform: translateY(0);
+  -webkit-transform: translateY(0);
+}
+.km-nova .km-list .km-label-above .k-dropdown-wrap .k-input {
+  text-indent: 0;
+  padding: .2em 0;
 }
 .km-nova .km-label-above {
   width: 100%;

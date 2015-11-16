@@ -896,9 +896,6 @@ div.k-filebrowser-dropzone em {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-grid td.k-state-selected.k-state-focused {
-  background-color: #0086cf;
-}
 .k-popup,
 .k-menu .k-menu-group,
 .k-grid .k-filter-options,
@@ -1940,8 +1937,6 @@ div.k-window.k-state-focused {
   background: none;
   color: #666;
 }
-.k-grid td.k-state-selected,
-.k-grid tr.k-state-selected,
 .k-list > .k-state-selected,
 .k-group > .k-item > .k-state-selected,
 .k-gantt .k-treelist .k-state-selected,
@@ -1950,6 +1945,24 @@ div.k-window.k-state-focused {
 .k-gantt .k-treelist .k-alt.k-state-selected > td {
   background-color: #e5f3ff;
   color: #333333;
+}
+.k-grid tr:hover {
+  background-color: #eaeaea;
+}
+.k-grid-header th.k-state-focused,
+.k-grid td.k-state-focused {
+  -webkit-box-shadow: inset 0 0 0 1px #007cc0;
+          box-shadow: inset 0 0 0 1px #007cc0;
+}
+.k-grid tr.k-state-selected,
+.k-grid td.k-state-selected,
+.k-grid td.k-state-selected.k-state-focused {
+  color: #333333;
+  background-color: #e6f3fe;
+}
+.k-grid tr:hover .k-state-selected,
+.k-grid tr.k-state-selected:hover td {
+  background-color: #d6ecff;
 }
 .k-gantt-treelist {
   background: #f2f2f2;

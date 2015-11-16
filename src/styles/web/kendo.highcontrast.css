@@ -415,7 +415,7 @@ html .km-pane-wrapper .k-header {
 .k-event,
 .k-task-complete {
   border-color: #f0f0f0;
-  background: #f0f0f0 0 -257px url('textures/highlight.png') repeat-x;
+  background: #c9c9c9 0 -257px url('textures/highlight.png') repeat-x;
   color: #000000;
 }
 .k-event-inverse {

@@ -418,7 +418,7 @@ html .km-pane-wrapper .k-header {
 .k-event,
 .k-task-complete {
   border-color: #ffc09c;
-  background: #ffc09c 0 -257px url('textures/highlight.png') repeat-x;
+  background: #ff8f50 0 -257px url('textures/highlight.png') repeat-x;
   color: #2e2e2e;
 }
 .k-event-inverse {
@@ -605,8 +605,8 @@ html .km-pane-wrapper .k-header {
 .k-grid-header th.k-state-focused,
 td.k-state-focused,
 .k-button.k-state-focused {
-  -webkit-box-shadow: inset 0 0 3px 1px #b6b6b6;
-          box-shadow: inset 0 0 3px 1px #b6b6b6;
+  -webkit-box-shadow: inset 0 0 3px 1px #aeaeae;
+          box-shadow: inset 0 0 3px 1px #aeaeae;
 }
 .k-state-focused.k-state-selected,
 .k-list > .k-state-focused.k-state-selected,
@@ -1536,8 +1536,8 @@ textarea.k-textbox,
   color: #2e2e2e;
 }
 .k-grid td.k-state-focused {
-  -webkit-box-shadow: inset 0 0 0 1px inset 0 0 3px 1px #b6b6b6;
-          box-shadow: inset 0 0 0 1px inset 0 0 3px 1px #b6b6b6;
+  -webkit-box-shadow: inset 0 0 3px 1px #aeaeae;
+          box-shadow: inset 0 0 3px 1px #aeaeae;
 }
 .k-header,
 .k-grid-header-wrap,

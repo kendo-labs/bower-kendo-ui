@@ -2472,8 +2472,8 @@ ul.k-menu-vertical .k-separator,
   min-height: 18px;
   line-height: 18px;
   /* due to sorting icons*/
-  margin: -0.5em -0.6em -0.4em -0.6em;
-  padding: .5em .6em .4em .6em;
+  margin: -0.5em -0.6em -0.4em 0;
+  padding: .5em .6em .4em 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -4443,6 +4443,10 @@ span.k-dropdown,
 .k-header-column-menu {
   -webkit-touch-callout: none;
 }
+.k-list-scroller {
+  position: relative;
+  overflow: auto;
+}
 .k-popup.k-list-container,
 .k-popup.k-calendar-container {
   -webkit-touch-callout: none;
@@ -4650,7 +4654,7 @@ body .k-datetimepicker .k-select {
   border: 0;
 }
 .k-list {
-  height: 100%;
+  height: auto;
 }
 .k-popup .k-list .k-item,
 .k-fieldselector .k-list .k-item,
@@ -9979,8 +9983,8 @@ div.k-navigator .k-navigator-w {
 }
 @font-face {
   font-family: 'KendoUIGlyphs';
-  src: url('fonts/glyphs/KendoUIGlyphs.eot?-wd8xpd');
-  src: url('fonts/glyphs/KendoUIGlyphs.eot?#iefix-wd8xpd') format('embedded-opentype'), url('fonts/glyphs/KendoUIGlyphs.ttf?-wd8xpd') format('truetype'), url('fonts/glyphs/KendoUIGlyphs.woff?-wd8xpd') format('woff'), url('fonts/glyphs/KendoUIGlyphs.svg?-wd8xpd#KendoUIGlyphs') format('svg');
+  src: url('fonts/glyphs/KendoUIGlyphs.eot?y6oa7j');
+  src: url('fonts/glyphs/KendoUIGlyphs.eot?y6oa7j?#iefix') format('embedded-opentype'), url('fonts/glyphs/KendoUIGlyphs.ttf?y6oa7j') format('truetype'), url('fonts/glyphs/KendoUIGlyphs.woff?y6oa7j') format('woff'), url('fonts/glyphs/KendoUIGlyphs.svg?y6oa7j#KendoUIGlyphs') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -10011,7 +10015,7 @@ div.k-navigator .k-navigator-w {
 .k-i-sarrow-n:before {
   content: "\e608";
 }
-.k-i-sarrow-:before {
+.k-i-sarrow-e:before {
   content: "\e609";
 }
 .k-i-sarrow-s:before {
@@ -10442,6 +10446,9 @@ div.k-navigator .k-navigator-w {
 }
 .k-i-format-number:before {
   content: "\e698";
+}
+.k-i-reset-color:before {
+  content: "\e900";
 }
 .k-spreadsheet {
   width: 800px;
