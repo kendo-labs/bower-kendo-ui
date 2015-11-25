@@ -399,7 +399,7 @@
                 value = optionValue;
             }
 
-            if (value !== that._old) {
+            if (value !== unifyType(that._old, typeof value)) {
                 trigger = true;
             } else if (index !== undefined && index !== that._oldIndex) {
                 trigger = true;
@@ -478,6 +478,11 @@
             if (length) {
                 popups = list.add(list.parent(".k-animation-container")).show();
 
+                if (!list.is(":visible")) {
+                    popups.hide();
+                    return;
+                }
+
                 height = that.listView.content[0].scrollHeight > height ? height : "auto";
 
                 popups.height(height);
@@ -511,7 +516,7 @@
             }
 
             computedStyle = window.getComputedStyle ? window.getComputedStyle(wrapper[0], null) : 0;
-            computedWidth = computedStyle ? parseFloat(computedStyle.width) : wrapper.outerWidth();
+            computedWidth = parseFloat(computedStyle  && computedStyle.width) || wrapper.outerWidth();
 
             if (computedStyle && browser.msie) { // getComputedStyle returns different box in IE.
                 computedWidth += parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight) + parseFloat(computedStyle.borderLeftWidth) + parseFloat(computedStyle.borderRightWidth);
@@ -586,9 +591,25 @@
             }
         },
 
-        _firstOpen: function() {
-            var height = this._height(this.dataSource.flatView().length);
+        _calculatePopupHeight: function(force) {
+            var height = this._height(this.dataSource.flatView().length || force);
             this._calculateGroupPadding(height);
+        },
+
+        _resizePopup: function(force) {
+            if (this.options.virtual) {
+                return;
+            }
+
+            if (!this.popup.element.is(":visible")) {
+                this.popup.one("open", (function(force) {
+                    return proxy(function() {
+                        this._calculatePopupHeight(force);
+                    }, this);
+                }).call(this, force));
+            } else {
+                this._calculatePopupHeight(force);
+            }
         },
 
         _popup: function() {
@@ -601,10 +622,6 @@
                 animation: that.options.animation,
                 isRtl: support.isRtl(that.wrapper)
             }));
-
-            if (!that.options.virtual) {
-                that.popup.one(OPEN, proxy(that._firstOpen, that));
-            }
         },
 
         _makeUnselectable: function() {
@@ -1555,7 +1572,6 @@
 
         _valueExpr: function(type, values) {
             var that = this;
-            var value;
             var idx = 0;
 
             var body;
@@ -1566,19 +1582,7 @@
                 that._valueType = type;
 
                 for (; idx < values.length; idx++) {
-                    value = values[idx];
-
-                    if (value !== undefined && value !== "" && value !== null) {
-                        if (type === "boolean") {
-                            value = Boolean(value);
-                        } else if (type === "number") {
-                            value = Number(value);
-                        } else if (type === "string") {
-                            value = value.toString();
-                        }
-                    }
-
-                    normalized.push(value);
+                    normalized.push(unifyType(values[idx], type));
                 }
 
                 body = "for (var idx = 0; idx < " + normalized.length + "; idx++) {" +
@@ -2053,6 +2057,20 @@
         }
 
         return found;
+    }
+
+    function unifyType(value, type) {
+        if (value !== undefined && value !== "" && value !== null) {
+            if (type === "boolean") {
+                value = Boolean(value);
+            } else if (type === "number") {
+                value = Number(value);
+            } else if (type === "string") {
+                value = value.toString();
+            }
+        }
+
+        return value;
     }
 })(window.kendo.jQuery);
 

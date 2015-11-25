@@ -12012,10 +12012,10 @@ div.editorToolbarWindow.k-window-content {
 .k-dropdown-wrap.k-state-border-down .k-i-arrow-s {
   background-position: -16px 0;
 }
-.k-state-active .k-i-calendar {
+.k-picker-wrap.k-state-active .k-i-calendar {
   background-position: -48px -176px;
 }
-.k-state-active .k-i-clock {
+.k-picker-wrap.k-state-active .k-i-clock {
   background-position: -48px -192px;
 }
 .k-state-active > .k-i-insert-n,
@@ -12287,28 +12287,40 @@ div.editorToolbarWindow.k-window-content {
 .k-button:not(.k-state-disabled):active:hover .k-i-ungroup {
   background-position: -128px -288px;
 }
-.k-panelbar .k-i-arrow-n,
-.k-pivot .k-i-arrow-n,
 .k-panelbar .k-link.k-state-selected .k-i-arrow-n,
 .k-pivot .k-link.k-state-selected .k-i-arrow-n,
 .k-panelbar .k-link:not(.k-state-disabled):hover > .k-i-arrow-n,
 .k-pivot .k-link:not(.k-state-disabled):hover > .k-i-arrow-n {
   background-position: 0 -192px;
 }
-.k-panelbar .k-i-arrow-s,
-.k-pivot .k-i-arrow-s,
 .k-panelbar .k-link.k-state-selected .k-i-arrow-s,
 .k-pivot .k-link.k-state-selected .k-i-arrow-s,
 .k-panelbar .k-link:not(.k-state-disabled):hover > .k-i-arrow-s,
 .k-pivot .k-link:not(.k-state-disabled):hover > .k-i-arrow-s {
   background-position: 0 -224px;
 }
-.k-panelbar .k-i-arrow-e,
-.k-pivot .k-i-arrow-e,
 .k-panelbar .k-link.k-state-selected .k-i-arrow-e,
 .k-pivot .k-link.k-state-selected .k-i-arrow-e,
 .k-panelbar .k-link:not(.k-state-disabled):hover > .k-i-arrow-e,
 .k-pivot .k-link:not(.k-state-disabled):hover > .k-i-arrow-e {
+  background-position: 0 -190px;
+}
+.k-pivot .k-i-arrow-n {
+  background-position: 0 -192px;
+}
+.k-pivot .k-i-arrow-s {
+  background-position: 0 -224px;
+}
+.k-pivot .k-i-arrow-e {
+  background-position: 0 -190px;
+}
+.k-panelbar .k-link > .k-i-arrow-n {
+  background-position: 0 -192px;
+}
+.k-panelbar .k-link > .k-i-arrow-s {
+  background-position: 0 -224px;
+}
+.k-panelbar .k-link > .k-i-arrow-e {
   background-position: 0 -190px;
 }
 .k-pivot-configurator-settings .k-si-close,

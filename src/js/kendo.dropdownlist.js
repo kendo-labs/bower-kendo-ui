@@ -349,7 +349,7 @@
                     that._accessor("", -1);
                 }
 
-                that._old = that._accessor();
+                that._old = that.listView.value()[0];
                 that._oldIndex = that.selectedIndex;
             });
 
@@ -415,17 +415,13 @@
             var length = data.length;
             var dataItem;
 
-            var height;
             var value;
 
             that._angularItems("compile");
 
             that._presetValue = false;
 
-            if (!that.options.virtual) {
-                height = that._height(filtered ? (length || 1) : length);
-                that._calculateGroupPadding(height);
-            }
+            that._resizePopup(true);
 
             that.popup.position();
 

@@ -1420,7 +1420,7 @@ html .km-pane-wrapper .km-widget,
 .k-panelbar > li.k-state-default > .k-link.k-state-hover {
   color: #333333;
 }
-.k-panelbar .k-state-focused.k-state-hover {
+.k-panelbar > .k-state-focused.k-state-hover {
   background: #ebebeb;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -1483,9 +1483,25 @@ html .km-pane-wrapper .km-widget,
 .k-grouping-header {
   color: #333333;
 }
+.k-grid tr:hover {
+  background-color: #ebebeb;
+}
 .k-grid td.k-state-focused {
   -webkit-box-shadow: inset 0 0 0 1px inset 0 0 7px 0 #76abd9;
           box-shadow: inset 0 0 0 1px inset 0 0 7px 0 #76abd9;
+}
+.k-grid tr:hover .k-state-focused,
+.k-grid tr.k-state-focused:hover td {
+  background-color: #d5e5f3;
+}
+.k-grid tr:hover .k-state-selected,
+.k-grid tr.k-state-selected:hover td {
+  background-color: #3379b5;
+}
+.k-grid tr:hover .k-state-focused.k-state-selected,
+.k-grid tr.k-state-selected:hover td.k-state-focused {
+  -webkit-box-shadow: inset 0 0 7px 0 #193c5a;
+          box-shadow: inset 0 0 7px 0 #193c5a;
 }
 .k-header,
 .k-grid-header-wrap,
@@ -2076,7 +2092,7 @@ thead.k-grid-header th.k-header:last-child {
 .k-panelbar > li.k-state-default > .k-link {
   color: #333333;
 }
-.k-panelbar .k-state-focused {
+.k-panelbar > .k-state-focused {
   -webkit-box-shadow: inset 0 0 7px 0 #76abd9;
           box-shadow: inset 0 0 7px 0 #76abd9;
 }
@@ -2092,15 +2108,18 @@ thead.k-grid-header th.k-header:last-child {
 .k-panelbar .k-link.k-state-selected.k-state-hover {
   color: #333333;
 }
-.k-panelbar .k-state-focused.k-state-selected,
 td.k-state-focused.k-state-selected,
 .k-state-selected td.k-state-focused,
 .k-listview > .k-state-focused.k-state-selected {
   -webkit-box-shadow: inset 0 0 10px 3px #3276b1;
           box-shadow: inset 0 0 10px 3px #3276b1;
 }
-.k-panelbar .k-state-focused.k-state-hover {
+.k-panelbar > .k-state-focused.k-state-hover {
   background: #ebebeb;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-panelbar > li .k-state-selected.k-state-hover {
   -webkit-box-shadow: none;
           box-shadow: none;
 }

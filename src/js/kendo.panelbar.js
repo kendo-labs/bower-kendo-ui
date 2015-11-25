@@ -257,7 +257,9 @@
                 that.expand(content.parent(), false);
             }
 
-            that._angularCompile();
+            if (options.dataSource) {
+                that._angularCompile();
+            }
 
             kendo.notify(that);
         },

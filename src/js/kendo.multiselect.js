@@ -509,7 +509,7 @@
 
             that._render(data);
 
-            that._calculateGroupPadding(that._height(length));
+            that._resizePopup();
 
             if (that._open) {
                 that._open = false;

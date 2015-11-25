@@ -932,8 +932,20 @@ div.k-filebrowser-dropzone em {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-grid tr:hover {
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,.01)), to(rgba(0,0,0,.08)));
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+  background-color: #cccccc;
+}
 .k-grid td.k-state-selected.k-state-focused {
   background-color: #f6f6f6;
+}
+.k-grid tr.k-state-selected:hover,
+.k-grid td.k-state-selected:hover {
+  background-color: #efeded;
+  background-image: none;
 }
 .k-popup,
 .k-menu .k-menu-group,
@@ -1472,7 +1484,7 @@ textarea.k-textbox,
 .k-panelbar > li.k-state-default > .k-link.k-state-hover {
   color: #676767;
 }
-.k-panelbar .k-state-focused.k-state-hover {
+.k-panelbar > .k-state-focused.k-state-hover {
   background: #ffffff;
   -webkit-box-shadow: none;
           box-shadow: none;

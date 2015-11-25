@@ -1408,7 +1408,7 @@ html .km-pane-wrapper .km-widget,
 .k-panelbar > li.k-state-default > .k-link.k-state-hover {
   color: #000000;
 }
-.k-panelbar .k-state-focused.k-state-hover {
+.k-panelbar > li > .k-state-focused.k-state-hover {
   background: #f4f4f4;
   -webkit-box-shadow: none;
           box-shadow: none;

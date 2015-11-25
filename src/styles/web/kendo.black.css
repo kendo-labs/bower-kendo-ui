@@ -932,8 +932,20 @@ div.k-filebrowser-dropzone em {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-grid tr:hover {
+  background-image: url('textures/glass.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.12)), color-stop(50%, rgba(255,255,255,.08)), color-stop(50%, rgba(255,255,255,.05)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
+  background-color: #292525;
+}
 .k-grid td.k-state-selected.k-state-focused {
   background-color: #006edb;
+}
+.k-grid tr.k-state-selected:hover,
+.k-grid td.k-state-selected:hover {
+  background-color: #0066cc;
+  background-image: none;
 }
 .k-popup,
 .k-menu .k-menu-group,
@@ -1472,7 +1484,7 @@ textarea.k-textbox,
 .k-panelbar > li.k-state-default > .k-link.k-state-hover {
   color: #ffffff;
 }
-.k-panelbar .k-state-focused.k-state-hover {
+.k-panelbar > .k-state-focused.k-state-hover {
   background: #3d3d3d;
   -webkit-box-shadow: none;
           box-shadow: none;

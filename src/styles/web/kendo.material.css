@@ -1405,7 +1405,7 @@ html .km-pane-wrapper .km-widget,
 .k-panelbar > li.k-state-default > .k-link.k-state-hover {
   color: #444444;
 }
-.k-panelbar .k-state-focused.k-state-hover {
+.k-panelbar > li > .k-state-focused.k-state-hover {
   background: #ebebeb;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -2484,7 +2484,7 @@ td.k-group-cell,
 .k-panelbar > li.k-state-default > .k-link {
   color: #444444;
 }
-.k-panelbar .k-state-hover {
+.k-panelbar > li > .k-state-hover {
   background-color: #ebebeb;
 }
 .k-panelbar > .k-item > .k-link,
@@ -2580,12 +2580,12 @@ table.k-editor {
 .k-treeview .k-state-selected,
 .k-treeview .k-state-focused,
 .k-editor-toolbar .k-dropdown,
-.k-panelbar .k-state-focused {
+.k-panelbar > li > .k-state-focused {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 .k-treeview .k-state-focused,
-.k-panelbar .k-state-focused {
+.k-panelbar > li > .k-state-focused {
   background-color: #ebebeb;
 }
 .k-editor-toolbar .k-dropdown-wrap.k-state-default,

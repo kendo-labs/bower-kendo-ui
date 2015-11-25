@@ -49,7 +49,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.3.1116".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2015.3.1125".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -11566,6 +11566,10 @@ function pad(number, digits, end) {
                 element = this.container(),
                 template = this.template();
 
+            if (source == null) {
+                return;
+            }
+
             if (source instanceof kendo.data.DataSource) {
                 source = source.view();
             }
@@ -11586,8 +11590,7 @@ function pad(number, digits, end) {
                         bindElement(element.children[idx], source[idx], this.options.roles, [source[idx]].concat(parents));
                     }
                 }
-            }
-            else {
+            } else {
                 $(element).html(kendo.render(template, source));
             }
         }
@@ -12718,7 +12721,7 @@ function pad(number, digits, end) {
                 element.kendoBindingTarget = null;
             }
         }
-        
+
         if(destroyWidget) {
             var widget = kendo.widgetInstance($(element));
             if (widget && typeof widget.destroy === FUNCTION) {
@@ -22223,7 +22226,7 @@ function pad(number, digits, end) {
                 value = optionValue;
             }
 
-            if (value !== that._old) {
+            if (value !== unifyType(that._old, typeof value)) {
                 trigger = true;
             } else if (index !== undefined && index !== that._oldIndex) {
                 trigger = true;
@@ -22302,6 +22305,11 @@ function pad(number, digits, end) {
             if (length) {
                 popups = list.add(list.parent(".k-animation-container")).show();
 
+                if (!list.is(":visible")) {
+                    popups.hide();
+                    return;
+                }
+
                 height = that.listView.content[0].scrollHeight > height ? height : "auto";
 
                 popups.height(height);
@@ -22335,7 +22343,7 @@ function pad(number, digits, end) {
             }
 
             computedStyle = window.getComputedStyle ? window.getComputedStyle(wrapper[0], null) : 0;
-            computedWidth = computedStyle ? parseFloat(computedStyle.width) : wrapper.outerWidth();
+            computedWidth = parseFloat(computedStyle  && computedStyle.width) || wrapper.outerWidth();
 
             if (computedStyle && browser.msie) { // getComputedStyle returns different box in IE.
                 computedWidth += parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight) + parseFloat(computedStyle.borderLeftWidth) + parseFloat(computedStyle.borderRightWidth);
@@ -22410,9 +22418,25 @@ function pad(number, digits, end) {
             }
         },
 
-        _firstOpen: function() {
-            var height = this._height(this.dataSource.flatView().length);
+        _calculatePopupHeight: function(force) {
+            var height = this._height(this.dataSource.flatView().length || force);
             this._calculateGroupPadding(height);
+        },
+
+        _resizePopup: function(force) {
+            if (this.options.virtual) {
+                return;
+            }
+
+            if (!this.popup.element.is(":visible")) {
+                this.popup.one("open", (function(force) {
+                    return proxy(function() {
+                        this._calculatePopupHeight(force);
+                    }, this);
+                }).call(this, force));
+            } else {
+                this._calculatePopupHeight(force);
+            }
         },
 
         _popup: function() {
@@ -22425,10 +22449,6 @@ function pad(number, digits, end) {
                 animation: that.options.animation,
                 isRtl: support.isRtl(that.wrapper)
             }));
-
-            if (!that.options.virtual) {
-                that.popup.one(OPEN, proxy(that._firstOpen, that));
-            }
         },
 
         _makeUnselectable: function() {
@@ -23379,7 +23399,6 @@ function pad(number, digits, end) {
 
         _valueExpr: function(type, values) {
             var that = this;
-            var value;
             var idx = 0;
 
             var body;
@@ -23390,19 +23409,7 @@ function pad(number, digits, end) {
                 that._valueType = type;
 
                 for (; idx < values.length; idx++) {
-                    value = values[idx];
-
-                    if (value !== undefined && value !== "" && value !== null) {
-                        if (type === "boolean") {
-                            value = Boolean(value);
-                        } else if (type === "number") {
-                            value = Number(value);
-                        } else if (type === "string") {
-                            value = value.toString();
-                        }
-                    }
-
-                    normalized.push(value);
+                    normalized.push(unifyType(values[idx], type));
                 }
 
                 body = "for (var idx = 0; idx < " + normalized.length + "; idx++) {" +
@@ -23877,6 +23884,20 @@ function pad(number, digits, end) {
         }
 
         return found;
+    }
+
+    function unifyType(value, type) {
+        if (value !== undefined && value !== "" && value !== null) {
+            if (type === "boolean") {
+                value = Boolean(value);
+            } else if (type === "number") {
+                value = Number(value);
+            } else if (type === "string") {
+                value = value.toString();
+            }
+        }
+
+        return value;
     }
 })(window.kendo.jQuery);
 
@@ -26305,7 +26326,7 @@ function pad(number, digits, end) {
 
             that._angularItems("compile");
 
-            that._calculateGroupPadding(that._height(length));
+            that._resizePopup();
 
             popup.position();
 
@@ -26900,7 +26921,7 @@ function pad(number, digits, end) {
                     that._accessor("", -1);
                 }
 
-                that._old = that._accessor();
+                that._old = that.listView.value()[0];
                 that._oldIndex = that.selectedIndex;
             });
 
@@ -26966,17 +26987,13 @@ function pad(number, digits, end) {
             var length = data.length;
             var dataItem;
 
-            var height;
             var value;
 
             that._angularItems("compile");
 
             that._presetValue = false;
 
-            if (!that.options.virtual) {
-                height = that._height(filtered ? (length || 1) : length);
-                that._calculateGroupPadding(height);
-            }
+            that._resizePopup(true);
 
             that.popup.position();
 
@@ -28045,9 +28062,7 @@ function pad(number, digits, end) {
 
             that._presetValue = false;
 
-            if (!options.virtual) {
-                that._calculateGroupPadding(that._height(length));
-            }
+            that._resizePopup();
 
             that.popup.position();
 
@@ -29088,7 +29103,7 @@ function pad(number, digits, end) {
 
             that._render(data);
 
-            that._calculateGroupPadding(that._height(length));
+            that._resizePopup();
 
             if (that._open) {
                 that._open = false;
@@ -36711,7 +36726,9 @@ function pad(number, digits, end) {
                 that.expand(content.parent(), false);
             }
 
-            that._angularCompile();
+            if (options.dataSource) {
+                that._angularCompile();
+            }
 
             kendo.notify(that);
         },
@@ -39703,7 +39720,7 @@ function pad(number, digits, end) {
                     .on("mouseenter" + ns, LI, function() { $(this).addClass(HOVER); })
                     .on("mouseleave" + ns, LI, function() { $(this).removeClass(HOVER); });
 
-        that.list = $("<div class='k-list-container k-list-scroller'/>")
+        that.list = $("<div class='k-list-container k-list-scroller' unselectable='on'/>")
                     .append(that.ul)
                     .on(MOUSEDOWN, preventDefault);
 
