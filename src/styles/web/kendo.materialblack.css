@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /* Kendo skin */
+.k-theme-test-class,
 .ktb-theme-id-material {
   opacity: 0;
 }

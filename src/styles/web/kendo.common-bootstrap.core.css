@@ -17,6 +17,9 @@
 .fake {
   color: red;
 }
+.k-common-test-class {
+  opacity: 0;
+}
 .k-reset {
   margin: 0;
   padding: 0;
@@ -2848,6 +2851,12 @@ body .k-datetimepicker .k-select {
   position: absolute;
   right: 6px;
   top: 1px;
+}
+.km-root .k-list-filter > .k-textbox {
+  padding-left: 0;
+  padding-right: 0;
+  border-left-width: 0;
+  border-right-width: 0;
 }
 /* MultiSelect */
 .k-multiselect-wrap {

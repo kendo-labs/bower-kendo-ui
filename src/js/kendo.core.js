@@ -49,7 +49,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.3.1125".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2015.3.1201".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 

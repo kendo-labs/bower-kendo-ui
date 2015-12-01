@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /* Kendo skin */
+.k-theme-test-class,
 .ktb-theme-id-default {
   opacity: 0;
 }
@@ -1149,8 +1150,11 @@ div.k-filebrowser-dropzone em {
 .k-rtl .k-toolbar .k-button-group .k-group-start {
   border-radius: 0 6px 6px 0;
 }
+.k-toolbar .k-button-group > .k-group-end {
+  border-radius: 6px;
+}
 .k-tool.k-group-end,
-.k-toolbar .k-button-group .k-group-end,
+.k-toolbar .k-button-group .k-button + .k-group-end,
 .k-toolbar .k-split-button .k-split-button-arrow {
   border-radius: 0 6px 6px 0;
 }

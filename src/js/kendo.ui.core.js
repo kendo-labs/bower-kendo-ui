@@ -49,7 +49,7 @@
         slice = [].slice,
         globalize = window.Globalize;
 
-    kendo.version = "2015.3.1125".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2015.3.1201".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -16173,7 +16173,7 @@ function pad(number, digits, end) {
 
                 target._trigger(DRAGENTER, extend(e, { dropTarget: $(targetElement) }));
                 lastDropTarget = extend(target, { targetElement: targetElement });
-            });            
+            });
 
             this._trigger(DRAG, extend(e, { dropTarget: lastDropTarget, elementUnderCursor: cursorElement }));
         },
@@ -16396,7 +16396,7 @@ function pad(number, digits, end) {
 
         var parent = $(element)[0];
 
-        while (!kendo.isScrollable(parent) && parent !== document.body) {
+        while (parent && !kendo.isScrollable(parent) && parent !== document.body) {
             parent = parent.parentNode;
         }
 
@@ -38103,7 +38103,7 @@ function pad(number, digits, end) {
             this.element
                 .addClass("k-rpanel k-rpanel-" + this.options.orientation + " " + this._guid);
 
-            this._resizeHandler = proxy(this.resize, this, false);
+            this._resizeHandler = proxy(this.resize, this, true);
             $(window).on("resize" + NS, this._resizeHandler);
         },
         _mediaQuery:
@@ -38171,7 +38171,9 @@ function pad(number, digits, end) {
             CLOSE
         ],
         _resize: function() {
-            this.element.removeClass("k-rpanel-animate");
+            this.element.removeClass("k-rpanel-animate k-rpanel-expanded");
+
+            $(document.documentElement).off(ACTIVATE_EVENTS, this._closeHandler);
         },
         _toggleButtonClick: function(e) {
             e.preventDefault();
