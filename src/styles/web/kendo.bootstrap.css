@@ -525,15 +525,39 @@ html .km-pane-wrapper .k-header {
   background-color: #ebebeb;
   color: #333333;
 }
-.k-calendar .k-link.k-state-hover,
-.k-window-titlebar .k-link {
+.k-calendar .k-link.k-state-hover {
   border-radius: 4px;
+}
+.k-calendar .k-state-focused.k-state-hover {
+  background-color: #d5e5f3;
+}
+.k-calendar .k-state-selected.k-state-hover {
+  background-color: #3276b1;
+}
+.k-calendar .k-state-selected.k-state-hover .k-link {
+  color: #ffffff;
+}
+.k-calendar td.k-state-focused.k-state-selected.k-state-hover {
+  -webkit-box-shadow: inset 0 0 7px 0 #1f496e;
+          box-shadow: inset 0 0 7px 0 #1f496e;
+}
+.k-calendar .k-today {
+  background-color: #ebebeb;
+}
+.k-calendar .k-today.k-state-hover {
+  background-color: #d9d9d9;
+}
+.k-calendar .k-today.k-state-focused.k-state-hover {
+  background-color: #d5e5f3;
 }
 .k-calendar .k-footer .k-link {
   border-radius: 0;
 }
 .k-calendar th {
   background-color: #f5f5f5;
+}
+.k-window-titlebar .k-link {
+  border-radius: 4px;
 }
 .k-calendar-container.k-group {
   border-color: rgba(0, 0, 0, 0.2);
@@ -977,6 +1001,9 @@ div.k-filebrowser-dropzone em {
 .k-gantt .k-treelist .k-alt {
   background-color: #dcdcdc;
 }
+.k-gantt .k-treelist tr:hover {
+  background-color: #ebebeb;
+}
 .k-gantt .k-treelist .k-state-selected,
 .k-gantt .k-treelist .k-state-selected td,
 .k-gantt .k-treelist .k-alt.k-state-selected,
@@ -1356,6 +1383,14 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-scheduler-delete:active,
 .km-pane-wrapper .k-filter-menu .k-button[type=reset]:active {
   background-color: #990000;
+}
+.km-pane-wrapper .k-pager-numbers .k-link,
+.km-pane-wrapper .k-pager-numbers .k-state-selected,
+.km-pane-wrapper .k-pager-wrap > .k-link {
+  border-radius: 0;
+}
+.km-pane-wrapper .k-pager-nav.k-pager-first {
+  border-radius: 4px 0 0 4px;
 }
 /* /Column Menu */
 .k-autocomplete.k-state-default,

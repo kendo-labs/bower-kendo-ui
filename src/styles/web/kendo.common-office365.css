@@ -7368,6 +7368,7 @@ html .k-upload {
   z-index: 1;
   font: 170px monospace !important;
   /* critical for correct operation; larger values lead to ignoring or text layout problems in IE */
+  filter: alpha(opacity=0);
   opacity: 0;
   margin: 0;
   padding: 0;
@@ -8095,7 +8096,8 @@ div.k-navigator .k-navigator-w {
 .k-treemap-wrap.k-last > .k-treemap-tile {
   padding: .3em;
 }
-.k-treemap-tile.k-state-hover {
+.k-treemap-tile.k-state-hover,
+.k-treemap-tile.k-state-hover:hover {
   z-index: 2;
   background-image: none;
 }
@@ -10459,6 +10461,15 @@ div.k-navigator .k-navigator-w {
 .k-i-reset-color:before {
   content: "\e900";
 }
+.k-i-file-horizontal:before {
+  content: "\e901";
+}
+.k-i-folder:before {
+  content: "\e902";
+}
+.k-i-folder-open:before {
+  content: "\e903";
+}
 .k-spreadsheet {
   width: 800px;
   height: 600px;
@@ -11005,14 +11016,15 @@ div.k-navigator .k-navigator-w {
   left: .4em;
   z-index: 1;
 }
-.k-tabstrip-bottom .k-spreadsheet-sheets-remove {
+.k-spreadsheet-sheets-bar .k-spreadsheet-sheets-remove {
   padding: 0;
+  margin: 0.5em 0.5em 0.5em -0.5em;
 }
-.k-spreadsheet-sheets-remove .k-button-icon {
+.k-spreadsheet-sheets-bar .k-spreadsheet-sheets-remove .k-button-icon {
   padding: 2px;
   line-height: normal;
 }
-.k-spreadsheet-sheets-remove .k-icon {
+.k-spreadsheet-sheets-bar .k-spreadsheet-sheets-remove .k-icon {
   margin: 0;
 }
 .k-spreadsheet-sheets-items-hint {
@@ -11931,11 +11943,6 @@ div.k-window-content {
 }
 .k-spreadsheet .k-spreadsheet-sheets-bar .k-button {
   padding: 5px;
-}
-.k-spreadsheet .k-spreadsheet-sheets-bar .k-spreadsheet-sheets-remove {
-  margin-left: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
 }
 .k-spreadsheet .k-spreadsheet-quick-access-toolbar .k-button {
   margin: 0 2px;

@@ -2061,21 +2061,44 @@ div.k-window.k-state-focused {
   background: #f2f2f2;
   border-color: #ffffff;
 }
+.k-calendar td.k-state-focused {
+  -webkit-box-shadow: inset 0 0 0px 1px #007cc0;
+          box-shadow: inset 0 0 0px 1px #007cc0;
+}
 .k-calendar td.k-weekend {
   background: #e5e5e5;
 }
 .k-calendar td.k-today {
-  background: #ccc;
+  background: #007cc0;
+}
+.k-calendar .k-today .k-link {
+  color: #ffffff;
+}
+.k-calendar .k-today.k-state-hover {
+  background-color: #0086c0;
+}
+.k-calendar .k-today.k-state-focused,
+.k-calendar .k-today:active,
+.k-calendar .k-today.k-state-selected:active {
+  -webkit-box-shadow: inset 0 0 0px 1px #005483;
+          box-shadow: inset 0 0 0px 1px #005483;
 }
 .k-calendar td.k-other-month {
   background: transparent;
 }
 .k-calendar td.k-state-selected {
-  background: #007cc0;
+  background: #e9f7ff;
+}
+.k-calendar td.k-state-selected .k-link {
+  color: #333333;
 }
 .k-calendar td.k-state-hover {
   background: #eaeaea;
   border-color: #ffffff;
+}
+.k-calendar td:active,
+.k-calendar td.k-state-selected.k-state-hover {
+  background-color: #cfe6f3;
 }
 .k-scheduler-table .k-other-month,
 .k-scheduler-header th {

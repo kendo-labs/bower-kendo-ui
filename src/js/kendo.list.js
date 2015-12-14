@@ -1135,15 +1135,22 @@
 
                 options.autoBind = false;
 
-                parent.first("cascade", function(e) {
+                var cascadeHandler = function(e) {
                     that._userTriggered = e.userTriggered;
+
+                    if (parent.popup.visible()) {
+                        return;
+                    }
 
                     if (that.listView.isBound()) {
                         that._clearSelection(parent, true);
                     }
 
                     that._cascadeSelect(parent);
-                });
+                };
+
+                parent.first("cascade", cascadeHandler);
+                parent.popup.bind("deactivate", cascadeHandler);
 
                 //refresh was called
                 if (parent.listView.isBound()) {

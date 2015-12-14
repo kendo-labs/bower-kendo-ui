@@ -4548,9 +4548,6 @@ span.k-tooltip {
 .k-slider-vertical .k-slider-selection {
   margin-left: -5px;
 }
-input.k-textbox {
-  height: 2.43em;
-}
 .k-textbox > input,
 .k-autocomplete .k-input,
 .k-picker-wrap .k-input,

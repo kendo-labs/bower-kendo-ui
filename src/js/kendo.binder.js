@@ -1380,7 +1380,7 @@
                             }
                         }
 
-                        if (options.autoBind === false && options.valuePrimitive !== true && !widget.listView.isBound()) {
+                        if (options.autoBind === false && options.valuePrimitive !== true && !widget._isBound()) {
                             widget._preselect(data, value);
                         } else {
                             widget.value(value);

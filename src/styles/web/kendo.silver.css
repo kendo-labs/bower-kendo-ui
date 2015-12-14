@@ -520,7 +520,7 @@ html .km-pane-wrapper .k-header {
 }
 .k-state-focused,
 .k-grouping-row .k-state-focused {
-  border-color: #95d79f;
+  border-color: #dedee0;
 }
 .k-calendar .k-link {
   color: #505968;
@@ -549,15 +549,40 @@ html .km-pane-wrapper .k-header {
   background-color: #b6bdca;
   color: #263248;
 }
-.k-calendar .k-link.k-state-hover,
-.k-window-titlebar .k-link {
+.k-calendar .k-link.k-state-hover {
   border-radius: 4px;
+}
+.k-calendar .k-today {
+  background-color: #1186d0;
+}
+.k-calendar .k-today .k-link {
+  color: #ffffff;
+}
+.k-calendar .k-today.k-state-hover {
+  background-color: #1984c8;
 }
 .k-calendar .k-footer .k-link {
   border-radius: 0;
 }
 .k-calendar th {
   background-color: #f5f5f5;
+}
+.k-calendar td.k-state-selected.k-state-hover {
+  background-color: #1186d0;
+  background-image: none;
+}
+.k-calendar td.k-state-selected .k-link {
+  color: #ffffff;
+}
+.k-calendar td.k-state-focused.k-state-selected,
+.k-calendar td.k-state-selected.k-state-active,
+.k-calendar td.k-state-selected:active,
+.k-calendar td.k-state-selected.k-state-hover:active {
+  -webkit-box-shadow: inset 0 0 3px 1px #d7dae0;
+          box-shadow: inset 0 0 3px 1px #d7dae0;
+}
+.k-window-titlebar .k-link {
+  border-radius: 4px;
 }
 .k-calendar-container.k-group {
   border-color: #ceced2;
@@ -1036,11 +1061,27 @@ div.k-filebrowser-dropzone em {
 .k-gantt .k-treelist .k-alt {
   background-color: #eeeeef;
 }
+.k-gantt .k-treelist tr:hover {
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
+  background-color: #bbbbc6;
+}
 .k-gantt .k-treelist .k-state-selected,
 .k-gantt .k-treelist .k-state-selected td,
 .k-gantt .k-treelist .k-alt.k-state-selected,
 .k-gantt .k-treelist .k-alt.k-state-selected > td {
   background-color: #1984c8;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0)), to(rgba(255,255,255,.2)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 100%);
+}
+.k-gantt .k-treelist .k-state-selected:hover,
+.k-gantt .k-treelist .k-state-selected:hover td {
+  background-color: #1186d0;
+  background-image: none;
 }
 .k-task-dot:after {
   background-color: #515967;
@@ -2281,9 +2322,6 @@ textarea.k-textbox,
 }
 .k-spreadsheet .k-widget[data-property='fontFamily'] {
   width: 130px;
-}
-.k-spreadsheet .k-spreadsheet-sheets-remove {
-  margin: 0.5em 0.5em 0.5em -0.5em;
 }
 .k-spreadsheet-toolbar .k-combobox .k-input {
   color: #515967;
