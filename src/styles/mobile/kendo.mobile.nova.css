@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -2024,6 +2033,17 @@ div.km-split-horizontal > .km-content > .km-pane {
   left: 0.25rem;
   border-radius: 50%;
 }
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
+}
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
 }
@@ -3437,7 +3457,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-nova .km-content {
   color: #32364c;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* Shim */
 .km-nova .km-popup,
@@ -3449,7 +3469,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 /* Button */
 .km-nova .km-button {
   color: #888e90;
-  background: #ffffff;
+  background: #fff;
   border-color: #888e90;
 }
 .km-nova .km-button.km-state-active {
@@ -3457,13 +3477,13 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 /* Primary Button */
 .km-nova .km-primary {
-  color: #ffffff;
+  color: #fff;
   background: #ff4350;
   border-color: #ff4350;
 }
 .km-nova .km-icon-button,
 .km-nova .km-list .km-icon-button .km-icon {
-  color: #ffffff;
+  color: #fff;
 }
 .km-nova .km-primary.km-state-active {
   background: #e63c48;
@@ -3501,10 +3521,10 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-nova .k-toolbar .km-back:before,
 .km-nova .km-navbar .km-button,
 .km-nova .km-view-title {
-  color: #ffffff;
+  color: #fff;
 }
 .km-nova .km-tabstrip .km-button {
-  color: #ffffff;
+  color: #fff;
   background: transparent;
   border-color: transparent;
 }
@@ -3524,7 +3544,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-nova .km-light.km-navbar,
 .km-nova .km-light.k-toolbar,
 .km-nova .km-light.km-tabstrip {
-  background: #ffffff;
+  background: #fff;
   -webkit-box-shadow: 0 1px 40px 4px #f8fafb;
           box-shadow: 0 1px 40px 4px #f8fafb;
 }
@@ -3541,7 +3561,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-nova .km-drawer .km-list .km-listview-link:after,
 .km-nova .km-drawer .km-list .km-listview-label:after {
-  border-color: #ffffff;
+  border-color: #fff;
   opacity: .3;
 }
 .km-nova .km-touch-scrollbar {
@@ -3565,7 +3585,7 @@ div.km-split-horizontal > .km-content > .km-pane {
   border-color: #9ca6a6;
 }
 .km-nova .km-buttongroup .km-state-active {
-  color: #ffffff;
+  color: #fff;
   background-color: #9ca6a6;
 }
 .km-nova .km-buttongroup.km-primary .km-button {
@@ -3573,27 +3593,27 @@ div.km-split-horizontal > .km-content > .km-pane {
   border-color: #ff4350;
 }
 .km-nova .km-buttongroup.km-primary .km-state-active {
-  color: #ffffff;
+  color: #fff;
   background-color: #ff4350;
 }
 /* Inverse ButtonGroup */
 .km-nova .km-inverse .km-button {
-  color: #ffffff;
+  color: #fff;
   background-color: #9ca6a6;
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-nova .km-inverse .km-state-active {
   color: #9ca6a6;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-nova .km-inverse.km-primary .km-button {
-  color: #ffffff;
-  border-color: #ffffff;
+  color: #fff;
+  border-color: #fff;
   background-color: #ff4350;
 }
 .km-nova .km-inverse.km-primary .km-state-active {
   color: #ff4350;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* Accent NavBar */
 .km-nova .km-accent.km-navbar,
@@ -3602,15 +3622,15 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-nova .km-accent.km-navbar .km-back:before,
 .km-nova .km-accent.k-toolbar .km-back:before,
 .km-nova .km-accent.km-navbar .km-button {
-  color: #ffffff;
+  color: #fff;
 }
 /* ButtonGroup in NavBar*/
 .km-nova .km-navbar .km-buttongroup .km-button {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-nova .km-navbar .km-buttongroup .km-state-active {
   color: #32364c;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* ListView */
 .km-nova .km-list > li {
@@ -3662,7 +3682,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 /* Drawer */
 .km-nova .km-drawer {
-  color: #ffffff;
+  color: #fff;
   background-color: #2a2d40;
 }
 .km-nova .km-drawer .km-content {
@@ -3670,7 +3690,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 /* ListView in Drawer */
 .km-nova .km-drawer .km-group-title {
-  color: #ffffff;
+  color: #fff;
   background-color: #14151e;
   border-color: #3c415b;
 }
@@ -3680,7 +3700,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-nova .km-drawer .km-list > li,
 .km-nova .km-drawer .km-list > li > .km-listview-link,
 .km-nova .km-drawer .km-list > li .km-icon {
-  color: #ffffff;
+  color: #fff;
 }
 /* Generic content */
 .km-nova .km-thumbnail {
@@ -3711,7 +3731,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-nova .k-slider .k-draghandle,
 .km-nova .k-slider .k-draghandle:hover {
-  background-color: #ffffff;
+  background-color: #fff;
   -webkit-box-shadow: 0 0.202rem 0.403rem 0 rgba(0, 0, 0, 0.3);
           box-shadow: 0 0.202rem 0.403rem 0 rgba(0, 0, 0, 0.3);
 }
@@ -3737,7 +3757,7 @@ div.km-split-horizontal > .km-content > .km-pane {
   border-color: #f8fafb;
 }
 .km-nova .km-switch-handle {
-  background: #ffffff;
+  background: #fff;
   -webkit-box-shadow: 0 0.202rem 0.403rem 0 rgba(0, 0, 0, 0.3);
           box-shadow: 0 0.202rem 0.403rem 0 rgba(0, 0, 0, 0.3);
   border-color: #dee7ec;
@@ -3784,7 +3804,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 /* ModalView */
 .km-nova .km-modalview,
 .km-nova .km-modalview .km-footer .km-rightitem {
-  background: #ffffff;
+  background: #fff;
 }
 .km-nova .km-modalview .km-footer .km-button {
   color: #59859b;
@@ -3798,7 +3818,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-nova .km-actionsheet > li > a,
 .km-nova .km-popup .k-item {
   color: #32364c;
-  background: #ffffff;
+  background: #fff;
 }
 .km-nova .km-actionsheet > li:nth-last-child(2) > a {
   -webkit-border-image: none;
@@ -3817,12 +3837,12 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-nova .km-popup.km-pane,
 .km-tablet .km-nova .km-actionsheet-wrapper {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* Collapsible */
 .km-nova .km-collapsible-header,
 .km-nova .km-collapsible-content {
-  background: #ffffff;
+  background: #fff;
   border-color: #dee7ec;
 }
 .km-nova .km-collapsible-content {
@@ -3839,7 +3859,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-nova .km-detail,
 .km-nova .km-detail .km-icon:after {
   color: #ff4350;
-  background: #ffffff;
+  background: #fff;
 }
 .km-nova .km-list > li .km-style-default .km-icon:after {
   color: #32364c;
@@ -3857,7 +3877,7 @@ div.km-split-horizontal > .km-content > .km-pane {
   color: #f44336;
 }
 .km-nova .km-badge {
-  color: #ffffff;
+  color: #fff;
   background: #ff4350;
   border-color: #ff4350;
 }
@@ -3868,7 +3888,19 @@ div.km-split-horizontal > .km-content > .km-pane {
   background: #dfe1e2;
 }
 .km-nova span.km-loading-right {
-  background: #ffffff;
+  background: #fff;
+}
+/* Validation */
+.km-nova .km-list > li label.km-invalid,
+.km-nova .km-list fieldset .km-legend-button.km-invalid,
+.km-nova .km-list > li label.km-invalid.km-required:after {
+  color: #f9a825;
+}
+.km-nova .km-invalid-msg {
+  background: #f9a825;
+}
+.km-nova .km-invalid-msg {
+  color: #fff;
 }
 /* Tablet Styles */
 .km-tablet .km-nova.km-horizontal .km-navbar .km-button,

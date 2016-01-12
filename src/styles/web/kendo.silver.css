@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Kendo skin */
 .k-theme-test-class,
 .ktb-theme-id-default {
@@ -25,13 +34,13 @@
   color: #f3f3f4;
 }
 .ktb-var-background {
-  color: #ffffff;
+  color: #fff;
 }
 .ktb-var-border-radius {
   border-radius: 4px;
 }
 .ktb-var-normal-background {
-  color: #ffffff;
+  color: #fff;
 }
 .ktb-var-normal-gradient {
   background-image: url('textures/highlight.png');
@@ -64,7 +73,7 @@
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 100%);
 }
 .ktb-var-selected-text-color {
-  color: #ffffff;
+  color: #fff;
 }
 .ktb-var-error {
   color: #ffe0d9;
@@ -94,10 +103,10 @@
   color: #a419b7;
 }
 .ktb-var-series-f {
-  color: #430b62;
+  color: #430B62;
 }
 .k-grid-norecords-template {
-  background-color: #ffffff;
+  background-color: #fff;
   border: 1px solid #dedee0;
 }
 .k-in,
@@ -108,7 +117,7 @@
 /* main colors */
 .k-block,
 .k-widget {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .k-block,
 .k-widget,
@@ -187,7 +196,7 @@ td.k-group-cell,
 .k-panelbar > li.k-item,
 .k-panel > li.k-item,
 .k-tiles {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .k-alt,
 .k-separator,
@@ -230,11 +239,11 @@ input.k-textbox:hover,
 textarea.k-textbox:hover,
 .k-textbox > input,
 .k-multiselect-wrap {
-  background-color: #ffffff;
+  background-color: #fff;
   color: #515967;
 }
 .k-input[readonly] {
-  background-color: #ffffff;
+  background-color: #fff;
   color: #515967;
 }
 .k-block,
@@ -378,14 +387,14 @@ html .km-pane-wrapper .k-header {
 /* Scheduler */
 .k-scheduler {
   color: #515967;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .k-scheduler-layout {
   color: #515967;
 }
 .k-scheduler-datecolumn,
 .k-scheduler-groupcolumn {
-  background-color: #ffffff;
+  background-color: #fff;
   color: #515967;
 }
 .k-scheduler-times tr,
@@ -423,7 +432,7 @@ html .km-pane-wrapper .k-header {
   color: #515967;
 }
 .k-event-inverse {
-  color: #ffffff;
+  color: #fff;
 }
 .k-event.k-state-selected {
   background-position: 0 0;
@@ -441,7 +450,7 @@ html .km-pane-wrapper .k-header {
 .k-panelbar .k-content,
 .k-panelbar .k-panel,
 .k-panelbar .k-item {
-  background-color: #ffffff;
+  background-color: #fff;
   color: #515967;
   border-color: #ceced2;
 }
@@ -452,7 +461,7 @@ html .km-pane-wrapper .k-header {
   border-color: #ceced2;
 }
 .k-panel > li.k-item {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* states */
 .k-state-active,
@@ -478,7 +487,7 @@ html .km-pane-wrapper .k-header {
 }
 .k-button:active,
 .k-button.k-state-active {
-  color: #ffffff;
+  color: #fff;
   background-color: #1984c8;
   border-color: #1a87cd;
 }
@@ -531,15 +540,15 @@ html .km-pane-wrapper .k-header {
 .k-calendar .k-footer .k-nav-today {
   color: #505968;
   text-decoration: none;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .k-calendar .k-footer .k-nav-today:hover,
 .k-calendar .k-footer .k-nav-today.k-state-hover {
-  background-color: #ffffff;
+  background-color: #fff;
   text-decoration: underline;
 }
 .k-calendar .k-footer .k-nav-today:active {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .k-calendar .k-link.k-nav-fast {
   color: #505968;
@@ -556,7 +565,7 @@ html .km-pane-wrapper .k-header {
   background-color: #1186d0;
 }
 .k-calendar .k-today .k-link {
-  color: #ffffff;
+  color: #fff;
 }
 .k-calendar .k-today.k-state-hover {
   background-color: #1984c8;
@@ -572,7 +581,7 @@ html .km-pane-wrapper .k-header {
   background-image: none;
 }
 .k-calendar td.k-state-selected .k-link {
-  color: #ffffff;
+  color: #fff;
 }
 .k-calendar td.k-state-focused.k-state-selected,
 .k-calendar td.k-state-selected.k-state-active,
@@ -599,7 +608,7 @@ html .km-pane-wrapper .k-header {
 .k-scheduler .k-scheduler-toolbar .k-state-selected,
 .k-scheduler .k-today.k-state-selected,
 .k-marquee-color {
-  color: #ffffff;
+  color: #fff;
   background-color: #1984c8;
   border-color: #1a87cd;
 }
@@ -611,11 +620,11 @@ html .km-pane-wrapper .k-header {
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
   background: #bebec3;
-  color: #ffffff;
+  color: #fff;
 }
 .k-popup .k-list .k-item > .k-group {
   background: #bebec3;
-  color: #ffffff;
+  color: #fff;
   border-bottom-left-radius: 3px;
 }
 .k-popup .k-treeview .k-item > .k-group {
@@ -623,7 +632,7 @@ html .km-pane-wrapper .k-header {
   color: #515967;
 }
 .k-marquee-text {
-  color: #ffffff;
+  color: #fff;
 }
 .k-state-focused,
 .k-list > .k-state-focused,
@@ -659,7 +668,7 @@ td.k-state-focused.k-state-selected {
 .k-state-selected > .k-link,
 .k-panelbar > li > .k-state-selected,
 .k-panelbar > li.k-state-default > .k-link.k-state-selected {
-  color: #ffffff;
+  color: #fff;
 }
 .k-state-hover,
 .k-state-hover:hover,
@@ -902,7 +911,7 @@ div.k-filebrowser-dropzone em {
 }
 /* ImageBrowser */
 .k-tile {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .k-textbox:hover,
 .k-tiles li.k-state-hover {
@@ -997,7 +1006,7 @@ div.k-filebrowser-dropzone em {
   border-color: rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 7px 1px rgba(128, 128, 128, 0.3);
           box-shadow: 1px 1px 7px 1px rgba(128, 128, 128, 0.3);
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .k-window.k-state-focused {
   border-color: rgba(0, 0, 0, 0.3);
@@ -1125,7 +1134,7 @@ div.k-filebrowser-dropzone em {
   color: #1984c8;
 }
 .k-resource {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* PivotGrid */
 .k-i-kpi-decrease,
@@ -1405,7 +1414,7 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-mobile-list .k-item,
 .km-pane-wrapper .k-mobile-list .k-edit-field,
 .km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-field .k-check {
-  background-color: #ffffff;
+  background-color: #fff;
   border-top: 1px solid #ceced2;
 }
 .km-pane-wrapper .k-mobile-list .k-edit-field textarea {
@@ -1708,7 +1717,7 @@ textarea.k-textbox,
 }
 .k-checkbox-label:before {
   border-color: #ceced2;
-  background: #ffffff;
+  background: #fff;
   border-radius: 3px;
 }
 .k-checkbox-label:hover:before,
@@ -1753,10 +1762,23 @@ textarea.k-textbox,
   -webkit-box-shadow: 0 0 3px 0 #1984c8;
           box-shadow: 0 0 3px 0 #1984c8;
 }
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+  background-color: #1a87cd;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0)), to(rgba(255,255,255,.2)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 100%);
+  border-color: #1a87cd;
+  border-radius: 2px;
+}
+.k-checkbox:indeterminate:hover + .k-checkbox-label:after {
+  border-color: #1a87cd;
+  background-color: #1a87cd;
+}
 .k-radio-label:before {
   border-color: #ceced2;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: #fff;
   border-width: 1px;
 }
 .k-radio-label:hover:before,
@@ -2012,7 +2034,7 @@ textarea.k-textbox,
   }
 }
 .k-chart .k-mask {
-  background-color: #ffffff;
+  background-color: #fff;
   filter: alpha(opacity=68);
   opacity: 0.68;
 }
@@ -2064,11 +2086,11 @@ textarea.k-textbox,
 }
 .k-spreadsheet-row-header,
 .k-spreadsheet-column-header {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .k-spreadsheet-top-corner,
-.k-spreadsheet-row-header td,
-.k-spreadsheet-column-header td {
+.k-spreadsheet-row-header,
+.k-spreadsheet-column-header {
   background-color: #f3f3f4;
   background-image: none;
   color: #000000;
@@ -2083,15 +2105,16 @@ textarea.k-textbox,
 .k-spreadsheet-pane {
   border-color: #bebec3;
 }
-.k-spreadsheet-pane td {
+.k-spreadsheet-pane .k-spreadsheet-vaxis,
+.k-spreadsheet-pane .k-spreadsheet-haxis {
   border-color: #d8d8dc;
 }
-.k-spreadsheet-pane .k-spreadsheet-column-header td,
-.k-spreadsheet-pane .k-spreadsheet-row-header td {
+.k-spreadsheet-pane .k-spreadsheet-column-header,
+.k-spreadsheet-pane .k-spreadsheet-row-header {
   border-color: #bebec3;
 }
 .k-spreadsheet-pane .k-spreadsheet-merged-cell {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .k-spreadsheet-pane .k-selection-partial,
 .k-spreadsheet-pane .k-selection-full {
@@ -2109,46 +2132,24 @@ textarea.k-textbox,
 .k-spreadsheet-pane .k-spreadsheet-row-header .k-selection-full {
   border-right-color: #1984c8;
 }
+.k-auto-fill,
+.k-spreadsheet-selection {
+  border-color: #1984c8;
+  -webkit-box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #1984c8;
+          box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #1984c8;
+}
 .k-spreadsheet-selection {
   background-color: rgba(25, 132, 200, 0.2);
-  border-color: #1984c8;
-}
-.k-spreadsheet-cell-editor {
-  -webkit-box-shadow: inset 0 0 0 2px #1984c8;
-          box-shadow: inset 0 0 0 2px #1984c8;
 }
 .k-spreadsheet-active-cell {
-  -webkit-box-shadow: inset 0 0 0 1px #1984c8;
-          box-shadow: inset 0 0 0 1px #1984c8;
-  border-color: #1984c8;
-}
-.k-spreadsheet-active-cell td {
-  background-color: #ffffff;
-  border-color: #1984c8;
-  -webkit-box-shadow: inset 1px 1px 0 1px #1984c8, inset 0 0 0 1px #1984c8;
-          box-shadow: inset 1px 1px 0 1px #1984c8, inset 0 0 0 1px #1984c8;
-}
-.k-spreadsheet-active-cell.k-right td {
-  -webkit-box-shadow: inset 1px 1px 0 1px #1984c8, inset -2px 0 0 1px #1984c8;
-          box-shadow: inset 1px 1px 0 1px #1984c8, inset -2px 0 0 1px #1984c8;
-}
-.k-spreadsheet-active-cell.k-bottom td {
-  -webkit-box-shadow: inset 1px 1px 0 1px #1984c8, inset 0 -2px 0 1px #1984c8;
-          box-shadow: inset 1px 1px 0 1px #1984c8, inset 0 -2px 0 1px #1984c8;
-}
-.k-spreadsheet-active-cell.k-right.k-bottom td {
-  -webkit-box-shadow: inset 1px 1px 0 1px #1984c8, inset -2px -2px 0 1px #1984c8;
-          box-shadow: inset 1px 1px 0 1px #1984c8, inset -2px -2px 0 1px #1984c8;
-}
-.k-ff .k-spreadsheet-active-cell td {
-  -webkit-box-shadow: inset 0 0 0 1px #1984c8;
-          box-shadow: inset 0 0 0 1px #1984c8;
+  border-color: #1984c8 !important;
+  background-color: #fff;
 }
 .k-spreadsheet-active-cell.k-single {
   background-color: #fff;
 }
 .k-spreadsheet > .k-spreadsheet-formula-bar {
-  background-color: #ffffff;
+  background-color: #fff;
   border-color: #f3f3f4 #f3f3f4 #bebec3;
 }
 .k-spreadsheet > .k-spreadsheet-formula-bar:before {
@@ -2158,7 +2159,7 @@ textarea.k-textbox,
   border-color: #f3f3f4;
 }
 .k-spreadsheet .k-spreadsheet-formula-input {
-  background-color: #ffffff;
+  background-color: #fff;
   color: #515967;
 }
 .k-spreadsheet .k-resize-handle,
@@ -2172,10 +2173,7 @@ textarea.k-textbox,
 }
 .k-spreadsheet .k-single-selection::after {
   background-color: #1984c8;
-  border-color: #ffffff;
-}
-.k-spreadsheet .k-auto-fill {
-  border-color: #1984c8;
+  border-color: #fff;
 }
 .k-spreadsheet .k-auto-fill-punch {
   background-color: rgba(255, 255, 255, 0.5);
@@ -2188,12 +2186,12 @@ textarea.k-textbox,
 }
 .k-spreadsheet-filter {
   border-radius: 4px;
-  background-color: #ffffff;
+  background-color: #fff;
   -webkit-box-shadow: inset 0 0 0 1px #d8d8dc;
           box-shadow: inset 0 0 0 1px #d8d8dc;
 }
 .k-spreadsheet-filter.k-state-active {
-  color: #ffffff;
+  color: #fff;
   background-color: #1984c8;
 }
 .k-spreadsheet-filter:hover {
@@ -2214,6 +2212,34 @@ textarea.k-textbox,
 .k-spreadsheet-window .k-list {
   border-color: #dedee0;
   border-radius: 4px;
+}
+.k-spreadsheet-window .export-config,
+.k-spreadsheet-window .k-edit-field > .k-orientation-label {
+  border-color: #dedee0;
+}
+.k-spreadsheet-window .k-edit-field > input[type="radio"]:checked + .k-orientation-label {
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0)), to(rgba(255,255,255,.2)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 100%);
+  background-color: #1984c8;
+  color: #ffffff;
+}
+.k-spreadsheet-window .k-page-orientation {
+  border-color: #ceced2;
+  -webkit-box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1);
+          box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1);
+}
+.k-spreadsheet-window .k-page-orientation:before {
+  background: #fff;
+  border-color: transparent;
+  border-bottom-color: #ceced2;
+  border-left-color: #ceced2;
+}
+.k-spreadsheet-window .k-margins-horizontal,
+.k-spreadsheet-window .k-margins-vertical {
+  background: transparent;
+  border-color: #dedee0;
 }
 .k-spreadsheet-toolbar.k-toolbar .k-button-group .k-button {
   border-radius: 4px;
@@ -2252,10 +2278,10 @@ textarea.k-textbox,
   border-color: #dedee0;
 }
 .k-spreadsheet-filter-menu .k-details-content .k-space-right {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .k-spreadsheet-filter-menu .k-spreadsheet-value-treeview-wrapper {
-  background-color: #ffffff;
+  background-color: #fff;
   border-color: #dedee0;
   border-radius: 4px 0 0 4px;
 }
@@ -2304,7 +2330,7 @@ textarea.k-textbox,
   background-color: rgba(164, 25, 183, 0.15);
 }
 .k-series-f {
-  border-color: #430b62;
+  border-color: #430B62;
   background-color: rgba(67, 11, 98, 0.15);
 }
 .k-spreadsheet-sheets-remove:hover .k-icon {
@@ -2312,7 +2338,12 @@ textarea.k-textbox,
 }
 .k-spreadsheet-formula-list .k-state-focused {
   background-color: #1984c8;
-  color: #ffffff;
+  color: #fff;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+  .k-icon.k-font-icon {
+    background-image: none;
+  }
 }
 .k-spreadsheet .k-widget[data-property='fontSize'] {
   width: 60px;

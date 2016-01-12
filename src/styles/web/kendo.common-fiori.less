@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 @input-height: 2.214em;
 @input-indent: .8em;
 @editor-icon-size: 36px;
@@ -999,14 +1008,23 @@ span.k-tooltip
 @checkbox-tick-icon-content: "\2714";
 @checkbox-border-width: 2px;
 
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+    width: 6px;
+    height: 6px;
+    margin-left: 0;
+    top: 4px;
+    left: 4px;
+    transform: none;
+}
+
 .k-radio:checked + .k-radio-label:after {
-  top: 5px; 
-  left: 5px
+   top: 5px; 
+   left: 5px;
 }
 
 .k-radio-label:before {
-  width: 16px;
-  height: 16px;
+   width: 16px;
+   height: 16px;
 }
 
 .k-dropzone .k-upload-status
@@ -1077,5 +1095,15 @@ span.k-tooltip
 
     .k-tabstrip-items  .k-link {
         padding-top: .4em;
+    }
+}
+
+.k-spreadsheet-window {
+    .k-page-orientation {
+        top: 26%;
+    }
+
+    .k-page-landscape {
+        top: 30%;
     }
 }

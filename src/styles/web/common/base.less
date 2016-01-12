@@ -1,3 +1,27 @@
+/*!
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Kendo base CSS */
 
 .fake{color:red;}
@@ -575,6 +599,15 @@ html .k-error-colored
     z-index: 100;
 }
 
+.k-loading-mask .k-loading-progress {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
 .k-loading-text
 {
     text-indent: -4000px;
@@ -793,6 +826,23 @@ input.k-checkbox,
   font-size: @checkbox-check-size;
   line-height: @checkbox-size;
   text-align: center;
+}
+
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  border-width: @checkbox-border-width;
+  border-style: solid;
+  width: 8px;
+  height: 8px;
+  font-size: @checkbox-check-size;
+  text-align: center;
+  content: " ";
+  margin-left: -2px;
 }
 
 .k-checkbox:checked + .k-checkbox-label:before {

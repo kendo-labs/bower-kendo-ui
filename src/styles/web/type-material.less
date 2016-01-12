@@ -1,3 +1,27 @@
+/*!
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 @sprite-image: url('@{image-folder}/sprite.png');
 @tooltip-texture: none;
 @widget-text-color: @normal-text-color;
@@ -1132,7 +1156,7 @@ div.k-filebrowser-dropzone em
 
 .k-file
 {
-    background-color: @active-background-color;
+    background-color: @background;
     border-color: @widget-border-color;
 }
 
@@ -1942,7 +1966,8 @@ html .km-pane-wrapper .km-widget,
     .box-shadow(none);
 }
 
-.k-tabstrip-items .k-state-default
+.k-tabstrip-items .k-state-default,
+.k-panelbar .k-tabstrip-items .k-state-default
 {
     border-color: @tabstrip-items-border;
 }
@@ -1950,14 +1975,6 @@ html .km-pane-wrapper .km-widget,
 .k-tabstrip-items .k-state-hover
 {
     border-color: @hover-border-color;
-}
-
-.k-tabstrip-items .k-state-active,
-.k-panelbar .k-tabstrip-items .k-state-active
-{
-    background-color: @active-background-color;
-    .composite-background(@active-gradient);
-    border-color: @active-border-color;
 }
 
 .k-tabstrip .k-content.k-state-active
@@ -2158,10 +2175,8 @@ html .km-pane-wrapper .km-widget,
 @checkbox-disabled-background-color: contrast(@background, lighten(@background, 20%), darken(@background, 4%), 0.5);
 @checkbox-disabled-color: darken(@hover-background, 17%);
 @checkbox-disabled-border-color: contrast(@background, lighten(@background, 20%), darken(@background, 25%), 0.5);
-
-.k-checkbox + .k-checkbox-label:before {
-    z-index: 1;
-}
+@checkbox-indeterminate-background-color: @accent;
+@checkbox-indeterminate-border-color: @accent;
 
 .k-checkbox + .k-checkbox-label:after {
     content: "";
@@ -2183,6 +2198,10 @@ html .km-pane-wrapper .km-widget,
 
 .k-checkbox:checked + .k-checkbox-label:active:after {
     box-shadow: 0 0 0 12px fadeout(@accent, 70%);
+}
+
+.k-checkbox:indeterminate + .k-checkbox-label:before {
+    border-color: @accent;
 }
 
 @import "themes/radiobutton.less";
@@ -2759,7 +2778,8 @@ border-radius: 0;
     border-radius: 0;
 }
 
-.k-tabstrip-items .k-state-active {
+.k-tabstrip-items .k-state-active,
+.k-panelbar .k-tabstrip-items .k-state-active {
 background-color: @header-background-color;
 .composite-background(@active-gradient);
 border-color: @selected-background;
@@ -3086,7 +3106,9 @@ background-color: @hover-background-color;
 
 .k-panelbar > .k-item > .k-link,
 .k-panelbar.k-header,
-.k-panelbar .k-content, .k-panelbar .k-panel, .k-panelbar .k-item {
+.k-panelbar .k-content,
+.k-panelbar .k-panel,
+.k-panelbar .k-item {
 border-color: @panelbar-items-border;
 }
 
@@ -3866,3 +3888,5 @@ div.k-scheduler-marquee:after {
         line-height: 2em;
     }
 }
+
+@spreadsheet-page-orientation-border-color: @widget-border-color;

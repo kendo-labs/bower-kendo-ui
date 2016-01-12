@@ -1,3 +1,27 @@
+/*!
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 @flat-main-color: #4c5356;
 @flat-second-color: #bababa;
 @flat-background: #f4f4f4;
@@ -10,6 +34,8 @@
 @flat-second-active-background: #da2228;
 @flat-light-shadow: rgba(255,255,255,.2);
 @flat-overlay-background: rgba(0,0,0,.4);
+
+@warning: #ef470a;
 
 .km-flat,
 .km-flat .km-navbar,
@@ -386,4 +412,16 @@
 
 .km-flat .km-list fieldset legend {
     .box-shadow(0 1px 0 @flat-border-color);
+}
+
+/* Validation */
+.km-flat .km-list > li label.km-invalid,
+.km-flat .km-list fieldset .km-legend-button.km-invalid,
+.km-flat .km-list > li label.km-invalid.km-required:after {
+    color: @warning;
+}
+
+.km-flat .km-invalid-msg {
+    color: @flat-active-color;
+    background: @warning;
 }

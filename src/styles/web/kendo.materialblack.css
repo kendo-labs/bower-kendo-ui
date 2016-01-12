@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Kendo skin */
 .k-theme-test-class,
 .ktb-theme-id-material {
@@ -22,7 +31,7 @@
   color: #3f51b5;
 }
 .ktb-var-base {
-  color: #ffffff;
+  color: #fff;
 }
 .ktb-var-background {
   color: #363636;
@@ -807,7 +816,7 @@ div.k-filebrowser-dropzone em {
 }
 /* Upload */
 .k-file {
-  background-color: #ffffff;
+  background-color: #363636;
   border-color: #4d4d4d;
 }
 .k-file-progress {
@@ -1420,17 +1429,12 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-tabstrip-items .k-state-default {
+.k-tabstrip-items .k-state-default,
+.k-panelbar .k-tabstrip-items .k-state-default {
   border-color: transparent;
 }
 .k-tabstrip-items .k-state-hover {
   border-color: #ebebeb;
-}
-.k-tabstrip-items .k-state-active,
-.k-panelbar .k-tabstrip-items .k-state-active {
-  background-color: #ffffff;
-  background-image: none;
-  border-color: #cccccc;
 }
 .k-tabstrip .k-content.k-state-active {
   background-color: #363636;
@@ -1622,8 +1626,15 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-checkbox + .k-checkbox-label:before {
-  z-index: 1;
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+  background-color: #3f51b5;
+  background-image: none;
+  border-color: #3f51b5;
+  border-radius: 0px;
+}
+.k-checkbox:indeterminate:hover + .k-checkbox-label:after {
+  border-color: #3f51b5;
+  background-color: #3f51b5;
 }
 .k-checkbox + .k-checkbox-label:after {
   content: "";
@@ -1645,6 +1656,9 @@ html .km-pane-wrapper .km-widget,
 .k-checkbox:checked + .k-checkbox-label:active:after {
   -webkit-box-shadow: 0 0 0 12px rgba(63, 81, 181, 0.3);
           box-shadow: 0 0 0 12px rgba(63, 81, 181, 0.3);
+}
+.k-checkbox:indeterminate + .k-checkbox-label:before {
+  border-color: #3f51b5;
 }
 .k-radio-label:before {
   border-color: #ffffff;
@@ -2179,7 +2193,7 @@ td.k-state-focused.k-state-selected {
   background-color: #00a2eb;
 }
 .k-calendar .k-state-selected > .k-link {
-  color: #ffffff;
+  color: #fff;
 }
 /* Calendar */
 .k-calendar .k-header .k-link {
@@ -2207,7 +2221,7 @@ td.k-state-focused.k-state-selected {
   background-color: #3f51b5;
 }
 .k-calendar .k-today .k-link {
-  color: #ffffff;
+  color: #fff;
 }
 .k-calendar .k-today.k-state-hover {
   background-color: #5c6dc4;
@@ -2225,7 +2239,8 @@ td.k-state-focused.k-state-selected {
 .k-tabstrip > .k-tabstrip-items > .k-item {
   border-radius: 0;
 }
-.k-tabstrip-items .k-state-active {
+.k-tabstrip-items .k-state-active,
+.k-panelbar .k-tabstrip-items .k-state-active {
   background-color: #3f51b5;
   background-image: none;
   border-color: #00b0ff;
@@ -2410,7 +2425,7 @@ td.k-group-cell,
 .k-grid td.k-state-selected,
 .k-listview > .k-state-selected,
 .k-state-selected .k-progress-status {
-  color: #ffffff;
+  color: #fff;
 }
 .k-grid tr:hover {
   background-color: #606060;
@@ -3278,8 +3293,8 @@ div.k-scheduler-marquee:after {
   background-color: #363636;
 }
 .k-spreadsheet-top-corner,
-.k-spreadsheet-row-header td,
-.k-spreadsheet-column-header td {
+.k-spreadsheet-row-header,
+.k-spreadsheet-column-header {
   background-color: #363636;
   background-image: none;
   color: #ffffff;
@@ -3294,11 +3309,12 @@ div.k-scheduler-marquee:after {
 .k-spreadsheet-pane {
   border-color: #030303;
 }
-.k-spreadsheet-pane td {
+.k-spreadsheet-pane .k-spreadsheet-vaxis,
+.k-spreadsheet-pane .k-spreadsheet-haxis {
   border-color: #1c1c1c;
 }
-.k-spreadsheet-pane .k-spreadsheet-column-header td,
-.k-spreadsheet-pane .k-spreadsheet-row-header td {
+.k-spreadsheet-pane .k-spreadsheet-column-header,
+.k-spreadsheet-pane .k-spreadsheet-row-header {
   border-color: #030303;
 }
 .k-spreadsheet-pane .k-spreadsheet-merged-cell {
@@ -3320,40 +3336,18 @@ div.k-scheduler-marquee:after {
 .k-spreadsheet-pane .k-spreadsheet-row-header .k-selection-full {
   border-right-color: #00b0ff;
 }
+.k-auto-fill,
+.k-spreadsheet-selection {
+  border-color: #00b0ff;
+  -webkit-box-shadow: inset 0 0 0 1px #363636, 0 0 0 1px #00b0ff;
+          box-shadow: inset 0 0 0 1px #363636, 0 0 0 1px #00b0ff;
+}
 .k-spreadsheet-selection {
   background-color: rgba(0, 176, 255, 0.2);
-  border-color: #00b0ff;
-}
-.k-spreadsheet-cell-editor {
-  -webkit-box-shadow: inset 0 0 0 2px #00b0ff;
-          box-shadow: inset 0 0 0 2px #00b0ff;
 }
 .k-spreadsheet-active-cell {
-  -webkit-box-shadow: inset 0 0 0 1px #00b0ff;
-          box-shadow: inset 0 0 0 1px #00b0ff;
-  border-color: #00b0ff;
-}
-.k-spreadsheet-active-cell td {
+  border-color: #00b0ff !important;
   background-color: #363636;
-  border-color: #00b0ff;
-  -webkit-box-shadow: inset 1px 1px 0 1px #00b0ff, inset 0 0 0 1px #00b0ff;
-          box-shadow: inset 1px 1px 0 1px #00b0ff, inset 0 0 0 1px #00b0ff;
-}
-.k-spreadsheet-active-cell.k-right td {
-  -webkit-box-shadow: inset 1px 1px 0 1px #00b0ff, inset -2px 0 0 1px #00b0ff;
-          box-shadow: inset 1px 1px 0 1px #00b0ff, inset -2px 0 0 1px #00b0ff;
-}
-.k-spreadsheet-active-cell.k-bottom td {
-  -webkit-box-shadow: inset 1px 1px 0 1px #00b0ff, inset 0 -2px 0 1px #00b0ff;
-          box-shadow: inset 1px 1px 0 1px #00b0ff, inset 0 -2px 0 1px #00b0ff;
-}
-.k-spreadsheet-active-cell.k-right.k-bottom td {
-  -webkit-box-shadow: inset 1px 1px 0 1px #00b0ff, inset -2px -2px 0 1px #00b0ff;
-          box-shadow: inset 1px 1px 0 1px #00b0ff, inset -2px -2px 0 1px #00b0ff;
-}
-.k-ff .k-spreadsheet-active-cell td {
-  -webkit-box-shadow: inset 0 0 0 1px #00b0ff;
-          box-shadow: inset 0 0 0 1px #00b0ff;
 }
 .k-spreadsheet-active-cell.k-single {
   background-color: #fff;
@@ -3384,9 +3378,6 @@ div.k-scheduler-marquee:after {
 .k-spreadsheet .k-single-selection::after {
   background-color: #00b0ff;
   border-color: #363636;
-}
-.k-spreadsheet .k-auto-fill {
-  border-color: #00b0ff;
 }
 .k-spreadsheet .k-auto-fill-punch {
   background-color: rgba(54, 54, 54, 0.5);
@@ -3425,6 +3416,31 @@ div.k-scheduler-marquee:after {
 .k-spreadsheet-window .k-list {
   border-color: #4d4d4d;
   border-radius: 2px;
+}
+.k-spreadsheet-window .export-config,
+.k-spreadsheet-window .k-edit-field > .k-orientation-label {
+  border-color: #4d4d4d;
+}
+.k-spreadsheet-window .k-edit-field > input[type="radio"]:checked + .k-orientation-label {
+  background-image: none;
+  background-color: #3f51b5;
+  color: #3dc3ff;
+}
+.k-spreadsheet-window .k-page-orientation {
+  border-color: #4d4d4d;
+  -webkit-box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1);
+          box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1);
+}
+.k-spreadsheet-window .k-page-orientation:before {
+  background: #363636;
+  border-color: transparent;
+  border-bottom-color: #4d4d4d;
+  border-left-color: #4d4d4d;
+}
+.k-spreadsheet-window .k-margins-horizontal,
+.k-spreadsheet-window .k-margins-vertical {
+  background: transparent;
+  border-color: #4d4d4d;
 }
 .k-spreadsheet-toolbar.k-toolbar .k-button-group .k-button {
   border-radius: 2px;
@@ -3524,6 +3540,11 @@ div.k-scheduler-marquee:after {
 .k-spreadsheet-formula-list .k-state-focused {
   background-color: #00b0ff;
   color: #00b0ff;
+}
+@media only screen and (-webkit-min-device-pixel-ratio: 2) {
+  .k-icon.k-font-icon {
+    background-image: none;
+  }
 }
 .k-spreadsheet .k-spreadsheet-quick-access-toolbar .k-button,
 .k-spreadsheet .k-spreadsheet-sheets-bar .k-button {

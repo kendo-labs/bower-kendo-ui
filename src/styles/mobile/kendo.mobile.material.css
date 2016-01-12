@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -2023,6 +2032,17 @@ div.km-split-horizontal > .km-content > .km-pane {
   -webkit-transform: translateY(-50%);
   left: 0.25rem;
   border-radius: 50%;
+}
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
 }
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
@@ -5370,7 +5390,7 @@ body:before {
 }
 .km-material .km-switch-container,
 .km-material .km-switch-wrapper {
-  border-color: #333333;
+  border-color: #333;
 }
 .km-material-dark .km-switch-container,
 .km-material-dark .km-switch-wrapper {
@@ -5395,7 +5415,7 @@ body:before {
 .km-material .km-filter-wrap:before,
 .km-material .km-filter-reset .km-clear,
 .km-material .km-filter-wrap > input {
-  color: #333333;
+  color: #333;
 }
 .km-material-dark .km-filter-wrap:before,
 .km-material-dark .km-filter-reset .km-clear,
@@ -5408,7 +5428,7 @@ body:before {
 }
 /* Forms */
 .km-material .km-list select:not([multiple]) option {
-  color: #333333;
+  color: #333;
 }
 /* Checkboxes and Radios */
 .km-material .km-listview-label input[type=radio],
@@ -5419,13 +5439,13 @@ body:before {
 .km-material-dark .km-listview-label input[type=radio],
 .km-material-dark .km-listview-label input[type=checkbox] {
   border-color: #fafafa;
-  background: #333333;
+  background: #333;
 }
 .km-material .km-listview-label input[type=checkbox]:checked:after {
   color: #fafafa;
 }
 .km-material-dark .km-listview-label input[type=checkbox]:checked:after {
-  color: #333333;
+  color: #333;
 }
 /* Shim */
 .km-material .km-shim {
@@ -5435,26 +5455,26 @@ body:before {
   background: #fafafa;
 }
 .km-phone .km-material-dark .km-actionsheet-wrapper {
-  background: #333333;
+  background: #333;
 }
 /* PopUp */
 .km-material .km-popup .k-item,
 .km-material .km-actionsheet > li > a {
-  color: #333333;
+  color: #333;
   background: #fafafa;
   border-bottom-color: #fafafa;
 }
 .km-material-dark .km-popup .k-item,
 .km-material-dark .km-actionsheet > li > a {
   color: #fafafa;
-  background: #333333;
-  border-bottom-color: #333333;
+  background: #333;
+  border-bottom-color: #333;
 }
 .km-material .km-popup {
   background: #fafafa;
 }
 .km-material-dark .km-popup {
-  background: #333333;
+  background: #333;
 }
 .km-material .km-actionsheet-wrapper,
 .km-material .km-popup .k-list-container {
@@ -5465,24 +5485,24 @@ body:before {
 }
 .km-material-dark .km-actionsheet-wrapper,
 .km-material-dark .km-popup .k-list-container {
-  background: #333333;
-  border-top-color: #333333;
+  background: #333;
+  border-top-color: #333;
 }
 .km-material .km-popup.km-pane,
 .km-tablet .km-material .km-actionsheet-wrapper {
-  color: #333333;
+  color: #333;
   background-color: #fafafa;
 }
 .km-material-dark .km-popup.km-pane,
 .km-tablet .km-material-dark .km-actionsheet-wrapper {
   color: #fafafa;
-  background-color: #333333;
+  background-color: #333;
 }
 .km-material .km-popup-arrow:after {
   border-color: #fafafa transparent;
 }
 .km-material-dark .km-popup-arrow:after {
-  border-color: #333333 transparent;
+  border-color: #333 transparent;
 }
 .km-material .km-left .km-popup-arrow:after,
 .km-material .km-right .km-popup-arrow:after {
@@ -5490,7 +5510,7 @@ body:before {
 }
 .km-material-dark .km-left .km-popup-arrow:after,
 .km-material-dark .km-right .km-popup-arrow:after {
-  border-color: transparent #333333;
+  border-color: transparent #333;
 }
 /* Loader & Pull-to-refresh */
 .km-material .km-loading:before,
@@ -5529,7 +5549,7 @@ body:before {
           box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 .km-material .km-loader h1 {
-  color: #333333;
+  color: #333;
 }
 .km-material-dark .km-loader h1 {
   color: #fafafa;
@@ -5579,7 +5599,7 @@ body:before {
 .km-material-dark .km-popup .k-state-hover,
 .km-material-dark .km-popup .k-state-focused,
 .km-material-dark .km-state-active .km-listview-link:after {
-  color: #333333;
+  color: #333;
 }
 .km-material .km-filter-wrap > input,
 .km-material .km-switch-handle.km-state-active {
@@ -5587,7 +5607,7 @@ body:before {
 }
 .km-material-dark .km-filter-wrap > input,
 .km-material-dark .km-switch-handle.km-state-active {
-  background: #333333;
+  background: #333;
 }
 .km-material .km-switch-handle,
 .km-material .k-slider-selection {
@@ -5679,7 +5699,7 @@ body:before {
 }
 .km-material .km-buttongroup .km-button,
 .km-pane-wrapper .k-mobile-list .k-scheduler-toolbar .k-link {
-  color: #333333;
+  color: #333;
 }
 .km-material-dark .km-buttongroup .km-button {
   color: #fafafa;
@@ -5688,7 +5708,7 @@ body:before {
   color: #fafafa;
 }
 .km-material-dark .km-widget.km-navbar .km-buttongroup .km-button {
-  color: #333333;
+  color: #333;
 }
 .km-root .km-material .km-buttongroup > .km-state-active {
   color: #3f51b5;
@@ -5719,7 +5739,7 @@ body:before {
 .km-material .km-tabstrip,
 .km-material .km-popover-root .km-navbar,
 .km-material .km-modalview .km-navbar {
-  color: #333333;
+  color: #333;
   background-color: #fafafa;
 }
 .km-material-dark .km-content,
@@ -5727,7 +5747,7 @@ body:before {
 .km-material-dark .km-popover-root .km-navbar,
 .km-material-dark .km-modalview .km-navbar {
   color: #fafafa;
-  background-color: #333333;
+  background-color: #333;
 }
 .km-material-dark .km-content button {
   color: #fafafa;
@@ -5759,11 +5779,11 @@ body:before {
 }
 .km-material .km-popup .k-popup .k-item.k-state-selected,
 .km-material .km-popup .k-popup .k-item.k-state-focused {
-  color: #333333;
+  color: #333;
   background-color: rgba(128, 128, 128, 0.2);
 }
 .km-material .km-popup .k-popup .k-item.k-state-hover {
-  color: #333333;
+  color: #333;
 }
 .km-material-dark .km-popup .k-popup .k-item.k-state-selected,
 .km-material-dark .km-popup .k-popup .k-item.k-state-focused,
@@ -5802,7 +5822,7 @@ body:before {
 .km-material-dark input[type=email],
 .km-material-dark input[type=text]:not(.k-input),
 .km-root .km-material-dark textarea {
-  background: #333333;
+  background: #333;
 }
 .km-material input,
 .km-material select,
@@ -5835,7 +5855,7 @@ body:before {
 }
 .km-material input[type=radio],
 .km-material input[type=checkbox] {
-  color: #333333;
+  color: #333;
   border-color: rgba(0, 0, 0, 0.12);
 }
 .km-material-dark input[type=radio],

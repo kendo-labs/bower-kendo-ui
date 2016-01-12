@@ -1,3 +1,27 @@
+/*!
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 @spreadsheet-first-tool-offset: .3em;
 @spreadsheet-popup-button-padding: .3em 1.5em .3em .9em;
 .force-font() {
@@ -8,6 +32,7 @@
 .k-spreadsheet {
     width: 800px;
     height: 600px;
+    position: relative;
 
     border-width: 1px;
     border-style: solid;
@@ -15,48 +40,51 @@
     cursor: default;
 
     .k-spreadsheet-pane {
-        td {
-            white-space: nowrap;
-            border-width: 1px;
-            border-style: solid;
+        padding-right: 1px;
+        position: absolute;
+        border-width: 1px;
+        border-style: solid;
+        overflow: hidden;
+        box-sizing: border-box;
+
+        &.k-top { border-top-width: 0; }
+        &.k-left { border-left-width: 0; }
+
+        .k-spreadsheet-cell {
+            position: absolute;
+            white-space: pre;
             box-sizing: border-box;
             overflow: hidden;
-            height: 20px;
-            user-select: none;
-        }
-
-        table {
-            table-layout: fixed;
-            border-collapse: collapse;
-            box-sizing: border-box;
-            position: absolute;
-
-            &.k-spreadsheet-merged-cell {
-                width: auto;
-                height: auto;
-            }
-
-            &.k-spreadsheet-row-header {
-                width: auto;
-
-                td {
-                    border-left-width: 0;
-                }
-            }
-
-            &.k-spreadsheet-column-header {
-                height: auto;
-
-                td {
-                    border-top-width: 0;
-                }
-            }
+            padding: 1px;
+            background-clip: padding-box;
         }
     }
 
-    .k-filter-range,
-    .k-spreadsheet-selection,
+    .k-spreadsheet-vaxis,
+    .k-spreadsheet-haxis {
+      position: absolute;
+      border-style: solid;
+    }
+
+    .k-spreadsheet-vaxis {
+      top: 0;
+      border-width: 0 0 0 1px;
+    }
+
+    .k-spreadsheet-haxis {
+      left: 0;
+      border-width: 1px 0 0;
+    }
+
+    .k-spreadsheet-data,
+    .k-merged-cells-wrapper,
+    .k-selection-wrapper,
     .k-spreadsheet-active-cell {
+        cursor: cell;
+    }
+
+    .k-filter-range,
+    .k-spreadsheet-selection {
         border-width: 1px;
         border-style: solid;
         position: absolute;
@@ -64,11 +92,8 @@
     }
 
     .k-spreadsheet-active-cell {
-        &.k-left { border-left-width: 0; }
-
-        td {
-            border-width: 0 !important; // overrides model border
-        }
+        position: absolute;
+        box-sizing: border-box;
     }
 
     @formula-bar-height: 26px;
@@ -114,14 +139,14 @@
         line-height: @formula-input-height;
         width: 100%;
         box-sizing: border-box;
-        white-space: nowrap;
+        white-space: pre;
         padding: @formula-input-padding .5em 0;
     }
 
     .k-spreadsheet-cell-editor {
         position: absolute;
         display: none;
-        padding: 0 .3em;
+        padding: 0 3px;
         line-height: @formula-input-height;
         z-index: 2000;
         overflow: hidden;
@@ -158,19 +183,35 @@
     .k-merged-cells-wrapper,
     .k-selection-wrapper,
     .k-filter-wrapper,
-    .k-spreadsheet-column-header {
+    .k-spreadsheet-row-header {
         position: relative;
+    }
+
+    .k-spreadsheet-column-header {
+        position: absolute;
     }
 
     .k-spreadsheet-sheets-bar {
         border-width: 1px 0 0;
     }
 
-    .k-dirty-cell {
-        position: relative;
+    .k-vertical-align-top {}
+
+    .k-vertical-align-center {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .k-vertical-align-bottom {
+      position: relative;
+      top: 100%;
+      transform: translateY(-100%);
     }
 
     .k-dirty {
+        position: absolute;
+        top: 0;
         right: 0;
         margin: -2px 0 0 -7px;
         border-width: 4px;
@@ -185,8 +226,9 @@
         display: block;
         bottom: 0;
         right: 0;
-        margin-bottom: -4px;
-        margin-right: -4px;
+        border-radius: 50%;
+        margin-bottom: -5px;
+        margin-right: -5px;
         border-width: 1px;
         border-style: solid;
         z-index: 100;
@@ -200,7 +242,7 @@
     }
 
     .k-auto-fill {
-        border-width: 3px;
+        border-width: 1px;
         border-style: solid;
         cursor: crosshair;
     }
@@ -220,6 +262,22 @@
 
 .k-spreadsheet .k-colorpicker .k-tool-icon {
     overflow: visible;
+}
+
+.k-button.k-reset-color, .k-button.k-custom-color {
+    display: block;
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    text-align: left;
+    line-height: 2em;
+}
+
+.k-spreadsheet-colorpicker .k-colorpalette {
+    border: 1px solid #dbdbdb;
+    border-left: none;
+    border-right: none;
+    padding: 0.4em;
 }
 
 .k-spreadsheet-filter {
@@ -283,27 +341,21 @@
     height: 100%;
     box-sizing: border-box;
     z-index: 2;
+    user-select: none;
 }
 
 .k-spreadsheet-view-size {
     position: relative;
 }
 
-.k-spreadsheet-pane {
-    padding-right: 1px;
-    position: absolute;
-    border-width: 1px;
-    border-style: solid;
-    overflow: hidden;
-    box-sizing: border-box;
-
-    &.k-top { border-top-width: 0; }
-    &.k-left { border-left-width: 0; }
-}
-
 .k-spreadsheet-column-header,
 .k-spreadsheet-row-header {
     text-align: center;
+
+    .k-spreadsheet-cell {
+        border-style: solid;
+        border-width: 0 1px 1px 0;
+    }
 }
 
 .k-spreadsheet-window {
@@ -344,6 +396,130 @@
     .k-action-buttons {
         padding: 1em;
     }
+
+    .k-edit-label {
+        width: 20%;
+    }
+
+    .k-edit-field {
+        width: 70%;
+    }
+
+    .k-edit-field .k-textbox,
+    .k-edit-field .k-dropdown {
+        width: 100%;
+    }
+
+    .export-config {
+        border-width: 1px 0 0;
+        border-style: solid;
+        padding: 1em;
+        margin: 0 -1em;
+    }
+
+    .export-config .k-edit-field {
+        width: 40%;
+        float: left;
+        margin-left: 30px;
+    }
+
+    .k-edit-field > input[type="radio"] {
+        display: inline;
+        opacity: 0;
+        width: 0;
+        margin: 0;
+    }
+
+    .k-edit-field > .k-orientation-label {
+        position: relative;
+        display: inline-block;
+        text-align: center;
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        border-width: 1px;
+        border-style: solid;  
+    }
+
+    .k-edit-field > .k-orientation-label:before {
+        font-family: 'KendoUIGlyphs';
+        font-size: 16px;
+    }
+
+    .k-orientation-portrait-label:before {        
+        content: "\e639";
+    }
+
+    .k-orientation-landscape-label:before {        
+        content: "\e901";
+    }
+
+    .k-page-orientation {
+        position: absolute;
+        right: 4em;
+        top: 22%;
+        width: 64px;
+        height: 92px;
+        border-width: 1px;
+        border-style: solid;              
+    }
+
+    .k-page-orientation:before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        content: "";
+        display: inline-block;
+        width: 0;
+        height: 0;        
+        border-width: 3px;
+        border-style: solid;        
+        margin-top: -1px;
+        margin-right: -1px;
+    }
+
+    .k-page-landscape {
+        top: 26%;
+        width: 92px;
+        height: 64px;
+    }
+
+    .k-margins-horizontal {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        height: 62px;
+        border-width: 1px 0;
+        border-style: solid;
+    }
+
+    .k-margins-vertical {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 34px;
+        height: 100%;
+        border-width: 0 1px;
+        border-style: solid;      
+    }
+
+    .k-page-landscape .k-margins-horizontal {
+        height: 34px;
+    }
+
+    .k-page-landscape .k-margins-vertical {
+        width: 62px;
+    }
+
+    .export-config:after,
+    >div:after {
+        content: " ";
+        display: block;
+        clear: both;
+        height: 0; 
+    }
 }
 
 .k-spreadsheet-format-cells {
@@ -362,7 +538,7 @@
 .k-spreadsheet-border-palette {
     width: 153px;
 
-    .k-button {
+    .k-spreadsheet-border-type-palette .k-button {
         box-sizing: border-box;
         width: 20%;
     }
@@ -594,7 +770,7 @@
 }
 
 .k-spreadsheet-selection-highlight {
-    border-width: 2px;
+    border-width: 1px;
     border-style: solid;
     position: absolute;
     box-sizing: border-box;
@@ -641,3 +817,4 @@
     background: none !important;
     border-width: 0 !important;
 }
+

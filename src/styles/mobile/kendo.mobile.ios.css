@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -2023,6 +2032,17 @@ div.km-split-horizontal > .km-content > .km-pane {
   -webkit-transform: translateY(-50%);
   left: 0.25rem;
   border-radius: 50%;
+}
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
 }
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
@@ -5246,7 +5266,7 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 /* Variables */
 .km-ios,
 .km-ios .km-listview-wrapper .km-filter-wrap {
-  background: #ffffff;
+  background: #fff;
 }
 .km-ios .k-toolbar,
 .km-ios .km-navbar,
@@ -5275,7 +5295,7 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 .km-ios .km-actionsheet > li > a,
 .km-ios .k-split-container > li > .km-button,
 .km-ios .k-overflow-container > li > .km-button {
-  color: #ffffff;
+  color: #fff;
   text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
 }
 .km-ios .km-button {
@@ -5301,7 +5321,7 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 .km-ios li.km-state-active .km-icon,
 .km-ios li.km-state-active,
 .km-ios .km-switch-label-on {
-  color: #ffffff;
+  color: #fff;
 }
 .km-ios .km-checkbox,
 .km-ios .km-switch-wrapper {
@@ -5335,8 +5355,8 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f1969b), color-stop(50%, rgba(230, 70, 78, 0.5)), color-stop(50%, rgba(222, 11, 21, 0.5)), to(rgba(183, 0, 0, 0)));
   background-image: -webkit-linear-gradient(top, #f1969b, rgba(230, 70, 78, 0.5) 50%, rgba(222, 11, 21, 0.5) 50%, rgba(183, 0, 0, 0));
   background-image: linear-gradient(to bottom, #f1969b, rgba(230, 70, 78, 0.5) 50%, rgba(222, 11, 21, 0.5) 50%, rgba(183, 0, 0, 0));
-  -webkit-box-shadow: 0 2px 3px #333333;
-          box-shadow: 0 2px 3px #333333;
+  -webkit-box-shadow: 0 2px 3px #333;
+          box-shadow: 0 2px 3px #333;
 }
 .km-ios .km-switch-handle {
   border-color: rgba(102, 102, 102, 0.8);
@@ -5453,8 +5473,8 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(46, 46, 46, 0.8)), color-stop(50%, rgba(21, 21, 21, 0.5)), color-stop(50%, rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0.8)));
   background-image: -webkit-linear-gradient(top, rgba(46, 46, 46, 0.8), rgba(21, 21, 21, 0.5) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8));
   background-image: linear-gradient(to bottom, rgba(46, 46, 46, 0.8), rgba(21, 21, 21, 0.5) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8));
-  -webkit-box-shadow: 0 -1px 0 0 #000000;
-          box-shadow: 0 -1px 0 0 #000000;
+  -webkit-box-shadow: 0 -1px 0 0 #000;
+          box-shadow: 0 -1px 0 0 #000;
   background-color: #1A1A1A;
   text-shadow: 0 1px 1px #000;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.18)), to(rgba(255, 255, 255, 0)));
@@ -5524,8 +5544,8 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.3)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3));
-  -webkit-box-shadow: 0 -1px 0 #86929a;
-          box-shadow: 0 -1px 0 #86929a;
+  -webkit-box-shadow: 0 -1px 0 #86929A;
+          box-shadow: 0 -1px 0 #86929A;
 }
 .km-ios .km-listgroupinset .km-group-title {
   color: #4C566C;
@@ -5600,9 +5620,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 .km-ios .k-slider .k-draghandle,
 .km-ios .k-slider .k-draghandle:hover {
   background-color: #fff;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #cccccc, #ffffff);
-  background-image: linear-gradient(to bottom, #cccccc, #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff));
+  background-image: -webkit-linear-gradient(top, #ccc, #fff);
+  background-image: linear-gradient(to bottom, #ccc, #fff);
   -webkit-box-shadow: inset 0 0 0 1px #f9f9f9, 1px 1px 3px rgba(0,0,0,.3);
           box-shadow: inset 0 0 0 1px #f9f9f9, 1px 1px 3px rgba(0,0,0,.3);
 }
@@ -5620,21 +5640,21 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 .km-ios .km-dialog {
   background: rgba(10, 25, 65, 0.8);
   border-color: rgba(255, 255, 255, 0.8);
-  -webkit-box-shadow: 3px 3px 5px #111111;
-          box-shadow: 3px 3px 5px #111111;
+  -webkit-box-shadow: 3px 3px 5px #111;
+          box-shadow: 3px 3px 5px #111;
 }
 .km-ios .km-dialog-title {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), color-stop(60%, rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%);
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%);
-  text-shadow: 0 -1px #333333;
+  text-shadow: 0 -1px #333;
 }
 .km-ios .km-dialog:before {
   background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22><defs><clipPath id=%22clip%22><rect x=%220%22 y=%220%22 width=%22100%%22 height=%22100%%22 rx=%2210%22 ry=%2210%22/></clipPath></defs><ellipse fill=%22white%22 cx=%2250%%22 cy=%220%22 rx=%2280%%22 ry=%2260%%22 clip-path=%22url(%23clip)%22/></svg>');
 }
 .km-ios .km-dialog-content {
   color: #fff;
-  text-shadow: 0 -1px #333333;
+  text-shadow: 0 -1px #333;
 }
 /* Loader */
 .km-ios .km-loader {
@@ -5968,9 +5988,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
   border-color: #b1b3b8;
   -webkit-box-shadow: none;
           box-shadow: none;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #cccccc, #ffffff);
-  background-image: linear-gradient(to bottom, #cccccc, #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff));
+  background-image: -webkit-linear-gradient(top, #ccc, #fff);
+  background-image: linear-gradient(to bottom, #ccc, #fff);
 }
 .km-ios .km-checkbox-label:before,
 .km-ios .km-checkbox-label:after {
@@ -5978,7 +5998,7 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 }
 .km-ios .km-radio-label:before {
   border-color: #b1b3b8;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-ios .km-radio-label:after {
   background-color: #44648f;
@@ -5986,6 +6006,16 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
   border-color: #264e8c;
+}
+/* Validation */
+.km-ios .km-list > li label.km-invalid,
+.km-ios .km-list fieldset .km-legend-button.km-invalid,
+.km-ios .km-list > li label.km-invalid.km-required:after {
+  color: #ff3b30;
+}
+.km-ios .km-invalid-msg {
+  color: #fff;
+  background: #ff3b30;
 }
 .km-ios .km-button {
   text-align: center;
@@ -7197,8 +7227,8 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7,
 .km-ios7.km-pane .km-content {
-  color: #000000;
-  background-color: #ffffff;
+  color: #000;
+  background-color: #fff;
 }
 .km-ios7 .km-splitview > .km-split-content > .km-pane:first-child {
   border-right-color: rgba(180, 180, 180, 0.5);
@@ -7210,7 +7240,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
   border-color: rgba(180, 180, 180, 0.5);
 }
 .km-ios7 .km-view-title {
-  color: #000000;
+  color: #000;
 }
 /* Button */
 .km-ios7 .km-button {
@@ -7226,7 +7256,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-detail {
   color: #007aff;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-ios7 .km-detail:active,
 .km-ios7 .km-state-active .km-detail {
@@ -7245,18 +7275,18 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-switch-background,
 .km-ios7 .k-slider-selection {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #ffffff, #ffffff);
-  background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff));
+  background-image: -webkit-linear-gradient(top, #fff, #fff);
+  background-image: linear-gradient(to bottom, #fff, #fff);
 }
 .km-ios7 .km-switch-handle {
-  background: #ffffff;
+  background: #fff;
   -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px currentcolor;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px currentcolor;
 }
 .km-ios7 .km-switch-off .km-switch-handle {
-  -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px #ffffff;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px #ffffff;
+  -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px #fff;
 }
 .km-ios7 .km-switch-container,
 .km-ios7 .km-switch-wrapper {
@@ -7273,7 +7303,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 /* ListView */
 .km-ios7 .km-list > li {
-  color: #000000;
+  color: #000;
   border-top-color: rgba(180, 180, 180, 0.5);
   -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, rgba(180, 180, 180, 0.5)), to(rgba(180, 180, 180, 0.5))) 1 stretch;
   -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, rgba(180, 180, 180, 0.5) 1em, rgba(180, 180, 180, 0.5) 100%) 1 stretch;
@@ -7333,7 +7363,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-actionsheet > li > a,
 .km-ios7 .k-overflow-container a.km-state-disabled,
 .km-ios7 .k-overflow-container .km-state-disabled:active {
-  background: #f7f7f8;
+  background: #F7F7F8;
   border-bottom-color: rgba(180, 180, 180, 0.5);
 }
 .km-ios7 .km-popup {
@@ -7341,7 +7371,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-popup.km-pane,
 .km-tablet .km-ios7 .km-actionsheet-wrapper {
-  background-color: #f7f7f8;
+  background-color: #F7F7F8;
 }
 /* PopOver */
 .km-ios7 .km-popup.km-pane {
@@ -7354,11 +7384,11 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
           box-shadow: 0 0 5px rgba(180, 180, 180, 0.5);
 }
 .km-ios7 .km-popup-arrow:after {
-  border-color: #f7f7f8 transparent;
+  border-color: #F7F7F8 transparent;
 }
 .km-ios7 .km-left .km-popup-arrow:after,
 .km-ios7 .km-right .km-popup-arrow:after {
-  border-color: transparent #f7f7f8;
+  border-color: transparent #F7F7F8;
 }
 /* Loader */
 .km-ios7.km-pane > .km-loader,
@@ -7420,7 +7450,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-state-active.km-detail:after,
 .km-ios7 .km-state-active.km-detail .km-icon:after,
 .km-ios7 .km-switch-handle.km-state-active {
-  color: #ffffff;
+  color: #fff;
 }
 .km-ios7 .km-tabstrip .km-state-active .km-text,
 .km-ios7 .k-toolbar .km-state-active .km-text,
@@ -7429,10 +7459,10 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .k-slider .k-draghandle,
 .km-ios7 .k-slider .k-draghandle:hover {
-  background: #ffffff;
+  background: #fff;
 }
 .km-ios7 span.km-switch {
-  color: #4cda64;
+  color: #4CDA64;
 }
 .km-ios7 .km-badge {
   background: #fd472b;
@@ -7447,7 +7477,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 li.km-state-active .km-listview-link,
 .km-ios7 li.km-state-active .km-listview-label {
-  color: #000000;
+  color: #000;
 }
 .km-ios7 .km-tabstrip .km-button:not(.km-state-active) {
   color: #929292;
@@ -7460,13 +7490,20 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-checkbox-label,
 .km-ios7 .km-radio-label {
-  color: #000000;
+  color: #000;
 }
 .km-ios7 .km-radio-label:before {
   border-color: #8f8f8f;
 }
 .km-ios7 .km-radio-label:after {
   background-color: #007aff;
+}
+/* Validation */
+.km-ios7 .km-list > li label.km-invalid,
+.km-ios7 .km-list fieldset .km-legend-button.km-invalid,
+.km-ios7 .km-list > li label.km-invalid.km-required:after,
+.km-ios7 .km-invalid-msg {
+  color: #ff3b30;
 }
 /* Active States */
 .km-ios7 .km-tabstrip .km-button,

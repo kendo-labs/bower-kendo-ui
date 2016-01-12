@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -2023,6 +2032,17 @@ div.km-split-horizontal > .km-content > .km-pane {
   -webkit-transform: translateY(-50%);
   left: 0.25rem;
   border-radius: 50%;
+}
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
 }
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
@@ -5216,12 +5236,12 @@ body:before {
 .km-wp-dark-force,
 .km-wp-dark-force .km-content,
 .km-wp-dark-force .km-button {
-  background-color: #000000;
+  background-color: #000;
 }
 .km-wp-light-force,
 .km-wp-light-force .km-content,
 .km-wp-light-force .km-button {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-wp-dark,
 .km-wp-dark a,
@@ -5234,7 +5254,7 @@ body:before {
 .km-wp-dark .km-detail,
 .km-wp-dark .km-popup .km-item,
 .km-wp-dark .k-dropdown .k-dropdown-wrap {
-  color: #ffffff;
+  color: #fff;
 }
 .km-wp-light,
 .km-wp-light a,
@@ -5247,7 +5267,7 @@ body:before {
 .km-wp-light .km-detail,
 .km-wp-light .km-popup .km-item,
 .km-wp-light .k-dropdown .k-dropdown-wrap {
-  color: #000000;
+  color: #000;
 }
 .km-wp-dark .km-actionsheet-wrapper,
 .km-wp-dark .km-popup .k-list-container,
@@ -5261,15 +5281,15 @@ body:before {
 .km-wp-light .km-modalview,
 .km-wp-light .km-popup-wrapper,
 .km-wp-light .km-footer {
-  background-color: #dddddd;
+  background-color: #ddd;
 }
 .km-wp-dark .km-button,
 .km-wp-dark .km-listview-link:after {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-wp-light .km-button,
 .km-wp-light .km-listview-link:after {
-  border-color: #000000;
+  border-color: #000;
 }
 .km-wp .km-detail:active,
 .km-wp .km-button:active,
@@ -5295,7 +5315,7 @@ body:before {
 }
 .km-wp-dark .km-list > li > .km-icon,
 .km-wp-dark .km-listview-link > .km-icon {
-  background: #333333;
+  background: #333;
 }
 .km-wp-light .km-list > li > .km-icon,
 .km-wp-light .km-listview-link > .km-icon {
@@ -5303,7 +5323,7 @@ body:before {
 }
 .km-wp-dark .km-state-active .km-listview-link,
 .km-wp-dark .km-state-active .km-listview-label {
-  color: #dddddd;
+  color: #ddd;
 }
 .km-wp-light .km-state-active .km-listview-link,
 .km-wp-light .km-state-active .km-listview-label {
@@ -5315,28 +5335,28 @@ body:before {
 }
 .km-wp .km-listview-label input[type=radio],
 .km-wp .km-listview-label input[type=checkbox] {
-  border-color: #ffffff;
-  -webkit-box-shadow: 0 0 1px #ffffff;
-          box-shadow: 0 0 1px #ffffff;
+  border-color: #fff;
+  -webkit-box-shadow: 0 0 1px #fff;
+          box-shadow: 0 0 1px #fff;
 }
 .km-wp-light .km-listview-label input[type=radio],
 .km-wp-light .km-listview-label input[type=checkbox] {
-  border-color: #000000;
-  -webkit-box-shadow: 0 0 1px #000000;
-          box-shadow: 0 0 1px #000000;
+  border-color: #000;
+  -webkit-box-shadow: 0 0 1px #000;
+          box-shadow: 0 0 1px #000;
 }
 .km-wp .km-listview-label input[type=checkbox]:checked:after {
-  color: #ffffff;
+  color: #fff;
 }
 .km-wp-light .km-listview-label input[type=checkbox]:checked:after {
-  color: #000000;
+  color: #000;
 }
 .km-wp .km-listview-label input[type=radio]:checked:after {
   color: transparent;
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-light .km-listview-label input[type=radio]:checked:after {
-  background: #000000;
+  background: #000;
 }
 .km-wp .km-badge,
 .km-wp .km-group-title {
@@ -5346,12 +5366,12 @@ body:before {
 .km-wp-dark .km-loader h1,
 .km-wp-dark .km-filter-wrap:before,
 .km-wp-dark .km-filter-reset .km-clear {
-  color: #ffffff;
+  color: #fff;
 }
 .km-wp-light .km-loader h1,
 .km-wp-light .km-filter-wrap:before,
 .km-wp-light .km-filter-reset .km-clear {
-  color: #000000;
+  color: #000;
 }
 .km-wp .km-navbar,
 .km-wp .k-toolbar {
@@ -5359,44 +5379,44 @@ body:before {
 }
 .km-wp-dark-force .km-navbar,
 .km-wp-dark-force .k-toolbar {
-  background: #000000;
+  background: #000;
 }
 .km-wp-light-force .km-navbar,
 .km-wp-light-force .k-toolbar {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-dark .km-pages > li {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-light .km-pages > li {
-  background: #000000;
+  background: #000;
 }
 .km-wp .km-pages .km-current-page {
   background: Highlight;
 }
 .km-wp-dark .km-switch-wrapper {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-wp-light .km-switch-wrapper {
-  border-color: #000000;
+  border-color: #000;
 }
 .km-wp-light .km-switch-container {
-  -webkit-box-shadow: inset 0 0 0 0.2em #ffffff;
-          box-shadow: inset 0 0 0 0.2em #ffffff;
+  -webkit-box-shadow: inset 0 0 0 0.2em #fff;
+          box-shadow: inset 0 0 0 0.2em #fff;
 }
 .km-wp-dark .km-switch-container {
-  -webkit-box-shadow: inset 0 0 0 0.2em #000000;
-          box-shadow: inset 0 0 0 0.2em #000000;
+  -webkit-box-shadow: inset 0 0 0 0.2em #000;
+          box-shadow: inset 0 0 0 0.2em #000;
 }
 .km-wp-dark .km-switch-handle {
-  -webkit-box-shadow: 0 0 0 0.3em #000000;
-          box-shadow: 0 0 0 0.3em #000000;
-  background: #ffffff;
+  -webkit-box-shadow: 0 0 0 0.3em #000;
+          box-shadow: 0 0 0 0.3em #000;
+  background: #fff;
 }
 .km-wp-light .km-switch-handle {
-  -webkit-box-shadow: 0 0 0 0.3em #ffffff;
-          box-shadow: 0 0 0 0.3em #ffffff;
-  background: #000000;
+  -webkit-box-shadow: 0 0 0 0.3em #fff;
+          box-shadow: 0 0 0 0.3em #fff;
+  background: #000;
 }
 .km-wp .km-switch-background {
   background: Highlight;
@@ -5407,11 +5427,11 @@ body:before {
 }
 .km-wp-dark .km-scroller-pull .km-icon,
 .km-wp-dark .km-tabstrip .km-state-active .km-icon {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-wp-light .km-scroller-pull .km-icon,
 .km-wp-light .km-tabstrip .km-state-active .km-icon {
-  border-color: #000000;
+  border-color: #000;
 }
 .km-wp-light .km-loader:before,
 .km-wp-light .km-loader:after,
@@ -5423,13 +5443,13 @@ body:before {
 .km-wp-light .km-scroller-refresh .km-icon,
 .km-wp-light .km-scroller-refresh .km-icon:after,
 .km-wp-light .km-scroller-refresh .km-icon:before {
-  color: #000000;
+  color: #000;
 }
 .km-wp-dark .km-loading-right {
   background: #1f1f1f;
 }
 .km-wp-light .km-loading-right {
-  background: #dddddd;
+  background: #ddd;
 }
 .km-wp .km-touch-scrollbar {
   border-color: rgba(255, 255, 255, 0.4);
@@ -5452,9 +5472,9 @@ body:before {
 .km-wp select:not([multiple]),
 .km-wp .k-dropdown,
 .km-wp textarea {
-  border-color: #ffffff;
+  border-color: #fff;
   background: Background;
-  color: #ffffff;
+  color: #fff;
 }
 .km-wp input::-moz-selection,
 .km-wp textarea::-moz-selection {
@@ -5483,8 +5503,8 @@ body:before {
 .km-wp-light select:not([multiple]),
 .km-wp-light .k-dropdown,
 .km-wp-light textarea {
-  border-color: #000000;
-  color: #000000;
+  border-color: #000;
+  color: #000;
 }
 .km-wp-dark-force input[type=password],
 .km-wp-dark-force input[type=search],
@@ -5503,7 +5523,7 @@ body:before {
 .km-wp-dark-force select:not([multiple]),
 .km-wp-dark-force .k-dropdown,
 .km-wp-dark-force textarea {
-  background: #000000;
+  background: #000;
 }
 .km-wp-light-force input[type=password],
 .km-wp-light-force input[type=search],
@@ -5522,7 +5542,7 @@ body:before {
 .km-wp-light-force select:not([multiple]),
 .km-wp-light-force .k-dropdown,
 .km-wp-light-force textarea {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp input[type=password]:focus,
 .km-wp input[type=search]:focus,
@@ -5551,23 +5571,23 @@ body:before {
 /* Slider */
 .km-wp .k-slider .k-draghandle,
 .km-wp .k-slider .k-draghandle:hover {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-light .k-slider .k-draghandle,
 .km-wp-light .k-slider .k-draghandle:hover {
-  background: #000000;
+  background: #000;
 }
 .km-wp .k-slider .k-tick-large:before {
-  background: #000000;
+  background: #000;
 }
 .km-wp-light .k-slider .k-tick-large:before {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp .k-slider-selection {
   background: Highlight;
 }
 .km-wp .k-slider-track {
-  background: #333333;
+  background: #333;
 }
 .km-wp-light .k-slider-track {
   background: #bebebe;
@@ -5623,14 +5643,24 @@ body:before {
 .km-wp .km-list .km-label-above .k-dropdown-wrap,
 .km-wp .km-list fieldset textarea,
 .km-wp .km-list .km-label-above textarea {
-  color: #000000;
-  background: #dddddd;
+  color: #000;
+  background: #ddd;
 }
 .km-wp input.km-radio:checked + .km-radio-label:after {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-light input.km-radio:checked + .km-radio-label:after {
-  background: #000000;
+  background: #000;
+}
+/* Validation */
+.km-wp .km-list > li label.km-invalid,
+.km-wp .km-list fieldset .km-legend-button.km-invalid,
+.km-wp .km-list > li label.km-invalid.km-required:after {
+  color: #f52312;
+}
+.km-wp .km-invalid-msg {
+  color: #fff;
+  background: #f52312;
 }
 /* Button */
 .km-wp .km-button {

@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -1497,6 +1506,17 @@ button.km-button {
   -webkit-transform: translateY(-50%);
   left: 0.25rem;
   border-radius: 50%;
+}
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
 }
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
@@ -5357,7 +5377,7 @@ body:before {
 .km-content,
 .km-popover-root .km-content .km-widget {
   color: #333333;
-  background: #ffffff;
+  background: #fff;
 }
 .km-navbar {
   color: #333333;
@@ -5383,7 +5403,7 @@ body:before {
 .km-detail {
   color: #333333;
   border-color: rgba(51, 51, 51, 0.2);
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-detail:active,
 .km-state-active .km-detail {
@@ -5404,7 +5424,7 @@ body:before {
   background-color: currentcolor;
 }
 .km-switch-handle {
-  background: #ffffff;
+  background: #fff;
 }
 .km-switch-off .km-switch-handle {
   -webkit-box-shadow: 0 1px 0 1px #bababa, 0 -1px 0 1px #bababa;
@@ -5441,7 +5461,7 @@ body:before {
   color: #808080;
 }
 .km-group-title {
-  background: #ffffff;
+  background: #fff;
   border-color: rgba(51, 51, 51, 0.2);
 }
 /* ScrollView */
@@ -5508,7 +5528,7 @@ body:before {
 .km-listview-label input[type=radio],
 .km-listview-label input[type=checkbox] {
   border-color: rgba(51, 51, 51, 0.2);
-  background: #ffffff;
+  background: #fff;
 }
 .km-listview-label input[type=checkbox]:checked:after {
   color: #eee;

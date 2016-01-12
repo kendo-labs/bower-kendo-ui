@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Kendo base CSS */
 .fake {
   color: red;
@@ -1434,6 +1443,14 @@ html .k-error-colored {
 .k-loading-mask {
   z-index: 100;
 }
+.k-loading-mask .k-loading-progress {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 .k-loading-text {
   text-indent: -4000px;
   text-align: center;
@@ -1606,6 +1623,23 @@ input.k-checkbox,
   font-size: 1em;
   line-height: 1em;
   text-align: center;
+}
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+  border-width: 1px;
+  border-style: solid;
+  width: 8px;
+  height: 8px;
+  font-size: 1em;
+  text-align: center;
+  content: " ";
+  margin-left: -2px;
 }
 .k-checkbox:checked + .k-checkbox-label:before {
   content: "\2713";
@@ -2854,7 +2888,10 @@ body .k-datetimepicker .k-select {
 .k-list-filter > .k-icon {
   position: absolute;
   right: 6px;
-  top: 1px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
 }
 .km-root .k-list-filter > .k-textbox {
   padding-left: 0;
@@ -3109,16 +3146,16 @@ div.k-flatcolorpicker {
   margin-left: -5px;
   margin-top: -5px;
   border-radius: 6px;
-  -webkit-box-shadow: 0 1px 2px #444444;
-          box-shadow: 0 1px 2px #444444;
+  -webkit-box-shadow: 0 1px 2px #444;
+          box-shadow: 0 1px 2px #444;
   background: transparent;
 }
 .k-flatcolorpicker .k-hsv-rectangle .k-draghandle:hover,
 .k-flatcolorpicker .k-hsv-rectangle .k-draghandle:focus {
   background: transparent;
   border-color: #fff;
-  -webkit-box-shadow: 0 1px 5px #000000;
-          box-shadow: 0 1px 5px #000000;
+  -webkit-box-shadow: 0 1px 5px #000;
+          box-shadow: 0 1px 5px #000;
 }
 .k-flatcolorpicker .k-hsv-rectangle.k-dragging,
 .k-flatcolorpicker .k-hsv-rectangle.k-dragging * {
@@ -3148,8 +3185,8 @@ div.k-flatcolorpicker {
   margin-top: 1px;
   height: 8px;
   width: 8px;
-  -webkit-box-shadow: 0 1px 4px #444444;
-          box-shadow: 0 1px 4px #444444;
+  -webkit-box-shadow: 0 1px 4px #444;
+          box-shadow: 0 1px 4px #444;
 }
 .k-flatcolorpicker .k-hue-slider .k-draghandle:hover,
 .k-flatcolorpicker .k-transparency-slider .k-draghandle:hover,
@@ -3157,8 +3194,8 @@ div.k-flatcolorpicker {
 .k-flatcolorpicker .k-transparency-slider .k-draghandle:focus {
   background: transparent;
   border-color: #fff;
-  -webkit-box-shadow: 0 1px 5px #000000;
-          box-shadow: 0 1px 5px #000000;
+  -webkit-box-shadow: 0 1px 5px #000;
+          box-shadow: 0 1px 5px #000;
   border-width: 2px;
   padding: 1px;
 }
@@ -3414,7 +3451,9 @@ div.k-flatcolorpicker {
           transform-origin: 0 100%;
 }
 .k-ie8 .k-progressbar-vertical .k-progress-status {
-  writing-mode: bt-lr;
+  -webkit-writing-mode: bt-lr;
+      -ms-writing-mode: bt-lr;
+          writing-mode: bt-lr;
   padding: .5em 0;
 }
 /* Slider */
@@ -5102,6 +5141,24 @@ div.k-window-content {
 }
 .k-notification .k-i-note {
   background-position: -176px -240px;
+}
+.k-checkbox:indeterminate + .k-checkbox-label:before {
+  border-width: 2px;
+}
+.k-checkbox + .k-checkbox-label:before {
+  z-index: 1;
+}
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+  width: 10px;
+  height: 10px;
+  border-width: 0;
+  margin-left: 0;
+  top: 4px;
+  left: 4px;
+  -webkit-transform: none;
+      -ms-transform: none;
+          transform: none;
+  z-index: 2;
 }
 .k-radio:checked + .k-radio-label:after {
   top: 4px;

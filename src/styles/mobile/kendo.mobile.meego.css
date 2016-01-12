@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -2023,6 +2032,17 @@ div.km-split-horizontal > .km-content > .km-pane {
   -webkit-transform: translateY(-50%);
   left: 0.25rem;
   border-radius: 50%;
+}
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
 }
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
@@ -5558,21 +5578,21 @@ body:before {
 .km-meego .km-dialog {
   background: rgba(10, 25, 65, 0.8);
   border: 2px solid rgba(255, 255, 255, 0.8);
-  -webkit-box-shadow: 3px 3px 5px #111111;
-          box-shadow: 3px 3px 5px #111111;
+  -webkit-box-shadow: 3px 3px 5px #111;
+          box-shadow: 3px 3px 5px #111;
 }
 .km-meego .km-dialog-title {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), color-stop(60%, rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%);
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%);
-  text-shadow: 0 -1px #333333;
+  text-shadow: 0 -1px #333;
 }
 .km-meego .km-dialog:before {
   background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22><defs><clipPath id=%22clip%22><rect x=%220%22 y=%220%22 width=%22100%%22 height=%22100%%22 rx=%2210%22 ry=%2210%22/></clipPath></defs><ellipse fill=%22white%22 cx=%2250%%22 cy=%220%22 rx=%2280%%22 ry=%2260%%22 clip-path=%22url(%23clip)%22/></svg>');
 }
 .km-meego .km-dialog-content {
   color: #fff;
-  text-shadow: 0 -1px #333333;
+  text-shadow: 0 -1px #333;
 }
 .km-meego .km-dialog .km-button {
   display: block;
@@ -5861,9 +5881,9 @@ body:before {
 }
 .km-meego .km-listview-label input[type=radio]:checked:after,
 .km-meego .km-listview-label input[type=checkbox]:checked:after {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(10%, #f9f9f9), to(#eeeeee));
-  background-image: -webkit-linear-gradient(top, #ffffff, #f9f9f9 10%, #eeeeee);
-  background-image: linear-gradient(to bottom, #ffffff, #f9f9f9 10%, #eeeeee);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), to(#eee));
+  background-image: -webkit-linear-gradient(top, #fff, #f9f9f9 10%, #eee);
+  background-image: linear-gradient(to bottom, #fff, #f9f9f9 10%, #eee);
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
           box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
 }

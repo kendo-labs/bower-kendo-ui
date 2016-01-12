@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -2023,6 +2032,17 @@ div.km-split-horizontal > .km-content > .km-pane {
   -webkit-transform: translateY(-50%);
   left: 0.25rem;
   border-radius: 50%;
+}
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
 }
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
@@ -5143,8 +5163,8 @@ body:before {
 /* Color Template */
 .km-blackberry,
 .km-blackberry .km-content {
-  color: #000000;
-  background: #ffffff;
+  color: #000;
+  background: #fff;
 }
 .km-blackberry .km-navbar,
 .km-blackberry .k-toolbar,
@@ -5152,7 +5172,7 @@ body:before {
 .km-blackberry .km-buttongroup,
 .km-blackberry .km-tabstrip,
 .km-blackberry input[type=file] {
-  color: #000000;
+  color: #000;
   background-color: #e6e6e6;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.7)), color-stop(70%, rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 70%);
@@ -5175,7 +5195,7 @@ body:before {
 }
 .km-blackberry .km-navbar .km-button,
 .km-blackberry .k-toolbar .km-button {
-  color: #ffffff;
+  color: #fff;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.2)), to(rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
@@ -5186,17 +5206,17 @@ body:before {
 }
 .km-blackberry .km-view-title,
 .km-blackberry .km-dialog-title {
-  color: #ffffff;
-  text-shadow: 0 1px 0 #000000;
+  color: #fff;
+  text-shadow: 0 1px 0 #000;
 }
 .km-blackberry .km-badge,
 .km-blackberry .km-detail {
-  color: #ffffff;
+  color: #fff;
   background-color: #00aae7;
 }
 .km-blackberry .km-badge {
-  -webkit-box-shadow: 0 0 0 1px #ffffff;
-          box-shadow: 0 0 0 1px #ffffff;
+  -webkit-box-shadow: 0 0 0 1px #fff;
+          box-shadow: 0 0 0 1px #fff;
 }
 .km-blackberry .km-detail {
   background: #999;
@@ -5250,14 +5270,14 @@ body:before {
 }
 .km-blackberry .km-switch-label-on,
 .km-blackberry .km-switch-label-off {
-  color: #000000;
+  color: #000;
 }
 /* ButtonGroup */
 .km-blackberry .km-buttongroup > .km-button {
-  color: #ffffff;
+  color: #fff;
 }
 .km-blackberry .km-content .km-buttongroup > .km-button {
-  color: #000000;
+  color: #000;
 }
 /* ListView */
 .km-blackberry div.km-group-title {
@@ -5265,7 +5285,7 @@ body:before {
   border-bottom-color: #00aae7;
 }
 .km-blackberry .km-scroll-header .km-group-title {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-blackberry .km-list > li {
   border-bottom-color: rgba(180, 180, 180, 0.3);
@@ -5334,11 +5354,11 @@ body:before {
 .km-blackberry .km-load-more.km-scroller-refresh .km-icon,
 .km-blackberry .km-scroller-pull.km-scroller-refresh .km-icon,
 .km-blackberry .km-scroller-refresh .km-loading-left {
-  border-color: #000000;
+  border-color: #000;
 }
 .km-blackberry .km-loader h1,
 .km-blackberry .km-scroller-pull .km-icon {
-  color: #000000;
+  color: #000;
 }
 /* Forms */
 .km-blackberry input[type=password],
@@ -5419,30 +5439,30 @@ body:before {
 .km-blackberry input[type=datetime-local]:focus,
 .km-blackberry select:not([multiple]):focus,
 .km-blackberry .k-dropdown .k-state-focused {
-  color: #ffffff;
+  color: #fff;
   background-color: #00aae7;
   background: -webkit-calc(100% - 5px) 50% no-repeat url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAADICAQAAADrJAMDAAADrUlEQVR4Xu3a6UocWQCG4bqJhrkL933Lvu9LK25JJpjchTA3MhcSmCsIg4i4ZCSImjSJ2GpCcMuPbwwFdoIfpklOl6e63+/l/C8eDvWjqESZRPEDAE1AAw00AQ00AQ000AQ00AQ00EAT0EAT0EADTUADTUADDTQBDTQBDTTQBDTQBDTQQBPQQBPQQANNQANNQAMNNAENNAENNNAENNAENNBAE9BAE9BAA01AA01AAw00AQ00AQ000AR0h/7Wf0enA+ha9kKVvQS6Vk3px70AuhY918lNAR26P+X3HOiQPZNZaGqgn+r0PQM6RE/08z0FOjyz7wnQv9Ok3P4NSw30hNxm1KTXcpsE+lcal9usmpQcHX+rJ4AOyfytJs3IbRxon29MbnMpcyhqoEflNn/MXKGeldsY0NU0IreFlPkE9ZzcRoEOyZxSz8ttBOjTGpbboppTgDDUQBfltqSWnwA0aUFuw0C7HntmtVYB0KxFuRWBro75jWH2tWhJbo+B/r5Hclv2zD616s3p1EA/lNvblDkA9SOgv/UgEHNKvSy3h0B75hXDXC31W7k9aGzo+3JbtczVU6946saFvie3NcMchvp+Y0LfDcTsqVfldq/xoD3zutoCAbRqTW53Gwv6jtzeqT0gQJvWPXXjQN/2zMH/EG3XO7ndaQxoz/w+Zc6I+nb9Q9+SW0mdNfuf+r3cbtU39E25fTDM4epUyVPXL/SNDJg99Qe53axPaM+8YZizo75Rf9DX5baZMmdCvSG36/UFfU1u5ZQ5M+rNs6SuV2ZPXZbbtfqA9sxb6lKSeV3a8tT5h74qt211pwDRUF/NN/QVz6weJWdWt7Y9dX6hL8ttxzBnW4925HYln9Ce+ZN6lZx5vfokt8v5g74kt8/qMwAxUV/KF/TFqJh9ffqcJXV2zF9S5qiov8jtYj6gL8ht1zDHQL0rtwvxQ5+X255hjoV6T27nI4AOwxw/dbzQBfuJfV/9SqKuX/sG+qP+iBV62jAfaEBJ9A3owFD/FSv0K8M8qCQXDerwBPQ/ebnRh445fur4b3RBZVX2VUNKctWQvqqychzvaF/xmLqkc0py1zmVjpmLcX/rKGhar45OIU/A/vmzhKb4oQlooIEmoIEmoIEGmoAGmoAGGmgCGmgCGmigCWigCWiggSaggSaggQaagAaagAYaaAIaaAIaaKAJaKAJaKCBJqCBJqCBBpqABpqABhpoAhpoAhpooAlooAlooIEmoIEmoIEGmoAGmv4H0vCT+B5BT60AAAAASUVORK5CYII="), -webkit-gradient(linear, 0 0, 0 100%, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.1))), #00aae7;
   -webkit-background-size: auto 90%, auto;
 }
 .km-blackberry .k-dropdown .k-state-focused .k-input {
-  color: #ffffff;
+  color: #fff;
 }
 .km-blackberry select:not([multiple]):focus option {
-  color: #000000;
-  background-color: #ffffff;
+  color: #000;
+  background-color: #fff;
 }
 /* PopUp */
 .km-blackberry .km-shim {
   background: rgba(27, 27, 27, 0.3);
 }
 .km-blackberry .km-popup .k-item {
-  color: #000000;
-  background: #ffffff;
+  color: #000;
+  background: #fff;
 }
 .km-blackberry .km-popup .k-state-hover,
 .km-blackberry .km-popup .k-state-focused,
 .km-blackberry .km-popup .k-state-selected {
-  color: #ffffff;
+  color: #fff;
   background: #00aae7;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.2)));
   background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
@@ -5452,18 +5472,18 @@ body:before {
   background-color: rgba(0, 170, 231, 0.8);
 }
 .km-blackberry .km-popup .k-list-container {
-  background: #ffffff;
+  background: #fff;
   border-color: #777;
 }
 .km-blackberry .k-dropdown.k-state-border-up {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#777777), color-stop(10%, #777777), color-stop(10%, transparent), color-stop(top), color-stop(#777777), color-stop(10%, #777777), color-stop(10%, transparent), color-stop(top), color-stop(#ffffff), color-stop(10%, #ffffff), color-stop(10%, transparent));
-  background-image: -webkit-linear-gradient(top, #777777, #777777 10%, transparent 10%, top, #777777, #777777 10%, transparent 10%, top, #ffffff, #ffffff 10%, transparent 10%);
-  background-image: linear-gradient(to bottom, #777777, #777777 10%, transparent 10%, top, #777777, #777777 10%, transparent 10%, top, #ffffff, #ffffff 10%, transparent 10%);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#777), color-stop(10%, #777), color-stop(10%, transparent), color-stop(top), color-stop(#777), color-stop(10%, #777), color-stop(10%, transparent), color-stop(top), color-stop(#fff), color-stop(10%, #fff), color-stop(10%, transparent));
+  background-image: -webkit-linear-gradient(top, #777, #777 10%, transparent 10%, top, #777, #777 10%, transparent 10%, top, #fff, #fff 10%, transparent 10%);
+  background-image: linear-gradient(to bottom, #777, #777 10%, transparent 10%, top, #777, #777 10%, transparent 10%, top, #fff, #fff 10%, transparent 10%);
 }
 .km-blackberry .k-dropdown.k-state-border-down {
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(90%, transparent), color-stop(90%, #777777), color-stop(#777777), color-stop(top), color-stop(90%, transparent), color-stop(90%, #777777), color-stop(#777777), color-stop(top), color-stop(90%, transparent), color-stop(90%, #ffffff), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, transparent 90%, #777777 90%, #777777, top, transparent 90%, #777777 90%, #777777, top, transparent 90%, #ffffff 90%, #ffffff);
-  background-image: linear-gradient(to bottom, transparent 90%, #777777 90%, #777777, top, transparent 90%, #777777 90%, #777777, top, transparent 90%, #ffffff 90%, #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(90%, transparent), color-stop(90%, #777), color-stop(#777), color-stop(top), color-stop(90%, transparent), color-stop(90%, #777), color-stop(#777), color-stop(top), color-stop(90%, transparent), color-stop(90%, #fff), to(#fff));
+  background-image: -webkit-linear-gradient(top, transparent 90%, #777 90%, #777, top, transparent 90%, #777 90%, #777, top, transparent 90%, #fff 90%, #fff);
+  background-image: linear-gradient(to bottom, transparent 90%, #777 90%, #777, top, transparent 90%, #777 90%, #777, top, transparent 90%, #fff 90%, #fff);
 }
 .km-blackberry .km-popup .k-state-border-up {
   -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,.3);
@@ -5490,20 +5510,20 @@ body:before {
 }
 .km-root .km-blackberry.km-pane .km-listview-label input[type=radio]:checked:after {
   -webkit-background-clip: inherit;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(10%, #f9f9f9), to(#eeeeee));
-  background-image: -webkit-linear-gradient(top, #ffffff, #f9f9f9 10%, #eeeeee);
-  background-image: linear-gradient(to bottom, #ffffff, #f9f9f9 10%, #eeeeee);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), to(#eee));
+  background-image: -webkit-linear-gradient(top, #fff, #f9f9f9 10%, #eee);
+  background-image: linear-gradient(to bottom, #fff, #f9f9f9 10%, #eee);
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
           box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
 }
 .km-blackberry.km-pane div.km-actionsheet-wrapper {
-  background-color: #000000;
+  background-color: #000;
 }
 .km-blackberry.km-pane .km-actionsheet-title {
   color: #9a9a9a;
 }
 .km-blackberry .km-actionsheet > li > a {
-  color: #ffffff;
+  color: #fff;
   border-color: rgba(180, 180, 180, 0.3);
 }
 .km-blackberry .km-actionsheet > li:nth-child(2) > a {
@@ -5558,7 +5578,7 @@ body:before {
 /* Active States */
 .km-blackberry input[type=file]:active,
 .km-blackberry input[type=file]:focus {
-  color: #ffffff;
+  color: #fff;
   background-color: rgba(0, 0, 0, 0.2);
 }
 .km-blackberry .km-button:active:before,
@@ -5587,11 +5607,11 @@ body:before {
 .km-blackberry .km-actionsheet > li > a:active,
 .km-blackberry .km-actionsheet > li > .km-state-active {
   background: #00aae7;
-  color: #ffffff;
+  color: #fff;
 }
 /* Tablet Styles */
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-tablet .km-blackberry .km-popup-arrow:after {
   border-color: #cfd1d3 transparent;
@@ -5603,13 +5623,13 @@ body:before {
 .km-blackberry .k-split-container > li > a,
 .km-blackberry .k-overflow-container > li > a,
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > a {
-  color: #000000;
+  color: #000;
 }
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > a:hover,
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > a:focus,
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > a:active,
 .km-tablet .km-blackberry *:not(.km-actionsheet-phone) > .km-actionsheet > li:not(.km-actionsheet-cancel) > .km-state-active {
-  color: #ffffff;
+  color: #fff;
   background: #00aae7;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), to(rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0));
@@ -5632,7 +5652,7 @@ body:before {
 }
 .km-blackberry input.km-radio + .km-radio-label:before,
 .km-blackberry input.km-checkbox + .km-checkbox-label:before {
-  color: #ffffff;
+  color: #fff;
   border-color: rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: inset 0 0 2px 1px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.3);
           box-shadow: inset 0 0 2px 1px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.3);
@@ -5645,13 +5665,13 @@ body:before {
           box-shadow: inset 0 0 2px 1px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.3);
 }
 .km-blackberry input.km-checkbox:checked + .km-checkbox-label:after {
-  color: #ffffff;
+  color: #fff;
 }
 .km-blackberry input.km-radio:checked + .km-radio-label:after {
   -webkit-background-clip: inherit;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(10%, #f9f9f9), to(#eeeeee));
-  background-image: -webkit-linear-gradient(top, #ffffff, #f9f9f9 10%, #eeeeee);
-  background-image: linear-gradient(to bottom, #ffffff, #f9f9f9 10%, #eeeeee);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), to(#eee));
+  background-image: -webkit-linear-gradient(top, #fff, #f9f9f9 10%, #eee);
+  background-image: linear-gradient(to bottom, #fff, #f9f9f9 10%, #eee);
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
           box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
 }
@@ -5699,6 +5719,16 @@ body:before {
 .km-blackberry .km-list fieldset > .k-dropdown-wrap,
 .km-blackberry .km-list fieldset > textarea {
   background: none;
+}
+/* Validation */
+.km-blackberry .km-list > li label.km-invalid,
+.km-blackberry .km-list fieldset .km-legend-button.km-invalid,
+.km-blackberry .km-list > li label.km-invalid.km-required:after {
+  color: #cf2e2d;
+}
+.km-blackberry .km-invalid-msg {
+  color: #fff;
+  background: #cf2e2d;
 }
 /* Active States */
 .km-blackberry .km-button,
@@ -6016,8 +6046,8 @@ html .km-blackberry .k-overflow-container.km-actionsheet > li {
 .km-blackberry .km-tabstrip .km-button.km-state-active {
   background: rgba(255, 255, 255, 0.1);
   border-top: 2px solid #057fe4;
-  -webkit-box-shadow: 0 1px 5px #000000;
-          box-shadow: 0 1px 5px #000000;
+  -webkit-box-shadow: 0 1px 5px #000;
+          box-shadow: 0 1px 5px #000;
 }
 .km-blackberry .km-tabstrip.km-vertical .km-button {
   padding: 0 .7em;

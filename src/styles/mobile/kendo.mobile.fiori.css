@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -2023,6 +2032,17 @@ div.km-split-horizontal > .km-content > .km-pane {
   -webkit-transform: translateY(-50%);
   left: 0.25rem;
   border-radius: 50%;
+}
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
 }
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
@@ -5207,16 +5227,16 @@ body:before {
   background-color: #f3f8fc;
 }
 .km-fiori {
-  color: #333333;
+  color: #333;
 }
 .km-fiori .km-navbar {
-  color: #666666;
+  color: #666;
 }
 /* ActionSheet, Footer */
 .km-fiori .km-footer,
 .km-fiori .km-actionsheet > li > a {
   background: #40464b;
-  color: #ffffff;
+  color: #fff;
 }
 .km-fiori .km-footer .km-tabstrip .km-button:hover,
 .km-fiori .km-actionsheet > li > a:active,
@@ -5249,19 +5269,19 @@ body:before {
 }
 /* Switch */
 .km-fiori .km-switch-wrapper {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-modalview,
 .km-fiori .km-switch-background {
-  background: #ffffff;
+  background: #fff;
 }
 .km-fiori .km-switch-handle {
-  background: #ffffff;
-  border-color: #ffffff;
+  background: #fff;
+  border-color: #fff;
 }
 .km-fiori .km-switch-container,
 .km-fiori .km-switch-wrapper {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 /* Slider */
 /* ListView */
@@ -5287,18 +5307,18 @@ body:before {
 }
 .km-fiori .km-group-title {
   background: #f7f7f7;
-  border-color: #dddddd transparent #a4bdd4;
+  border-color: #ddd transparent #a4bdd4;
   color: #004990;
 }
 .km-fiori .km-listview .km-state-active > .km-listview-link {
-  color: #333333;
+  color: #333;
 }
 .km-fiori .km-filter-wrap:before,
 .km-fiori .km-filter-reset .km-clear {
-  color: #333333;
+  color: #333;
 }
 .km-fiori .km-filter-wrap > input {
-  color: #333333;
+  color: #333;
   border-color: #bfbfbf;
 }
 .km-fiori .km-filter-wrap > input:focus {
@@ -5327,7 +5347,7 @@ body:before {
 .km-fiori .km-list .k-dropdown-wrap,
 .km-fiori .km-list textarea,
 .km-fiori .km-list .k-dropdown-wrap .k-input {
-  color: #333333;
+  color: #333;
 }
 .km-fiori .km-list select:not([multiple]) option {
   color: #333;
@@ -5371,7 +5391,7 @@ body:before {
   background: rgba(0, 0, 0, 0.05);
 }
 .km-fiori .km-loader h1 {
-  color: #333333;
+  color: #333;
 }
 /* Active States */
 .km-fiori .km-detail:active,
@@ -5403,7 +5423,7 @@ body:before {
 .km-fiori li.km-state-active .km-listview-link,
 .km-fiori li.km-state-active .km-listview-label,
 .km-fiori .km-state-active .km-listview-link:after {
-  color: #ffffff;
+  color: #fff;
 }
 .km-fiori .km-loader > *:not(h1),
 .km-fiori .km-filter-wrap > input,

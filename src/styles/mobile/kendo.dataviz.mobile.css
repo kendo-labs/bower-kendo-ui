@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -2023,6 +2032,17 @@ div.km-split-horizontal > .km-content > .km-pane {
   -webkit-transform: translateY(-50%);
   left: 0.25rem;
   border-radius: 50%;
+}
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
 }
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
@@ -5246,7 +5266,7 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 /* Variables */
 .km-ios,
 .km-ios .km-listview-wrapper .km-filter-wrap {
-  background: #ffffff;
+  background: #fff;
 }
 .km-ios .k-toolbar,
 .km-ios .km-navbar,
@@ -5275,7 +5295,7 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 .km-ios .km-actionsheet > li > a,
 .km-ios .k-split-container > li > .km-button,
 .km-ios .k-overflow-container > li > .km-button {
-  color: #ffffff;
+  color: #fff;
   text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
 }
 .km-ios .km-button {
@@ -5301,7 +5321,7 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
 .km-ios li.km-state-active .km-icon,
 .km-ios li.km-state-active,
 .km-ios .km-switch-label-on {
-  color: #ffffff;
+  color: #fff;
 }
 .km-ios .km-checkbox,
 .km-ios .km-switch-wrapper {
@@ -5335,8 +5355,8 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#f1969b), color-stop(50%, rgba(230, 70, 78, 0.5)), color-stop(50%, rgba(222, 11, 21, 0.5)), to(rgba(183, 0, 0, 0)));
   background-image: -webkit-linear-gradient(top, #f1969b, rgba(230, 70, 78, 0.5) 50%, rgba(222, 11, 21, 0.5) 50%, rgba(183, 0, 0, 0));
   background-image: linear-gradient(to bottom, #f1969b, rgba(230, 70, 78, 0.5) 50%, rgba(222, 11, 21, 0.5) 50%, rgba(183, 0, 0, 0));
-  -webkit-box-shadow: 0 2px 3px #333333;
-          box-shadow: 0 2px 3px #333333;
+  -webkit-box-shadow: 0 2px 3px #333;
+          box-shadow: 0 2px 3px #333;
 }
 .km-ios .km-switch-handle {
   border-color: rgba(102, 102, 102, 0.8);
@@ -5453,8 +5473,8 @@ html .km-ios .km-popup.km-pane .km-tabstrip {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(46, 46, 46, 0.8)), color-stop(50%, rgba(21, 21, 21, 0.5)), color-stop(50%, rgba(0, 0, 0, 0.8)), to(rgba(0, 0, 0, 0.8)));
   background-image: -webkit-linear-gradient(top, rgba(46, 46, 46, 0.8), rgba(21, 21, 21, 0.5) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8));
   background-image: linear-gradient(to bottom, rgba(46, 46, 46, 0.8), rgba(21, 21, 21, 0.5) 50%, rgba(0, 0, 0, 0.8) 50%, rgba(0, 0, 0, 0.8));
-  -webkit-box-shadow: 0 -1px 0 0 #000000;
-          box-shadow: 0 -1px 0 0 #000000;
+  -webkit-box-shadow: 0 -1px 0 0 #000;
+          box-shadow: 0 -1px 0 0 #000;
   background-color: #1A1A1A;
   text-shadow: 0 1px 1px #000;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.18)), to(rgba(255, 255, 255, 0)));
@@ -5524,8 +5544,8 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.3)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.3));
-  -webkit-box-shadow: 0 -1px 0 #86929a;
-          box-shadow: 0 -1px 0 #86929a;
+  -webkit-box-shadow: 0 -1px 0 #86929A;
+          box-shadow: 0 -1px 0 #86929A;
 }
 .km-ios .km-listgroupinset .km-group-title {
   color: #4C566C;
@@ -5600,9 +5620,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 .km-ios .k-slider .k-draghandle,
 .km-ios .k-slider .k-draghandle:hover {
   background-color: #fff;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #cccccc, #ffffff);
-  background-image: linear-gradient(to bottom, #cccccc, #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff));
+  background-image: -webkit-linear-gradient(top, #ccc, #fff);
+  background-image: linear-gradient(to bottom, #ccc, #fff);
   -webkit-box-shadow: inset 0 0 0 1px #f9f9f9, 1px 1px 3px rgba(0,0,0,.3);
           box-shadow: inset 0 0 0 1px #f9f9f9, 1px 1px 3px rgba(0,0,0,.3);
 }
@@ -5620,21 +5640,21 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 .km-ios .km-dialog {
   background: rgba(10, 25, 65, 0.8);
   border-color: rgba(255, 255, 255, 0.8);
-  -webkit-box-shadow: 3px 3px 5px #111111;
-          box-shadow: 3px 3px 5px #111111;
+  -webkit-box-shadow: 3px 3px 5px #111;
+          box-shadow: 3px 3px 5px #111;
 }
 .km-ios .km-dialog-title {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), color-stop(60%, rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%);
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 60%);
-  text-shadow: 0 -1px #333333;
+  text-shadow: 0 -1px #333;
 }
 .km-ios .km-dialog:before {
   background: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22><defs><clipPath id=%22clip%22><rect x=%220%22 y=%220%22 width=%22100%%22 height=%22100%%22 rx=%2210%22 ry=%2210%22/></clipPath></defs><ellipse fill=%22white%22 cx=%2250%%22 cy=%220%22 rx=%2280%%22 ry=%2260%%22 clip-path=%22url(%23clip)%22/></svg>');
 }
 .km-ios .km-dialog-content {
   color: #fff;
-  text-shadow: 0 -1px #333333;
+  text-shadow: 0 -1px #333;
 }
 /* Loader */
 .km-ios .km-loader {
@@ -5968,9 +5988,9 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
   border-color: #b1b3b8;
   -webkit-box-shadow: none;
           box-shadow: none;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#cccccc), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #cccccc, #ffffff);
-  background-image: linear-gradient(to bottom, #cccccc, #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff));
+  background-image: -webkit-linear-gradient(top, #ccc, #fff);
+  background-image: linear-gradient(to bottom, #ccc, #fff);
 }
 .km-ios .km-checkbox-label:before,
 .km-ios .km-checkbox-label:after {
@@ -5978,7 +5998,7 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
 }
 .km-ios .km-radio-label:before {
   border-color: #b1b3b8;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-ios .km-radio-label:after {
   background-color: #44648f;
@@ -5986,6 +6006,16 @@ html .km-ios .km-tabstrip .km-button:active:last-child {
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
   border-color: #264e8c;
+}
+/* Validation */
+.km-ios .km-list > li label.km-invalid,
+.km-ios .km-list fieldset .km-legend-button.km-invalid,
+.km-ios .km-list > li label.km-invalid.km-required:after {
+  color: #f52312;
+}
+.km-ios .km-invalid-msg {
+  color: #fff;
+  background: #f52312;
 }
 .km-ios .km-button {
   text-align: center;
@@ -7197,8 +7227,8 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7,
 .km-ios7.km-pane .km-content {
-  color: #000000;
-  background-color: #ffffff;
+  color: #000;
+  background-color: #fff;
 }
 .km-ios7 .km-splitview > .km-split-content > .km-pane:first-child {
   border-right-color: rgba(180, 180, 180, 0.5);
@@ -7210,7 +7240,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
   border-color: rgba(180, 180, 180, 0.5);
 }
 .km-ios7 .km-view-title {
-  color: #000000;
+  color: #000;
 }
 /* Button */
 .km-ios7 .km-button {
@@ -7226,7 +7256,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-detail {
   color: #007aff;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-ios7 .km-detail:active,
 .km-ios7 .km-state-active .km-detail {
@@ -7245,18 +7275,18 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-switch-background,
 .km-ios7 .k-slider-selection {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#ffffff));
-  background-image: -webkit-linear-gradient(top, #ffffff, #ffffff);
-  background-image: linear-gradient(to bottom, #ffffff, #ffffff);
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#fff));
+  background-image: -webkit-linear-gradient(top, #fff, #fff);
+  background-image: linear-gradient(to bottom, #fff, #fff);
 }
 .km-ios7 .km-switch-handle {
-  background: #ffffff;
+  background: #fff;
   -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px currentcolor;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px currentcolor;
 }
 .km-ios7 .km-switch-off .km-switch-handle {
-  -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px #ffffff;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px #ffffff;
+  -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 1px #fff;
 }
 .km-ios7 .km-switch-container,
 .km-ios7 .km-switch-wrapper {
@@ -7273,7 +7303,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 /* ListView */
 .km-ios7 .km-list > li {
-  color: #000000;
+  color: #000;
   border-top-color: rgba(180, 180, 180, 0.5);
   -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, rgba(180, 180, 180, 0.5)), to(rgba(180, 180, 180, 0.5))) 1 stretch;
   -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, rgba(180, 180, 180, 0.5) 1em, rgba(180, 180, 180, 0.5) 100%) 1 stretch;
@@ -7333,7 +7363,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-actionsheet > li > a,
 .km-ios7 .k-overflow-container a.km-state-disabled,
 .km-ios7 .k-overflow-container .km-state-disabled:active {
-  background: #f7f7f8;
+  background: #F7F7F8;
   border-bottom-color: rgba(180, 180, 180, 0.5);
 }
 .km-ios7 .km-popup {
@@ -7341,7 +7371,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-popup.km-pane,
 .km-tablet .km-ios7 .km-actionsheet-wrapper {
-  background-color: #f7f7f8;
+  background-color: #F7F7F8;
 }
 /* PopOver */
 .km-ios7 .km-popup.km-pane {
@@ -7354,11 +7384,11 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
           box-shadow: 0 0 5px rgba(180, 180, 180, 0.5);
 }
 .km-ios7 .km-popup-arrow:after {
-  border-color: #f7f7f8 transparent;
+  border-color: #F7F7F8 transparent;
 }
 .km-ios7 .km-left .km-popup-arrow:after,
 .km-ios7 .km-right .km-popup-arrow:after {
-  border-color: transparent #f7f7f8;
+  border-color: transparent #F7F7F8;
 }
 /* Loader */
 .km-ios7.km-pane > .km-loader,
@@ -7420,7 +7450,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-state-active.km-detail:after,
 .km-ios7 .km-state-active.km-detail .km-icon:after,
 .km-ios7 .km-switch-handle.km-state-active {
-  color: #ffffff;
+  color: #fff;
 }
 .km-ios7 .km-tabstrip .km-state-active .km-text,
 .km-ios7 .k-toolbar .km-state-active .km-text,
@@ -7429,10 +7459,10 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .k-slider .k-draghandle,
 .km-ios7 .k-slider .k-draghandle:hover {
-  background: #ffffff;
+  background: #fff;
 }
 .km-ios7 span.km-switch {
-  color: #4cda64;
+  color: #4CDA64;
 }
 .km-ios7 .km-badge {
   background: #fd472b;
@@ -7447,7 +7477,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 li.km-state-active .km-listview-link,
 .km-ios7 li.km-state-active .km-listview-label {
-  color: #000000;
+  color: #000;
 }
 .km-ios7 .km-tabstrip .km-button:not(.km-state-active) {
   color: #929292;
@@ -7460,13 +7490,20 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-checkbox-label,
 .km-ios7 .km-radio-label {
-  color: #000000;
+  color: #000;
 }
 .km-ios7 .km-radio-label:before {
   border-color: #8f8f8f;
 }
 .km-ios7 .km-radio-label:after {
   background-color: #007aff;
+}
+/* Validation */
+.km-ios7 .km-list > li label.km-invalid,
+.km-ios7 .km-list fieldset .km-legend-button.km-invalid,
+.km-ios7 .km-list > li label.km-invalid.km-required:after,
+.km-ios7 .km-invalid-msg {
+  color: #f52312;
 }
 /* Active States */
 .km-ios7 .km-tabstrip .km-button,
@@ -8716,8 +8753,8 @@ html .km-android .km-navbar .km-notext {
 .km-android input[type=email],
 .km-android input[type=text]:not(.k-input),
 .km-root .km-android textarea {
-  background: #000000;
-  outline-color: #000000;
+  background: #000;
+  outline-color: #000;
 }
 .km-android-light,
 .km-android-light .km-header,
@@ -8744,9 +8781,9 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-popup .k-item,
 .km-android .km-actionsheet > li > a,
 .km-android select:not([multiple]):focus option {
-  color: #ffffff;
+  color: #fff;
   border-color: rgba(153, 153, 153, 0.7);
-  background-color: #000000;
+  background-color: #000;
 }
 .km-android-light .km-navbar,
 .km-android-light .k-toolbar,
@@ -8757,7 +8794,7 @@ html .km-android .km-navbar .km-notext {
 .km-android-light .km-popup .k-item,
 .km-android-light .km-actionsheet > li > a,
 .km-android-light select:not([multiple]):focus option {
-  color: #222222;
+  color: #222;
   background-color: #fcfcfc;
 }
 .km-android-light .km-navbar,
@@ -8772,20 +8809,20 @@ html .km-android .km-navbar .km-notext {
 .km-android select,
 .km-android textarea,
 .km-android .km-widget {
-  color: #ffffff;
+  color: #fff;
   border-color: rgba(153, 153, 153, 0.7);
 }
 .km-android-light input,
 .km-android-light select,
 .km-android-light textarea,
 .km-android-light .km-widget {
-  color: #222222;
+  color: #222;
 }
 .km-android .km-navbar,
 .km-android .k-toolbar,
 .km-android .km-tabstrip {
-  -webkit-box-shadow: 0 0 1px #999999, 0 0 4px #999999;
-          box-shadow: 0 0 1px #999999, 0 0 4px #999999;
+  -webkit-box-shadow: 0 0 1px #999, 0 0 4px #999;
+          box-shadow: 0 0 1px #999, 0 0 4px #999;
 }
 /* Button */
 .km-android .km-button,
@@ -8813,7 +8850,7 @@ html .km-android .km-navbar .km-notext {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.1)), to(rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
-  border-color: #ffffff;
+  border-color: #fff;
   background-color: #B01B1A;
 }
 .km-android-light .km-badge,
@@ -8822,7 +8859,7 @@ html .km-android .km-navbar .km-notext {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(34, 34, 34, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(34, 34, 34, 0.1)), to(rgba(34, 34, 34, 0)));
   background-image: -webkit-linear-gradient(top, rgba(34, 34, 34, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(34, 34, 34, 0.1) 50%, rgba(34, 34, 34, 0));
   background-image: linear-gradient(to bottom, rgba(34, 34, 34, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(34, 34, 34, 0.1) 50%, rgba(34, 34, 34, 0));
-  border-color: #222222;
+  border-color: #222;
 }
 .km-android .km-detail .km-text {
   border-left-color: #dddddd;
@@ -8888,7 +8925,7 @@ html .km-android .km-navbar .km-notext {
   color: rgba(153, 153, 153, 0.7);
 }
 .km-android .km-item label:before {
-  border-color: #000000;
+  border-color: #000;
   background-color: #363636;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#363636), to(#2b2b2b));
   background-image: -webkit-linear-gradient(top, #363636, #2b2b2b);
@@ -8902,8 +8939,8 @@ html .km-android .km-navbar .km-notext {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#c6c6c6), to(#d1d1d1));
   background-image: -webkit-linear-gradient(top, #c6c6c6, #d1d1d1);
   background-image: linear-gradient(to bottom, #c6c6c6, #d1d1d1);
-  -webkit-box-shadow: 0 0 1px 2px #999999;
-          box-shadow: 0 0 1px 2px #999999;
+  -webkit-box-shadow: 0 0 1px 2px #999;
+          box-shadow: 0 0 1px 2px #999;
 }
 /* Icons */
 .km-android .km-button .km-icon,
@@ -8925,12 +8962,12 @@ html .km-android .km-navbar .km-notext {
   background: rgba(0, 0, 0, 0.1);
 }
 .km-android .km-loading {
-  border-color: #ffffff rgba(255, 255, 255, 0.2);
+  border-color: #fff rgba(255, 255, 255, 0.2);
   -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
           box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(0, 0, 0, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 .km-android-light .km-loading {
-  border-color: #222222 rgba(34, 34, 34, 0.2);
+  border-color: #222 rgba(34, 34, 34, 0.2);
   -webkit-box-shadow: 0 1px 0 rgba(252, 252, 252, 0.1), 0 -1px 0 rgba(252, 252, 252, 0.1), inset 0 1px 0 rgba(252, 252, 252, 0.1), inset 0 -1px 0 rgba(252, 252, 252, 0.1);
           box-shadow: 0 1px 0 rgba(252, 252, 252, 0.1), 0 -1px 0 rgba(252, 252, 252, 0.1), inset 0 1px 0 rgba(252, 252, 252, 0.1), inset 0 -1px 0 rgba(252, 252, 252, 0.1);
 }
@@ -8981,7 +9018,7 @@ html .km-android .km-navbar .km-notext {
 }
 .km-android .km-actionsheet,
 .km-android .km-popup .k-list-container {
-  background: #000000;
+  background: #000;
   -webkit-box-shadow: 2px 2px 5px rgba(102, 102, 102, 0.5);
           box-shadow: 2px 2px 5px rgba(102, 102, 102, 0.5);
 }
@@ -9006,11 +9043,11 @@ html .km-android .km-navbar .km-notext {
   border-color: transparent rgba(153, 153, 153, 0.7);
 }
 .km-android .km-popup-arrow:after {
-  border-color: #000000 transparent;
+  border-color: #000 transparent;
 }
 .km-android .km-left .km-popup-arrow:after,
 .km-android .km-right .km-popup-arrow:after {
-  border-color: transparent #000000;
+  border-color: transparent #000;
 }
 .km-android-light .km-popup-arrow:after {
   border-color: #e9e9e9 transparent;
@@ -9040,8 +9077,8 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-popup.km-pane .km-view,
 .km-android .km-splitview .km-pane:last-child .km-content {
   border-color: rgba(128, 128, 128, 0.4);
-  -webkit-box-shadow: inset 0 0 1px 1px #000000;
-          box-shadow: inset 0 0 1px 1px #000000;
+  -webkit-box-shadow: inset 0 0 1px 1px #000;
+          box-shadow: inset 0 0 1px 1px #000;
 }
 .km-android-light .km-popup.km-pane .km-view,
 .km-android-light .km-splitview .km-pane:last-child .km-content {
@@ -9053,7 +9090,7 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-modalview {
   -webkit-box-shadow: 0 0 10px rgba(102, 102, 102, 0.5) 0 0 2px rgba(255, 255, 255, 0.7);
           box-shadow: 0 0 10px rgba(102, 102, 102, 0.5) 0 0 2px rgba(255, 255, 255, 0.7);
-  border-color: #000000;
+  border-color: #000;
 }
 .km-android .km-modalview .km-view-title {
   -webkit-box-shadow: inset 0 -2px rgba(255, 255, 255, 0.1);
@@ -9074,7 +9111,7 @@ html .km-android .km-navbar .km-notext {
   border-color: rgba(204, 204, 204, 0.5);
 }
 .km-android .km-collapsible-header .km-icon {
-  color: #999999;
+  color: #999;
 }
 /* Tablet Styles */
 .km-tablet .km-android *:not(.km-actionsheet-phone) > .km-actionsheet {
@@ -9126,7 +9163,7 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-state-active .km-icon,
 .km-android .km-state-active.km-detail:after,
 .km-android .km-state-active .km-detail:after {
-  color: #ffffff;
+  color: #fff;
 }
 .km-android .km-actionsheet > li > a:focus,
 .km-android .km-actionsheet > li > a:active,
@@ -9134,31 +9171,31 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-popup .k-state-focused,
 .km-android .km-popup .k-state-selected {
   text-indent: -10000px;
-  text-shadow: 10000px 0 0 #ffffff;
+  text-shadow: 10000px 0 0 #fff;
 }
 .km-android2 .km-actionsheet > li > a:focus,
 .km-android2 .km-actionsheet > li > a:active,
 .km-android2 .km-popup .k-state-hover,
 .km-android2 .km-popup .k-state-focused,
 .km-android2 .km-popup .k-state-selected {
-  text-shadow: 10000px 0 1px #ffffff;
+  text-shadow: 10000px 0 1px #fff;
 }
 .km-android .km-state-active .km-listview-link,
 .km-android .km-state-active .km-listview-label {
-  color: #ffffff;
+  color: #fff;
   background: #33b5e5;
 }
 .km-android li.km-actionsheet-cancel > a:focus,
 .km-android li.km-actionsheet-cancel > a:active,
 .km-android .km-badge {
   text-indent: -10000px;
-  text-shadow: 5000px 0 0 #ffffff;
+  text-shadow: 5000px 0 0 #fff;
   opacity: .8;
 }
 .km-android2 li.km-actionsheet-cancel > a:focus,
 .km-android2 li.km-actionsheet-cancel > a:active,
 .km-android2 .km-badge {
-  text-shadow: 5000px 0 1px #ffffff;
+  text-shadow: 5000px 0 1px #fff;
 }
 .km-android .k-split-container > li > a:focus,
 .km-android .k-split-container > li > a:active,
@@ -9177,7 +9214,7 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-badge > * {
   text-indent: 0;
   text-shadow: none;
-  color: #ffffff;
+  color: #fff;
 }
 .km-android select:focus,
 .km-android textarea:focus,
@@ -9207,20 +9244,20 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-detaildisclose:before,
 .km-android .k-overflow-container .km-state-disabled {
   display: block;
-  color: #999999;
+  color: #999;
 }
 .km-android .k-overflow-container a.km-state-disabled {
-  color: #999999;
-  background-color: #000000;
+  color: #999;
+  background-color: #000;
   border-color: rgba(153, 153, 153, 0.7);
 }
 .km-android-light .k-overflow-container a.km-state-disabled {
-  color: #999999;
+  color: #999;
   background-color: #e9e9e9;
   border-color: rgba(204, 204, 204, 0.5);
 }
 .km-android .km-state-active.km-state-disabled .km-text {
-  color: #999999;
+  color: #999;
 }
 .km-android .km-shim,
 .km-android .km-popup,
@@ -9274,7 +9311,7 @@ html .km-android .km-navbar .km-notext {
   border-color: rgba(153, 153, 153, 0.5);
 }
 .km-android-light input.km-checkbox:checked + .km-checkbox-label:before {
-  border-color: #222222;
+  border-color: #222;
 }
 .km-android input.km-checkbox:focus + .km-checkbox-label:before,
 .km-android input.km-checkbox:focus + .km-checkbox-label:before {
@@ -9288,6 +9325,16 @@ html .km-android .km-navbar .km-notext {
   -webkit-box-shadow: 0 0 16px 1px #33b5e5;
           box-shadow: 0 0 16px 1px #33b5e5;
   border-color: rgba(34, 34, 34, 0.4);
+}
+/* Validation */
+.km-android .km-list > li label.km-invalid,
+.km-android .km-list fieldset .km-legend-button.km-invalid,
+.km-android .km-list > li label.km-invalid.km-required:after {
+  color: #f52312;
+}
+.km-android .km-invalid-msg {
+  color: #fff;
+  background: #f52312;
 }
 /* Active States */
 .km-android .km-button.km-state-active,
@@ -10759,7 +10806,7 @@ html .km-android .k-toolbar .km-state-active {
 .km-flat .km-content .km-list .km-state-active input[type=text]:not(.k-input),
 .km-flat .km-content .km-list .km-state-active select:not([multiple]),
 .km-flat .km-content .km-list .km-state-active textarea {
-  color: #ffffff;
+  color: #fff;
 }
 /* Checkboxes and Radios */
 .km-flat .km-listview-label input[type=radio],
@@ -10848,13 +10895,13 @@ html .km-android .k-toolbar .km-state-active {
 .km-flat li.km-state-active .km-listview-link,
 .km-flat li.km-state-active .km-listview-label,
 .km-flat .km-state-active .km-listview-link:after {
-  color: #ffffff;
+  color: #fff;
 }
 .km-flat .km-loader > *:not(h1),
 .km-flat .km-filter-wrap > input,
 .km-flat .km-switch-handle.km-state-active,
 .km-root .km-flat .km-scroller-refresh span:not(.km-template) {
-  background: #ffffff;
+  background: #fff;
 }
 .km-flat .km-switch-handle,
 .km-flat .k-slider-selection,
@@ -10909,6 +10956,16 @@ html .km-android .k-toolbar .km-state-active {
 .km-flat .km-list fieldset legend {
   -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
           box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+/* Validation */
+.km-flat .km-list > li label.km-invalid,
+.km-flat .km-list fieldset .km-legend-button.km-invalid,
+.km-flat .km-list > li label.km-invalid.km-required:after {
+  color: #f52312;
+}
+.km-flat .km-invalid-msg {
+  color: #fff;
+  background: #f52312;
 }
 /* Tablet Styles */
 .km-tablet .km-flat.km-horizontal .km-navbar .km-button,
@@ -11704,7 +11761,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 .km-nova .km-content {
   color: #32364c;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* Shim */
 .km-nova .km-popup,
@@ -11716,7 +11773,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 /* Button */
 .km-nova .km-button {
   color: #888e90;
-  background: #ffffff;
+  background: #fff;
   border-color: #888e90;
 }
 .km-nova .km-button.km-state-active {
@@ -11724,13 +11781,13 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 /* Primary Button */
 .km-nova .km-primary {
-  color: #ffffff;
+  color: #fff;
   background: #ff4350;
   border-color: #ff4350;
 }
 .km-nova .km-icon-button,
 .km-nova .km-list .km-icon-button .km-icon {
-  color: #ffffff;
+  color: #fff;
 }
 .km-nova .km-primary.km-state-active {
   background: #e63c48;
@@ -11768,10 +11825,10 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-nova .k-toolbar .km-back:before,
 .km-nova .km-navbar .km-button,
 .km-nova .km-view-title {
-  color: #ffffff;
+  color: #fff;
 }
 .km-nova .km-tabstrip .km-button {
-  color: #ffffff;
+  color: #fff;
   background: transparent;
   border-color: transparent;
 }
@@ -11791,7 +11848,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-nova .km-light.km-navbar,
 .km-nova .km-light.k-toolbar,
 .km-nova .km-light.km-tabstrip {
-  background: #ffffff;
+  background: #fff;
   -webkit-box-shadow: 0 1px 40px 4px #f8fafb;
           box-shadow: 0 1px 40px 4px #f8fafb;
 }
@@ -11808,7 +11865,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 .km-nova .km-drawer .km-list .km-listview-link:after,
 .km-nova .km-drawer .km-list .km-listview-label:after {
-  border-color: #ffffff;
+  border-color: #fff;
   opacity: .3;
 }
 .km-nova .km-touch-scrollbar {
@@ -11832,7 +11889,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   border-color: #9ca6a6;
 }
 .km-nova .km-buttongroup .km-state-active {
-  color: #ffffff;
+  color: #fff;
   background-color: #9ca6a6;
 }
 .km-nova .km-buttongroup.km-primary .km-button {
@@ -11840,27 +11897,27 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   border-color: #ff4350;
 }
 .km-nova .km-buttongroup.km-primary .km-state-active {
-  color: #ffffff;
+  color: #fff;
   background-color: #ff4350;
 }
 /* Inverse ButtonGroup */
 .km-nova .km-inverse .km-button {
-  color: #ffffff;
+  color: #fff;
   background-color: #9ca6a6;
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-nova .km-inverse .km-state-active {
   color: #9ca6a6;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-nova .km-inverse.km-primary .km-button {
-  color: #ffffff;
-  border-color: #ffffff;
+  color: #fff;
+  border-color: #fff;
   background-color: #ff4350;
 }
 .km-nova .km-inverse.km-primary .km-state-active {
   color: #ff4350;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* Accent NavBar */
 .km-nova .km-accent.km-navbar,
@@ -11869,15 +11926,15 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-nova .km-accent.km-navbar .km-back:before,
 .km-nova .km-accent.k-toolbar .km-back:before,
 .km-nova .km-accent.km-navbar .km-button {
-  color: #ffffff;
+  color: #fff;
 }
 /* ButtonGroup in NavBar*/
 .km-nova .km-navbar .km-buttongroup .km-button {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-nova .km-navbar .km-buttongroup .km-state-active {
   color: #32364c;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* ListView */
 .km-nova .km-list > li {
@@ -11929,7 +11986,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 /* Drawer */
 .km-nova .km-drawer {
-  color: #ffffff;
+  color: #fff;
   background-color: #2a2d40;
 }
 .km-nova .km-drawer .km-content {
@@ -11937,7 +11994,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 /* ListView in Drawer */
 .km-nova .km-drawer .km-group-title {
-  color: #ffffff;
+  color: #fff;
   background-color: #14151e;
   border-color: #3c415b;
 }
@@ -11947,7 +12004,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-nova .km-drawer .km-list > li,
 .km-nova .km-drawer .km-list > li > .km-listview-link,
 .km-nova .km-drawer .km-list > li .km-icon {
-  color: #ffffff;
+  color: #fff;
 }
 /* Generic content */
 .km-nova .km-thumbnail {
@@ -11978,7 +12035,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 .km-nova .k-slider .k-draghandle,
 .km-nova .k-slider .k-draghandle:hover {
-  background-color: #ffffff;
+  background-color: #fff;
   -webkit-box-shadow: 0 0.202rem 0.403rem 0 rgba(0, 0, 0, 0.3);
           box-shadow: 0 0.202rem 0.403rem 0 rgba(0, 0, 0, 0.3);
 }
@@ -12004,7 +12061,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   border-color: #f8fafb;
 }
 .km-nova .km-switch-handle {
-  background: #ffffff;
+  background: #fff;
   -webkit-box-shadow: 0 0.202rem 0.403rem 0 rgba(0, 0, 0, 0.3);
           box-shadow: 0 0.202rem 0.403rem 0 rgba(0, 0, 0, 0.3);
   border-color: #dee7ec;
@@ -12051,7 +12108,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 /* ModalView */
 .km-nova .km-modalview,
 .km-nova .km-modalview .km-footer .km-rightitem {
-  background: #ffffff;
+  background: #fff;
 }
 .km-nova .km-modalview .km-footer .km-button {
   color: #59859b;
@@ -12065,7 +12122,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-nova .km-actionsheet > li > a,
 .km-nova .km-popup .k-item {
   color: #32364c;
-  background: #ffffff;
+  background: #fff;
 }
 .km-nova .km-actionsheet > li:nth-last-child(2) > a {
   -webkit-border-image: none;
@@ -12084,12 +12141,12 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 .km-nova .km-popup.km-pane,
 .km-tablet .km-nova .km-actionsheet-wrapper {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 /* Collapsible */
 .km-nova .km-collapsible-header,
 .km-nova .km-collapsible-content {
-  background: #ffffff;
+  background: #fff;
   border-color: #dee7ec;
 }
 .km-nova .km-collapsible-content {
@@ -12106,7 +12163,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-nova .km-detail,
 .km-nova .km-detail .km-icon:after {
   color: #ff4350;
-  background: #ffffff;
+  background: #fff;
 }
 .km-nova .km-list > li .km-style-default .km-icon:after {
   color: #32364c;
@@ -12118,13 +12175,13 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   color: #00c853;
 }
 .km-nova .km-list > li .km-style-warning .km-icon:after {
-  color: #f9a825;
+  color: #f52312;
 }
 .km-nova .km-list > li .km-style-error .km-icon:after {
   color: #f44336;
 }
 .km-nova .km-badge {
-  color: #ffffff;
+  color: #fff;
   background: #ff4350;
   border-color: #ff4350;
 }
@@ -12135,7 +12192,19 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   background: #dfe1e2;
 }
 .km-nova span.km-loading-right {
-  background: #ffffff;
+  background: #fff;
+}
+/* Validation */
+.km-nova .km-list > li label.km-invalid,
+.km-nova .km-list fieldset .km-legend-button.km-invalid,
+.km-nova .km-list > li label.km-invalid.km-required:after {
+  color: #f52312;
+}
+.km-nova .km-invalid-msg {
+  background: #f52312;
+}
+.km-nova .km-invalid-msg {
+  color: #fff;
 }
 /* Tablet Styles */
 .km-tablet .km-nova.km-horizontal .km-navbar .km-button,
@@ -14248,12 +14317,12 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp-dark-force,
 .km-wp-dark-force .km-content,
 .km-wp-dark-force .km-button {
-  background-color: #000000;
+  background-color: #000;
 }
 .km-wp-light-force,
 .km-wp-light-force .km-content,
 .km-wp-light-force .km-button {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-wp-dark,
 .km-wp-dark a,
@@ -14266,7 +14335,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp-dark .km-detail,
 .km-wp-dark .km-popup .km-item,
 .km-wp-dark .k-dropdown .k-dropdown-wrap {
-  color: #ffffff;
+  color: #fff;
 }
 .km-wp-light,
 .km-wp-light a,
@@ -14279,7 +14348,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp-light .km-detail,
 .km-wp-light .km-popup .km-item,
 .km-wp-light .k-dropdown .k-dropdown-wrap {
-  color: #000000;
+  color: #000;
 }
 .km-wp-dark .km-actionsheet-wrapper,
 .km-wp-dark .km-popup .k-list-container,
@@ -14293,15 +14362,15 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp-light .km-modalview,
 .km-wp-light .km-popup-wrapper,
 .km-wp-light .km-footer {
-  background-color: #dddddd;
+  background-color: #ddd;
 }
 .km-wp-dark .km-button,
 .km-wp-dark .km-listview-link:after {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-wp-light .km-button,
 .km-wp-light .km-listview-link:after {
-  border-color: #000000;
+  border-color: #000;
 }
 .km-wp .km-detail:active,
 .km-wp .km-button:active,
@@ -14327,7 +14396,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 .km-wp-dark .km-list > li > .km-icon,
 .km-wp-dark .km-listview-link > .km-icon {
-  background: #333333;
+  background: #333;
 }
 .km-wp-light .km-list > li > .km-icon,
 .km-wp-light .km-listview-link > .km-icon {
@@ -14335,7 +14404,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 .km-wp-dark .km-state-active .km-listview-link,
 .km-wp-dark .km-state-active .km-listview-label {
-  color: #dddddd;
+  color: #ddd;
 }
 .km-wp-light .km-state-active .km-listview-link,
 .km-wp-light .km-state-active .km-listview-label {
@@ -14347,28 +14416,28 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 .km-wp .km-listview-label input[type=radio],
 .km-wp .km-listview-label input[type=checkbox] {
-  border-color: #ffffff;
-  -webkit-box-shadow: 0 0 1px #ffffff;
-          box-shadow: 0 0 1px #ffffff;
+  border-color: #fff;
+  -webkit-box-shadow: 0 0 1px #fff;
+          box-shadow: 0 0 1px #fff;
 }
 .km-wp-light .km-listview-label input[type=radio],
 .km-wp-light .km-listview-label input[type=checkbox] {
-  border-color: #000000;
-  -webkit-box-shadow: 0 0 1px #000000;
-          box-shadow: 0 0 1px #000000;
+  border-color: #000;
+  -webkit-box-shadow: 0 0 1px #000;
+          box-shadow: 0 0 1px #000;
 }
 .km-wp .km-listview-label input[type=checkbox]:checked:after {
-  color: #ffffff;
+  color: #fff;
 }
 .km-wp-light .km-listview-label input[type=checkbox]:checked:after {
-  color: #000000;
+  color: #000;
 }
 .km-wp .km-listview-label input[type=radio]:checked:after {
   color: transparent;
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-light .km-listview-label input[type=radio]:checked:after {
-  background: #000000;
+  background: #000;
 }
 .km-wp .km-badge,
 .km-wp .km-group-title {
@@ -14378,12 +14447,12 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp-dark .km-loader h1,
 .km-wp-dark .km-filter-wrap:before,
 .km-wp-dark .km-filter-reset .km-clear {
-  color: #ffffff;
+  color: #fff;
 }
 .km-wp-light .km-loader h1,
 .km-wp-light .km-filter-wrap:before,
 .km-wp-light .km-filter-reset .km-clear {
-  color: #000000;
+  color: #000;
 }
 .km-wp .km-navbar,
 .km-wp .k-toolbar {
@@ -14391,44 +14460,44 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 .km-wp-dark-force .km-navbar,
 .km-wp-dark-force .k-toolbar {
-  background: #000000;
+  background: #000;
 }
 .km-wp-light-force .km-navbar,
 .km-wp-light-force .k-toolbar {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-dark .km-pages > li {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-light .km-pages > li {
-  background: #000000;
+  background: #000;
 }
 .km-wp .km-pages .km-current-page {
   background: Highlight;
 }
 .km-wp-dark .km-switch-wrapper {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-wp-light .km-switch-wrapper {
-  border-color: #000000;
+  border-color: #000;
 }
 .km-wp-light .km-switch-container {
-  -webkit-box-shadow: inset 0 0 0 0.2em #ffffff;
-          box-shadow: inset 0 0 0 0.2em #ffffff;
+  -webkit-box-shadow: inset 0 0 0 0.2em #fff;
+          box-shadow: inset 0 0 0 0.2em #fff;
 }
 .km-wp-dark .km-switch-container {
-  -webkit-box-shadow: inset 0 0 0 0.2em #000000;
-          box-shadow: inset 0 0 0 0.2em #000000;
+  -webkit-box-shadow: inset 0 0 0 0.2em #000;
+          box-shadow: inset 0 0 0 0.2em #000;
 }
 .km-wp-dark .km-switch-handle {
-  -webkit-box-shadow: 0 0 0 0.3em #000000;
-          box-shadow: 0 0 0 0.3em #000000;
-  background: #ffffff;
+  -webkit-box-shadow: 0 0 0 0.3em #000;
+          box-shadow: 0 0 0 0.3em #000;
+  background: #fff;
 }
 .km-wp-light .km-switch-handle {
-  -webkit-box-shadow: 0 0 0 0.3em #ffffff;
-          box-shadow: 0 0 0 0.3em #ffffff;
-  background: #000000;
+  -webkit-box-shadow: 0 0 0 0.3em #fff;
+          box-shadow: 0 0 0 0.3em #fff;
+  background: #000;
 }
 .km-wp .km-switch-background {
   background: Highlight;
@@ -14439,11 +14508,11 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 }
 .km-wp-dark .km-scroller-pull .km-icon,
 .km-wp-dark .km-tabstrip .km-state-active .km-icon {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-wp-light .km-scroller-pull .km-icon,
 .km-wp-light .km-tabstrip .km-state-active .km-icon {
-  border-color: #000000;
+  border-color: #000;
 }
 .km-wp-light .km-loader:before,
 .km-wp-light .km-loader:after,
@@ -14455,13 +14524,13 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp-light .km-scroller-refresh .km-icon,
 .km-wp-light .km-scroller-refresh .km-icon:after,
 .km-wp-light .km-scroller-refresh .km-icon:before {
-  color: #000000;
+  color: #000;
 }
 .km-wp-dark .km-loading-right {
   background: #1f1f1f;
 }
 .km-wp-light .km-loading-right {
-  background: #dddddd;
+  background: #ddd;
 }
 .km-wp .km-touch-scrollbar {
   border-color: rgba(255, 255, 255, 0.4);
@@ -14484,9 +14553,9 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp select:not([multiple]),
 .km-wp .k-dropdown,
 .km-wp textarea {
-  border-color: #ffffff;
+  border-color: #fff;
   background: Background;
-  color: #ffffff;
+  color: #fff;
 }
 .km-wp input::-moz-selection,
 .km-wp textarea::-moz-selection {
@@ -14515,8 +14584,8 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp-light select:not([multiple]),
 .km-wp-light .k-dropdown,
 .km-wp-light textarea {
-  border-color: #000000;
-  color: #000000;
+  border-color: #000;
+  color: #000;
 }
 .km-wp-dark-force input[type=password],
 .km-wp-dark-force input[type=search],
@@ -14535,7 +14604,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp-dark-force select:not([multiple]),
 .km-wp-dark-force .k-dropdown,
 .km-wp-dark-force textarea {
-  background: #000000;
+  background: #000;
 }
 .km-wp-light-force input[type=password],
 .km-wp-light-force input[type=search],
@@ -14554,7 +14623,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp-light-force select:not([multiple]),
 .km-wp-light-force .k-dropdown,
 .km-wp-light-force textarea {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp input[type=password]:focus,
 .km-wp input[type=search]:focus,
@@ -14583,23 +14652,23 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 /* Slider */
 .km-wp .k-slider .k-draghandle,
 .km-wp .k-slider .k-draghandle:hover {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-light .k-slider .k-draghandle,
 .km-wp-light .k-slider .k-draghandle:hover {
-  background: #000000;
+  background: #000;
 }
 .km-wp .k-slider .k-tick-large:before {
-  background: #000000;
+  background: #000;
 }
 .km-wp-light .k-slider .k-tick-large:before {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp .k-slider-selection {
   background: Highlight;
 }
 .km-wp .k-slider-track {
-  background: #333333;
+  background: #333;
 }
 .km-wp-light .k-slider-track {
   background: #bebebe;
@@ -14655,14 +14724,24 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-wp .km-list .km-label-above .k-dropdown-wrap,
 .km-wp .km-list fieldset textarea,
 .km-wp .km-list .km-label-above textarea {
-  color: #000000;
-  background: #dddddd;
+  color: #000;
+  background: #ddd;
 }
 .km-wp input.km-radio:checked + .km-radio-label:after {
-  background: #ffffff;
+  background: #fff;
 }
 .km-wp-light input.km-radio:checked + .km-radio-label:after {
-  background: #000000;
+  background: #000;
+}
+/* Validation */
+.km-wp .km-list > li label.km-invalid,
+.km-wp .km-list fieldset .km-legend-button.km-invalid,
+.km-wp .km-list > li label.km-invalid.km-required:after {
+  color: #f52312;
+}
+.km-wp .km-invalid-msg {
+  color: #fff;
+  background: #f52312;
 }
 /* Button */
 .km-wp .km-button {

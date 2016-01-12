@@ -1,18 +1,27 @@
-/**
- * Copyright 2015 Telerik AD
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** 
+ * Copyright 2016 Telerik AD                                                                                                                                                                            
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
 /* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
@@ -2023,6 +2032,17 @@ div.km-split-horizontal > .km-content > .km-pane {
   -webkit-transform: translateY(-50%);
   left: 0.25rem;
   border-radius: 50%;
+}
+/* Validation */
+.km-root .km-invalid-msg {
+  font-size: 1.2rem;
+  position: static;
+  display: inline-block;
+  border-width: 1px;
+  padding-top: 12px;
+  padding-bottom: 11px;
+  width: 100%;
+  text-align: center;
 }
 .km-root .km-icon-label.k-i-arrow-e:before {
   content: "\E000";
@@ -4991,42 +5011,42 @@ body:before {
 /*listview*/
 .km-office365,
 .km-office365 .km-view {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-office365 {
-  color: #333333;
+  color: #333;
 }
 .km-office365 .k-toolbar,
 .km-office365 .km-navbar,
 .km-office365 .km-navbar .km-view-title {
-  color: #ffffff;
+  color: #fff;
   background-color: #0072c6;
 }
 .km-office365 .km-popup .km-navbar,
 .km-office365 .km-modalview .km-navbar {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-office365 .km-popup .km-navbar,
 .km-office365 .km-popup .km-navbar .km-view-title {
-  color: #333333;
-  background-color: #ffffff;
+  color: #333;
+  background-color: #fff;
 }
 .km-office365 .km-modalview .km-header .km-navbar,
 .km-office365 .km-modalview .km-header .km-navbar .km-view-title {
   color: #666666;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-office365 .km-modalview .km-footer .km-rightitem {
-  color: #333333;
+  color: #333;
   background-color: #f4f4f4;
 }
 .km-office365 .km-modalview .km-footer .km-rightitem .km-button:first-child,
 .km-office365 .km-modalview .km-footer .km-button.km-state-active {
-  color: #ffffff;
+  color: #fff;
   background-color: #0072c6;
 }
 .km-office365 .km-navbar .km-leftitem .km-button {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-office365 .km-navbar .km-leftitem .km-button.km-state-active {
   border-color: #004578;
@@ -5038,8 +5058,8 @@ body:before {
 }
 /* ActionSheet, Footer */
 .km-office365 .km-actionsheet > li > a {
-  background: #ffffff;
-  color: #333333;
+  background: #fff;
+  color: #333;
   border-top-color: #e5e5e5;
   -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
   -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
@@ -5052,14 +5072,14 @@ body:before {
 }
 .km-office365 .km-footer .km-tabstrip .km-button:hover,
 .km-office365 .km-actionsheet > li > a:active {
-  background: #ffffff;
+  background: #fff;
 }
 .km-office365 .km-footer .km-tabstrip .km-button,
 .km-office365 .km-actionsheet > li > a {
   border-color: #e5e5e5;
 }
 .km-office365 .km-actionsheet > .km-actionsheet-cancel > a {
-  color: #ffffff;
+  color: #fff;
   background: #0072c6;
 }
 /* Button */
@@ -5081,16 +5101,16 @@ body:before {
   z-index: 1;
 }
 .km-office365 .km-widget.km-navbar .km-buttongroup .km-button {
-  border-color: #ffffff;
+  border-color: #fff;
 }
 .km-office365 .km-buttongroup .km-button:last-child {
   border-left-color: #f4f4f4;
 }
 .km-office365 .km-widget.km-navbar .km-buttongroup .km-state-active {
   color: #0072c6;
-  background-color: #ffffff;
-  -webkit-box-shadow: 0 0 0 1px #ffffff;
-          box-shadow: 0 0 0 1px #ffffff;
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 0 1px #fff;
+          box-shadow: 0 0 0 1px #fff;
 }
 .km-office365 .km-button:hover,
 .km-office365 .km-footer .km-tabstrip .km-button:hover {
@@ -5110,7 +5130,7 @@ body:before {
   background-color: #f4f4f4;
 }
 .km-modalview {
-  background: #ffffff;
+  background: #fff;
 }
 .km-office365 .km-switch-handle {
   background: #666666;
@@ -5120,7 +5140,7 @@ body:before {
 .km-office365 .km-switch-on .km-switch-handle:after,
 .km-office365 .km-switch-off .km-switch-handle:before,
 .km-office365 .km-switch-on .km-switch-handle:before {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-office365 .km-switch-container,
 .km-office365 .km-switch-wrapper {
@@ -5129,7 +5149,7 @@ body:before {
 /* Slider */
 /* ListView */
 .km-office365 .km-list > li {
-  background: #ffffff;
+  background: #fff;
   border-color: #f4f4f4;
   border-top-color: #e5e5e5;
   -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
@@ -5138,7 +5158,7 @@ body:before {
           border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
 }
 .km-office365 .km-list > li:hover {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-office365 .km-listinset > li:first-child,
 .km-office365 .km-listgroupinset .km-list > li:first-child {
@@ -5166,14 +5186,14 @@ body:before {
   border-color: #bababa;
 }
 .km-office365 .km-listview .km-state-active > .km-listview-link {
-  color: #333333;
+  color: #333;
 }
 .km-office365 .km-filter-wrap:before,
 .km-office365 .km-filter-reset .km-clear {
-  color: #333333;
+  color: #333;
 }
 .km-office365 .km-filter-wrap > input {
-  color: #333333;
+  color: #333;
   border-color: #f4f4f4;
 }
 .km-office365 .km-filter-wrap > input:focus {
@@ -5203,11 +5223,11 @@ body:before {
 .km-office365 .km-list .k-dropdown-wrap,
 .km-office365 .km-list textarea,
 .km-office365 .km-list .k-dropdown-wrap .k-input {
-  color: #333333;
+  color: #333;
   border-color: #bababa;
 }
 .km-office365 .km-list select:not([multiple]) option {
-  color: #333333;
+  color: #333;
 }
 /* Checkboxes and Radios */
 .km-office365 .km-listview-label input[type=radio],
@@ -5236,25 +5256,25 @@ body:before {
 }
 .km-office365 .km-actionsheet-wrapper,
 .km-office365 .km-popup .k-list-container {
-  background: #ffffff;
-  border-top-color: #ffffff;
+  background: #fff;
+  border-top-color: #fff;
 }
 .km-office365 .km-popup.km-pane,
 .km-tablet .km-office365 .km-actionsheet-wrapper {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-office365 .km-popup-arrow:after {
-  border-color: #ffffff transparent;
+  border-color: #fff transparent;
 }
 .km-office365 .km-actionsheet-root .km-popup-arrow:after {
-  border-color: transparent #ffffff transparent;
+  border-color: transparent #fff transparent;
 }
 /* Loader & Pull-to-refresh */
 .km-office365 .km-loader {
   background: rgba(0, 0, 0, 0.05);
 }
 .km-office365 .km-loader h1 {
-  color: #333333;
+  color: #333;
 }
 /* Active States */
 .km-office365 .km-state-active[style*=background] {
@@ -5278,17 +5298,17 @@ body:before {
 .km-office365 .km-popup .k-state-selected,
 .km-office365 li.km-state-active .km-listview-link,
 .km-office365 li.km-state-active .km-listview-label {
-  color: #ffffff;
+  color: #fff;
 }
 .km-office365 .km-scroller-pull .km-icon {
   color: #0072c6;
 }
 .km-office365 .km-popup .k-item {
-  color: #333333;
+  color: #333;
   border-bottom-color: #bababa;
 }
 .km-office365 .km-popup .k-state-selected.k-item {
-  color: #ffffff;
+  color: #fff;
 }
 .km-office365 .km-filter-wrap > input,
 .km-office365 .km-switch-handle.km-state-active {
@@ -5329,14 +5349,14 @@ body:before {
 }
 .km-office365 .km-state-active .km-detail,
 .km-office365 .km-detail.km-state-active {
-  color: #333333;
-  border-color: #333333;
+  color: #333;
+  border-color: #333;
 }
 .km-office365 .km-state-active .km-rowinsert,
 .km-office365 .km-rowinsert.km-state-active,
 .km-office365 .km-state-active .km-rowdelete,
 .km-office365 .km-rowdelete.km-state-active {
-  color: #ffffff;
+  color: #fff;
   border-color: #0072c6;
 }
 .km-office365 .km-filter-wrap > input:focus {
@@ -6186,7 +6206,7 @@ html .km-office365 .k-overflow-container.km-actionsheet > li {
   margin: -0.5em 0.5em 0 0;
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .km-office365 .k-slider-selection {
   margin-left: 0;
