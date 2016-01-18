@@ -126,7 +126,8 @@
                 'filtering',
                 'dataBinding',
                 'dataBound',
-                'cascade'
+                'cascade',
+                'set'
             ],
             setOptions: function (options) {
                 Select.fn.setOptions.call(this, options);
@@ -220,7 +221,6 @@
                     return;
                 }
                 var custom = that._customOption;
-                var hasChild = that.element[0].children[0];
                 if (that._state === STATE_REBIND) {
                     that._state = '';
                 }
@@ -228,8 +228,6 @@
                 that._options(data, '', that.value());
                 if (custom && custom[0].selected) {
                     that._custom(custom.val());
-                } else if (!hasChild) {
-                    that._custom('');
                 }
             },
             _updateSelection: function () {
@@ -257,7 +255,9 @@
                 if (!dataItem) {
                     return;
                 }
-                that._custom(that._value(dataItem) || '');
+                if (that._value(dataItem) !== that.value()) {
+                    that._custom(that._value(dataItem));
+                }
                 if (that.text() && that.text() !== that._text(dataItem)) {
                     that._selectValue(dataItem);
                 }
@@ -452,6 +452,7 @@
                     value = that._accessor() || that.listView.value()[0];
                     return value === undefined || value === null ? '' : value;
                 }
+                that.trigger('set', { value: value });
                 if (value === options.value && that.input.val() === options.text) {
                     return;
                 }
@@ -608,7 +609,7 @@
                     if (that._prev !== value) {
                         that._prev = value;
                         if (that.options.filter === 'none') {
-                            that.listView.value('');
+                            that.listView.select(-1);
                         }
                         that.search(value);
                     }

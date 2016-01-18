@@ -557,6 +557,9 @@ html .km-pane-wrapper .k-header {
 .k-calendar .k-today {
   background-color: #363940;
 }
+.k-calendar .k-today.k-state-selected {
+  background-color: #10c4b2;
+}
 .k-calendar .k-today .k-link {
   color: #fff;
 }
@@ -566,8 +569,8 @@ html .km-pane-wrapper .k-header {
 .k-calendar .k-today.k-state-focused,
 .k-calendar .k-today:active,
 .k-calendar .k-today.k-state-selected:active {
-  -webkit-box-shadow: inset 0 0 0px 1px #131417;
-          box-shadow: inset 0 0 0px 1px #131417;
+  -webkit-box-shadow: inset 0 0 0 1px #0c9083;
+          box-shadow: inset 0 0 0 1px #0c9083;
 }
 .k-calendar .k-footer .k-link {
   border-radius: 0;
@@ -1527,6 +1530,10 @@ html .km-pane-wrapper .km-widget,
 .k-grid tr:hover {
   color: #fff;
   background-color: #2eb3a6;
+}
+.k-pivot-rowheaders .k-grid tr:hover {
+  color: #4c5356;
+  background: none;
 }
 .k-grouping-header {
   color: #fff;

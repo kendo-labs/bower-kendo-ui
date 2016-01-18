@@ -562,13 +562,25 @@ html .km-pane-wrapper .k-header {
   border-radius: 4px;
 }
 .k-calendar .k-today {
-  background-color: #0066cc;
+  -webkit-box-shadow: inset 0 0 0 1px #0066cc;
+          box-shadow: inset 0 0 0 1px #0066cc;
 }
 .k-calendar .k-today .k-link {
   color: #fff;
+  font-weight: bold;
 }
-.k-calendar .k-today.k-state-hover {
-  background-color: #0066cc;
+.k-calendar td.k-today.k-state-focused,
+.k-calendar td.k-today.k-state-focused.k-state-hover {
+  -webkit-box-shadow: inset 0 0 3px 1px #ffffff;
+          box-shadow: inset 0 0 3px 1px #ffffff;
+}
+.k-calendar td.k-today.k-state-hover,
+.k-calendar td.k-today.k-state-selected {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-calendar td.k-today.k-state-hover .k-link {
+  color: #ffffff;
 }
 .k-calendar .k-footer .k-link {
   border-radius: 0;
@@ -580,7 +592,8 @@ html .km-pane-wrapper .k-header {
   background-color: #0066cc;
   background-image: none;
 }
-.k-calendar td.k-state-selected .k-link {
+.k-calendar td.k-state-selected .k-link,
+.k-calendar td.k-today.k-state-selected.k-state-hover .k-link {
   color: #fff;
 }
 .k-calendar td.k-state-focused.k-state-selected,
@@ -973,6 +986,9 @@ div.k-filebrowser-dropzone em {
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.12) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.05) 50%, rgba(255,255,255,.0) 100%);
   background-color: #292525;
+}
+.k-pivot-rowheaders .k-grid tr:hover {
+  background: none;
 }
 .k-grid td.k-state-selected.k-state-focused {
   background-color: #006edb;

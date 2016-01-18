@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.1.112'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.1.118'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -11785,7 +11785,7 @@
             _extractMessage: function (input, ruleKey) {
                 var that = this, customMessage = that.options.messages[ruleKey], fieldName = input.attr(NAME);
                 customMessage = kendo.isFunction(customMessage) ? customMessage(input) : customMessage;
-                return kendo.format(input.attr(kendo.attr(ruleKey + '-msg')) || input.attr('validationMessage') || input.attr('title') || customMessage || '', fieldName, input.attr(ruleKey));
+                return kendo.format(input.attr(kendo.attr(ruleKey + '-msg')) || input.attr('validationMessage') || input.attr('title') || customMessage || '', fieldName, input.attr(ruleKey) || input.attr(kendo.attr(ruleKey)));
             },
             _checkValidity: function (input) {
                 var rules = this.options.rules, rule;
@@ -17543,6 +17543,11 @@
                     if (!parent) {
                         return;
                     }
+                    parent.bind('set', function () {
+                        that.one('set', function (e) {
+                            that._selectedValue = e.value;
+                        });
+                    });
                     options.autoBind = false;
                     cascadeHandler = proxy(function (e) {
                         var valueBeforeCascade = this.value();
@@ -17570,7 +17575,8 @@
             },
             _cascadeChange: function (parent) {
                 var that = this;
-                var value = that._accessor();
+                var value = that._accessor() || that._selectedValue;
+                that._selectedValue = null;
                 if (that._userTriggered) {
                     that._clearSelection(parent, true);
                 } else if (value) {
@@ -20284,7 +20290,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Select = ui.Select, support = kendo.support, activeElement = kendo._activeElement, ObservableObject = kendo.data.ObservableObject, keys = kendo.keys, ns = '.kendoDropDownList', DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', FOCUSED = 'k-state-focused', DEFAULT = 'k-state-default', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, TABINDEX = 'tabindex', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', MSG_INVALID_OPTION_LABEL = 'The `optionLabel` option is not valid due to missing fields. Define a custom optionLabel as shown here http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist#configuration-optionLabel', proxy = $.proxy;
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, support = kendo.support, activeElement = kendo._activeElement, ObservableObject = kendo.data.ObservableObject, keys = kendo.keys, ns = '.kendoDropDownList', DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', FOCUSED = 'k-state-focused', DEFAULT = 'k-state-default', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, TABINDEX = 'tabindex', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', MSG_INVALID_OPTION_LABEL = 'The `optionLabel` option is not valid due to missing fields. Define a custom optionLabel as shown here http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist#configuration-optionLabel', proxy = $.proxy;
         var DropDownList = Select.extend({
             init: function (element, options) {
                 var that = this;
@@ -20376,7 +20382,8 @@
                 'filtering',
                 'dataBinding',
                 'dataBound',
-                'cascade'
+                'cascade',
+                'set'
             ],
             setOptions: function (options) {
                 Select.fn.setOptions.call(this, options);
@@ -20507,6 +20514,7 @@
                 if (value) {
                     that._initialIndex = null;
                 }
+                this.trigger('set', { value: value });
                 if (that._request && that.options.cascadeFrom && that.listView.bound()) {
                     if (that._valueSetter) {
                         dataSource.unbind(CHANGE, that._valueSetter);
@@ -20578,30 +20586,36 @@
                 }
                 return null;
             },
+            _buildOptions: function (data) {
+                var that = this;
+                if (!that._isSelect) {
+                    return;
+                }
+                var value = that.listView.value()[0];
+                var optionLabel = that._optionLabelDataItem();
+                if (value === undefined || value === null) {
+                    value = '';
+                }
+                if (optionLabel) {
+                    optionLabel = '<option value="' + that._value(optionLabel) + '">' + that._text(optionLabel) + '</option>';
+                }
+                that._options(data, optionLabel, value);
+                if (value !== List.unifyType(that._accessor(), typeof value)) {
+                    that._customOption = null;
+                    that._custom(value);
+                }
+            },
             _listBound: function () {
                 var that = this;
                 var initialIndex = that._initialIndex;
-                var optionLabel = that.options.optionLabel;
                 var filtered = that._state === STATE_FILTER;
                 var data = that.dataSource.flatView();
-                var length = data.length;
                 var dataItem;
-                var value;
                 that._angularItems('compile');
                 that._presetValue = false;
                 that._resizePopup(true);
                 that.popup.position();
-                if (that._isSelect) {
-                    value = that.value();
-                    if (length) {
-                        if (optionLabel) {
-                            optionLabel = that._option('', that._optionLabelText());
-                        }
-                    } else if (value) {
-                        optionLabel = that._option(value, that.text());
-                    }
-                    that._options(data, optionLabel, value);
-                }
+                that._buildOptions(data);
                 that._makeUnselectable();
                 if (!filtered) {
                     if (that._open) {
@@ -20609,7 +20623,7 @@
                     }
                     that._open = false;
                     if (!that._fetch) {
-                        if (length) {
+                        if (data.length) {
                             if (!that.listView.value().length && initialIndex > -1 && initialIndex !== null) {
                                 that.select(initialIndex);
                             }
@@ -20695,9 +20709,6 @@
                 }
                 element.attr(DISABLED, disable).attr(READONLY, readonly);
                 wrapper.attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
-            },
-            _option: function (value, text) {
-                return '<option value="' + value + '">' + text + '</option>';
             },
             _keydown: function (e) {
                 var that = this;
@@ -21299,7 +21310,8 @@
                 'filtering',
                 'dataBinding',
                 'dataBound',
-                'cascade'
+                'cascade',
+                'set'
             ],
             setOptions: function (options) {
                 Select.fn.setOptions.call(this, options);
@@ -21393,7 +21405,6 @@
                     return;
                 }
                 var custom = that._customOption;
-                var hasChild = that.element[0].children[0];
                 if (that._state === STATE_REBIND) {
                     that._state = '';
                 }
@@ -21401,8 +21412,6 @@
                 that._options(data, '', that.value());
                 if (custom && custom[0].selected) {
                     that._custom(custom.val());
-                } else if (!hasChild) {
-                    that._custom('');
                 }
             },
             _updateSelection: function () {
@@ -21430,7 +21439,9 @@
                 if (!dataItem) {
                     return;
                 }
-                that._custom(that._value(dataItem) || '');
+                if (that._value(dataItem) !== that.value()) {
+                    that._custom(that._value(dataItem));
+                }
                 if (that.text() && that.text() !== that._text(dataItem)) {
                     that._selectValue(dataItem);
                 }
@@ -21625,6 +21636,7 @@
                     value = that._accessor() || that.listView.value()[0];
                     return value === undefined || value === null ? '' : value;
                 }
+                that.trigger('set', { value: value });
                 if (value === options.value && that.input.val() === options.text) {
                     return;
                 }
@@ -21781,7 +21793,7 @@
                     if (that._prev !== value) {
                         that._prev = value;
                         if (that.options.filter === 'none') {
-                            that.listView.value('');
+                            that.listView.select(-1);
                         }
                         that.search(value);
                     }
@@ -30934,7 +30946,7 @@
                     id: id,
                     anchor: that.wrapper,
                     change: function () {
-                        var value = dateView.calendar.value(), msValue = +value, msMin = +options.min, msMax = +options.max, current;
+                        var value = dateView.calendar.value(), msValue = +value, msMin = +options.min, msMax = +options.max, current, adjustedDate;
                         if (msValue === msMin || msValue === msMax) {
                             current = new DATE(+that._value);
                             current.setFullYear(value.getFullYear(), value.getMonth(), value.getDate());
@@ -30943,7 +30955,10 @@
                             }
                         }
                         if (that._value) {
-                            value = kendo.date.setHours(new Date(value), that._value);
+                            adjustedDate = kendo.date.setHours(new Date(value), that._value);
+                            if (isInRange(adjustedDate, msMin, msMax)) {
+                                value = adjustedDate;
+                            }
                         }
                         that._change(value);
                         that.close('date');

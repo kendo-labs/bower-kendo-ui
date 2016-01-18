@@ -562,13 +562,25 @@ html .km-pane-wrapper .k-header {
   border-radius: 4px;
 }
 .k-calendar .k-today {
-  background-color: #f35800;
+  -webkit-box-shadow: inset 0 0 0 1px #f35800;
+          box-shadow: inset 0 0 0 1px #f35800;
 }
 .k-calendar .k-today .k-link {
-  color: #fff;
+  color: #f35800;
+  font-weight: bold;
 }
-.k-calendar .k-today.k-state-hover {
-  background-color: #f35800;
+.k-calendar td.k-today.k-state-focused,
+.k-calendar td.k-today.k-state-focused.k-state-hover {
+  -webkit-box-shadow: inset 0 0 3px 1px #aeaeae;
+          box-shadow: inset 0 0 3px 1px #aeaeae;
+}
+.k-calendar td.k-today.k-state-hover,
+.k-calendar td.k-today.k-state-selected {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-calendar td.k-today.k-state-hover .k-link {
+  color: #2e2e2e;
 }
 .k-calendar .k-footer .k-link {
   border-radius: 0;
@@ -580,7 +592,8 @@ html .km-pane-wrapper .k-header {
   background-color: #f35800;
   background-image: none;
 }
-.k-calendar td.k-state-selected .k-link {
+.k-calendar td.k-state-selected .k-link,
+.k-calendar td.k-today.k-state-selected.k-state-hover .k-link {
   color: #fff;
 }
 .k-calendar td.k-state-focused.k-state-selected,
@@ -973,6 +986,9 @@ div.k-filebrowser-dropzone em {
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.6) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.6) 0%, rgba(255,255,255,.0) 100%);
   background-color: #b9b3b3;
+}
+.k-pivot-rowheaders .k-grid tr:hover {
+  background: none;
 }
 .k-grid td.k-state-selected.k-state-focused {
   background-color: #ff5e03;

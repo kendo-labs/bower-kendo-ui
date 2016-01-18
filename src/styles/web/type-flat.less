@@ -779,6 +779,10 @@ html .km-pane-wrapper .k-header
         background-color: @base;
     }
 
+    .k-today.k-state-selected {
+        background-color: @selected-background-color;
+    }
+
     .k-today .k-link {
         color: @normal-background;
     }
@@ -790,7 +794,7 @@ html .km-pane-wrapper .k-header
     .k-today.k-state-focused,
     .k-today:active,
     .k-today.k-state-selected:active {
-        box-shadow: inset 0 0 0px 1px darken(@base, 15%);
+        box-shadow: @focused-item-shadow;
     }
 
     .k-footer .k-link {
@@ -2075,6 +2079,11 @@ html .km-pane-wrapper .km-widget,
 .k-grid tr:hover {
     color: @hover-text-color;
     background-color: @hover-background;
+}
+
+.k-pivot-rowheaders .k-grid tr:hover {
+    color: @widget-text-color;
+    background: none;
 }
 
 .k-grouping-header

@@ -1976,6 +1976,9 @@ div.k-window.k-state-focused {
 .k-grid tr:hover {
   background-color: #eaeaea;
 }
+.k-pivot-rowheaders .k-grid tr:hover {
+  background: none;
+}
 .k-grid-header th.k-state-focused,
 .k-grid td.k-state-focused {
   -webkit-box-shadow: inset 0 0 0 1px #007cc0;

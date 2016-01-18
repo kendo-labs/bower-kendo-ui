@@ -2880,6 +2880,7 @@ body .k-datetimepicker .k-select {
 }
 .k-list-filter {
   position: relative;
+  margin-bottom: 2px;
 }
 .k-list-filter > .k-textbox {
   padding-right: 20px;
@@ -4697,8 +4698,7 @@ span.k-tooltip {
   margin: 0 6px;
 }
 .k-calendar {
-  width: 18.29em;
-  padding: 0 5px;
+  width: 19em;
 }
 .k-calendar .k-header {
   margin: 0 -5px;

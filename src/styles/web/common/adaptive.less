@@ -753,6 +753,29 @@
     line-height: 2.4em;
 }
 
+@media all and (max-width: 1024px) {
+ 
+    .km-pane-wrapper .k-pager-nav + .k-pager-nav ~ .k-pager-nav
+    {
+        position: absolute;
+        right: .3em;
+        top: .3em;
+    }
+
+    .km-pane-wrapper .k-pager-wrap .k-pager-numbers + .k-pager-nav,
+    .km-pane-wrapper .k-pager-nav:first-child + .k-pager-nav + .k-pager-nav
+    {
+        right: 3em;
+    }
+
+    .km-pane-wrapper .k-pager-info,
+    .km-pane-wrapper .k-pager-refresh
+    {
+        display: none;
+    }
+
+}
+
 @media all and (max-width: 699px),
                (-ms-high-contrast: active) and
                (-ms-high-contrast: none) and
@@ -816,23 +839,6 @@
         float: left;
     }
 
-    .km-pane-wrapper .k-pager-nav + .k-pager-nav ~ .k-pager-nav
-    {
-        position: absolute;
-        right: .3em;
-        top: .3em;
-    }
-
-    .km-pane-wrapper .k-pager-wrap .k-pager-numbers + .k-pager-nav,
-    .km-pane-wrapper .k-pager-nav:first-child + .k-pager-nav + .k-pager-nav
-    {
-        right: 3em;
-    }
-
-    .km-pane-wrapper .k-pager-info
-    {
-        display: none;
-    }
 }
 
 .km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-field .k-check,

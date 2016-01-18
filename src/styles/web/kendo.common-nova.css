@@ -4736,6 +4736,7 @@ body .k-datetimepicker .k-select {
 }
 .k-list-filter {
   position: relative;
+  margin-bottom: 2px;
 }
 .k-list-filter > .k-textbox {
   padding-right: 20px;
@@ -9566,6 +9567,21 @@ div.k-navigator .k-navigator-w {
 .km-pane-wrapper .k-pager-wrap {
   line-height: 2.4em;
 }
+@media all and (max-width: 1024px) {
+  .km-pane-wrapper .k-pager-nav + .k-pager-nav ~ .k-pager-nav {
+    position: absolute;
+    right: .3em;
+    top: .3em;
+  }
+  .km-pane-wrapper .k-pager-wrap .k-pager-numbers + .k-pager-nav,
+  .km-pane-wrapper .k-pager-nav:first-child + .k-pager-nav + .k-pager-nav {
+    right: 3em;
+  }
+  .km-pane-wrapper .k-pager-info,
+  .km-pane-wrapper .k-pager-refresh {
+    display: none;
+  }
+}
 @media all and (max-width: 699px), (-ms-high-contrast: active) and (-ms-high-contrast: none) and (max-width: 800px) {
   .km-pane-wrapper *:not(.k-state-default):not(.k-pager-input) > input:not([type="checkbox"]):not([type="radio"]),
   .km-pane-wrapper .k-mobile-list select:not([multiple]),
@@ -9607,18 +9623,6 @@ div.k-navigator .k-navigator-w {
   }
   .km-pane-wrapper .k-pager-nav {
     float: left;
-  }
-  .km-pane-wrapper .k-pager-nav + .k-pager-nav ~ .k-pager-nav {
-    position: absolute;
-    right: .3em;
-    top: .3em;
-  }
-  .km-pane-wrapper .k-pager-wrap .k-pager-numbers + .k-pager-nav,
-  .km-pane-wrapper .k-pager-nav:first-child + .k-pager-nav + .k-pager-nav {
-    right: 3em;
-  }
-  .km-pane-wrapper .k-pager-info {
-    display: none;
   }
 }
 .km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-field .k-check,
@@ -11637,8 +11641,7 @@ div.k-navigator .k-navigator-w {
   margin: 0 6px;
 }
 .k-calendar {
-  width: 18.29em;
-  padding: 0 5px;
+  width: 19em;
 }
 .k-calendar .k-header {
   margin: 0 -5px;
@@ -11681,6 +11684,9 @@ div.k-navigator .k-navigator-w {
 .k-popup .k-list .k-state-focused,
 .k-popup .k-list .k-state-selected {
   padding: 0 10px;
+}
+.k-list-filter {
+  margin: 0 .29em .29em;
 }
 .k-button,
 .k-calendar .k-header .k-link,
