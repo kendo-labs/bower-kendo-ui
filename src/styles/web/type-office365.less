@@ -1963,6 +1963,10 @@ html .km-pane-wrapper .km-widget,
 }
 
 .k-tabstrip-items .k-state-hover .k-link,
+.k-tabstrip-items .k-state-active .k-link {
+    color: @link-text-color;
+}
+
 .k-panelbar > li.k-state-hover > .k-link,
 .k-panelbar>li.k-state-default>.k-link.k-state-hover
 {
@@ -2813,11 +2817,6 @@ input.k-textbox:focus {
 	.k-item.k-state-active {
 		background-color: @active-background-color;
 		border-color: @active-background-color;
-	}
-
-	.k-item.k-state-hover .k-link,
-	.k-item.k-state-active .k-link {
-		color: @link-text-color;
 	}
 
 	.k-content {

@@ -1421,6 +1421,9 @@ html .km-pane-wrapper .km-widget,
   color: #333333;
 }
 .k-tabstrip-items .k-state-hover .k-link,
+.k-tabstrip-items .k-state-active .k-link {
+  color: #0072c6;
+}
 .k-panelbar > li.k-state-hover > .k-link,
 .k-panelbar > li.k-state-default > .k-link.k-state-hover {
   color: #000;
@@ -2236,10 +2239,6 @@ input.k-textbox:focus {
 .k-tabstrip .k-item.k-state-active {
   background-color: #fff;
   border-color: #fff;
-}
-.k-tabstrip .k-item.k-state-hover .k-link,
-.k-tabstrip .k-item.k-state-active .k-link {
-  color: #0072c6;
 }
 .k-tabstrip .k-content {
   border-color: transparent;

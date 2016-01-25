@@ -285,7 +285,7 @@
                     dataSource.one(CHANGE, that._valueSetter);
                     return;
                 }
-                if (listView.bound() && listView.isFiltered()) {
+                if (that._isFilterEnabled() && listView.bound() && listView.isFiltered()) {
                     listView.bound(false);
                     that._filterSource();
                 } else {
@@ -642,7 +642,7 @@
                 var that = this;
                 var dataSource = that.dataSource;
                 clearTimeout(that._typingTimeout);
-                if (that.options.filter !== 'none') {
+                if (that._isFilterEnabled()) {
                     that._typingTimeout = setTimeout(function () {
                         var value = that.filterInput.val();
                         if (that._prev !== value) {
@@ -814,13 +814,11 @@
             },
             _filterHeader: function () {
                 var icon;
-                var options = this.options;
-                var filterEnalbed = options.filter !== 'none';
                 if (this.filterInput) {
                     this.filterInput.off(ns).parent().remove();
                     this.filterInput = null;
                 }
-                if (filterEnalbed) {
+                if (this._isFilterEnabled()) {
                     icon = '<span unselectable="on" class="k-icon k-i-search">select</span>';
                     this.filterInput = $('<input class="k-textbox"/>').attr({
                         placeholder: this.element.attr('placeholder'),

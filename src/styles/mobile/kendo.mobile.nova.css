@@ -7182,6 +7182,10 @@ body:before {
 .km-nova .km-right-drawer .km-listview-label:after {
   display: none;
 }
+.km-nova .km-drawer.km-left-drawer {
+  -webkit-transform: translate3d(0, 0px, 0px);
+          transform: translate3d(0, 0px, 0px);
+}
 .km-nova .km-popup .km-navbar .km-view-title,
 .km-nova .km-modalview .km-header .km-navbar .km-view-title {
   padding-left: .591em;

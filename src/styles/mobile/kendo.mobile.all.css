@@ -15478,19 +15478,17 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   color: #fafafa;
   background-color: #333;
 }
-.km-material .km-popup-arrow:after {
-  border-color: #fafafa transparent;
-}
-.km-material-dark .km-popup-arrow:after {
-  border-color: #333 transparent;
-}
+.km-material .km-popup-arrow:after,
+.km-material-dark .km-popup-arrow:after,
 .km-material .km-left .km-popup-arrow:after,
-.km-material .km-right .km-popup-arrow:after {
-  border-color: transparent #fafafa;
-}
+.km-material .km-right .km-popup-arrow:after,
 .km-material-dark .km-left .km-popup-arrow:after,
 .km-material-dark .km-right .km-popup-arrow:after {
-  border-color: transparent #333;
+  border-color: transparent;
+}
+.km-material .km-popup {
+  -webkit-box-shadow: 0 15px 30px 3px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 15px 30px 3px rgba(0, 0, 0, 0.3);
 }
 /* Loader & Pull-to-refresh */
 .km-material .km-loading:before,
@@ -16621,8 +16619,6 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 }
 .km-material .km-widget.km-actionsheet-wrapper {
   width: 100%;
-  -webkit-box-shadow: none;
-          box-shadow: none;
   border: 0;
   padding: .55em 0;
 }
@@ -18933,6 +18929,10 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-nova .km-right-drawer .km-listview-link:after,
 .km-nova .km-right-drawer .km-listview-label:after {
   display: none;
+}
+.km-nova .km-drawer.km-left-drawer {
+  -webkit-transform: translate3d(0, 0px, 0px);
+          transform: translate3d(0, 0px, 0px);
 }
 .km-nova .km-popup .km-navbar .km-view-title,
 .km-nova .km-modalview .km-header .km-navbar .km-view-title {

@@ -239,11 +239,11 @@ input.k-textbox:hover,
 textarea.k-textbox:hover,
 .k-textbox > input,
 .k-multiselect-wrap {
-  background-color: #4d4d4d;
+  background-color: #272727;
   color: #fff;
 }
 .k-input[readonly] {
-  background-color: #4d4d4d;
+  background-color: #272727;
   color: #fff;
 }
 .k-block,

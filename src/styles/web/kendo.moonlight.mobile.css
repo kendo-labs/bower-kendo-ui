@@ -5377,7 +5377,7 @@ body:before {
 .km-content,
 .km-popover-root .km-content .km-widget {
   color: #fff;
-  background: #212a33;
+  background: #414550;
 }
 .km-navbar {
   color: #ffffff;
@@ -5392,7 +5392,7 @@ body:before {
 }
 /* Button */
 .km-button {
-  background: rgba(33, 42, 51, 0.2);
+  background: rgba(65, 69, 80, 0.2);
   border-color: rgba(255, 255, 255, 0.2);
 }
 .km-state-active[style*=background] {
@@ -5403,12 +5403,12 @@ body:before {
 .km-detail {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.2);
-  background-color: #212a33;
+  background-color: #414550;
 }
 .km-detail:active,
 .km-state-active .km-detail {
-  -webkit-box-shadow: inset 0 0 0 1000px rgba(33, 42, 51, 0.2);
-          box-shadow: inset 0 0 0 1000px rgba(33, 42, 51, 0.2);
+  -webkit-box-shadow: inset 0 0 0 1000px rgba(65, 69, 80, 0.2);
+          box-shadow: inset 0 0 0 1000px rgba(65, 69, 80, 0.2);
 }
 /* Switch */
 .km-switch-wrapper {
@@ -5424,7 +5424,7 @@ body:before {
   background-color: currentcolor;
 }
 .km-switch-handle {
-  background: #212a33;
+  background: #414550;
 }
 .km-switch-off .km-switch-handle {
   -webkit-box-shadow: 0 1px 0 1px #bababa, 0 -1px 0 1px #bababa;
@@ -5444,10 +5444,10 @@ body:before {
 }
 /* ListView */
 .km-list > li {
-  background: #171d24;
+  background: #363942;
   border-color: rgba(255, 255, 255, 0.2);
-  -webkit-box-shadow: inset 0 1px 0 rgba(33, 42, 51, 0.2);
-          box-shadow: inset 0 1px 0 rgba(33, 42, 51, 0.2);
+  -webkit-box-shadow: inset 0 1px 0 rgba(65, 69, 80, 0.2);
+          box-shadow: inset 0 1px 0 rgba(65, 69, 80, 0.2);
 }
 .km-listinset > li:first-child,
 .km-listgroupinset .km-list > li:first-child {
@@ -5461,7 +5461,7 @@ body:before {
   color: #ffffff;
 }
 .km-group-title {
-  background: #212a33;
+  background: #414550;
   border-color: rgba(255, 255, 255, 0.2);
 }
 /* ScrollView */
@@ -5528,7 +5528,7 @@ body:before {
 .km-listview-label input[type=radio],
 .km-listview-label input[type=checkbox] {
   border-color: rgba(255, 255, 255, 0.2);
-  background: #212a33;
+  background: #414550;
 }
 .km-listview-label input[type=checkbox]:checked:after {
   color: #eee;
@@ -5542,7 +5542,7 @@ body:before {
 .km-widget.km-actionsheet-wrapper,
 .km-widget.km-actionsheet > li > a {
   background: #e6ebf1;
-  border-bottom-color: rgba(33, 42, 51, 0.2);
+  border-bottom-color: rgba(65, 69, 80, 0.2);
 }
 .km-actionsheet-cancel > a {
   color: #bababa;
@@ -5555,7 +5555,7 @@ body:before {
 .km-actionsheet-wrapper,
 .km-popup .k-list-container {
   background: rgba(0, 0, 0, 0.4);
-  border-top-color: rgba(33, 42, 51, 0.2);
+  border-top-color: rgba(65, 69, 80, 0.2);
 }
 /* PopOver */
 .km-popup.km-pane {
@@ -5615,7 +5615,7 @@ li.km-state-active .km-listview-label,
   background-color: #171e28;
 }
 .km-switch-handle.km-state-active {
-  background-color: #354452;
+  background-color: #585d6c;
 }
 .km-switch-handle,
 .km-switch-background {

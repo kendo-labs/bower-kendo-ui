@@ -149,6 +149,10 @@
                     e.preventDefault();
                 }
             },
+            _isFilterEnabled: function () {
+                var filter = this.options.filter;
+                return filter && filter !== 'none';
+            },
             _filterSource: function (filter, force) {
                 var that = this;
                 var options = that.options;
@@ -277,7 +281,7 @@
                 }
                 id = id ? id + ' ' + that.ul[0].id : that.ul[0].id;
                 element.attr('aria-owns', id);
-                that.ul.attr('aria-live', !options.filter || options.filter === 'none' ? 'off' : 'polite');
+                that.ul.attr('aria-live', !that._isFilterEnabled() ? 'off' : 'polite');
             },
             _blur: function () {
                 var that = this;
@@ -567,19 +571,18 @@
                 var length = word.length;
                 var options = that.options;
                 var ignoreCase = options.ignoreCase;
-                var filter = options.filter;
                 var field = options.dataTextField;
                 clearTimeout(that._typingTimeout);
                 if (!length || length >= options.minLength) {
                     that._state = 'filter';
-                    if (filter === 'none') {
+                    if (!that._isFilterEnabled()) {
                         that._filter(word);
                     } else {
                         that._open = true;
                         that._filterSource({
                             value: ignoreCase ? word.toLowerCase() : word,
                             field: field,
-                            operator: filter,
+                            operator: options.filter,
                             ignoreCase: ignoreCase
                         });
                     }

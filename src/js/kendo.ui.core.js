@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.1.120'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.1.125'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -3289,7 +3289,7 @@
         }());
         kendo.proxyModelSetters = function proxyModelSetters(data) {
             var observable = {};
-            Object.keys(data).forEach(function (property) {
+            Object.keys(data || {}).forEach(function (property) {
                 Object.defineProperty(observable, property, {
                     get: function () {
                         return data[property];
@@ -16822,6 +16822,10 @@
                     e.preventDefault();
                 }
             },
+            _isFilterEnabled: function () {
+                var filter = this.options.filter;
+                return filter && filter !== 'none';
+            },
             _filterSource: function (filter, force) {
                 var that = this;
                 var options = that.options;
@@ -16950,7 +16954,7 @@
                 }
                 id = id ? id + ' ' + that.ul[0].id : that.ul[0].id;
                 element.attr('aria-owns', id);
-                that.ul.attr('aria-live', !options.filter || options.filter === 'none' ? 'off' : 'polite');
+                that.ul.attr('aria-live', !that._isFilterEnabled() ? 'off' : 'polite');
             },
             _blur: function () {
                 var that = this;
@@ -17240,19 +17244,18 @@
                 var length = word.length;
                 var options = that.options;
                 var ignoreCase = options.ignoreCase;
-                var filter = options.filter;
                 var field = options.dataTextField;
                 clearTimeout(that._typingTimeout);
                 if (!length || length >= options.minLength) {
                     that._state = 'filter';
-                    if (filter === 'none') {
+                    if (!that._isFilterEnabled()) {
                         that._filter(word);
                     } else {
                         that._open = true;
                         that._filterSource({
                             value: ignoreCase ? word.toLowerCase() : word,
                             field: field,
-                            operator: filter,
+                            operator: options.filter,
                             ignoreCase: ignoreCase
                         });
                     }
@@ -20525,7 +20528,7 @@
                     dataSource.one(CHANGE, that._valueSetter);
                     return;
                 }
-                if (listView.bound() && listView.isFiltered()) {
+                if (that._isFilterEnabled() && listView.bound() && listView.isFiltered()) {
                     listView.bound(false);
                     that._filterSource();
                 } else {
@@ -20882,7 +20885,7 @@
                 var that = this;
                 var dataSource = that.dataSource;
                 clearTimeout(that._typingTimeout);
-                if (that.options.filter !== 'none') {
+                if (that._isFilterEnabled()) {
                     that._typingTimeout = setTimeout(function () {
                         var value = that.filterInput.val();
                         if (that._prev !== value) {
@@ -21054,13 +21057,11 @@
             },
             _filterHeader: function () {
                 var icon;
-                var options = this.options;
-                var filterEnalbed = options.filter !== 'none';
                 if (this.filterInput) {
                     this.filterInput.off(ns).parent().remove();
                     this.filterInput = null;
                 }
-                if (filterEnalbed) {
+                if (this._isFilterEnabled()) {
                     icon = '<span unselectable="on" class="k-icon k-i-search">select</span>';
                     this.filterInput = $('<input class="k-textbox"/>').attr({
                         placeholder: this.element.attr('placeholder'),
@@ -21642,7 +21643,7 @@
                     return;
                 }
                 that._accessor(value);
-                if (listView.bound() && listView.isFiltered()) {
+                if (that._isFilterEnabled() && listView.bound() && listView.isFiltered()) {
                     listView.bound(false);
                     that._filterSource();
                 } else {
@@ -22191,7 +22192,6 @@
                 var that = this;
                 var options = that.options;
                 var ignoreCase = options.ignoreCase;
-                var filter = options.filter;
                 var field = options.dataTextField;
                 var inputValue = that.input.val();
                 var expression;
@@ -22208,7 +22208,7 @@
                     expression = {
                         value: ignoreCase ? word.toLowerCase() : word,
                         field: field,
-                        operator: filter,
+                        operator: options.filter,
                         ignoreCase: ignoreCase
                     };
                     that._filterSource(expression);
@@ -39997,6 +39997,7 @@
     ], f);
 }(function () {
     'bundle all';
+    return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
     (a3 || a2)();
 }));
