@@ -271,7 +271,7 @@
                     value = that._accessor() || that.listView.value()[0];
                     return value === undefined || value === null ? '' : value;
                 }
-                if (value) {
+                if (value || !that.hasOptionLabel()) {
                     that._initialIndex = null;
                 }
                 this.trigger('set', { value: value });

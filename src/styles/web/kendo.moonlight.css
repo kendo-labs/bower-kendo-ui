@@ -1421,11 +1421,6 @@ html .km-pane-wrapper .km-widget,
   div.km-pane-wrapper a {
     color: #fff;
   }
-  .km-pane-wrapper .k-icon {
-    background-image: url('Moonlight/sprite_2x.png');
-    -webkit-background-size: 21.2em 21em;
-            background-size: 21.2em 21em;
-  }
 }
 .km-pane-wrapper .k-mobile-list .k-item,
 .km-pane-wrapper .k-mobile-list .k-edit-field,

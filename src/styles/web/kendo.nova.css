@@ -1372,11 +1372,6 @@ html .km-pane-wrapper .km-widget,
   div.km-pane-wrapper a {
     color: #32364c;
   }
-  .km-pane-wrapper .k-icon {
-    background-image: url('Nova/sprite_2x.png');
-    -webkit-background-size: 21.2em 21em;
-            background-size: 21.2em 21em;
-  }
 }
 .km-pane-wrapper .k-mobile-list .k-check,
 .km-pane-wrapper .k-mobile-list .k-edit-field textarea {

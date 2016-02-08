@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.1.125'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.1.208'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -16480,7 +16480,7 @@
                 }
             },
             _buttonClick: function (e) {
-                var that = this, popup, target, item, splitContainer, isSplitButtonArrow = e.target.closest('.' + SPLIT_BUTTON_ARROW).length, handler, eventData;
+                var that = this, popup, target, item, splitContainer, isSplitButtonArrow = e.target.closest('.' + SPLIT_BUTTON_ARROW).length, handler, eventData, urlTarget;
                 e.preventDefault();
                 if (isSplitButtonArrow) {
                     that._toggle(e);
@@ -16524,7 +16524,10 @@
                     that.trigger(CLICK, eventData);
                 }
                 if (item.options.url) {
-                    window.location.href = item.options.url;
+                    if (item.options.attributes && item.options.attributes.target) {
+                        urlTarget = item.options.attributes.target;
+                    }
+                    window.open(item.options.url, urlTarget || '_self');
                 }
                 if (target.hasClass(OVERFLOW_BUTTON)) {
                     that.popup.close();
@@ -17607,7 +17610,7 @@
                 if (filterValue || filterValue === 0) {
                     expressions = that.dataSource.filter() || {};
                     removeFiltersForField(expressions, valueField);
-                    filters = expressions.filters || [];
+                    filters = (expressions.filters || []).slice(0);
                     filters.push({
                         field: valueField,
                         operator: 'eq',
@@ -18342,7 +18345,7 @@
                     if (link.href.indexOf('#') != -1) {
                         e.preventDefault();
                     }
-                    if (that.options.disableDates(value)) {
+                    if (that.options.disableDates(value) && that._view.name == 'month') {
                         return;
                     }
                     that._click($(link));
@@ -18741,7 +18744,7 @@
             _click: function (link) {
                 var that = this, options = that.options, currentValue = new Date(+that._current), value = that._toDateObject(link);
                 adjustDST(value, 0);
-                if (that.options.disableDates(value)) {
+                if (that.options.disableDates(value) && that._view.name == 'month') {
                     value = that._value;
                 }
                 that._view.setDate(currentValue, value);
@@ -19256,6 +19259,13 @@
             }
             return $.noop;
         }
+        function convertDatesArray(dates) {
+            var result = [];
+            for (var i = 0; i < dates.length; i++) {
+                result.push(dates[i].setHours(0, 0, 0, 0));
+            }
+            return result;
+        }
         function createDisabledExpr(dates) {
             var body, callback, disabledDates = [], days = [
                     'su',
@@ -19265,15 +19275,20 @@
                     'th',
                     'fr',
                     'sa'
-                ];
-            for (var i = 0; i < dates.length; i++) {
-                var day = dates[i].toLowerCase();
-                var index = $.inArray(day, days);
-                if (index > -1) {
-                    disabledDates.push(index);
+                ], searchExpression = 'if (found) {' + ' return true ' + '} else {' + 'return false' + '}';
+            if (dates[0] instanceof DATE) {
+                disabledDates = convertDatesArray(dates);
+                body = 'var found = date && $.inArray(date.setHours(0, 0, 0, 0),[' + disabledDates + ']) > -1;' + searchExpression;
+            } else {
+                for (var i = 0; i < dates.length; i++) {
+                    var day = dates[i].slice(0, 2).toLowerCase();
+                    var index = $.inArray(day, days);
+                    if (index > -1) {
+                        disabledDates.push(index);
+                    }
                 }
+                body = 'var found = date && $.inArray(date.getDay(),[' + disabledDates + ']) > -1;' + searchExpression;
             }
-            body = 'var found = date && $.inArray(date.getDay(),[' + disabledDates + ']) > -1;' + 'if (found) {' + ' return true ' + '} else {' + 'return false' + '}';
             callback = new Function('date', body);
             return callback;
         }
@@ -20514,7 +20529,7 @@
                     value = that._accessor() || that.listView.value()[0];
                     return value === undefined || value === null ? '' : value;
                 }
-                if (value) {
+                if (value || !that.hasOptionLabel()) {
                     that._initialIndex = null;
                 }
                 this.trigger('set', { value: value });
@@ -21650,7 +21665,6 @@
                     that._fetchData();
                 }
                 listView.value(value).done(function () {
-                    that._selectValue(listView.selectedDataItems()[0]);
                     if (that.selectedIndex === -1) {
                         that._accessor(value);
                         that.input.val(value);
@@ -30147,8 +30161,13 @@
                 if (!item) {
                     return;
                 }
-                var ul = this.ul[0], itemOffsetTop = item.offsetTop, itemOffsetHeight = item.offsetHeight, ulScrollTop = ul.scrollTop, ulOffsetHeight = ul.clientHeight, bottomDistance = itemOffsetTop + itemOffsetHeight;
-                ul.scrollTop = ulScrollTop > itemOffsetTop ? itemOffsetTop : bottomDistance > ulScrollTop + ulOffsetHeight ? bottomDistance - ulOffsetHeight : ulScrollTop;
+                var content = this.list[0], itemOffsetTop = item.offsetTop, itemOffsetHeight = item.offsetHeight, contentScrollTop = content.scrollTop, contentOffsetHeight = content.clientHeight, bottomDistance = itemOffsetTop + itemOffsetHeight;
+                if (contentScrollTop > itemOffsetTop) {
+                    contentScrollTop = itemOffsetTop;
+                } else if (bottomDistance > contentScrollTop + contentOffsetHeight) {
+                    contentScrollTop = bottomDistance - contentOffsetHeight;
+                }
+                content.scrollTop = contentScrollTop;
             },
             select: function (li) {
                 var that = this, options = that.options, current = that._current, selection;
@@ -38836,10 +38855,7 @@
                 deregister();
                 if (widget) {
                     if (widget.element) {
-                        widget = kendoWidgetInstance(widget.element);
-                        if (widget) {
-                            widget.destroy();
-                        }
+                        widget.destroy();
                     }
                     widget = null;
                 }

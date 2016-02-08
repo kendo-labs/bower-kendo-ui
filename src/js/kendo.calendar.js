@@ -55,7 +55,7 @@
                     if (link.href.indexOf('#') != -1) {
                         e.preventDefault();
                     }
-                    if (that.options.disableDates(value)) {
+                    if (that.options.disableDates(value) && that._view.name == 'month') {
                         return;
                     }
                     that._click($(link));
@@ -454,7 +454,7 @@
             _click: function (link) {
                 var that = this, options = that.options, currentValue = new Date(+that._current), value = that._toDateObject(link);
                 adjustDST(value, 0);
-                if (that.options.disableDates(value)) {
+                if (that.options.disableDates(value) && that._view.name == 'month') {
                     value = that._value;
                 }
                 that._view.setDate(currentValue, value);
@@ -969,6 +969,13 @@
             }
             return $.noop;
         }
+        function convertDatesArray(dates) {
+            var result = [];
+            for (var i = 0; i < dates.length; i++) {
+                result.push(dates[i].setHours(0, 0, 0, 0));
+            }
+            return result;
+        }
         function createDisabledExpr(dates) {
             var body, callback, disabledDates = [], days = [
                     'su',
@@ -978,15 +985,20 @@
                     'th',
                     'fr',
                     'sa'
-                ];
-            for (var i = 0; i < dates.length; i++) {
-                var day = dates[i].toLowerCase();
-                var index = $.inArray(day, days);
-                if (index > -1) {
-                    disabledDates.push(index);
+                ], searchExpression = 'if (found) {' + ' return true ' + '} else {' + 'return false' + '}';
+            if (dates[0] instanceof DATE) {
+                disabledDates = convertDatesArray(dates);
+                body = 'var found = date && $.inArray(date.setHours(0, 0, 0, 0),[' + disabledDates + ']) > -1;' + searchExpression;
+            } else {
+                for (var i = 0; i < dates.length; i++) {
+                    var day = dates[i].slice(0, 2).toLowerCase();
+                    var index = $.inArray(day, days);
+                    if (index > -1) {
+                        disabledDates.push(index);
+                    }
                 }
+                body = 'var found = date && $.inArray(date.getDay(),[' + disabledDates + ']) > -1;' + searchExpression;
             }
-            body = 'var found = date && $.inArray(date.getDay(),[' + disabledDates + ']) > -1;' + 'if (found) {' + ' return true ' + '} else {' + 'return false' + '}';
             callback = new Function('date', body);
             return callback;
         }

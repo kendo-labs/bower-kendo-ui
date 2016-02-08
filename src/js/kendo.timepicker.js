@@ -154,8 +154,13 @@
                 if (!item) {
                     return;
                 }
-                var ul = this.ul[0], itemOffsetTop = item.offsetTop, itemOffsetHeight = item.offsetHeight, ulScrollTop = ul.scrollTop, ulOffsetHeight = ul.clientHeight, bottomDistance = itemOffsetTop + itemOffsetHeight;
-                ul.scrollTop = ulScrollTop > itemOffsetTop ? itemOffsetTop : bottomDistance > ulScrollTop + ulOffsetHeight ? bottomDistance - ulOffsetHeight : ulScrollTop;
+                var content = this.list[0], itemOffsetTop = item.offsetTop, itemOffsetHeight = item.offsetHeight, contentScrollTop = content.scrollTop, contentOffsetHeight = content.clientHeight, bottomDistance = itemOffsetTop + itemOffsetHeight;
+                if (contentScrollTop > itemOffsetTop) {
+                    contentScrollTop = itemOffsetTop;
+                } else if (bottomDistance > contentScrollTop + contentOffsetHeight) {
+                    contentScrollTop = bottomDistance - contentOffsetHeight;
+                }
+                content.scrollTop = contentScrollTop;
             },
             select: function (li) {
                 var that = this, options = that.options, current = that._current, selection;

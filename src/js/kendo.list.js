@@ -934,7 +934,7 @@
                 if (filterValue || filterValue === 0) {
                     expressions = that.dataSource.filter() || {};
                     removeFiltersForField(expressions, valueField);
-                    filters = expressions.filters || [];
+                    filters = (expressions.filters || []).slice(0);
                     filters.push({
                         field: valueField,
                         operator: 'eq',

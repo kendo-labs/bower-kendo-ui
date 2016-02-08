@@ -7424,9 +7424,7 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-drawer a {
   text-decoration: none;
 }
-.km-ios7 .km-list > li label,
-.km-ios7 .km-list fieldset textarea,
-.km-ios7 .km-list fieldset input,
+.km-ios7 .km-list .km-label-above,
 .km-ios7 .km-checkbox-label,
 .km-ios7 .km-radio-label {
   color: #8f8f8f;
