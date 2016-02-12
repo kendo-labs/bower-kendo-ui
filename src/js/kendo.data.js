@@ -393,7 +393,7 @@
                 return composite;
             },
             set: function (field, value) {
-                var that = this, composite = field.indexOf('.') >= 0, current = kendo.getter(field, true)(that);
+                var that = this, isSetPrevented = false, composite = field.indexOf('.') >= 0, current = kendo.getter(field, true)(that);
                 if (current !== value) {
                     if (current instanceof Observable && this._handlers[field]) {
                         if (this._handlers[field].get) {
@@ -401,10 +401,11 @@
                         }
                         current.unbind(CHANGE, this._handlers[field].change);
                     }
-                    if (!that.trigger('set', {
-                            field: field,
-                            value: value
-                        })) {
+                    isSetPrevented = that.trigger('set', {
+                        field: field,
+                        value: value
+                    });
+                    if (!isSetPrevented) {
                         if (!composite) {
                             value = that.wrap(value, field, function () {
                                 return that;
@@ -415,6 +416,7 @@
                         }
                     }
                 }
+                return isSetPrevented;
             },
             parent: noop,
             wrap: function (object, field, parent) {
@@ -560,11 +562,14 @@
             },
             set: function (field, value, initiator) {
                 var that = this;
+                var dirty = that.dirty;
                 if (that.editable(field)) {
                     value = that._parse(field, value);
                     if (!equal(value, that.get(field))) {
                         that.dirty = true;
-                        ObservableObject.fn.set.call(that, field, value, initiator);
+                        if (ObservableObject.fn.set.call(that, field, value, initiator) && !dirty) {
+                            that.dirty = dirty;
+                        }
                     }
                 }
             },

@@ -10734,12 +10734,13 @@ span.k-selectbox .k-input {
   padding: 0.643em 0;
   text-indent: .714em;
 }
-input.k-textbox {
+input.k-textbox,
+.k-ff input.k-textbox {
   height: 2.857em;
 }
 .k-button {
   line-height: 1.143em;
-  padding: 11px 14px;
+  padding: .82em 14px;
 }
 .k-tabstrip > .k-content,
 .k-panelbar .k-tabstrip > .k-content {

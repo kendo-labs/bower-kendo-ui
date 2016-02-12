@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.1.208'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.1.212'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -5132,7 +5132,7 @@
                 return composite;
             },
             set: function (field, value) {
-                var that = this, composite = field.indexOf('.') >= 0, current = kendo.getter(field, true)(that);
+                var that = this, isSetPrevented = false, composite = field.indexOf('.') >= 0, current = kendo.getter(field, true)(that);
                 if (current !== value) {
                     if (current instanceof Observable && this._handlers[field]) {
                         if (this._handlers[field].get) {
@@ -5140,10 +5140,11 @@
                         }
                         current.unbind(CHANGE, this._handlers[field].change);
                     }
-                    if (!that.trigger('set', {
-                            field: field,
-                            value: value
-                        })) {
+                    isSetPrevented = that.trigger('set', {
+                        field: field,
+                        value: value
+                    });
+                    if (!isSetPrevented) {
                         if (!composite) {
                             value = that.wrap(value, field, function () {
                                 return that;
@@ -5154,6 +5155,7 @@
                         }
                     }
                 }
+                return isSetPrevented;
             },
             parent: noop,
             wrap: function (object, field, parent) {
@@ -5299,11 +5301,14 @@
             },
             set: function (field, value, initiator) {
                 var that = this;
+                var dirty = that.dirty;
                 if (that.editable(field)) {
                     value = that._parse(field, value);
                     if (!equal(value, that.get(field))) {
                         that.dirty = true;
-                        ObservableObject.fn.set.call(that, field, value, initiator);
+                        if (ObservableObject.fn.set.call(that, field, value, initiator) && !dirty) {
+                            that.dirty = dirty;
+                        }
                     }
                 }
             },

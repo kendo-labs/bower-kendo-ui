@@ -2204,7 +2204,7 @@ td.k-state-focused.k-state-selected {
   background-color: #fff;
 }
 .k-calendar .k-header .k-state-hover {
-  background-color: #283593;
+  background-color: #32408f;
 }
 .k-calendar .k-footer .k-nav-today {
   color: #3f51b5;
@@ -2348,8 +2348,8 @@ td.k-group-cell,
 .k-grouping-header .k-group-indicator,
 .k-pivot-toolbar .k-button {
   color: #ffffff;
-  background-color: #283593;
-  border-color: #283593;
+  background-color: #32408f;
+  border-color: #32408f;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -2830,6 +2830,38 @@ div.k-scheduler-marquee:after {
   color: #444444;
 }
 /* Responsive styles */
+@media only screen and (max-width: 370px) {
+  .k-webkit .k-pager-refresh,
+  .k-ff .k-pager-refresh,
+  .k-ie11 .k-pager-refresh,
+  .k-safari .k-pager-refresh {
+    display: none;
+  }
+}
+@media only screen and (max-width: 590px) {
+  .k-webkit .k-pager-refresh,
+  .k-ff .k-pager-refresh,
+  .k-ie11 .k-pager-refresh,
+  .k-safari .k-pager-refresh {
+    margin-right: 0;
+  }
+}
+@media only screen and (max-width: 530px) {
+  .k-webkit .k-pager-sizes,
+  .k-ff .k-pager-sizes,
+  .k-ie11 .k-pager-sizes,
+  .k-safari .k-pager-sizes {
+    display: none;
+  }
+}
+@media only screen and (max-width: 687px) {
+  .k-webkit .k-pager-info,
+  .k-ff .k-pager-info,
+  .k-ie11 .k-pager-info,
+  .k-safari .k-pager-info {
+    display: none;
+  }
+}
 @media only screen and (max-width: 1024px) {
   .k-webkit,
   .k-ff,
@@ -3109,6 +3141,7 @@ div.k-scheduler-marquee:after {
     right: 0.6em;
     width: 1.333em;
     height: 1.333em;
+    background-position: 0 -30px;
   }
   .k-webkit .k-pager-numbers + .k-link,
   .k-ff .k-pager-numbers + .k-link,
@@ -3185,7 +3218,7 @@ div.k-scheduler-marquee:after {
     display: inline-block;
   }
 }
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 755px) {
   .k-webkit .k-pager-info,
   .k-ff .k-pager-info,
   .k-ie11 .k-pager-info,
@@ -3193,7 +3226,7 @@ div.k-scheduler-marquee:after {
     display: none;
   }
 }
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 572px) {
   .k-webkit .k-pager-sizes,
   .k-ff .k-pager-sizes,
   .k-ie11 .k-pager-sizes,

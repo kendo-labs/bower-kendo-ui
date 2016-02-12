@@ -201,7 +201,7 @@
 @secondary-background-color: contrast(@background, lighten(@background, 14%), darken(@background, 2%), 0.5);
 @secondary-hover-background-color: #5c6bc0;
 @secondary-header-color: rgba(256, 256, 256, 0.5);
-@secondary-header-background-color: #283593;
+@secondary-header-background-color: darken(@accent, 10%);
 
 /* Kendo skin */
 
@@ -3465,6 +3465,41 @@ div.k-scheduler-marquee:after {
 }
 
 /* Responsive styles */
+@media only screen and (max-width: 370px) {
+    .k-webkit .k-pager-refresh,
+    .k-ff .k-pager-refresh,
+    .k-ie11 .k-pager-refresh,
+    .k-safari .k-pager-refresh {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 590px) {
+    .k-webkit .k-pager-refresh,
+    .k-ff .k-pager-refresh,
+    .k-ie11 .k-pager-refresh,
+    .k-safari .k-pager-refresh {
+        margin-right: 0;
+    }
+}
+
+@media only screen and (max-width: 530px) {
+    .k-webkit .k-pager-sizes,
+    .k-ff .k-pager-sizes,
+    .k-ie11 .k-pager-sizes,
+    .k-safari .k-pager-sizes {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 687px) {
+    .k-webkit .k-pager-info,
+    .k-ff .k-pager-info,
+    .k-ie11 .k-pager-info,
+    .k-safari .k-pager-info {
+        display: none;
+    }
+}
 
 @media only screen and (max-width: 1024px) {
     .k-webkit,
@@ -3635,6 +3670,7 @@ div.k-scheduler-marquee:after {
             right: 0.6em;
             width: 1.333em;
             height: 1.333em;
+            background-position: 0 -30px;
         }
 
         .k-pager-numbers + .k-link {
@@ -3691,7 +3727,7 @@ div.k-scheduler-marquee:after {
     }
 }
 
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 755px) {
     .k-webkit,
     .k-ff,
     .k-ie11,
@@ -3702,7 +3738,7 @@ div.k-scheduler-marquee:after {
     }
 }
 
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 572px) {
     .k-webkit,
     .k-ff,
     .k-ie11,
