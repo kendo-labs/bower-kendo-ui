@@ -1602,6 +1602,11 @@ input.k-checkbox,
   opacity: 0;
   width: 0;
   margin: 0;
+  -webkit-appearance: none;
+  overflow: hidden;
+}
+.k-ff input.k-checkbox,
+.k-ff .k-radio {
   position: absolute;
 }
 .k-checkbox-label {
@@ -2844,6 +2849,7 @@ form.k-filter-menu .k-textbox {
 }
 form.k-filter-menu .k-textbox {
   width: 100%;
+  margin-bottom: 3px;
 }
 .k-filter-help-text,
 .k-filter-menu .k-widget,

@@ -2513,7 +2513,7 @@
                     }
                     this.offlineData(state.concat(destroyed));
                     if (updatePristine) {
-                        this._pristineData = state;
+                        this._pristineData = this._readData(state);
                     }
                 }
             },

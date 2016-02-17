@@ -498,7 +498,8 @@ textarea.k-textbox:hover,
 .k-dropdown-wrap.k-state-active .k-select {
   border-color: #ff4350;
 }
-.k-numeric-wrap .k-link.k-state-selected {
+.k-numeric-wrap .k-link.k-state-selected,
+.k-grid .k-numeric-wrap .k-link.k-state-selected {
   background-color: #ff4350;
 }
 .k-dropdown .k-state-active .k-input {

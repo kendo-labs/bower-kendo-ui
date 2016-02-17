@@ -1598,6 +1598,11 @@ input.k-checkbox,
   opacity: 0;
   width: 0;
   margin: 0;
+  -webkit-appearance: none;
+  overflow: hidden;
+}
+.k-ff input.k-checkbox,
+.k-ff .k-radio {
   position: absolute;
 }
 .k-checkbox-label {

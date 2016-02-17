@@ -17342,11 +17342,6 @@ html .km-material .k-overflow-container.km-actionsheet > li {
   left: 50%;
   margin: 0 0 0 -90px;
 }
-.km-nova .km-scroller-release {
-  -ms-transform: translate(-50%, -1.5em);
-      transform: translate(-50%, -1.5em);
-  -webkit-transform: translate(-50%, -1.5em);
-}
 .km-nova .km-loader h1 {
   display: none;
   font-size: 1em;
@@ -18239,9 +18234,6 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 }
 .km-nova .km-list:not(.km-virtual-list) > li:last-child {
   border-bottom-width: 1px;
-}
-.km-nova .km-list > .km-load-more + li {
-  border-top: 0;
 }
 .km-nova .km-listview-link:after {
   border-width: .2rem .2rem 0 0;
