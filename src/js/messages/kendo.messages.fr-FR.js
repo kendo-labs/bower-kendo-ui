@@ -25,7 +25,7 @@
 
 (function(f){
     if (typeof define === 'function' && define.amd) {
-        define([ "../kendo.core" ], f);
+        define(["kendo.core"], f);
     } else {
         f();
     }
@@ -42,7 +42,9 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "gt": "Est postérieur",
     "lte": "Est antérieur ou égal à",
     "lt": "Est antérieur",
-    "neq": "N’est pas égal à"
+    "neq": "N’est pas égal à",
+    "isnull": "Est nulle",
+    "isnotnull": "N’est pas nulle"
   },
   "number": {
     "eq": "Est égal à",
@@ -50,7 +52,9 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "gt": "Est supérieur à",
     "lte": "Est inférieur ou égal à",
     "lt": "Est inférieur à",
-    "neq": "N’est pas égal à"
+    "neq": "N’est pas égal à",
+    "isnull": "Est nulle",
+    "isnotnull": "N’est pas nulle"
   },
   "string": {
     "endswith": "Se termine par",
@@ -58,11 +62,17 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "neq": "N’est pas égal à",
     "startswith": "Commence par",
     "contains": "Contient",
-    "doesnotcontain": "Ne contient pas"
+    "doesnotcontain": "Ne contient pas",
+    "isnull": "Est nulle",
+    "isnotnull": "N’est pas nulle",
+    "isempty": "Est vide",
+    "isnotempty": "N’est pas vide"
   },
   "enums": {
     "eq": "Est égal à",
-    "neq": "N’est pas égal à"
+    "neq": "N’est pas égal à",
+    "isnull": "Est nulle",
+    "isnotnull": "N’est pas nulle"
   }
 });
 }
@@ -78,7 +88,9 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "gt": "Est postérieur",
     "lte": "Est antérieur ou égal à",
     "lt": "Est antérieur",
-    "neq": "N’est pas égal à"
+    "neq": "N’est pas égal à",
+    "isnull": "Est nulle",
+    "isnotnull": "N’est pas nulle"
   },
   "number": {
     "eq": "Est égal à",
@@ -86,7 +98,9 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "gt": "Est supérieur à",
     "lte": "Est inférieur ou égal à",
     "lt": "Est inférieur à",
-    "neq": "N’est pas égal à"
+    "neq": "N’est pas égal à",
+    "isnull": "Est nulle",
+    "isnotnull": "N’est pas nulle"
   },
   "string": {
     "endswith": "Se termine par",
@@ -94,11 +108,17 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "neq": "N’est pas égal à",
     "startswith": "Commence par",
     "contains": "Contient",
-    "doesnotcontain": "Ne contient pas"
+    "doesnotcontain": "Ne contient pas",
+    "isnull": "Est nulle",
+    "isnotnull": "N’est pas nulle",
+    "isempty": "Est vide",
+    "isnotempty": "N’est pas vide"
   },
   "enums": {
     "eq": "Est égal à",
-    "neq": "N’est pas égal à"
+    "neq": "N’est pas égal à",
+    "isnull": "Est nulle",
+    "isnotnull": "N’est pas nulle"
   }
 });
 }

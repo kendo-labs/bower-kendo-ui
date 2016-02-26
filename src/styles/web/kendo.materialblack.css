@@ -2170,9 +2170,9 @@ span.k-colorpicker {
 .k-list-container {
   border-color: #606060;
 }
-td.k-state-focused.k-state-selected {
-  -webkit-box-shadow: none;
-          box-shadow: none;
+.k-grid td.k-state-focused.k-state-selected {
+  -webkit-box-shadow: inset 0 0 0 1px #ffffff;
+          box-shadow: inset 0 0 0 1px #ffffff;
 }
 .k-calendar td.k-state-focused,
 .k-calendar td.k-state-selected.k-state-focused {
@@ -2436,7 +2436,7 @@ td.k-group-cell,
 .k-grid tr.k-state-selected > td {
   border-color: #008dcc;
 }
-.k-grid tr:hover .k-state-selected,
+.k-grid td.k-state-selected:hover,
 .k-grid tr.k-state-selected:hover td {
   background-color: #00a2eb;
 }

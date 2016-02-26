@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.1.217'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.1.226'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2057,10 +2057,10 @@
                 }
                 kendo._widgetRegisteredCallbacks.push(callback);
             },
-            logToConsole: function (message) {
+            logToConsole: function (message, type) {
                 var console = window.console;
                 if (!kendo.suppressLog && typeof console != 'undefined' && console.log) {
-                    console.log(message);
+                    console[type || 'log'](message);
                 }
             }
         });
@@ -7957,7 +7957,9 @@
                 if (options.type) {
                     kendo.data.transports = kendo.data.transports || {};
                     kendo.data.schemas = kendo.data.schemas || {};
-                    if (kendo.data.transports[options.type] && !isPlainObject(kendo.data.transports[options.type])) {
+                    if (!kendo.data.transports[options.type]) {
+                        kendo.logToConsole('Unknown DataSource transport type \'' + options.type + '\'.\nVerify that registration scripts for this type are included after Kendo UI on the page.', 'warn');
+                    } else if (!isPlainObject(kendo.data.transports[options.type])) {
                         transport = new kendo.data.transports[options.type](extend(transportOptions, { data: data }));
                     } else {
                         transportOptions = extend(true, {}, kendo.data.transports[options.type], transportOptions);
@@ -14876,7 +14878,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-note">#=typeIcon#</span>' + '#=content#' + '<span class="k-icon k-i-close">Hide</span>' + '</div>';
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-note">#=typeIcon#</span>' + '#=content#' + '<span class="k-icon k-i-close">Hide</span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
         var Notification = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -14933,11 +14935,11 @@
                     that._compiled[value.type] = kendoTemplate(value.template || $('#' + value.templateId).html());
                 });
                 that._defaultCompiled = kendoTemplate(TEMPLATE);
+                that._safeCompiled = kendoTemplate(SAFE_TEMPLATE);
             },
-            _getCompiled: function (type) {
-                var that = this;
-                var defaultCompiled = that._defaultCompiled;
-                return type ? that._compiled[type] || defaultCompiled : defaultCompiled;
+            _getCompiled: function (type, safe) {
+                var defaultCompiled = safe ? this._safeCompiled : this._defaultCompiled;
+                return type ? this._compiled[type] || defaultCompiled : defaultCompiled;
             },
             _compileStacking: function (stacking, top, left) {
                 var that = this, paddings = {
@@ -15125,7 +15127,7 @@
                     return { elements: element };
                 });
             },
-            show: function (content, type) {
+            show: function (content, type, safe) {
                 var that = this, options = that.options, wrapper = $(WRAPPER), args, defaultArgs;
                 if (!type) {
                     type = INFO;
@@ -15146,7 +15148,7 @@
                     wrapper.addClass(KNOTIFICATION + '-' + type).toggleClass(KNOTIFICATION + '-button', options.button).attr('data-role', 'alert').css({
                         width: options.width,
                         height: options.height
-                    }).append(that._getCompiled(type)(args));
+                    }).append(that._getCompiled(type, safe)(args));
                     that.angular('compile', function () {
                         return {
                             elements: wrapper,
@@ -15161,6 +15163,9 @@
                     that.trigger(SHOW, { element: wrapper });
                 }
                 return that;
+            },
+            showText: function (content, type) {
+                this.show(content, type, true);
             },
             info: function (content) {
                 return this.show(content, INFO);
@@ -16377,7 +16382,8 @@
                     if (item.toolbar.options.type === 'button' && item.toolbar.options.isChild) {
                         item.toolbar.getParentGroup().refresh();
                     }
-                } else if (item.overflow) {
+                }
+                if (item.overflow) {
                     item.overflow.show();
                     if (item.overflow.options.type === 'button' && item.overflow.options.isChild) {
                         item.overflow.getParentGroup().refresh();
@@ -16472,7 +16478,13 @@
                 that.popup.container.attr(KENDO_UID_ATTR, this.uid);
             },
             _toggleOverflowAnchor: function () {
-                if (this.popup.element.children(':not(.' + OVERFLOW_HIDDEN + ', .' + POPUP + ')').length > 0) {
+                var hasVisibleChildren = false;
+                if (this.options.mobile) {
+                    hasVisibleChildren = this.popup.element.find('.' + OVERFLOW_CONTAINER).children(':not(.' + OVERFLOW_HIDDEN + ', .' + POPUP + ')').length > 0;
+                } else {
+                    hasVisibleChildren = this.popup.element.children(':not(.' + OVERFLOW_HIDDEN + ', .' + POPUP + ')').length > 0;
+                }
+                if (hasVisibleChildren) {
                     this.overflowAnchor.css({
                         visibility: 'visible',
                         width: ''
@@ -20594,7 +20606,10 @@
                 }
                 that.optionLabel.html(template(optionLabel)).off().click(proxy(that._click, that)).on(HOVEREVENTS, that._toggleHover);
                 that.angular('compile', function () {
-                    return { elements: that.optionLabel };
+                    return {
+                        elements: that.optionLabel,
+                        data: [{ dataItem: that._optionLabelDataItem() }]
+                    };
                 });
             },
             _optionLabelText: function () {
@@ -21131,7 +21146,7 @@
                     template = kendo.template(template);
                 }
                 that.valueTemplate = template;
-                if (that.hasOptionLabel()) {
+                if (that.hasOptionLabel() && !that.options.optionLabelTemplate) {
                     try {
                         that.valueTemplate(that._optionLabelDataItem());
                     } catch (e) {
@@ -22183,6 +22198,17 @@
             },
             refresh: function () {
                 this.listView.refresh();
+            },
+            _angularItems: function (cmd) {
+                var that = this;
+                that.angular(cmd, function () {
+                    return {
+                        elements: that.items(),
+                        data: $.map(that.dataSource.flatView(), function (dataItem) {
+                            return { dataItem: dataItem };
+                        })
+                    };
+                });
             },
             _listBound: function () {
                 var that = this;
@@ -31659,32 +31685,12 @@
         depends: ['draganddrop']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-minimize,.k-window-actions .k-i-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-minimize,.k-window-actions .k-i-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
         function defined(x) {
             return typeof x != 'undefined';
         }
         function constrain(value, low, high) {
             return Math.max(Math.min(parseInt(value, 10), high === Infinity ? high : parseInt(high, 10)), parseInt(low, 10));
-        }
-        function sizingAction(actionId, callback) {
-            return function () {
-                var that = this, wrapper = that.wrapper, style = wrapper[0].style, options = that.options;
-                if (options.isMaximized || options.isMinimized) {
-                    return that;
-                }
-                that.restoreOptions = {
-                    width: style.width,
-                    height: style.height
-                };
-                wrapper.children(KWINDOWRESIZEHANDLES).hide().end().children(KWINDOWTITLEBAR).find(MINIMIZE_MAXIMIZE).parent().hide().eq(0).before(templates.action({ name: 'Restore' }));
-                callback.call(that);
-                if (actionId == 'maximize') {
-                    that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().hide();
-                } else {
-                    that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().show();
-                }
-                return that;
-            };
         }
         function executableScript() {
             return !this.type || this.type.toLowerCase().indexOf('script') >= 0;
@@ -31917,6 +31923,8 @@
                 ACTIVATE,
                 DEACTIVATE,
                 CLOSE,
+                MINIMIZE,
+                MAXIMIZE,
                 REFRESH,
                 RESIZE,
                 RESIZEEND,
@@ -32330,32 +32338,51 @@
                 that.resize();
                 return that;
             },
-            maximize: sizingAction('maximize', function () {
-                var that = this, wrapper = that.wrapper, position = wrapper.position(), doc = $(document);
-                extend(that.restoreOptions, {
-                    left: position.left,
-                    top: position.top
+            _sizingAction: function (actionId, callback) {
+                var that = this, wrapper = that.wrapper, style = wrapper[0].style, options = that.options;
+                if (options.isMaximized || options.isMinimized) {
+                    return that;
+                }
+                that.restoreOptions = {
+                    width: style.width,
+                    height: style.height
+                };
+                wrapper.children(KWINDOWRESIZEHANDLES).hide().end().children(KWINDOWTITLEBAR).find(MINIMIZE_MAXIMIZE).parent().hide().eq(0).before(templates.action({ name: 'Restore' }));
+                callback.call(that);
+                that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().toggle(actionId !== 'maximize');
+                that.trigger(actionId);
+                return that;
+            },
+            maximize: function () {
+                this._sizingAction('maximize', function () {
+                    var that = this, wrapper = that.wrapper, position = wrapper.position(), doc = $(document);
+                    extend(that.restoreOptions, {
+                        left: position.left,
+                        top: position.top
+                    });
+                    wrapper.css({
+                        left: 0,
+                        top: 0,
+                        position: 'fixed'
+                    }).addClass(MAXIMIZEDSTATE);
+                    this._documentScrollTop = doc.scrollTop();
+                    this._documentScrollLeft = doc.scrollLeft();
+                    $('html, body').css(OVERFLOW, HIDDEN);
+                    that.options.isMaximized = true;
+                    that._onDocumentResize();
                 });
-                wrapper.css({
-                    left: 0,
-                    top: 0,
-                    position: 'fixed'
-                }).addClass(MAXIMIZEDSTATE);
-                this._documentScrollTop = doc.scrollTop();
-                this._documentScrollLeft = doc.scrollLeft();
-                $('html, body').css(OVERFLOW, HIDDEN);
-                that.options.isMaximized = true;
-                that._onDocumentResize();
-            }),
-            minimize: sizingAction('minimize', function () {
-                var that = this;
-                that.wrapper.css({
-                    height: '',
-                    minHeight: ''
+            },
+            minimize: function () {
+                this._sizingAction('minimize', function () {
+                    var that = this;
+                    that.wrapper.css({
+                        height: '',
+                        minHeight: ''
+                    });
+                    that.element.hide();
+                    that.options.isMinimized = true;
                 });
-                that.element.hide();
-                that.options.isMinimized = true;
-            }),
+            },
             pin: function (force) {
                 var that = this, win = $(window), wrapper = that.wrapper, top = parseInt(wrapper.css('top'), 10), left = parseInt(wrapper.css('left'), 10);
                 if (force || !that.options.pinned && !that.options.isMaximized) {

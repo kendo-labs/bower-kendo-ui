@@ -33,32 +33,12 @@
         depends: ['draganddrop']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-minimize,.k-window-actions .k-i-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-minimize,.k-window-actions .k-i-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
         function defined(x) {
             return typeof x != 'undefined';
         }
         function constrain(value, low, high) {
             return Math.max(Math.min(parseInt(value, 10), high === Infinity ? high : parseInt(high, 10)), parseInt(low, 10));
-        }
-        function sizingAction(actionId, callback) {
-            return function () {
-                var that = this, wrapper = that.wrapper, style = wrapper[0].style, options = that.options;
-                if (options.isMaximized || options.isMinimized) {
-                    return that;
-                }
-                that.restoreOptions = {
-                    width: style.width,
-                    height: style.height
-                };
-                wrapper.children(KWINDOWRESIZEHANDLES).hide().end().children(KWINDOWTITLEBAR).find(MINIMIZE_MAXIMIZE).parent().hide().eq(0).before(templates.action({ name: 'Restore' }));
-                callback.call(that);
-                if (actionId == 'maximize') {
-                    that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().hide();
-                } else {
-                    that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().show();
-                }
-                return that;
-            };
         }
         function executableScript() {
             return !this.type || this.type.toLowerCase().indexOf('script') >= 0;
@@ -291,6 +271,8 @@
                 ACTIVATE,
                 DEACTIVATE,
                 CLOSE,
+                MINIMIZE,
+                MAXIMIZE,
                 REFRESH,
                 RESIZE,
                 RESIZEEND,
@@ -704,32 +686,51 @@
                 that.resize();
                 return that;
             },
-            maximize: sizingAction('maximize', function () {
-                var that = this, wrapper = that.wrapper, position = wrapper.position(), doc = $(document);
-                extend(that.restoreOptions, {
-                    left: position.left,
-                    top: position.top
+            _sizingAction: function (actionId, callback) {
+                var that = this, wrapper = that.wrapper, style = wrapper[0].style, options = that.options;
+                if (options.isMaximized || options.isMinimized) {
+                    return that;
+                }
+                that.restoreOptions = {
+                    width: style.width,
+                    height: style.height
+                };
+                wrapper.children(KWINDOWRESIZEHANDLES).hide().end().children(KWINDOWTITLEBAR).find(MINIMIZE_MAXIMIZE).parent().hide().eq(0).before(templates.action({ name: 'Restore' }));
+                callback.call(that);
+                that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().toggle(actionId !== 'maximize');
+                that.trigger(actionId);
+                return that;
+            },
+            maximize: function () {
+                this._sizingAction('maximize', function () {
+                    var that = this, wrapper = that.wrapper, position = wrapper.position(), doc = $(document);
+                    extend(that.restoreOptions, {
+                        left: position.left,
+                        top: position.top
+                    });
+                    wrapper.css({
+                        left: 0,
+                        top: 0,
+                        position: 'fixed'
+                    }).addClass(MAXIMIZEDSTATE);
+                    this._documentScrollTop = doc.scrollTop();
+                    this._documentScrollLeft = doc.scrollLeft();
+                    $('html, body').css(OVERFLOW, HIDDEN);
+                    that.options.isMaximized = true;
+                    that._onDocumentResize();
                 });
-                wrapper.css({
-                    left: 0,
-                    top: 0,
-                    position: 'fixed'
-                }).addClass(MAXIMIZEDSTATE);
-                this._documentScrollTop = doc.scrollTop();
-                this._documentScrollLeft = doc.scrollLeft();
-                $('html, body').css(OVERFLOW, HIDDEN);
-                that.options.isMaximized = true;
-                that._onDocumentResize();
-            }),
-            minimize: sizingAction('minimize', function () {
-                var that = this;
-                that.wrapper.css({
-                    height: '',
-                    minHeight: ''
+            },
+            minimize: function () {
+                this._sizingAction('minimize', function () {
+                    var that = this;
+                    that.wrapper.css({
+                        height: '',
+                        minHeight: ''
+                    });
+                    that.element.hide();
+                    that.options.isMinimized = true;
                 });
-                that.element.hide();
-                that.options.isMinimized = true;
-            }),
+            },
             pin: function (force) {
                 var that = this, win = $(window), wrapper = that.wrapper, top = parseInt(wrapper.css('top'), 10), left = parseInt(wrapper.css('left'), 10);
                 if (force || !that.options.pinned && !that.options.isMaximized) {

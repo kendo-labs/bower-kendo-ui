@@ -331,7 +331,10 @@
                 }
                 that.optionLabel.html(template(optionLabel)).off().click(proxy(that._click, that)).on(HOVEREVENTS, that._toggleHover);
                 that.angular('compile', function () {
-                    return { elements: that.optionLabel };
+                    return {
+                        elements: that.optionLabel,
+                        data: [{ dataItem: that._optionLabelDataItem() }]
+                    };
                 });
             },
             _optionLabelText: function () {
@@ -868,7 +871,7 @@
                     template = kendo.template(template);
                 }
                 that.valueTemplate = template;
-                if (that.hasOptionLabel()) {
+                if (that.hasOptionLabel() && !that.options.optionLabelTemplate) {
                     try {
                         that.valueTemplate(that._optionLabelDataItem());
                     } catch (e) {

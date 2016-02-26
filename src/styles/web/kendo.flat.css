@@ -1522,7 +1522,8 @@ html .km-pane-wrapper .km-widget,
   border-color: #606572;
   font-weight: bold;
 }
-.k-grid tr:hover {
+.k-grid tr:hover,
+.k-grid td.k-state-selected:hover {
   color: #fff;
   background-color: #2eb3a6;
 }

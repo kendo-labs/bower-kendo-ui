@@ -56,3 +56,7 @@
 
 /* Default fonts for PDF export */
 @import "../fonts/DejaVu/dejavu.less";
+
+.kendo-pdf-hide-pseudo-elements {
+    &:before, &:after { display: none !important; }
+}

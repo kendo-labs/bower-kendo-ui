@@ -1985,7 +1985,7 @@ div.k-window.k-state-focused {
   color: #333;
   background-color: #e6f3fe;
 }
-.k-grid tr:hover .k-state-selected,
+.k-grid td.k-state-selected:hover,
 .k-grid tr.k-state-selected:hover td {
   background-color: #d6ecff;
 }

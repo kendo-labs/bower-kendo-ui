@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-note">#=typeIcon#</span>' + '#=content#' + '<span class="k-icon k-i-close">Hide</span>' + '</div>';
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-note">#=typeIcon#</span>' + '#=content#' + '<span class="k-icon k-i-close">Hide</span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
         var Notification = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -96,11 +96,11 @@
                     that._compiled[value.type] = kendoTemplate(value.template || $('#' + value.templateId).html());
                 });
                 that._defaultCompiled = kendoTemplate(TEMPLATE);
+                that._safeCompiled = kendoTemplate(SAFE_TEMPLATE);
             },
-            _getCompiled: function (type) {
-                var that = this;
-                var defaultCompiled = that._defaultCompiled;
-                return type ? that._compiled[type] || defaultCompiled : defaultCompiled;
+            _getCompiled: function (type, safe) {
+                var defaultCompiled = safe ? this._safeCompiled : this._defaultCompiled;
+                return type ? this._compiled[type] || defaultCompiled : defaultCompiled;
             },
             _compileStacking: function (stacking, top, left) {
                 var that = this, paddings = {
@@ -288,7 +288,7 @@
                     return { elements: element };
                 });
             },
-            show: function (content, type) {
+            show: function (content, type, safe) {
                 var that = this, options = that.options, wrapper = $(WRAPPER), args, defaultArgs;
                 if (!type) {
                     type = INFO;
@@ -309,7 +309,7 @@
                     wrapper.addClass(KNOTIFICATION + '-' + type).toggleClass(KNOTIFICATION + '-button', options.button).attr('data-role', 'alert').css({
                         width: options.width,
                         height: options.height
-                    }).append(that._getCompiled(type)(args));
+                    }).append(that._getCompiled(type, safe)(args));
                     that.angular('compile', function () {
                         return {
                             elements: wrapper,
@@ -324,6 +324,9 @@
                     that.trigger(SHOW, { element: wrapper });
                 }
                 return that;
+            },
+            showText: function (content, type) {
+                this.show(content, type, true);
             },
             info: function (content) {
                 return this.show(content, INFO);

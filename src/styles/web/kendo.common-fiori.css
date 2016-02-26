@@ -10729,6 +10729,10 @@ div.k-navigator .k-navigator-w {
   font-style: italic;
   src: url("fonts/DejaVu/DejaVuSansMono-BoldOblique.ttf?v=1.1") format("truetype");
 }
+.kendo-pdf-hide-pseudo-elements:before,
+.kendo-pdf-hide-pseudo-elements:after {
+  display: none !important;
+}
 .k-textbox > input,
 span.k-autocomplete .k-input,
 span.k-picker-wrap .k-input,

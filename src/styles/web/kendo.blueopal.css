@@ -990,9 +990,6 @@ div.k-filebrowser-dropzone em {
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;
 }
-.k-grid td.k-state-selected.k-state-focused {
-  background-color: #157299;
-}
 .k-grid tr.k-state-selected:hover,
 .k-grid td.k-state-selected:hover {
   background-color: #0d6a92;

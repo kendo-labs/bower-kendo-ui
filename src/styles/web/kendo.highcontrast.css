@@ -1561,7 +1561,7 @@ html .km-pane-wrapper .km-widget,
 .k-grid td.k-state-selected.k-state-focused {
   background-color: #870074;
 }
-.k-grid tr:hover .k-state-selected,
+.k-grid td.k-state-selected:hover,
 .k-grid tr.k-state-selected:hover td {
   background-color: #cb00ae;
 }

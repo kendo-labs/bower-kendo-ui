@@ -25,7 +25,7 @@
 
 (function(f){
     if (typeof define === 'function' && define.amd) {
-        define([ "../kendo.core" ], f);
+        define(["kendo.core"], f);
     } else {
         f();
     }
@@ -177,7 +177,11 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "startswith": "Comienza con",
     "contains": "Contiene",
     "doesnotcontain": "No contiene",
-    "endswith": "Termina en"
+    "endswith": "Termina en",
+    "isnull": "Es nulo",
+    "isnotnull": "No es nulo",
+    "isempty": "Está vacío",
+    "isnotempty": "No está vacío"
   },
   "number": {
     "eq": "Es igual a",
@@ -185,7 +189,9 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "gte": "Es mayor o igual que",
     "gt": "Es mayor que",
     "lte": "Es menor o igual que",
-    "lt": "Es menor que"
+    "lt": "Es menor que",
+    "isnull": "Es nulo",
+    "isnotnull": "No es nulo"
   },
   "date": {
     "eq": "Es igual a",
@@ -193,11 +199,15 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "gte": "Es posterior o igual a",
     "gt": "Es posterior",
     "lte": "Es anterior o igual a",
-    "lt": "Es anterior"
+    "lt": "Es anterior",
+    "isnull": "Es nulo",
+    "isnotnull": "No es nulo"
   },
   "enums": {
     "eq": "Es igual a",
-    "neq": "No es igual a"
+    "neq": "No es igual a",
+    "isnull": "Es nulo",
+    "isnotnull": "No es nulo"
   }
 });
 }

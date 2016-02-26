@@ -25,7 +25,7 @@
 
 (function(f){
     if (typeof define === 'function' && define.amd) {
-        define([ "../kendo.core" ], f);
+        define(["kendo.core"], f);
     } else {
         f();
     }
@@ -42,11 +42,15 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "gte": "É posterior ou igual a",
     "lt": "É anterior a",
     "lte": "É anterior ou igual a",
-    "neq": "Não é igual a"
+    "neq": "Não é igual a",
+    "isnull": "É nulo",
+    "isnotnull": "É não nulo"
   },
   "enums": {
     "eq": "É igual a",
-    "neq": "Não é igual a"
+    "neq": "Não é igual a",
+    "isnull": "É nulo",
+    "isnotnull": "É não nulo"
   },
   "number": {
     "eq": "É igual a",
@@ -54,7 +58,9 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "gte": "É maior que ou igual a",
     "lt": "É menor que",
     "lte": "É menor que ou igual a",
-    "neq": "Não é igual a"
+    "neq": "Não é igual a",
+    "isnull": "É nulo",
+    "isnotnull": "É não nulo"
   },
   "string": {
     "contains": "Contém",
@@ -62,7 +68,11 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "endswith": "Termina com",
     "eq": "É igual a",
     "neq": "Não é igual a",
-    "startswith": "Começa com"
+    "startswith": "Começa com",
+    "isnull": "É nulo",
+    "isnotnull": "É não nulo",
+    "isempty": "É vazio",
+    "isnotempty": "É não vazio"
   }
 });
 }
@@ -78,11 +88,15 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "gte": "É posterior ou igual a",
     "lt": "É anterior a",
     "lte": "É anterior ou igual a",
-    "neq": "Não é igual a"
+    "neq": "Não é igual a",
+    "isnull": "É nulo",
+    "isnotnull": "É não nulo"
   },
   "enums": {
     "eq": "É igual a",
-    "neq": "Não é igual a"
+    "neq": "Não é igual a",
+    "isnull": "É nulo",
+    "isnotnull": "É não nulo"
   },
   "number": {
     "eq": "É igual a",
@@ -90,7 +104,9 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "gte": "É maior que ou igual a",
     "lt": "É menor que",
     "lte": "É menor que ou igual a",
-    "neq": "Não é igual a"
+    "neq": "Não é igual a",
+    "isnull": "É nulo",
+    "isnotnull": "É não nulo"
   },
   "string": {
     "contains": "Contém",
@@ -98,7 +114,11 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "endswith": "Termina com",
     "eq": "É igual a",
     "neq": "Não é igual a",
-    "startswith": "Começa com"
+    "startswith": "Começa com",
+    "isnull": "É nulo",
+    "isnotnull": "É não nulo",
+    "isempty": "É vazio",
+    "isnotempty": "É não vazio"
   }
 });
 }
