@@ -2750,6 +2750,9 @@ div.k-grid-footer {
   float: left;
   cursor: default;
 }
+.k-widget.k-grid .k-pager-numbers {
+  position: relative;
+}
 .k-pager-info {
   float: right;
   padding: 0 1.333em;
@@ -8728,6 +8731,10 @@ div.k-navigator .k-navigator-w {
   width: 1.01em;
   height: 1em;
 }
+.km-pane-wrapper .k-column-menu .k-label .k-check {
+  height: 16px;
+  width: 16px;
+}
 .km-pane-wrapper .km-pane .k-mobile-list input:not([type="checkbox"]):not([type="radio"]),
 .km-pane-wrapper .km-pane .k-mobile-list select:not([multiple]),
 .km-pane-wrapper .km-pane .k-mobile-list textarea,
@@ -11147,8 +11154,10 @@ span.k-tooltip {
 .k-file {
   padding: 0.357em .167em 0.357em .8em;
 }
-.k-scheduler-table td,
 .k-scheduler-table th {
+  height: 1.8em;
+}
+.k-scheduler-table td {
   height: 1.286em;
 }
 .k-scheduler .k-scheduler-times th {

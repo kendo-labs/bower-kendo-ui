@@ -1601,7 +1601,7 @@ html .km-pane-wrapper .km-widget,
   border-color: #ffffff;
 }
 .k-checkbox:disabled + .k-checkbox-label {
-  color: #353535;
+  color: #999999;
 }
 .k-checkbox:disabled + .k-checkbox-label:hover:before {
   -webkit-box-shadow: none;
@@ -1611,7 +1611,7 @@ html .km-pane-wrapper .km-widget,
 .k-checkbox:checked:disabled + .k-checkbox-label:before,
 .k-checkbox:checked:disabled + .k-checkbox-label:active:before,
 .k-checkbox:checked:disabled + .k-checkbox-label:hover:before {
-  color: #353535;
+  color: #999999;
   background: #696969;
   border-color: #696969;
   border-radius: 1px;
@@ -1651,6 +1651,10 @@ html .km-pane-wrapper .km-widget,
 .k-checkbox:checked + .k-checkbox-label:active:after {
   -webkit-box-shadow: 0 0 0 12px rgba(63, 81, 181, 0.3);
           box-shadow: 0 0 0 12px rgba(63, 81, 181, 0.3);
+}
+.k-checkbox:disabled + .k-checkbox-label:active:after {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-checkbox:indeterminate + .k-checkbox-label:before {
   border-color: #3f51b5;
@@ -1905,6 +1909,12 @@ html .km-pane-wrapper .km-widget,
   .k-ie11 .k-gantt-toolbar > ul.k-gantt-views,
   .k-safari .k-gantt-toolbar > ul.k-gantt-views {
     top: 0;
+  }
+  .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
+    position: absolute;
   }
 }
 .k-button:hover .k-icon,
@@ -2282,6 +2292,27 @@ span.k-colorpicker {
 .k-toolbar {
   background-color: #616161;
   border-color: #4d4d4d;
+}
+.k-toolbar .k-toggle-button:focus {
+  background-color: transparent;
+  border-color: #ffffff;
+}
+.k-toolbar .k-toggle-button:hover {
+  background-color: #606060;
+}
+.k-toolbar .k-toggle-button.k-state-active {
+  color: #fff;
+  background-color: #3f51b5;
+  border-color: #3f51b5;
+}
+.k-toolbar .k-toggle-button.k-state-active:focus {
+  background-color: #3f51b5;
+  border-color: #2b387c;
+}
+.k-toolbar .k-toggle-button.k-state-active:hover {
+  color: #fff;
+  background-color: #32408f;
+  border-color: #32408f;
 }
 .k-toolbar .k-button {
   -webkit-box-shadow: none;

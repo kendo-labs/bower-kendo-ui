@@ -1330,6 +1330,9 @@ div.k-filebrowser-dropzone em {
 .k-grid-mobile .k-column-active + th.k-header {
   border-left-color: #4c5356;
 }
+.k-grid-mobile .k-button-icontext {
+  color: #fff;
+}
 html .km-pane-wrapper .km-widget,
 .k-ie .km-pane-wrapper .k-widget,
 .k-ie .km-pane-wrapper .k-group,
@@ -1617,7 +1620,9 @@ html .km-pane-wrapper .km-widget,
 }
 .k-treeview .k-icon,
 .k-scheduler-table .k-icon,
-.k-grid .k-hierarchy-cell .k-icon {
+.k-grid .k-hierarchy-cell .k-icon,
+.km-pane-wrapper .k-column-menu .k-sprite,
+.km-pane-wrapper .k-column-menu .k-check {
   background-color: #cccccc;
   border-radius: 13px;
 }
@@ -1785,6 +1790,30 @@ html .km-pane-wrapper .km-widget,
 }
 /* Responsive styles */
 @media only screen and (max-width: 1024px) {
+  .k-webkit .k-pager-numbers,
+  .k-ff .k-pager-numbers,
+  .k-ie11 .k-pager-numbers,
+  .k-safari .k-pager-numbers,
+  .k-webkit .k-grid .k-pager-numbers,
+  .k-ff .k-grid .k-pager-numbers,
+  .k-ie11 .k-grid .k-pager-numbers,
+  .k-safari .k-grid .k-pager-numbers {
+    -ms-transform: translatey(-100%);
+        transform: translatey(-100%);
+    -webkit-transform: translatey(-100%);
+  }
+  .k-webkit .k-pager-numbers .k-current-page,
+  .k-ff .k-pager-numbers .k-current-page,
+  .k-ie11 .k-pager-numbers .k-current-page,
+  .k-safari .k-pager-numbers .k-current-page,
+  .k-webkit .k-grid .k-pager-numbers .k-current-page,
+  .k-ff .k-grid .k-pager-numbers .k-current-page,
+  .k-ie11 .k-grid .k-pager-numbers .k-current-page,
+  .k-safari .k-grid .k-pager-numbers .k-current-page {
+    -ms-transform: translatey(100%);
+        transform: translatey(100%);
+    -webkit-transform: translatey(100%);
+  }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
@@ -1925,6 +1954,12 @@ html .km-pane-wrapper .km-widget,
   .k-ie11 .k-pager-numbers .k-link,
   .k-safari .k-pager-numbers .k-link {
     border-radius: 2px;
+  }
+  .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
+    position: absolute;
   }
 }
 .k-button-group .k-tool,

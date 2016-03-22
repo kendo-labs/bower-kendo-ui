@@ -1720,6 +1720,9 @@ div.km-split-horizontal > .km-content > .km-pane {
   display: block;
   position: absolute;
 }
+.km-widget .k-slider-vertical .k-draghandle {
+  left: -5px;
+}
 .km-widget .k-slider-tooltip {
   display: none;
 }
@@ -5637,8 +5640,6 @@ body:before {
 .km-material-dark .k-slider-selection,
 .km-material-dark .km-touch-scrollbar,
 .km-material-dark .km-pages .km-current-page,
-.km-material-dark .k-slider .k-draghandle,
-.km-material-dark .k-slider .k-draghandle:hover,
 .km-material-dark .km-actionsheet > li > a:focus,
 .km-material-dark .km-actionsheet > li > a:active,
 .km-material-dark li.km-state-active .km-listview-label,
@@ -6576,14 +6577,17 @@ html .km-material .k-overflow-container.km-actionsheet > li {
   top: 2px;
 }
 .km-material .k-slider-vertical .k-draghandle {
-  left: -0.5em;
+  left: -0.35em;
+}
+.km-material .k-slider-vertical .k-draghandle.k-state-focused {
+  margin-left: 0;
 }
 .km-material .k-slider-horizontal .k-slider-selection {
   margin-top: 0;
 }
 .km-material .k-slider-vertical .k-slider-selection {
   margin-left: -0.1em;
-  width: .2em;
+  width: .143em;
 }
 .km-material .k-slider-horizontal .k-slider-track {
   height: .143em;

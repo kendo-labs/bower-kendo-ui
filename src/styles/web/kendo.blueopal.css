@@ -2040,6 +2040,12 @@ textarea.k-textbox,
   .k-safari .k-pager-numbers .k-link {
     border-radius: 3px;
   }
+  .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
+    position: absolute;
+  }
 }
 .k-chart .k-mask {
   background-color: #fff;

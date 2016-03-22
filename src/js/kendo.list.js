@@ -866,42 +866,53 @@
                 var that = this;
                 var options = that.options;
                 var cascade = options.cascadeFrom;
-                var cascadeHandler;
                 var parent;
                 if (cascade) {
                     parent = that._parentWidget();
+                    that._cascadeHandlerProxy = proxy(that._cascadeHandler, that);
                     if (!parent) {
                         return;
                     }
+                    options.autoBind = false;
                     parent.bind('set', function () {
                         that.one('set', function (e) {
                             that._selectedValue = e.value;
                         });
                     });
-                    options.autoBind = false;
-                    cascadeHandler = proxy(function (e) {
-                        var valueBeforeCascade = this.value();
-                        this._userTriggered = e.userTriggered;
-                        if (this.listView.bound()) {
-                            this._clearSelection(parent, true);
-                        }
-                        this._cascadeSelect(parent, valueBeforeCascade);
-                    }, that);
-                    parent.first(CASCADE, cascadeHandler);
-                    parent._focused.bind('focus', function () {
-                        parent.unbind(CASCADE, cascadeHandler);
-                        parent.first(CHANGE, cascadeHandler);
-                    });
-                    parent._focused.bind('focusout', function () {
-                        parent.unbind(CHANGE, cascadeHandler);
-                        parent.first(CASCADE, cascadeHandler);
-                    });
+                    parent.first(CASCADE, that._cascadeHandlerProxy);
                     if (parent.listView.bound()) {
+                        that._toggleCascadeOnFocus();
                         that._cascadeSelect(parent);
-                    } else if (!parent.value()) {
-                        that.enable(false);
+                    } else {
+                        parent.one('dataBound', function () {
+                            that._toggleCascadeOnFocus();
+                        });
+                        if (!parent.value()) {
+                            that.enable(false);
+                        }
                     }
                 }
+            },
+            _toggleCascadeOnFocus: function () {
+                var that = this;
+                var parent = that._parentWidget();
+                parent._focused.bind('focus', function () {
+                    parent.unbind(CASCADE, that._cascadeHandlerProxy);
+                    parent.first(CHANGE, that._cascadeHandlerProxy);
+                });
+                parent._focused.bind('focusout', function () {
+                    parent.unbind(CHANGE, that._cascadeHandlerProxy);
+                    parent.first(CASCADE, that._cascadeHandlerProxy);
+                });
+            },
+            _cascadeHandler: function (e) {
+                var parent = this._parentWidget();
+                var valueBeforeCascade = this.value();
+                this._userTriggered = e.userTriggered;
+                if (this.listView.bound()) {
+                    this._clearSelection(parent, true);
+                }
+                this._cascadeSelect(parent, valueBeforeCascade);
             },
             _cascadeChange: function (parent) {
                 var that = this;
@@ -929,17 +940,11 @@
                 var dataItem = parent.dataItem();
                 var filterValue = dataItem ? parent._value(dataItem) : null;
                 var valueField = that.options.cascadeFromField || parent.options.dataValueField;
-                var expressions, filters;
+                var expressions;
                 that._valueBeforeCascade = valueBeforeCascade !== undefined ? valueBeforeCascade : that.value();
                 if (filterValue || filterValue === 0) {
                     expressions = that.dataSource.filter() || {};
                     removeFiltersForField(expressions, valueField);
-                    filters = (expressions.filters || []).slice(0);
-                    filters.push({
-                        field: valueField,
-                        operator: 'eq',
-                        value: filterValue
-                    });
                     var handler = function () {
                         that.unbind('dataBound', handler);
                         that._cascadeChange(parent);

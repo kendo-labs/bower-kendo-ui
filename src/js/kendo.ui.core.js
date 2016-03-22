@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.1.226'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.1.322'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -5625,10 +5625,10 @@
                     return a + ' !== \'\'';
                 },
                 isnull: function (a) {
-                    return a + ' === null || ' + a + ' === undefined';
+                    return '(' + a + ' === null || ' + a + ' === undefined)';
                 },
                 isnotnull: function (a) {
-                    return a + ' !== null && ' + a + ' !== undefined';
+                    return '(' + a + ' !== null && ' + a + ' !== undefined)';
                 }
             };
         }();
@@ -17559,42 +17559,53 @@
                 var that = this;
                 var options = that.options;
                 var cascade = options.cascadeFrom;
-                var cascadeHandler;
                 var parent;
                 if (cascade) {
                     parent = that._parentWidget();
+                    that._cascadeHandlerProxy = proxy(that._cascadeHandler, that);
                     if (!parent) {
                         return;
                     }
+                    options.autoBind = false;
                     parent.bind('set', function () {
                         that.one('set', function (e) {
                             that._selectedValue = e.value;
                         });
                     });
-                    options.autoBind = false;
-                    cascadeHandler = proxy(function (e) {
-                        var valueBeforeCascade = this.value();
-                        this._userTriggered = e.userTriggered;
-                        if (this.listView.bound()) {
-                            this._clearSelection(parent, true);
-                        }
-                        this._cascadeSelect(parent, valueBeforeCascade);
-                    }, that);
-                    parent.first(CASCADE, cascadeHandler);
-                    parent._focused.bind('focus', function () {
-                        parent.unbind(CASCADE, cascadeHandler);
-                        parent.first(CHANGE, cascadeHandler);
-                    });
-                    parent._focused.bind('focusout', function () {
-                        parent.unbind(CHANGE, cascadeHandler);
-                        parent.first(CASCADE, cascadeHandler);
-                    });
+                    parent.first(CASCADE, that._cascadeHandlerProxy);
                     if (parent.listView.bound()) {
+                        that._toggleCascadeOnFocus();
                         that._cascadeSelect(parent);
-                    } else if (!parent.value()) {
-                        that.enable(false);
+                    } else {
+                        parent.one('dataBound', function () {
+                            that._toggleCascadeOnFocus();
+                        });
+                        if (!parent.value()) {
+                            that.enable(false);
+                        }
                     }
                 }
+            },
+            _toggleCascadeOnFocus: function () {
+                var that = this;
+                var parent = that._parentWidget();
+                parent._focused.bind('focus', function () {
+                    parent.unbind(CASCADE, that._cascadeHandlerProxy);
+                    parent.first(CHANGE, that._cascadeHandlerProxy);
+                });
+                parent._focused.bind('focusout', function () {
+                    parent.unbind(CHANGE, that._cascadeHandlerProxy);
+                    parent.first(CASCADE, that._cascadeHandlerProxy);
+                });
+            },
+            _cascadeHandler: function (e) {
+                var parent = this._parentWidget();
+                var valueBeforeCascade = this.value();
+                this._userTriggered = e.userTriggered;
+                if (this.listView.bound()) {
+                    this._clearSelection(parent, true);
+                }
+                this._cascadeSelect(parent, valueBeforeCascade);
             },
             _cascadeChange: function (parent) {
                 var that = this;
@@ -17622,17 +17633,11 @@
                 var dataItem = parent.dataItem();
                 var filterValue = dataItem ? parent._value(dataItem) : null;
                 var valueField = that.options.cascadeFromField || parent.options.dataValueField;
-                var expressions, filters;
+                var expressions;
                 that._valueBeforeCascade = valueBeforeCascade !== undefined ? valueBeforeCascade : that.value();
                 if (filterValue || filterValue === 0) {
                     expressions = that.dataSource.filter() || {};
                     removeFiltersForField(expressions, valueField);
-                    filters = (expressions.filters || []).slice(0);
-                    filters.push({
-                        field: valueField,
-                        operator: 'eq',
-                        value: filterValue
-                    });
                     var handler = function () {
                         that.unbind('dataBound', handler);
                         that._cascadeChange(parent);
@@ -21994,6 +21999,7 @@
             ],
             setDataSource: function (dataSource) {
                 this.options.dataSource = dataSource;
+                this._state = '';
                 this._dataSource();
                 this.listView.setDataSource(this.dataSource);
                 if (this.options.autoBind) {
@@ -30921,7 +30927,9 @@
                     formattedValue = kendo.toString(date, options.format, options.culture);
                     if (formattedValue !== value) {
                         that.element.val(date === null ? value : formattedValue);
-                        that.element.trigger(CHANGE);
+                        if (value instanceof String) {
+                            that.element.trigger(CHANGE);
+                        }
                     }
                     return date;
                 }
@@ -38767,6 +38775,7 @@
                 return;
             }
             var value;
+            var haveChangeOnElement = false;
             if (isForm(element)) {
                 value = function () {
                     return formValue(element);
@@ -38784,7 +38793,9 @@
                 if (val === undefined) {
                     val = null;
                 }
+                haveChangeOnElement = true;
                 setTimeout(function () {
+                    haveChangeOnElement = false;
                     if (widget) {
                         var kNgModel = scope[widget.element.attr('k-ng-model')];
                         if (kNgModel) {
@@ -38800,7 +38811,6 @@
                     }
                 }, 0);
             };
-            var haveChangeOnElement = false;
             if (isForm(element)) {
                 element.on('change', function () {
                     haveChangeOnElement = true;
@@ -38886,9 +38896,7 @@
             var deregister = scope.$on('$destroy', function () {
                 deregister();
                 if (widget) {
-                    if (widget.element) {
-                        widget.destroy();
-                    }
+                    kendo.destroy(widget.element);
                     widget = null;
                 }
             });
@@ -39694,7 +39702,7 @@
                                     $log.warn(attrName + ' without a matching parent widget found. It can be one of the following: ' + parents.join(', '));
                                 } else {
                                     controller.template(templateName, template);
-                                    $element.remove();
+                                    element.remove();
                                 }
                             };
                         }

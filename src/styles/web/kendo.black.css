@@ -1750,7 +1750,7 @@ textarea.k-textbox,
   border-color: #0069d1;
 }
 .k-checkbox:disabled + .k-checkbox-label {
-  color: #363636;
+  color: #676767;
 }
 .k-checkbox:disabled + .k-checkbox-label:hover:before {
   -webkit-box-shadow: none;
@@ -1760,7 +1760,7 @@ textarea.k-textbox,
 .k-checkbox:checked:disabled + .k-checkbox-label:before,
 .k-checkbox:checked:disabled + .k-checkbox-label:active:before,
 .k-checkbox:checked:disabled + .k-checkbox-label:hover:before {
-  color: #363636;
+  color: #676767;
   background: #737373;
   border-color: #113718;
   border-radius: 3px;
@@ -1810,7 +1810,7 @@ textarea.k-textbox,
   border-color: #0069d1;
 }
 .k-radio:disabled + .k-radio-label {
-  color: #363636;
+  color: #676767;
 }
 .k-radio:disabled + .k-radio-label:before,
 .k-radio:disabled + .k-radio-label:active:before,
@@ -2039,6 +2039,12 @@ textarea.k-textbox,
   .k-ie11 .k-pager-numbers .k-link,
   .k-safari .k-pager-numbers .k-link {
     border-radius: 3px;
+  }
+  .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
+    position: absolute;
   }
 }
 .k-chart .k-mask {

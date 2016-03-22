@@ -1720,6 +1720,9 @@ div.km-split-horizontal > .km-content > .km-pane {
   display: block;
   position: absolute;
 }
+.km-widget .k-slider-vertical .k-draghandle {
+  left: -5px;
+}
 .km-widget .k-slider-tooltip {
   display: none;
 }
@@ -11290,6 +11293,15 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-flat .k-slider-selection {
   margin-left: 0;
 }
+.km-flat .k-slider-vertical .k-draghandle {
+  top: initial;
+  left: -6px;
+}
+.km-flat .k-slider-vertical .k-slider-selection {
+  width: .29rem;
+  margin-left: -2px;
+  border-radius: 3px;
+}
 /* Forms */
 .km-flat .km-list input[type=password],
 .km-flat .km-list input[type=search],
@@ -13333,7 +13345,7 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
   top: 2px;
 }
 .km-nova .k-slider-vertical .k-draghandle {
-  left: -0.665em;
+  left: -0.5em;
 }
 .km-nova .k-slider-horizontal .k-slider-selection {
   margin-top: 0;

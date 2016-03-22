@@ -312,6 +312,7 @@
                 return;
             }
             var value;
+            var haveChangeOnElement = false;
             if (isForm(element)) {
                 value = function () {
                     return formValue(element);
@@ -329,7 +330,9 @@
                 if (val === undefined) {
                     val = null;
                 }
+                haveChangeOnElement = true;
                 setTimeout(function () {
+                    haveChangeOnElement = false;
                     if (widget) {
                         var kNgModel = scope[widget.element.attr('k-ng-model')];
                         if (kNgModel) {
@@ -345,7 +348,6 @@
                     }
                 }, 0);
             };
-            var haveChangeOnElement = false;
             if (isForm(element)) {
                 element.on('change', function () {
                     haveChangeOnElement = true;
@@ -431,9 +433,7 @@
             var deregister = scope.$on('$destroy', function () {
                 deregister();
                 if (widget) {
-                    if (widget.element) {
-                        widget.destroy();
-                    }
+                    kendo.destroy(widget.element);
                     widget = null;
                 }
             });
@@ -1239,7 +1239,7 @@
                                     $log.warn(attrName + ' without a matching parent widget found. It can be one of the following: ' + parents.join(', '));
                                 } else {
                                     controller.template(templateName, template);
-                                    $element.remove();
+                                    element.remove();
                                 }
                             };
                         }

@@ -296,7 +296,9 @@
                     formattedValue = kendo.toString(date, options.format, options.culture);
                     if (formattedValue !== value) {
                         that.element.val(date === null ? value : formattedValue);
-                        that.element.trigger(CHANGE);
+                        if (value instanceof String) {
+                            that.element.trigger(CHANGE);
+                        }
                     }
                     return date;
                 }

@@ -1920,6 +1920,12 @@ html .km-pane-wrapper .km-widget,
   .k-safari .k-gantt-toolbar > ul.k-gantt-views {
     top: 0;
   }
+  .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
+    position: absolute;
+  }
 }
 @media only screen and (max-width: 678px) {
   .k-webkit .k-pager-info,

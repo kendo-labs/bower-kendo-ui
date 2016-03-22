@@ -1881,6 +1881,12 @@ html .km-pane-wrapper .km-widget,
   .k-safari .k-pager-numbers .k-link {
     border-radius: 0;
   }
+  .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
+    position: absolute;
+  }
 }
 .k-button,
 .k-split-button {

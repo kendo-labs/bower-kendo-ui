@@ -786,6 +786,9 @@ div.k-filebrowser-dropzone em {
 .k-dropzone .k-upload-status {
   color: #fff;
 }
+.k-upload-status .k-button:hover .k-delete {
+  background-color: #008886;
+}
 /* Progressbar */
 .k-progressbar-indeterminate {
   background: url('MetroBlack/indeterminate.gif');
@@ -1965,6 +1968,12 @@ html .km-pane-wrapper .km-widget,
   .k-ie11 .k-pager-numbers .k-link,
   .k-safari .k-pager-numbers .k-link {
     border-radius: 0;
+  }
+  .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
+    position: absolute;
   }
 }
 /* Metro Theme */

@@ -1736,47 +1736,47 @@ html .km-pane-wrapper .km-widget,
   background-color: #fff;
 }
 .k-radio-label:before {
-  border-color: #2f252e;
+  border-color: #fff;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: #1b141a;
   border-width: 1px;
 }
 .k-radio-label:hover:before,
 .k-radio:checked + .k-radio-label:hover:before {
-  border-color: #322831;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  border-color: #fff;
+  -webkit-box-shadow: 0 0 0 1px #fff;
+          box-shadow: 0 0 0 1px #fff;
 }
 .k-radio:checked + .k-radio-label:after {
-  background-color: #960081;
+  background-color: #fff;
   border-radius: 50%;
 }
 .k-radio-label:active:before {
-  border-color: #8c0078;
-  -webkit-box-shadow: 0 0 3px 0 #870074;
-          box-shadow: 0 0 3px 0 #870074;
+  border-color: #fff;
+  -webkit-box-shadow: 0 0 3px 0 #fff;
+          box-shadow: 0 0 3px 0 #fff;
 }
 .k-radio:checked + .k-radio-label:active:before {
-  -webkit-box-shadow: 0 0 3px 0 #870074;
-          box-shadow: 0 0 3px 0 #870074;
-  border-color: #8c0078;
+  -webkit-box-shadow: 0 0 3px 0 #fff;
+          box-shadow: 0 0 3px 0 #fff;
+  border-color: #fff;
 }
 .k-radio:disabled + .k-radio-label {
-  color: #3d313c;
+  color: #808080;
 }
 .k-radio:disabled + .k-radio-label:before,
 .k-radio:disabled + .k-radio-label:active:before,
 .k-radio:disabled + .k-radio-label:hover:after,
 .k-radio:disabled + .k-radio-label:hover:before {
-  background: #ff13dd;
-  border-color: #bfbfbf;
+  background: #1b141a;
+  border-color: #634b5f;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 .k-radio:focus + .k-radio-label:before {
-  border-color: #8c0078;
-  -webkit-box-shadow: 0 0 3px 0 #870074;
-          box-shadow: 0 0 3px 0 #870074;
+  border-color: #fff;
+  -webkit-box-shadow: 0 0 3px 0 #fff;
+          box-shadow: 0 0 3px 0 #fff;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
   .k-icon:not(.k-loading),
@@ -1988,6 +1988,12 @@ html .km-pane-wrapper .km-widget,
   .k-ie11 .k-pager-numbers .k-link,
   .k-safari .k-pager-numbers .k-link {
     border-radius: 12px;
+  }
+  .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
+  .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
+    position: absolute;
   }
 }
 .k-chart .k-mask {

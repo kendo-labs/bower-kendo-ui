@@ -2750,6 +2750,9 @@ div.k-grid-footer {
   float: left;
   cursor: default;
 }
+.k-widget.k-grid .k-pager-numbers {
+  position: relative;
+}
 .k-pager-info {
   float: right;
   padding: 0 1.333em;
@@ -8599,6 +8602,10 @@ div.k-navigator .k-navigator-w {
   text-indent: -9999px;
   width: 1.01em;
   height: 1em;
+}
+.km-pane-wrapper .k-column-menu .k-label .k-check {
+  height: 16px;
+  width: 16px;
 }
 .km-pane-wrapper .km-pane .k-mobile-list input:not([type="checkbox"]):not([type="radio"]),
 .km-pane-wrapper .km-pane .k-mobile-list select:not([multiple]),
