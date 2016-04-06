@@ -605,6 +605,10 @@ html .km-pane-wrapper .k-header {
 .k-static-header + .k-list > .k-item.k-first {
   border-top-color: #2eb3a6;
 }
+.k-group-header + div > .k-list > .k-item.k-first {
+  -webkit-box-shadow: 0 -1px 0px 0px #2eb3a6;
+          box-shadow: 0 -1px 0px 0px #2eb3a6;
+}
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
   background: #2eb3a6;

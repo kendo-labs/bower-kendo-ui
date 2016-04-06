@@ -88,6 +88,8 @@
 @fiori-list-group-text: #004990;
 @fiori-list-border: #ddd;
 
+@accent: #f44336;
+
 .km-fiori
 {
     background-color: @fiori-background;
@@ -432,4 +434,46 @@
 .km-fiori .km-rowdelete
 {
     background: @fiori-button-primary-background;
+}
+
+/* Nova theme features */
+.km-fiori label.km-required:after {
+    color: @accent;
+}
+
+.km-fiori .km-label-above {
+    color: darken(@fiori-button-border, 27%);
+}
+
+.km-fiori .km-legend-button,
+.km-fiori .km-list fieldset legend {
+    color: @fiori-list-group-text;
+    text-transform: uppercase;
+}
+
+.km-fiori .km-list fieldset legend {
+    border-color: #a4bdd4;
+}
+
+.km-fiori .km-list fieldset .km-inline-field {
+    border-color: @fiori-button-border;
+}
+
+/* Standalone Checkboxes and RadioButtons */
+.km-fiori .km-checkbox-label,
+.km-fiori .km-radio-label {
+    color: @fiori-text;
+}
+
+.km-fiori .km-checkbox:checked + .km-checkbox-label:after {
+    background-color: @fiori-button-selected-background;
+}
+
+.km-fiori .km-checkbox-label:before,
+.km-fiori .km-radio-label:before {
+    border-color: @fiori-button-border;
+}
+
+.km-fiori .km-radio:checked + .km-radio-label:after {
+    background: @fiori-button-selected-background;
 }

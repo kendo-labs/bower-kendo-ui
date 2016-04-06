@@ -630,13 +630,17 @@ html .km-pane-wrapper .k-header {
 .k-static-header + .k-list > .k-item.k-first {
   border-top-color: #b6b6b6;
 }
+.k-group-header + div > .k-list > .k-item.k-first {
+  -webkit-box-shadow: 0 -1px 0px 0px #b9b3b3;
+          box-shadow: 0 -1px 0px 0px #b9b3b3;
+}
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
   background: #b6b6b6;
   color: #fff;
 }
 .k-popup .k-list .k-item > .k-group {
-  background: #b6b6b6;
+  background: #b9b3b3;
   color: #fff;
   border-bottom-left-radius: 3px;
 }

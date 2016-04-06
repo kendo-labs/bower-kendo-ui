@@ -522,6 +522,10 @@ input.k-textbox:active {
 .k-popup .k-list .k-item {
   color: #00acc1;
 }
+.k-group-header + div > .k-list > .k-item.k-first {
+  -webkit-box-shadow: 0 -1px 0px 0px #ff4350;
+          box-shadow: 0 -1px 0px 0px #ff4350;
+}
 .k-popup .k-list .k-item > .k-group {
   background: #ff4350;
   color: #fff;
@@ -1677,7 +1681,7 @@ html .km-pane-wrapper .km-widget,
   .k-ff .k-grid .k-pager-numbers,
   .k-ie11 .k-grid .k-pager-numbers,
   .k-safari .k-grid .k-pager-numbers {
-    position: absolute;
+    position: relative;
     left: 5.6em;
     display: -moz-inline-flex;
     display: -webkit-inline-flex;

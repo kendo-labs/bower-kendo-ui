@@ -41,7 +41,7 @@
 @group-border-color: darken(@background, 21%);
 @content-background-color: @background;
 @hover-background-color: @hover-background;
-@hover-border-color: darken(@success, 29%);
+@hover-border-color: darken(@background, 44%);
 @hover-shadow: none;
 @select-background-color: @base;
 @select-border-color: @base;
@@ -825,6 +825,10 @@ html .km-pane-wrapper .k-header
     border-top-color: @hover-border-color;
 }
 
+.k-group-header + div > .k-list > .k-item.k-first {
+    box-shadow: 0 -1px 0px 0px @hover-border-color;
+}
+
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header
 {
@@ -835,7 +839,7 @@ html .km-pane-wrapper .k-header
 .k-popup .k-list .k-item > .k-group
 {
     background: @hover-border-color;
-    color: @selected-text-color;
+    color: @background;
     border-bottom-left-radius: @inner-border-radius;
 }
 
@@ -3110,7 +3114,7 @@ input.k-textbox:focus {
         
         .k-pager-numbers,
         .k-grid .k-pager-numbers {
-            position: absolute;
+            position: relative;
             left: 5em;
             display: inline-flex;
             flex-direction: column-reverse;

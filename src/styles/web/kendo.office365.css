@@ -566,16 +566,20 @@ html .km-pane-wrapper .k-header {
 .k-virtual-item.k-first,
 .k-group-header + .k-list > .k-item.k-first,
 .k-static-header + .k-list > .k-item.k-first {
-  border-top-color: #62b865;
+  border-top-color: #8f8f8f;
+}
+.k-group-header + div > .k-list > .k-item.k-first {
+  -webkit-box-shadow: 0 -1px 0px 0px #8f8f8f;
+          box-shadow: 0 -1px 0px 0px #8f8f8f;
 }
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
-  background: #62b865;
+  background: #8f8f8f;
   color: #333333;
 }
 .k-popup .k-list .k-item > .k-group {
-  background: #62b865;
-  color: #333333;
+  background: #8f8f8f;
+  color: #fff;
   border-bottom-left-radius: 0;
 }
 .k-marquee-text {
@@ -632,20 +636,20 @@ td.k-state-focused.k-state-selected {
 .k-mobile-list .k-recur-view .k-check:active {
   color: #000;
   background-color: #f4f4f4;
-  border-color: #62b865;
+  border-color: #8f8f8f;
 }
 /* this selector should be used separately, otherwise old IEs ignore the whole rule */
 .k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active {
   color: #000;
   background-color: #f4f4f4;
-  border-color: #62b865;
+  border-color: #8f8f8f;
 }
 .k-ie8 .k-window-titlebar .k-state-hover {
-  border-color: #62b865;
+  border-color: #8f8f8f;
 }
 .k-state-hover > .k-select,
 .k-state-focused > .k-select {
-  border-color: #62b865;
+  border-color: #8f8f8f;
 }
 .k-button:hover,
 .k-button.k-state-hover,
@@ -844,7 +848,7 @@ div.k-filebrowser-dropzone em {
 }
 .k-textbox:hover,
 .k-tiles li.k-state-hover {
-  border-color: #62b865;
+  border-color: #8f8f8f;
 }
 .k-tiles li.k-state-selected {
   border-color: #cde6f7;
@@ -1432,7 +1436,7 @@ html .km-pane-wrapper .km-widget,
   border-color: transparent;
 }
 .k-tabstrip-items .k-state-hover {
-  border-color: #62b865;
+  border-color: #8f8f8f;
 }
 .k-tabstrip-items .k-state-active,
 .k-panelbar .k-tabstrip-items .k-state-active {
@@ -1803,7 +1807,7 @@ html .km-pane-wrapper .km-widget,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover {
-    border-color: #62b865;
+    border-color: #8f8f8f;
     background-image: none;
     background-color: #f4f4f4;
   }
@@ -2472,7 +2476,7 @@ input.k-textbox:focus {
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover {
-    border-color: #62b865;
+    border-color: #8f8f8f;
     background-image: none;
     background-color: #f4f4f4;
   }
@@ -2539,7 +2543,7 @@ input.k-textbox:focus {
   .k-ff .k-grid .k-pager-numbers,
   .k-ie11 .k-grid .k-pager-numbers,
   .k-safari .k-grid .k-pager-numbers {
-    position: absolute;
+    position: relative;
     left: 5em;
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
@@ -2625,7 +2629,7 @@ input.k-textbox:focus {
   .k-safari .k-pager-numbers .k-current-page:hover .k-link {
     border-radius: 0;
     background-color: #f4f4f4;
-    border: 1px solid #62b865;
+    border: 1px solid #8f8f8f;
   }
   .k-webkit .k-pager-numbers .k-current-page .k-link:after,
   .k-ff .k-pager-numbers .k-current-page .k-link:after,

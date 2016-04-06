@@ -104,6 +104,10 @@
             },
             setOptions: function (options) {
                 var old = this.options;
+                var disableDates = options.disableDates;
+                if (disableDates) {
+                    options.disableDates = calendar.disabled(disableDates);
+                }
                 this.options = extend(old, options, {
                     change: old.change,
                     close: old.close,

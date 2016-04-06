@@ -5464,6 +5464,39 @@ body:before {
 .km-fiori .km-rowdelete {
   background: #009de0;
 }
+/* Nova theme features */
+.km-fiori label.km-required:after {
+  color: #f44336;
+}
+.km-fiori .km-label-above {
+  color: #7a7a7a;
+}
+.km-fiori .km-legend-button,
+.km-fiori .km-list fieldset legend {
+  color: #004990;
+  text-transform: uppercase;
+}
+.km-fiori .km-list fieldset legend {
+  border-color: #a4bdd4;
+}
+.km-fiori .km-list fieldset .km-inline-field {
+  border-color: #bfbfbf;
+}
+/* Standalone Checkboxes and RadioButtons */
+.km-fiori .km-checkbox-label,
+.km-fiori .km-radio-label {
+  color: #333;
+}
+.km-fiori .km-checkbox:checked + .km-checkbox-label:after {
+  background-color: #007cc0;
+}
+.km-fiori .km-checkbox-label:before,
+.km-fiori .km-radio-label:before {
+  border-color: #bfbfbf;
+}
+.km-fiori .km-radio:checked + .km-radio-label:after {
+  background: #007cc0;
+}
 /* Tablet Styles */
 .km-tablet .km-fiori.km-horizontal .km-navbar .km-button,
 .km-tablet .km-fiori.km-horizontal .km-toolbar .km-button {
@@ -5772,8 +5805,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .k-slider .k-draghandle:hover {
   border: 0;
   border-radius: 5em;
-  -webkit-box-shadow: 0 0 0 3px currentcolor;
-          box-shadow: 0 0 0 3px currentcolor;
 }
 .km-fiori .k-slider-track {
   margin: -0.5em 0.5em 0 0;
@@ -5812,6 +5843,10 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
   padding: .4em;
   outline: none;
   background: transparent;
+  margin-top: 0;
+  -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
 }
 .km-fiori .km-list .k-dropdown-wrap {
   padding: .2em;
@@ -5871,6 +5906,301 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 }
 .km-fiori .km-listview-label input[type=radio]:after {
   color: transparent;
+}
+/* Nova theme features */
+.km-fiori .km-thumbnail {
+  border-radius: 50%;
+}
+/* Label above */
+.km-fiori .km-label-above {
+  width: 100%;
+  font-size: 0.87em;
+  line-height: 1.2em;
+  display: block;
+  padding-top: .92em;
+  padding-bottom: 2.4em;
+  margin-left: .5em;
+}
+.km-fiori .km-inline-field {
+  display: inline-block;
+  position: relative;
+  width: -webkit-calc(48.39%);
+  width: calc(48.39%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.km-fiori .km-list .km-label-above input[type=text]:not(.k-input),
+.km-fiori .km-list .km-label-above input[type=password],
+.km-fiori .km-list .km-label-above input[type=search],
+.km-fiori .km-list .km-label-above input[type=number],
+.km-fiori .km-list .km-label-above input[type=tel],
+.km-fiori .km-list .km-label-above input[type=url],
+.km-fiori .km-list .km-label-above input[type=email],
+.km-fiori .km-list .km-label-above input[type=file],
+.km-fiori .km-list .km-label-above input[type=month],
+.km-fiori .km-list .km-label-above input[type=color],
+.km-fiori .km-list .km-label-above input[type=week],
+.km-fiori .km-list .km-label-above input[type=date],
+.km-fiori .km-list .km-label-above input[type=time],
+.km-fiori .km-list .km-label-above input[type=datetime],
+.km-fiori .km-list .km-label-above input[type=datetime-local],
+.km-fiori .km-list .km-label-above select:not([multiple]),
+.km-fiori .km-list .km-label-above .k-dropdown,
+.km-fiori .km-list .km-label-above textarea {
+  width: 100%;
+  right: 0;
+  margin-top: -5px;
+  padding-left: 0;
+  left: 1em;
+  -ms-transform: translateY(0);
+      transform: translateY(0);
+  -webkit-transform: translateY(0);
+}
+.km-fiori .km-list fieldset {
+  border: none;
+  padding: 0;
+  padding: 0 1em;
+  margin: -0.5em -0.7em;
+}
+.km-fiori .km-list fieldset legend {
+  text-indent: 0;
+  margin: 0 -1.61em;
+  font-weight: normal;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  padding: 0 1.61em 0;
+  width: 100%;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  padding: .45em 1em;
+  margin: 0 -1em;
+}
+.km-fiori .km-list fieldset .km-inline-field {
+  margin-top: 0;
+  margin-left: 0;
+  padding-left: 1.1em;
+  border-right-width: 1px;
+  border-right-style: solid;
+}
+.km-fiori .km-list fieldset .km-inline-field:first-of-type {
+  padding-left: 0;
+}
+.km-fiori .km-list fieldset textarea,
+.km-fiori .km-list fieldset input[type=password],
+.km-fiori .km-list fieldset input[type=search],
+.km-fiori .km-list fieldset input[type=number],
+.km-fiori .km-list fieldset input[type=tel],
+.km-fiori .km-list fieldset input[type=url],
+.km-fiori .km-list fieldset input[type=email],
+.km-fiori .km-list fieldset input[type=month],
+.km-fiori .km-list fieldset input[type=color],
+.km-fiori .km-list fieldset input[type=week],
+.km-fiori .km-list fieldset input[type=date],
+.km-fiori .km-list fieldset input[type=time],
+.km-fiori .km-list fieldset input[type=datetime],
+.km-fiori .km-list fieldset input[type=datetime-local],
+.km-fiori .km-list fieldset input[type=text]:not(.k-input),
+.km-fiori .km-list fieldset select:not([multiple]),
+.km-fiori .km-list fieldset .k-dropdown-wrap {
+  width: 100%;
+  position: relative;
+  -ms-transform: translateY(0);
+      transform: translateY(0);
+  -webkit-transform: translateY(0);
+}
+.km-fiori .km-list fieldset textarea {
+  width: 100%;
+  -ms-transform: translateY(0);
+      transform: translateY(0);
+  -webkit-transform: translateY(0);
+  margin-right: 0;
+  padding-left: 0;
+}
+.km-fiori .km-list fieldset > input[type=password],
+.km-fiori .km-list fieldset > input[type=search],
+.km-fiori .km-list fieldset > input[type=number],
+.km-fiori .km-list fieldset > input[type=tel],
+.km-fiori .km-list fieldset > input[type=url],
+.km-fiori .km-list fieldset > input[type=email],
+.km-fiori .km-list fieldset > input[type=month],
+.km-fiori .km-list fieldset > input[type=color],
+.km-fiori .km-list fieldset > input[type=week],
+.km-fiori .km-list fieldset > input[type=date],
+.km-fiori .km-list fieldset > input[type=time],
+.km-fiori .km-list fieldset > input[type=datetime],
+.km-fiori .km-list fieldset > input[type=datetime-local],
+.km-fiori .km-list fieldset > input[type=text]:not(.k-input),
+.km-fiori .km-list fieldset > select:not([multiple]),
+.km-fiori .km-list fieldset > .k-dropdown-wrap {
+  padding: 1.23em 0;
+}
+.km-fiori .km-list .km-inline-field input[type=text]:not(.k-input),
+.km-fiori .km-list .km-inline-field input[type=password],
+.km-fiori .km-list .km-inline-field input[type=search],
+.km-fiori .km-list .km-inline-field input[type=number],
+.km-fiori .km-list .km-inline-field input[type=tel],
+.km-fiori .km-list .km-inline-field input[type=url],
+.km-fiori .km-list .km-inline-field input[type=email],
+.km-fiori .km-list .km-inline-field input[type=file],
+.km-fiori .km-list .km-inline-field input[type=month],
+.km-fiori .km-list .km-inline-field input[type=color],
+.km-fiori .km-list .km-inline-field input[type=week],
+.km-fiori .km-list .km-inline-field input[type=date],
+.km-fiori .km-list .km-inline-field input[type=time],
+.km-fiori .km-list .km-inline-field input[type=datetime],
+.km-fiori .km-list .km-inline-field input[type=datetime-local],
+.km-fiori .km-list .km-inline-field select:not([multiple]),
+.km-fiori .km-list .km-inline-field .k-dropdown,
+.km-fiori .km-list .km-inline-field textarea {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  padding-left: 0;
+  padding-left: 1em;
+}
+.km-fiori .km-list .km-inline-field:first-of-type input[type=text]:not(.k-input),
+.km-fiori .km-list .km-inline-field:first-of-type input[type=password],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=search],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=number],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=tel],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=url],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=email],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=file],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=month],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=color],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=week],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=date],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=time],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=datetime],
+.km-fiori .km-list .km-inline-field:first-of-type input[type=datetime-local],
+.km-fiori .km-list .km-inline-field:first-of-type select:not([multiple]),
+.km-fiori .km-list .km-inline-field:first-of-type .k-dropdown,
+.km-fiori .km-list .km-inline-field:first-of-type textarea {
+  margin-left: 0;
+  padding-left: 0;
+}
+.km-fiori .km-list .km-full-width-slider {
+  position: relative;
+  margin-top: 0;
+  padding: 1.3em 0;
+  width: auto;
+  display: block;
+}
+.km-fiori .k-slider-horizontal .k-draghandle {
+  top: 2px;
+}
+.km-fiori .k-slider-vertical .k-draghandle {
+  left: -0.665em;
+}
+.km-fiori .k-slider-horizontal .k-slider-selection {
+  margin-top: 0;
+}
+.km-fiori .k-slider-vertical .k-slider-selection {
+  margin-left: -0.1em;
+  width: .29rem;
+}
+.km-fiori .k-slider-horizontal .k-slider-track {
+  height: .29rem;
+}
+.km-fiori .k-slider-vertical .k-slider-track {
+  width: .29rem;
+}
+.km-fiori .k-slider-selection {
+  margin-left: 0;
+}
+.km-fiori .k-slider .k-draghandle,
+.km-fiori .k-slider .k-draghandle:hover {
+  margin-top: -0.665em;
+  padding: 0;
+  background-clip: content-box;
+  -webkit-background-clip: content-box;
+}
+.km-fiori .k-slider .k-draghandle:active:before {
+  opacity: .4;
+}
+.km-fiori .k-slider .k-draghandle,
+.km-fiori .k-slider .k-draghandle:hover {
+  border: 0;
+  border-radius: 5em;
+}
+.km-fiori .k-slider-track {
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
+  border-radius: .5em;
+  border-width: 0;
+}
+.km-fiori .km-full-width-slider .k-slider-track {
+  margin-top: 0;
+}
+.km-fiori .k-slider-selection {
+  margin-left: 0;
+}
+/* Standalone Checkboxes and RadioButtons */
+.km-fiori input.km-checkbox,
+.km-fiori input.km-radio {
+  display: inline;
+  opacity: 0;
+  width: 0;
+  margin: 0;
+  height: 0;
+}
+.km-fiori .km-checkbox-label,
+.km-fiori .km-radio-label {
+  display: block;
+  position: relative;
+  vertical-align: middle;
+  font-size: 1.2em;
+  line-height: 1.5em;
+  margin-left: 1em;
+}
+.km-fiori .km-checkbox-label:before {
+  top: 0;
+  right: .7em;
+  left: auto;
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+  border-style: solid;
+}
+.km-fiori .km-checkbox-label:after {
+  top: 6px;
+  right: .85em;
+  left: auto;
+  width: 10px;
+  height: 10px;
+  vertical-align: middle;
+}
+.km-fiori input.km-checkbox:checked + .km-checkbox-label:after {
+  content: "";
+  font-size: 1.2em;
+  line-height: 1em;
+}
+.km-fiori .km-radio-label {
+  position: relative;
+  vertical-align: middle;
+  line-height: 1.5em;
+}
+.km-fiori .km-radio-label:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: .7em;
+  left: auto;
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 50%;
+}
+.km-fiori input.km-radio:checked + .km-radio-label:after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 11px;
+  right: 1em;
+  left: auto;
+  border-radius: 50%;
 }
 /* ActionSheet */
 .km-fiori .km-actionsheet > li > a {

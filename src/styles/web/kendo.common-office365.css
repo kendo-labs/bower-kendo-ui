@@ -3173,7 +3173,7 @@ html .k-grid-edit-row .k-tooltip {
   .k-ff .k-grid .k-pager-numbers,
   .k-ie11 .k-grid .k-pager-numbers,
   .k-safari .k-grid .k-pager-numbers {
-    position: absolute;
+    position: relative;
     left: 4.8em;
     display: -webkit-inline-box;
     display: -webkit-inline-flex;

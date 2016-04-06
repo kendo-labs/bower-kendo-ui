@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.1.322'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.1.406'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -4264,6 +4264,7 @@
                 surface: null,
                 global: false,
                 fastTap: false,
+                filter: null,
                 multiTouch: false,
                 enableSwipe: false,
                 minXDelta: 30,
@@ -16362,15 +16363,19 @@
             hide: function (candidate) {
                 var item = this._getItem(candidate);
                 if (item.toolbar) {
-                    item.toolbar.hide();
                     if (item.toolbar.options.type === 'button' && item.toolbar.options.isChild) {
+                        item.toolbar.hide();
                         item.toolbar.getParentGroup().refresh();
+                    } else if (!item.toolbar.options.hidden) {
+                        item.toolbar.hide();
                     }
                 }
                 if (item.overflow) {
-                    item.overflow.hide();
                     if (item.overflow.options.type === 'button' && item.overflow.options.isChild) {
+                        item.overflow.hide();
                         item.overflow.getParentGroup().refresh();
+                    } else if (!item.toolbar.options.hidden) {
+                        item.overflow.hide();
                     }
                 }
                 this.resize(true);
@@ -16378,15 +16383,19 @@
             show: function (candidate) {
                 var item = this._getItem(candidate);
                 if (item.toolbar) {
-                    item.toolbar.show();
                     if (item.toolbar.options.type === 'button' && item.toolbar.options.isChild) {
+                        item.toolbar.show();
                         item.toolbar.getParentGroup().refresh();
+                    } else if (item.toolbar.options.hidden) {
+                        item.toolbar.show();
                     }
                 }
                 if (item.overflow) {
-                    item.overflow.show();
                     if (item.overflow.options.type === 'button' && item.overflow.options.isChild) {
+                        item.toolbar.show();
                         item.overflow.getParentGroup().refresh();
+                    } else if (item.overflow.options.hidden) {
+                        item.overflow.show();
                     }
                 }
                 this.resize(true);
@@ -16596,7 +16605,7 @@
                             firstHasFocus = true;
                         }
                     }
-                    if (lastHasFocus && this.overflowAnchor.css('visibility') !== 'hidden') {
+                    if (lastHasFocus && this.overflowAnchor && this.overflowAnchor.css('visibility') !== 'hidden') {
                         e.preventDefault();
                         this.overflowAnchor.focus();
                     }
@@ -19416,6 +19425,10 @@
             },
             setOptions: function (options) {
                 var old = this.options;
+                var disableDates = options.disableDates;
+                if (disableDates) {
+                    options.disableDates = calendar.disabled(disableDates);
+                }
                 this.options = extend(old, options, {
                     change: old.change,
                     close: old.close,

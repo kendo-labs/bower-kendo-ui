@@ -826,15 +826,19 @@
             hide: function (candidate) {
                 var item = this._getItem(candidate);
                 if (item.toolbar) {
-                    item.toolbar.hide();
                     if (item.toolbar.options.type === 'button' && item.toolbar.options.isChild) {
+                        item.toolbar.hide();
                         item.toolbar.getParentGroup().refresh();
+                    } else if (!item.toolbar.options.hidden) {
+                        item.toolbar.hide();
                     }
                 }
                 if (item.overflow) {
-                    item.overflow.hide();
                     if (item.overflow.options.type === 'button' && item.overflow.options.isChild) {
+                        item.overflow.hide();
                         item.overflow.getParentGroup().refresh();
+                    } else if (!item.toolbar.options.hidden) {
+                        item.overflow.hide();
                     }
                 }
                 this.resize(true);
@@ -842,15 +846,19 @@
             show: function (candidate) {
                 var item = this._getItem(candidate);
                 if (item.toolbar) {
-                    item.toolbar.show();
                     if (item.toolbar.options.type === 'button' && item.toolbar.options.isChild) {
+                        item.toolbar.show();
                         item.toolbar.getParentGroup().refresh();
+                    } else if (item.toolbar.options.hidden) {
+                        item.toolbar.show();
                     }
                 }
                 if (item.overflow) {
-                    item.overflow.show();
                     if (item.overflow.options.type === 'button' && item.overflow.options.isChild) {
+                        item.toolbar.show();
                         item.overflow.getParentGroup().refresh();
+                    } else if (item.overflow.options.hidden) {
+                        item.overflow.show();
                     }
                 }
                 this.resize(true);
@@ -1060,7 +1068,7 @@
                             firstHasFocus = true;
                         }
                     }
-                    if (lastHasFocus && this.overflowAnchor.css('visibility') !== 'hidden') {
+                    if (lastHasFocus && this.overflowAnchor && this.overflowAnchor.css('visibility') !== 'hidden') {
                         e.preventDefault();
                         this.overflowAnchor.focus();
                     }

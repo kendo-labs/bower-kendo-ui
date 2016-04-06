@@ -570,6 +570,10 @@ html .km-pane-wrapper .k-header {
 .k-static-header + .k-list > .k-item.k-first {
   border-top-color: #ebebeb;
 }
+.k-group-header + div > .k-list > .k-item.k-first {
+  -webkit-box-shadow: 0 -1px 0px 0px #ebebeb;
+          box-shadow: 0 -1px 0px 0px #ebebeb;
+}
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
   background: #ebebeb;
@@ -3035,7 +3039,7 @@ div.k-scheduler-marquee:after {
   .k-ff .k-grid .k-pager-numbers,
   .k-ie11 .k-grid .k-pager-numbers,
   .k-safari .k-grid .k-pager-numbers {
-    position: absolute;
+    position: relative;
     left: 5.6em;
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
