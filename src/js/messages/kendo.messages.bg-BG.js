@@ -728,7 +728,8 @@ kendo.ui.FilterMultiCheck.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages,{
   "checkAll": "Избери всички",
   "clear": "Премахни филтър",
-  "filter": "Филтрирай"
+  "filter": "Филтрирай",
+  "search": "Търси"
 });
 }
 

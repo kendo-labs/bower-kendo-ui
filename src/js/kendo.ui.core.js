@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.1.406'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.1.412'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -6917,6 +6917,20 @@
                     that._ranges = [];
                     that._addRange(that._data);
                     that._change();
+                    that._markOfflineUpdatesAsDirty();
+                }
+            },
+            _markOfflineUpdatesAsDirty: function () {
+                var that = this;
+                if (that.options.offlineStorage != null) {
+                    that._eachItem(that._data, function (items) {
+                        for (var idx = 0; idx < items.length; idx++) {
+                            var item = items.at(idx);
+                            if (item.__state__ == 'update') {
+                                item.dirty = true;
+                            }
+                        }
+                    });
                 }
             },
             hasChanges: function () {
@@ -7020,6 +7034,9 @@
                     if (idx >= 0) {
                         if (pristine && (!model.isNew() || pristine.__state__)) {
                             items[idx].accept(pristine);
+                            if (pristine.__state__ == 'update') {
+                                items[idx].dirty = true;
+                            }
                         } else {
                             items.splice(idx, 1);
                         }
@@ -7195,16 +7212,7 @@
                 that._pristineData = data.slice(0);
                 that._detachObservableParents();
                 that._data = that._observe(data);
-                if (that.options.offlineStorage != null) {
-                    that._eachItem(that._data, function (items) {
-                        for (var idx = 0; idx < items.length; idx++) {
-                            var item = items.at(idx);
-                            if (item.__state__ == 'update') {
-                                item.dirty = true;
-                            }
-                        }
-                    });
-                }
+                that._markOfflineUpdatesAsDirty();
                 that._storeData();
                 that._addRange(that._data);
                 that._process(that._data);
@@ -38975,6 +38983,9 @@
             var unregister = scope.$watch(rebindAttr, function (newValue, oldValue) {
                 if (!widget._muteRebind && newValue !== oldValue) {
                     unregister();
+                    if (attrs._cleanUp) {
+                        attrs._cleanUp();
+                    }
                     var templateOptions = WIDGET_TEMPLATE_OPTIONS[widget.options.name];
                     if (templateOptions) {
                         templateOptions.forEach(function (name) {
@@ -39007,6 +39018,14 @@
             }, true);
             digest(scope);
         }
+        function bind(f, obj) {
+            return function (a, b) {
+                return f.call(obj, a, b);
+            };
+        }
+        function setTemplate(key, value) {
+            this[key] = kendo.stringify(value);
+        }
         module.factory('directiveFactory', [
             '$compile',
             function (compile) {
@@ -39026,14 +39045,11 @@
                             '$attrs',
                             '$element',
                             function ($scope, $attrs) {
-                                var that = this;
-                                that.template = function (key, value) {
-                                    $attrs[key] = kendo.stringify(value);
-                                };
-                                $scope.$on('$destroy', function () {
-                                    that.template = null;
-                                    that = null;
-                                });
+                                this.template = bind(setTemplate, $attrs);
+                                $attrs._cleanUp = bind(function () {
+                                    this.template = null;
+                                    $attrs._cleanUp = null;
+                                }, this);
                             }
                         ],
                         link: function (scope, element, attrs, controllers) {

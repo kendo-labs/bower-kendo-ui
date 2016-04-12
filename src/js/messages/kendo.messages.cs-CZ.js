@@ -264,7 +264,8 @@ kendo.ui.FilterMultiCheck.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages,{
   "checkAll": "Zvolit vše",
   "clear": "Vymazat",
-  "filter": "Filtr"
+  "filter": "Filtr",
+  "search": "Hledat"
 });
 }
 
