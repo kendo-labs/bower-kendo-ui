@@ -2543,7 +2543,7 @@ input.k-textbox:focus {
   .k-ff .k-grid .k-pager-numbers,
   .k-ie11 .k-grid .k-pager-numbers,
   .k-safari .k-grid .k-pager-numbers {
-    position: relative;
+    position: absolute;
     left: 5em;
     display: -webkit-inline-box;
     display: -webkit-inline-flex;

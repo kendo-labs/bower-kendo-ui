@@ -376,7 +376,8 @@
                     change: function () {
                         var value = dateView.calendar.value(), msValue = +value, msMin = +options.min, msMax = +options.max, current, adjustedDate;
                         if (msValue === msMin || msValue === msMax) {
-                            current = new DATE(+that._value);
+                            current = msValue === msMin ? msMin : msMax;
+                            current = new DATE(that._value || current);
                             current.setFullYear(value.getFullYear(), value.getMonth(), value.getDate());
                             if (isInRange(current, msMin, msMax)) {
                                 value = current;

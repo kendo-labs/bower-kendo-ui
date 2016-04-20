@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.1.412'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.1.420'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -16863,6 +16863,12 @@
                 var filter = this.options.filter;
                 return filter && filter !== 'none';
             },
+            _clearFilter: function () {
+                if (!this.options.virtual) {
+                    this.listView.bound(false);
+                }
+                this._filterSource();
+            },
             _filterSource: function (filter, force) {
                 var that = this;
                 var options = that.options;
@@ -20587,8 +20593,7 @@
                     return;
                 }
                 if (that._isFilterEnabled() && listView.bound() && listView.isFiltered()) {
-                    listView.bound(false);
-                    that._filterSource();
+                    that._clearFilter();
                 } else {
                     that._fetchData();
                 }
@@ -21705,8 +21710,7 @@
                 }
                 that._accessor(value);
                 if (that._isFilterEnabled() && listView.bound() && listView.isFiltered()) {
-                    listView.bound(false);
-                    that._filterSource();
+                    that._clearFilter();
                 } else {
                     that._fetchData();
                 }
@@ -22300,8 +22304,7 @@
                     value = value.slice(0, maxSelectedItems);
                 }
                 if (clearFilters) {
-                    listView.bound(false);
-                    that._filterSource();
+                    that._clearFilter();
                 }
                 listView.value(value);
                 that._old = value;
@@ -31028,7 +31031,8 @@
                     change: function () {
                         var value = dateView.calendar.value(), msValue = +value, msMin = +options.min, msMax = +options.max, current, adjustedDate;
                         if (msValue === msMin || msValue === msMax) {
-                            current = new DATE(+that._value);
+                            current = msValue === msMin ? msMin : msMax;
+                            current = new DATE(that._value || current);
                             current.setFullYear(value.getFullYear(), value.getMonth(), value.getDate());
                             if (isInRange(current, msMin, msMax)) {
                                 value = current;

@@ -985,11 +985,12 @@ div.k-filebrowser-dropzone em {
           box-shadow: none;
 }
 .k-grid tr:hover {
+  background-color: #3f4450;
   background-image: url("textures/brushed-metal.png");
   background-image: url("textures/brushed-metal.png"), -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.2)), to(rgba(255,255,255,.1)));
   background-image: url("textures/brushed-metal.png"), -webkit-linear-gradient(top, rgba(255,255,255,.2) 0%, rgba(255,255,255,.1) 100%);
   background-image: url("textures/brushed-metal.png"), linear-gradient(to bottom, rgba(255,255,255,.2) 0%, rgba(255,255,255,.1) 100%);
-  background-color: #1f2a35;
+  background-position: 50% 50%;
 }
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;

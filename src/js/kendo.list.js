@@ -153,6 +153,12 @@
                 var filter = this.options.filter;
                 return filter && filter !== 'none';
             },
+            _clearFilter: function () {
+                if (!this.options.virtual) {
+                    this.listView.bound(false);
+                }
+                this._filterSource();
+            },
             _filterSource: function (filter, force) {
                 var that = this;
                 var options = that.options;

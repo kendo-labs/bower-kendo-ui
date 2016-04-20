@@ -985,11 +985,12 @@ div.k-filebrowser-dropzone em {
           box-shadow: none;
 }
 .k-grid tr:hover {
+  background-color: #ffffff;
   background-image: url('textures/highlight.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,.01)), to(rgba(0,0,0,.08)));
-  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-  background-color: #cccccc;
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,.01)), to(rgba(0,0,0,.06)));
+  background-image: none, -webkit-linear-gradient(top, rgba(0,0,0,.01) 0%, rgba(0,0,0,.06) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.06) 100%);
+  background-position: 50% 50%;
 }
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;

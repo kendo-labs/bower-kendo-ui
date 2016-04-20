@@ -1681,7 +1681,7 @@ html .km-pane-wrapper .km-widget,
   .k-ff .k-grid .k-pager-numbers,
   .k-ie11 .k-grid .k-pager-numbers,
   .k-safari .k-grid .k-pager-numbers {
-    position: relative;
+    position: absolute;
     left: 5.6em;
     display: -moz-inline-flex;
     display: -webkit-inline-flex;
@@ -1729,6 +1729,7 @@ html .km-pane-wrapper .km-widget,
   .k-ff .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-ie11 .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-safari .km-pane-wrapper .k-grid .k-pager-numbers {
+    position: relative;
     left: 50%;
     -ms-transform: translate(-50%, 0%);
         transform: translate(-50%, 0%);

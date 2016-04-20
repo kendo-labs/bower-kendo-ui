@@ -419,8 +419,7 @@
                     value = value.slice(0, maxSelectedItems);
                 }
                 if (clearFilters) {
-                    listView.bound(false);
-                    that._filterSource();
+                    that._clearFilter();
                 }
                 listView.value(value);
                 that._old = value;

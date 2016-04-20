@@ -553,11 +553,17 @@ html .km-pane-wrapper .k-header {
 .k-calendar .k-today {
   background-color: #ebebeb;
 }
+.k-calendar .k-today.k-state-selected {
+  background-color: #428bca;
+}
 .k-calendar .k-today.k-state-hover {
   background-color: #d9d9d9;
 }
 .k-calendar .k-today.k-state-focused.k-state-hover {
   background-color: #d5e5f3;
+}
+.k-calendar .k-today.k-state-selected.k-state-hover {
+  background-color: #3276b1;
 }
 .k-calendar .k-footer .k-link {
   border-radius: 0;
@@ -2147,7 +2153,8 @@ thead.k-grid-header th.k-header:last-child {
           box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.125);
 }
 .k-picker-wrap.k-state-focused > .k-select,
-.k-picker-wrap.k-state-active > .k-select .k-dropdown-wrap.k-state-focused > .k-select,
+.k-picker-wrap.k-state-active > .k-select,
+.k-dropdown-wrap.k-state-focused > .k-select,
 .k-dropdown-wrap.k-state-active > .k-select {
   border-color: #cccccc;
 }
