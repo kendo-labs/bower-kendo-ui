@@ -851,8 +851,8 @@ html .km-pane-wrapper .k-header
     border-top-color: @hover-border-color;
 }
 
-.k-group-header + div > .k-list > .k-item.k-first {
-    box-shadow: 0 -1px 0px 0px @hover-border-color;
+.k-group-header + div > .k-list > .k-item.k-first:before {
+    border-top-color: @hover-border-color;
 }
 
 .k-popup > .k-group-header,
@@ -1037,6 +1037,25 @@ div.k-filebrowser-dropzone em
 .k-dropdown .k-state-focused .k-input
 {
     color: @widget-text-color;
+}
+
+.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu {
+    .k-space-right {
+        .composite-background(@widget-gradient);
+        background-position: 50% 50%;
+        background: @base;
+        border-color: @base;
+
+        > input {
+            background: @background;
+            border-color: @widget-border-color;
+        }
+
+        > input:focus {
+            border-color: lighten(@accent, 13%);
+            .box-shadow(@focused-shadow);
+        }
+    }
 }
 
 .k-dropdown .k-state-hover .k-input
@@ -2562,6 +2581,27 @@ thead.k-grid-header th.k-header:last-child
 {
     background-color: @selected-background-color;
     color: @selected-text-color;
+}
+
+.k-menu {
+    .k-state-selected > .k-link {
+        color: @selected-text-color;
+        background-color: @selected-background-color;
+        border-color: @selected-border-color;
+        .composite-background(@selected-gradient);
+    }
+
+    .k-link.k-state-active,
+    .k-state-hover > .k-link {
+        color: @hover-text-color;
+        background-color: @hover-background-color;
+        border-color: @hover-border-color;
+        .composite-background(@hover-gradient);
+    }
+
+    .k-state-hover .k-link.k-state-active {
+        background-color: darken(@hover-background-color, 7%);
+    }
 }
 
 /* Slider */

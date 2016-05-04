@@ -151,9 +151,6 @@ input.k-textbox
     padding: 1px 7px 1px 7px;
 }
 
-.k-popup .k-list .k-state-hover,
-.k-popup .k-list .k-state-focused,
-.k-popup .k-list .k-state-selected,
 .k-overflow-container .k-state-hover,
 .k-overflow-container .k-state-focused,
 .k-overflow-container .k-state-selected,
@@ -467,6 +464,36 @@ span.k-tooltip {
 
 .k-menu .k-item > .k-link > .k-icon {
     margin-left: 5px;
+}
+
+.k-menu {
+    .k-state-selected {
+        .k-i-arrow-s {
+            background-position: 0 -32px;
+        }
+    }
+
+    .k-state-hover {
+        .k-state-active {
+            .k-i-arrow-s {
+                background-position: -16px -32px;
+            }
+
+            .k-i-arrow-e {
+               background-position: -16px -16px;
+            }
+        }
+    }
+
+    .k-state-active {
+        .k-i-arrow-s {
+            background-position: -16px -32px;
+        }
+
+        .k-i-arrow-e {
+            background-position: -16px -16px;
+        }
+    }
 }
 
 .k-context-menu.k-menu-vertical > .k-item > .k-link,

@@ -350,7 +350,7 @@
                 var element = this.element = $('<div class="' + SPLIT_BUTTON + '" tabindex="0"></div>');
                 this.options = options;
                 this.toolbar = toolbar;
-                this.mainButton = new ToolBarButton(options, toolbar);
+                this.mainButton = new ToolBarButton($.extend({}, options, { hidden: false }), toolbar);
                 this.arrowButton = $('<a class="' + BUTTON + ' ' + SPLIT_BUTTON_ARROW + '"><span class="' + (options.mobile ? 'km-icon km-arrowdown' : 'k-icon k-i-arrow-s') + '"></span></a>');
                 this.popupElement = $('<ul class="' + LIST_CONTAINER + '"></ul>');
                 this.mainButton.element.removeAttr('href tabindex').appendTo(element);
@@ -369,6 +369,10 @@
                 this.createPopup();
                 this._navigatable();
                 this.mainButton.main = true;
+                this.enable(options.enable);
+                if (options.hidden) {
+                    this.hide();
+                }
                 element.data({
                     type: 'splitButton',
                     splitButton: this,
@@ -445,6 +449,17 @@
             },
             focus: function () {
                 this.element.focus();
+            },
+            hide: function () {
+                if (this.popup) {
+                    this.popup.close();
+                }
+                this.element.addClass(STATE_HIDDEN).hide();
+                this.options.hidden = true;
+            },
+            show: function () {
+                this.element.removeClass(STATE_HIDDEN).hide();
+                this.options.hidden = false;
             }
         });
         kendo.toolbar.ToolBarSplitButton = ToolBarSplitButton;

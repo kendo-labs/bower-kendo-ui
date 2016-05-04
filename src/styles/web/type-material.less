@@ -199,7 +199,7 @@
 @button-focused-shadow: 0 6px 17px 0 #c4c4c4;
 @button-focused-active-shadow: 0 6px 17px 0 fadeout(@hover-background, 70%);
 @secondary-background-color: contrast(@background, lighten(@background, 14%), darken(@background, 2%), 0.5);
-@secondary-hover-background-color: #5c6bc0;
+@secondary-hover-background-color: softlight(@accent, #b9b9b9);
 @secondary-header-color: rgba(256, 256, 256, 0.5);
 @secondary-header-background-color: darken(@accent, 10%);
 
@@ -820,8 +820,8 @@ html .km-pane-wrapper .k-header
     border-top-color: @hover-border-color;
 }
 
-.k-group-header + div > .k-list > .k-item.k-first {
-    box-shadow: 0 -1px 0px 0px @hover-border-color;
+.k-group-header + div > .k-list > .k-item.k-first:before {
+    border-top-color: @hover-border-color;
 }
 
 .k-popup > .k-group-header,
@@ -1002,6 +1002,26 @@ div.k-filebrowser-dropzone em
 .k-dropdown .k-state-focused .k-input
 {
     color: @widget-text-color;
+}
+
+.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu {
+    .k-space-right {
+        background: @background;
+        border-color: @widget-border-color;
+
+        > input {
+            background-color: @input-background-color;
+            border-color: @drop-down-border-color;
+
+            +.k-i-search:before {
+                color: @widget-text-color;
+            }
+        }
+
+        > input:focus {
+            .box-shadow(@focused-shadow);
+        }
+    }
 }
 
 .k-dropdown .k-state-hover .k-input

@@ -1553,6 +1553,33 @@ html .k-error-colored {
   background: #f00;
   position: absolute;
 }
+.k-current-time-arrow-down {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-bottom: 4px solid  transparent;
+  border-top: 4px solid #f00;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+.k-current-time-arrow-left {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-bottom: 4px solid  transparent;
+  border-top: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-right: 4px solid #f00;
+}
+.k-current-time-arrow-right {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-bottom: 4px solid  transparent;
+  border-top: 4px solid transparent;
+  border-left: 4px solid #f00;
+  border-right: 4px solid transparent;
+}
 /* override box sizing for grid layout framework integration (Bootstrap 3, Foundation 4) */
 .k-animation-container,
 .k-widget,
@@ -2869,6 +2896,10 @@ form.k-filter-menu .k-textbox {
 }
 .k-filter-menu .k-button + .k-button {
   margin-right: 0;
+}
+.k-filter-menu .k-filter-selected-items {
+  font-weight: bold;
+  margin: .5em;
 }
 .k-multicheck-wrap {
   overflow: auto;
@@ -4720,6 +4751,25 @@ body .k-datetimepicker .k-select {
   padding: 1px 5px 1px 5px;
   line-height: 1.8em;
   min-height: 1.8em;
+}
+.k-popup .k-list .k-item {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  padding: 0 4px;
+}
+.k-popup .k-list .k-item > .k-group {
+  top: -1px;
+}
+.k-group-header + div > .k-list > .k-item.k-first:before {
+  content: " ";
+  display: block;
+  border-top-width: 1px;
+  border-top-style: solid;
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
 }
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
@@ -8790,6 +8840,25 @@ div.k-navigator .k-navigator-w {
   z-index: 1;
   position: relative;
 }
+.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right {
+  padding: 10px;
+  border-radius: 0;
+}
+.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right > input {
+  float: none;
+  width: 100%;
+  padding: 1px 0;
+  margin: 0;
+  border-radius: 3px;
+  text-indent: 30px;
+  border-width: 1px;
+  border-style: solid;
+}
+.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-font-icon {
+  position: absolute;
+  left: 20px;
+  z-index: 1;
+}
 .km-pane-wrapper .k-scheduler-views {
   width: 18em;
 }
@@ -11074,6 +11143,15 @@ input.k-textbox,
 }
 .k-menu .k-item > .k-link > .k-icon {
   margin-left: 2px;
+}
+.k-menu .k-state-selected .k-i-arrow-s {
+  background-position: 0 -32px;
+}
+.k-menu .k-state-active .k-i-arrow-s {
+  background-position: -16px -32px;
+}
+.k-menu .k-state-active .k-i-arrow-e {
+  background-position: -16px -16px;
 }
 table.k-editor {
   border-spacing: 0;

@@ -1553,6 +1553,33 @@ html .k-error-colored {
   background: #f00;
   position: absolute;
 }
+.k-current-time-arrow-down {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-bottom: 4px solid  transparent;
+  border-top: 4px solid #f00;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+.k-current-time-arrow-left {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-bottom: 4px solid  transparent;
+  border-top: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-right: 4px solid #f00;
+}
+.k-current-time-arrow-right {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-bottom: 4px solid  transparent;
+  border-top: 4px solid transparent;
+  border-left: 4px solid #f00;
+  border-right: 4px solid transparent;
+}
 /* override box sizing for grid layout framework integration (Bootstrap 3, Foundation 4) */
 .k-animation-container,
 .k-widget,
@@ -2856,6 +2883,25 @@ body .k-datetimepicker .k-select {
   padding: 1px 5px 1px 5px;
   line-height: 1.8em;
   min-height: 1.8em;
+}
+.k-popup .k-list .k-item {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  padding: 0 4px;
+}
+.k-popup .k-list .k-item > .k-group {
+  top: -1px;
+}
+.k-group-header + div > .k-list > .k-item.k-first:before {
+  content: " ";
+  display: block;
+  border-top-width: 1px;
+  border-top-style: solid;
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
 }
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
@@ -4739,11 +4785,6 @@ span.k-tooltip {
 }
 .k-popup .k-list .k-item {
   padding: 1px 11px;
-}
-.k-popup .k-list .k-state-hover,
-.k-popup .k-list .k-state-focused,
-.k-popup .k-list .k-state-selected {
-  padding: 0 10px;
 }
 .k-button,
 .k-calendar .k-header .k-link,

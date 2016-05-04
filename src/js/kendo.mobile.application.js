@@ -247,7 +247,9 @@
             destroy: function () {
                 Widget.fn.destroy.call(this);
                 this.pane.destroy();
-                this.router.destroy();
+                if (this.options.browserHistory) {
+                    this.router.destroy();
+                }
             },
             _setupPlatform: function () {
                 var that = this, platform = that.options.platform, skin = that.options.skin, split = [], os = OS || MOBILE_PLATFORMS[DEFAULT_OS];

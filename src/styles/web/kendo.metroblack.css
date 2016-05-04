@@ -514,6 +514,23 @@ html .km-pane-wrapper .k-header {
 .k-menu .k-state-hover > .k-state-active {
   background-color: transparent;
 }
+.k-menu .k-state-selected > .k-link {
+  color: #fff;
+  background-color: #008886;
+  border-color: #008886;
+  background-image: none;
+}
+.k-menu .k-link.k-state-active {
+  background-color: #1d1d1d;
+  border-color: #008886;
+  color: #ffffff;
+}
+.k-menu .k-state-hover > .k-link {
+  color: #fff;
+  background-color: #00aba9;
+  border-color: #00aba9;
+  background-image: none;
+}
 .k-state-highlight {
   background: #1d1d1d;
   color: #ffffff;
@@ -609,9 +626,8 @@ html .km-pane-wrapper .k-header {
 .k-static-header + .k-list > .k-item.k-first {
   border-top-color: #00aba9;
 }
-.k-group-header + div > .k-list > .k-item.k-first {
-  -webkit-box-shadow: 0 -1px 0px 0px #00aba9;
-          box-shadow: 0 -1px 0px 0px #00aba9;
+.k-group-header + div > .k-list > .k-item.k-first:before {
+  border-top-color: #00aba9;
 }
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
@@ -756,6 +772,17 @@ div.k-filebrowser-dropzone em {
 .km-pane-wrapper .k-mobile-list textarea,
 .k-dropdown .k-state-focused .k-input {
   color: #fff;
+}
+.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right {
+  background: #0e0e0e;
+  border-color: #323232;
+}
+.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right > input {
+  background-color: #0e0e0e;
+  border-color: #323232;
+}
+.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right > input:focus {
+  border-color: #00aba9;
 }
 .k-dropdown .k-state-hover .k-input {
   color: #fff;

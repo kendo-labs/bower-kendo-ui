@@ -998,6 +998,10 @@
                 var wnd = this.owner, element = wnd.element, actions = element.find('.k-window-actions'), containerOffset = kendo.getOffset(wnd.appendTo);
                 wnd.trigger(DRAGSTART);
                 wnd.initialWindowPosition = kendo.getOffset(wnd.wrapper, 'position');
+                wnd.initialPointerPosition = {
+                    left: e.x.client,
+                    top: e.y.client
+                };
                 wnd.startPosition = {
                     left: e.x.client - wnd.initialWindowPosition.left,
                     top: e.y.client - wnd.initialWindowPosition.top
@@ -1013,13 +1017,15 @@
                 $(BODY).css(CURSOR, e.currentTarget.css(CURSOR));
             },
             drag: function (e) {
-                var wnd = this.owner, position = wnd.options.position, newTop = Math.max(e.y.client - wnd.startPosition.top, wnd.minTopPosition), newLeft = Math.max(e.x.client - wnd.startPosition.left, wnd.minLeftPosition), coordinates = {
-                        left: newLeft,
-                        top: newTop
-                    };
-                $(wnd.wrapper).css(coordinates);
-                position.top = newTop;
-                position.left = newLeft;
+                var wnd = this.owner;
+                var position = wnd.options.position;
+                position.top = Math.max(e.y.client - wnd.startPosition.top, wnd.minTopPosition);
+                position.left = Math.max(e.x.client - wnd.startPosition.left, wnd.minLeftPosition);
+                if (kendo.support.transforms) {
+                    $(wnd.wrapper).css('transform', 'translate(' + (e.x.client - wnd.initialPointerPosition.left) + 'px, ' + (e.y.client - wnd.initialPointerPosition.top) + 'px)');
+                } else {
+                    $(wnd.wrapper).css(position);
+                }
             },
             _finishDrag: function () {
                 var wnd = this.owner;
@@ -1031,6 +1037,7 @@
                 e.currentTarget.closest(KWINDOW).css(this.owner.initialWindowPosition);
             },
             dragend: function () {
+                $(this.owner.wrapper).css(this.owner.options.position).css('transform', '');
                 this._finishDrag();
                 this.owner.trigger(DRAGEND);
                 return false;

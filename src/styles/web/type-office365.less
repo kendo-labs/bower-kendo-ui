@@ -825,8 +825,8 @@ html .km-pane-wrapper .k-header
     border-top-color: @hover-border-color;
 }
 
-.k-group-header + div > .k-list > .k-item.k-first {
-    box-shadow: 0 -1px 0px 0px @hover-border-color;
+.k-group-header + div > .k-list > .k-item.k-first:before {
+    border-top-color: @hover-border-color;
 }
 
 .k-popup > .k-group-header,
@@ -1010,6 +1010,22 @@ div.k-filebrowser-dropzone em
 .k-dropdown .k-state-focused .k-input
 {
     color: @widget-text-color;
+}
+
+.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu {
+    .k-space-right {
+        background: @background;
+        border-color: @widget-border-color;
+
+        > input {
+            background-color: @input-background-color;
+            border-color: @widget-border-color;
+        }
+
+        > input:focus {
+            border-color: @drop-down-focused-border-color;
+        }
+    }
 }
 
 .k-dropdown .k-state-hover .k-input
@@ -2041,6 +2057,18 @@ html .km-pane-wrapper .km-widget,
     border-color: @group-border-color;
 }
 
+.k-menu {
+    .k-link.k-state-active {
+        background-color: @base;
+        color: @normal-background;
+    }
+
+    .k-state-hover .k-state-active {
+        background-color: darken(@base, 8%);
+    }
+    
+}
+
 .k-grid-filter.k-state-active
 {
     background-color: @active-filter-background-color;
@@ -2614,14 +2642,9 @@ input.k-textbox:focus {
 	}
 }
 
-.k-menu > .k-item > .k-state-active,
 .k-popup.k-context-menu.k-group .k-state-hover {
     color: @link-text-color;
     background-color: @widget-background-color;
-}
-
-.k-menu .k-state-active {
-	background-color: @menu-active-background;
 }
 
 .k-splitbar {

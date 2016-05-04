@@ -33,15 +33,15 @@
         depends: ['popup']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, MOUSEDOWN = 'mousedown', CLICK = 'click', extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', mobile = touch || allPointers, DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', menuSelector = '.k-menu', groupSelector = '.k-menu-group', popupSelector = groupSelector + ',.k-animation-container', allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = exclusionSelector + ':eq(0)', lastSelector = exclusionSelector + ':last', templateSelector = '> div:not(.k-animation-container,.k-list-container)', touchPointerTypes = {
+        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, MOUSEDOWN = 'mousedown', CLICK = 'click', extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', mobile = touch || allPointers, DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', popupSelector = groupSelector + ',.k-animation-container', allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = exclusionSelector + ':eq(0)', lastSelector = exclusionSelector + ':last', templateSelector = '> div:not(.k-animation-container,.k-list-container)', touchPointerTypes = {
                 '2': 1,
                 'touch': 1
             }, templates = {
-                content: template('<div class=\'k-content #= groupCssClass() #\' tabindex=\'-1\'>#= content(item) #</div>'),
+                content: template('<div #= contentCssAttributes(item) # tabindex=\'-1\'>#= content(item) #</div>'),
                 group: template('<ul class=\'#= groupCssClass(group) #\'#= groupAttributes(group) # role=\'menu\' aria-hidden=\'true\'>' + '#= renderItems(data) #' + '</ul>'),
-                itemWrapper: template('<#= tag(item) # class=\'#= textClass(item) #\'#= textAttributes(item) #>' + '#= image(item) ##= sprite(item) ##= text(item) #' + '#= arrow(data) #' + '</#= tag(item) #>'),
-                item: template('<li class=\'#= wrapperCssClass(group, item) #\' role=\'menuitem\' #=item.items ? "aria-haspopup=\'true\'": ""#' + '#=item.enabled === false ? "aria-disabled=\'true\'" : \'\'#>' + '#= itemWrapper(data) #' + '# if (item.items) { #' + '#= subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
-                image: template('<img class=\'k-image\' alt=\'\' src=\'#= imageUrl #\' />'),
+                itemWrapper: template('<#= tag(item) # class=\'#= textClass(item) #\'#= textAttributes(item) #>' + '#= image(data) ##= sprite(item) ##= text(item) #' + '#= arrow(data) #' + '</#= tag(item) #>'),
+                item: template('<li class=\'#= wrapperCssClass(group, item) #\' #= itemCssAttributes(item) # role=\'menuitem\'  #=item.items ? "aria-haspopup=\'true\'": ""#' + '#=item.enabled === false ? "aria-disabled=\'true\'" : \'\'#>' + '#= itemWrapper(data) #' + '# if (item.items) { #' + '#= subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
+                image: template('<img #= imageCssAttributes(item) # alt=\'\' src=\'#= item.imageUrl #\' />'),
                 arrow: template('<span class=\'#= arrowClass(item, group) #\'></span>'),
                 sprite: template('<span class=\'k-sprite #= spriteCssClass #\'></span>'),
                 empty: template('')
@@ -61,6 +61,53 @@
                     }
                     if (item.cssClass) {
                         result += ' ' + item.cssClass;
+                    }
+                    if (item.attr && item.attr.hasOwnProperty('class')) {
+                        result += ' ' + item.attr['class'];
+                    }
+                    if (item.selected) {
+                        result += ' ' + SELECTEDSTATE;
+                    }
+                    return result;
+                },
+                itemCssAttributes: function (item) {
+                    var result = '';
+                    var attributes = item.attr || {};
+                    for (var attr in attributes) {
+                        if (attributes.hasOwnProperty(attr) && attr !== 'class') {
+                            result += attr + '="' + attributes[attr] + '" ';
+                        }
+                    }
+                    return result;
+                },
+                imageCssAttributes: function (item) {
+                    var result = '';
+                    var attributes = item.imageAttr || {};
+                    if (!attributes['class']) {
+                        attributes['class'] = IMAGE;
+                    } else {
+                        attributes['class'] += ' ' + IMAGE;
+                    }
+                    for (var attr in attributes) {
+                        if (attributes.hasOwnProperty(attr)) {
+                            result += attr + '="' + attributes[attr] + '" ';
+                        }
+                    }
+                    return result;
+                },
+                contentCssAttributes: function (item) {
+                    var result = '';
+                    var attributes = item.contentAttr || {};
+                    var defaultClasses = 'k-content k-group k-menu-group';
+                    if (!attributes['class']) {
+                        attributes['class'] = defaultClasses;
+                    } else {
+                        attributes['class'] += ' ' + defaultClasses;
+                    }
+                    for (var attr in attributes) {
+                        if (attributes.hasOwnProperty(attr)) {
+                            result += attr + '="' + attributes[attr] + '" ';
+                        }
                     }
                     return result;
                 },
@@ -137,7 +184,7 @@
             item.addClass('k-item').children(IMG).addClass(IMAGE);
             item.children('a').addClass(LINK).children(IMG).addClass(IMAGE);
             item.filter(':not([disabled])').addClass(DEFAULTSTATE);
-            item.filter('.k-separator:empty').append('&nbsp;');
+            item.filter('.k-separator').empty().append('&nbsp;');
             item.filter('li[disabled]').addClass(DISABLEDSTATE).removeAttr('disabled').attr('aria-disabled', true);
             if (!item.filter('[role]').length) {
                 item.attr('role', 'menuitem');
