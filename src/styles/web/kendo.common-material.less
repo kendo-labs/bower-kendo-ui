@@ -363,6 +363,10 @@
     line-height: 2.143em;
 }
 
+.k-fieldselector .k-pivot-configurator-settings li.k-item {
+    padding-right: 3.8em;
+}
+
 .k-popup .k-list .k-item {
     padding: 1px 11px;
 }
@@ -1190,8 +1194,21 @@ form.k-filter-menu .k-textbox {
     }
 }
 
-.k-i-arrowhead-s {
+.k-i-arrowhead-s,
+.k-pivot-setting .k-item.k-state-hover .k-i-arrowhead-s {
     background-position: 0 -288px;
+}
+
+.k-pivot-toolbar {
+    .k-field-actions .k-i-sort-asc,
+    .k-button:not(.k-state-disabled):hover .k-i-sort-asc {
+        background-position: -128px -240px;
+    }
+
+    .k-field-actions .k-i-sort-desc,
+    .k-button:not(.k-state-disabled):hover .k-i-sort-desc {
+        background-position: -128px -256px;
+    }
 }
 
 .k-item.k-state-hover .k-i-arrowhead-s,

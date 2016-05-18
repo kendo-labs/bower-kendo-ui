@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-note">#=typeIcon#</span>' + '#=content#' + '<span class="k-icon k-i-close">Hide</span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', KHIDING = 'k-hiding', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-note">#=typeIcon#</span>' + '#=content#' + '<span class="k-icon k-i-close">Hide</span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
         var Notification = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -184,7 +184,7 @@
             },
             _showPopup: function (wrapper, options) {
                 var that = this, autoHideAfter = options.autoHideAfter, x = options.position.left, y = options.position.top, popup, openPopup;
-                openPopup = $('.' + that._guid + ':not(.k-hiding)').last();
+                openPopup = $('.' + that._guid + ':not(.' + KHIDING + ')').last();
                 popup = new kendo.ui.Popup(wrapper, {
                     anchor: openPopup[0] ? openPopup : document.body,
                     origin: that._popupOrigin,
@@ -230,7 +230,7 @@
                 }
             },
             _hidePopup: function (popup) {
-                popup.wrapper.addClass('k-hiding');
+                popup.wrapper.addClass(KHIDING);
                 popup.close();
             },
             _togglePin: function (wrapper, pin) {
@@ -357,7 +357,7 @@
                 return that;
             },
             getNotifications: function () {
-                var that = this, guidElements = $('.' + that._guid);
+                var that = this, guidElements = $('.' + that._guid + ':not(.' + KHIDING + ')');
                 if (that.options.appendTo) {
                     return guidElements;
                 } else {

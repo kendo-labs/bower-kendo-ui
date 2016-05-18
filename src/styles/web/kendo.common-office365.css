@@ -10171,7 +10171,7 @@ div.k-navigator .k-navigator-w {
 }
 .k-spreadsheet-clipboard-paste,
 .k-spreadsheet-clipboard {
-  position: fixed;
+  position: absolute;
   opacity: 0;
   top: 0;
   left: 0;
@@ -10183,6 +10183,9 @@ div.k-navigator .k-navigator-w {
   height: 1px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+textarea.k-spreadsheet-clipboard {
+  position: fixed;
 }
 .k-spreadsheet-top-corner {
   position: absolute;

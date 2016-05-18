@@ -10299,7 +10299,7 @@ div.k-navigator .k-navigator-w {
 }
 .k-spreadsheet-clipboard-paste,
 .k-spreadsheet-clipboard {
-  position: fixed;
+  position: absolute;
   opacity: 0;
   top: 0;
   left: 0;
@@ -10311,6 +10311,9 @@ div.k-navigator .k-navigator-w {
   height: 1px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+textarea.k-spreadsheet-clipboard {
+  position: fixed;
 }
 .k-spreadsheet-top-corner {
   position: absolute;
@@ -11062,6 +11065,9 @@ div.k-navigator .k-navigator-w {
   min-height: 2.143em;
   line-height: 2.143em;
 }
+.k-fieldselector .k-pivot-configurator-settings li.k-item {
+  padding-right: 3.8em;
+}
 .k-popup .k-list .k-item {
   padding: 1px 11px;
 }
@@ -11673,8 +11679,17 @@ form.k-filter-menu .k-textbox {
 .k-gantt .k-button:not(.k-state-disabled):hover .k-i-gantt-toggle {
   background-position: -80px -240px;
 }
-.k-i-arrowhead-s {
+.k-i-arrowhead-s,
+.k-pivot-setting .k-item.k-state-hover .k-i-arrowhead-s {
   background-position: 0 -288px;
+}
+.k-pivot-toolbar .k-field-actions .k-i-sort-asc,
+.k-pivot-toolbar .k-button:not(.k-state-disabled):hover .k-i-sort-asc {
+  background-position: -128px -240px;
+}
+.k-pivot-toolbar .k-field-actions .k-i-sort-desc,
+.k-pivot-toolbar .k-button:not(.k-state-disabled):hover .k-i-sort-desc {
+  background-position: -128px -256px;
 }
 .k-item.k-state-hover .k-i-arrowhead-s,
 .k-button:hover .k-i-arrowhead-s {

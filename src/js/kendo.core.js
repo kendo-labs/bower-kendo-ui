@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.2.504'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.2.518'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -746,7 +746,7 @@
                         }
                     }
                     if (hasGroup) {
-                        number = groupInteger(number, start, Math.max(end, integerLength + start - 1), numberFormat);
+                        number = groupInteger(number, start + (negative ? 1 : 0), Math.max(end, integerLength + start), numberFormat);
                     }
                     if (end >= start) {
                         number += format.substring(end + 1);
@@ -3277,7 +3277,9 @@
                 var e = document.createEvent('MouseEvents');
                 e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
                 fileSaver.dispatchEvent(e);
-                URL.revokeObjectURL(dataURI);
+                setTimeout(function () {
+                    URL.revokeObjectURL(dataURI);
+                });
             }
             kendo.saveAs = function (options) {
                 var save = postToProxy;

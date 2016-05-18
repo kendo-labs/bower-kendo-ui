@@ -117,9 +117,6 @@
             setOptions: function (options) {
                 var that = this;
                 normalize(options);
-                if (!options.dates[0]) {
-                    options.dates = that.options.dates;
-                }
                 options.disableDates = getDisabledExpr(options.disableDates);
                 Widget.fn.setOptions.call(that, options);
                 that._templates();
@@ -931,7 +928,7 @@
             if (depth === undefined || depth > start) {
                 options.depth = MONTH;
             }
-            if (!options.dates) {
+            if (options.dates === null) {
                 options.dates = [];
             }
         }

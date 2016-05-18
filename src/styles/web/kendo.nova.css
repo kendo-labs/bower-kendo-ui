@@ -746,6 +746,7 @@ input.k-textbox:active {
 }
 .k-tabstrip-items .k-item.k-state-hover,
 .k-tabstrip-items .k-item.k-state-selected {
+  border-top-color: #32364c;
   background-image: none;
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(#202333), to(#081421));
   background-image: none, -webkit-linear-gradient(top, #202333 0%, #081421 100%);

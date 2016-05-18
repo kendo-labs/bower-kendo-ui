@@ -2186,7 +2186,7 @@
                     that._eachItem(that._data, function (items) {
                         for (var idx = 0; idx < items.length; idx++) {
                             var item = items.at(idx);
-                            if (item.__state__ == 'update') {
+                            if (item.__state__ == 'update' || item.__state__ == 'create') {
                                 item.dirty = true;
                             }
                         }
@@ -2443,6 +2443,7 @@
                         that._aggregateResult = that._readAggregates(data);
                     }
                     data = that._readData(data);
+                    that._destroyed = [];
                 } else {
                     data = that._readData(data);
                     var items = [];

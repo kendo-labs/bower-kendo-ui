@@ -589,6 +589,8 @@
                     }).on(KEYDOWN_NS, bind(that._keydown, that)).on(CLICK_NS, '.k-select', bind(that.toggle, that)).on(CLICK_NS, that.options.toolIcon ? '.k-tool-icon' : '.k-selected-color', function () {
                         that.trigger('activate');
                     });
+                } else {
+                    that.close();
                 }
             },
             _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker k-header">' + '<span class="k-picker-wrap k-state-default">' + '# if (toolIcon) { #' + '<span class="k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"></span>' + '# } #' + '<span class="k-select" unselectable="on">' + '<span class="k-icon k-i-arrow-s" unselectable="on"></span>' + '</span>' + '</span>' + '</span>'),
@@ -612,13 +614,17 @@
                 'close'
             ],
             open: function () {
-                this._getPopup().open();
+                if (!this.element.prop('disabled')) {
+                    this._getPopup().open();
+                }
             },
             close: function () {
                 this._getPopup().close();
             },
             toggle: function () {
-                this._getPopup().toggle();
+                if (!this.element.prop('disabled')) {
+                    this._getPopup().toggle();
+                }
             },
             color: ColorSelector.fn.color,
             value: ColorSelector.fn.value,
