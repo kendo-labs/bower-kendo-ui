@@ -1725,7 +1725,7 @@ html .km-pane-wrapper .km-widget,
 .k-radio:checked + .k-radio-label:active:before {
   border-color: #007cc0;
 }
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+@media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-icon:not(.k-loading),
   .k-grouping-dropclue,
   .k-drop-hint,
@@ -2596,7 +2596,7 @@ div.k-window.k-state-focused {
 .k-map .k-marker {
   background-image: url("Fiori/markers.png");
 }
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+@media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-map .k-marker {
     background-image: url("Fiori/markers_2x.png");
   }

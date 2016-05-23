@@ -1870,7 +1870,7 @@ textarea.k-textbox,
   -webkit-box-shadow: 0 0 3px 0 #0066cc;
           box-shadow: 0 0 3px 0 #0066cc;
 }
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+@media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-icon:not(.k-loading),
   .k-grouping-dropclue,
   .k-drop-hint,
@@ -2134,7 +2134,7 @@ textarea.k-textbox,
 .k-map .k-marker {
   background-image: url("Black/markers.png");
 }
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+@media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-map .k-marker {
     background-image: url("Black/markers_2x.png");
   }

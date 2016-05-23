@@ -1768,7 +1768,7 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: 0 0 2px 0 #76abd9;
           box-shadow: 0 0 2px 0 #76abd9;
 }
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+@media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-icon:not(.k-loading),
   .k-grouping-dropclue,
   .k-drop-hint,
@@ -2689,7 +2689,7 @@ td.k-state-focused.k-state-selected,
 .k-map .k-marker {
   background-image: url("Bootstrap/markers.png");
 }
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+@media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-map .k-marker {
     background-image: url("Bootstrap/markers_2x.png");
   }
