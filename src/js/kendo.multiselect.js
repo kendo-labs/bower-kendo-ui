@@ -50,7 +50,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = kendo.keys, activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', FOCUSEDCLASS = 'k-state-focused', HIDDENCLASS = 'k-loading-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = kendo.keys, activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', HIDDENCLASS = 'k-loading-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
                 'font-family',
                 'font-size',
                 'font-stretch',
@@ -204,9 +204,17 @@
                 List.fn._setListValue.call(this, this._initialValues.slice(0));
             },
             _listChange: function (e) {
+                var data = this.dataSource.flatView();
+                var optionsMap = this._optionsMap;
+                var valueGetter = this._value;
                 if (this._state === REBIND) {
                     this._state = '';
-                    e.added = [];
+                }
+                for (var i = 0; i < e.added.length; i++) {
+                    if (optionsMap[valueGetter(e.added[i])] === undefined) {
+                        this._render(data);
+                        break;
+                    }
                 }
                 this._selectValue(e.added, e.removed);
             },
@@ -290,7 +298,7 @@
                 if (!readonly && !disable) {
                     wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that));
                     that.input.on(KEYDOWN, proxy(that._keydown, that)).on('paste' + ns, proxy(that._search, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
-                    input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false);
+                    input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
                     tagList.on(MOUSEENTER, LI, function () {
                         $(this).addClass(HOVERCLASS);
                     }).on(MOUSELEAVE, LI, function () {
@@ -302,7 +310,7 @@
                     } else {
                         wrapper.removeClass(STATEDISABLED);
                     }
-                    input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
+                    input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
             },
             _close: function () {
@@ -345,23 +353,11 @@
             refresh: function () {
                 this.listView.refresh();
             },
-            _angularItems: function (cmd) {
-                var that = this;
-                that.angular(cmd, function () {
-                    return {
-                        elements: that.items(),
-                        data: $.map(that.dataSource.flatView(), function (dataItem) {
-                            return { dataItem: dataItem };
-                        })
-                    };
-                });
-            },
             _listBound: function () {
                 var that = this;
                 var data = that.dataSource.flatView();
                 var skip = that.listView.skip();
                 var length = data.length;
-                that._angularItems('compile');
                 that._render(data);
                 that._resizePopup();
                 if (that._open) {

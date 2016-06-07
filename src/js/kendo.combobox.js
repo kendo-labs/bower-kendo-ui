@@ -50,7 +50,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
         var ComboBox = Select.extend({
             init: function (element, options) {
                 var that = this, text, disabled;
@@ -140,6 +140,7 @@
                 that.input.off(ns);
                 that.element.off(ns);
                 that._inputWrapper.off(ns);
+                clearTimeout(that._pasteTimeout);
                 that._arrow.parent().off(CLICK + ' ' + MOUSEDOWN);
                 Select.fn.destroy.call(that);
             },
@@ -168,18 +169,26 @@
                 that._blur();
                 that.element.blur();
             },
+            _inputPaste: function () {
+                var that = this;
+                clearTimeout(that._pasteTimeout);
+                that._pasteTimeout = null;
+                that._pasteTimeout = setTimeout(function () {
+                    that.search();
+                });
+            },
             _editable: function (options) {
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that._inputWrapper.off(ns), input = that.element.add(that.input.off(ns)), arrow = that._arrow.parent().off(CLICK + ' ' + MOUSEDOWN);
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false);
+                    input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
                     arrow.on(CLICK, proxy(that._arrowClick, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
-                    that.input.on('keydown' + ns, proxy(that._keydown, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
+                    that.input.on('keydown' + ns, proxy(that._keydown, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that)).on('paste' + ns, proxy(that._inputPaste, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
-                    input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
+                    input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
             },
             open: function () {
@@ -276,7 +285,6 @@
                 var data = that.dataSource.flatView();
                 var skip = that.listView.skip();
                 var isFirstPage = skip === undefined || skip === 0;
-                that._angularItems('compile');
                 that._presetValue = false;
                 that._resizePopup();
                 that.popup.position();
@@ -529,7 +537,7 @@
                 }
             },
             _input: function () {
-                var that = this, element = that.element.removeClass('k-input')[0], accessKey = element.accessKey, wrapper = that.wrapper, SELECTOR = 'input.k-input', name = element.name || '', input;
+                var that = this, element = that.element.removeClass('k-input')[0], accessKey = element.accessKey, wrapper = that.wrapper, SELECTOR = 'input.k-input', name = element.name || '', input, maxLength;
                 if (name) {
                     name = 'name="' + name + '_input" ';
                 }
@@ -540,8 +548,9 @@
                 }
                 input[0].style.cssText = element.style.cssText;
                 input[0].title = element.title;
-                if (element.maxLength > -1) {
-                    input[0].maxLength = element.maxLength;
+                maxLength = parseInt(this.element.prop('maxlength') || this.element.attr('maxlength'), 10);
+                if (maxLength > -1) {
+                    input[0].maxLength = maxLength;
                 }
                 input.addClass(element.className).val(this.options.text || element.value).css({
                     width: '100%',

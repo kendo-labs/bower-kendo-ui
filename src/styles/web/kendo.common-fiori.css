@@ -3187,6 +3187,7 @@ html .k-grid-edit-row .k-tooltip {
   .k-ie11 .k-pager-wrap,
   .k-safari .k-pager-wrap {
     overflow: visible;
+    min-height: 2.1em;
   }
   .k-webkit .k-pager-wrap .k-pager-nav,
   .k-ff .k-pager-wrap .k-pager-nav,
@@ -3220,6 +3221,16 @@ html .k-grid-edit-row .k-tooltip {
             flex-direction: column-reverse;
     overflow: visible;
     height: auto;
+  }
+  .k-webkit .k-pager-numbers:first-child,
+  .k-ff .k-pager-numbers:first-child,
+  .k-ie11 .k-pager-numbers:first-child,
+  .k-safari .k-pager-numbers:first-child,
+  .k-webkit .k-grid .k-pager-numbers:first-child,
+  .k-ff .k-grid .k-pager-numbers:first-child,
+  .k-ie11 .k-grid .k-pager-numbers:first-child,
+  .k-safari .k-grid .k-pager-numbers:first-child {
+    left: .2em;
   }
   .k-webkit .k-pager-numbers.k-state-expanded,
   .k-ff .k-pager-numbers.k-state-expanded,
@@ -3277,6 +3288,17 @@ html .k-grid-edit-row .k-tooltip {
     left: auto;
     right: 4.8em;
     width: 4.5em;
+  }
+  .k-webkit .k-rtl .k-pager-numbers:first-child,
+  .k-ff .k-rtl .k-pager-numbers:first-child,
+  .k-ie11 .k-rtl .k-pager-numbers:first-child,
+  .k-safari .k-rtl .k-pager-numbers:first-child,
+  .k-webkit .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-ff .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-ie11 .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-safari .k-rtl .k-grid .k-pager-numbers:first-child {
+    left: auto;
+    right: .2em;
   }
   .k-webkit .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-ff .k-rtl .km-pane-wrapper .k-pager-numbers,
@@ -11358,6 +11380,10 @@ span.k-tooltip {
 }
 .k-scheduler-toolbar .k-nav-today .k-link {
   padding-left: 0;
+}
+.k-rtl .k-scheduler-toolbar .k-nav-today .k-link {
+  padding-right: 0;
+  padding-left: 1.1em;
 }
 .k-scheduler-header .k-slot-cell {
   vertical-align: middle;

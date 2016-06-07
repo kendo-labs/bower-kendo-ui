@@ -286,6 +286,9 @@
                 this.splice(0, this.length);
             }
         });
+        if (typeof Symbol !== 'undefined' && Symbol.iterator && !ObservableArray.prototype[Symbol.iterator]) {
+            ObservableArray.prototype[Symbol.iterator] = [][Symbol.iterator];
+        }
         var LazyObservableArray = ObservableArray.extend({
             init: function (data, type) {
                 Observable.fn.init.call(this);

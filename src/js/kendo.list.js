@@ -111,10 +111,8 @@
                     deactivate: proxy(that._deactivateItem, that),
                     dataBinding: function () {
                         that.trigger('dataBinding');
-                        that._angularItems('cleanup');
                     },
                     dataBound: listBoundHandler,
-                    listBound: listBoundHandler,
                     height: currentOptions.height,
                     dataValueField: currentOptions.dataValueField,
                     dataTextField: currentOptions.dataTextField,
@@ -124,6 +122,9 @@
                 }, options, virtual);
                 if (!options.template) {
                     options.template = '#:' + kendo.expr(options.dataTextField, 'data') + '#';
+                }
+                if (currentOptions.$angular) {
+                    options.$angular = currentOptions.$angular;
                 }
                 return options;
             },
@@ -135,6 +136,7 @@
                 } else {
                     that.listView = new kendo.ui.VirtualList(that.ul, listOptions);
                 }
+                that.listView.bind('listBound', proxy(that._listBound, that));
                 that._setListValue();
             },
             _setListValue: function (value) {
@@ -1554,6 +1556,7 @@
                 var isItemChange = action === 'itemchange';
                 var result;
                 that.trigger('dataBinding');
+                this._angularItems('cleanup');
                 that._fixedHeader();
                 that._render();
                 that.bound(true);
@@ -1578,6 +1581,7 @@
                 if (that._valueDeferred) {
                     that._valueDeferred.resolve();
                 }
+                that._angularItems('compile');
                 that.trigger('dataBound');
             },
             bound: function (bound) {

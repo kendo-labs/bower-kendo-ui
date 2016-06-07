@@ -2537,6 +2537,12 @@ input.k-textbox:focus {
   .k-safari .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
     text-align: left;
   }
+  .k-webkit .k-pager-wrap,
+  .k-ff .k-pager-wrap,
+  .k-ie11 .k-pager-wrap,
+  .k-safari .k-pager-wrap {
+    min-height: 2.2em;
+  }
   .k-webkit .k-pager-wrap .k-pager-nav,
   .k-ff .k-pager-wrap .k-pager-nav,
   .k-ie11 .k-pager-wrap .k-pager-nav,

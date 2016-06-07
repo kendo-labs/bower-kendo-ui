@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, TimeView = kendo.TimeView, parse = kendo.parseDate, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, calendar = kendo.calendar, isInRange = calendar.isInRange, restrictValue = calendar.restrictValue, isEqualDatePart = calendar.isEqualDatePart, getMilliseconds = TimeView.getMilliseconds, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoDateTimePicker', CLICK = 'click' + ns, DISABLED = 'disabled', READONLY = 'readonly', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', STATEDISABLED = 'k-state-disabled', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MONTH = 'month', SPAN = '<span/>', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_OWNS = 'aria-owns', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', DATE = Date, MIN = new DATE(1800, 0, 1), MAX = new DATE(2099, 11, 31), dateViewParams = { view: 'date' }, timeViewParams = { view: 'time' }, extend = $.extend;
+        var kendo = window.kendo, TimeView = kendo.TimeView, parse = kendo.parseDate, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, calendar = kendo.calendar, isInRange = calendar.isInRange, restrictValue = calendar.restrictValue, isEqualDatePart = calendar.isEqualDatePart, getMilliseconds = TimeView.getMilliseconds, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoDateTimePicker', CLICK = 'click' + ns, DISABLED = 'disabled', READONLY = 'readonly', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', STATEDISABLED = 'k-state-disabled', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MONTH = 'month', SPAN = '<span/>', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_OWNS = 'aria-owns', ARIA_DISABLED = 'aria-disabled', DATE = Date, MIN = new DATE(1800, 0, 1), MAX = new DATE(2099, 11, 31), dateViewParams = { view: 'date' }, timeViewParams = { view: 'time' }, extend = $.extend;
         var DateTimePicker = Widget.extend({
             init: function (element, options) {
                 var that = this, disabled;
@@ -130,7 +130,7 @@
                 var that = this, element = that.element.off(ns), dateIcon = that._dateIcon.off(ns), timeIcon = that._timeIcon.off(ns), wrapper = that._inputWrapper.off(ns), readonly = options.readonly, disable = options.disable;
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false).on('keydown' + ns, $.proxy(that._keydown, that)).on('focus' + ns, function () {
+                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).on('keydown' + ns, $.proxy(that._keydown, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     }).on('focusout' + ns, function () {
                         that._inputWrapper.removeClass(FOCUSED);
@@ -154,7 +154,7 @@
                     });
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
-                    element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
+                    element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
             },
             readonly: function (readonly) {

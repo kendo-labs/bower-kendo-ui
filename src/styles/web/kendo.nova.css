@@ -1682,6 +1682,12 @@ html .km-pane-wrapper .km-widget,
     border-width: 1px;
     background-image: none;
   }
+  .k-webkit .k-pager-wrap,
+  .k-ff .k-pager-wrap,
+  .k-ie11 .k-pager-wrap,
+  .k-safari .k-pager-wrap {
+    min-height: 2.7em;
+  }
   .k-webkit .k-pager-wrap .k-pager-nav,
   .k-ff .k-pager-wrap .k-pager-nav,
   .k-ie11 .k-pager-wrap .k-pager-nav,
@@ -1718,6 +1724,16 @@ html .km-pane-wrapper .km-widget,
     background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 3px;
+  }
+  .k-webkit .k-pager-numbers:first-child,
+  .k-ff .k-pager-numbers:first-child,
+  .k-ie11 .k-pager-numbers:first-child,
+  .k-safari .k-pager-numbers:first-child,
+  .k-webkit .k-grid .k-pager-numbers:first-child,
+  .k-ff .k-grid .k-pager-numbers:first-child,
+  .k-ie11 .k-grid .k-pager-numbers:first-child,
+  .k-safari .k-grid .k-pager-numbers:first-child {
+    left: .3em;
   }
   .k-webkit .k-pager-numbers:hover,
   .k-ff .k-pager-numbers:hover,
@@ -1796,6 +1812,17 @@ html .km-pane-wrapper .km-widget,
   .k-safari .k-rtl .k-grid .k-pager-numbers {
     right: 5.6em;
     width: 5.15em;
+  }
+  .k-webkit .k-rtl .k-pager-numbers:first-child,
+  .k-ff .k-rtl .k-pager-numbers:first-child,
+  .k-ie11 .k-rtl .k-pager-numbers:first-child,
+  .k-safari .k-rtl .k-pager-numbers:first-child,
+  .k-webkit .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-ff .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-ie11 .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-safari .k-rtl .k-grid .k-pager-numbers:first-child {
+    left: auto;
+    right: .3em;
   }
   .k-webkit .k-pager-numbers .k-current-page,
   .k-ff .k-pager-numbers .k-current-page,

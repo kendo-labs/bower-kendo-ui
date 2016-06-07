@@ -1820,6 +1820,23 @@ div.k-filebrowser-dropzone em
     border-radius: @inner-border-radius - 1;
 }
 
+/* RTL Scheduler & Gantt */
+
+.k-rtl .k-scheduler-toolbar > ul.k-scheduler-navigation > li
+{
+    border-width: 0;
+}
+
+.k-rtl .k-scheduler-toolbar > ul > li:first-child {
+    border-right-width: 0;
+}
+
+.k-rtl .k-gantt-toolbar > ul.k-gantt-views > li,
+.k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li {
+    border-width: 0 0 3px 0; 
+    border-color: transparent;
+}
+
 /* Adaptive Grid */
 
 .k-grid-mobile .k-column-active + th.k-header
@@ -2885,6 +2902,11 @@ div.k-window.k-state-focused
         
         /* Responsive Pager */
     
+        .k-pager-wrap
+        {
+            min-height: 3.8em;
+        }
+        
         .k-pager-wrap .k-pager-nav,
         .k-pager-input {
             display: inline-block;
@@ -2903,6 +2925,11 @@ div.k-window.k-state-focused
             transform: translatey(-100%);
         }
         
+        .k-pager-numbers:first-child,
+        .k-grid .k-pager-numbers:first-child { // move left when previousNext: false
+            left: .3em;
+        }
+        
         .km-pane-wrapper .k-pager-numbers .k-link,
         .km-pane-wrapper .k-pager-numbers .k-state-selected,
         .km-pane-wrapper .k-pager-wrap > .k-link,
@@ -2916,6 +2943,11 @@ div.k-window.k-state-focused
         {
             right: 5em;
             width: 5.15em;
+        }
+        
+        .k-rtl .k-pager-numbers:first-child,
+        .k-rtl .k-grid .k-pager-numbers:first-child { // move right when previousNext: false
+            right: .3em;
         }
         
         .k-pager-numbers .k-current-page,

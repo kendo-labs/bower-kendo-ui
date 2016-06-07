@@ -75,13 +75,15 @@ var mangle = {
 };
 
 function renameModules(match) {
-    return match.replace(/['"]([\w\.\/]+)?['"]/g, '"$1.min"');
+  return match.replace(/['"]([\w\.\-\/]+)?['"]/g, function(_, module) {
+    return module == "jquery" ? '"jquery"' : `"${module}.min"`
+  });
 }
 
 var uglify = lazypipe()
     .pipe(logger, { after: 'uglify complete', extname: '.min.js', showChange: true })
     .pipe(uglify, { compress, mangle, preserveComments: "license" })
-    .pipe(replace, /define\(.+?\]/g, renameModules)
+    .pipe(replace, /define\(".+?\]/g, renameModules)
     .pipe(rename, { suffix: ".min" });
 
 

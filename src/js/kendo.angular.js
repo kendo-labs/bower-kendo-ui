@@ -56,6 +56,8 @@
                 TreeList: 'TreeListDataSource',
                 TreeView: 'HierarchicalDataSource',
                 Scheduler: 'SchedulerDataSource',
+                PivotGrid: 'PivotDataSource',
+                PivotConfigurator: 'PivotDataSource',
                 PanelBar: '$PLAIN',
                 Menu: '$PLAIN',
                 ContextMenu: '$PLAIN'

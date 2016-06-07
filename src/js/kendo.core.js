@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.2.523'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.2.607'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1149,7 +1149,7 @@
                         formats[idx] = patterns[formatsSequence[idx]];
                     }
                     idx = 0;
-                    formats = [
+                    formats = formats.concat([
                         'yyyy/MM/dd HH:mm:ss',
                         'yyyy/MM/dd HH:mm',
                         'yyyy/MM/dd',
@@ -1168,7 +1168,7 @@
                         'yyyy-MM-dd',
                         'HH:mm:ss',
                         'HH:mm'
-                    ].concat(formats);
+                    ]);
                 }
                 formats = isArray(formats) ? formats : [formats];
                 length = formats.length;
@@ -2338,7 +2338,7 @@
                         leftRight = isRtl ? 'right' : 'left';
                         containerScrollLeft = container.scrollLeft();
                         webkitCorrection = browser.webkit ? !isRtl ? 0 : container[0].scrollWidth - container.width() - 2 * containerScrollLeft : 0;
-                        mask = $('<div class=\'k-loading-mask\'><span class=\'k-loading-text\'>Loading...</span><div class=\'k-loading-image\'/><div class=\'k-loading-color\'/></div>').width('100%').height('100%').css('top', container.scrollTop()).css(leftRight, Math.abs(containerScrollLeft) + webkitCorrection).prependTo(container);
+                        mask = $('<div class=\'k-loading-mask\'><span class=\'k-loading-text\'>' + kendo.ui.progress.messages.loading + '</span><div class=\'k-loading-image\'/><div class=\'k-loading-color\'/></div>').width('100%').height('100%').css('top', container.scrollTop()).css(leftRight, Math.abs(containerScrollLeft) + webkitCorrection).prependTo(container);
                     }
                 } else if (mask) {
                     mask.remove();
@@ -2393,6 +2393,7 @@
                 };
             }
         });
+        kendo.ui.progress.messages = { loading: 'Loading...' };
         var ContainerNullObject = {
             bind: function () {
                 return this;

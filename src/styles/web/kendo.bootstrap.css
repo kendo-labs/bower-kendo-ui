@@ -2414,6 +2414,12 @@ td.k-state-focused.k-state-selected,
 }
 /* Responsive styles  */
 @media only screen and (max-width: 1024px) {
+  .k-webkit .k-pager-wrap,
+  .k-ff .k-pager-wrap,
+  .k-ie11 .k-pager-wrap,
+  .k-safari .k-pager-wrap {
+    min-height: 2.4em;
+  }
   .k-webkit .k-pager-wrap .k-pager-nav,
   .k-ff .k-pager-wrap .k-pager-nav,
   .k-ie11 .k-pager-wrap .k-pager-nav,
@@ -2433,7 +2439,7 @@ td.k-state-focused.k-state-selected,
   .k-ff .k-grid .k-pager-numbers,
   .k-ie11 .k-grid .k-pager-numbers,
   .k-safari .k-grid .k-pager-numbers {
-    position: relative;
+    position: absolute;
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -2443,12 +2449,22 @@ td.k-state-focused.k-state-selected,
     -webkit-flex-direction: column-reverse;
         -ms-flex-direction: column-reverse;
             flex-direction: column-reverse;
-    margin-left: .3em;
+    left: 5.6em;
     overflow: visible;
     height: auto;
     -ms-transform: translatey(-100%);
         transform: translatey(-100%);
     -webkit-transform: translatey(-100%);
+  }
+  .k-webkit .k-pager-numbers:first-child,
+  .k-ff .k-pager-numbers:first-child,
+  .k-ie11 .k-pager-numbers:first-child,
+  .k-safari .k-pager-numbers:first-child,
+  .k-webkit .k-grid .k-pager-numbers:first-child,
+  .k-ff .k-grid .k-pager-numbers:first-child,
+  .k-ie11 .k-grid .k-pager-numbers:first-child,
+  .k-safari .k-grid .k-pager-numbers:first-child {
+    left: .3em;
   }
   .k-webkit .km-pane-wrapper .k-pager-numbers .k-link,
   .k-ff .km-pane-wrapper .k-pager-numbers .k-link,
@@ -2487,8 +2503,18 @@ td.k-state-focused.k-state-selected,
   .k-ff .k-rtl .k-grid .k-pager-numbers,
   .k-ie11 .k-rtl .k-grid .k-pager-numbers,
   .k-safari .k-rtl .k-grid .k-pager-numbers {
-    right: 5.18em;
+    right: 5.68em;
     width: 4.45em;
+  }
+  .k-webkit .k-rtl .k-pager-numbers:first-child,
+  .k-ff .k-rtl .k-pager-numbers:first-child,
+  .k-ie11 .k-rtl .k-pager-numbers:first-child,
+  .k-safari .k-rtl .k-pager-numbers:first-child,
+  .k-webkit .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-ff .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-ie11 .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-safari .k-rtl .k-grid .k-pager-numbers:first-child {
+    right: .3em;
   }
   .k-webkit .k-pager-numbers .k-current-page,
   .k-ff .k-pager-numbers .k-current-page,

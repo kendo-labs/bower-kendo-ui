@@ -33,7 +33,7 @@
         depends: ['popup']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, keys = kendo.keys, parse = kendo.parseDate, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, support = kendo.support, browser = support.browser, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoTimePicker', CLICK = 'click' + ns, DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', LI = 'li', SPAN = '<span/>', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_SELECTED = 'aria-selected', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ID = 'id', isArray = $.isArray, extend = $.extend, proxy = $.proxy, DATE = Date, TODAY = new DATE();
+        var kendo = window.kendo, keys = kendo.keys, parse = kendo.parseDate, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, support = kendo.support, browser = support.browser, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoTimePicker', CLICK = 'click' + ns, DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', LI = 'li', SPAN = '<span/>', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_SELECTED = 'aria-selected', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_DISABLED = 'aria-disabled', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ID = 'id', isArray = $.isArray, extend = $.extend, proxy = $.proxy, DATE = Date, TODAY = new DATE();
         TODAY = new DATE(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate(), 0, 0, 0);
         var TimeView = function (options) {
             var that = this, id = options.id;
@@ -435,13 +435,13 @@
                 var that = this, disable = options.disable, readonly = options.readonly, arrow = that._arrow.off(ns), element = that.element.off(ns), wrapper = that._inputWrapper.off(ns);
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
+                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     });
                     arrow.on(CLICK, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
-                    element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
+                    element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
             },
             readonly: function (readonly) {

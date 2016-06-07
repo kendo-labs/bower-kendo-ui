@@ -412,12 +412,17 @@
                     that.options.valueMapper({
                         value: this.options.selectable === 'multiple' ? value : value[0],
                         success: function (indexes) {
-                            that._values = [];
-                            that._selectedIndexes = [];
-                            that._selectedDataItems = [];
-                            indexes = toArray(indexes);
+                            if (indexes === undefined || indexes === -1 || indexes === null) {
+                                indexes = [];
+                            } else {
+                                indexes = toArray(indexes);
+                            }
                             if (!indexes.length) {
                                 indexes = [-1];
+                            } else {
+                                that._values = [];
+                                that._selectedIndexes = [];
+                                that._selectedDataItems = [];
                             }
                             that.select(indexes);
                         }
