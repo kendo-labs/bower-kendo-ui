@@ -473,8 +473,8 @@ html .km-pane-wrapper .k-header {
 .k-button:hover,
 .k-button.k-state-hover {
   color: #d5d5d5;
-  border-color: #616161;
-  background-color: #616161;
+  border-color: #717171;
+  background-color: #717171;
 }
 .k-button:active,
 .k-button.k-state-active {
@@ -1852,8 +1852,8 @@ div.k-splitbar.k-state-focused .k-icon,
 .k-button:active:hover,
 .k-button.k-state-active:hover {
   color: #d5d5d5;
-  border-color: #616161;
-  background-color: #616161;
+  border-color: #717171;
+  background-color: #717171;
 }
 .k-primary:active,
 .k-primary.k-state-active,
@@ -1906,8 +1906,8 @@ div.k-splitbar.k-state-focused .k-icon,
 .k-widget .k-button:active:hover,
 .k-widget .k-button.k-state-active:hover {
   color: #d5d5d5;
-  border-color: #616161;
-  background-color: #616161;
+  border-color: #717171;
+  background-color: #717171;
 }
 .k-button[disabled],
 .k-button.k-state-disabled,

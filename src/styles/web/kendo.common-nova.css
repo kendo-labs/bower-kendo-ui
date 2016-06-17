@@ -10262,6 +10262,9 @@ div.k-navigator .k-navigator-w {
   z-index: 100;
   cursor: crosshair;
 }
+.k-spreadsheet .k-spreadsheet-edit-container .k-single-selection::after {
+  display: none;
+}
 .k-spreadsheet .k-auto-fill,
 .k-spreadsheet .k-auto-fill-punch {
   position: absolute;
@@ -12031,10 +12034,6 @@ form.k-filter-menu .k-textbox {
 }
 .k-rtl .k-widget.k-datetimepicker .k-picker-wrap .k-icon {
   margin: 0 6px;
-}
-.k-webkit .k-rtl .k-widget .k-dropdown-wrap .k-input,
-.k-webkit .k-rtl .k-widget .k-numeric-wrap .k-input {
-  margin-right: 0;
 }
 .k-rtl .k-calendar .k-icon.k-i-arrow-w,
 .k-rtl .k-calendar .k-link:not(.k-state-disabled):hover > .k-i-arrow-w,

@@ -474,6 +474,9 @@
                 }
                 $.each(indexes, function (_, index) {
                     var rangeStart = Math.floor(index / take) * take;
+                    if (index === rangeStart && rangeStart > take) {
+                        rangeStart -= take;
+                    }
                     that._promisesList.push(that.deferredRange(rangeStart));
                 });
                 if (isEmptyList) {

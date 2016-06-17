@@ -10134,6 +10134,9 @@ div.k-navigator .k-navigator-w {
   z-index: 100;
   cursor: crosshair;
 }
+.k-spreadsheet .k-spreadsheet-edit-container .k-single-selection::after {
+  display: none;
+}
 .k-spreadsheet .k-auto-fill,
 .k-spreadsheet .k-auto-fill-punch {
   position: absolute;

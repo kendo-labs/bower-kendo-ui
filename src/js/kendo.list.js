@@ -183,7 +183,7 @@
                 if (!force) {
                     dataSource.filter(expression);
                 } else {
-                    dataSource.read({ filter: expression });
+                    dataSource.read(dataSource._mergeState({ filter: expression }));
                 }
             },
             _header: function () {
