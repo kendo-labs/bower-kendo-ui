@@ -115,7 +115,8 @@
   line-height: normal;
   outline: 0;
 }
-.k-widget ::-ms-clear {
+.k-widget ::-ms-clear,
+.k-list-filter ::-ms-clear {
   width: 0;
   height: 0;
 }

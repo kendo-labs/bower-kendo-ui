@@ -109,8 +109,8 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "startswith": "Commence par",
     "contains": "Contient",
     "doesnotcontain": "Ne contient pas",
-    "isnull": "est nul",
-    "isnotnull": "c nul" ,
+    "isnull": "Est nul",
+    "isnotnull": "N’est pas nul" ,
     "isempty": "Est vide",
     "isnotempty": "N’est pas vide"
   },
@@ -434,16 +434,18 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
     "title": "Titre",
     "noTimezone": "No timezone"
   },
-  "event": "Event",
+  "event": "Evènement",
   "recurrenceMessages": {
-    "deleteRecurring": "Voulez-vous supprimer seulement cet événement ou toute la série?",
-    "deleteWindowOccurrence": "Suppression de l'élément courant",
-    "deleteWindowSeries": "Suppression de toute la série",
-    "deleteWindowTitle": "Suppression d'un élément récurrent",
-    "editRecurring": "Do you want to edit only this event occurrence or the whole series?",
-    "editWindowOccurrence": "Edit current occurrence",
-    "editWindowSeries": "Edit the series",
-    "editWindowTitle": "Edit Recurring Item"
+      "deleteRecurring": "Voulez-vous supprimer seulement cet évènement ou toute la série?",
+      "deleteWindowOccurrence": "Suppression de l'élément courant",
+      "deleteWindowSeries": "Suppression de toute la série",
+      "deleteWindowTitle": "Suppression d'un élément récurrent",
+      "editRecurring": "Voulez-vous modifier seulement cet évènement ou toute la série?",
+
+      "editWindowOccurrence": "Modifier l'occurrence courante",
+      "editWindowSeries": "Modifier la série",
+      "editWindowTitle": "Modification de l'élément courant"
+
   },
   "save": "Sauvegarder",
   "time": "Time",
@@ -453,7 +455,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
     "day": "Jour",
     "month": "Mois",
     "week": "Semaine",
-    "workWeek": "Work Week"
+    "workWeek": "Semaine de travail"
   },
   "deleteWindowTitle": "Suppression de l'élément",
   "showFullDay": "Montrer toute la journée",
