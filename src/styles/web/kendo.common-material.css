@@ -11787,6 +11787,10 @@ form.k-filter-menu .k-textbox {
 .k-panelbar .k-link > .k-i-arrow-e {
   background-position: 0 -190px;
 }
+.k-tabstrip .k-button .k-i-pdf,
+.k-tabstrip .k-button:hover .k-i-pdf {
+  background-position: -64px -80px;
+}
 .k-pivot-configurator-settings .k-si-close,
 .k-pivot-configurator-settings .k-item.k-state-hover .k-si-close,
 .k-pivot-configurator-settings .k-button:hover .k-si-close {

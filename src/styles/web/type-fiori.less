@@ -2261,6 +2261,9 @@ html .km-pane-wrapper .km-widget,
     border-color: @radio-hover-border-color;
 }
 
+.k-radio:disabled:checked + .k-radio-label:active:before {
+    border-color: @radio-disabled-border-color;
+}
 
 // Retina sprite
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2),

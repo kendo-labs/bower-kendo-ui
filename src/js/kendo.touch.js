@@ -116,6 +116,9 @@
             cancel: function () {
                 this.events.cancel();
             },
+            destroy: function () {
+                this.events.destroy();
+            },
             _triggerTouch: function (type, e) {
                 if (this.trigger(type, {
                         touch: e.touch,

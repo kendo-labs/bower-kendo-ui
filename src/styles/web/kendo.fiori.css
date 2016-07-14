@@ -1729,6 +1729,10 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-radio:disabled:checked + .k-radio-label:after {
+  background-color: #007cc0;
+  opacity: .5;
+}
 .k-radio:focus + .k-radio-label:before {
   border-color: #bfbfbf;
   -webkit-box-shadow: none;
@@ -1736,6 +1740,9 @@ html .km-pane-wrapper .km-widget,
 }
 .k-radio:checked + .k-radio-label:active:before {
   border-color: #007cc0;
+}
+.k-radio:disabled:checked + .k-radio-label:active:before {
+  border-color: #bfbfbf;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-icon:not(.k-loading),

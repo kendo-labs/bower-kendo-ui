@@ -627,13 +627,13 @@
             _drag: function (e) {
                 e.preventDefault();
                 var cursorElement = this._elementUnderCursor(e);
+                if (this.options.autoScroll && this._cursorElement !== cursorElement) {
+                    this._scrollableParent = findScrollableParent(cursorElement);
+                    this._cursorElement = cursorElement;
+                }
                 this._lastEvent = e;
                 this._processMovement(e, cursorElement);
                 if (this.options.autoScroll) {
-                    if (this._cursorElement !== cursorElement) {
-                        this._scrollableParent = findScrollableParent(cursorElement);
-                        this._cursorElement = cursorElement;
-                    }
                     if (this._scrollableParent[0]) {
                         var velocity = autoScrollVelocity(e.x.location, e.y.location, scrollableViewPort(this._scrollableParent));
                         this._scrollCompenstation = $.extend({}, this.hintOffset);

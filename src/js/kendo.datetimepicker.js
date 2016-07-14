@@ -288,7 +288,7 @@
                 var that = this, options = that.options, min = options.min, max = options.max, dates = options.dates, timeView = that.timeView, current = that._value, date = parse(value, options.parseFormats, options.culture), isSameType = date === null && current === null || date instanceof Date && current instanceof Date, rebind, timeViewOptions, old, skip, formattedValue;
                 if (options.disableDates && options.disableDates(date)) {
                     date = null;
-                    if (!that._old) {
+                    if (!that._old && !that.element.val()) {
                         value = null;
                     }
                 }

@@ -898,6 +898,7 @@
             init: function (element, options) {
                 var that = this;
                 Menu.fn.init.call(that, element, options);
+                that._marker = kendo.guid().substring(0, 8);
                 that.target = $(that.options.target);
                 that._popup();
                 that._wire();
@@ -920,7 +921,7 @@
             setOptions: function (options) {
                 var that = this;
                 Menu.fn.setOptions.call(that, options);
-                that.target.off(that.showOn + NS, that._showProxy);
+                that.target.off(that.showOn + NS + that._marker, that._showProxy);
                 if (that.userEvents) {
                     that.userEvents.destroy();
                 }
@@ -933,8 +934,8 @@
             },
             destroy: function () {
                 var that = this;
-                that.target.off(that.options.showOn + NS);
-                DOCUMENT_ELEMENT.off(kendo.support.mousedown + NS, that._closeProxy);
+                that.target.off(that.options.showOn + NS + that._marker);
+                DOCUMENT_ELEMENT.off(kendo.support.mousedown + NS + that._marker, that._closeProxy);
                 if (that.userEvents) {
                     that.userEvents.destroy();
                 }
@@ -963,7 +964,7 @@
                             that.popup.open();
                         }
                         DOCUMENT_ELEMENT.off(that.popup.downEvent, that.popup._mousedownProxy);
-                        DOCUMENT_ELEMENT.on(kendo.support.mousedown + NS, that._closeProxy);
+                        DOCUMENT_ELEMENT.on(kendo.support.mousedown + NS + that._marker, that._closeProxy);
                     }
                 }
                 return that;
@@ -1038,13 +1039,13 @@
                             filter: options.filter,
                             allowSelection: false
                         });
-                        target.on(options.showOn + NS, false);
+                        target.on(options.showOn + NS + that._marker, false);
                         that.userEvents.bind('hold', that._showProxy);
                     } else {
                         if (options.filter) {
-                            target.on(options.showOn + NS, options.filter, that._showProxy);
+                            target.on(options.showOn + NS + that._marker, options.filter, that._showProxy);
                         } else {
-                            target.on(options.showOn + NS, that._showProxy);
+                            target.on(options.showOn + NS + that._marker, that._showProxy);
                         }
                     }
                 }

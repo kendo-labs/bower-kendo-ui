@@ -1865,6 +1865,10 @@ textarea.k-textbox,
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-radio:disabled:checked + .k-radio-label:after {
+  background-color: #1b8dd6;
+  opacity: .5;
+}
 .k-radio:focus + .k-radio-label:before {
   border-color: #1a87cd;
   -webkit-box-shadow: 0 0 3px 0 #1984c8;

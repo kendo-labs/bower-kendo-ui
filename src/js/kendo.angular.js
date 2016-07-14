@@ -400,7 +400,7 @@
             var updating = false;
             var valueIsCollection = kendo.ui.MultiSelect && widget instanceof kendo.ui.MultiSelect;
             var length = function (value) {
-                return valueIsCollection ? value.length : 0;
+                return value && valueIsCollection ? value.length : 0;
             };
             var currentValueLength = length(getter(scope));
             widget.$angular_setLogicValue(getter(scope));

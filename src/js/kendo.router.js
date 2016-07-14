@@ -244,7 +244,10 @@
                     return;
                 }
                 if (!silent) {
-                    if (this.trigger(CHANGE, { url: to })) {
+                    if (this.trigger(CHANGE, {
+                            url: to,
+                            decode: false
+                        })) {
                         return;
                     }
                 }
@@ -314,23 +317,25 @@
                 this.route = route;
                 this._callback = callback;
             },
-            callback: function (url, back) {
+            callback: function (url, back, decode) {
                 var params, idx = 0, length, queryStringParams = kendo.parseQueryStringParams(url);
                 queryStringParams._back = back;
                 url = stripUrl(url);
                 params = this.route.exec(url).slice(1);
                 length = params.length;
-                for (; idx < length; idx++) {
-                    if (typeof params[idx] !== 'undefined') {
-                        params[idx] = decodeURIComponent(params[idx]);
+                if (decode) {
+                    for (; idx < length; idx++) {
+                        if (typeof params[idx] !== 'undefined') {
+                            params[idx] = decodeURIComponent(params[idx]);
+                        }
                     }
                 }
                 params.push(queryStringParams);
                 this._callback.apply(null, params);
             },
-            worksWith: function (url, back) {
+            worksWith: function (url, back, decode) {
                 if (this.route.test(stripUrl(url))) {
-                    this.callback(url, back);
+                    this.callback(url, back, decode);
                     return true;
                 } else {
                     return false;
@@ -409,6 +414,7 @@
             },
             _urlChanged: function (e) {
                 var url = e.url;
+                var decode = typeof e.decode === 'undefined';
                 var back = e.backButtonPressed;
                 if (!url) {
                     url = '/';
@@ -424,7 +430,7 @@
                 var idx = 0, routes = this.routes, route, length = routes.length;
                 for (; idx < length; idx++) {
                     route = routes[idx];
-                    if (route.worksWith(url, back)) {
+                    if (route.worksWith(url, back, decode)) {
                         return;
                     }
                 }

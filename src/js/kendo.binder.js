@@ -1245,7 +1245,7 @@
             return result;
         }
         function bindElement(element, source, roles, parents) {
-            var role = element.getAttribute('data-' + kendo.ns + 'role'), idx, bind = element.getAttribute('data-' + kendo.ns + 'bind'), children = element.children, childrenCopy = [], deep = true, bindings, options = {}, target;
+            var role = element.getAttribute('data-' + kendo.ns + 'role'), idx, bind = element.getAttribute('data-' + kendo.ns + 'bind'), childrenCopy = [], deep = true, bindings, options = {}, target;
             parents = parents || [source];
             if (role || bind) {
                 unbindElement(element, false);
@@ -1298,6 +1298,7 @@
             if (target) {
                 element.kendoBindingTarget = target;
             }
+            var children = element.children;
             if (deep && children) {
                 for (idx = 0; idx < children.length; idx++) {
                     childrenCopy[idx] = children[idx];

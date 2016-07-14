@@ -1715,6 +1715,10 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-radio:disabled:checked + .k-radio-label:after {
+  background-color: #3f51b5;
+  opacity: .5;
+}
 .k-radio:focus + .k-radio-label:before {
   border-color: #6b7acb;
   -webkit-box-shadow: 0 0 2px 0 #6b7acb;
@@ -1737,6 +1741,14 @@ html .km-pane-wrapper .km-widget,
   border-color: #ffffff;
   -webkit-box-shadow: 0 0 0 12px rgba(96, 96, 96, 0.3);
           box-shadow: 0 0 0 12px rgba(96, 96, 96, 0.3);
+}
+.k-radio:disabled:checked + .k-radio-label:before,
+.k-radio:disabled:checked + .k-radio-label:hover:before {
+  border-color: #bfbfbf;
+}
+.k-radio:disabled:checked + .k-radio-label:active:before {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-icon:not(.k-loading),

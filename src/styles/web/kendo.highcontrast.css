@@ -1796,6 +1796,10 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-radio:disabled:checked + .k-radio-label:after {
+  background-color: #fff;
+  opacity: .5;
+}
 .k-radio:focus + .k-radio-label:before {
   border-color: #fff;
   -webkit-box-shadow: 0 0 3px 0 #fff;

@@ -316,7 +316,8 @@ textarea.k-textbox:hover,
 .k-button .k-image,
 .k-panelbar > .k-state-active > .k-header > .k-icon,
 .k-panelbar > .k-state-active > .k-header .k-state-default .k-icon,
-.k-tabstrip-scrollable .k-button:active .k-icon {
+.k-tabstrip-scrollable .k-button:active .k-icon,
+.k-tabstrip .k-button .k-icon {
   opacity: .4;
 }
 .k-primary .k-icon,
@@ -1336,6 +1337,10 @@ input.k-textbox:active {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-radio:disabled:checked + .k-radio-label:after {
+  background-color: #ff4350;
+  opacity: .5;
+}
 .k-radio:focus + .k-radio-label:before {
   border-color: #ff4350;
   -webkit-box-shadow: none;
@@ -1344,6 +1349,9 @@ input.k-textbox:active {
 .k-radio:checked + .k-radio-label:hover:before,
 .k-radio:checked + .k-radio-label:active:before {
   border-color: #ff4350;
+}
+.k-radio:disabled:checked + .k-radio-label:hover:before {
+  border-color: #e0e0e0;
 }
 /* Drag & Drop */
 .k-drag-clue {
