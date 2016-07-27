@@ -1780,7 +1780,7 @@ textarea.k-textbox,
 }
 .k-checkbox:checked + .k-checkbox-label:before {
   background-color: #ffffff;
-  border-color: #a0dba9;
+  border-color: #d3d3d7;
   color: #1a87cd;
 }
 .k-checkbox-label:active:before {
@@ -1806,7 +1806,7 @@ textarea.k-textbox,
 .k-checkbox:checked:disabled + .k-checkbox-label:hover:before {
   color: #a6a6ad;
   background: #f4f5f7;
-  border-color: #9cd9a6;
+  border-color: #d3d3d7;
   border-radius: 3px;
 }
 .k-checkbox:focus + .k-checkbox-label:before {

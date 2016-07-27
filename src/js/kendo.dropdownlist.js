@@ -837,6 +837,7 @@
                     icon = '<span unselectable="on" class="k-icon k-i-search">select</span>';
                     this.filterInput = $('<input class="k-textbox"/>').attr({
                         placeholder: this.element.attr('placeholder'),
+                        title: this.element.attr('title'),
                         role: 'listbox',
                         'aria-haspopup': true,
                         'aria-expanded': false

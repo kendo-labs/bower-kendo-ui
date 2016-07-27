@@ -591,7 +591,9 @@ html .km-pane-wrapper .k-header {
 .k-listview > .k-state-focused,
 .k-listview > .k-state-focused.k-state-selected,
 td.k-state-focused,
-.k-button.k-state-focused {
+.k-button.k-state-focused,
+.k-upload-files .k-button:focus,
+.k-upload-files .k-button:focus:not(.k-state-disabled):not([disabled]) {
   -webkit-box-shadow: inset 0 0 0 1px #808080;
           box-shadow: inset 0 0 0 1px #808080;
 }
@@ -2126,7 +2128,7 @@ span.k-colorpicker {
 .k-panelbar .k-tabstrip-items .k-state-active {
   background-color: #3f51b5;
   background-image: none;
-  border-color: #00b0ff;
+  border-bottom-color: #00b0ff;
 }
 .k-tabstrip .k-content.k-state-active {
   border-color: transparent;
@@ -2448,9 +2450,7 @@ td.k-group-cell,
   color: #444444;
   background-color: #fff;
 }
-.k-upload-files .k-button,
-.k-upload-files .k-button:focus,
-.k-upload-files .k-button:focus:not(.k-state-disabled):not([disabled]) {
+.k-upload-files .k-button {
   -webkit-box-shadow: none;
           box-shadow: none;
 }

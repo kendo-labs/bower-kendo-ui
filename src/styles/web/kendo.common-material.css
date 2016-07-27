@@ -2859,7 +2859,7 @@ div.k-grid-footer {
 .k-header > .k-grid-filter,
 .k-header > .k-header-column-menu {
   float: right;
-  margin: -0.5em -0.6em -0.4em;
+  margin: -0.5em -0.6em -0.4em 0;
   padding: .5em .2em .4em;
   position: relative;
   z-index: 1;
@@ -4495,6 +4495,7 @@ span.k-dropdown,
 .k-filter-menu .k-datetimepicker,
 .k-filter-menu .k-numerictextbox,
 .k-filter-menu .k-dropdown,
+.k-filter-menu .k-autocomplete,
 .k-filter-menu .k-textbox {
   width: 13.2em;
 }
@@ -11330,6 +11331,7 @@ span.k-tooltip {
 }
 .k-window-titlebar .k-window-actions {
   right: 0.929em;
+  padding-top: .45em;
 }
 div.k-window {
   border-width: 0;
@@ -11654,7 +11656,7 @@ form.k-filter-menu .k-textbox {
 .k-grid-header .k-grid-filter,
 .k-grid-header .k-header-column-menu {
   padding: .714em;
-  margin: -0.786em -0.6em;
+  margin: -0.786em -0.6em -0.786em 0;
 }
 .k-grid-header .k-header-column-menu .k-i-arrowhead-s {
   background-position: -64px -32px;

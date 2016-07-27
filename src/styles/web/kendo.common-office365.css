@@ -2859,7 +2859,7 @@ div.k-grid-footer {
 .k-header > .k-grid-filter,
 .k-header > .k-header-column-menu {
   float: right;
-  margin: -0.5em -0.6em -0.4em;
+  margin: -0.5em -0.6em -0.4em 0;
   padding: .5em .2em .4em;
   position: relative;
   z-index: 1;
@@ -4495,6 +4495,7 @@ span.k-dropdown,
 .k-filter-menu .k-datetimepicker,
 .k-filter-menu .k-numerictextbox,
 .k-filter-menu .k-dropdown,
+.k-filter-menu .k-autocomplete,
 .k-filter-menu .k-textbox {
   width: 13.2em;
 }
@@ -10921,7 +10922,7 @@ span.k-tooltip {
 }
 .k-header > .k-grid-filter,
 .k-header > .k-header-column-menu {
-  margin: -0.5em -0.4em -0.4em;
+  margin: -0.5em -0.4em -0.4em 0;
   padding: .4em .2em .5em;
 }
 .k-grouping-header {

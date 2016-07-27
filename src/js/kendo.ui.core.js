@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.2.714'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.2.727'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -14732,6 +14732,9 @@
                     that.element.kendoStop(true);
                     wrap.css({ overflow: HIDDEN });
                     that.element.kendoAnimate(animation);
+                    if (skipEffects) {
+                        that._animationClose();
+                    }
                 }
             },
             _trigger: function (ev) {
@@ -14802,9 +14805,19 @@
                 });
             },
             _position: function (fixed) {
-                var that = this, element = that.element, wrapper = that.wrapper, options = that.options, viewport = $(options.viewport), viewportOffset = viewport.offset(), anchor = $(options.anchor), origins = options.origin.toLowerCase().split(' '), positions = options.position.toLowerCase().split(' '), collisions = that.collisions, zoomLevel = support.zoomLevel(), siblingContainer, parents, parentZIndex, zIndex = 10002, isWindow = !!(viewport[0] == window && window.innerWidth && zoomLevel <= 1.02), idx = 0, docEl = document.documentElement, length, viewportWidth, viewportHeight;
-                viewportWidth = isWindow ? window.innerWidth : viewport.width();
-                viewportHeight = isWindow ? window.innerHeight : viewport.height();
+                var that = this, element = that.element, wrapper = that.wrapper, options = that.options, viewport = $(options.viewport), zoomLevel = support.zoomLevel(), isWindow = !!(viewport[0] == window && window.innerWidth && zoomLevel <= 1.02), anchor = $(options.anchor), origins = options.origin.toLowerCase().split(' '), positions = options.position.toLowerCase().split(' '), collisions = that.collisions, siblingContainer, parents, parentZIndex, zIndex = 10002, idx = 0, docEl = document.documentElement, length, viewportOffset, viewportWidth, viewportHeight;
+                if (isWindow) {
+                    viewportWidth = window.innerWidth;
+                    viewportHeight = window.innerHeight;
+                    viewportOffset = {
+                        top: window.pageYOffset || document.documentElement.scrollTop || 0,
+                        left: window.pageXOffset || document.documentElement.scrollLeft || 0
+                    };
+                } else {
+                    viewportWidth = viewport.width();
+                    viewportHeight = viewport.height();
+                    viewportOffset = viewport.offset();
+                }
                 if (isWindow && docEl.scrollHeight - docEl.clientHeight > 0) {
                     viewportWidth -= kendo.support.scrollbar();
                 }
@@ -14837,13 +14850,8 @@
                     pos = getOffset(wrapper, POSITION, true);
                     offset = getOffset(wrapper);
                 }
-                if (viewport[0] === window) {
-                    offset.top -= window.pageYOffset || document.documentElement.scrollTop || 0;
-                    offset.left -= window.pageXOffset || document.documentElement.scrollLeft || 0;
-                } else {
-                    offset.top -= viewportOffset.top;
-                    offset.left -= viewportOffset.left;
-                }
+                offset.top -= viewportOffset.top;
+                offset.left -= viewportOffset.left;
                 if (!that.wrapper.data(LOCATION)) {
                     wrapper.data(LOCATION, extend({}, pos));
                 }
@@ -19837,7 +19845,7 @@
                 }
                 that._value = date;
                 that.dateView.value(date);
-                that.element.val(date ? kendo.toString(date, options.format, options.culture) : value);
+                that.element.val(kendo.toString(date || value, options.format, options.culture));
                 that._updateARIA(date);
                 return date;
             },
@@ -21202,6 +21210,7 @@
                     icon = '<span unselectable="on" class="k-icon k-i-search">select</span>';
                     this.filterInput = $('<input class="k-textbox"/>').attr({
                         placeholder: this.element.attr('placeholder'),
+                        title: this.element.attr('title'),
                         role: 'listbox',
                         'aria-haspopup': true,
                         'aria-expanded': false
@@ -22802,15 +22811,19 @@
                 }
             },
             _input: function () {
-                var that = this, accessKey = that.element[0].accessKey, input = that._innerWrapper.children('input.k-input');
+                var that = this;
+                var element = that.element;
+                var accessKey = element[0].accessKey;
+                var input = that._innerWrapper.children('input.k-input');
                 if (!input[0]) {
                     input = $('<input class="k-input" style="width: 25px" />').appendTo(that._innerWrapper);
                 }
-                that.element.removeAttr('accesskey');
+                element.removeAttr('accesskey');
                 that._focused = that.input = input.attr({
                     'accesskey': accessKey,
                     'autocomplete': 'off',
                     'role': 'listbox',
+                    'title': element[0].title,
                     'aria-expanded': false
                 });
             },
@@ -30764,7 +30777,7 @@
                     date = null;
                 }
                 that._value = date;
-                that.element.val(date ? kendo.toString(date, options.format, options.culture) : value);
+                that.element.val(kendo.toString(date || value, options.format, options.culture));
                 timeView.value(date);
                 return date;
             },
@@ -31138,7 +31151,7 @@
                         timeView.bind();
                     }
                 }
-                that.element.val(date ? kendo.toString(date, options.format, options.culture) : value);
+                that.element.val(kendo.toString(date || value, options.format, options.culture));
                 that._updateARIA(date);
                 return date;
             },
@@ -31977,12 +31990,12 @@
                 ];
                 this.title(options.title);
                 for (var i = 0; i < dimensions.length; i++) {
-                    var value = options[dimensions[i]];
-                    if (value && value != Infinity) {
+                    var value = options[dimensions[i]] || '';
+                    if (value != Infinity) {
                         wrapper.css(dimensions[i], value);
                     }
                 }
-                if (maxHeight && maxHeight != Infinity) {
+                if (maxHeight != Infinity) {
                     this.element.css('maxHeight', maxHeight);
                 }
                 if (width) {
@@ -31991,6 +32004,8 @@
                     } else {
                         wrapper.width(constrain(width, options.minWidth, options.maxWidth));
                     }
+                } else {
+                    wrapper.width('');
                 }
                 if (height) {
                     if (height.toString().indexOf('%') > 0) {
@@ -31998,6 +32013,8 @@
                     } else {
                         wrapper.height(constrain(height, options.minHeight, options.maxHeight));
                     }
+                } else {
+                    wrapper.height('');
                 }
                 if (!options.visible) {
                     wrapper.hide();

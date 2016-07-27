@@ -158,12 +158,12 @@
                 ];
                 this.title(options.title);
                 for (var i = 0; i < dimensions.length; i++) {
-                    var value = options[dimensions[i]];
-                    if (value && value != Infinity) {
+                    var value = options[dimensions[i]] || '';
+                    if (value != Infinity) {
                         wrapper.css(dimensions[i], value);
                     }
                 }
-                if (maxHeight && maxHeight != Infinity) {
+                if (maxHeight != Infinity) {
                     this.element.css('maxHeight', maxHeight);
                 }
                 if (width) {
@@ -172,6 +172,8 @@
                     } else {
                         wrapper.width(constrain(width, options.minWidth, options.maxWidth));
                     }
+                } else {
+                    wrapper.width('');
                 }
                 if (height) {
                     if (height.toString().indexOf('%') > 0) {
@@ -179,6 +181,8 @@
                     } else {
                         wrapper.height(constrain(height, options.minHeight, options.maxHeight));
                     }
+                } else {
+                    wrapper.height('');
                 }
                 if (!options.visible) {
                     wrapper.hide();

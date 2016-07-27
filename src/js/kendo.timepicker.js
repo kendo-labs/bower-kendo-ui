@@ -562,7 +562,7 @@
                     date = null;
                 }
                 that._value = date;
-                that.element.val(date ? kendo.toString(date, options.format, options.culture) : value);
+                that.element.val(kendo.toString(date || value, options.format, options.culture));
                 timeView.value(date);
                 return date;
             },

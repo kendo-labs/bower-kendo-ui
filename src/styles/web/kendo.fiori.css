@@ -1010,17 +1010,17 @@ div.k-filebrowser-dropzone em {
 .k-widget.k-notification.k-notification-success {
   background-color: #cce8d8;
   color: #333;
-  border-color: #595959;
+  border-color: #48a06e;
 }
 .k-widget.k-notification.k-notification-warning {
   background-color: #fef1d0;
   color: #333;
-  border-color: #ff8b8b;
+  border-color: #fabd21;
 }
 .k-widget.k-notification.k-notification-error {
   background-color: #ffd7d7;
   color: #333;
-  border-color: #666666;
+  border-color: #ff7171;
 }
 /* Gantt */
 .k-gantt .k-treelist {

@@ -848,7 +848,9 @@ html .km-pane-wrapper .k-header
 .k-listview>.k-state-focused,
 .k-listview > .k-state-focused.k-state-selected,
 td.k-state-focused,
-.k-button.k-state-focused
+.k-button.k-state-focused,
+.k-upload-files .k-button:focus,
+.k-upload-files .k-button:focus:not(.k-state-disabled):not([disabled])
 {
     .box-shadow(@focused-item-shadow);
 }
@@ -2709,7 +2711,7 @@ border-radius: 0;
 .k-panelbar .k-tabstrip-items .k-state-active {
 background-color: @header-background-color;
 .composite-background(@active-gradient);
-border-color: @selected-background;
+border-bottom-color: @selected-background;
 }
 
 .k-tabstrip .k-content.k-state-active {
@@ -3088,9 +3090,7 @@ color: @widget-text-color;
 background-color: @widget-background-color;
 }
 
-.k-upload-files .k-button,
-.k-upload-files .k-button:focus,
-.k-upload-files .k-button:focus:not(.k-state-disabled):not([disabled]) {
+.k-upload-files .k-button {
     .box-shadow(none);
 }
 
