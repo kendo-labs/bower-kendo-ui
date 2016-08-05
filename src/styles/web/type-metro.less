@@ -2075,6 +2075,11 @@ html .km-pane-wrapper .km-widget,
     border-color: @active-border-color;
 }
 
+.k-tabstrip-top .k-tabstrip-items .k-state-active,
+.k-panelbar .k-tabstrip-top .k-tabstrip-items .k-state-active {
+    border-bottom-color: @active-background-color;
+}
+
 .k-tabstrip .k-content.k-state-active
 {
     background-color: @tabstrip-active-background;
@@ -2355,6 +2360,7 @@ html .km-pane-wrapper .km-widget,
     .k-webkit,
     .k-ff,
     .k-ie11,
+    .k-edge,
     .k-safari {
 
         .km-pane-wrapper .k-pager-numbers,

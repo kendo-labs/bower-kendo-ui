@@ -2076,6 +2076,11 @@ html .km-pane-wrapper .km-widget,
     border-color: @active-border-color;
 }
 
+.k-tabstrip-top .k-tabstrip-items .k-state-active,
+.k-panelbar .k-tabstrip-top .k-tabstrip-items .k-state-active {
+   border-bottom-color: @active-background-color;
+}
+
 .k-tabstrip .k-content.k-state-active
 {
     background-color: @tabstrip-active-background;
@@ -2339,6 +2344,7 @@ html .km-pane-wrapper .km-widget,
     .k-webkit,
     .k-ff,
     .k-ie11,
+    .k-edge,
     .k-safari {
 
         .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
@@ -3049,6 +3055,7 @@ td.k-state-focused.k-state-selected,
     .k-webkit,
     .k-ff,
     .k-ie11,
+    .k-edge,
     .k-safari {
         .k-pager-wrap {
             min-height: 2.4em;
@@ -3212,6 +3219,7 @@ td.k-state-focused.k-state-selected,
     .k-webkit,
     .k-ff,
     .k-ie11,
+    .k-edge,
     .k-safari {
         .k-pager-info {
             display: none;
@@ -3223,6 +3231,7 @@ td.k-state-focused.k-state-selected,
     .k-webkit,
     .k-ff,
     .k-ie11,
+    .k-edge,
     .k-safari {
         .k-pager-sizes {
             display: none;

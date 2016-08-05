@@ -2076,6 +2076,12 @@ div.k-window-iframecontent {
   margin-bottom: -1px;
   padding-bottom: 1px;
 }
+.k-tabstrip-top .k-tabstrip-items .k-state-active,
+.k-panelbar .k-tabstrip-top .k-tabstrip-items .k-state-active {
+  border-bottom-width: 1px;
+  margin-bottom: -2px;
+  padding-bottom: 0px;
+}
 .k-tabstrip-items .k-tab-on-top {
   z-index: 1;
 }
@@ -3186,6 +3192,7 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-wrap,
   .k-ff .k-pager-wrap,
   .k-ie11 .k-pager-wrap,
+  .k-edge .k-pager-wrap,
   .k-safari .k-pager-wrap {
     overflow: visible;
     min-height: 2.1em;
@@ -3193,10 +3200,12 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-wrap .k-pager-nav,
   .k-ff .k-pager-wrap .k-pager-nav,
   .k-ie11 .k-pager-wrap .k-pager-nav,
+  .k-edge .k-pager-wrap .k-pager-nav,
   .k-safari .k-pager-wrap .k-pager-nav,
   .k-webkit .k-pager-input,
   .k-ff .k-pager-input,
   .k-ie11 .k-pager-input,
+  .k-edge .k-pager-input,
   .k-safari .k-pager-input {
     display: inline-block;
     vertical-align: top;
@@ -3204,10 +3213,12 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-numbers,
   .k-ff .k-pager-numbers,
   .k-ie11 .k-pager-numbers,
+  .k-edge .k-pager-numbers,
   .k-safari .k-pager-numbers,
   .k-webkit .k-grid .k-pager-numbers,
   .k-ff .k-grid .k-pager-numbers,
   .k-ie11 .k-grid .k-pager-numbers,
+  .k-edge .k-grid .k-pager-numbers,
   .k-safari .k-grid .k-pager-numbers {
     position: absolute;
     left: 4.8em;
@@ -3226,20 +3237,24 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-numbers:first-child,
   .k-ff .k-pager-numbers:first-child,
   .k-ie11 .k-pager-numbers:first-child,
+  .k-edge .k-pager-numbers:first-child,
   .k-safari .k-pager-numbers:first-child,
   .k-webkit .k-grid .k-pager-numbers:first-child,
   .k-ff .k-grid .k-pager-numbers:first-child,
   .k-ie11 .k-grid .k-pager-numbers:first-child,
+  .k-edge .k-grid .k-pager-numbers:first-child,
   .k-safari .k-grid .k-pager-numbers:first-child {
     left: .2em;
   }
   .k-webkit .k-pager-numbers.k-state-expanded,
   .k-ff .k-pager-numbers.k-state-expanded,
   .k-ie11 .k-pager-numbers.k-state-expanded,
+  .k-edge .k-pager-numbers.k-state-expanded,
   .k-safari .k-pager-numbers.k-state-expanded,
   .k-webkit .k-grid .k-pager-numbers.k-state-expanded,
   .k-ff .k-grid .k-pager-numbers.k-state-expanded,
   .k-ie11 .k-grid .k-pager-numbers.k-state-expanded,
+  .k-edge .k-grid .k-pager-numbers.k-state-expanded,
   .k-safari .k-grid .k-pager-numbers.k-state-expanded {
     -ms-transform: translatey(-100%);
         transform: translatey(-100%);
@@ -3248,10 +3263,12 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .km-pane-wrapper .k-pager-numbers,
   .k-ff .km-pane-wrapper .k-pager-numbers,
   .k-ie11 .km-pane-wrapper .k-pager-numbers,
+  .k-edge .km-pane-wrapper .k-pager-numbers,
   .k-safari .km-pane-wrapper .k-pager-numbers,
   .k-webkit .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-ff .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-ie11 .km-pane-wrapper .k-grid .k-pager-numbers,
+  .k-edge .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-safari .km-pane-wrapper .k-grid .k-pager-numbers {
     position: relative;
     left: 50%;
@@ -3262,18 +3279,22 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .km-pane-wrapper .k-pager-numbers .k-link,
   .k-ff .km-pane-wrapper .k-pager-numbers .k-link,
   .k-ie11 .km-pane-wrapper .k-pager-numbers .k-link,
+  .k-edge .km-pane-wrapper .k-pager-numbers .k-link,
   .k-safari .km-pane-wrapper .k-pager-numbers .k-link,
   .k-webkit .km-pane-wrapper .k-pager-numbers .k-state-selected,
   .k-ff .km-pane-wrapper .k-pager-numbers .k-state-selected,
   .k-ie11 .km-pane-wrapper .k-pager-numbers .k-state-selected,
+  .k-edge .km-pane-wrapper .k-pager-numbers .k-state-selected,
   .k-safari .km-pane-wrapper .k-pager-numbers .k-state-selected,
   .k-webkit .km-pane-wrapper .k-pager-wrap > .k-link,
   .k-ff .km-pane-wrapper .k-pager-wrap > .k-link,
   .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-link,
+  .k-edge .km-pane-wrapper .k-pager-wrap > .k-link,
   .k-safari .km-pane-wrapper .k-pager-wrap > .k-link,
   .k-webkit .km-pane-wrapper .k-pager-wrap > .k-pager-info,
   .k-ff .km-pane-wrapper .k-pager-wrap > .k-pager-info,
   .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-pager-info,
+  .k-edge .km-pane-wrapper .k-pager-wrap > .k-pager-info,
   .k-safari .km-pane-wrapper .k-pager-wrap > .k-pager-info {
     padding-top: 0;
     padding-bottom: 0;
@@ -3281,10 +3302,12 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-rtl .k-pager-numbers,
   .k-ff .k-rtl .k-pager-numbers,
   .k-ie11 .k-rtl .k-pager-numbers,
+  .k-edge .k-rtl .k-pager-numbers,
   .k-safari .k-rtl .k-pager-numbers,
   .k-webkit .k-rtl .k-grid .k-pager-numbers,
   .k-ff .k-rtl .k-grid .k-pager-numbers,
   .k-ie11 .k-rtl .k-grid .k-pager-numbers,
+  .k-edge .k-rtl .k-grid .k-pager-numbers,
   .k-safari .k-rtl .k-grid .k-pager-numbers {
     left: auto;
     right: 4.8em;
@@ -3293,10 +3316,12 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-rtl .k-pager-numbers:first-child,
   .k-ff .k-rtl .k-pager-numbers:first-child,
   .k-ie11 .k-rtl .k-pager-numbers:first-child,
+  .k-edge .k-rtl .k-pager-numbers:first-child,
   .k-safari .k-rtl .k-pager-numbers:first-child,
   .k-webkit .k-rtl .k-grid .k-pager-numbers:first-child,
   .k-ff .k-rtl .k-grid .k-pager-numbers:first-child,
   .k-ie11 .k-rtl .k-grid .k-pager-numbers:first-child,
+  .k-edge .k-rtl .k-grid .k-pager-numbers:first-child,
   .k-safari .k-rtl .k-grid .k-pager-numbers:first-child {
     left: auto;
     right: .2em;
@@ -3304,20 +3329,24 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-ff .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-ie11 .k-rtl .km-pane-wrapper .k-pager-numbers,
+  .k-edge .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-safari .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-webkit .k-rtl .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-ff .k-rtl .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-ie11 .k-rtl .km-pane-wrapper .k-grid .k-pager-numbers,
+  .k-edge .k-rtl .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-safari .k-rtl .km-pane-wrapper .k-grid .k-pager-numbers {
     right: 5.8em;
   }
   .k-webkit .k-pager-numbers .k-current-page,
   .k-ff .k-pager-numbers .k-current-page,
   .k-ie11 .k-pager-numbers .k-current-page,
+  .k-edge .k-pager-numbers .k-current-page,
   .k-safari .k-pager-numbers .k-current-page,
   .k-webkit .k-grid .k-pager-numbers .k-current-page,
   .k-ff .k-grid .k-pager-numbers .k-current-page,
   .k-ie11 .k-grid .k-pager-numbers .k-current-page,
+  .k-edge .k-grid .k-pager-numbers .k-current-page,
   .k-safari .k-grid .k-pager-numbers .k-current-page {
     display: block;
     border-left: 0;
@@ -3325,10 +3354,12 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-numbers.k-state-expanded .k-current-page,
   .k-ff .k-pager-numbers.k-state-expanded .k-current-page,
   .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page,
+  .k-edge .k-pager-numbers.k-state-expanded .k-current-page,
   .k-safari .k-pager-numbers.k-state-expanded .k-current-page,
   .k-webkit .k-grid .k-pager-number.k-state-expanded .k-current-page,
   .k-ff .k-grid .k-pager-number.k-state-expanded .k-current-page,
   .k-ie11 .k-grid .k-pager-number.k-state-expanded .k-current-page,
+  .k-edge .k-grid .k-pager-number.k-state-expanded .k-current-page,
   .k-safari .k-grid .k-pager-number.k-state-expanded .k-current-page {
     -ms-transform: translatey(100%);
         transform: translatey(100%);
@@ -3337,12 +3368,14 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-numbers li:not(.k-current-page),
   .k-ff .k-pager-numbers li:not(.k-current-page),
   .k-ie11 .k-pager-numbers li:not(.k-current-page),
+  .k-edge .k-pager-numbers li:not(.k-current-page),
   .k-safari .k-pager-numbers li:not(.k-current-page) {
     display: none;
   }
   .k-webkit .k-pager-numbers .k-current-page .k-link,
   .k-ff .k-pager-numbers .k-current-page .k-link,
   .k-ie11 .k-pager-numbers .k-current-page .k-link,
+  .k-edge .k-pager-numbers .k-current-page .k-link,
   .k-safari .k-pager-numbers .k-current-page .k-link {
     width: 3.2em;
     padding: 0 .429em 0 .714em;
@@ -3351,12 +3384,14 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-numbers + .k-link,
   .k-ff .k-pager-numbers + .k-link,
   .k-ie11 .k-pager-numbers + .k-link,
+  .k-edge .k-pager-numbers + .k-link,
   .k-safari .k-pager-numbers + .k-link {
     margin-left: 4.8em;
   }
   .k-webkit .k-rtl .k-pager-numbers + .k-link,
   .k-ff .k-rtl .k-pager-numbers + .k-link,
   .k-ie11 .k-rtl .k-pager-numbers + .k-link,
+  .k-edge .k-rtl .k-pager-numbers + .k-link,
   .k-safari .k-rtl .k-pager-numbers + .k-link {
     margin-right: 5.1em;
     margin-left: 0;
@@ -3364,10 +3399,12 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-numbers .k-state-selected,
   .k-ff .k-pager-numbers .k-state-selected,
   .k-ie11 .k-pager-numbers .k-state-selected,
+  .k-edge .k-pager-numbers .k-state-selected,
   .k-safari .k-pager-numbers .k-state-selected,
   .k-webkit .k-pager-numbers .k-link,
   .k-ff .k-pager-numbers .k-link,
   .k-ie11 .k-pager-numbers .k-link,
+  .k-edge .k-pager-numbers .k-link,
   .k-safari .k-pager-numbers .k-link {
     display: block;
     margin-right: 0;
@@ -3377,6 +3414,7 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-numbers.k-state-expanded,
   .k-ff .k-pager-numbers.k-state-expanded,
   .k-ie11 .k-pager-numbers.k-state-expanded,
+  .k-edge .k-pager-numbers.k-state-expanded,
   .k-safari .k-pager-numbers.k-state-expanded {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -3385,6 +3423,7 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-numbers.k-state-expanded .k-current-page,
   .k-ff .k-pager-numbers.k-state-expanded .k-current-page,
   .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page,
+  .k-edge .k-pager-numbers.k-state-expanded .k-current-page,
   .k-safari .k-pager-numbers.k-state-expanded .k-current-page {
     margin: -2em -3px 0;
     padding: 0;
@@ -3392,12 +3431,14 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-numbers.k-state-expanded .k-current-page .k-link,
   .k-ff .k-pager-numbers.k-state-expanded .k-current-page .k-link,
   .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page .k-link,
+  .k-edge .k-pager-numbers.k-state-expanded .k-current-page .k-link,
   .k-safari .k-pager-numbers.k-state-expanded .k-current-page .k-link {
     border-radius: 0 0 1.0833em 1.0833em;
   }
   .k-webkit .k-pager-numbers.k-state-expanded li,
   .k-ff .k-pager-numbers.k-state-expanded li,
   .k-ie11 .k-pager-numbers.k-state-expanded li,
+  .k-edge .k-pager-numbers.k-state-expanded li,
   .k-safari .k-pager-numbers.k-state-expanded li {
     display: inline-block;
   }
@@ -3406,6 +3447,7 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-info,
   .k-ff .k-pager-info,
   .k-ie11 .k-pager-info,
+  .k-edge .k-pager-info,
   .k-safari .k-pager-info {
     display: none;
   }
@@ -3414,6 +3456,7 @@ html .k-grid-edit-row .k-tooltip {
   .k-webkit .k-pager-sizes,
   .k-ff .k-pager-sizes,
   .k-ie11 .k-pager-sizes,
+  .k-edge .k-pager-sizes,
   .k-safari .k-pager-sizes {
     display: none;
   }
@@ -5234,14 +5277,16 @@ table.k-editor {
 }
 .k-webkit .k-editor-toolbar,
 .k-ff .k-editor-toolbar,
-.k-ie9 .k-editor-toolbar {
+.k-ie9 .k-editor-toolbar,
+.k-edge .k-editor-toolbar {
   padding: 0;
 }
 .k-webkit .k-editor-toolbar li,
 .k-safari .k-editor-toolbar li,
 .k-ff .k-editor-toolbar li,
 .k-ie9 .k-editor-toolbar li,
-.k-ie10 .k-editor-toolbar li {
+.k-ie10 .k-editor-toolbar li,
+.k-edge .k-editor-toolbar li {
   display: inline-block;
   padding: .1em 0;
 }
@@ -7058,6 +7103,7 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views,
+  .k-edge .k-scheduler-toolbar > ul.k-scheduler-views,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views {
     position: absolute;
     right: 6px;
@@ -7067,6 +7113,7 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views,
   .k-ff .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views,
   .k-ie11 .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views,
+  .k-edge .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views,
   .k-safari .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views {
     right: auto;
     left: 6px;
@@ -7074,24 +7121,28 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li:not(.k-current-view),
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li:not(.k-current-view),
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li:not(.k-current-view),
+  .k-edge .k-scheduler-toolbar > ul.k-scheduler-views > li:not(.k-current-view),
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li:not(.k-current-view) {
     display: none;
   }
   .k-webkit .k-scheduler-toolbar li.k-nav-current .k-lg-date-format,
   .k-ff .k-scheduler-toolbar li.k-nav-current .k-lg-date-format,
   .k-ie11 .k-scheduler-toolbar li.k-nav-current .k-lg-date-format,
+  .k-edge .k-scheduler-toolbar li.k-nav-current .k-lg-date-format,
   .k-safari .k-scheduler-toolbar li.k-nav-current .k-lg-date-format {
     display: none;
   }
   .k-webkit .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
   .k-ff .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
   .k-ie11 .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
+  .k-edge .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
   .k-safari .k-scheduler-toolbar li.k-nav-current .k-sm-date-format {
     display: inline;
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
+  .k-edge .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
     display: block;
     border-width: 1px;
@@ -7099,6 +7150,7 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ff .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ie11 .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
+  .k-edge .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-safari .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
     text-align: left;
     padding-left: 1em;
@@ -7106,6 +7158,7 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
+  .k-edge .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link {
     display: block;
     position: relative;
@@ -7115,12 +7168,14 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
   .k-ff .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
   .k-ie11 .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
+  .k-edge .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link,
   .k-safari .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link {
     padding-left: 0;
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
+  .k-edge .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after {
     display: block;
     content: "";
@@ -7134,10 +7189,12 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
+  .k-edge .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li,
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li:first-child + li,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li:first-child + li,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li:first-child + li,
+  .k-edge .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li:first-child + li,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li:first-child + li {
     display: block;
     border: 0;
@@ -7146,6 +7203,7 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
+  .k-edge .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
     border: 1px solid #c5c5c5;
     background-color: #fff;
@@ -7156,6 +7214,7 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-ff .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-ie11 .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
+  .k-edge .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-safari .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded {
     text-align: left;
   }
@@ -7164,18 +7223,21 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-scheduler:not(.k-scheduler-mobile) .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
   .k-ff .k-scheduler:not(.k-scheduler-mobile) .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
   .k-ie11 .k-scheduler:not(.k-scheduler-mobile) .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
+  .k-edge .k-scheduler:not(.k-scheduler-mobile) .k-scheduler-toolbar li.k-nav-current .k-sm-date-format,
   .k-safari .k-scheduler:not(.k-scheduler-mobile) .k-scheduler-toolbar li.k-nav-current .k-sm-date-format {
     display: none;
   }
   .k-webkit .k-scheduler-timecolumn,
   .k-ff .k-scheduler-timecolumn,
   .k-ie11 .k-scheduler-timecolumn,
+  .k-edge .k-scheduler-timecolumn,
   .k-safari .k-scheduler-timecolumn {
     width: 5em;
   }
   .k-webkit .k-scheduler-datecolumn,
   .k-ff .k-scheduler-datecolumn,
   .k-ie11 .k-scheduler-datecolumn,
+  .k-edge .k-scheduler-datecolumn,
   .k-safari .k-scheduler-datecolumn {
     width: 6em;
     overflow: hidden;
@@ -7183,10 +7245,12 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-webkit .k-scheduler-timecolumn > div,
   .k-ff .k-scheduler-timecolumn > div,
   .k-ie11 .k-scheduler-timecolumn > div,
+  .k-edge .k-scheduler-timecolumn > div,
   .k-safari .k-scheduler-timecolumn > div,
   .k-webkit .k-scheduler-datecolumn > div,
   .k-ff .k-scheduler-datecolumn > div,
   .k-ie11 .k-scheduler-datecolumn > div,
+  .k-edge .k-scheduler-datecolumn > div,
   .k-safari .k-scheduler-datecolumn > div {
     white-space: normal;
   }
