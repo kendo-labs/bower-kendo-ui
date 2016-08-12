@@ -373,7 +373,7 @@
             _change: function (value) {
                 var that = this, oldValue = that.element.val(), dateChanged;
                 value = that._update(value);
-                dateChanged = +that._old != +value;
+                dateChanged = !kendo.calendar.isEqualDate(that._old, value);
                 var valueUpdated = dateChanged && !that._typing;
                 var textFormatted = oldValue !== that.element.val();
                 if (valueUpdated || textFormatted) {

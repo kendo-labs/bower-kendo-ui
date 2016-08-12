@@ -332,7 +332,7 @@
                 }
                 that._hueSlider = element.find('.k-hue-slider').kendoSlider({
                     min: 0,
-                    max: 359,
+                    max: 360,
                     tickPlacement: 'none',
                     showButtons: false,
                     slide: hueChange,

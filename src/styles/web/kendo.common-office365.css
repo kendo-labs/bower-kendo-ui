@@ -10861,6 +10861,9 @@ span.k-dropdown-wrap .k-input,
 span.k-selectbox .k-input {
   padding: 0.143em 0;
 }
+input.k-textbox {
+  padding: 2px 0;
+}
 .k-picker-wrap .k-select,
 .k-numeric-wrap .k-select,
 .k-dropdown-wrap .k-select {
@@ -11102,6 +11105,11 @@ span.k-tooltip {
 }
 .k-gantt .k-gantt-timeline th {
   text-align: left;
+}
+.k-gantt .k-grid-content tr,
+.k-gantt-rows tr,
+.k-gantt-tasks tr {
+  height: 2.174em;
 }
 .k-tabstrip.k-header {
   border: 0;

@@ -373,13 +373,13 @@ html .km-pane-wrapper .k-header {
   background-color: #212a33;
 }
 .k-draghandle {
-  border-color: #133b1a;
+  border-color: #232d36;
   background-color: #3f5061;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 .k-draghandle:hover {
-  border-color: #0f3015;
+  border-color: #232d36;
   background-color: #41454e;
   -webkit-box-shadow: none;
           box-shadow: none;

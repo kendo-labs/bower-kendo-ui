@@ -358,17 +358,20 @@
             },
             _position: function (fixed) {
                 var that = this, element = that.element, wrapper = that.wrapper, options = that.options, viewport = $(options.viewport), zoomLevel = support.zoomLevel(), isWindow = !!(viewport[0] == window && window.innerWidth && zoomLevel <= 1.02), anchor = $(options.anchor), origins = options.origin.toLowerCase().split(' '), positions = options.position.toLowerCase().split(' '), collisions = that.collisions, siblingContainer, parents, parentZIndex, zIndex = 10002, idx = 0, docEl = document.documentElement, length, viewportOffset, viewportWidth, viewportHeight;
-                if (isWindow) {
-                    viewportWidth = window.innerWidth;
-                    viewportHeight = window.innerHeight;
+                if (options.viewport === window) {
                     viewportOffset = {
                         top: window.pageYOffset || document.documentElement.scrollTop || 0,
                         left: window.pageXOffset || document.documentElement.scrollLeft || 0
                     };
                 } else {
+                    viewportOffset = viewport.offset();
+                }
+                if (isWindow) {
+                    viewportWidth = window.innerWidth;
+                    viewportHeight = window.innerHeight;
+                } else {
                     viewportWidth = viewport.width();
                     viewportHeight = viewport.height();
-                    viewportOffset = viewport.offset();
                 }
                 if (isWindow && docEl.scrollHeight - docEl.clientHeight > 0) {
                     viewportWidth -= kendo.support.scrollbar();

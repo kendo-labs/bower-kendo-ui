@@ -1007,6 +1007,7 @@
             return oldValue === newValue;
         }
         calendar.isEqualDatePart = isEqualDatePart;
+        calendar.isEqualDate = isEqualDate;
         calendar.makeUnselectable = makeUnselectable;
         calendar.restrictValue = restrictValue;
         calendar.isInRange = isInRange;

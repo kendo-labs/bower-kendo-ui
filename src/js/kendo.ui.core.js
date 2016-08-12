@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.2.805'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.2.812'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -14806,17 +14806,20 @@
             },
             _position: function (fixed) {
                 var that = this, element = that.element, wrapper = that.wrapper, options = that.options, viewport = $(options.viewport), zoomLevel = support.zoomLevel(), isWindow = !!(viewport[0] == window && window.innerWidth && zoomLevel <= 1.02), anchor = $(options.anchor), origins = options.origin.toLowerCase().split(' '), positions = options.position.toLowerCase().split(' '), collisions = that.collisions, siblingContainer, parents, parentZIndex, zIndex = 10002, idx = 0, docEl = document.documentElement, length, viewportOffset, viewportWidth, viewportHeight;
-                if (isWindow) {
-                    viewportWidth = window.innerWidth;
-                    viewportHeight = window.innerHeight;
+                if (options.viewport === window) {
                     viewportOffset = {
                         top: window.pageYOffset || document.documentElement.scrollTop || 0,
                         left: window.pageXOffset || document.documentElement.scrollLeft || 0
                     };
                 } else {
+                    viewportOffset = viewport.offset();
+                }
+                if (isWindow) {
+                    viewportWidth = window.innerWidth;
+                    viewportHeight = window.innerHeight;
+                } else {
                     viewportWidth = viewport.width();
                     viewportHeight = viewport.height();
-                    viewportOffset = viewport.offset();
                 }
                 if (isWindow && docEl.scrollHeight - docEl.clientHeight > 0) {
                     viewportWidth -= kendo.support.scrollbar();
@@ -19412,6 +19415,7 @@
             return oldValue === newValue;
         }
         calendar.isEqualDatePart = isEqualDatePart;
+        calendar.isEqualDate = isEqualDate;
         calendar.makeUnselectable = makeUnselectable;
         calendar.restrictValue = restrictValue;
         calendar.isInRange = isInRange;
@@ -19775,7 +19779,7 @@
             _change: function (value) {
                 var that = this, oldValue = that.element.val(), dateChanged;
                 value = that._update(value);
-                dateChanged = +that._old != +value;
+                dateChanged = !kendo.calendar.isEqualDate(that._old, value);
                 var valueUpdated = dateChanged && !that._typing;
                 var textFormatted = oldValue !== that.element.val();
                 if (valueUpdated || textFormatted) {
@@ -24932,7 +24936,7 @@
                 }
                 that._hueSlider = element.find('.k-hue-slider').kendoSlider({
                     min: 0,
-                    max: 359,
+                    max: 360,
                     tickPlacement: 'none',
                     showButtons: false,
                     slide: hueChange,

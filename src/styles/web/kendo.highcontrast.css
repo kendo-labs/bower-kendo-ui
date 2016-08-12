@@ -370,14 +370,14 @@ html .km-pane-wrapper .k-header {
   background-color: #2c232b;
 }
 .k-draghandle {
-  border-color: none;
-  background-color: none;
+  border-color: #674c63;
+  background-color: #2c232b;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 .k-draghandle:hover {
-  border-color: none;
-  background-color: none;
+  border-color: #a7008f;
+  background-color: #a7008f;
   -webkit-box-shadow: none;
           box-shadow: none;
 }
