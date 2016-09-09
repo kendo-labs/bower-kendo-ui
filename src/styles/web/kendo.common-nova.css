@@ -2135,7 +2135,7 @@ div.k-window-iframecontent {
   border-style: solid;
   border-width: 1px;
   margin: 0 .286em .3em;
-  padding: .3em .92em;
+  padding: .92em;
   zoom: 1;
 }
 .k-tabstrip > .k-content {
@@ -9656,8 +9656,8 @@ div.k-navigator .k-navigator-w {
 }
 @font-face {
   font-family: 'KendoUIGlyphs';
-  src: url('fonts/glyphs/KendoUIGlyphs.eot?y6oa7j');
-  src: url('fonts/glyphs/KendoUIGlyphs.eot?y6oa7j?#iefix') format('embedded-opentype'), url('fonts/glyphs/KendoUIGlyphs.ttf?y6oa7j') format('truetype'), url('fonts/glyphs/KendoUIGlyphs.woff?y6oa7j') format('woff'), url('fonts/glyphs/KendoUIGlyphs.svg?y6oa7j#KendoUIGlyphs') format('svg');
+  src: url('fonts/glyphs/KendoUIGlyphs.eot?wi2r8m');
+  src: url('fonts/glyphs/KendoUIGlyphs.eot?wi2r8m?#iefix') format('embedded-opentype'), url('fonts/glyphs/KendoUIGlyphs.ttf?wi2r8m') format('truetype'), url('fonts/glyphs/KendoUIGlyphs.woff?wi2r8m') format('woff'), url('fonts/glyphs/KendoUIGlyphs.svg?wi2r8m#KendoUIGlyphs') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -10135,6 +10135,69 @@ div.k-navigator .k-navigator-w {
 .k-i-folder-open:before {
   content: "\e903";
 }
+.k-i-table-align-top-left:before {
+  content: "\e904";
+}
+.k-i-table-align-top-center:before {
+  content: "\e905";
+}
+.k-i-table-align-top-right:before {
+  content: "\e906";
+}
+.k-i-table-align-middle-left:before {
+  content: "\e907";
+}
+.k-i-table-align-middle-center:before {
+  content: "\e908";
+}
+.k-i-table-align-middle-right:before {
+  content: "\e909";
+}
+.k-i-table-align-bottom-left:before {
+  content: "\e90a";
+}
+.k-i-table-align-bottom-center:before {
+  content: "\e90b";
+}
+.k-i-table-align-bottom-right:before {
+  content: "\e90c";
+}
+.k-i-table-align-remove:before {
+  content: "\e90d";
+}
+.k-i-full-screen:before {
+  content: "\e90e";
+}
+.k-i-full-screen-exit:before {
+  content: "\e90f";
+}
+.k-i-volume-down:before {
+  content: "\e910";
+}
+.k-i-volume-up:before {
+  content: "\e911";
+}
+.k-i-volume-off:before {
+  content: "\e912";
+}
+.k-i-play:before {
+  content: "\e913";
+}
+.k-i-pause:before {
+  content: "\e914";
+}
+.k-i-stop:before {
+  content: "\e915";
+}
+.k-i-hd:before {
+  content: "\e916";
+}
+.k-i-subtitles:before {
+  content: "\e917";
+}
+.k-i-playlist:before {
+  content: "\e918";
+}
 .k-spreadsheet {
   width: 800px;
   height: 600px;
@@ -10235,6 +10298,9 @@ div.k-navigator .k-navigator-w {
   bottom: 0;
   left: 0;
   width: 100%;
+}
+.k-spreadsheet .k-spreadsheet-formula-bar .k-spreadsheet-formula-input {
+  overflow: hidden;
 }
 .k-spreadsheet .k-spreadsheet-formula-input {
   outline: none;
@@ -11501,6 +11567,11 @@ div.editorToolbarWindow.k-window-content {
 .k-gantt .k-gantt-timeline th {
   text-align: left;
 }
+.k-gantt .k-grid-content tr,
+.k-gantt-rows tr,
+.k-gantt-tasks tr {
+  height: 3.458em;
+}
 .k-notification-wrap {
   padding: 1.786em;
 }
@@ -12069,8 +12140,13 @@ form.k-filter-menu .k-textbox {
 .k-pivot .k-button:not(.k-state-disabled):hover .k-si-close {
   background-position: -176px -80px;
 }
-.k-notification .k-i-note {
+.k-notification .k-i-note,
+.k-notification .k-i-info,
+.k-notification .k-i-success,
+.k-notification .k-i-warning,
+.k-notification .k-i-error {
   background-position: -176px -240px;
+  margin-right: 10px;
 }
 .k-column-menu .k-state-active .k-i-columns,
 .k-column-menu .k-link:not(.k-state-disabled):hover > .k-i-columns {

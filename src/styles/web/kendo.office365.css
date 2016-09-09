@@ -2078,6 +2078,9 @@ input.k-textbox:focus {
 .k-list > .k-state-hover {
   border-color: #f4f4f4;
 }
+.k-list > .k-item.k-state-focused {
+  border-color: #0072c6;
+}
 .k-list > .k-state-selected {
   background-color: #cde6f7;
   border-color: #cde6f7;

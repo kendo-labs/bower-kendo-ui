@@ -870,7 +870,7 @@
             _createWindow: function () {
                 var contentHtml = this.element, options = this.options, iframeSrcAttributes, wrapper, isRtl = kendo.support.isRtl(contentHtml);
                 if (options.scrollable === false) {
-                    contentHtml.attr('style', 'overflow:hidden;');
+                    contentHtml.css('overflow', 'hidden');
                 }
                 wrapper = $(templates.wrapper(options));
                 iframeSrcAttributes = contentHtml.find('iframe:not(.k-content)').map(function () {

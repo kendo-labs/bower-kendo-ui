@@ -863,6 +863,9 @@
             },
             _parentWidget: function () {
                 var name = this.options.name;
+                if (!this.options.cascadeFrom) {
+                    return;
+                }
                 var parentElement = $('#' + this.options.cascadeFrom);
                 var parent = parentElement.data('kendo' + name);
                 if (!parent) {

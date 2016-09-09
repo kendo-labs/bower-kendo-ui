@@ -610,6 +610,9 @@ button.km-button {
 .km-buttongroup > .km-button {
   display: table-cell;
 }
+.km-buttongroup .km-badge {
+  z-index: 1;
+}
 .km-widget.km-buttongroup .km-button {
   margin: 0;
   border-width: 1px 0 1px 1px;

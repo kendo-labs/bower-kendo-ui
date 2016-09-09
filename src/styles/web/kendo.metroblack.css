@@ -501,7 +501,7 @@ html .km-pane-wrapper .k-header {
 .k-button.k-state-disabled:hover,
 .k-state-disabled .k-button:active,
 .k-button.k-state-disabled:active {
-  color: #cccccc;
+  color: #797979;
   border-color: #323232;
   background-color: #0e0e0e;
   background-image: none;
@@ -815,7 +815,7 @@ div.k-filebrowser-dropzone em {
 .k-dropzone em,
 .k-tile-empty strong,
 .k-slider .k-draghandle {
-  color: #cccccc;
+  color: #797979;
 }
 .k-dropzone .k-upload-status {
   color: #fff;
