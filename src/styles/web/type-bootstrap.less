@@ -102,12 +102,12 @@
 @event-inverse-text-color: @normal-text-color;
 @scheduler-nonwork-background-color: lighten(@base, 4%);
 @resize-background-color: @background;
-@upload-progress-background-color: saturate(@info, 10%);
-@upload-progress-text-color: contrast(@info);
-@upload-success-background-color: saturate(@success, 10%);
-@upload-success-text-color: contrast(@success);
-@upload-error-background-color: saturate(@error, 10%);
-@upload-error-text-color: contrast(@error);
+@upload-progress-background-color: darken(@info, 50%);
+@upload-progress-text-color: darken(@info, 50%);
+@upload-success-background-color: darken(@success, 50%);
+@upload-success-text-color: darken(@success, 50%);
+@upload-error-background-color: darken(@error, 50%);
+@upload-error-text-color: darken(@error, 50%);
 @task-summary-color: lighten(@widget-text-color, 25%);
 @task-summary-selected-color: lighten(@selected-background-color, 25%);
 @loading-panel-color: @background;
@@ -268,6 +268,7 @@
 .k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
+.k-popup.k-align .k-list .k-item:last-child,
 .k-upload-files
 {
     border-color: @widget-border-color;
@@ -455,6 +456,11 @@ html .km-pane-wrapper .k-header
     background-color: @header-background-color;
 }
 
+.k-mediaplayer-toolbar
+{
+    background-color: fade(@header-background-color, 80%);
+}
+
 /* icons */
 .k-icon:hover,
 .k-state-hover .k-icon,
@@ -515,7 +521,9 @@ html .km-pane-wrapper .k-header
 }
 
 .k-loading,
-.k-state-hover .k-loading
+.k-state-hover .k-loading,
+.k-i-loading,
+.k-state-hover .k-i-loading
 {
     background-image: url('@{image-folder}/loading.gif');
     background-position: 50% 50%;
@@ -733,6 +741,22 @@ html .km-pane-wrapper .k-header
 {
     border-color: @focused-border-color;
 }
+
+.k-button-bare {
+	&.k-state-focused .k-font-icon,
+	&:focus .k-font-icon {
+		text-shadow: 0 0 3px currentColor;
+	}
+}
+
+html .k-mediaplayer-toolbar .k-button-bare {
+	&:active,
+	&.k-state-active,
+	&.k-state-active:hover {
+		color: @accent;
+	}
+}
+
 
 .k-calendar {
     .k-link {
@@ -1254,11 +1278,77 @@ div.k-filebrowser-dropzone em
 .k-file-error
 {
     color: @upload-error-text-color;
+
+    .k-file-extension-wrapper,
+    .k-multiple-files-extension-wrapper {
+        color: @upload-error-text-color;
+        border-color: @upload-error-text-color;
+    }
+
+    .k-file-extension-wrapper:before,
+    .k-multiple-files-extension-wrapper:before {
+        background-color: @widget-background-color;
+        border-color: transparent transparent @upload-error-text-color @upload-error-text-color;
+    }
 }
 
 .k-file-error .k-progress
 {
     background-color: @upload-error-background-color;
+}
+
+.k-file-extension-wrapper,
+.k-multiple-files-extension-wrapper {
+    color: @disabled-text-color;
+    border-color: @disabled-text-color;
+}
+
+.k-file-invalid .k-file-name-invalid {
+    color: @upload-error-text-color;
+}
+
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+    color: @upload-error-text-color;
+    border-color: @upload-error-text-color;
+}
+
+.k-file-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:before {
+    background-color: @widget-background-color;
+    border-color: transparent transparent @disabled-text-color @disabled-text-color;
+}
+
+.k-file-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:before {
+    background-color: @widget-background-color;
+    border-color: transparent transparent @upload-error-text-color @upload-error-text-color;
+}
+
+.k-multiple-files-extension-wrapper:after {
+    border-top-color: @disabled-text-color;
+    border-left-color: @disabled-text-color;
+}
+
+.k-multiple-files-invalid-extension-wrapper:after {
+    border-top-color: @upload-error-text-color;
+    border-left-color: @upload-error-text-color;
+}
+
+.k-file-size,
+.k-file-information,
+.k-file-validation-message {
+    color: @disabled-text-color;
+}
+
+.k-upload .k-upload-selected {
+    color: @accent;
+    border-color: @widget-border-color;
+
+    &:hover {
+        color: @selected-text-color;
+        background-color: @selected-background;
+    }
 }
 
 /* ImageBrowser */
@@ -1280,7 +1370,9 @@ div.k-filebrowser-dropzone em
 }
 
 .k-filebrowser .k-tile .k-folder,
-.k-filebrowser .k-tile .k-file
+.k-filebrowser .k-tile .k-file,
+.k-filebrowser .k-tile .k-i-folder,
+.k-filebrowser .k-tile .k-i-file
 {
     background-image: url('@{image-folder}/imagebrowser.png');
     background-size: auto auto;
@@ -2012,6 +2104,10 @@ html .km-pane-wrapper .km-widget,
     color: @drop-down-text-color;
 }
 
+.k-nodata {
+    color: @disabled-text-color;
+}
+
 .k-dropdown .k-input,
 .k-dropdown .k-state-focused .k-input,
 .k-menu .k-popup
@@ -2295,6 +2391,7 @@ html .km-pane-wrapper .km-widget,
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2),
        only screen and (min-device-pixel-ratio: 1.2) {
     .k-icon:not(.k-loading),
+    .k-icon:not(.k-i-loading),
     .k-grouping-dropclue,
     .k-drop-hint,
     .k-callout,
@@ -3306,4 +3403,102 @@ td.k-state-focused.k-state-selected,
         &[data-property='format'] { width: 100px; }
         &[data-property='fontFamily'] { width: 130px; }
     }
+}
+
+/* Dialog */
+
+.k-dialog {
+    .k-window-titlebar {
+        padding: 1.1em 1em;
+        border-color: @button-hover-background-color;
+        background: @widget-background-color;
+        .k-dialog-title {
+            font-size: 1.1em;
+        }
+    }
+    a.k-dialog-action.k-dialog-close {
+        position: absolute;
+        padding: 1.1em;
+        right: 0;
+        top: 0;
+        line-height: 1em;
+        cursor: pointer;
+        z-index: 10000;
+    }
+    &.k-dialog-titleless a.k-dialog-action.k-dialog-close {
+        right: 0.5em;
+        top: 0.5em;
+    }
+    .k-content {
+        border-bottom-right-radius: @border-radius;
+        border-bottom-left-radius: @border-radius;
+    }
+    &.k-dialog-titleless .k-content {
+        border-top-right-radius: @border-radius;
+        border-top-left-radius: @border-radius;
+    }
+    .k-dialog-buttongroup {
+        &.k-dialog-button-layout-stretched {
+            width: 100%;
+            .k-button {
+                display: inline-block;
+                padding: 0.9em 0 0.9em 0;
+                border-radius: 0;
+                border-bottom: 0;
+                border-width: 1px 0 0 1px;
+                border-color: @button-hover-background-color;
+            }
+            li.k-button:first-child {
+            border-bottom-left-radius: @border-radius;
+            border-left: 0;
+            }
+            li.k-button:last-child {
+                border-bottom-right-radius: @border-radius;
+                border-right: 0;
+            }
+        }
+        &.k-dialog-button-layout-normal {
+            width: auto;
+            padding: 1em;
+            text-align: right;
+            border-top: 1px solid @button-hover-background-color;
+            // border-top: 1px solid @widget-border-color;
+            .k-button {
+                margin-left: 0.5em;
+                &:first-child {
+                margin-left: 0;
+                }
+            }
+        }
+    }
+}
+
+.k-rtl .k-dialog {
+    a.k-dialog-action.k-dialog-close {
+        left: 0.5em;
+    }
+    .k-dialog-buttongroup {
+        &.k-dialog-button-layout-stretched {
+            li.k-button:first-child {
+                border-bottom-right-radius: @border-radius;
+            }
+            li.k-button:last-child {
+                border-bottom-left-radius: @border-radius;
+            }
+        }
+        &.k-dialog-button-layout-normal {
+            text-align: left;
+            .k-button {
+                margin-left: 0;
+                margin-right: 0.5em;
+                &:first-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}
+
+.k-editor-dialog .k-tabstrip-items {
+    border-color: @active-border-color;
 }

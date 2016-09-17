@@ -22,43 +22,123 @@
                                                                                                                                                                                                        
 
 */
-@import "mixins.less";
-@import "base.less";
-@import "responsivepanel.less";
-@import "forms.less";
-@import "window.less";
-@import "tabstrip.less";
-@import "panelbar.less";
-@import "menu.less";
-@import "grid.less";
-@import "treelist.less";
-@import "gantt.less";
-@import "pivot.less";
-@import "calendar.less";
-@import "treeview.less";
-@import "inputs.less";
-@import "editor.less";
-@import "notification.less";
-@import "progressbar.less";
-@import "slider.less";
-@import "scheduler.less";
-@import "tooltip.less";
-@import "toolbar.less";
-@import "splitter.less";
-@import "upload.less";
-@import "mediaplayer.less";
-@import "imagebrowser.less";
-@import "dataviz.less";
-@import "adaptive.less";
-@import "../../common/transitions.less";
-@import "virtuallist.less";
-@import "font-icons.less";
-@import "spreadsheet.less";
-@import "dialog.less";
+.k-mediaplayer {
+	position: relative;
 
-/* Default fonts for PDF export */
-@import "../fonts/DejaVu/dejavu.less";
+	> video,
+	> iframe {
+		vertical-align: top;
+	}
 
-.kendo-pdf-hide-pseudo-elements {
-    &:before, &:after { display: none !important; }
+	.k-mediaplayer-titlebar,
+	.k-mediaplayer-toolbar {
+		z-index: 2;
+	}
+
+	.k-mediaplayer-overlay {
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+	}
+}
+
+.k-mediaplayer-titlebar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	background: linear-gradient( rgba(0,0,0, 0.7), rgba(0, 0, 0, 0.05) 80%, rgba(0, 0, 0, 0) );
+	color: white;
+	padding: 12px 12px 30px;
+}
+
+.k-mediaplayer-toolbar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 0px;
+	border-width: 0;
+
+	html & .k-button-bare {
+		padding-left: 9px;
+		padding-right: 9px;
+	}
+	
+	div.k-mediaplayer-volume {
+		margin: 2px 6px 0;
+	}
+
+	.k-slider-track,
+	.k-slider-selection {
+		border-radius: 0;
+	}
+
+	// seekbar
+	.k-mediaplayer-seekbar {
+		position: absolute;
+		top: -17px;
+		left: 0;
+		right: 0;
+		margin: 0;
+		width: auto;
+
+		.k-slider-track {
+			width: 100% !important;
+		}
+		
+		.k-draghandle {
+			opacity: 0;
+			transition: 0.2s opacity;
+		}
+
+		.k-draghandle.k-state-selected,
+		&:hover .k-draghandle {
+			opacity: 1;
+		}
+	}
+
+	.k-mediaplayer-quality {
+		width: auto;
+		padding: 0;
+		background: none transparent;
+
+		.k-dropdown-wrap {
+			border: 0 none;
+			box-shadow: none;
+			padding: 0;
+			background: none transparent;
+			color: inherit;
+		}
+
+		.k-input {
+			display: none;
+		}
+
+		.k-select {
+			position: relative;
+			width: auto;
+			min-height: 0;
+			line-height: inherit;
+		}
+	}
+
+	.k-align-right {
+		line-height: inherit;
+
+		 & > * {
+			display: inline-block;
+		}
+	}
+}
+
+.k-mediaplayer-currenttime {
+	display: inline-block;
+	margin-top: 2px;
+}
+
+.k-quality-list {
+	width: 80px !important;
+	margin-left: -32px !important;
 }

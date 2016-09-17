@@ -569,13 +569,13 @@
                 Widget.fn.destroy.call(this);
             },
             enable: function (enable) {
-                var that = this, wrapper = that.wrapper, innerWrapper = wrapper.children('.k-picker-wrap'), icon = innerWrapper.find('.k-select');
+                var that = this, wrapper = that.wrapper, innerWrapper = wrapper.children('.k-picker-wrap'), arrow = innerWrapper.find('.k-select');
                 if (arguments.length === 0) {
                     enable = true;
                 }
                 that.element.attr('disabled', !enable);
                 wrapper.attr('aria-disabled', !enable);
-                icon.off(NS).on('mousedown' + NS, preventDefault);
+                arrow.off(NS).on('mousedown' + NS, preventDefault);
                 wrapper.addClass('k-state-disabled').removeAttr('tabIndex').add('*', wrapper).off(NS);
                 if (enable) {
                     wrapper.removeClass('k-state-disabled').attr('tabIndex', that._tabIndex).on('mouseenter' + NS, function () {
@@ -593,7 +593,7 @@
                     that.close();
                 }
             },
-            _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker k-header">' + '<span class="k-picker-wrap k-state-default">' + '# if (toolIcon) { #' + '<span class="k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"></span>' + '# } #' + '<span class="k-select" unselectable="on">' + '<span class="k-icon k-i-arrow-s" unselectable="on"></span>' + '</span>' + '</span>' + '</span>'),
+            _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker k-header">' + '<span class="k-picker-wrap k-state-default">' + '# if (toolIcon) { #' + '<span class="k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"></span>' + '# } #' + '<span class="k-select" unselectable="on" aria-label="select">' + '<span class="k-icon k-i-arrow-s"></span>' + '</span>' + '</span>' + '</span>'),
             options: {
                 name: 'ColorPicker',
                 palette: null,

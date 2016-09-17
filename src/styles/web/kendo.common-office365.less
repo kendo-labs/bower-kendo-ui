@@ -111,6 +111,19 @@ span.k-selectbox .k-input {
     padding: 2px 0;
 }
 
+.k-combobox > .k-dropdown-wrap > .k-i-close {
+    right: 2.3em;
+}
+
+.k-autocomplete,
+.k-combobox > .k-dropdown-wrap {
+    &.k-state-border-down {
+       > .k-i-close {
+           margin-top: -1px;
+        }
+    }
+}
+
 .k-picker-wrap .k-select,
 .k-numeric-wrap .k-select,
 .k-dropdown-wrap .k-select
@@ -739,12 +752,13 @@ div.k-window-content {
 
 .k-file {
     line-height: 1.143em;
-    padding: .43em .17em .43em 1.14em;
+    padding: .643em .17em .643em 1em;
 }
 
 .k-upload-status {
     line-height: 1.29em;
     top: auto;
+    right: 12px;
 }
 
 .k-widget.k-state-border-down .k-select .k-i-arrow-s,
@@ -848,15 +862,21 @@ div.k-window-content {
 .k-multiselect {
     .k-delete,
     .k-state-hover .k-delete,
-    .k-button:not(.k-state-disabled):hover > .k-delete {
+    .k-button:not(.k-state-disabled):hover > .k-delete,
+    .k-i-delete,
+    .k-state-hover .k-i-delete,
+    .k-button:not(.k-state-disabled):hover > .k-i-delete {
         background-position: -160px -80px;
     }
 
     &.k-state-focused.k-state-border-up,
     &.k-state-focused.k-state-border-down {
         .k-delete,
-         .k-state-hover .k-delete,
-         .k-button:not(.k-state-disabled):hover > .k-delete {
+        .k-state-hover .k-delete,
+        .k-button:not(.k-state-disabled):hover > .k-delete,
+        .k-i-delete,
+        .k-state-hover .k-i-delete,
+        .k-button:not(.k-state-disabled):hover > .k-i-delete {
             background-position: -176px -80px;
         }
     }
@@ -941,15 +961,18 @@ div.k-window-content {
 }
 
 .k-treeview {
-    .k-minus {
+    .k-minus,
+    .k-i-minus {
         background-position: 0 -32px;
     }
 
-    .k-plus {
+    .k-plus,
+    .k-i-plus {
         background-position: 0 -16px;
     }
 
-    .k-loading {
+    .k-loading,
+    .k-i-loading {
         background-position: 50%;
     }
 }
@@ -972,36 +995,46 @@ div.k-window-content {
 
 .k-edit-form-container {
     .k-update,
-    .k-button:not(.k-state-disabled):hover .k-update {
+    .k-button:not(.k-state-disabled):hover .k-update,
+    .k-i-update,
+    .k-button:not(.k-state-disabled):hover .k-i-update {
         background-position: -48px -32px;
     }
 
-    .k-button:active .k-cancel {
+    .k-button:active .k-cancel,
+    .k-button:active .k-i-cancel {
         background-position: -48px -48px;
     }
 }
 
 .k-primary .k-update,
 .k-primary:not(.k-state-disabled):hover .k-update,
-.k-button:active:hover .k-update {
+.k-button:active:hover .k-update,
+.k-primary .k-i-update,
+.k-primary:not(.k-state-disabled):hover .k-i-update,
+.k-button:active:hover .k-i-update {
     background-position: -48px -32px;
 }
 
 .k-button:active,
 .k-button:active:hover {
-    .k-add {
+    .k-add,
+    .k-i-add {
         background-position: -48px -64px;
     }
 
-    .k-edit {
+    .k-edit,
+    .k-i-edit {
         background-position: -48px 0px;
     }
 
-    .k-cancel {
+    .k-cancel,
+    .k-i-cancel {
         background-position: -48px -48px;
     }
 
-    .k-delete {
+    .k-delete,
+    .k-i-delete {
         background-position: -48px -16px;
     }
 
@@ -1026,12 +1059,16 @@ div.k-window-content {
 
 .k-grouping-header {
     .k-si-arrow-n,
-    .k-link:hover > .k-icon.k-si-arrow-n {
+    .k-link:hover > .k-icon.k-si-arrow-n,
+    .k-i-sarrow-n,
+    .k-link:hover > .k-icon.k-i-sarrow-n  {
         background-position: 0 -288px;
     }
 
     .k-si-arrow-s,
-    .k-link:hover > .k-icon.k-si-arrow-s {
+    .k-link:hover > .k-icon.k-si-arrow-s,
+    .k-i-sarrow-s,
+    .k-link:hover > .k-icon.k-i-sarrow-s {
         background-position: 0 -256px;
     }
 }
@@ -1049,7 +1086,8 @@ div.k-window-content {
 }
 
 .k-gantt {
-    .k-link:hover > .k-icon.k-si-arrow-n {
+    .k-link:hover > .k-icon.k-si-arrow-n,
+    .k-link:hover > .k-icon.k-i-sarrow-n {
         background-position: -48px -64px;
     }
 
@@ -1105,7 +1143,8 @@ div.k-window-content {
 }
 
 .k-filter-row {
-    .k-state-active .k-filter {
+    .k-state-active .k-filter,
+    .k-state-active .k-i-filter {
         background-position: -48px -80px;
     }
 
@@ -1173,6 +1212,19 @@ div.k-window-content {
     background-position: 0 -16px;
 }
 
+.k-rtl .k-widget.k-autocomplete > .k-i-close,
+.k-rtl .k-widget.k-multiselect > .k-multiselect-wrap > .k-i-close {
+    left: 0;
+    right: initial;
+    margin-left: 6px;
+    margin-right: 0;
+}
+
+.k-rtl .k-widget.k-combobox > .k-dropdown-wrap > .k-i-close {
+    left: 2.3em;
+    right: initial;
+}
+
 .k-spreadsheet {
     .k-button-group .k-button {
         border-width: 1px;
@@ -1199,4 +1251,36 @@ div.k-window-content {
 
 .k-spreadsheet-window .k-page-landscape {
     top: 25%;
+}
+
+.k-spreadsheet-window {
+    .hint-wrapper:before {
+        margin-left: -1em;
+        padding-right: 1em;
+        padding-left: 1em;
+    }
+
+    .k-edit-label > label {
+        vertical-align: middle;
+    }
+
+    .k-edit-field {
+        > .k-radio-label:before,
+        > .k-radio-label:after {
+            margin-top: -4px;
+        }
+    }
+}
+
+div.k-spreadsheet-window {
+    padding: 1em;
+}
+
+.k-editor-dialog .k-root-tabs {
+    padding: 0 1em;
+}
+
+.k-editor-dialog ul.k-tabstrip-items {
+    padding: 0;
+    border: 0;
 }

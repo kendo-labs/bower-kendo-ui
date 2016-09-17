@@ -106,7 +106,7 @@
 @shadow-color: rgba(0, 0, 0, 0.7);
 @shadow-inset-color: darken(@base, 9%);
 @link-text-color: @normal-text-color;
-@upload-progress-background-color: @info;
+@upload-progress-background-color: @normal-text-color;
 @upload-progress-text-color: @normal-text-color;
 @upload-success-background-color: @success;
 @upload-success-text-color: @normal-text-color;
@@ -250,7 +250,9 @@
 .k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
-.k-upload-files
+.k-upload-files,
+.k-popup.k-align .k-list .k-item:last-child,
+.k-editor-dialog .k-tabstrip-items
 {
     border-color: @widget-border-color;
 }
@@ -497,7 +499,9 @@ html .km-pane-wrapper .k-header
 }
 
 .k-loading,
-.k-state-hover .k-loading
+.k-state-hover .k-loading,
+.k-i-loading,
+.k-state-hover .k-i-loading
 {
     background-image: url('@{image-folder}/loading.gif');
     background-position: 50% 50%;
@@ -728,6 +732,21 @@ html .km-pane-wrapper .k-header
 .k-grouping-row .k-state-focused
 {
     border-color: @focused-border-color;
+}
+
+.k-button-bare {
+	&.k-state-focused .k-font-icon,
+	&:focus .k-font-icon {
+		text-shadow: 0 0 3px currentColor;
+	}
+}
+
+html .k-mediaplayer-toolbar .k-button-bare {
+	&:active,
+	&.k-state-active,
+	&.k-state-active:hover {
+	    color: @accent;
+    }
 }
 
 
@@ -1231,6 +1250,54 @@ div.k-filebrowser-dropzone em
     background-color: @upload-error-background-color;
 }
 
+.k-file-extension-wrapper,
+.k-multiple-files-extension-wrapper {
+    color: @header-text-color;
+    border-color: @header-text-color;
+}
+
+.k-file-invalid .k-file-name-invalid {
+    color: @error;
+}
+
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+    color: @error;
+    border-color: @error;
+}
+
+.k-file-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:before {
+    background-color: @active-background-color;
+    border-color: transparent transparent @header-text-color @header-text-color;
+}
+
+.k-file-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:before {
+    background-color: @active-background-color;
+    border-color: transparent transparent @error @error;
+}
+
+.k-multiple-files-extension-wrapper:after {
+    border-top-color: @header-text-color;
+    border-left-color: @header-text-color;
+}
+
+.k-multiple-files-invalid-extension-wrapper:after {
+    border-top-color: @error;
+    border-left-color: @error;
+}
+
+.k-file-size,
+.k-file-information,
+.k-file-validation-message {
+    color: @header-text-color;
+}
+
+.k-upload .k-upload-selected {
+    border-color: @widget-border-color;
+}
+
 /* ImageBrowser */
 
 .k-tile
@@ -1250,7 +1317,9 @@ div.k-filebrowser-dropzone em
 }
 
 .k-filebrowser .k-tile .k-folder,
-.k-filebrowser .k-tile .k-file
+.k-filebrowser .k-tile .k-file,
+.k-filebrowser .k-tile .k-i-folder,
+.k-filebrowser .k-tile .k-i-file
 {
     background-image: url('@{image-folder}/imagebrowser.png');
     background-size: auto auto;
@@ -1965,6 +2034,10 @@ html .km-pane-wrapper .km-widget,
     color: @drop-down-text-color;
 }
 
+.k-nodata {
+    color: @disabled-text-color;
+}
+
 .k-dropdown .k-input,
 .k-dropdown .k-state-focused .k-input,
 .k-menu .k-popup
@@ -2271,6 +2344,7 @@ html .km-pane-wrapper .km-widget,
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2),
        only screen and (min-device-pixel-ratio: 1.2) {
     .k-icon:not(.k-loading),
+    .k-icon:not(.k-i-loading),
     .k-grouping-dropclue,
     .k-drop-hint,
     .k-callout,
@@ -2500,3 +2574,76 @@ html .km-pane-wrapper .km-widget,
 
 @spreadsheet-page-orientation-border-color: @button-border-color;
 @spreadsheet-page-orientation-background: @content-background-color;
+
+/* Dialog */
+
+.k-dialog {
+    border-color: @widget-border-color;
+    background-color: @base;
+    .k-content {
+        border-bottom-right-radius: @border-radius;
+        border-bottom-left-radius: @border-radius;
+    }
+    &.k-dialog-titleless .k-content {
+        border-top-right-radius: @border-radius;
+        border-top-left-radius: @border-radius;
+    }
+    .k-dialog-buttongroup {
+        &.k-dialog-button-layout-stretched {
+            width: 100%;
+            .k-button {
+                display: inline-block;
+                padding: 0.9em 0 0.9em 0;
+                border-radius: 0;
+                border-bottom: 0;
+                border-width: 1px 0 0 1px;
+            }
+            li.k-button:first-child {
+            border-bottom-left-radius: @border-radius;
+            border-left-width: 0;
+            }
+            li.k-button:last-child {
+                border-bottom-right-radius: @border-radius;
+                border-right-width: 0;
+            }
+        }
+        &.k-dialog-button-layout-normal {
+            width: auto;
+            margin: 0;
+            padding: 1em;
+            text-align: right;
+            .k-button {
+                margin-left: 0.5em;
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+}
+.k-rtl .k-dialog {
+    a.k-dialog-action.k-dialog-close {
+        top: 1em;
+        left: .5em;
+    }
+    .k-dialog-buttongroup {
+        &.k-dialog-button-layout-stretched {
+            li.k-button:first-child {
+                border-bottom-right-radius: @border-radius;
+            }
+            li.k-button:last-child {
+                border-bottom-left-radius: @border-radius;
+            }
+        }
+        &.k-dialog-button-layout-normal {
+            text-align: left;
+            .k-button {
+                margin-left: 0;
+                margin-right: 0.5em;
+                &:first-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}

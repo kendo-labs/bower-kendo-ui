@@ -1560,16 +1560,20 @@ button.km-button {
 .km-root .km-icon-label.k-i-seek-w:before {
   content: "\E00B";
 }
-.km-root .km-icon-label.k-si-arrow-e:before {
+.km-root .km-icon-label.k-si-arrow-e:before,
+.km-root .km-icon-label.k-i-sarrow-e:before {
   content: "\E00C";
 }
-.km-root .km-icon-label.k-si-arrow-n:before {
+.km-root .km-icon-label.k-si-arrow-n:before,
+.km-root .km-icon-label.k-i-sarrow-n:before {
   content: "\E00D";
 }
-.km-root .km-icon-label.k-si-arrow-s:before {
+.km-root .km-icon-label.k-si-arrow-s:before,
+.km-root .km-icon-label.k-i-sarrow-s:before {
   content: "\E00E";
 }
-.km-root .km-icon-label.k-si-arrow-w:before {
+.km-root .km-icon-label.k-si-arrow-w:before,
+.km-root .km-icon-label.k-i-sarrow-w:before {
   content: "\E00F";
 }
 .km-root .km-icon-label.k-i-arrowhead-e:before {
@@ -1614,10 +1618,12 @@ button.km-button {
 .km-root .km-icon-label.k-i-refresh-rev:before {
   content: "\E01D";
 }
-.km-root .km-icon-label.k-si-refresh:before {
+.km-root .km-icon-label.k-si-refresh:before,
+.km-root .km-icon-label.k-i-srefresh:before {
   content: "\E01E";
 }
-.km-root .km-icon-label.k-si-refresh-rev:before {
+.km-root .km-icon-label.k-si-refresh-rev:before,
+.km-root .km-icon-label.k-i-srefresh-rev:before {
   content: "\E01F";
 }
 .km-root .km-icon-label.k-i-turn-en:before {
@@ -1680,10 +1686,12 @@ button.km-button {
 .km-root .km-icon-label.k-i-minus-sign:before {
   content: "\E033";
 }
-.km-root .km-icon-label.k-si-plus-sign:before {
+.km-root .km-icon-label.k-si-plus-sign:before,
+.km-root .km-icon-label.k-i-splus-sign:before {
   content: "\E034";
 }
-.km-root .km-icon-label.k-si-minus-sign:before {
+.km-root .km-icon-label.k-si-minus-sign:before,
+.km-root .km-icon-label.k-i-sminus-sign:before {
   content: "\E035";
 }
 .km-root .km-icon-label.k-i-cancel:before {
@@ -1701,10 +1709,12 @@ button.km-button {
 .km-root .km-icon-label.k-i-minus:before {
   content: "\E03A";
 }
-.km-root .km-icon-label.k-si-plus:before {
+.km-root .km-icon-label.k-si-plus:before,
+.km-root .km-icon-label.k-i-splus:before {
   content: "\E03B";
 }
-.km-root .km-icon-label.k-si-minus:before {
+.km-root .km-icon-label.k-si-minus:before,
+.km-root .km-icon-label.k-i-sminus:before {
   content: "\E03C";
 }
 .km-root .km-icon-label.k-i-stop:before {
@@ -4101,16 +4111,20 @@ body:before {
 .km-list .km-icon-label.k-i-seek-w:before {
   content: "\E00B";
 }
-.km-list .km-icon-label.k-si-arrow-e:before {
+.km-list .km-icon-label.k-si-arrow-e:before,
+.km-list .km-icon-label.k-i-sarrow-e:before {
   content: "\E00C";
 }
-.km-list .km-icon-label.k-si-arrow-n:before {
+.km-list .km-icon-label.k-si-arrow-n:before,
+.km-list .km-icon-label.k-i-sarrow-n:before {
   content: "\E00D";
 }
-.km-list .km-icon-label.k-si-arrow-s:before {
+.km-list .km-icon-label.k-si-arrow-s:before,
+.km-list .km-icon-label.k-i-sarrow-s:before {
   content: "\E00E";
 }
-.km-list .km-icon-label.k-si-arrow-w:before {
+.km-list .km-icon-label.k-si-arrow-w:before,
+.km-list .km-icon-label.k-i-sarrow-w:before {
   content: "\E00F";
 }
 .km-list .km-icon-label.k-i-arrowhead-e:before {
@@ -4155,10 +4169,12 @@ body:before {
 .km-list .km-icon-label.k-i-refresh-rev:before {
   content: "\E01D";
 }
-.km-list .km-icon-label.k-si-refresh:before {
+.km-list .km-icon-label.k-si-refresh:before,
+.km-list .km-icon-label.k-i-srefresh:before {
   content: "\E01E";
 }
-.km-list .km-icon-label.k-si-refresh-rev:before {
+.km-list .km-icon-label.k-si-refresh-rev:before,
+.km-list .km-icon-label.k-s-srefresh-rev:before {
   content: "\E01F";
 }
 .km-list .km-icon-label.k-i-turn-en:before {
@@ -4221,10 +4237,12 @@ body:before {
 .km-list .km-icon-label.k-i-minus-sign:before {
   content: "\E033";
 }
-.km-list .km-icon-label.k-si-plus-sign:before {
+.km-list .km-icon-label.k-si-plus-sign:before,
+.km-list .km-icon-label.k-i-splus-sign:before {
   content: "\E034";
 }
-.km-list .km-icon-label.k-si-minus-sign:before {
+.km-list .km-icon-label.k-si-minus-sign:before,
+.km-list .km-icon-label.k-i-sminus-sign:before {
   content: "\E035";
 }
 .km-list .km-icon-label.k-i-cancel:before {
@@ -4242,10 +4260,12 @@ body:before {
 .km-list .km-icon-label.k-i-minus:before {
   content: "\E03A";
 }
-.km-list .km-icon-label.k-si-plus:before {
+.km-list .km-icon-label.k-si-plus:before,
+.km-list .km-icon-label.k-i-splus:before {
   content: "\E03B";
 }
-.km-list .km-icon-label.k-si-minus:before {
+.km-list .km-icon-label.k-si-minus:before,
+.km-list .km-icon-label.k-i-sminus:before {
   content: "\E03C";
 }
 .km-list .km-icon-label.k-i-stop:before {

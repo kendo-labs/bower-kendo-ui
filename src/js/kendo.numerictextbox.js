@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, round = kendo._round, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, extend = $.extend;
+        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, extend = $.extend;
         var NumericTextBox = Widget.extend({
             init: function (element, options) {
                 var that = this, isStep = options && options.step !== undefined, min, max, step, value, disabled;
@@ -48,18 +48,6 @@
                 element = that.element.on('focusout' + ns, proxy(that._focusout, that)).attr('role', 'spinbutton');
                 options.placeholder = options.placeholder || element.attr('placeholder');
                 that._initialOptions = extend({}, options);
-                that._reset();
-                that._wrapper();
-                that._arrows();
-                that._input();
-                if (!kendo.support.mobileOS) {
-                    that._text.on(FOCUS + ns, proxy(that._click, that));
-                } else {
-                    that._text.on(TOUCHEND + ns + ' ' + FOCUS + ns, function () {
-                        that._toggleText(false);
-                        element.focus();
-                    });
-                }
                 min = that.min(element.attr('min'));
                 max = that.max(element.attr('max'));
                 step = that._parse(element.attr('step'));
@@ -71,6 +59,25 @@
                 }
                 if (!isStep && step !== NULL) {
                     options.step = step;
+                }
+                that._reset();
+                that._wrapper();
+                that._arrows();
+                that._input();
+                if (!kendo.support.mobileOS) {
+                    that._text.on(FOCUS + ns, proxy(that._click, that));
+                } else {
+                    that._text.on(TOUCHEND + ns + ' ' + FOCUS + ns, function () {
+                        if (kendo.support.browser.edge) {
+                            that._text.one(FOCUS + ns, function () {
+                                that._toggleText(false);
+                                element.focus();
+                            });
+                        } else {
+                            that._toggleText(false);
+                            element.focus();
+                        }
+                    });
                 }
                 element.attr('aria-valuemin', options.min).attr('aria-valuemax', options.max);
                 options.format = extractFormat(options.format);
@@ -87,10 +94,12 @@
             options: {
                 name: 'NumericTextBox',
                 decimals: NULL,
+                restrictDecimals: false,
                 min: NULL,
                 max: NULL,
                 value: NULL,
                 step: 1,
+                round: true,
                 culture: '',
                 format: 'n',
                 spinners: true,
@@ -193,7 +202,7 @@
                     }, options = that.options, spinners = options.spinners, element = that.element;
                 arrows = element.siblings('.k-icon');
                 if (!arrows[0]) {
-                    arrows = $(buttonHtml('n', options.upArrowText) + buttonHtml('s', options.downArrowText)).insertAfter(element);
+                    arrows = $(buttonHtml('increase', options.upArrowText) + buttonHtml('decrease', options.downArrowText)).insertAfter(element);
                     arrows.wrapAll('<span class="k-select"/>');
                 }
                 if (!spinners) {
@@ -271,7 +280,7 @@
                 return numberFormat;
             },
             _input: function () {
-                var that = this, CLASSNAME = 'k-formatted-value', element = that.element.addClass(INPUT).show()[0], accessKey = element.accessKey, wrapper = that.wrapper, text;
+                var that = this, options = that.options, CLASSNAME = 'k-formatted-value', element = that.element.addClass(INPUT).show()[0], accessKey = element.accessKey, wrapper = that.wrapper, text;
                 text = wrapper.find(POINT + CLASSNAME);
                 if (!text[0]) {
                     text = $('<input type="text"/>').insertBefore(element).addClass(CLASSNAME);
@@ -284,12 +293,16 @@
                 text[0].tabIndex = element.tabIndex;
                 text[0].style.cssText = element.style.cssText;
                 text[0].title = element.title;
-                text.prop('placeholder', that.options.placeholder);
+                text.prop('placeholder', options.placeholder);
                 if (accessKey) {
                     text.attr('accesskey', accessKey);
                     element.accessKey = '';
                 }
-                that._text = text.addClass(element.className);
+                that._text = text.addClass(element.className).attr({
+                    'role': 'spinbutton',
+                    'aria-valuemin': options.min,
+                    'aria-valuemax': options.max
+                });
             },
             _keydown: function (e) {
                 var that = this, key = e.keyCode;
@@ -337,6 +350,7 @@
                 var that = this;
                 var separator = numberFormat[POINT];
                 var precision = that.options.decimals;
+                var fractionRule = '*';
                 if (separator === POINT) {
                     separator = '\\' + separator;
                 }
@@ -346,22 +360,30 @@
                 if (precision === 0) {
                     return INTEGER_REGEXP;
                 }
+                if (that.options.restrictDecimals) {
+                    fractionRule = '{0,' + precision + '}';
+                }
                 if (that._separator !== separator) {
                     that._separator = separator;
-                    that._floatRegExp = new RegExp('^(-)?(((\\d+(' + separator + '\\d*)?)|(' + separator + '\\d*)))?$');
+                    that._floatRegExp = new RegExp('^(-)?(((\\d+(' + separator + '\\d' + fractionRule + ')?)|(' + separator + '\\d' + fractionRule + ')))?$');
                 }
                 return that._floatRegExp;
             },
             _paste: function (e) {
-                var that = this, element = e.target, value = element.value;
+                var that = this;
+                var element = e.target;
+                var value = element.value;
+                var numberFormat = that._format(that.options.format);
                 setTimeout(function () {
-                    if (that._parse(element.value) === NULL) {
+                    var result = that._parse(element.value);
+                    var isValid = that._numericRegex(numberFormat).test(element.value);
+                    if (result === NULL || that._adjust(result) !== result || !isValid) {
                         that._update(value);
                     }
                 });
             },
             _option: function (option, value) {
-                var that = this, options = that.options;
+                var that = this, element = that.element, options = that.options;
                 if (value === undefined) {
                     return options[option];
                 }
@@ -370,7 +392,8 @@
                     return;
                 }
                 options[option] = value;
-                that.element.attr('aria-value' + option, value).attr(option, value);
+                element.add(that._text).attr('aria-value' + option, value);
+                element.attr(option, value);
             },
             _spin: function (step, timeout) {
                 var that = this;
@@ -402,6 +425,10 @@
             _parse: function (value, culture) {
                 return parse(value, this._culture(culture), this.options.format);
             },
+            _round: function (value, precision) {
+                var rounder = this.options.round ? kendo._round : truncate;
+                return rounder(value, precision);
+            },
             _update: function (value) {
                 var that = this, options = that.options, format = options.format, decimals = options.decimals, culture = that._culture(), numberFormat = that._format(format, culture), isNotNull;
                 if (decimals === NULL) {
@@ -410,26 +437,30 @@
                 value = that._parse(value, culture);
                 isNotNull = value !== NULL;
                 if (isNotNull) {
-                    value = parseFloat(round(value, decimals));
+                    value = parseFloat(that._round(value, decimals), 10);
                 }
                 that._value = value = that._adjust(value);
                 that._placeholder(kendo.toString(value, format, culture));
                 if (isNotNull) {
                     value = value.toString();
                     if (value.indexOf('e') !== -1) {
-                        value = round(+value, decimals);
+                        value = that._round(+value, decimals);
                     }
                     value = value.replace(POINT, numberFormat[POINT]);
                 } else {
                     value = '';
                 }
-                that.element.val(value).attr('aria-valuenow', value);
+                that.element.val(value);
+                that.element.add(that._text).attr('aria-valuenow', value);
             },
             _placeholder: function (value) {
-                this._text.val(value);
+                var input = this._text;
+                input.val(value);
                 if (!placeholderSupported && !value) {
-                    this._text.val(this.options.placeholder);
+                    input.val(this.options.placeholder);
                 }
+                input.attr('title', input.attr('title') || input.val());
+                input.attr('aria-title', input.attr('title') || input.val());
             },
             _wrapper: function () {
                 var that = this, element = that.element, DOMElement = element[0], wrapper;
@@ -457,8 +488,16 @@
                 }
             }
         });
-        function buttonHtml(className, text) {
-            return '<span unselectable="on" class="k-link"><span unselectable="on" class="k-icon k-i-arrow-' + className + '" title="' + text + '">' + text + '</span></span>';
+        function buttonHtml(direction, text) {
+            var className = 'k-i-arrow-' + (direction === 'increase' ? 'n' : 's');
+            return '<span unselectable="on" class="k-link k-link-' + direction + '" aria-label="' + text + '"><span unselectable="on" class="k-icon ' + className + '"></span></span>';
+        }
+        function truncate(value, precision) {
+            var parts = parseFloat(value, 10).toString().split(POINT);
+            if (parts[1]) {
+                parts[1] = parts[1].substring(0, precision);
+            }
+            return parts.join(POINT);
         }
         ui.plugin(NumericTextBox);
     }(window.kendo.jQuery));

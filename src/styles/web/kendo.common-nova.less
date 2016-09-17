@@ -81,7 +81,9 @@
 }
 
 .k-tabstrip-left > .k-tabstrip-items .k-loading,
-.k-tabstrip-right > .k-tabstrip-items .k-loading
+.k-tabstrip-right > .k-tabstrip-items .k-loading,
+.k-tabstrip-left > .k-tabstrip-items .k-i-loading,
+.k-tabstrip-right > .k-tabstrip-items .k-i-loading
 {
     display: none;
 }
@@ -291,7 +293,9 @@
 }
 
 .k-autocomplete .k-loading,
-.k-multiselect .k-loading
+.k-multiselect .k-loading,
+.k-autocomplete .k-i-loading,
+.k-multiselect .k-i-loading
 {
     bottom: 10px;
 }
@@ -300,6 +304,19 @@
 .k-picker-wrap,
 .k-numeric-wrap {
     padding: 0 2.571em 0 0;
+}
+
+.k-combobox > .k-dropdown-wrap > .k-i-close {
+    right: 3.2em;
+}
+
+.k-multiselect > .k-multiselect-wrap > .k-i-close {
+    top: @grid-size/2 + 2px;
+}
+
+.k-autocomplete > .k-i-close,
+.k-multiselect > .k-multiselect-wrap > .k-i-close {
+    margin-right: 10px;
 }
 
 .k-picker-wrap .k-select,
@@ -572,12 +589,6 @@ table.k-editor {
     margin: 0;
 }
 
-.k-editor-toolbar .k-button-group .k-tool-icon,
-.k-toolbar .k-button-group .k-tool-icon {
-    width: 24px;
-    height: 24px;
-}
-
 .k-editor-toolbar {
     > li {
         margin-right: 0;
@@ -672,7 +683,8 @@ span.k-tooltip
     padding: 11px 20px 9px;
 }
 
-.k-tooltip-validation .k-warning {
+.k-tooltip-validation .k-warning,
+.k-tooltip-validation .k-i-warning {
     margin-right: 10px;
 }
 
@@ -725,7 +737,7 @@ div.editorToolbarWindow.k-window-content {
 }
 
 .k-file {
-    padding: 0.357em .167em 0.357em .8em;
+    padding: .643em .17em .643em 1em;
 }
 
 .k-scheduler-table td,
@@ -981,17 +993,23 @@ form.k-filter-menu .k-textbox {
     }
 
     .k-edit,
-    &:not(.k-state-disabled):hover .k-edit {
+    &:not(.k-state-disabled):hover .k-edit,
+    .k-i-edit,
+    &:not(.k-state-disabled):hover .k-i-edit {
         background-position: -48px 0px;
     }
 
     .k-delete,
-    &:not(.k-state-disabled):hover .k-delete {
+    &:not(.k-state-disabled):hover .k-delete
+    .k-i-delete,
+    &:not(.k-state-disabled):hover .k-i-delete {
         background-position: -48px -16px;
     }
 
     .k-cancel,
-    &:not(.k-state-disabled):hover .k-cancel {
+    &:not(.k-state-disabled):hover .k-cancel,
+    .k-i-cancel,
+    &:not(.k-state-disabled):hover .k-i-cancel {
         background-position: -48px -48px;
     }
 
@@ -1063,19 +1081,27 @@ form.k-filter-menu .k-textbox {
 
 .k-editor-toolbar {
     .k-state-selected {
-        .k-justifyLeft {
+        .k-justifyLeft,
+        .k-i-justify-left,
+        .k-i-align-left {
             background-position: -265px -144px;
         }
 
-        .k-justifyCenter {
+        .k-justifyCenter,
+        .k-i-justify-center,
+        .k-i-align-center {
             background-position: -265px -168px;
         }
 
-        .k-justifyRight {
+        .k-justifyRight,
+        .k-i-justify-right,
+        .k-i-align-right {
             background-position: -265px -192px;
         }
 
-        .k-justifyFull {
+        .k-justifyFull,
+        .k-i-justify-full,
+        .k-i-align-justify {
             background-position: -260px -216px;
         }
 
@@ -1091,11 +1117,15 @@ form.k-filter-menu .k-textbox {
             background-position: -265px -48px;
         }
 
-        .k-insertUnorderedList {
+        .k-insertUnorderedList,
+        .k-i-insert-unordered-list,
+        .k-i-unordered-list {
             background-position: -264px -264px;
         }
 
-        .k-insertOrderedList {
+        .k-insertOrderedList,
+        .k-i-insert-ordered-list,
+        .k-i-ordered-list {
             background-position: -264px -288px;
         }
 
@@ -1153,7 +1183,8 @@ form.k-filter-menu .k-textbox {
     background-position: -16px -35px;
 }
 
-.k-drag-clue .k-add {
+.k-drag-clue .k-add,
+.k-drag-clue .k-i-add {
     background-position: -48px -64px;
 }
 
@@ -1166,6 +1197,11 @@ form.k-filter-menu .k-textbox {
 .k-multiselect-wrap .k-state-hover .k-i-close,
 .k-multiselect-wrap .k-button:not(.k-state-disabled):hover .k-i-close {
     background-position: -48px -16px;
+}
+
+/* Clear button */
+.k-multiselect-wrap > .k-i-close {
+    background-position: -32px -16px;
 }
 
 .k-multiselect-wrap .k-i-arrow-s,
@@ -1182,16 +1218,20 @@ form.k-filter-menu .k-textbox {
 
 .k-i-close,
 .k-delete,
-.k-group-delete {
+.k-group-delete,
+.k-i-delete,
+.k-i-group-delete {
     background-position: -32px -16px;
 }
 
 .k-multiselect {
-    .k-delete {
+    .k-delete,
+    .k-i-delete {
         margin-top: -2px;
     }
 
-    .k-button:not(.k-state-disabled):hover .k-delete {
+    .k-button:not(.k-state-disabled):hover .k-delete,
+    .k-button:not(.k-state-disabled):hover .k-i-delete {
         background-position: -160px -80px;
     }
 }
@@ -1246,15 +1286,18 @@ form.k-filter-menu .k-textbox {
 }
 
 .k-treeview {
-    .k-minus {
+    .k-minus,
+    .k-i-minus {
         background-position: 0 -32px;
     }
 
-    .k-plus {
+    .k-plus,
+    .k-i-plus {
         background-position: 0 -16px;
     }
 
-    .k-loading {
+    .k-loading,
+    .k-i-loading {
         background-position: 50%;
     }
 }
@@ -1343,7 +1386,8 @@ form.k-filter-menu .k-textbox {
     background-position: -64px -32px;
 }
 
-.k-denied {
+.k-denied,
+.k-i-denied {
     background-position: -48px -48px;
 }
 
@@ -1355,7 +1399,10 @@ form.k-filter-menu .k-textbox {
     .k-i-tick,
     .k-insert,
     .k-update,
-    &:not(.k-state-disabled):hover .k-update {
+    &:not(.k-state-disabled):hover .k-update,
+    .k-i-insert,
+    .k-i-update,
+    &:not(.k-state-disabled):hover .k-i-update {
         background-position: -48px -32px;
     }
 }
@@ -1373,39 +1420,49 @@ form.k-filter-menu .k-textbox {
 }
 
 .k-grid-toolbar {
-    .k-button:active .k-add {
+    .k-button:active .k-add,
+    .k-button:active .k-i-add {
         background-position: -48px -64px;
     }
 
-    .k-button:active .k-update {
+    .k-button:active .k-update,
+    .k-button:active .k-i-update {
         background-position: -48px -32px;
     }
 
-    .k-button:active .k-cancel {
+    .k-button:active .k-cancel,
+    .k-button:active .k-i-cancel {
         background-position: -48px -48px;
     }
 }
 
 .k-grouping-header {
     .k-group-delete,
-    .k-button-icon:hover > .k-icon.k-group-delete {
+    .k-button-icon:hover > .k-icon.k-group-delete,
+    .k-i-group-delete,
+    .k-button-icon:hover > .k-icon.k-i-group-delete {
         background-position: -176px -80px;
     }
 
     .k-si-arrow-n,
-    .k-link:hover > .k-icon.k-si-arrow-n {
+    .k-link:hover > .k-icon.k-si-arrow-n,
+    .k-i-sarrow-n,
+    .k-link:hover > .k-icon.k-i-sarrow-n {
         background-position: -16px -288px;
     }
 
     .k-si-arrow-s,
-    .k-link:hover > .k-icon.k-si-arrow-s {
+    .k-link:hover > .k-icon.k-si-arrow-s,
+    .k-i-sarrow-s,
+    .k-link:hover > .k-icon.k-i-sarrow-s {
         background-position: -16px -256px;
     }
 }
 
 .k-filtercell {
     .k-state-active {
-        .k-filter {
+        .k-filter,
+        .k-i-filter {
             background-position: -48px -80px;
         }
     }
@@ -1447,6 +1504,7 @@ form.k-filter-menu .k-textbox {
 .k-gantt {
     .k-i-plus,
     .k-link:hover > .k-icon.k-si-arrow-n,
+    .k-link:hover > .k-icon.k-i-sarrow-n,
     .k-button:hover .k-i-plus {
         background-position: -48px -64px;
     }
@@ -1576,7 +1634,9 @@ form.k-filter-menu .k-textbox {
     }
 
     .k-state-active .k-filter,
-    .k-link:not(.k-state-disabled):hover > .k-filter {
+    .k-link:not(.k-state-disabled):hover > .k-filter,
+    .k-state-active .k-i-filter,
+    .k-link:not(.k-state-disabled):hover > .k-i-filter {
         background-position: -48px -80px;
     }
 }
@@ -1587,7 +1647,8 @@ form.k-filter-menu .k-textbox {
             background-position: -128px -288px;
         }
 
-        .k-warning {
+        .k-warning,
+        .k-i-warning {
             background-position: -176px -240px;
         }
 
@@ -1624,7 +1685,8 @@ form.k-filter-menu .k-textbox {
     background-position: -128px -256px;
 }
 
-.k-mobile-list .k-link:not(.k-state-disabled):hover > .k-filter {
+.k-mobile-list .k-link:not(.k-state-disabled):hover > .k-filter,
+.k-mobile-list .k-link:not(.k-state-disabled):hover > .k-i-filter {
     background-position: -32px -80px;
 }
 
@@ -1643,6 +1705,19 @@ form.k-filter-menu .k-textbox {
 .k-rtl .k-widget .k-picker-wrap,
 .k-rtl .k-widget .k-numeric-wrap {
     padding-left: 2.5em;
+}
+
+.k-rtl .k-widget.k-autocomplete > .k-i-close,
+.k-rtl .k-widget.k-multiselect > .k-multiselect-wrap > .k-i-close {
+    left: 0;
+    right: initial;
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.k-rtl .k-widget.k-combobox > .k-dropdown-wrap > .k-i-close {
+    left: 3.2em;
+    right: initial;
 }
 
 .k-rtl .k-widget.k-datetimepicker .k-picker-wrap {
@@ -1728,4 +1803,78 @@ li.k-item.k-last.k-state-selected {
     .k-page-landscape {
         top: 30%;
     }
+
+    .k-edit-label,
+    .k-edit-field {
+        padding: 0;
+        line-height: 4em;
+    }
+
+    .k-edit-label > label {
+        vertical-align: middle;
+    }
+
+    .k-edit-field {
+        .k-radio-label {
+            padding-left: 1.75em;
+        }
+
+        > .k-radio-label:before,
+        > .k-radio-label:after {
+            margin-top: -2px;
+        }
+    }
+}
+
+div.k-spreadsheet-window {
+    padding: 1em;
+}
+
+.k-editor-dialog.k-editor-table-wizard-dialog.k-window-content {
+    min-width: 325px;
+    width: 25.8em;
+}
+
+.k-editor-dialog.k-editor-table-wizard-dialog .k-tabstrip-wrapper .k-content {
+    min-height: 510px;
+    height: 42em;
+}
+
+.k-edit-label,
+.k-edit-form-container .editor-label {
+    padding: 0.8em 0 1em;
+}
+
+.k-editor-dialog .k-root-tabs {
+    padding: 0 1em;
+}
+
+.k-editor-dialog ul.k-tabstrip-items {
+    padding: 0;
+    border: 0;
+}
+
+.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-textbox,
+.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-dropdown {
+    width: 16.35em;
+}
+
+.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-numerictextbox + .k-dropdown {
+    width: 5.35em;
+}
+
+.k-editor-dialog.k-editor-table-wizard-dialog .k-dropdown.k-align {
+    width: 5.4em;
+}
+
+.k-animation-container .k-popup.k-align .k-list .k-font-icon {
+    line-height: 1.4em;
+}
+
+.k-animation-container .k-popup.k-align .k-list .k-i-justify-clear {
+    line-height: 1.6em;
+}
+
+.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-buttons {
+    padding: 0.6em 1.3em;
 }

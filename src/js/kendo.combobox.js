@@ -63,6 +63,7 @@
                 that._reset();
                 that._wrapper();
                 that._input();
+                that._clearButton();
                 that._tabindex(that.input);
                 that._popup();
                 that._dataSource();
@@ -71,6 +72,7 @@
                 that._oldIndex = that.selectedIndex = -1;
                 that._aria();
                 that._initialIndex = options.index;
+                that.requireValueMapper(that.options);
                 that._initList();
                 that._cascade();
                 if (options.autoBind) {
@@ -103,7 +105,8 @@
                 delay: 200,
                 dataTextField: '',
                 dataValueField: '',
-                minLength: 0,
+                minLength: 1,
+                enforceMinLength: false,
                 height: 200,
                 highlightFirst: true,
                 filter: 'none',
@@ -116,7 +119,8 @@
                 virtual: false,
                 template: null,
                 groupTemplate: '#:data#',
-                fixedGroupTemplate: '#:data#'
+                fixedGroupTemplate: '#:data#',
+                clearButton: true
             },
             events: [
                 'open',
@@ -141,7 +145,8 @@
                 that.element.off(ns);
                 that._inputWrapper.off(ns);
                 clearTimeout(that._pasteTimeout);
-                that._arrow.parent().off(CLICK + ' ' + MOUSEDOWN);
+                that._arrow.off(CLICK + ' ' + MOUSEDOWN);
+                that._clear.off(CLICK + ' ' + MOUSEDOWN);
                 Select.fn.destroy.call(that);
             },
             _focusHandler: function () {
@@ -161,7 +166,12 @@
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = null;
                 that.text(that.text());
-                if (value !== that.value() && that.trigger('select', { item: that._focus() })) {
+                var item = that._focus();
+                var dataItem = this.listView.dataItemByIndex(this.listView.getElementIndex(item));
+                if (value !== that.value() && that.trigger('select', {
+                        dataItem: dataItem,
+                        item: item
+                    })) {
                     that.value(value);
                     return;
                 }
@@ -178,11 +188,14 @@
                 });
             },
             _editable: function (options) {
-                var that = this, disable = options.disable, readonly = options.readonly, wrapper = that._inputWrapper.off(ns), input = that.element.add(that.input.off(ns)), arrow = that._arrow.parent().off(CLICK + ' ' + MOUSEDOWN);
+                var that = this, disable = options.disable, readonly = options.readonly, wrapper = that._inputWrapper.off(ns), input = that.element.add(that.input.off(ns)), arrow = that._arrow.off(CLICK + ' ' + MOUSEDOWN), clear = that._clear;
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
                     input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
                     arrow.on(CLICK, proxy(that._arrowClick, that)).on(MOUSEDOWN, function (e) {
+                        e.preventDefault();
+                    });
+                    clear.on(CLICK, proxy(that._clearValue, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
                     that.input.on('keydown' + ns, proxy(that._keydown, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that)).on('paste' + ns, proxy(that._inputPaste, that));
@@ -200,8 +213,13 @@
                 if (!that.listView.bound() && state !== STATE_FILTER || state === STATE_ACCEPT) {
                     that._open = true;
                     that._state = STATE_REBIND;
-                    that._filterSource();
-                } else {
+                    if (that.options.minLength !== 1) {
+                        that.refresh();
+                        that.popup.open();
+                    } else {
+                        that._filterSource();
+                    }
+                } else if (that._allowOpening()) {
                     that.popup.open();
                     that._focusItem();
                 }
@@ -286,6 +304,9 @@
                 var skip = that.listView.skip();
                 var isFirstPage = skip === undefined || skip === 0;
                 that._presetValue = false;
+                that._renderFooter();
+                that._renderNoData();
+                that._toggleNoData(!data.length);
                 that._resizePopup();
                 that.popup.position();
                 that._buildOptions(data);
@@ -302,7 +323,7 @@
                     if (that._typingTimeout && !isActive) {
                         that.popup.close();
                     } else {
-                        that.toggle(!!data.length);
+                        that.toggle(that._allowOpening());
                     }
                     that._typingTimeout = null;
                 }
@@ -352,7 +373,7 @@
                     idx = -1;
                 }
                 this.selectedIndex = idx;
-                if (idx === -1) {
+                if (idx === -1 && !dataItem) {
                     value = text = this.input[0].value;
                     this.listView.focus(-1);
                 } else {
@@ -460,6 +481,7 @@
                     value = that._accessor() || that.listView.value()[0];
                     return value === undefined || value === null ? '' : value;
                 }
+                that.requireValueMapper(that.options, value);
                 that.trigger('set', { value: value });
                 if (value === options.value && that.input.val() === options.text) {
                     return;
@@ -486,8 +508,12 @@
             },
             _click: function (e) {
                 var item = e.item;
+                var dataItem = this.listView.dataItemByIndex(this.listView.getElementIndex(item));
                 e.preventDefault();
-                if (this.trigger('select', { item: item })) {
+                if (this.trigger('select', {
+                        dataItem: dataItem,
+                        item: item
+                    })) {
                     this.close();
                     return;
                 }
@@ -495,7 +521,10 @@
                 this._select(item);
                 this._blur();
             },
-            _filter: function (word) {
+            _inputValue: function () {
+                return this.text();
+            },
+            _searchByWord: function (word) {
                 var that = this;
                 var options = that.options;
                 var dataSource = that.dataSource;
@@ -543,7 +572,7 @@
                 }
                 input = wrapper.find(SELECTOR);
                 if (!input[0]) {
-                    wrapper.append('<span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default"><input ' + name + 'class="k-input" type="text" autocomplete="off"/><span tabindex="-1" unselectable="on" class="k-select"><span unselectable="on" class="k-icon k-i-arrow-s">select</span></span></span>').append(that.element);
+                    wrapper.append('<span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default"><input ' + name + 'class="k-input" type="text" autocomplete="off"/><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-s"></span></span></span>').append(that.element);
                     input = wrapper.find(SELECTOR);
                 }
                 input[0].style.cssText = element.style.cssText;
@@ -552,7 +581,7 @@
                 if (maxLength > -1) {
                     input[0].maxLength = maxLength;
                 }
-                input.addClass(element.className).val(this.options.text || element.value).css({
+                input.addClass(element.className).css({
                     width: '100%',
                     height: element.style.height
                 }).attr({
@@ -568,12 +597,21 @@
                 }
                 that._focused = that.input = input;
                 that._inputWrapper = $(wrapper[0].firstChild);
-                that._arrow = wrapper.find('.k-icon').attr({
+                that._arrow = wrapper.find('.k-select').attr({
                     'role': 'button',
                     'tabIndex': -1
                 });
                 if (element.id) {
                     that._arrow.attr('aria-controls', that.ul[0].id);
+                }
+            },
+            _clearButton: function () {
+                this._clear = $('<span unselectable="on" class="k-icon k-i-close" title="clear"></span>').attr({
+                    'role': 'button',
+                    'tabIndex': -1
+                });
+                if (this.options.clearButton) {
+                    this._clear.insertAfter(this.input);
                 }
             },
             _keydown: function (e) {

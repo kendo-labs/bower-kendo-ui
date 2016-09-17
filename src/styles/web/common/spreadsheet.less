@@ -93,35 +93,66 @@
     @formula-input-height: @formula-bar-height / 1.3;
     @formula-input-padding: (@formula-bar-height - @formula-input-height) / 2;
 
-    .k-spreadsheet-formula-bar {
-        border-width: 0 1px 1px;
+    .k-spreadsheet-action-bar {
+        border-width: 0 0 1px;
         border-style: solid;
-        padding-left: 31px; // XXX: Move to code
         position: relative;
         .force-font();
 
-        &:before {
-            .use-font-icon();
-            content: "\e659";
-            display: block;
-            height: @formula-input-height;
-            top: @formula-input-padding;
-            border-width: 0 1px 0 0;
-            border-style: solid;
-            position: absolute;
-            width: 24px;
-            margin-left: -24px;
+        display: table;
+        width: 100%;
+
+        .k-spreadsheet-name-editor,
+        .k-spreadsheet-formula-bar {
+            display: table-cell;
         }
 
-        &:after {
-            content: "";
-            display: block;
-            border-width: 0 0 1px;
+        .k-spreadsheet-name-editor {
+            position: relative;
+            vertical-align: top;
+            border-width: 0 1px 0 0;
             border-style: solid;
-            position: absolute;
-            bottom: 0;
-            left: 0;
+
+            .k-combobox {
+                width: 9.5em;
+                border-radius: 0;
+                border-color: transparent;
+
+                .k-dropdown-wrap {
+                    border-radius: 0;
+                    border-color: transparent;
+                    background: transparent;
+                    box-shadow: none;
+
+                    .k-input {
+                        border-radius: 0;
+                    }
+
+                    .k-select {
+                        border-radius: 0;
+                        margin: -1px -1px -1px 0;
+                        padding: 1px 1px 1px 0;
+                    }
+                }
+            }
+        }
+
+        .k-spreadsheet-formula-bar {
             width: 100%;
+            padding-left: 31px; // XXX: Move to code
+
+            &::before {
+                .use-font-icon();
+                content: "\e659";
+                display: block;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                border-width: 0 1px 0 0;
+                border-style: solid;
+                width: 24px;
+                margin-left: -24px;
+            }
         }
 
         .k-spreadsheet-formula-input {
@@ -252,6 +283,23 @@
 
     .k-auto-fill-wrapper {
         position: relative;
+    }
+}
+
+.k-spreadsheet-names-popup {
+    .k-item {
+        position: relative;
+    }
+    .k-icon {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.7;
+        cursor: pointer;
+        &:hover {
+            opacity: 1;
+        }
     }
 }
 
@@ -389,7 +437,15 @@ textarea.k-spreadsheet-clipboard {
     }
 }
 
+div.k-spreadsheet-window {
+    padding: 1.167em .75em .75em;
+}
+
 .k-spreadsheet-window {
+    .k-edit-form-container {
+        width: 100%;
+    }
+
     .k-root-tabs {
         border-width: 0;
         margin: -1em -1em 0;
@@ -429,11 +485,29 @@ textarea.k-spreadsheet-clipboard {
     }
 
     .k-edit-label {
-        width: 20%;
+        width: 27%;
+        margin: 0 0 0 .75em;
     }
 
     .k-edit-field {
-        width: 70%;
+        width: 67%;
+        margin: 0 .917em 0 0;
+
+        > .k-radio-label {
+            margin-right: 1.25em;
+            vertical-align: baseline;
+        }
+
+        > .k-radio-label:before,
+        > .k-radio-label:after {
+            margin-top: -1px;
+        }
+    }
+
+    .k-edit-label,
+    .k-edit-field {
+        padding: 0;
+        line-height: 3em;
     }
 
     .k-edit-field .k-textbox,
@@ -469,7 +543,7 @@ textarea.k-spreadsheet-clipboard {
         height: 28px;
         line-height: 28px;
         border-width: 1px;
-        border-style: solid;  
+        border-style: solid;
     }
 
     .k-edit-field > .k-orientation-label:before {
@@ -477,11 +551,11 @@ textarea.k-spreadsheet-clipboard {
         font-size: 16px;
     }
 
-    .k-orientation-portrait-label:before {        
+    .k-orientation-portrait-label:before {
         content: "\e639";
     }
 
-    .k-orientation-landscape-label:before {        
+    .k-orientation-landscape-label:before {
         content: "\e901";
     }
 
@@ -492,7 +566,7 @@ textarea.k-spreadsheet-clipboard {
         width: 64px;
         height: 92px;
         border-width: 1px;
-        border-style: solid;              
+        border-style: solid;
     }
 
     .k-page-orientation:before {
@@ -502,9 +576,9 @@ textarea.k-spreadsheet-clipboard {
         content: "";
         display: inline-block;
         width: 0;
-        height: 0;        
+        height: 0;
         border-width: 3px;
-        border-style: solid;        
+        border-style: solid;
         margin-top: -1px;
         margin-right: -1px;
     }
@@ -533,7 +607,7 @@ textarea.k-spreadsheet-clipboard {
         width: 34px;
         height: 100%;
         border-width: 0 1px;
-        border-style: solid;      
+        border-style: solid;
     }
 
     .k-page-landscape .k-margins-horizontal {
@@ -549,7 +623,7 @@ textarea.k-spreadsheet-clipboard {
         content: " ";
         display: block;
         clear: both;
-        height: 0; 
+        height: 0;
     }
 }
 
@@ -849,3 +923,37 @@ textarea.k-spreadsheet-clipboard {
     border-width: 0 !important;
 }
 
+.k-spreadsheet-editor-button {
+    position: absolute;
+    width: 20px;
+    z-index: 10;
+    margin-left: 2px;
+    padding: 0 !important;
+
+    span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.hint-wrapper {
+    margin-top: 1em;
+}
+
+.hint-wrapper:before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin-left: -.917em;
+    padding-right: .917em;
+    padding-left: .917em;
+}
+
+.k-edit-form-container > div:after {
+    display: block;
+    content: "";
+    clear: both;
+}

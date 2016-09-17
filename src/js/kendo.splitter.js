@@ -177,7 +177,7 @@
                 paneConfig = pane.data(PANE);
                 url = url || paneConfig.contentUrl;
                 if (url) {
-                    pane.append('<span class=\'k-icon k-loading k-pane-loading\' />');
+                    pane.append('<span class=\'k-icon k-i-loading k-pane-loading\' />');
                     if (kendo.isLocalUrl(url)) {
                         jQuery.ajax({
                             url: url,
@@ -250,7 +250,7 @@
                 var catIconIf = function (iconType, condition) {
                         return condition ? '<div class=\'k-icon ' + iconType + '\' />' : '';
                     }, orientation = this.orientation, draggable = previousPane.resizable !== false && nextPane.resizable !== false, prevCollapsible = previousPane.collapsible, prevCollapsed = previousPane.collapsed, nextCollapsible = nextPane.collapsible, nextCollapsed = nextPane.collapsed;
-                splitbar.addClass('k-splitbar k-state-default k-splitbar-' + orientation).attr('role', 'separator').attr('aria-expanded', !(prevCollapsed || nextCollapsed)).removeClass('k-splitbar-' + orientation + '-hover').toggleClass('k-splitbar-draggable-' + orientation, draggable && !prevCollapsed && !nextCollapsed).toggleClass('k-splitbar-static-' + orientation, !draggable && !prevCollapsible && !nextCollapsible).html(catIconIf('k-collapse-prev', prevCollapsible && !prevCollapsed && !nextCollapsed) + catIconIf('k-expand-prev', prevCollapsible && prevCollapsed && !nextCollapsed) + catIconIf('k-resize-handle', draggable) + catIconIf('k-collapse-next', nextCollapsible && !nextCollapsed && !prevCollapsed) + catIconIf('k-expand-next', nextCollapsible && nextCollapsed && !prevCollapsed));
+                splitbar.addClass('k-splitbar k-state-default k-splitbar-' + orientation).attr('role', 'separator').attr('aria-expanded', !(prevCollapsed || nextCollapsed)).removeClass('k-splitbar-' + orientation + '-hover').toggleClass('k-splitbar-draggable-' + orientation, draggable && !prevCollapsed && !nextCollapsed).toggleClass('k-splitbar-static-' + orientation, !draggable && !prevCollapsible && !nextCollapsible).html(catIconIf('k-collapse-prev k-i-sarrow-n', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-prev k-i-sarrow-w', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-prev k-i-sarrow-n', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-expand-prev k-i-sarrow-w', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-resize-handle k-i-hbar', draggable && orientation == VERTICAL) + catIconIf('k-resize-handle k-i-vbar', draggable && orientation == HORIZONTAL) + catIconIf('k-collapse-next k-i-sarrow-s', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-next k-i-sarrow-e', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-next k-i-sarrow-s', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-expand-next k-i-sarrow-e', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == HORIZONTAL));
                 if (!draggable && !prevCollapsible && !nextCollapsible) {
                     splitbar.removeAttr('tabindex');
                 }

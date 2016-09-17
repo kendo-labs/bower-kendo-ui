@@ -84,6 +84,7 @@
                     options.index = index;
                 }
                 that._initialIndex = options.index;
+                that.requireValueMapper(that.options);
                 that._initList();
                 that._cascade();
                 if (options.autoBind) {
@@ -127,6 +128,7 @@
                 animation: {},
                 filter: 'none',
                 minLength: 1,
+                enforceMinLength: false,
                 virtual: false,
                 template: null,
                 valueTemplate: null,
@@ -180,18 +182,35 @@
                         that.filterInput.val('');
                         that._prev = '';
                     }
-                    that._filterSource();
+                    if (that.filterInput && that.options.minLength !== 1) {
+                        that.refresh();
+                        that.popup.one('activate', that._focusInputHandler);
+                        that.popup.open();
+                        if (that.filterInput) {
+                            that._resizeFilterInput();
+                        }
+                    } else {
+                        that._filterSource();
+                    }
                 } else if (that._allowOpening()) {
                     that.popup.one('activate', that._focusInputHandler);
                     that.popup.open();
+                    if (that.filterInput) {
+                        that._resizeFilterInput();
+                    }
                     that._focusItem();
                 }
             },
             _focusInput: function () {
                 this._focusElement(this.filterInput);
             },
+            _resizeFilterInput: function () {
+                this.filterInput.css('display', 'none');
+                this.filterInput.css('width', this.popup.element.css('width'));
+                this.filterInput.css('display', 'inline-block');
+            },
             _allowOpening: function () {
-                return this.hasOptionLabel() || this.filterInput || this.dataSource.view().length;
+                return this.hasOptionLabel() || this.filterInput || Select.fn._allowOpening.call(this);
             },
             toggle: function (toggle) {
                 this._toggle(toggle, true);
@@ -263,6 +282,10 @@
                     return that._textAccessor();
                 }
             },
+            _clearFilter: function () {
+                $(this.filterInput).val('');
+                Select.fn._clearFilter.call(this);
+            },
             value: function (value) {
                 var that = this;
                 var listView = that.listView;
@@ -271,6 +294,7 @@
                     value = that._accessor() || that.listView.value()[0];
                     return value === undefined || value === null ? '' : value;
                 }
+                that.requireValueMapper(that.options, value);
                 if (value || !that.hasOptionLabel()) {
                     that._initialIndex = null;
                 }
@@ -378,6 +402,9 @@
                 var data = that.dataSource.flatView();
                 var dataItem;
                 that._presetValue = false;
+                that._renderFooter();
+                that._renderNoData();
+                that._toggleNoData(!data.length);
                 that._resizePopup(true);
                 that.popup.position();
                 that._buildOptions(data);
@@ -428,9 +455,13 @@
                 var filtered = that._state === STATE_FILTER;
                 var isIFrame = window.self !== window.top;
                 var focusedItem = that._focus();
+                var dataItem = that._getElementDataItem(focusedItem);
                 if (!that._prevent) {
                     clearTimeout(that._typingTimeout);
-                    if (filtered && focusedItem && !that.trigger('select', { item: focusedItem })) {
+                    if (!filtered && focusedItem && !that.trigger('select', {
+                            dataItem: dataItem,
+                            item: focusedItem
+                        })) {
                         that._select(focusedItem, !that.dataSource.view().length);
                     }
                     if (support.mobileOS.ios && isIFrame) {
@@ -502,6 +533,9 @@
                 if (altKey && key === keys.UP || key === keys.ESC) {
                     that._focusElement(that.wrapper);
                 }
+                if (that._state === STATE_FILTER && key === keys.ESC) {
+                    that._clearFilter();
+                }
                 if (key === keys.ENTER && that._typingTimeout && that.filterInput && isPopupVisible) {
                     e.preventDefault();
                     return;
@@ -520,7 +554,10 @@
                         that._lastItem();
                     }
                     if (handled) {
-                        if (that.trigger('select', { item: that._focus() })) {
+                        if (that.trigger('select', {
+                                dataItem: that._getElementDataItem(that._focus()),
+                                item: that._focus()
+                            })) {
                             that._focus(current);
                             return;
                         }
@@ -579,7 +616,10 @@
                 if (idx !== dataLength) {
                     oldFocusedItem = that._focus();
                     that._select(normalizeIndex(startIndex + idx, dataLength));
-                    if (that.trigger('select', { item: that._focus() })) {
+                    if (that.trigger('select', {
+                            dataItem: that._getElementDataItem(that._focus()),
+                            item: that._focus()
+                        })) {
                         that._select(oldFocusedItem);
                     }
                     if (!that.popup.visible()) {
@@ -615,10 +655,22 @@
                 Select.fn._popup.call(this);
                 this.popup.one('open', proxy(this._popupOpen, this));
             },
+            _getElementDataItem: function (element) {
+                if (!element || !element[0]) {
+                    return null;
+                }
+                if (element[0] === this.optionLabel[0]) {
+                    return this._optionLabelDataItem();
+                }
+                return this.listView.dataItemByIndex(this.listView.getElementIndex(element));
+            },
             _click: function (e) {
                 var item = e.item || $(e.currentTarget);
                 e.preventDefault();
-                if (this.trigger('select', { item: item })) {
+                if (this.trigger('select', {
+                        dataItem: this._getElementDataItem(item),
+                        item: item
+                    })) {
                     this.close();
                     return;
                 }
@@ -641,7 +693,7 @@
                     this._focused = element.focus();
                 }
             },
-            _filter: function (word) {
+            _searchByWord: function (word) {
                 if (word) {
                     var that = this;
                     var ignoreCase = that.options.ignoreCase;
@@ -653,6 +705,9 @@
                     });
                 }
             },
+            _inputValue: function () {
+                return this.text();
+            },
             _search: function () {
                 var that = this;
                 var dataSource = that.dataSource;
@@ -663,6 +718,7 @@
                         if (that._prev !== value) {
                             that._prev = value;
                             that.search(value);
+                            that._resizeFilterInput();
                         }
                         that._typingTimeout = null;
                     }, that.options.delay);
@@ -834,7 +890,7 @@
                     this.filterInput = null;
                 }
                 if (this._isFilterEnabled()) {
-                    icon = '<span unselectable="on" class="k-icon k-i-search">select</span>';
+                    icon = '<span class="k-icon k-i-search"></span>';
                     this.filterInput = $('<input class="k-textbox"/>').attr({
                         placeholder: this.element.attr('placeholder'),
                         title: this.element.attr('title'),
@@ -849,7 +905,7 @@
                 var that = this, wrapper = that.wrapper, SELECTOR = 'span.k-input', span;
                 span = wrapper.find(SELECTOR);
                 if (!span[0]) {
-                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span unselectable="on" class="k-input">&nbsp;</span><span unselectable="on" class="k-select"><span unselectable="on" class="k-icon k-i-arrow-s">select</span></span></span>').append(that.element);
+                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span unselectable="on" class="k-input">&nbsp;</span><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-s"></span></span></span>').append(that.element);
                     span = wrapper.find(SELECTOR);
                 }
                 that.span = span;
@@ -864,7 +920,6 @@
                     wrapper[0].style.cssText = DOMelement.style.cssText;
                     wrapper[0].title = DOMelement.title;
                 }
-                element.hide();
                 that._focused = that.wrapper = wrapper.addClass('k-widget k-dropdown k-header').addClass(DOMelement.className).css('display', '').attr({
                     accesskey: element.attr('accesskey'),
                     unselectable: 'on',
@@ -872,6 +927,7 @@
                     'aria-haspopup': true,
                     'aria-expanded': false
                 });
+                element.hide().removeAttr('accesskey');
             },
             _clearSelection: function (parent) {
                 this.select(parent.value() ? 0 : -1);
@@ -908,8 +964,13 @@
                 if (!dataItem) {
                     dataItem = this._assignInstance(text, this._accessor());
                 }
-                if (dataItem === optionLabelText || this._text(dataItem) === optionLabelText) {
-                    template = this.optionLabelTemplate;
+                if (this.hasOptionLabel()) {
+                    if (dataItem === optionLabelText || this._text(dataItem) === optionLabelText) {
+                        template = this.optionLabelTemplate;
+                        if (typeof this.options.optionLabel === 'string' && !this.options.optionLabelTemplate) {
+                            dataItem = optionLabelText;
+                        }
+                    }
                 }
                 var getElements = function () {
                     return {

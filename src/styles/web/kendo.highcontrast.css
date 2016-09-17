@@ -163,7 +163,9 @@
 .k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
-.k-upload-files {
+.k-upload-files,
+.k-popup.k-align .k-list .k-item:last-child,
+.k-editor-dialog .k-tabstrip-items {
   border-color: #674c63;
 }
 .k-group,
@@ -354,7 +356,9 @@ html .km-pane-wrapper .k-header {
   border-color: transparent;
 }
 .k-loading,
-.k-state-hover .k-loading {
+.k-state-hover .k-loading,
+.k-i-loading,
+.k-state-hover .k-i-loading {
   background-image: url('HighContrast/loading.gif');
   background-position: 50% 50%;
 }
@@ -524,6 +528,15 @@ html .km-pane-wrapper .k-header {
 .k-state-focused,
 .k-grouping-row .k-state-focused {
   border-color: #fff;
+}
+.k-button-bare.k-state-focused .k-font-icon,
+.k-button-bare:focus .k-font-icon {
+  text-shadow: 0 0 3px currentColor;
+}
+html .k-mediaplayer-toolbar .k-button-bare:active,
+html .k-mediaplayer-toolbar .k-button-bare.k-state-active,
+html .k-mediaplayer-toolbar .k-button-bare.k-state-active:hover {
+  color: #870074;
 }
 .k-calendar .k-link {
   color: #fff;
@@ -891,7 +904,7 @@ div.k-filebrowser-dropzone em {
   color: #fff;
 }
 .k-file-progress .k-progress {
-  background-color: #0c779b;
+  background-color: #fff;
 }
 .k-file-success {
   color: #fff;
@@ -905,6 +918,45 @@ div.k-filebrowser-dropzone em {
 .k-file-error .k-progress {
   background-color: #be5138;
 }
+.k-file-extension-wrapper,
+.k-multiple-files-extension-wrapper {
+  color: #fff;
+  border-color: #fff;
+}
+.k-file-invalid .k-file-name-invalid {
+  color: #be5138;
+}
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+  color: #be5138;
+  border-color: #be5138;
+}
+.k-file-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:before {
+  background-color: #2c232b;
+  border-color: transparent transparent #fff #fff;
+}
+.k-file-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:before {
+  background-color: #2c232b;
+  border-color: transparent transparent #be5138 #be5138;
+}
+.k-multiple-files-extension-wrapper:after {
+  border-top-color: #fff;
+  border-left-color: #fff;
+}
+.k-multiple-files-invalid-extension-wrapper:after {
+  border-top-color: #be5138;
+  border-left-color: #be5138;
+}
+.k-file-size,
+.k-file-information,
+.k-file-validation-message {
+  color: #fff;
+}
+.k-upload .k-upload-selected {
+  border-color: #674c63;
+}
 /* ImageBrowser */
 .k-tile {
   border-color: #2c232b;
@@ -917,7 +969,9 @@ div.k-filebrowser-dropzone em {
   border-color: #870074;
 }
 .k-filebrowser .k-tile .k-folder,
-.k-filebrowser .k-tile .k-file {
+.k-filebrowser .k-tile .k-file,
+.k-filebrowser .k-tile .k-i-folder,
+.k-filebrowser .k-tile .k-i-file {
   background-image: url('HighContrast/imagebrowser.png');
   -webkit-background-size: auto auto;
           background-size: auto auto;
@@ -1473,6 +1527,9 @@ html .km-pane-wrapper .km-widget,
 .k-list-container {
   color: #fff;
 }
+.k-nodata {
+  color: #808080;
+}
 .k-dropdown .k-input,
 .k-dropdown .k-state-focused .k-input,
 .k-menu .k-popup {
@@ -1811,6 +1868,7 @@ html .km-pane-wrapper .km-widget,
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-icon:not(.k-loading),
+  .k-icon:not(.k-i-loading),
   .k-grouping-dropclue,
   .k-drop-hint,
   .k-callout,
@@ -2170,15 +2228,15 @@ html .km-pane-wrapper .km-widget,
 .k-spreadsheet-active-cell.k-single {
   background-color: #fff;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar {
+.k-spreadsheet .k-spreadsheet-action-bar {
   background-color: #1b141a;
-  border-color: #2c232b #2c232b #000000;
+  border-color: #674c63;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar:before {
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-name-editor {
   border-color: #000000;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar:after {
-  border-color: #2c232b;
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar::before {
+  border-color: #000000;
 }
 .k-spreadsheet .k-spreadsheet-formula-input {
   background-color: #1b141a;
@@ -2259,6 +2317,9 @@ html .km-pane-wrapper .km-widget,
 .k-spreadsheet-window .k-margins-vertical {
   background: transparent;
   border-color: #674c63;
+}
+.k-spreadsheet-window .hint-wrapper:before {
+  background: #674c63;
 }
 .k-spreadsheet-toolbar.k-toolbar .k-button-group .k-button {
   border-radius: 13px;
@@ -2363,4 +2424,67 @@ html .km-pane-wrapper .km-widget,
   .k-icon.k-font-icon {
     background-image: none;
   }
+}
+/* Dialog */
+.k-dialog {
+  border-color: #674c63;
+  background-color: #2c232b;
+}
+.k-dialog .k-content {
+  border-bottom-right-radius: 13px;
+  border-bottom-left-radius: 13px;
+}
+.k-dialog.k-dialog-titleless .k-content {
+  border-top-right-radius: 13px;
+  border-top-left-radius: 13px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched {
+  width: 100%;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
+  display: inline-block;
+  padding: 0.9em 0 0.9em 0;
+  border-radius: 0;
+  border-bottom: 0;
+  border-width: 1px 0 0 1px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:first-child {
+  border-bottom-left-radius: 13px;
+  border-left-width: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:last-child {
+  border-bottom-right-radius: 13px;
+  border-right-width: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  width: auto;
+  margin: 0;
+  padding: 1em;
+  text-align: right;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
+  margin-left: 0.5em;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
+  margin-left: 0;
+}
+.k-rtl .k-dialog a.k-dialog-action.k-dialog-close {
+  top: 1em;
+  left: .5em;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:first-child {
+  border-bottom-right-radius: 13px;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:last-child {
+  border-bottom-left-radius: 13px;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  text-align: left;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
+  margin-right: 0;
 }

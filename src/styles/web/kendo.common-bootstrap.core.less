@@ -85,6 +85,18 @@ input.k-textbox {
       padding: 0.167em 0;
 }
 
+.k-autocomplete > .k-i-close {
+    margin-right: 8px;
+}
+
+.k-combobox > .k-dropdown-wrap > .k-i-close {
+    right: 2.55em;
+}
+
+.k-multiselect > .k-multiselect-wrap > .k-i-close {
+    top: @grid-size/2 - 1px;
+}
+
 .k-numerictextbox .k-link {
     height: 1.15em;
 }
@@ -100,6 +112,19 @@ input.k-textbox {
 .k-webkit .k-rtl .k-widget .k-dropdown-wrap .k-input,
 .k-webkit .k-rtl .k-widget .k-numeric-wrap .k-input {
     margin-right: 0;
+}
+
+.k-rtl .k-widget.k-autocomplete > .k-i-close,
+.k-rtl .k-widget.k-multiselect > .k-multiselect-wrap > .k-i-close {
+    left: 0;
+    right: initial;
+    margin-left: 8px;
+    margin-right: 0;
+}
+
+.k-rtl .k-widget.k-combobox > .k-dropdown-wrap > .k-i-close {
+    left: 2.55em;
+    right: initial;
 }
 
 .k-pager-wrap,

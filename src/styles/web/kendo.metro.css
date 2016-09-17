@@ -160,7 +160,8 @@
 .k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
-.k-upload-files {
+.k-upload-files,
+.k-popup.k-align .k-list .k-item:last-child {
   border-color: #dbdbdb;
 }
 .k-group,
@@ -351,7 +352,9 @@ html .km-pane-wrapper .k-header {
   border-color: transparent;
 }
 .k-loading,
-.k-state-hover .k-loading {
+.k-state-hover .k-loading,
+.k-i-loading,
+.k-state-hover .k-i-loading {
   background-image: url('Metro/loading.gif');
   background-position: 50% 50%;
 }
@@ -519,6 +522,15 @@ html .km-pane-wrapper .k-header {
 }
 .k-menu .k-state-hover > .k-state-active {
   background-color: transparent;
+}
+.k-button-bare.k-state-focused .k-font-icon,
+.k-button-bare:focus .k-font-icon {
+  text-shadow: 0 0 3px currentColor;
+}
+html .k-mediaplayer-toolbar .k-button-bare:active,
+html .k-mediaplayer-toolbar .k-button-bare.k-state-active,
+html .k-mediaplayer-toolbar .k-button-bare.k-state-active:hover {
+  color: #7ea700;
 }
 .k-menu .k-state-selected > .k-link {
   color: #fff;
@@ -832,7 +844,8 @@ div.k-filebrowser-dropzone em {
 .k-dropzone .k-upload-status {
   color: #787878;
 }
-.k-upload-status .k-button:hover .k-delete {
+.k-upload-status .k-button:hover .k-delete,
+.k-upload-status .k-button:hover .k-i-delete {
   background-color: #7ea700;
 }
 /* Progressbar */
@@ -925,7 +938,6 @@ div.k-filebrowser-dropzone em {
 }
 /* Upload */
 .k-file {
-  background-color: #ffffff;
   border-color: #dbdbdb;
 }
 .k-file-progress {
@@ -935,16 +947,59 @@ div.k-filebrowser-dropzone em {
   background-color: #d0f8ff;
 }
 .k-file-success {
-  color: #2b9d00;
+  color: #32b600;
 }
 .k-file-success .k-progress {
-  background-color: #ddffd0;
+  background-color: #32b600;
 }
 .k-file-error {
-  color: #a41d00;
+  color: #c82300;
 }
 .k-file-error .k-progress {
-  background-color: #ffded7;
+  background-color: #c82300;
+}
+.k-file-extension-wrapper,
+.k-multiple-files-extension-wrapper {
+  color: #cccccc;
+  border-color: #cccccc;
+}
+.k-file-invalid .k-file-name-invalid {
+  color: #c82300;
+}
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+  color: #c82300;
+  border-color: #ffded7;
+}
+.k-file-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:before {
+  background-color: #fff;
+  border-color: transparent transparent #cccccc #cccccc;
+}
+.k-file-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:before {
+  background-color: #fff;
+  border-color: transparent transparent #ffded7 #ffded7;
+}
+.k-multiple-files-extension-wrapper:after {
+  border-top-color: #cccccc;
+  border-left-color: #cccccc;
+}
+.k-multiple-files-invalid-extension-wrapper:after {
+  border-top-color: #ffded7;
+  border-left-color: #ffded7;
+}
+.k-file-size,
+.k-file-information,
+.k-file-validation-message {
+  color: #cccccc;
+}
+.k-upload .k-upload-selected {
+  color: #7ea700;
+  border-color: #dbdbdb;
+}
+.k-upload .k-upload-selected:hover {
+  color: #ffffff;
 }
 /* ImageBrowser */
 .k-tile {
@@ -958,7 +1013,9 @@ div.k-filebrowser-dropzone em {
   border-color: #7ea700;
 }
 .k-filebrowser .k-tile .k-folder,
-.k-filebrowser .k-tile .k-file {
+.k-filebrowser .k-tile .k-file,
+.k-filebrowser .k-tile .k-i-folder,
+.k-filebrowser .k-tile .k-i-file {
   background-image: url('Metro/imagebrowser.png');
   -webkit-background-size: auto auto;
           background-size: auto auto;
@@ -1315,6 +1372,12 @@ div.k-filebrowser-dropzone em {
 .k-list-container.k-state-border-right {
   border-radius: 0 0 0 0;
 }
+.k-autocomplete > .k-i-close,
+.k-combobox > .k-dropdown-wrap > .k-i-close,
+.k-multiselect > .k-multiselect-wrap > .k-i-close {
+  border-radius: 50%;
+  background-color: #dbdbdb;
+}
 .k-rtl .k-dropdown-wrap .k-select,
 .k-rtl .k-picker-wrap .k-select,
 .k-rtl .k-numeric-wrap .k-select,
@@ -1506,6 +1569,9 @@ html .km-pane-wrapper .km-widget,
 }
 .k-list-container {
   color: #787878;
+}
+.k-nodata {
+  color: #cccccc;
 }
 .k-dropdown .k-input,
 .k-menu .k-popup {
@@ -1823,6 +1889,7 @@ html .km-pane-wrapper .km-widget,
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-icon:not(.k-loading),
+  .k-icon:not(.k-i-loading),
   .k-grouping-dropclue,
   .k-drop-hint,
   .k-callout,
@@ -2191,15 +2258,15 @@ html .km-pane-wrapper .km-widget,
 .k-spreadsheet-active-cell.k-single {
   background-color: #fff;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar {
+.k-spreadsheet .k-spreadsheet-action-bar {
   background-color: #fff;
-  border-color: #fff #fff #cccccc;
+  border-color: #dbdbdb;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar:before {
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-name-editor {
   border-color: #cccccc;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar:after {
-  border-color: #fff;
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar::before {
+  border-color: #cccccc;
 }
 .k-spreadsheet .k-spreadsheet-formula-input {
   background-color: #fff;
@@ -2280,6 +2347,9 @@ html .km-pane-wrapper .km-widget,
 .k-spreadsheet-window .k-margins-vertical {
   background: transparent;
   border-color: #dbdbdb;
+}
+.k-spreadsheet-window .hint-wrapper:before {
+  background: #dbdbdb;
 }
 .k-spreadsheet-toolbar.k-toolbar .k-button-group .k-button {
   border-radius: 0;
@@ -2384,4 +2454,69 @@ html .km-pane-wrapper .km-widget,
   .k-icon.k-font-icon {
     background-image: none;
   }
+}
+/* Dialog */
+.k-dialog {
+  border-color: #dbdbdb;
+}
+.k-dialog .k-window-titlebar {
+  border-bottom-width: 0;
+}
+.k-dialog .k-dialog-title {
+  color: #000000;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched {
+  width: 100%;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
+  display: inline-block;
+  padding: 0.9em 0 0.9em 0;
+  border-radius: 0;
+  border-bottom: 0;
+  border-width: 1px 0 0 1px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:first-child {
+  border-bottom-left-radius: 0;
+  border-left: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:last-child {
+  border-bottom-right-radius: 0;
+  border-right: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  width: auto;
+  margin: 0;
+  padding: 1em;
+  text-align: left;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
+  padding: 0.2em 1.5em;
+  margin-left: 0.5em;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
+  margin-left: 0;
+}
+.k-rtl .k-dialog a.k-dialog-action.k-dialog-close {
+  top: 1em;
+  left: .5em;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:first-child {
+  border-right-width: 0;
+  border-left-width: 1px;
+  border-bottom-right-radius: 0;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:last-child {
+  border-left-width: 0;
+  border-right-width: 1px;
+  border-bottom-left-radius: 0;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  text-align: right;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
+  margin-right: 0;
+  margin-left: 0.5em;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:last-child {
+  margin-left: 0;
 }

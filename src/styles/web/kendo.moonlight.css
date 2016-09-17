@@ -166,7 +166,9 @@
 .k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
-.k-upload-files {
+.k-upload-files,
+.k-popup.k-align .k-list .k-item:last-child,
+.k-editor-dialog .k-tabstrip-items {
   border-color: #232d36;
 }
 .k-group,
@@ -310,6 +312,9 @@ textarea.k-textbox:hover,
 html .km-pane-wrapper .k-header {
   background-color: #1f2a35;
 }
+.k-mediaplayer-toolbar {
+  background-color: rgba(74, 79, 91, 0.7);
+}
 /* icons */
 .k-icon:hover,
 .k-state-hover .k-icon,
@@ -357,7 +362,9 @@ html .km-pane-wrapper .k-header {
   border-color: transparent;
 }
 .k-loading,
-.k-state-hover .k-loading {
+.k-state-hover .k-loading,
+.k-i-loading,
+.k-state-hover .k-i-loading {
   background-image: url('Moonlight/loading.gif');
   background-position: 50% 50%;
 }
@@ -504,7 +511,7 @@ html .km-pane-wrapper .k-header {
 .k-button.k-state-disabled:hover,
 .k-state-disabled .k-button:active,
 .k-button.k-state-disabled:active {
-  color: #536a80;
+  color: #7890a8;
   border-color: #232d36;
   background-color: #212a33;
   background-image: url("textures/brushed-metal.png");
@@ -522,6 +529,15 @@ html .km-pane-wrapper .k-header {
 }
 .k-menu .k-state-hover > .k-state-active {
   background-color: transparent;
+}
+.k-button-bare.k-state-focused .k-font-icon,
+.k-button-bare:focus .k-font-icon {
+  text-shadow: 0 0 3px currentColor;
+}
+html .k-mediaplayer-toolbar .k-button-bare:active,
+html .k-mediaplayer-toolbar .k-button-bare.k-state-active,
+html .k-mediaplayer-toolbar .k-button-bare.k-state-active:hover {
+  color: #f4af03;
 }
 .k-menu .k-state-selected > .k-link {
   color: #171e28;
@@ -859,10 +875,10 @@ div.k-filebrowser-dropzone em {
 .k-dropzone em,
 .k-tile-empty strong,
 .k-slider .k-draghandle {
-  color: #536a80;
+  color: #7890a8;
 }
 .k-dropzone .k-upload-status {
-  color: #fff;
+  color: #7890a8;
 }
 /* Progressbar */
 .k-progressbar-indeterminate {
@@ -945,7 +961,7 @@ div.k-filebrowser-dropzone em {
 /* Upload */
 .k-file {
   background-color: #42454f;
-  border-color: #394958;
+  border-color: #232d36;
 }
 .k-file-progress {
   color: #ffffff;
@@ -954,16 +970,57 @@ div.k-filebrowser-dropzone em {
   background-color: #0c779b;
 }
 .k-file-success {
-  color: #ffffff;
+  color: #2b893c;
 }
 .k-file-success .k-progress {
   background-color: #2b893c;
 }
 .k-file-error {
-  color: #ffffff;
+  color: #be5138;
 }
-.k-file-error .k-progress {
+.k-file-error .k-progress,
+.k-file-invalid .k-progress {
   background-color: #be5138;
+}
+.k-file-extension-wrapper,
+.k-multiple-files-extension-wrapper {
+  color: #7890a8;
+  border-color: #7890a8;
+}
+.k-file-invalid .k-file-name-invalid {
+  color: #be5138;
+}
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+  color: #be5138;
+  border-color: #e5b1a5;
+}
+.k-file-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:before {
+  background-color: #414550;
+  border-color: transparent transparent #7890a8 #7890a8;
+}
+.k-file-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:before {
+  background-color: #414550;
+  border-color: transparent transparent #e5b1a5 #e5b1a5;
+}
+.k-multiple-files-extension-wrapper:after {
+  border-top-color: #7890a8;
+  border-left-color: #7890a8;
+}
+.k-multiple-files-invalid-extension-wrapper:after {
+  border-top-color: #e5b1a5;
+  border-left-color: #e5b1a5;
+}
+.k-file-size,
+.k-file-information,
+.k-file-validation-message {
+  color: #7890a8;
+}
+.k-upload .k-upload-selected {
+  color: #fff;
+  border-color: #232d36;
 }
 /* ImageBrowser */
 .k-tile {
@@ -977,7 +1034,9 @@ div.k-filebrowser-dropzone em {
   border-color: #f9b303;
 }
 .k-filebrowser .k-tile .k-folder,
-.k-filebrowser .k-tile .k-file {
+.k-filebrowser .k-tile .k-file,
+.k-filebrowser .k-tile .k-i-folder,
+.k-filebrowser .k-tile .k-i-file {
   background-image: url('Moonlight/imagebrowser.png');
   -webkit-background-size: auto auto;
           background-size: auto auto;
@@ -1563,6 +1622,9 @@ textarea.k-textbox,
 .k-list-container {
   color: #fff;
 }
+.k-nodata {
+  color: #7890a8;
+}
 .k-dropdown .k-input,
 .k-dropdown .k-state-focused .k-input,
 .k-menu .k-popup {
@@ -1798,7 +1860,7 @@ textarea.k-textbox,
   border-color: #f9b303;
 }
 .k-checkbox:disabled + .k-checkbox-label {
-  color: #536a80;
+  color: #7890a8;
 }
 .k-checkbox:disabled + .k-checkbox-label:hover:before {
   -webkit-box-shadow: none;
@@ -1808,7 +1870,7 @@ textarea.k-textbox,
 .k-checkbox:checked:disabled + .k-checkbox-label:before,
 .k-checkbox:checked:disabled + .k-checkbox-label:active:before,
 .k-checkbox:checked:disabled + .k-checkbox-label:hover:before {
-  color: #536a80;
+  color: #7890a8;
   background: #70778a;
   border-color: #090b0e;
   border-radius: 3px;
@@ -1858,7 +1920,7 @@ textarea.k-textbox,
   border-color: #f9b303;
 }
 .k-radio:disabled + .k-radio-label {
-  color: #536a80;
+  color: #7890a8;
 }
 .k-radio:disabled + .k-radio-label:before,
 .k-radio:disabled + .k-radio-label:active:before,
@@ -1880,6 +1942,7 @@ textarea.k-textbox,
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-icon:not(.k-loading),
+  .k-icon:not(.k-i-loading),
   .k-grouping-dropclue,
   .k-drop-hint,
   .k-callout,
@@ -2242,15 +2305,15 @@ textarea.k-textbox,
 .k-spreadsheet-active-cell.k-single {
   background-color: #fff;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar {
+.k-spreadsheet .k-spreadsheet-action-bar {
   background-color: #414550;
-  border-color: #212a33 #212a33 #000000;
+  border-color: #232d36;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar:before {
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-name-editor {
   border-color: #000000;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar:after {
-  border-color: #212a33;
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar::before {
+  border-color: #000000;
 }
 .k-spreadsheet .k-spreadsheet-formula-input {
   background-color: #414550;
@@ -2334,6 +2397,9 @@ textarea.k-textbox,
 .k-spreadsheet-window .k-margins-vertical {
   background: transparent;
   border-color: #232d36;
+}
+.k-spreadsheet-window .hint-wrapper:before {
+  background: #232d36;
 }
 .k-spreadsheet-toolbar.k-toolbar .k-button-group .k-button {
   border-radius: 2px;
@@ -2455,4 +2521,61 @@ textarea.k-textbox,
 .k-spreadsheet-toolbar .k-combobox .k-state-active .k-input,
 .k-spreadsheet-toolbar .k-combobox .k-state-focused .k-input {
   color: #fff;
+}
+/* Dialog */
+.k-dialog .k-content {
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+.k-dialog.k-dialog-titleless .k-content {
+  border-top-right-radius: 2px;
+  border-top-left-radius: 2px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched {
+  width: 100%;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
+  display: inline-block;
+  padding: 0.75em 0 0.75em 0;
+  border-radius: 0;
+  border-width: 1px 0 1px 1px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:first-child {
+  border-bottom-left-radius: 2px;
+  border-left-width: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:last-child {
+  border-bottom-right-radius: 2px;
+  border-right-width: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  width: auto;
+  margin: 0;
+  padding: 1em;
+  text-align: right;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
+  margin-left: 0.5em;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
+  margin-left: 0;
+}
+.k-rtl .k-dialog a.k-dialog-action.k-dialog-close {
+  left: .5em;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:first-child {
+  border-bottom-right-radius: 2px;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:last-child {
+  border-bottom-left-radius: 2px;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  text-align: left;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
+  margin-right: 0;
 }

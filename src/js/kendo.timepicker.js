@@ -522,7 +522,7 @@
                 var that = this, element = that.element, arrow;
                 arrow = element.next('span.k-select');
                 if (!arrow[0]) {
-                    arrow = $('<span unselectable="on" class="k-select"><span unselectable="on" class="k-icon k-i-clock">select</span></span>').insertAfter(element);
+                    arrow = $('<span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-clock"></span></span>').insertAfter(element);
                 }
                 that._arrow = arrow.attr({
                     'role': 'button',

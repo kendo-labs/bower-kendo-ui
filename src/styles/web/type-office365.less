@@ -62,19 +62,19 @@
 @error-text-color: lighten(@normal-text-color, 22%);
 @error-background-color: lighten(@error, 2%);
 @error-border-color: darken(@background, 14%);
-@disabled-text-color: darken(@hover-background, 29%);
-@notification-info-background-color: @info;
+@disabled-text-color: darken(@hover-background, 31%);
+@notification-info-background-color: lighten(@info, 39%);
 @notification-info-text-color: lighten(@normal-text-color, 10%);
-@notification-info-border-color: @info;
-@notification-success-background-color: @success;
+@notification-info-border-color: @notification-info-background-color;
+@notification-success-background-color: lighten(@success, 41%);
 @notification-success-text-color: lighten(@normal-text-color, 10%);
-@notification-success-border-color: @success;
+@notification-success-border-color: @notification-success-background-color;
 @notification-warning-background-color: @warning;
 @notification-warning-text-color: lighten(@normal-text-color, 10%);
 @notification-warning-border-color: @warning;
-@notification-error-background-color: @error;
+@notification-error-background-color: lighten(@error, 30%);
 @notification-error-text-color: lighten(@normal-text-color, 10%);
-@notification-error-border-color: @error;
+@notification-error-border-color: @notification-error-background-color;
 @tooltip-text-color: @normal-text-color;
 @tooltip-background-color: @background;
 @tooltip-border-color: darken(@background, 21%);
@@ -104,9 +104,9 @@
 @upload-progress-background-color: @info;
 @upload-progress-text-color: @normal-text-color;
 @upload-success-background-color: @success;
-@upload-success-text-color: @normal-text-color;
+@upload-success-text-color: @success;
 @upload-error-background-color: @error;
-@upload-error-text-color: @normal-text-color;
+@upload-error-text-color: @error;
 @task-summary-color: darken(@background, 18%);
 @task-summary-selected-color: @hover-text-color;
 @loading-panel-color: @background;
@@ -272,7 +272,9 @@
 .k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
-.k-upload-files
+.k-upload-files,
+.k-popup.k-align .k-list .k-item:last-child,
+.k-editor-dialog .k-tabstrip-items
 {
     border-color: @widget-border-color;
 }
@@ -519,7 +521,9 @@ html .km-pane-wrapper .k-header
 }
 
 .k-loading,
-.k-state-hover .k-loading
+.k-state-hover .k-loading,
+.k-i-loading,
+.k-state-hover .k-i-loading
 {
     background-image: url('@{image-folder}/loading.gif');
     background-position: 50% 50%;
@@ -736,6 +740,41 @@ html .km-pane-wrapper .k-header
 .k-grouping-row .k-state-focused
 {
     border-color: @focused-border-color;
+}
+
+html body .k-button-bare {
+	&.k-state-focused,
+	&:focus {
+		position: relative;
+
+		&:before {
+			content: "";
+			background-color: currentcolor;
+			opacity: 0.12;
+			border-radius: inherit;
+			height: 100%;
+			width: 100%;
+			position: absolute;
+			left: 0;
+			top: 0;
+		}
+	}
+}
+
+html .k-mediaplayer-toolbar .k-button-bare {
+	&:active,
+	&.k-state-active,
+	&.k-state-active:hover {
+		color: @button-active-background;
+
+		&:before {
+			opacity: 0.24;
+		}
+	}
+}
+
+.k-mediaplayer-toolbar .k-mediaplayer-seekbar {
+	top: -14px;
 }
 
 .k-calendar .k-link
@@ -1218,6 +1257,55 @@ div.k-filebrowser-dropzone em
     background-color: @upload-error-background-color;
 }
 
+.k-file-extension-wrapper,
+.k-multiple-files-extension-wrapper {
+    color: @disabled-text-color;
+    border-color: @disabled-text-color;
+}
+
+.k-file-invalid .k-file-name-invalid {
+    color: @error;
+}
+
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+    color: @error;
+    border-color: @upload-error-text-color;
+}
+
+.k-file-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:before {
+    background-color: @widget-background-color;
+    border-color: transparent transparent @disabled-text-color @disabled-text-color;
+}
+
+.k-file-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:before {
+    background-color: @widget-background-color;
+    border-color: transparent transparent @upload-error-text-color @upload-error-text-color;
+}
+
+.k-multiple-files-extension-wrapper:after {
+    border-top-color: @disabled-text-color;
+    border-left-color: @disabled-text-color;
+}
+
+.k-multiple-files-invalid-extension-wrapper:after {
+    border-top-color: @upload-error-text-color;
+    border-left-color: @upload-error-text-color;
+}
+
+.k-file-size,
+.k-file-information,
+.k-file-validation-message {
+    color: @disabled-text-color;
+}
+
+.k-upload .k-upload-selected {
+    color: @base;
+    border-color: @widget-border-color;
+}
+
 /* ImageBrowser */
 
 .k-tile
@@ -1237,7 +1325,9 @@ div.k-filebrowser-dropzone em
 }
 
 .k-filebrowser .k-tile .k-folder,
-.k-filebrowser .k-tile .k-file
+.k-filebrowser .k-tile .k-file,
+.k-filebrowser .k-tile .k-i-folder,
+.k-filebrowser .k-tile .k-i-file
 {
     background-image: url('@{image-folder}/imagebrowser.png');
     background-size: auto auto;
@@ -1943,6 +2033,10 @@ html .km-pane-wrapper .km-widget,
     color: @drop-down-text-color;
 }
 
+.k-nodata {
+    color: @disabled-text-color;
+}
+
 .k-dropdown .k-input,
 .k-dropdown .k-state-focused .k-input,
 .k-menu .k-popup
@@ -2242,6 +2336,7 @@ html .km-pane-wrapper .km-widget,
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2),
        only screen and (min-device-pixel-ratio: 1.2) {
     .k-icon:not(.k-loading),
+    .k-icon:not(.k-i-loading),
     .k-grouping-dropclue,
     .k-drop-hint,
     .k-callout,
@@ -2410,10 +2505,16 @@ div.k-splitbar.k-state-focused .k-icon,
 .k-textbox:hover > .k-icon,
 .k-grouping-header .k-group-delete,
 .k-grouping-header .k-button-icon:hover > .k-icon.k-group-delete,
+.k-grouping-header .k-i-group-delete,
+.k-grouping-header .k-button-icon:hover > .k-icon.k-i-group-delete,
 .k-grouping-header .k-si-arrow-n,
 .k-grouping-header .k-link:hover > .k-icon.k-si-arrow-n,
+.k-grouping-header .k-i-sarrow-n,
+.k-grouping-header .k-link:hover > .k-icon.k-i-sarrow-n,
 .k-grouping-header .k-si-arrow-s,
 .k-grouping-header .k-link:hover > .k-icon.k-si-arrow-s,
+.k-grouping-header .k-i-sarrow-s,
+.k-grouping-header .k-link:hover > .k-icon.k-i-sarrow-s,
 .k-grid-toolbar .k-i-pdf,
 .k-grid-toolbar .k-button:hover > .k-i-pdf,
 .k-grid-toolbar .k-i-excel,
@@ -3379,5 +3480,130 @@ input.k-textbox:focus {
 
     .k-item, .k-item.k-state-active {
         border-color: @spreadsheet-header-border;
+    }
+}
+
+/* Dialog */
+
+.k-dialog {
+    .k-window-titlebar {
+        height: auto;
+        width: auto;
+        display: block;
+        font-size: 1em;
+        padding: 1em;
+        .k-dialog-title {
+            display: inline-block;
+            padding: 0;
+            padding-right: 2em;
+            margin: 0;
+            width: auto;
+            white-space: normal;
+            overflow: unset;
+            text-overflow: inherit;
+            font-size: 1.2em;
+            line-height: 1.2em;
+            box-sizing: content-box;
+        }
+    }
+    a.k-dialog-action.k-dialog-close.k-button-bare {
+        &:before {
+            content: normal;
+        }
+    }
+    a.k-dialog-action.k-dialog-close {
+        padding: 1em;
+        right: 0;
+        top: 0;
+    }
+    &.k-alert .k-window-titlebar,
+    &.k-confirm .k-window-titlebar,
+    &.k-prompt .k-window-titlebar {
+        .k-dialog-title {
+            color: @normal-text-color;
+        }
+        border-bottom: none;
+    }
+    &.k-alert .k-content,
+    &.k-confirm .k-content,
+    .k-content {
+        padding: 1em 1em 1.8em 1em;
+        border-bottom-right-radius: @border-radius;
+        border-bottom-left-radius: @border-radius;
+    }
+    &.k-alert .k-content,
+    &.k-confirm .k-content,
+    &.k-prompt .k-content,
+    &.k-prompt {
+        text-align: left;
+    }
+    &.k-dialog-titleless .k-content {
+        border-top-right-radius: @border-radius;
+        border-top-left-radius: @border-radius;
+    }
+    .k-dialog-buttongroup {
+        &.k-dialog-button-layout-stretched {
+            width: 100%;
+            .k-button {
+                display: inline-block;
+                padding: 1em 0 1em 0;
+                border-radius: 0;
+                border-bottom: 0;
+                border-width: 1px 0 0 1px;
+            }
+            li.k-button:first-child {
+            border-bottom-left-radius: @border-radius;
+            border-left: 0;
+            }
+            li.k-button:last-child {
+                border-bottom-right-radius: @border-radius;
+                border-right: 0;
+            }
+        }
+        &.k-dialog-button-layout-normal {
+            width: auto;
+            margin: 0;
+            padding: 1em;
+            text-align: right;
+            .k-button {
+                padding-left: 2em;
+                padding-right: 2em;
+                margin-left: 1em;
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+}
+.k-rtl .k-dialog {
+        .k-window-titlebar {
+            .k-dialog-title {
+                padding-right: 0;
+                padding-left: 2em;
+            }
+    }
+    a.k-dialog-action.k-dialog-close {
+        left: 0;
+    }
+    .k-dialog-buttongroup {
+        &.k-dialog-button-layout-stretched {
+            li.k-button:first-child {
+                border-bottom-right-radius: @border-radius;
+            }
+            li.k-button:last-child {
+                border-bottom-left-radius: @border-radius;
+            }
+        }
+        &.k-dialog-button-layout-normal {
+            text-align: left;
+            .k-button {
+                margin-left: 0;
+                margin-right: 0.5em;
+                &:first-child {
+                    margin-right: 0;
+                }
+            }
+        }
     }
 }

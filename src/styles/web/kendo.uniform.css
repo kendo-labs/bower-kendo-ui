@@ -76,16 +76,16 @@
   color: #454545;
 }
 .ktb-var-error {
-  color: #ffe0d9;
+  color: #f45835;
 }
 .ktb-var-warning {
   color: #ffe9a8;
 }
 .ktb-var-success {
-  color: #eaf7ec;
+  color: #52c664;
 }
 .ktb-var-info {
-  color: #e5f5fa;
+  color: #3e6b99;
 }
 .ktb-var-series-a {
   color: #527aa3;
@@ -166,7 +166,9 @@
 .k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
-.k-upload-files {
+.k-upload-files,
+.k-popup.k-align .k-list .k-item:last-child,
+.k-editor-dialog .k-tabstrip-items {
   border-color: #ebebeb;
 }
 .k-group,
@@ -310,6 +312,9 @@ textarea.k-textbox:hover,
 html .km-pane-wrapper .k-header {
   background-color: #ffffff;
 }
+.k-mediaplayer-toolbar {
+  background-color: rgba(245, 245, 245, 0.7);
+}
 /* icons */
 .k-icon:hover,
 .k-state-hover .k-icon,
@@ -357,7 +362,9 @@ html .km-pane-wrapper .k-header {
   border-color: transparent;
 }
 .k-loading,
-.k-state-hover .k-loading {
+.k-state-hover .k-loading,
+.k-i-loading,
+.k-state-hover .k-i-loading {
   background-image: url('Uniform/loading.gif');
   background-position: 50% 50%;
 }
@@ -420,10 +427,10 @@ html .km-pane-wrapper .k-header {
   background-color: #f7f7f7;
 }
 .k-scheduler-now-arrow {
-  border-left-color: #ff6745;
+  border-left-color: #8d2008;
 }
 .k-scheduler-now-line {
-  background-color: #ff6745;
+  background-color: #8d2008;
 }
 .k-event,
 .k-task-complete {
@@ -504,7 +511,7 @@ html .km-pane-wrapper .k-header {
 .k-button.k-state-disabled:hover,
 .k-state-disabled .k-button:active,
 .k-button.k-state-disabled:active {
-  color: #b5b5b5;
+  color: #d9d9d9;
   border-color: #dbdbdb;
   background-color: #ffffff;
   background-image: url('textures/highlight.png');
@@ -522,6 +529,15 @@ html .km-pane-wrapper .k-header {
 }
 .k-menu .k-state-hover > .k-state-active {
   background-color: transparent;
+}
+.k-button-bare.k-state-focused .k-font-icon,
+.k-button-bare:focus .k-font-icon {
+  text-shadow: 0 0 3px currentColor;
+}
+html .k-mediaplayer-toolbar .k-button-bare:active,
+html .k-mediaplayer-toolbar .k-button-bare.k-state-active,
+html .k-mediaplayer-toolbar .k-button-bare.k-state-active:hover {
+  color: #eee;
 }
 .k-menu .k-state-selected > .k-link {
   color: #454545;
@@ -835,7 +851,7 @@ div.k-filebrowser-dropzone em {
   color: #676767;
 }
 .k-state-error {
-  border-color: #ff6745;
+  border-color: #8d2008;
   background-color: #b5b5b5;
   color: #e4e4e4;
 }
@@ -859,10 +875,10 @@ div.k-filebrowser-dropzone em {
 .k-dropzone em,
 .k-tile-empty strong,
 .k-slider .k-draghandle {
-  color: #b5b5b5;
+  color: #d9d9d9;
 }
 .k-dropzone .k-upload-status {
-  color: #676767;
+  color: #d9d9d9;
 }
 /* Progressbar */
 .k-progressbar-indeterminate {
@@ -945,25 +961,66 @@ div.k-filebrowser-dropzone em {
 /* Upload */
 .k-file {
   background-color: #ffffff;
-  border-color: #dbdbdb;
+  border-color: #ebebeb;
 }
 .k-file-progress {
-  color: #2498bc;
+  color: #464646;
 }
 .k-file-progress .k-progress {
-  background-color: #e5f5fa;
+  background-color: #3e6b99;
 }
 .k-file-success {
-  color: #3ea44e;
+  color: #52c664;
 }
 .k-file-success .k-progress {
-  background-color: #eaf7ec;
+  background-color: #52c664;
 }
 .k-file-error {
-  color: #d92800;
+  color: #f45835;
 }
-.k-file-error .k-progress {
-  background-color: #ffe0d9;
+.k-file-error .k-progress,
+.k-file-invalid .k-progress {
+  background-color: #f45835;
+}
+.k-file-extension-wrapper,
+.k-multiple-files-extension-wrapper {
+  color: #d9d9d9;
+  border-color: #d9d9d9;
+}
+.k-file-invalid .k-file-name-invalid {
+  color: #f45835;
+}
+.k-file-invalid-extension-wrapper,
+.k-multiple-files-invalid-extension-wrapper {
+  color: #f45835;
+  border-color: #fcccc1;
+}
+.k-file-extension-wrapper:before,
+.k-multiple-files-extension-wrapper:before {
+  background-color: #fff;
+  border-color: transparent transparent #d9d9d9 #d9d9d9;
+}
+.k-file-invalid-extension-wrapper:before,
+.k-multiple-files-invalid-extension-wrapper:before {
+  background-color: #fff;
+  border-color: transparent transparent #fcccc1 #fcccc1;
+}
+.k-multiple-files-extension-wrapper:after {
+  border-top-color: #d9d9d9;
+  border-left-color: #d9d9d9;
+}
+.k-multiple-files-invalid-extension-wrapper:after {
+  border-top-color: #fcccc1;
+  border-left-color: #fcccc1;
+}
+.k-file-size,
+.k-file-information,
+.k-file-validation-message {
+  color: #d9d9d9;
+}
+.k-upload .k-upload-selected {
+  color: #676767;
+  border-color: #ebebeb;
 }
 /* ImageBrowser */
 .k-tile {
@@ -977,7 +1034,9 @@ div.k-filebrowser-dropzone em {
   border-color: #cdcdcd;
 }
 .k-filebrowser .k-tile .k-folder,
-.k-filebrowser .k-tile .k-file {
+.k-filebrowser .k-tile .k-file,
+.k-filebrowser .k-tile .k-i-folder,
+.k-filebrowser .k-tile .k-i-file {
   background-image: url('Uniform/imagebrowser.png');
   -webkit-background-size: auto auto;
           background-size: auto auto;
@@ -1101,14 +1160,14 @@ div.k-filebrowser-dropzone em {
 }
 /* Notification */
 .k-widget.k-notification.k-notification-info {
-  background-color: #e5f5fa;
-  color: #2498bc;
-  border-color: #b6e3f1;
+  background-color: #3e6b99;
+  color: #e7e7e7;
+  border-color: #3f6e9d;
 }
 .k-widget.k-notification.k-notification-success {
-  background-color: #eaf7ec;
-  color: #3ea44e;
-  border-color: #c5e9cb;
+  background-color: #52c664;
+  color: #a7a7a7;
+  border-color: #39ac4b;
 }
 .k-widget.k-notification.k-notification-warning {
   background-color: #ffe9a8;
@@ -1116,9 +1175,9 @@ div.k-filebrowser-dropzone em {
   border-color: #ffe599;
 }
 .k-widget.k-notification.k-notification-error {
-  background-color: #ffe0d9;
-  color: #d92800;
-  border-color: #ffb6a6;
+  background-color: #f45835;
+  color: #a7a7a7;
+  border-color: #e9350d;
 }
 /* Gantt */
 .k-gantt .k-treelist {
@@ -1500,7 +1559,7 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-scheduler-delete,
 .km-pane-wrapper .k-filter-menu .k-button[type=reset] {
   color: #fff;
-  border-color: #ff6745;
+  border-color: #8d2008;
   background-color: red;
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.3)), to(rgba(255, 255, 255, 0.15)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
@@ -1562,6 +1621,9 @@ textarea.k-textbox,
 }
 .k-list-container {
   color: #676767;
+}
+.k-nodata {
+  color: #d9d9d9;
 }
 .k-dropdown .k-input,
 .k-dropdown .k-state-focused .k-input,
@@ -1798,7 +1860,7 @@ textarea.k-textbox,
   border-color: #a4a4a4;
 }
 .k-checkbox:disabled + .k-checkbox-label {
-  color: #b5b5b5;
+  color: #d9d9d9;
 }
 .k-checkbox:disabled + .k-checkbox-label:hover:before {
   -webkit-box-shadow: none;
@@ -1808,7 +1870,7 @@ textarea.k-textbox,
 .k-checkbox:checked:disabled + .k-checkbox-label:before,
 .k-checkbox:checked:disabled + .k-checkbox-label:active:before,
 .k-checkbox:checked:disabled + .k-checkbox-label:hover:before {
-  color: #b5b5b5;
+  color: #d9d9d9;
   background: #ffffff;
   border-color: #e0e0e0;
   border-radius: 3px;
@@ -1858,7 +1920,7 @@ textarea.k-textbox,
   border-color: #a4a4a4;
 }
 .k-radio:disabled + .k-radio-label {
-  color: #b5b5b5;
+  color: #d9d9d9;
 }
 .k-radio:disabled + .k-radio-label:before,
 .k-radio:disabled + .k-radio-label:active:before,
@@ -1880,6 +1942,7 @@ textarea.k-textbox,
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
   .k-icon:not(.k-loading),
+  .k-icon:not(.k-i-loading),
   .k-grouping-dropclue,
   .k-drop-hint,
   .k-callout,
@@ -2242,15 +2305,15 @@ textarea.k-textbox,
 .k-spreadsheet-active-cell.k-single {
   background-color: #fff;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar {
+.k-spreadsheet .k-spreadsheet-action-bar {
   background-color: #fff;
-  border-color: #fff #fff #cccccc;
+  border-color: #ebebeb;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar:before {
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-name-editor {
   border-color: #cccccc;
 }
-.k-spreadsheet > .k-spreadsheet-formula-bar:after {
-  border-color: #fff;
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar::before {
+  border-color: #cccccc;
 }
 .k-spreadsheet .k-spreadsheet-formula-input {
   background-color: #fff;
@@ -2334,6 +2397,9 @@ textarea.k-textbox,
 .k-spreadsheet-window .k-margins-vertical {
   background: transparent;
   border-color: #ebebeb;
+}
+.k-spreadsheet-window .hint-wrapper:before {
+  background: #ebebeb;
 }
 .k-spreadsheet-toolbar.k-toolbar .k-button-group .k-button {
   border-radius: 6px;
@@ -2455,4 +2521,61 @@ textarea.k-textbox,
 .k-spreadsheet-toolbar .k-combobox .k-state-active .k-input,
 .k-spreadsheet-toolbar .k-combobox .k-state-focused .k-input {
   color: #676767;
+}
+/* Dialog */
+.k-dialog .k-content {
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+.k-dialog.k-dialog-titleless .k-content {
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched {
+  width: 100%;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
+  display: inline-block;
+  padding: 0.75em 0 0.75em 0;
+  border-radius: 0;
+  border-width: 1px 0 1px 1px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:first-child {
+  border-bottom-left-radius: 6px;
+  border-left-width: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:last-child {
+  border-bottom-right-radius: 6px;
+  border-right-width: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  width: auto;
+  margin: 0;
+  padding: 1em;
+  text-align: right;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
+  margin-left: 0.5em;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
+  margin-left: 0;
+}
+.k-rtl .k-dialog a.k-dialog-action.k-dialog-close {
+  left: .5em;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:first-child {
+  border-bottom-right-radius: 6px;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched li.k-button:last-child {
+  border-bottom-left-radius: 6px;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  text-align: left;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+.k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
+  margin-right: 0;
 }
