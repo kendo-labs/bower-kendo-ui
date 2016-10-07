@@ -290,9 +290,10 @@
                 } catch (e) {
                     element.type = 'text';
                 }
+                that._initialTitle = element.title;
+                text[0].title = element.title;
                 text[0].tabIndex = element.tabIndex;
                 text[0].style.cssText = element.style.cssText;
-                text[0].title = element.title;
                 text.prop('placeholder', options.placeholder);
                 if (accessKey) {
                     text.attr('accesskey', accessKey);
@@ -459,8 +460,8 @@
                 if (!placeholderSupported && !value) {
                     input.val(this.options.placeholder);
                 }
-                input.attr('title', input.attr('title') || input.val());
-                input.attr('aria-title', input.attr('title') || input.val());
+                input.attr('title', this._initialTitle || input.val());
+                input.attr('aria-title', this._initialTitle || input.val());
             },
             _wrapper: function () {
                 var that = this, element = that.element, DOMElement = element[0], wrapper;

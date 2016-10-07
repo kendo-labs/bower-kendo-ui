@@ -2871,6 +2871,7 @@ div.k-window.k-state-focused {
   background-color: #fff;
 }
 .k-spreadsheet-active-cell.k-single {
+  color: #333;
   background-color: #fff;
 }
 .k-spreadsheet .k-spreadsheet-action-bar {

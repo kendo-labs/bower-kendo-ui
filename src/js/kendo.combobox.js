@@ -215,14 +215,22 @@
                     that._state = STATE_REBIND;
                     if (that.options.minLength !== 1) {
                         that.refresh();
-                        that.popup.open();
+                        that._openPopup();
                     } else {
                         that._filterSource();
                     }
                 } else if (that._allowOpening()) {
-                    that.popup.open();
+                    that._openPopup();
                     that._focusItem();
                 }
+            },
+            _scrollToFocusedItem: function () {
+                var listView = this.listView;
+                listView.scrollToIndex(listView.getElementIndex(listView.focus()));
+            },
+            _openPopup: function () {
+                this.popup.one('activate', proxy(this._scrollToFocusedItem, this));
+                this.popup.open();
             },
             _updateSelectionState: function () {
                 var that = this;

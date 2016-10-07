@@ -3458,7 +3458,8 @@ div.k-scheduler-marquee:after {
   background-color: #363636;
 }
 .k-spreadsheet-active-cell.k-single {
-  background-color: #fff;
+  color: #d5d5d5;
+  background-color: #363636;
 }
 .k-spreadsheet .k-spreadsheet-action-bar {
   background-color: #363636;

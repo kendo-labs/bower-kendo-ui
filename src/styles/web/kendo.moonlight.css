@@ -1161,23 +1161,29 @@ div.k-filebrowser-dropzone em {
 /* Notification */
 .k-widget.k-notification.k-notification-info {
   background-color: #0c779b;
-  color: #ffffff;
-  border-color: #0c7ba0;
+  color: #fff;
+  border-color: #0c779b;
 }
 .k-widget.k-notification.k-notification-success {
   background-color: #2b893c;
-  color: #ffffff;
-  border-color: #1f622b;
+  color: #fff;
+  border-color: #2b893c;
 }
 .k-widget.k-notification.k-notification-warning {
   background-color: #ea9d07;
-  color: #ffffff;
-  border-color: #efa007;
+  color: #000;
+  border-color: #ea9d07;
 }
 .k-widget.k-notification.k-notification-error {
   background-color: #be5138;
-  color: #ffffff;
-  border-color: #97402c;
+  color: #fff;
+  border-color: #be5138;
+}
+.k-widget.k-notification {
+  background-image: url("textures/brushed-metal.png");
+  background-image: url("textures/brushed-metal.png"), -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.25)), to(rgba(255,255,255,0)));
+  background-image: url("textures/brushed-metal.png"), -webkit-linear-gradient(top, rgba(255,255,255,.25) 0%, rgba(255,255,255,0) 100%);
+  background-image: url("textures/brushed-metal.png"), linear-gradient(to bottom, rgba(255,255,255,.25) 0%, rgba(255,255,255,0) 100%);
 }
 /* Gantt */
 .k-gantt .k-treelist {
@@ -2303,7 +2309,8 @@ textarea.k-textbox,
   background-color: #414550;
 }
 .k-spreadsheet-active-cell.k-single {
-  background-color: #fff;
+  color: #fff;
+  background-color: #414550;
 }
 .k-spreadsheet .k-spreadsheet-action-bar {
   background-color: #414550;

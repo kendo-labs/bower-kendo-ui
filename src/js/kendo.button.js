@@ -100,7 +100,9 @@
                 var that = this, element = that.element, options = that.options, icon = options.icon, spriteCssClass = options.spriteCssClass, imageUrl = options.imageUrl, span, img, isEmpty;
                 if (spriteCssClass || imageUrl || icon) {
                     isEmpty = true;
-                    element.contents().not('span.k-sprite').not('span.k-icon').not('img.k-image').each(function (idx, el) {
+                    element.contents().filter(function () {
+                        return !$(this).hasClass('k-sprite') && !$(this).hasClass('k-icon') && !$(this).hasClass('k-image');
+                    }).each(function (idx, el) {
                         if (el.nodeType == 1 || el.nodeType == 3 && $.trim(el.nodeValue).length > 0) {
                             isEmpty = false;
                         }

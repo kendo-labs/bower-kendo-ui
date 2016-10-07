@@ -2256,6 +2256,7 @@ html .km-pane-wrapper .km-widget,
   background-color: #fff;
 }
 .k-spreadsheet-active-cell.k-single {
+  color: #787878;
   background-color: #fff;
 }
 .k-spreadsheet .k-spreadsheet-action-bar {

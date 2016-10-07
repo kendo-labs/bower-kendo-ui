@@ -1923,11 +1923,13 @@ input.k-checkbox,
 .k-ff .k-radio {
   position: absolute;
 }
-.k-checkbox-label {
+.k-checkbox-label,
+.k-radio-label {
+  display: inline-block;
   position: relative;
-  padding-left: 1.5em;
+  padding-left: 20px;
   vertical-align: middle;
-  line-height: 0.875em;
+  line-height: 16px;
   cursor: pointer;
 }
 .k-checkbox-label:before {
@@ -1937,10 +1939,10 @@ input.k-checkbox,
   left: 0;
   border-width: 1px;
   border-style: solid;
-  width: 1em;
-  height: 1em;
-  font-size: 1em;
-  line-height: 1em;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  line-height: 16px;
   text-align: center;
 }
 .k-checkbox:indeterminate + .k-checkbox-label:after {
@@ -1955,7 +1957,7 @@ input.k-checkbox,
   border-style: solid;
   width: 8px;
   height: 8px;
-  font-size: 1em;
+  font-size: 16px;
   text-align: center;
   content: " ";
   margin-left: -2px;
@@ -1965,13 +1967,6 @@ input.k-checkbox,
 }
 .k-checkbox:disabled + .k-checkbox-label {
   cursor: auto;
-}
-.k-radio-label {
-  position: relative;
-  padding-left: 1.5em;
-  vertical-align: middle;
-  line-height: 0.875em;
-  cursor: pointer;
 }
 .k-radio-label:before {
   content: "";
@@ -2067,6 +2062,12 @@ input.k-checkbox + label {
 .k-rpanel-left + *,
 .k-rpanel-right + * {
   overflow: auto;
+}
+.k-ie .k-rpanel-left {
+  left: -100%;
+}
+.k-ie .k-rpanel-left.k-rpanel-expanded {
+  left: 0;
 }
 .k-rpanel-top {
   position: static;
@@ -3668,7 +3669,7 @@ div.k-flatcolorpicker {
 .k-notification-wrap > .k-i-info,
 .k-notification-wrap > .k-i-success,
 .k-notification-wrap > .k-i-warning,
-.k-notification-wrap > .k-i-erorr {
+.k-notification-wrap > .k-i-error {
   vertical-align: text-bottom;
   margin-right: 4px;
 }
@@ -4621,13 +4622,6 @@ span.k-tooltip {
 .k-dialog.k-window {
   position: fixed;
   padding-top: 0;
-}
-.k-dialog.k-dialog-centered {
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
 }
 .k-dialog .k-window-titlebar {
   position: static;
@@ -5788,7 +5782,7 @@ span.k-tooltip {
   margin: 0 -5px;
 }
 .k-popup.k-list-container {
-  padding: 0.286em 0;
+  padding: 11px;
 }
 .k-popup.k-calendar-containe {
   padding: 0;
@@ -5801,8 +5795,14 @@ span.k-tooltip {
 .k-popup .k-list .k-item {
   padding: 1px 11px;
 }
+.k-list-scroller,
+.k-virtual-wrap,
+.k-list-optionlabel,
+.k-popup > .k-group-header {
+  margin: 0 -11px;
+}
 .k-list-filter {
-  margin: 0 .29em .29em;
+  margin: 0 0 11px;
 }
 .k-button,
 .k-calendar .k-header .k-link,
@@ -5844,13 +5844,17 @@ span.k-tooltip {
   padding: 0;
 }
 .k-multiselect-wrap .k-input {
-  height: 2.214em;
+  font-size: inherit;
+  height: 2em;
 }
 .k-multiselect-wrap li {
   border-radius: 1.071em;
-  margin: 3px 0 3px 3px;
-  padding: 0 1.6em 0 .857em;
   line-height: 1.86em;
+}
+.k-multiselect-wrap .k-input,
+.k-multiselect-wrap li {
+  margin: .286em 0 .286em .286em;
+  padding: 0 1.6em 0 .857em;
 }
 .k-multiselect-wrap li span {
   margin-right: .4em;
@@ -6214,6 +6218,14 @@ div.k-window-content {
 .k-notification .k-i-error {
   background-position: -176px -240px;
   margin-right: 10px;
+}
+.k-checkbox-label,
+.k-radio-label {
+  line-height: 18px;
+}
+.k-radio-label:before {
+  width: 16px;
+  height: 16px;
 }
 .k-radio:checked + .k-radio-label:after {
   top: 4px;

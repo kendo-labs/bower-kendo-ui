@@ -140,6 +140,8 @@
         .k-spreadsheet-formula-bar {
             width: 100%;
             padding-left: 31px; // XXX: Move to code
+            height: @input-height;
+            vertical-align: middle;
 
             &::before {
                 .use-font-icon();
@@ -157,6 +159,12 @@
 
         .k-spreadsheet-formula-input {
             overflow: hidden;
+            height: 100%;
+            line-height: @input-height;
+            padding: .177em 0;
+            text-indent: @input-indent;
+            border: 0;
+            margin: 0;
         }
     }
 

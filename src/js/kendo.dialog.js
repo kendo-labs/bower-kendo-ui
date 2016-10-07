@@ -61,6 +61,7 @@
             },
             _init: function (element, options) {
                 var that = this, wrapper;
+                that._centerCallback = proxy(that._center, that);
                 that.appendTo = $(BODY);
                 if (!defined(options.visible) || options.visible === null) {
                     options.visible = element.is(VISIBLE);
@@ -366,6 +367,7 @@
             },
             close: function () {
                 this._close(true);
+                this._stopCenterOnResize();
                 return this;
             },
             _close: function (systemTriggered) {
@@ -387,11 +389,8 @@
                 return that;
             },
             center: function () {
-                var browser = kendo.support.browser;
-                if (browser.msie && Math.floor(browser.version) <= 8) {
-                    this.wrapper.removeClass('k-dialog-centered');
-                    this._center();
-                }
+                this._center();
+                this._centerOnResize();
             },
             _center: function () {
                 var that = this, wrapper = that.wrapper, documentWindow = $(window), scrollTop = 0, scrollLeft = 0, newLeft = scrollLeft + Math.max(0, (documentWindow.width() - wrapper.width()) / 2), newTop = scrollTop + Math.max(0, (documentWindow.height() - wrapper.height() - parseInt(wrapper.css('paddingTop'), 10)) / 2);
@@ -400,6 +399,17 @@
                     top: newTop
                 });
                 return that;
+            },
+            _centerOnResize: function () {
+                if (this._trackResize) {
+                    return;
+                }
+                kendo.onResize(this._centerCallback);
+                this._trackResize = true;
+            },
+            _stopCenterOnResize: function () {
+                kendo.unbindResize(this._centerCallback);
+                this._trackResize = false;
             },
             _removeOverlay: function () {
                 var modals = this._modals();
@@ -447,6 +457,7 @@
             destroy: function () {
                 var that = this;
                 that._destroy();
+                Widget.fn.destroy.call(that);
                 that.wrapper.remove();
                 that.wrapper = that.element = $();
             },
@@ -456,7 +467,7 @@
                 that.wrapper.off(ns);
                 that.element.off(ns);
                 that.wrapper.find(KICONCLOSE + ',' + KBUTTONGROUP + ' > ' + KBUTTON).off(ns);
-                Widget.fn.destroy.call(that);
+                that._stopCenterOnResize();
             },
             title: function (html) {
                 var that = this, wrapper = that.wrapper, options = that.options, titlebar = wrapper.children(KDIALOGTITLEBAR), title = titlebar.children(KDIALOGTITLE);
@@ -676,7 +687,7 @@
             return promptDialog.result;
         };
         templates = {
-            wrapper: template('<div class=\'k-widget k-dialog k-window k-dialog-centered\' role=\'dialog\' />'),
+            wrapper: template('<div class=\'k-widget k-dialog k-window\' role=\'dialog\' />'),
             action: template('<li class=\'k-button# if (data.primary) { # k-primary# } #\' role=\'button\'></li>'),
             titlebar: template('<div class=\'k-window-titlebar k-header\'>' + '<span class=\'k-dialog-title\'>#= title #</span>' + '</div>'),
             close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' aria-label=\'Close\' tabindex=\'-1\'><span class=\'k-font-icon k-i-x\'>#= messages.close #</span></a>'),

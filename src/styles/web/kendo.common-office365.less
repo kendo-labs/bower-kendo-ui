@@ -35,16 +35,6 @@
 
 @import "common/all.less";
 
-@checkbox-size: 1.357em;
-@checkbox-check-size: 1em;
-
-.k-checkbox:indeterminate + .k-checkbox-label:after {
-    margin-left: 0;
-    top: 5px;
-    left: 5px;
-    transform: none;
-}
-
 .k-grid .k-header,
 .k-gantt .k-grid-header,
 .k-calendar .k-header,
@@ -1154,19 +1144,29 @@ div.k-window-content {
 
 }
 
+@checkbox-size: 18px;
+@checkbox-check-size: @checkbox-size/2;
+
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+    margin-left: 0;
+    top: 5px;
+    left: 5px;
+    transform: none;
+}
+
+.k-checkbox-label,
 .k-radio-label {
-    line-height: normal;
-    padding-left: 2em;
+    line-height: 20px;
 }
 
 .k-radio-label:before {
-    width: 19px;
-    height: 19px;
+    width: @checkbox-size;
+    height: @checkbox-size;
 }
 
 .k-radio:checked + .k-radio-label:after {
-    width: 11px;
-    height: 11px;
+    width: 10px;
+    height: 10px;
     top: 5px;
     left: 5px;
 }

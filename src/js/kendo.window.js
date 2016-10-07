@@ -643,7 +643,7 @@
                 if (that._shouldFocus(target)) {
                     that.element.focus();
                     var scrollTop = $(window).scrollTop(), windowTop = parseInt(wrapper.position().top, 10);
-                    if (windowTop > 0 && windowTop < scrollTop) {
+                    if (!that.options.pinned && windowTop > 0 && windowTop < scrollTop) {
                         if (scrollTop > 0) {
                             $(window).scrollTop(windowTop);
                         } else {
@@ -949,12 +949,16 @@
                         width: newWidth
                     });
                 }
+                var newWindowTop = y;
+                if (wnd.options.pinned) {
+                    newWindowTop -= $(window).scrollTop();
+                }
                 if (direction.indexOf('s') >= 0) {
-                    newHeight = y - initialPosition.top - that.elementPadding - containerOffset.top;
+                    newHeight = newWindowTop - initialPosition.top - that.elementPadding - containerOffset.top;
                     wrapper.height(constrain(newHeight, options.minHeight, options.maxHeight));
                 } else if (direction.indexOf('n') >= 0) {
                     windowBottom = initialPosition.top + initialSize.height + containerOffset.top;
-                    newHeight = constrain(windowBottom - y, options.minHeight, options.maxHeight);
+                    newHeight = constrain(windowBottom - newWindowTop, options.minHeight, options.maxHeight);
                     wrapper.css({
                         top: windowBottom - newHeight - containerOffset.top,
                         height: newHeight

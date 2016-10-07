@@ -39,7 +39,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', HIDDENCLASS = 'k-loading-hidden', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', WIDTH = 'width', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, isIE8 = browser.msie && browser.version < 9, quotRegExp = /"/g, alternativeNames = {
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', HIDDENCLASS = 'k-loading-hidden', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', WIDTH = 'width', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, isIE = browser.msie, isIE8 = isIE && browser.version < 9, quotRegExp = /"/g, alternativeNames = {
                 'ComboBox': 'DropDownList',
                 'DropDownList': 'ComboBox'
             };
@@ -547,15 +547,14 @@
             },
             _focusItem: function () {
                 var listView = this.listView;
-                var focusedItem = listView.focus();
-                var index = listView.select();
-                index = index[index.length - 1];
-                if (index === undefined && this.options.highlightFirst && !focusedItem) {
+                var noFocusedItem = !listView.focus();
+                var index = last(listView.select());
+                if (index === undefined && this.options.highlightFirst && noFocusedItem) {
                     index = 0;
                 }
                 if (index !== undefined) {
                     listView.focus(index);
-                } else {
+                } else if (noFocusedItem) {
                     listView.scrollToIndex(0);
                 }
             },
@@ -1020,11 +1019,12 @@
             _toggleCascadeOnFocus: function () {
                 var that = this;
                 var parent = that._parentWidget();
+                var focusout = isIE ? 'blur' : 'focusout';
                 parent._focused.add(parent.filterInput).bind('focus', function () {
                     parent.unbind(CASCADE, that._cascadeHandlerProxy);
                     parent.first(CHANGE, that._cascadeHandlerProxy);
                 });
-                parent._focused.add(parent.filterInput).bind('focusout', function () {
+                parent._focused.add(parent.filterInput).bind(focusout, function () {
                     parent.unbind(CHANGE, that._cascadeHandlerProxy);
                     parent.first(CASCADE, that._cascadeHandlerProxy);
                 });
@@ -1241,7 +1241,7 @@
                 this.focus(this.element[0].children[0]);
             },
             focusLast: function () {
-                this.focus(this.element[0].children[this.element[0].children.length - 1]);
+                this.focus(last(this.element[0].children));
             },
             focus: function (candidate) {
                 var that = this;
@@ -1250,8 +1250,7 @@
                 if (candidate === undefined) {
                     return that._current;
                 }
-                candidate = that._get(candidate);
-                candidate = candidate[candidate.length - 1];
+                candidate = last(that._get(candidate));
                 candidate = $(this.element[0].children[candidate]);
                 if (that._current) {
                     that._current.removeClass(FOCUSED).removeAttr('aria-selected').removeAttr(ID);
@@ -1291,7 +1290,7 @@
                 if (filtered && !singleSelection && that._deselectFiltered(indices)) {
                     return;
                 }
-                if (singleSelection && !filtered && $.inArray(indices[indices.length - 1], selectedIndices) !== -1) {
+                if (singleSelection && !filtered && $.inArray(last(indices), selectedIndices) !== -1) {
                     if (that._dataItems.length && that._view.length) {
                         that._dataItems = [that._view[selectedIndices[0]].item];
                     }
@@ -1302,7 +1301,7 @@
                 indices = result.indices;
                 if (indices.length) {
                     if (singleSelection) {
-                        indices = [indices[indices.length - 1]];
+                        indices = [last(indices)];
                     }
                     added = that._select(indices);
                 }
@@ -1471,7 +1470,7 @@
                 var dataItem, index;
                 var added = [];
                 var idx = 0;
-                if (indices[indices.length - 1] !== -1) {
+                if (last(indices) !== -1) {
                     that.focus(indices);
                 }
                 for (; idx < indices.length; idx++) {
@@ -1721,6 +1720,9 @@
             }
         });
         ui.plugin(StaticList);
+        function last(list) {
+            return list[list.length - 1];
+        }
         function getSelectedOption(select) {
             var index = select.selectedIndex;
             return index > -1 ? select.options[index] : {};

@@ -689,17 +689,17 @@ input.k-textbox:active {
 }
 /* Notification */
 .k-widget.k-notification.k-notification-info {
-  color: #21b6c9;
+  color: #20aec0;
   background-color: #80deea;
   border-color: #80deea;
 }
 .k-widget.k-notification.k-notification-success {
-  color: #4fad53;
+  color: #4ca64f;
   background-color: #a5d6a7;
   border-color: #a5d6a7;
 }
 .k-widget.k-notification.k-notification-warning {
-  color: #ffc147;
+  color: #ffbd3d;
   background-color: #ffecc7;
   border-color: #ffecc7;
 }
@@ -2305,6 +2305,7 @@ html .km-pane-wrapper .km-widget,
   background-color: #fff;
 }
 .k-spreadsheet-active-cell.k-single {
+  color: #32364c;
   background-color: #fff;
 }
 .k-spreadsheet .k-spreadsheet-action-bar {

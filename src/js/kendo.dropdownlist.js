@@ -186,18 +186,14 @@
                         that.refresh();
                         that.popup.one('activate', that._focusInputHandler);
                         that.popup.open();
-                        if (that.filterInput) {
-                            that._resizeFilterInput();
-                        }
+                        that._resizeFilterInput();
                     } else {
                         that._filterSource();
                     }
                 } else if (that._allowOpening()) {
                     that.popup.one('activate', that._focusInputHandler);
                     that.popup.open();
-                    if (that.filterInput) {
-                        that._resizeFilterInput();
-                    }
+                    that._resizeFilterInput();
                     that._focusItem();
                 }
             },
@@ -205,9 +201,20 @@
                 this._focusElement(this.filterInput);
             },
             _resizeFilterInput: function () {
-                this.filterInput.css('display', 'none');
-                this.filterInput.css('width', this.popup.element.css('width'));
-                this.filterInput.css('display', 'inline-block');
+                var filterInput = this.filterInput;
+                var originalPrevent = this._prevent;
+                if (!filterInput) {
+                    return;
+                }
+                var isInputActive = this.filterInput[0] === activeElement();
+                var caret = kendo.caret(this.filterInput[0])[0];
+                this._prevent = true;
+                filterInput.css('display', 'none').css('width', this.popup.element.css('width')).css('display', 'inline-block');
+                if (isInputActive) {
+                    filterInput.focus();
+                    kendo.caret(filterInput[0], caret);
+                }
+                this._prevent = originalPrevent;
             },
             _allowOpening: function () {
                 return this.hasOptionLabel() || this.filterInput || Select.fn._allowOpening.call(this);
@@ -456,9 +463,11 @@
                 var isIFrame = window.self !== window.top;
                 var focusedItem = that._focus();
                 var dataItem = that._getElementDataItem(focusedItem);
+                var shouldTrigger;
                 if (!that._prevent) {
                     clearTimeout(that._typingTimeout);
-                    if (!filtered && focusedItem && !that.trigger('select', {
+                    shouldTrigger = !filtered && focusedItem && that._value(dataItem) !== that.value();
+                    if (shouldTrigger && !that.trigger('select', {
                             dataItem: dataItem,
                             item: focusedItem
                         })) {

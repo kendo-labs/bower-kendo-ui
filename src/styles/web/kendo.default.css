@@ -79,7 +79,7 @@
   color: #db4240;
 }
 .ktb-var-warning {
-  color: #ffe79e;
+  color: #ffc000;
 }
 .ktb-var-success {
   color: #37b400;
@@ -915,9 +915,9 @@ div.k-filebrowser-dropzone em {
           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 .k-widget.k-tooltip-validation {
-  border-color: #ffe79e;
-  background-color: #ffe79e;
-  color: #6b5100;
+  border-color: #ffc000;
+  background-color: #ffc000;
+  color: #000000;
 }
 /* Bootstrap theme fix */
 .input-prepend .k-tooltip-validation,
@@ -939,16 +939,16 @@ div.k-filebrowser-dropzone em {
   border-left-color: #eae8e8;
 }
 .k-tooltip-validation .k-callout-n {
-  border-bottom-color: #ffe79e;
+  border-bottom-color: #ffc000;
 }
 .k-tooltip-validation .k-callout-w {
-  border-right-color: #ffe79e;
+  border-right-color: #ffc000;
 }
 .k-tooltip-validation .k-callout-s {
-  border-top-color: #ffe79e;
+  border-top-color: #ffc000;
 }
 .k-tooltip-validation .k-callout-e {
-  border-left-color: #ffe79e;
+  border-left-color: #ffc000;
 }
 /* Splitter */
 .k-splitbar {
@@ -1161,23 +1161,29 @@ div.k-filebrowser-dropzone em {
 /* Notification */
 .k-widget.k-notification.k-notification-info {
   background-color: #0066cc;
-  color: #aeaeae;
-  border-color: #0069d1;
+  color: #fff;
+  border-color: #0066cc;
 }
 .k-widget.k-notification.k-notification-success {
   background-color: #37b400;
-  color: #6e6e6e;
-  border-color: #278100;
+  color: #fff;
+  border-color: #37b400;
 }
 .k-widget.k-notification.k-notification-warning {
-  background-color: #ffe79e;
-  color: #666666;
-  border-color: #ffe38f;
+  background-color: #ffc000;
+  color: #000;
+  border-color: #ffc000;
 }
 .k-widget.k-notification.k-notification-error {
   background-color: #db4240;
-  color: #6e6e6e;
-  border-color: #c32725;
+  color: #fff;
+  border-color: #db4240;
+}
+.k-widget.k-notification {
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.25)), to(rgba(255,255,255,0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.25) 0%, rgba(255,255,255,0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.25) 0%, rgba(255,255,255,0) 100%);
 }
 /* Gantt */
 .k-gantt .k-treelist {
@@ -2303,6 +2309,7 @@ textarea.k-textbox,
   background-color: #fff;
 }
 .k-spreadsheet-active-cell.k-single {
+  color: #2e2e2e;
   background-color: #fff;
 }
 .k-spreadsheet .k-spreadsheet-action-bar {

@@ -1923,11 +1923,13 @@ input.k-checkbox,
 .k-ff .k-radio {
   position: absolute;
 }
-.k-checkbox-label {
+.k-checkbox-label,
+.k-radio-label {
+  display: inline-block;
   position: relative;
-  padding-left: 1.5em;
+  padding-left: 20px;
   vertical-align: middle;
-  line-height: 0.875em;
+  line-height: 16px;
   cursor: pointer;
 }
 .k-checkbox-label:before {
@@ -1937,10 +1939,10 @@ input.k-checkbox,
   left: 0;
   border-width: 1px;
   border-style: solid;
-  width: 1em;
-  height: 1em;
-  font-size: 1em;
-  line-height: 1em;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  line-height: 16px;
   text-align: center;
 }
 .k-checkbox:indeterminate + .k-checkbox-label:after {
@@ -1955,7 +1957,7 @@ input.k-checkbox,
   border-style: solid;
   width: 8px;
   height: 8px;
-  font-size: 1em;
+  font-size: 16px;
   text-align: center;
   content: " ";
   margin-left: -2px;
@@ -1965,13 +1967,6 @@ input.k-checkbox,
 }
 .k-checkbox:disabled + .k-checkbox-label {
   cursor: auto;
-}
-.k-radio-label {
-  position: relative;
-  padding-left: 1.5em;
-  vertical-align: middle;
-  line-height: 0.875em;
-  cursor: pointer;
 }
 .k-radio-label:before {
   content: "";
@@ -2067,6 +2062,12 @@ input.k-checkbox + label {
 .k-rpanel-left + *,
 .k-rpanel-right + * {
   overflow: auto;
+}
+.k-ie .k-rpanel-left {
+  left: -100%;
+}
+.k-ie .k-rpanel-left.k-rpanel-expanded {
+  left: 0;
 }
 .k-rpanel-top {
   position: static;
@@ -3668,7 +3669,7 @@ div.k-flatcolorpicker {
 .k-notification-wrap > .k-i-info,
 .k-notification-wrap > .k-i-success,
 .k-notification-wrap > .k-i-warning,
-.k-notification-wrap > .k-i-erorr {
+.k-notification-wrap > .k-i-error {
   vertical-align: text-bottom;
   margin-right: 4px;
 }
@@ -4621,13 +4622,6 @@ span.k-tooltip {
 .k-dialog.k-window {
   position: fixed;
   padding-top: 0;
-}
-.k-dialog.k-dialog-centered {
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
 }
 .k-dialog .k-window-titlebar {
   position: static;
@@ -6200,6 +6194,12 @@ div.k-window-content {
 .k-panelbar .k-link:not(.k-state-disabled):hover > .k-i-arrow-e {
   background-position: 0 -190px;
 }
+.k-panelbar .k-numerictextbox .k-select .k-link span.k-i-arrow-n {
+  background-position: 0 -3px;
+}
+.k-panelbar .k-numerictextbox .k-select .k-link span.k-i-arrow-s {
+  background-position: 0 -35px;
+}
 .k-tabstrip .k-button .k-i-pdf,
 .k-tabstrip .k-button:hover .k-i-pdf {
   background-position: -64px -80px;
@@ -6210,6 +6210,10 @@ div.k-window-content {
 .k-notification .k-i-warning,
 .k-notification .k-i-erorr {
   background-position: -176px -240px;
+}
+.k-checkbox-label,
+.k-radio-label {
+  line-height: 18px;
 }
 .k-checkbox:indeterminate + .k-checkbox-label:before {
   border-width: 2px;
