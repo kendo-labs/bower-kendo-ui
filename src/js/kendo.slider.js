@@ -385,7 +385,7 @@
             } else {
                 buttonCssClass = isHorizontal ? 'k-i-arrow-w' : 'k-i-arrow-s';
             }
-            return '<a class=\'k-button k-button-' + type + '\' aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
+            return '<a class=\'k-button k-button-' + type + '\' ' + 'title=\'' + options[type + 'ButtonTitle'] + '\' ' + 'aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
         }
         function createSliderItems(options, distance) {
             var result = '<ul class=\'k-reset k-slider-items\'>', count = math.floor(round(distance / options.smallStep)) + 1, i;

@@ -2127,6 +2127,7 @@ div.k-window.k-state-focused {
 .k-grid tr:hover {
   background-color: #eaeaea;
 }
+.k-grid .k-filter-row:hover,
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;
 }

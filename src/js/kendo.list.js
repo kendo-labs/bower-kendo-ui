@@ -202,6 +202,7 @@
                 var options = that.options;
                 var dataSource = that.dataSource;
                 var expression = extend({}, dataSource.filter() || {});
+                var clearFilter = expression.filters && expression.filters.length && !filter;
                 var removed = removeFiltersForField(expression, options.dataTextField);
                 if ((filter || removed) && that.trigger('filtering', { filter: filter })) {
                     return;
@@ -216,11 +217,15 @@
                 if (that._cascading) {
                     this.listView.setDSFilter(expression);
                 }
-                if (!force) {
-                    dataSource.filter(expression);
-                } else {
-                    dataSource.read(dataSource._mergeState({ filter: expression }));
-                }
+                var dataSourceState = extend({}, {
+                    page: dataSource.page(),
+                    pageSize: clearFilter ? dataSource.options.pageSize : dataSource.pageSize(),
+                    sort: dataSource.sort(),
+                    filter: dataSource.filter(),
+                    group: dataSource.group(),
+                    aggregate: dataSource.aggregate()
+                }, { filter: expression });
+                dataSource[force ? 'read' : 'query'](dataSource._mergeState(dataSourceState));
             },
             _angularElement: function (element, action) {
                 if (!element) {
@@ -698,9 +703,10 @@
                 if (candidate === undefined) {
                     return that.selectedIndex;
                 } else {
-                    that._select(candidate);
-                    that._old = that._accessor();
-                    that._oldIndex = that.selectedIndex;
+                    return that._select(candidate).done(function () {
+                        that._old = that._accessor();
+                        that._oldIndex = that.selectedIndex;
+                    });
                 }
             },
             _accessor: function (value, idx) {
@@ -857,10 +863,11 @@
                             that._focus(current);
                             return;
                         }
-                        that._select(that._focus(), true);
-                        if (!that.popup.visible()) {
-                            that._blur();
-                        }
+                        that._select(that._focus(), true).done(function () {
+                            if (!that.popup.visible()) {
+                                that._blur();
+                            }
+                        });
                     }
                     e.preventDefault();
                     pressed = true;
@@ -992,10 +999,11 @@
                 var parent;
                 if (cascade) {
                     parent = that._parentWidget();
-                    that._cascadeHandlerProxy = proxy(that._cascadeHandler, that);
                     if (!parent) {
                         return;
                     }
+                    that._cascadeHandlerProxy = proxy(that._cascadeHandler, that);
+                    that._cascadeFilterRequests = [];
                     options.autoBind = false;
                     parent.bind('set', function () {
                         that.one('set', function (e) {
@@ -1041,7 +1049,9 @@
             _cascadeChange: function (parent) {
                 var that = this;
                 var value = that._accessor() || that._selectedValue;
-                that._selectedValue = null;
+                if (!that._cascadeFilterRequests.length) {
+                    that._selectedValue = null;
+                }
                 if (that._userTriggered) {
                     that._clearSelection(parent, true);
                 } else if (value) {
@@ -1070,10 +1080,20 @@
                     expressions = that.dataSource.filter() || {};
                     removeFiltersForField(expressions, valueField);
                     var handler = function () {
-                        that.unbind('dataBound', handler);
+                        var currentHandler = that._cascadeFilterRequests.shift();
+                        if (currentHandler) {
+                            that.unbind('dataBound', currentHandler);
+                        }
+                        currentHandler = that._cascadeFilterRequests[0];
+                        if (currentHandler) {
+                            that.first('dataBound', currentHandler);
+                        }
                         that._cascadeChange(parent);
                     };
-                    that.first('dataBound', handler);
+                    that._cascadeFilterRequests.push(handler);
+                    if (that._cascadeFilterRequests.length === 1) {
+                        that.first('dataBound', handler);
+                    }
                     that._cascading = true;
                     that._filterSource({
                         field: valueField,
@@ -1286,15 +1306,16 @@
                 if (indices.length === 1 && indices[0] === -1) {
                     indices = [];
                 }
+                var deferred = $.Deferred().resolve();
                 var filtered = that.isFiltered();
                 if (filtered && !singleSelection && that._deselectFiltered(indices)) {
-                    return;
+                    return deferred;
                 }
                 if (singleSelection && !filtered && $.inArray(last(indices), selectedIndices) !== -1) {
                     if (that._dataItems.length && that._view.length) {
                         that._dataItems = [that._view[selectedIndices[0]].item];
                     }
-                    return;
+                    return deferred;
                 }
                 result = that._deselect(indices);
                 removed = result.removed;
@@ -1312,6 +1333,7 @@
                         removed: removed
                     });
                 }
+                return deferred;
             },
             removeAt: function (position) {
                 this._selectedIndices.splice(position, 1);

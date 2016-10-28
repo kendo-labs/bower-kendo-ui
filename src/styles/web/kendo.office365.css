@@ -2239,6 +2239,7 @@ input.k-textbox:focus {
 .k-gantt .k-treelist tr:hover {
   background-color: #f4f4f4;
 }
+.k-grid .k-filter-row:hover,
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;
 }

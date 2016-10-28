@@ -1654,6 +1654,7 @@ html .km-pane-wrapper .km-widget,
   color: #fff;
   background-color: #00aba9;
 }
+.k-grid .k-filter-row:hover,
 .k-pivot-rowheaders .k-grid tr:hover {
   color: #fff;
   background: none;

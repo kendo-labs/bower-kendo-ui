@@ -989,6 +989,7 @@ input.k-textbox:active {
 .k-pivot-rowheaders .k-grid-footer {
   font-weight: bold;
 }
+.k-grid .k-filter-row:hover,
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;
 }
@@ -1205,6 +1206,13 @@ input.k-textbox:active {
 .k-toolbar .k-overflow-anchor.k-state-border-up {
   background-color: #ff4350;
   border-color: #ff4350;
+}
+.k-toolbar .k-button.k-state-disabled,
+.k-toolbar .k-button.k-state-disabled:hover,
+.k-toolbar .k-button.k-state-disabled:active {
+  color: #c4c4c4;
+  border-color: #bdc0c1;
+  background-color: #fff;
 }
 .k-overflow-container .k-overflow-button,
 .k-split-container .k-button {

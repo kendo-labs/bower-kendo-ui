@@ -2437,6 +2437,7 @@ td.k-group-cell,
 .k-grid tr:hover {
   background-color: #ebebeb;
 }
+.k-grid .k-filter-row:hover,
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;
 }

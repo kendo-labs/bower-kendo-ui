@@ -1090,6 +1090,7 @@ div.k-filebrowser-dropzone em {
   background-image: url("textures/brushed-metal.png"), linear-gradient(to bottom, rgba(255,255,255,.2) 0%, rgba(255,255,255,.1) 100%);
   background-position: 50% 50%;
 }
+.k-grid .k-filter-row:hover,
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;
 }

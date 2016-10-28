@@ -33,7 +33,7 @@
         depends: ['draganddrop']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-minimize,.k-window-actions .k-i-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-minimize,.k-window-actions .k-i-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
         function defined(x) {
             return typeof x != 'undefined';
         }
@@ -278,6 +278,7 @@
                 MINIMIZE,
                 MAXIMIZE,
                 REFRESH,
+                RESIZESTART,
                 RESIZE,
                 RESIZEEND,
                 DRAGSTART,
@@ -323,7 +324,9 @@
                 visible: null,
                 height: null,
                 width: null,
-                appendTo: 'body'
+                appendTo: 'body',
+                isMaximized: false,
+                isMinimized: false
             },
             _closable: function () {
                 return $.inArray('close', $.map(this.options.actions, function (x) {
@@ -727,6 +730,9 @@
                 });
                 return this;
             },
+            isMaximized: function () {
+                return this.options.isMaximized;
+            },
             minimize: function () {
                 this._sizingAction('minimize', function () {
                     var that = this;
@@ -738,6 +744,9 @@
                     that.options.isMinimized = true;
                 });
                 return this;
+            },
+            isMinimized: function () {
+                return this.options.isMinimized;
             },
             pin: function (force) {
                 var that = this, win = $(window), wrapper = that.wrapper, top = parseInt(wrapper.css('top'), 10), left = parseInt(wrapper.css('left'), 10);
@@ -904,6 +913,7 @@
         function WindowResizing(wnd) {
             var that = this;
             that.owner = wnd;
+            that._preventDragging = false;
             that._draggable = new Draggable(wnd.wrapper, {
                 filter: '>' + KWINDOWRESIZEHANDLES,
                 group: wnd.wrapper.id + '-resizing',
@@ -925,6 +935,10 @@
                 var that = this;
                 var wnd = that.owner;
                 var wrapper = wnd.wrapper;
+                that._preventDragging = wnd.trigger(RESIZESTART);
+                if (that._preventDragging) {
+                    return;
+                }
                 that.elementPadding = parseInt(wrapper.css('padding-top'), 10);
                 that.initialPosition = kendo.getOffset(wrapper, 'position');
                 that.resizeDirection = e.currentTarget.prop('className').replace('k-resize-handle k-resize-', '');
@@ -937,6 +951,9 @@
                 $(BODY).css(CURSOR, e.currentTarget.css(CURSOR));
             },
             drag: function (e) {
+                if (this._preventDragging) {
+                    return;
+                }
                 var that = this, wnd = that.owner, wrapper = wnd.wrapper, options = wnd.options, direction = that.resizeDirection, containerOffset = that.containerOffset, initialPosition = that.initialPosition, initialSize = that.initialSize, newWidth, newHeight, windowBottom, windowRight, x = Math.max(e.x.location, 0), y = Math.max(e.y.location, 0);
                 if (direction.indexOf('e') >= 0) {
                     newWidth = x - initialPosition.left - containerOffset.left;
@@ -973,6 +990,9 @@
                 wnd.resize();
             },
             dragend: function (e) {
+                if (this._preventDragging) {
+                    return;
+                }
                 var that = this, wnd = that.owner, wrapper = wnd.wrapper;
                 wrapper.children(KWINDOWRESIZEHANDLES).not(e.currentTarget).show();
                 $(BODY).css(CURSOR, '');
@@ -995,6 +1015,7 @@
         function WindowDragging(wnd, dragHandle) {
             var that = this;
             that.owner = wnd;
+            that._preventDragging = false;
             that._draggable = new Draggable(wnd.wrapper, {
                 filter: dragHandle,
                 group: wnd.wrapper.id + '-moving',
@@ -1008,7 +1029,10 @@
         WindowDragging.prototype = {
             dragstart: function (e) {
                 var wnd = this.owner, element = wnd.element, actions = element.find('.k-window-actions'), containerOffset = kendo.getOffset(wnd.appendTo);
-                wnd.trigger(DRAGSTART);
+                this._preventDragging = wnd.trigger(DRAGSTART);
+                if (this._preventDragging) {
+                    return;
+                }
                 wnd.initialWindowPosition = kendo.getOffset(wnd.wrapper, 'position');
                 wnd.initialPointerPosition = {
                     left: e.x.client,
@@ -1029,6 +1053,9 @@
                 $(BODY).css(CURSOR, e.currentTarget.css(CURSOR));
             },
             drag: function (e) {
+                if (this._preventDragging) {
+                    return;
+                }
                 var wnd = this.owner;
                 var position = wnd.options.position;
                 position.top = Math.max(e.y.client - wnd.startPosition.top, wnd.minTopPosition);
@@ -1045,10 +1072,16 @@
                 $(BODY).css(CURSOR, '');
             },
             dragcancel: function (e) {
+                if (this._preventDragging) {
+                    return;
+                }
                 this._finishDrag();
                 e.currentTarget.closest(KWINDOW).css(this.owner.initialWindowPosition);
             },
             dragend: function () {
+                if (this._preventDragging) {
+                    return;
+                }
                 $(this.owner.wrapper).css(this.owner.options.position).css('transform', '');
                 this._finishDrag();
                 this.owner.trigger(DRAGEND);

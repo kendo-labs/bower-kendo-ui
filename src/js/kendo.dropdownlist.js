@@ -266,25 +266,24 @@
             },
             text: function (text) {
                 var that = this;
-                var dataItem, loweredText;
+                var loweredText;
                 var ignoreCase = that.options.ignoreCase;
                 text = text === null ? '' : text;
                 if (text !== undefined) {
-                    if (typeof text === 'string') {
-                        loweredText = ignoreCase ? text.toLowerCase() : text;
-                        that._select(function (data) {
-                            data = that._text(data);
-                            if (ignoreCase) {
-                                data = (data + '').toLowerCase();
-                            }
-                            return data === loweredText;
-                        });
-                        dataItem = that.dataItem();
-                        if (dataItem) {
-                            text = dataItem;
-                        }
+                    if (typeof text !== 'string') {
+                        that._textAccessor(text);
+                        return;
                     }
-                    that._textAccessor(text);
+                    loweredText = ignoreCase ? text.toLowerCase() : text;
+                    that._select(function (data) {
+                        data = that._text(data);
+                        if (ignoreCase) {
+                            data = (data + '').toLowerCase();
+                        }
+                        return data === loweredText;
+                    }).done(function () {
+                        that._textAccessor(that.dataItem() || text);
+                    });
                 } else {
                     return that._textAccessor();
                 }
@@ -466,22 +465,26 @@
                 var shouldTrigger;
                 if (!that._prevent) {
                     clearTimeout(that._typingTimeout);
+                    var done = function () {
+                        if (support.mobileOS.ios && isIFrame) {
+                            that._change();
+                        } else {
+                            that._blur();
+                        }
+                        that._inputWrapper.removeClass(FOCUSED);
+                        that._prevent = true;
+                        that._open = false;
+                        that.element.blur();
+                    };
                     shouldTrigger = !filtered && focusedItem && that._value(dataItem) !== that.value();
                     if (shouldTrigger && !that.trigger('select', {
                             dataItem: dataItem,
                             item: focusedItem
                         })) {
-                        that._select(focusedItem, !that.dataSource.view().length);
-                    }
-                    if (support.mobileOS.ios && isIFrame) {
-                        that._change();
+                        that._select(focusedItem, !that.dataSource.view().length).done(done);
                     } else {
-                        that._blur();
+                        done();
                     }
-                    that._inputWrapper.removeClass(FOCUSED);
-                    that._prevent = true;
-                    that._open = false;
-                    that.element.blur();
                 }
             },
             _wrapperMousedown: function () {
@@ -570,10 +573,11 @@
                             that._focus(current);
                             return;
                         }
-                        that._select(that._focus(), true);
-                        if (!isPopupVisible) {
-                            that._blur();
-                        }
+                        that._select(that._focus(), true).done(function () {
+                            if (!isPopupVisible) {
+                                that._blur();
+                            }
+                        });
                     }
                 }
                 if (!altKey && !handled && that.filterInput) {
@@ -624,16 +628,21 @@
                 }
                 if (idx !== dataLength) {
                     oldFocusedItem = that._focus();
-                    that._select(normalizeIndex(startIndex + idx, dataLength));
-                    if (that.trigger('select', {
-                            dataItem: that._getElementDataItem(that._focus()),
-                            item: that._focus()
-                        })) {
-                        that._select(oldFocusedItem);
-                    }
-                    if (!that.popup.visible()) {
-                        that._change();
-                    }
+                    that._select(normalizeIndex(startIndex + idx, dataLength)).done(function () {
+                        var done = function () {
+                            if (!that.popup.visible()) {
+                                that._change();
+                            }
+                        };
+                        if (that.trigger('select', {
+                                dataItem: that._getElementDataItem(that._focus()),
+                                item: that._focus()
+                            })) {
+                            that._select(oldFocusedItem).done(done);
+                        } else {
+                            done();
+                        }
+                    });
                 }
             },
             _keypress: function (e) {
@@ -674,19 +683,21 @@
                 return this.listView.dataItemByIndex(this.listView.getElementIndex(element));
             },
             _click: function (e) {
+                var that = this;
                 var item = e.item || $(e.currentTarget);
                 e.preventDefault();
-                if (this.trigger('select', {
-                        dataItem: this._getElementDataItem(item),
+                if (that.trigger('select', {
+                        dataItem: that._getElementDataItem(item),
                         item: item
                     })) {
-                    this.close();
+                    that.close();
                     return;
                 }
-                this._userTriggered = true;
-                this._select(item);
-                this._focusElement(this.wrapper);
-                this._blur();
+                that._userTriggered = true;
+                that._select(item).done(function () {
+                    that._focusElement(that.wrapper);
+                    that._blur();
+                });
             },
             _focusElement: function (element) {
                 var active = activeElement();
@@ -703,16 +714,17 @@
                 }
             },
             _searchByWord: function (word) {
-                if (word) {
-                    var that = this;
-                    var ignoreCase = that.options.ignoreCase;
-                    if (ignoreCase) {
-                        word = word.toLowerCase();
-                    }
-                    that._select(function (dataItem) {
-                        return that._matchText(that._text(dataItem), word);
-                    });
+                if (!word) {
+                    return;
                 }
+                var that = this;
+                var ignoreCase = that.options.ignoreCase;
+                if (ignoreCase) {
+                    word = word.toLowerCase();
+                }
+                that._select(function (dataItem) {
+                    return that._matchText(that._text(dataItem), word);
+                });
             },
             _inputValue: function () {
                 return this.text();
@@ -843,13 +855,14 @@
             _select: function (candidate, keepState) {
                 var that = this;
                 candidate = that._get(candidate);
-                that.listView.select(candidate);
-                if (!keepState && that._state === STATE_FILTER) {
-                    that._state = STATE_ACCEPT;
-                }
-                if (candidate === -1) {
-                    that._selectValue(null);
-                }
+                return that.listView.select(candidate).done(function () {
+                    if (!keepState && that._state === STATE_FILTER) {
+                        that._state = STATE_ACCEPT;
+                    }
+                    if (candidate === -1) {
+                        that._selectValue(null);
+                    }
+                });
             },
             _selectValue: function (dataItem) {
                 var that = this;

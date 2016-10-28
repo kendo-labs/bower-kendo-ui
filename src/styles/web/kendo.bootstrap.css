@@ -302,6 +302,10 @@ textarea.k-textbox:hover,
 html .km-pane-wrapper .k-header {
   background-color: #f5f5f5;
 }
+.k-grid-header,
+.k-grid-header tr:first-child {
+  background: transparent;
+}
 .k-mediaplayer-toolbar {
   background-color: rgba(245, 245, 245, 0.8);
 }
@@ -1642,6 +1646,7 @@ html .km-pane-wrapper .km-widget,
 .k-grid tr:hover {
   background-color: #ebebeb;
 }
+.k-grid .k-filter-row:hover,
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;
 }

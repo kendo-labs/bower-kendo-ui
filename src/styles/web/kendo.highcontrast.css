@@ -1633,6 +1633,7 @@ html .km-pane-wrapper .km-widget,
   background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, rgba(255,255,255,.2) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
 }
+.k-grid .k-filter-row:hover,
 .k-pivot-rowheaders .k-grid tr:hover {
   background: none;
 }

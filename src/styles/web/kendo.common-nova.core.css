@@ -1928,7 +1928,7 @@ input.k-checkbox,
   display: inline-block;
   position: relative;
   padding-left: 20px;
-  vertical-align: middle;
+  vertical-align: text-top;
   line-height: 16px;
   cursor: pointer;
 }
@@ -1948,8 +1948,8 @@ input.k-checkbox,
 .k-checkbox:indeterminate + .k-checkbox-label:after {
   content: "";
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 8px;
+  top: 8px;
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
@@ -1960,7 +1960,6 @@ input.k-checkbox,
   font-size: 16px;
   text-align: center;
   content: " ";
-  margin-left: -2px;
 }
 .k-checkbox:checked + .k-checkbox-label:before {
   content: "\2713";
@@ -2063,10 +2062,10 @@ input.k-checkbox + label {
 .k-rpanel-right + * {
   overflow: auto;
 }
-.k-ie .k-rpanel-left {
+.k-ie9 .k-rpanel-left {
   left: -100%;
 }
-.k-ie .k-rpanel-left.k-rpanel-expanded {
+.k-ie9 .k-rpanel-left.k-rpanel-expanded {
   left: 0;
 }
 .k-rpanel-top {
@@ -3319,6 +3318,7 @@ body .k-datetimepicker .k-select {
   border-color: #C5C5C5;
   background-color: #FFF;
   min-height: 2.04em;
+  padding-right: 22px;
 }
 .k-multiselect-wrap .k-input {
   background-color: transparent;
@@ -4208,22 +4208,27 @@ span.k-tooltip {
   border-style: solid;
   border-width: 6px;
   border-color: transparent;
+  pointer-events: none;
 }
 .k-callout-n {
   top: -12px;
   left: 50%;
+  pointer-events: none;
 }
 .k-callout-w {
   top: 50%;
   left: -12px;
+  pointer-events: none;
 }
 .k-callout-s {
   left: 50%;
   bottom: -12px;
+  pointer-events: none;
 }
 .k-callout-e {
   top: 50%;
   right: -12px;
+  pointer-events: none;
 }
 .k-slider-tooltip .k-callout-n,
 .k-slider-tooltip .k-callout-s {
@@ -5846,15 +5851,17 @@ span.k-tooltip {
 .k-multiselect-wrap .k-input {
   font-size: inherit;
   height: 2em;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .k-multiselect-wrap li {
   border-radius: 1.071em;
   line-height: 1.86em;
+  padding: 0 1.6em 0 .857em;
 }
 .k-multiselect-wrap .k-input,
 .k-multiselect-wrap li {
   margin: .286em 0 .286em .286em;
-  padding: 0 1.6em 0 .857em;
 }
 .k-multiselect-wrap li span {
   margin-right: .4em;
@@ -6230,6 +6237,10 @@ div.k-window-content {
 .k-radio:checked + .k-radio-label:after {
   top: 4px;
   left: 4px;
+}
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+  left: 9px;
+  top: 9px;
 }
 .k-rtl .k-widget .k-dropdown-wrap,
 .k-rtl .k-widget .k-picker-wrap,

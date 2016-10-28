@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.3.1007'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.3.1028'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1733,10 +1733,6 @@
                 type = 'offset';
             }
             var result = element[type]();
-            if (support.mobileOS.android) {
-                result.top -= window.scrollY;
-                result.left -= window.scrollX;
-            }
             if (support.browser.msie && (support.pointers || support.msPointers) && !positioned) {
                 var sign = support.isRtl(element) ? 1 : -1;
                 result.top -= window.pageYOffset + sign * document.documentElement.scrollTop;
@@ -14205,7 +14201,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-seek-w', LAST = '.k-i-seek-e', PREV = '.k-i-arrow-w', NEXT = '.k-i-arrow-e', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-seek-w', LAST = '.k-i-seek-e', PREV = '.k-i-arrow-w', NEXT = '.k-i-arrow-e', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
         function button(template, idx, text, numeric, title) {
             return template({
                 idx: idx,
@@ -17001,6 +16997,7 @@
                 var options = that.options;
                 var dataSource = that.dataSource;
                 var expression = extend({}, dataSource.filter() || {});
+                var clearFilter = expression.filters && expression.filters.length && !filter;
                 var removed = removeFiltersForField(expression, options.dataTextField);
                 if ((filter || removed) && that.trigger('filtering', { filter: filter })) {
                     return;
@@ -17015,11 +17012,15 @@
                 if (that._cascading) {
                     this.listView.setDSFilter(expression);
                 }
-                if (!force) {
-                    dataSource.filter(expression);
-                } else {
-                    dataSource.read(dataSource._mergeState({ filter: expression }));
-                }
+                var dataSourceState = extend({}, {
+                    page: dataSource.page(),
+                    pageSize: clearFilter ? dataSource.options.pageSize : dataSource.pageSize(),
+                    sort: dataSource.sort(),
+                    filter: dataSource.filter(),
+                    group: dataSource.group(),
+                    aggregate: dataSource.aggregate()
+                }, { filter: expression });
+                dataSource[force ? 'read' : 'query'](dataSource._mergeState(dataSourceState));
             },
             _angularElement: function (element, action) {
                 if (!element) {
@@ -17497,9 +17498,10 @@
                 if (candidate === undefined) {
                     return that.selectedIndex;
                 } else {
-                    that._select(candidate);
-                    that._old = that._accessor();
-                    that._oldIndex = that.selectedIndex;
+                    return that._select(candidate).done(function () {
+                        that._old = that._accessor();
+                        that._oldIndex = that.selectedIndex;
+                    });
                 }
             },
             _accessor: function (value, idx) {
@@ -17656,10 +17658,11 @@
                             that._focus(current);
                             return;
                         }
-                        that._select(that._focus(), true);
-                        if (!that.popup.visible()) {
-                            that._blur();
-                        }
+                        that._select(that._focus(), true).done(function () {
+                            if (!that.popup.visible()) {
+                                that._blur();
+                            }
+                        });
                     }
                     e.preventDefault();
                     pressed = true;
@@ -17791,10 +17794,11 @@
                 var parent;
                 if (cascade) {
                     parent = that._parentWidget();
-                    that._cascadeHandlerProxy = proxy(that._cascadeHandler, that);
                     if (!parent) {
                         return;
                     }
+                    that._cascadeHandlerProxy = proxy(that._cascadeHandler, that);
+                    that._cascadeFilterRequests = [];
                     options.autoBind = false;
                     parent.bind('set', function () {
                         that.one('set', function (e) {
@@ -17840,7 +17844,9 @@
             _cascadeChange: function (parent) {
                 var that = this;
                 var value = that._accessor() || that._selectedValue;
-                that._selectedValue = null;
+                if (!that._cascadeFilterRequests.length) {
+                    that._selectedValue = null;
+                }
                 if (that._userTriggered) {
                     that._clearSelection(parent, true);
                 } else if (value) {
@@ -17869,10 +17875,20 @@
                     expressions = that.dataSource.filter() || {};
                     removeFiltersForField(expressions, valueField);
                     var handler = function () {
-                        that.unbind('dataBound', handler);
+                        var currentHandler = that._cascadeFilterRequests.shift();
+                        if (currentHandler) {
+                            that.unbind('dataBound', currentHandler);
+                        }
+                        currentHandler = that._cascadeFilterRequests[0];
+                        if (currentHandler) {
+                            that.first('dataBound', currentHandler);
+                        }
                         that._cascadeChange(parent);
                     };
-                    that.first('dataBound', handler);
+                    that._cascadeFilterRequests.push(handler);
+                    if (that._cascadeFilterRequests.length === 1) {
+                        that.first('dataBound', handler);
+                    }
                     that._cascading = true;
                     that._filterSource({
                         field: valueField,
@@ -18085,15 +18101,16 @@
                 if (indices.length === 1 && indices[0] === -1) {
                     indices = [];
                 }
+                var deferred = $.Deferred().resolve();
                 var filtered = that.isFiltered();
                 if (filtered && !singleSelection && that._deselectFiltered(indices)) {
-                    return;
+                    return deferred;
                 }
                 if (singleSelection && !filtered && $.inArray(last(indices), selectedIndices) !== -1) {
                     if (that._dataItems.length && that._view.length) {
                         that._dataItems = [that._view[selectedIndices[0]].item];
                     }
-                    return;
+                    return deferred;
                 }
                 result = that._deselect(indices);
                 removed = result.removed;
@@ -18111,6 +18128,7 @@
                         removed: removed
                     });
                 }
+                return deferred;
             },
             removeAt: function (position) {
                 this._selectedIndices.splice(position, 1);
@@ -20309,21 +20327,23 @@
             },
             _click: function (e) {
                 var item = e.item;
-                var element = this.element;
-                var dataItem = this.listView.dataItemByIndex(this.listView.getElementIndex(item));
+                var that = this;
+                var element = that.element;
+                var dataItem = that.listView.dataItemByIndex(that.listView.getElementIndex(item));
                 e.preventDefault();
-                this._active = true;
-                if (this.trigger('select', {
+                that._active = true;
+                if (that.trigger('select', {
                         dataItem: dataItem,
                         item: item
                     })) {
-                    this.close();
+                    that.close();
                     return;
                 }
-                this._oldText = element.val();
-                this._select(item);
-                this._blur();
-                caret(element, element.val().length);
+                that._oldText = element.val();
+                that._select(item).done(function () {
+                    that._blur();
+                    caret(element, element.val().length);
+                });
             },
             _clearText: $.noop,
             _resetFocusItem: function () {
@@ -20565,9 +20585,11 @@
                 }, that.options.delay);
             },
             _select: function (candidate) {
-                this._active = true;
-                this.listView.select(candidate);
-                this._active = false;
+                var that = this;
+                that._active = true;
+                return that.listView.select(candidate).done(function () {
+                    that._active = false;
+                });
             },
             _loader: function () {
                 this._loading = $('<span class="k-icon k-i-loading" style="display:none"></span>').insertAfter(this.element);
@@ -20851,25 +20873,24 @@
             },
             text: function (text) {
                 var that = this;
-                var dataItem, loweredText;
+                var loweredText;
                 var ignoreCase = that.options.ignoreCase;
                 text = text === null ? '' : text;
                 if (text !== undefined) {
-                    if (typeof text === 'string') {
-                        loweredText = ignoreCase ? text.toLowerCase() : text;
-                        that._select(function (data) {
-                            data = that._text(data);
-                            if (ignoreCase) {
-                                data = (data + '').toLowerCase();
-                            }
-                            return data === loweredText;
-                        });
-                        dataItem = that.dataItem();
-                        if (dataItem) {
-                            text = dataItem;
-                        }
+                    if (typeof text !== 'string') {
+                        that._textAccessor(text);
+                        return;
                     }
-                    that._textAccessor(text);
+                    loweredText = ignoreCase ? text.toLowerCase() : text;
+                    that._select(function (data) {
+                        data = that._text(data);
+                        if (ignoreCase) {
+                            data = (data + '').toLowerCase();
+                        }
+                        return data === loweredText;
+                    }).done(function () {
+                        that._textAccessor(that.dataItem() || text);
+                    });
                 } else {
                     return that._textAccessor();
                 }
@@ -21051,22 +21072,26 @@
                 var shouldTrigger;
                 if (!that._prevent) {
                     clearTimeout(that._typingTimeout);
+                    var done = function () {
+                        if (support.mobileOS.ios && isIFrame) {
+                            that._change();
+                        } else {
+                            that._blur();
+                        }
+                        that._inputWrapper.removeClass(FOCUSED);
+                        that._prevent = true;
+                        that._open = false;
+                        that.element.blur();
+                    };
                     shouldTrigger = !filtered && focusedItem && that._value(dataItem) !== that.value();
                     if (shouldTrigger && !that.trigger('select', {
                             dataItem: dataItem,
                             item: focusedItem
                         })) {
-                        that._select(focusedItem, !that.dataSource.view().length);
-                    }
-                    if (support.mobileOS.ios && isIFrame) {
-                        that._change();
+                        that._select(focusedItem, !that.dataSource.view().length).done(done);
                     } else {
-                        that._blur();
+                        done();
                     }
-                    that._inputWrapper.removeClass(FOCUSED);
-                    that._prevent = true;
-                    that._open = false;
-                    that.element.blur();
                 }
             },
             _wrapperMousedown: function () {
@@ -21155,10 +21180,11 @@
                             that._focus(current);
                             return;
                         }
-                        that._select(that._focus(), true);
-                        if (!isPopupVisible) {
-                            that._blur();
-                        }
+                        that._select(that._focus(), true).done(function () {
+                            if (!isPopupVisible) {
+                                that._blur();
+                            }
+                        });
                     }
                 }
                 if (!altKey && !handled && that.filterInput) {
@@ -21209,16 +21235,21 @@
                 }
                 if (idx !== dataLength) {
                     oldFocusedItem = that._focus();
-                    that._select(normalizeIndex(startIndex + idx, dataLength));
-                    if (that.trigger('select', {
-                            dataItem: that._getElementDataItem(that._focus()),
-                            item: that._focus()
-                        })) {
-                        that._select(oldFocusedItem);
-                    }
-                    if (!that.popup.visible()) {
-                        that._change();
-                    }
+                    that._select(normalizeIndex(startIndex + idx, dataLength)).done(function () {
+                        var done = function () {
+                            if (!that.popup.visible()) {
+                                that._change();
+                            }
+                        };
+                        if (that.trigger('select', {
+                                dataItem: that._getElementDataItem(that._focus()),
+                                item: that._focus()
+                            })) {
+                            that._select(oldFocusedItem).done(done);
+                        } else {
+                            done();
+                        }
+                    });
                 }
             },
             _keypress: function (e) {
@@ -21259,19 +21290,21 @@
                 return this.listView.dataItemByIndex(this.listView.getElementIndex(element));
             },
             _click: function (e) {
+                var that = this;
                 var item = e.item || $(e.currentTarget);
                 e.preventDefault();
-                if (this.trigger('select', {
-                        dataItem: this._getElementDataItem(item),
+                if (that.trigger('select', {
+                        dataItem: that._getElementDataItem(item),
                         item: item
                     })) {
-                    this.close();
+                    that.close();
                     return;
                 }
-                this._userTriggered = true;
-                this._select(item);
-                this._focusElement(this.wrapper);
-                this._blur();
+                that._userTriggered = true;
+                that._select(item).done(function () {
+                    that._focusElement(that.wrapper);
+                    that._blur();
+                });
             },
             _focusElement: function (element) {
                 var active = activeElement();
@@ -21288,16 +21321,17 @@
                 }
             },
             _searchByWord: function (word) {
-                if (word) {
-                    var that = this;
-                    var ignoreCase = that.options.ignoreCase;
-                    if (ignoreCase) {
-                        word = word.toLowerCase();
-                    }
-                    that._select(function (dataItem) {
-                        return that._matchText(that._text(dataItem), word);
-                    });
+                if (!word) {
+                    return;
                 }
+                var that = this;
+                var ignoreCase = that.options.ignoreCase;
+                if (ignoreCase) {
+                    word = word.toLowerCase();
+                }
+                that._select(function (dataItem) {
+                    return that._matchText(that._text(dataItem), word);
+                });
             },
             _inputValue: function () {
                 return this.text();
@@ -21428,13 +21462,14 @@
             _select: function (candidate, keepState) {
                 var that = this;
                 candidate = that._get(candidate);
-                that.listView.select(candidate);
-                if (!keepState && that._state === STATE_FILTER) {
-                    that._state = STATE_ACCEPT;
-                }
-                if (candidate === -1) {
-                    that._selectValue(null);
-                }
+                return that.listView.select(candidate).done(function () {
+                    if (!keepState && that._state === STATE_FILTER) {
+                        that._state = STATE_ACCEPT;
+                    }
+                    if (candidate === -1) {
+                        that._selectValue(null);
+                    }
+                });
             },
             _selectValue: function (dataItem) {
                 var that = this;
@@ -21976,15 +22011,17 @@
                 return candidate;
             },
             _select: function (candidate, keepState) {
-                candidate = this._get(candidate);
+                var that = this;
+                candidate = that._get(candidate);
                 if (candidate === -1) {
-                    this.input[0].value = '';
-                    this._accessor('');
+                    that.input[0].value = '';
+                    that._accessor('');
                 }
-                this.listView.select(candidate);
-                if (!keepState && this._state === STATE_FILTER) {
-                    this._state = STATE_ACCEPT;
-                }
+                return that.listView.select(candidate).done(function () {
+                    if (!keepState && that._state === STATE_FILTER) {
+                        that._state = STATE_ACCEPT;
+                    }
+                });
             },
             _selectValue: function (dataItem) {
                 var idx = this.listView.select();
@@ -22084,13 +22121,14 @@
                         data = (data + '').toLowerCase();
                     }
                     return data === loweredText;
+                }).done(function () {
+                    if (that.selectedIndex < 0) {
+                        that._accessor(text);
+                        input.value = text;
+                        that._triggerCascade();
+                    }
+                    that._prev = input.value;
                 });
-                if (that.selectedIndex < 0) {
-                    that._accessor(text);
-                    input.value = text;
-                    that._triggerCascade();
-                }
-                that._prev = input.value;
             },
             toggle: function (toggle) {
                 this._toggle(toggle, true);
@@ -22129,19 +22167,21 @@
                 });
             },
             _click: function (e) {
+                var that = this;
                 var item = e.item;
-                var dataItem = this.listView.dataItemByIndex(this.listView.getElementIndex(item));
+                var dataItem = that.listView.dataItemByIndex(that.listView.getElementIndex(item));
                 e.preventDefault();
-                if (this.trigger('select', {
+                if (that.trigger('select', {
                         dataItem: dataItem,
                         item: item
                     })) {
-                    this.close();
+                    that.close();
                     return;
                 }
-                this._userTriggered = true;
-                this._select(item);
-                this._blur();
+                that._userTriggered = true;
+                that._select(item).done(function () {
+                    that._blur();
+                });
             },
             _inputValue: function () {
                 return this.text();
@@ -22590,17 +22630,20 @@
                 if (customIndex === undefined && (state === ACCEPT || state === FILTER)) {
                     customIndex = that._optionsMap[value];
                 }
-                if (customIndex !== undefined) {
+                var done = function () {
+                    that.currentTag(null);
+                    that._change();
+                    that._close();
+                };
+                if (customIndex === undefined) {
+                    listView.select(listView.select()[position]).done(done);
+                } else {
                     option = that.element[0].children[customIndex];
                     option.selected = false;
                     listView.removeAt(position);
                     tag.remove();
-                } else {
-                    listView.select(listView.select()[position]);
+                    done();
                 }
-                that.currentTag(null);
-                that._change();
-                that._close();
             },
             _tagListClick: function (e) {
                 var target = $(e.currentTarget);
@@ -22821,11 +22864,13 @@
                 }
             },
             _click: function (e) {
+                var that = this;
                 var item = e.item;
                 e.preventDefault();
-                this._select(item);
-                this._change();
-                this._close();
+                that._select(item).done(function () {
+                    that._change();
+                    that._close();
+                });
             },
             _keydown: function (e) {
                 var that = this;
@@ -22876,9 +22921,10 @@
                         that.currentTag(tag[0] ? tag : null);
                     }
                 } else if (key === keys.ENTER && visible) {
-                    that._select(current);
-                    that._change();
-                    that._close();
+                    that._select(current).done(function () {
+                        that._change();
+                        that._close();
+                    });
                     e.preventDefault();
                 } else if (key === keys.ESC) {
                     if (visible) {
@@ -23140,8 +23186,9 @@
                 that._placeholder();
             },
             _select: function (candidate) {
+                var resolved = $.Deferred().resolve();
                 if (!candidate) {
-                    return;
+                    return resolved;
                 }
                 var that = this;
                 var listView = that.listView;
@@ -23151,21 +23198,22 @@
                     that._state = '';
                 }
                 if (!that._allowSelection()) {
-                    return;
+                    return resolved;
                 }
                 if (that.trigger(isSelected ? DESELECT : SELECT, {
                         dataItem: dataItem,
                         item: candidate
                     })) {
                     that._close();
-                    return;
+                    return resolved;
                 }
-                listView.select(candidate);
-                that._placeholder();
-                if (that._state === FILTER) {
-                    that._state = ACCEPT;
-                    listView.skipUpdate(true);
-                }
+                return listView.select(candidate).done(function () {
+                    that._placeholder();
+                    if (that._state === FILTER) {
+                        that._state = ACCEPT;
+                        listView.skipUpdate(true);
+                    }
+                });
             },
             _input: function () {
                 var that = this;
@@ -24192,7 +24240,7 @@
             } else {
                 buttonCssClass = isHorizontal ? 'k-i-arrow-w' : 'k-i-arrow-s';
             }
-            return '<a class=\'k-button k-button-' + type + '\' aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
+            return '<a class=\'k-button k-button-' + type + '\' ' + 'title=\'' + options[type + 'ButtonTitle'] + '\' ' + 'aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
         }
         function createSliderItems(options, distance) {
             var result = '<ul class=\'k-reset k-slider-items\'>', count = math.floor(round(distance / options.smallStep)) + 1, i;
@@ -26188,7 +26236,7 @@
         });
         function buttonHtml(direction, text) {
             var className = 'k-i-arrow-' + (direction === 'increase' ? 'n' : 's');
-            return '<span unselectable="on" class="k-link k-link-' + direction + '" aria-label="' + text + '"><span unselectable="on" class="k-icon ' + className + '"></span></span>';
+            return '<span unselectable="on" class="k-link k-link-' + direction + '" aria-label="' + text + '" title="' + text + '">' + '<span unselectable="on" class="k-icon ' + className + '"></span>' + '</span>';
         }
         function truncate(value, precision) {
             var parts = parseFloat(value, 10).toString().split(POINT);
@@ -29559,7 +29607,7 @@
                 this._resizeHandler = proxy(this.resize, this, true);
                 $(window).on('resize' + NS, this._resizeHandler);
             },
-            _mediaQuery: '@media (max-width: #= breakpoint-1 #px) {' + '.#= guid #.k-rpanel-animate.k-rpanel-left,' + '.#= guid #.k-rpanel-animate.k-rpanel-right {' + '-webkit-transition: -webkit-transform .2s ease-out;' + '-ms-transition: -ms-transform .2s ease-out;' + 'transition: transform .2s ease-out;' + '} ' + '.#= guid #.k-rpanel-top {' + 'overflow: hidden;' + '}' + '.#= guid #.k-rpanel-animate.k-rpanel-top {' + '-webkit-transition: max-height .2s linear;' + '-ms-transition: max-height .2s linear;' + 'transition: max-height .2s linear;' + '}' + '} ' + '@media (min-width: #= breakpoint #px) {' + '#= toggleButton # { display: none; } ' + '.#= guid #.k-rpanel-left { float: left; } ' + '.#= guid #.k-rpanel-right { float: right; } ' + '.#= guid #.k-rpanel-left, .#= guid #.k-rpanel-right {' + 'position: relative;' + '-webkit-transform: translateX(0);' + '-ms-transform: translateX(0);' + 'transform: translateX(0);' + '-webkit-transform: translateX(0) translateZ(0);' + '-ms-transform: translateX(0) translateZ(0);' + 'transform: translateX(0) translateZ(0);' + '} ' + '.#= guid #.k-rpanel-top { max-height: none; }' + '}',
+            _mediaQuery: '@media (max-width: #= breakpoint-1 #px) {' + '.#= guid #.k-rpanel-animate.k-rpanel-left,' + '.#= guid #.k-rpanel-animate.k-rpanel-right {' + '-webkit-transition: -webkit-transform .2s ease-out;' + '-ms-transition: -ms-transform .2s ease-out;' + 'transition: transform .2s ease-out;' + '} ' + '.#= guid #.k-rpanel-top {' + 'overflow: hidden;' + '}' + '.#= guid #.k-rpanel-animate.k-rpanel-top {' + '-webkit-transition: max-height .2s linear;' + '-ms-transition: max-height .2s linear;' + 'transition: max-height .2s linear;' + '}' + '} ' + '@media (min-width: #= breakpoint #px) {' + '#= toggleButton # { display: none; } ' + '.#= guid #.k-rpanel-left { float: left; } ' + '.#= guid #.k-rpanel-right { float: right; } ' + '.#= guid #.k-rpanel-left, .#= guid #.k-rpanel-right {' + 'position: relative;' + '-webkit-transform: translateX(0);' + '-ms-transform: translateX(0);' + 'transform: translateX(0);' + '-webkit-transform: translateX(0) translateZ(0);' + '-ms-transform: translateX(0) translateZ(0);' + 'transform: translateX(0) translateZ(0);' + '} ' + '.k-ie9 .#= guid #.k-rpanel-left { left: 0; } ' + '.#= guid #.k-rpanel-top { max-height: none; }' + '}',
             _registerBreakpoint: function () {
                 var options = this.options;
                 this._registerStyle(kendo.template(this._mediaQuery)({
@@ -32428,7 +32476,8 @@
                     }
                 });
             },
-            _closeClick: function () {
+            _closeClick: function (e) {
+                e.preventDefault();
                 this.close();
             },
             _closeKeyHandler: function (e) {
@@ -32786,7 +32835,7 @@
         var Dialog = DialogBase.extend({
             options: {
                 name: 'Dialog',
-                messages: { close: '' }
+                messages: { close: 'Close' }
             }
         });
         kendo.ui.plugin(Dialog);
@@ -32928,7 +32977,7 @@
             wrapper: template('<div class=\'k-widget k-dialog k-window\' role=\'dialog\' />'),
             action: template('<li class=\'k-button# if (data.primary) { # k-primary# } #\' role=\'button\'></li>'),
             titlebar: template('<div class=\'k-window-titlebar k-header\'>' + '<span class=\'k-dialog-title\'>#= title #</span>' + '</div>'),
-            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' aria-label=\'Close\' tabindex=\'-1\'><span class=\'k-font-icon k-i-x\'>#= messages.close #</span></a>'),
+            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-font-icon k-i-x\'></span></a>'),
             actionbar: template('<ul class=\'k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
             overlay: '<div class=\'k-overlay\' />',
             alertWrapper: template('<div class=\'k-widget k-dialog k-window k-dialog-centered\' role=\'alertdialog\' />'),
@@ -32995,7 +33044,7 @@
         depends: ['draganddrop']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-minimize,.k-window-actions .k-i-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-minimize,.k-window-actions .k-i-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
         function defined(x) {
             return typeof x != 'undefined';
         }
@@ -33240,6 +33289,7 @@
                 MINIMIZE,
                 MAXIMIZE,
                 REFRESH,
+                RESIZESTART,
                 RESIZE,
                 RESIZEEND,
                 DRAGSTART,
@@ -33285,7 +33335,9 @@
                 visible: null,
                 height: null,
                 width: null,
-                appendTo: 'body'
+                appendTo: 'body',
+                isMaximized: false,
+                isMinimized: false
             },
             _closable: function () {
                 return $.inArray('close', $.map(this.options.actions, function (x) {
@@ -33689,6 +33741,9 @@
                 });
                 return this;
             },
+            isMaximized: function () {
+                return this.options.isMaximized;
+            },
             minimize: function () {
                 this._sizingAction('minimize', function () {
                     var that = this;
@@ -33700,6 +33755,9 @@
                     that.options.isMinimized = true;
                 });
                 return this;
+            },
+            isMinimized: function () {
+                return this.options.isMinimized;
             },
             pin: function (force) {
                 var that = this, win = $(window), wrapper = that.wrapper, top = parseInt(wrapper.css('top'), 10), left = parseInt(wrapper.css('left'), 10);
@@ -33866,6 +33924,7 @@
         function WindowResizing(wnd) {
             var that = this;
             that.owner = wnd;
+            that._preventDragging = false;
             that._draggable = new Draggable(wnd.wrapper, {
                 filter: '>' + KWINDOWRESIZEHANDLES,
                 group: wnd.wrapper.id + '-resizing',
@@ -33887,6 +33946,10 @@
                 var that = this;
                 var wnd = that.owner;
                 var wrapper = wnd.wrapper;
+                that._preventDragging = wnd.trigger(RESIZESTART);
+                if (that._preventDragging) {
+                    return;
+                }
                 that.elementPadding = parseInt(wrapper.css('padding-top'), 10);
                 that.initialPosition = kendo.getOffset(wrapper, 'position');
                 that.resizeDirection = e.currentTarget.prop('className').replace('k-resize-handle k-resize-', '');
@@ -33899,6 +33962,9 @@
                 $(BODY).css(CURSOR, e.currentTarget.css(CURSOR));
             },
             drag: function (e) {
+                if (this._preventDragging) {
+                    return;
+                }
                 var that = this, wnd = that.owner, wrapper = wnd.wrapper, options = wnd.options, direction = that.resizeDirection, containerOffset = that.containerOffset, initialPosition = that.initialPosition, initialSize = that.initialSize, newWidth, newHeight, windowBottom, windowRight, x = Math.max(e.x.location, 0), y = Math.max(e.y.location, 0);
                 if (direction.indexOf('e') >= 0) {
                     newWidth = x - initialPosition.left - containerOffset.left;
@@ -33935,6 +34001,9 @@
                 wnd.resize();
             },
             dragend: function (e) {
+                if (this._preventDragging) {
+                    return;
+                }
                 var that = this, wnd = that.owner, wrapper = wnd.wrapper;
                 wrapper.children(KWINDOWRESIZEHANDLES).not(e.currentTarget).show();
                 $(BODY).css(CURSOR, '');
@@ -33957,6 +34026,7 @@
         function WindowDragging(wnd, dragHandle) {
             var that = this;
             that.owner = wnd;
+            that._preventDragging = false;
             that._draggable = new Draggable(wnd.wrapper, {
                 filter: dragHandle,
                 group: wnd.wrapper.id + '-moving',
@@ -33970,7 +34040,10 @@
         WindowDragging.prototype = {
             dragstart: function (e) {
                 var wnd = this.owner, element = wnd.element, actions = element.find('.k-window-actions'), containerOffset = kendo.getOffset(wnd.appendTo);
-                wnd.trigger(DRAGSTART);
+                this._preventDragging = wnd.trigger(DRAGSTART);
+                if (this._preventDragging) {
+                    return;
+                }
                 wnd.initialWindowPosition = kendo.getOffset(wnd.wrapper, 'position');
                 wnd.initialPointerPosition = {
                     left: e.x.client,
@@ -33991,6 +34064,9 @@
                 $(BODY).css(CURSOR, e.currentTarget.css(CURSOR));
             },
             drag: function (e) {
+                if (this._preventDragging) {
+                    return;
+                }
                 var wnd = this.owner;
                 var position = wnd.options.position;
                 position.top = Math.max(e.y.client - wnd.startPosition.top, wnd.minTopPosition);
@@ -34007,10 +34083,16 @@
                 $(BODY).css(CURSOR, '');
             },
             dragcancel: function (e) {
+                if (this._preventDragging) {
+                    return;
+                }
                 this._finishDrag();
                 e.currentTarget.closest(KWINDOW).css(this.owner.initialWindowPosition);
             },
             dragend: function () {
+                if (this._preventDragging) {
+                    return;
+                }
                 $(this.owner.wrapper).css(this.owner.options.position).css('transform', '');
                 this._finishDrag();
                 this.owner.trigger(DRAGEND);
@@ -34197,6 +34279,9 @@
                 unchanged: unchanged
             };
         }
+        function isActivePromise(promise) {
+            return promise && promise.state() !== 'resolved';
+        }
         var VirtualList = DataBoundWidget.extend({
             init: function (element, options) {
                 var that = this;
@@ -34220,7 +34305,6 @@
                 that._selectedDataItems = [];
                 that._selectedIndexes = [];
                 that._rangesList = {};
-                that._activeDeferred = null;
                 that._promisesList = [];
                 that._optionID = kendo.guid();
                 that._templates();
@@ -34385,13 +34469,11 @@
                     value = [];
                 }
                 value = toArray(value);
-                if (that.options.selectable === 'multiple' && that.select().length && value.length) {
-                    that.select(-1);
-                }
                 if (!that._valueDeferred || that._valueDeferred.state() === 'resolved') {
                     that._valueDeferred = $.Deferred();
                 }
-                if (!value.length) {
+                var shouldClear = that.options.selectable === 'multiple' && that.select().length && value.length;
+                if (shouldClear || !value.length) {
                     that.select(-1);
                 }
                 that._values = value;
@@ -34519,7 +34601,7 @@
             },
             prefetch: function (indexes) {
                 var that = this, take = this.itemCount, isEmptyList = !that._promisesList.length;
-                if (!that._activeDeferred) {
+                if (!isActivePromise(that._activeDeferred)) {
                     that._activeDeferred = $.Deferred();
                     that._promisesList = [];
                 }
@@ -34528,9 +34610,8 @@
                 });
                 if (isEmptyList) {
                     $.when.apply($, that._promisesList).done(function () {
-                        that._activeDeferred.resolve();
-                        that._activeDeferred = null;
                         that._promisesList = [];
+                        that._activeDeferred.resolve();
                     });
                 }
                 return that._activeDeferred;
@@ -34690,9 +34771,12 @@
                 }
             },
             select: function (candidate) {
-                var that = this, indices, singleSelection = that.options.selectable !== 'multiple', prefetchStarted = !!that._activeDeferred, filtered = this.isFiltered(), isAlreadySelected, deferred, result, removed = [];
+                var that = this, indices, singleSelection = that.options.selectable !== 'multiple', prefetchStarted = isActivePromise(that._activeDeferred), filtered = this.isFiltered(), isAlreadySelected, deferred, result, removed = [];
                 if (candidate === undefined) {
                     return that._selectedIndexes.slice();
+                }
+                if (!that._selectDeferred || that._selectDeferred.state() === 'resolved') {
+                    that._selectDeferred = $.Deferred();
                 }
                 indices = that._getIndecies(candidate);
                 isAlreadySelected = singleSelection && !filtered && lastFrom(indices) === lastFrom(this._selectedIndexes);
@@ -34702,7 +34786,7 @@
                     if (that._valueDeferred) {
                         that._valueDeferred.resolve();
                     }
-                    return;
+                    return that._selectDeferred.resolve().promise();
                 }
                 if (indices.length === 1 && indices[0] === -1) {
                     indices = [];
@@ -34711,7 +34795,6 @@
                 removed = result.removed;
                 indices = result.indices;
                 if (singleSelection) {
-                    that._activeDeferred = null;
                     prefetchStarted = false;
                     if (indices.length) {
                         indices = [lastFrom(indices)];
@@ -34724,6 +34807,7 @@
                     if (that._valueDeferred) {
                         that._valueDeferred.resolve();
                     }
+                    that._selectDeferred.resolve();
                 };
                 deferred = that.prefetch(indices);
                 if (!prefetchStarted) {
@@ -34733,6 +34817,7 @@
                         done();
                     }
                 }
+                return that._selectDeferred.promise();
             },
             bound: function (bound) {
                 if (bound === undefined) {

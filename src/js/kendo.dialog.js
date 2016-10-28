@@ -190,7 +190,8 @@
                     }
                 });
             },
-            _closeClick: function () {
+            _closeClick: function (e) {
+                e.preventDefault();
                 this.close();
             },
             _closeKeyHandler: function (e) {
@@ -548,7 +549,7 @@
         var Dialog = DialogBase.extend({
             options: {
                 name: 'Dialog',
-                messages: { close: '' }
+                messages: { close: 'Close' }
             }
         });
         kendo.ui.plugin(Dialog);
@@ -690,7 +691,7 @@
             wrapper: template('<div class=\'k-widget k-dialog k-window\' role=\'dialog\' />'),
             action: template('<li class=\'k-button# if (data.primary) { # k-primary# } #\' role=\'button\'></li>'),
             titlebar: template('<div class=\'k-window-titlebar k-header\'>' + '<span class=\'k-dialog-title\'>#= title #</span>' + '</div>'),
-            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' aria-label=\'Close\' tabindex=\'-1\'><span class=\'k-font-icon k-i-x\'>#= messages.close #</span></a>'),
+            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-font-icon k-i-x\'></span></a>'),
             actionbar: template('<ul class=\'k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
             overlay: '<div class=\'k-overlay\' />',
             alertWrapper: template('<div class=\'k-widget k-dialog k-window k-dialog-centered\' role=\'alertdialog\' />'),

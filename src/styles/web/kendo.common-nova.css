@@ -1928,7 +1928,7 @@ input.k-checkbox,
   display: inline-block;
   position: relative;
   padding-left: 20px;
-  vertical-align: middle;
+  vertical-align: text-top;
   line-height: 16px;
   cursor: pointer;
 }
@@ -1948,8 +1948,8 @@ input.k-checkbox,
 .k-checkbox:indeterminate + .k-checkbox-label:after {
   content: "";
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 8px;
+  top: 8px;
   -webkit-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
@@ -1960,7 +1960,6 @@ input.k-checkbox,
   font-size: 16px;
   text-align: center;
   content: " ";
-  margin-left: -2px;
 }
 .k-checkbox:checked + .k-checkbox-label:before {
   content: "\2713";
@@ -2063,10 +2062,10 @@ input.k-checkbox + label {
 .k-rpanel-right + * {
   overflow: auto;
 }
-.k-ie .k-rpanel-left {
+.k-ie9 .k-rpanel-left {
   left: -100%;
 }
-.k-ie .k-rpanel-left.k-rpanel-expanded {
+.k-ie9 .k-rpanel-left.k-rpanel-expanded {
   left: 0;
 }
 .k-rpanel-top {
@@ -4437,11 +4436,13 @@ button.k-gantt-toggle {
   text-align: left;
   position: relative;
   padding: .3em 5em .3em .3em;
+  cursor: move;
 }
 .k-field-actions {
   position: absolute;
   right: 2px;
   top: 3px;
+  cursor: pointer;
 }
 /*IE7 requires the following style to be applied to cells directly*/
 .k-pivot .k-grid td {
@@ -5254,6 +5255,7 @@ body .k-datetimepicker .k-select {
   border-color: #C5C5C5;
   background-color: #FFF;
   min-height: 2.04em;
+  padding-right: 22px;
 }
 .k-multiselect-wrap .k-input {
   background-color: transparent;
@@ -8083,22 +8085,27 @@ span.k-tooltip {
   border-style: solid;
   border-width: 6px;
   border-color: transparent;
+  pointer-events: none;
 }
 .k-callout-n {
   top: -12px;
   left: 50%;
+  pointer-events: none;
 }
 .k-callout-w {
   top: 50%;
   left: -12px;
+  pointer-events: none;
 }
 .k-callout-s {
   left: 50%;
   bottom: -12px;
+  pointer-events: none;
 }
 .k-callout-e {
   top: 50%;
   right: -12px;
+  pointer-events: none;
 }
 .k-slider-tooltip .k-callout-n,
 .k-slider-tooltip .k-callout-s {
@@ -9684,6 +9691,10 @@ div.k-navigator .k-navigator-w {
 .km-pane-wrapper .k-grid-edit-form .k-grid-cancel,
 .km-pane-wrapper .k-scheduler-edit-form .k-scheduler-cancel {
   float: left;
+}
+.km-pane-wrapper .k-grid-edit-row .k-textbox {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 /* Actiosheet Styles */
 .km-pane-wrapper .k-scheduler-edit-form .k-scheduler-delete,
@@ -11745,8 +11756,8 @@ div.k-spreadsheet-window {
 }
 .k-spreadsheet-window .k-page-orientation {
   position: absolute;
-  right: 4em;
-  top: 22%;
+  right: 2em;
+  top: 25%;
   width: 64px;
   height: 92px;
   border-width: 1px;
@@ -11766,7 +11777,7 @@ div.k-spreadsheet-window {
   margin-right: -1px;
 }
 .k-spreadsheet-window .k-page-landscape {
-  top: 26%;
+  top: 29%;
   width: 92px;
   height: 64px;
 }
@@ -12557,15 +12568,17 @@ div.k-spreadsheet-window {
 .k-multiselect-wrap .k-input {
   font-size: inherit;
   height: 2em;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .k-multiselect-wrap li {
   border-radius: 1.071em;
   line-height: 1.86em;
+  padding: 0 1.6em 0 .857em;
 }
 .k-multiselect-wrap .k-input,
 .k-multiselect-wrap li {
   margin: .286em 0 .286em .286em;
-  padding: 0 1.6em 0 .857em;
 }
 .k-multiselect-wrap li span {
   margin-right: .4em;
@@ -12996,31 +13009,31 @@ form.k-filter-menu .k-textbox {
   background-position: -80px -96px;
 }
 .k-toolbar .k-state-active .k-justifyLeft,
-.k-toolbar .k-button:active .k-justifyLeft {
+.k-toolbar .k-button:active:not(.k-state-disabled) .k-justifyLeft {
   background-position: -265px -144px;
 }
 .k-toolbar .k-state-active .k-justifyCenter,
-.k-toolbar .k-button:active .k-justifyCenter {
+.k-toolbar .k-button:active:not(.k-state-disabled) .k-justifyCenter {
   background-position: -265px -168px;
 }
 .k-toolbar .k-state-active .k-justifyRight,
-.k-toolbar .k-button:active .k-justifyRight {
+.k-toolbar .k-button:active:not(.k-state-disabled) .k-justifyRight {
   background-position: -265px -192px;
 }
 .k-toolbar .k-state-active .k-bold,
-.k-toolbar .k-button:active .k-bold {
+.k-toolbar .k-button:active:not(.k-state-disabled) .k-bold {
   background-position: -265px 0;
 }
 .k-toolbar .k-state-active .k-italic,
-.k-toolbar .k-button:active .k-italic {
+.k-toolbar .k-button:active:not(.k-state-disabled) .k-italic {
   background-position: -265px -24px;
 }
 .k-toolbar .k-state-active .k-underline,
-.k-toolbar .k-button:active .k-underline {
+.k-toolbar .k-button:active:not(.k-state-disabled) .k-underline {
   background-position: -265px -48px;
 }
 .k-toolbar .k-state-active .k-i-more,
-.k-toolbar .k-button:active .k-i-more,
+.k-toolbar .k-button:active:not(.k-state-disabled) .k-i-more,
 .k-toolbar .k-state-border-down .k-i-more,
 .k-toolbar .k-state-border-up .k-i-more,
 .k-toolbar .k-state-border-down:not(.k-state-disabled):hover .k-i-more,
@@ -13502,6 +13515,10 @@ form.k-filter-menu .k-textbox {
   top: 4px;
   left: 4px;
 }
+.k-checkbox:indeterminate + .k-checkbox-label:after {
+  left: 9px;
+  top: 9px;
+}
 .k-rtl .k-widget .k-dropdown-wrap,
 .k-rtl .k-widget .k-picker-wrap,
 .k-rtl .k-widget .k-numeric-wrap {
@@ -13555,7 +13572,7 @@ form.k-filter-menu .k-textbox {
   min-width: 2.429em;
 }
 .km-pane-wrapper .k-scheduler-views {
-  width: 8em;
+  width: auto;
 }
 .km-pane-wrapper .k-scheduler-toolbar > ul > li {
   border-width: 1px 1px 1px 0;
@@ -13577,7 +13594,7 @@ li.k-item.k-last.k-state-selected {
   padding: 0;
 }
 .k-spreadsheet-window .k-page-orientation {
-  top: 26%;
+  top: 27%;
 }
 .k-spreadsheet-window .k-page-landscape {
   top: 30%;
