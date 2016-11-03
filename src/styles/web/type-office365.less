@@ -2335,8 +2335,7 @@ html .km-pane-wrapper .km-widget,
 // Retina sprite
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2),
        only screen and (min-device-pixel-ratio: 1.2) {
-    .k-icon:not(.k-loading),
-    .k-icon:not(.k-i-loading),
+    .k-icon:not(.k-loading):not(.k-i-loading),
     .k-grouping-dropclue,
     .k-drop-hint,
     .k-callout,
@@ -2746,11 +2745,6 @@ input.k-textbox:focus {
     .k-footer {
         border-color: @widget-border-color;
     }
-}
-
-.k-popup.k-context-menu.k-group .k-state-hover {
-    color: @link-text-color;
-    background-color: @widget-background-color;
 }
 
 .k-splitbar {

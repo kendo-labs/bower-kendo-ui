@@ -202,7 +202,7 @@
                 var options = that.options;
                 var dataSource = that.dataSource;
                 var expression = extend({}, dataSource.filter() || {});
-                var clearFilter = expression.filters && expression.filters.length && !filter;
+                var resetPageSettings = filter || expression.filters && expression.filters.length && !filter;
                 var removed = removeFiltersForField(expression, options.dataTextField);
                 if ((filter || removed) && that.trigger('filtering', { filter: filter })) {
                     return;
@@ -218,8 +218,8 @@
                     this.listView.setDSFilter(expression);
                 }
                 var dataSourceState = extend({}, {
-                    page: dataSource.page(),
-                    pageSize: clearFilter ? dataSource.options.pageSize : dataSource.pageSize(),
+                    page: resetPageSettings ? 1 : dataSource.page(),
+                    pageSize: resetPageSettings ? dataSource.options.pageSize : dataSource.pageSize(),
                     sort: dataSource.sort(),
                     filter: dataSource.filter(),
                     group: dataSource.group(),

@@ -1791,8 +1791,7 @@ html .km-pane-wrapper .km-widget,
           box-shadow: none;
 }
 @media only screen and (-webkit-min-device-pixel-ratio: 1.2), only screen and (min-device-pixel-ratio: 1.2) {
-  .k-icon:not(.k-loading),
-  .k-icon:not(.k-i-loading),
+  .k-icon:not(.k-loading):not(.k-i-loading),
   .k-grouping-dropclue,
   .k-drop-hint,
   .k-callout,
@@ -2211,10 +2210,6 @@ input.k-textbox:focus {
 }
 .k-calendar .k-footer {
   border-color: #c9c9c9;
-}
-.k-popup.k-context-menu.k-group .k-state-hover {
-  color: #0072c6;
-  background-color: #fff;
 }
 .k-splitbar {
   border-color: #f4f4f4;
