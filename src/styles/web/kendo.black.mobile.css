@@ -81,7 +81,9 @@
   position: absolute;
   z-index: 2 !important;
   -webkit-transition: -webkit-transform 350ms ease-out;
-          transition: transform 350ms ease-out;
+  transition: -webkit-transform 350ms ease-out;
+  transition: transform 350ms ease-out;
+  transition: transform 350ms ease-out, -webkit-transform 350ms ease-out;
   -webkit-transform: translatex(-100%);
       -ms-transform: translatex(-100%);
           transform: translatex(-100%);
@@ -2583,7 +2585,9 @@ button.km-button {
       -ms-transform: rotate(0deg);
           transform: rotate(0deg);
   -webkit-transition: -webkit-transform 300ms linear;
-          transition: transform 300ms linear;
+  transition: -webkit-transform 300ms linear;
+  transition: transform 300ms linear;
+  transition: transform 300ms linear, -webkit-transform 300ms linear;
 }
 .km-widget .km-scroller-release .km-icon {
   -webkit-transform: rotate(180deg);
@@ -2592,7 +2596,7 @@ button.km-button {
 }
 .km-widget .km-scroller-refresh .km-icon {
   -webkit-transition: none;
-          transition: none;
+  transition: none;
 }
 /* Scroller */
 .km-touch-scrollbar {
@@ -2607,7 +2611,7 @@ button.km-button {
       -ms-transform-origin: 0 0;
           transform-origin: 0 0;
   -webkit-transition: opacity 0.3s linear;
-          transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
 }
 .km-vertical-scrollbar {
   height: 100%;
@@ -2680,7 +2684,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-end .k-fx-next,
 .k-fx-end .k-fx-current {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx {
   position: relative;
@@ -2756,7 +2760,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-slide.k-fx-end .k-fx-current .km-header,
 .k-fx-slide.k-fx-end .k-fx-current .km-footer {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx-slide.k-fx-start .k-fx-next .km-content {
   will-change: transform;

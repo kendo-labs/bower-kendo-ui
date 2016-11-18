@@ -2830,8 +2830,10 @@ td.k-state-focused.k-state-selected,
 }
 .k-chart .k-selection {
   border-color: #cccccc;
-  -webkit-transition: -webkit-box-shadow 0.2s linear, border-color 0.2s linear;
-          transition: box-shadow 0.2s linear, border-color 0.2s linear;
+  -webkit-transition: border-color 0.2s linear, -webkit-box-shadow 0.2s linear;
+  transition: border-color 0.2s linear, -webkit-box-shadow 0.2s linear;
+  transition: box-shadow 0.2s linear, border-color 0.2s linear;
+  transition: box-shadow 0.2s linear, border-color 0.2s linear, -webkit-box-shadow 0.2s linear;
 }
 .k-chart .k-selection:hover {
   border-color: #9e9e9e;

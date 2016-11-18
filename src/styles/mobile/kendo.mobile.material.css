@@ -81,7 +81,9 @@
   position: absolute;
   z-index: 2 !important;
   -webkit-transition: -webkit-transform 350ms ease-out;
-          transition: transform 350ms ease-out;
+  transition: -webkit-transform 350ms ease-out;
+  transition: transform 350ms ease-out;
+  transition: transform 350ms ease-out, -webkit-transform 350ms ease-out;
   -webkit-transform: translatex(-100%);
       -ms-transform: translatex(-100%);
           transform: translatex(-100%);
@@ -733,7 +735,7 @@ button.km-button {
 }
 .km-animated {
   -webkit-transition: all 0.2s ease-in-out;
-          transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 .km-hide-title {
   display: none;
@@ -1347,7 +1349,9 @@ button.km-button {
       -ms-transform: rotate(0deg);
           transform: rotate(0deg);
   -webkit-transition: -webkit-transform 300ms linear;
-          transition: transform 300ms linear;
+  transition: -webkit-transform 300ms linear;
+  transition: transform 300ms linear;
+  transition: transform 300ms linear, -webkit-transform 300ms linear;
 }
 .km-widget .km-scroller-release .km-icon {
   -webkit-transform: rotate(180deg);
@@ -1356,7 +1360,7 @@ button.km-button {
 }
 .km-widget .km-scroller-refresh .km-icon {
   -webkit-transition: none;
-          transition: none;
+  transition: none;
 }
 /* Scroller */
 .km-touch-scrollbar {
@@ -1371,7 +1375,7 @@ button.km-button {
       -ms-transform-origin: 0 0;
           transform-origin: 0 0;
   -webkit-transition: opacity 0.3s linear;
-          transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
 }
 .km-vertical-scrollbar {
   height: 100%;
@@ -2910,7 +2914,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-end .k-fx-next,
 .k-fx-end .k-fx-current {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx {
   position: relative;
@@ -2986,7 +2990,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-slide.k-fx-end .k-fx-current .km-header,
 .k-fx-slide.k-fx-end .k-fx-current .km-footer {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx-slide.k-fx-start .k-fx-next .km-content {
   will-change: transform;
@@ -5195,7 +5199,7 @@ body:before {
       -ms-transform: rotate(0deg);
           transform: rotate(0deg);
   -webkit-transition: none;
-          transition: none;
+  transition: none;
 }
 .km-material .km-load-more .km-icon:after,
 .km-material .km-scroller-pull .km-icon:after {
@@ -5206,7 +5210,9 @@ body:before {
       -ms-transform-origin: 62% 50%;
           transform-origin: 62% 50%;
   -webkit-transition: -webkit-transform 300ms linear;
-          transition: transform 300ms linear;
+  transition: -webkit-transform 300ms linear;
+  transition: transform 300ms linear;
+  transition: transform 300ms linear, -webkit-transform 300ms linear;
 }
 .km-material .km-scroller-release .km-icon:after {
   -webkit-transform: rotate(180deg);
@@ -5215,7 +5221,7 @@ body:before {
 }
 .km-material .km-scroller-refresh .km-icon:after {
   -webkit-transition: none;
-          transition: none;
+  transition: none;
 }
 @-webkit-keyframes materialrotate1 {
   0% {
@@ -5909,9 +5915,14 @@ body:before {
 /* Animation effects */
 .km-material .km-button[data-animated] {
   -webkit-transition: -webkit-box-shadow 300ms linear;
+  transition: -webkit-box-shadow 300ms linear;
   transition: box-shadow 300ms linear;
+  transition: box-shadow 300ms linear, -webkit-box-shadow 300ms linear;
   -webkit-transition-property: -webkit-box-shadow, background-color;
+  -webkit-transition-property: background-color, -webkit-box-shadow;
+  transition-property: background-color, -webkit-box-shadow;
   transition-property: box-shadow, background-color;
+  transition-property: box-shadow, background-color, -webkit-box-shadow;
 }
 /* Nova theme features */
 .km-material label.km-required:after {

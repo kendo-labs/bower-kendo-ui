@@ -39,7 +39,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', HIDDENCLASS = 'k-loading-hidden', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', WIDTH = 'width', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, isIE = browser.msie, isIE8 = isIE && browser.version < 9, quotRegExp = /"/g, alternativeNames = {
+        var kendo = window.kendo, ui = kendo.ui, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', HIDDENCLASS = 'k-loading-hidden', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', WIDTH = 'width', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, isIE = browser.msie, isIE8 = isIE && browser.version < 9, quotRegExp = /"/g, alternativeNames = {
                 'ComboBox': 'DropDownList',
                 'DropDownList': 'ComboBox'
             };
@@ -476,9 +476,9 @@
                 siblings.each(function () {
                     var element = $(this);
                     if (element.hasClass('k-list-filter')) {
-                        offsetHeight += element.children().outerHeight();
+                        offsetHeight += outerHeight(element.children());
                     } else {
-                        offsetHeight += element.outerHeight();
+                        offsetHeight += outerHeight(element);
                     }
                 });
                 return offsetHeight;
@@ -501,7 +501,7 @@
                     popups.height(height);
                     if (height !== 'auto') {
                         offsetTop = that._offsetHeight();
-                        footerHeight = $(that.footer).outerHeight() || 0;
+                        footerHeight = outerHeight($(that.footer)) || 0;
                         height = height - offsetTop - footerHeight;
                     }
                     that.listView.content.height(height);
@@ -517,12 +517,12 @@
                     return;
                 }
                 computedStyle = window.getComputedStyle ? window.getComputedStyle(wrapper[0], null) : 0;
-                computedWidth = parseFloat(computedStyle && computedStyle.width) || wrapper.outerWidth();
+                computedWidth = parseFloat(computedStyle && computedStyle.width) || outerWidth(wrapper);
                 if (computedStyle && browser.msie) {
                     computedWidth += parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight) + parseFloat(computedStyle.borderLeftWidth) + parseFloat(computedStyle.borderRightWidth);
                 }
                 if (list.css('box-sizing') !== 'border-box') {
-                    width = computedWidth - (list.outerWidth() - list.width());
+                    width = computedWidth - (outerWidth(list) - list.width());
                 } else {
                     width = computedWidth;
                 }

@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.mobile.ui, Widget = ui.Widget, support = kendo.support, CHANGE = 'change', SWITCHON = 'km-switch-on', SWITCHOFF = 'km-switch-off', MARGINLEFT = 'margin-left', ACTIVE_STATE = 'km-state-active', DISABLED_STATE = 'km-state-disabled', DISABLED = 'disabled', TRANSFORMSTYLE = support.transitions.css + 'transform', proxy = $.proxy;
+        var kendo = window.kendo, ui = kendo.mobile.ui, outerWidth = kendo._outerWidth, Widget = ui.Widget, support = kendo.support, CHANGE = 'change', SWITCHON = 'km-switch-on', SWITCHOFF = 'km-switch-off', MARGINLEFT = 'margin-left', ACTIVE_STATE = 'km-state-active', DISABLED_STATE = 'km-state-disabled', DISABLED = 'disabled', TRANSFORMSTYLE = support.transitions.css + 'transform', proxy = $.proxy;
         function limitValue(value, minLimit, maxLimit) {
             return Math.max(minLimit, Math.min(maxLimit, value));
         }
@@ -71,7 +71,7 @@
                 kendo.notify(that, kendo.mobile.ui);
             },
             refresh: function () {
-                var that = this, handleWidth = that.handle.outerWidth(true);
+                var that = this, handleWidth = outerWidth(that.handle, true);
                 that.width = that.wrapper.width();
                 that.constrain = that.width - handleWidth;
                 that.snapPoint = that.constrain / 2;
@@ -128,7 +128,7 @@
             _move: function (e) {
                 var that = this;
                 e.preventDefault();
-                that._position(limitValue(that.position + e.x.delta, 0, that.width - that.handle.outerWidth(true)));
+                that._position(limitValue(that.position + e.x.delta, 0, that.width - outerWidth(that.handle, true)));
             },
             _position: function (position) {
                 var that = this;

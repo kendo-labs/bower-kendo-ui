@@ -227,7 +227,7 @@
                     if (this.enablePager === true) {
                         var pager = this.element.parent().find('ol.km-pages');
                         if (!this.pagerOverlay && pager.length) {
-                            containerHeight -= pager.outerHeight(true);
+                            containerHeight -= kendo._outerHeight(pager, true);
                         }
                     }
                     this.element.css('height', containerHeight);
@@ -329,7 +329,7 @@
                     if (this.options.enablePager === true) {
                         var pager = this.element.parent().find('ol.km-pages');
                         if (!this.options.pagerOverlay && pager.length) {
-                            containerHeight -= pager.outerHeight(true);
+                            containerHeight -= kendo._outerHeight(pager, true);
                         }
                     }
                     this.element.css('height', containerHeight);

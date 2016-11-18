@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.3.1103'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.3.1118'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -838,6 +838,12 @@
                 }
             };
             kendo._round = round;
+            kendo._outerWidth = function (element, includeMargin) {
+                return $(element).outerWidth(includeMargin || false) || 0;
+            };
+            kendo._outerHeight = function (element, includeMargin) {
+                return $(element).outerHeight(includeMargin || false) || 0;
+            };
             kendo.toString = toString;
         }());
         (function () {
@@ -1273,26 +1279,19 @@
             };
         }
         function wrap(element, autosize) {
-            var browser = support.browser, percentage, isRtl = element.css('direction') == 'rtl';
+            var browser = support.browser, percentage, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight;
             if (!element.parent().hasClass('k-animation-container')) {
-                var shadows = getShadows(element), width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height);
-                if (browser.opera) {
-                    shadows.left = shadows.right = shadows.bottom = 5;
-                }
+                var width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height);
                 percentage = percentWidth || percentHeight;
                 if (!percentWidth && (!autosize || autosize && width)) {
-                    width = element.outerWidth();
+                    width = outerWidth(element);
                 }
                 if (!percentHeight && (!autosize || autosize && height)) {
-                    height = element.outerHeight();
+                    height = outerHeight(element);
                 }
                 element.wrap($('<div/>').addClass('k-animation-container').css({
                     width: width,
-                    height: height,
-                    marginLeft: shadows.left * (isRtl ? 1 : -1),
-                    paddingLeft: shadows.left,
-                    paddingRight: shadows.right,
-                    paddingBottom: shadows.bottom
+                    height: height
                 }));
                 if (percentage) {
                     element.css({
@@ -1311,8 +1310,8 @@
                 percentage = percentRegExp.test(wrapperStyle.width) || percentRegExp.test(wrapperStyle.height);
                 if (!percentage) {
                     wrapper.css({
-                        width: element.outerWidth(),
-                        height: element.outerHeight(),
+                        width: outerWidth(element),
+                        height: outerHeight(element),
                         boxSizing: 'content-box',
                         mozBoxSizing: 'content-box',
                         webkitBoxSizing: 'content-box'
@@ -1732,7 +1731,13 @@
             if (!type) {
                 type = 'offset';
             }
-            var result = element[type]();
+            var offset = element[type]();
+            var result = {
+                top: offset.top,
+                right: offset.right,
+                bottom: offset.bottom,
+                left: offset.left
+            };
             if (support.browser.msie && (support.pointers || support.msPointers) && !positioned) {
                 var sign = support.isRtl(element) ? 1 : -1;
                 result.top -= window.pageYOffset + sign * document.documentElement.scrollTop;

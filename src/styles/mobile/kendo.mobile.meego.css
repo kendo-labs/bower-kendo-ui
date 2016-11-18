@@ -81,7 +81,9 @@
   position: absolute;
   z-index: 2 !important;
   -webkit-transition: -webkit-transform 350ms ease-out;
-          transition: transform 350ms ease-out;
+  transition: -webkit-transform 350ms ease-out;
+  transition: transform 350ms ease-out;
+  transition: transform 350ms ease-out, -webkit-transform 350ms ease-out;
   -webkit-transform: translatex(-100%);
       -ms-transform: translatex(-100%);
           transform: translatex(-100%);
@@ -733,7 +735,7 @@ button.km-button {
 }
 .km-animated {
   -webkit-transition: all 0.2s ease-in-out;
-          transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 .km-hide-title {
   display: none;
@@ -1347,7 +1349,9 @@ button.km-button {
       -ms-transform: rotate(0deg);
           transform: rotate(0deg);
   -webkit-transition: -webkit-transform 300ms linear;
-          transition: transform 300ms linear;
+  transition: -webkit-transform 300ms linear;
+  transition: transform 300ms linear;
+  transition: transform 300ms linear, -webkit-transform 300ms linear;
 }
 .km-widget .km-scroller-release .km-icon {
   -webkit-transform: rotate(180deg);
@@ -1356,7 +1360,7 @@ button.km-button {
 }
 .km-widget .km-scroller-refresh .km-icon {
   -webkit-transition: none;
-          transition: none;
+  transition: none;
 }
 /* Scroller */
 .km-touch-scrollbar {
@@ -1371,7 +1375,7 @@ button.km-button {
       -ms-transform-origin: 0 0;
           transform-origin: 0 0;
   -webkit-transition: opacity 0.3s linear;
-          transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
 }
 .km-vertical-scrollbar {
   height: 100%;
@@ -2910,7 +2914,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-end .k-fx-next,
 .k-fx-end .k-fx-current {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx {
   position: relative;
@@ -2986,7 +2990,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-slide.k-fx-end .k-fx-current .km-header,
 .k-fx-slide.k-fx-end .k-fx-current .km-footer {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx-slide.k-fx-start .k-fx-next .km-content {
   will-change: transform;
@@ -5081,7 +5085,7 @@ body:before {
 .km-meego .km-switch-container {
   overflow: hidden;
   border-radius: .8rem;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), color-stop(98%, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.2)));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), color-stop(98%, rgba(0, 0, 0, 0)), color-stop(98%, rgba(0, 0, 0, 0.2)));
   background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 98%, rgba(0, 0, 0, 0.2));
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 98%, rgba(0, 0, 0, 0.2));
   padding: 0;
@@ -5101,7 +5105,7 @@ body:before {
   width: 3.6rem;
 }
 .km-meego .km-switch-handle {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(5%, #d7d7d7), to(#ffffff));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(5%, #d7d7d7), color-stop(5%, #ffffff));
   background-image: -webkit-linear-gradient(top, #ffffff, #d7d7d7 5%, #ffffff);
   background-image: linear-gradient(to bottom, #ffffff, #d7d7d7 5%, #ffffff);
   width: 1.6rem;
@@ -5115,13 +5119,13 @@ body:before {
 }
 .km-meego .km-switch-on .km-switch-wrapper {
   background: #1080DD;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.2)), color-stop(10%, rgba(255, 255, 255, 0.3)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.2)), color-stop(10%, rgba(255, 255, 255, 0.3)), color-stop(10%, rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.3) 10%, rgba(255, 255, 255, 0));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.3) 10%, rgba(255, 255, 255, 0));
 }
 .km-meego .km-badge,
 .km-meego .km-detail {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.2)), color-stop(50%, rgba(255, 255, 255, 0.1)), to(rgba(255, 255, 255, 0)));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.2)), color-stop(50%, rgba(255, 255, 255, 0.1)), color-stop(50%, rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   color: #FFF;
@@ -5585,7 +5589,7 @@ body:before {
 }
 .km-meego .k-slider-track {
   border-width: 1px;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.3)), color-stop(30%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(0, 0, 0, 0)), color-stop(rgba(0, 0, 0, 0.4)), color-stop(bottom, to), color-stop(#dbdbdb), to(#ffffff));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.3)), color-stop(30%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(0, 0, 0, 0.4)), color-stop(bottom, to), color-stop(bottom, #dbdbdb), color-stop(bottom, #ffffff));
   background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0.4), to bottom, #dbdbdb, #ffffff);
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0.4), to bottom, #dbdbdb, #ffffff);
 }
@@ -5907,7 +5911,7 @@ body:before {
 }
 .km-meego .km-listview-label input[type=radio]:checked:after,
 .km-meego .km-listview-label input[type=checkbox]:checked:after {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), to(#eee));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), color-stop(10%, #eee));
   background-image: -webkit-linear-gradient(top, #fff, #f9f9f9 10%, #eee);
   background-image: linear-gradient(to bottom, #fff, #f9f9f9 10%, #eee);
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);

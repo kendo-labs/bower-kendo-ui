@@ -33,7 +33,7 @@
         depends: ['data']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, map = $.map, each = $.each, trim = $.trim, extend = $.extend, template = kendo.template, Widget = ui.Widget, excludedNodesRegExp = /^(a|div)$/i, NS = '.kendoTabStrip', IMG = 'img', HREF = 'href', PREV = 'prev', SHOW = 'show', LINK = 'k-link', LAST = 'k-last', CLICK = 'click', ERROR = 'error', EMPTY = ':empty', IMAGE = 'k-image', FIRST = 'k-first', SELECT = 'select', ACTIVATE = 'activate', CONTENT = 'k-content', CONTENTURL = 'contentUrl', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', DISABLEDSTATE = 'k-state-disabled', DEFAULTSTATE = 'k-state-default', ACTIVESTATE = 'k-state-active', FOCUSEDSTATE = 'k-state-focused', HOVERSTATE = 'k-state-hover', TABONTOP = 'k-tab-on-top', NAVIGATABLEITEMS = '.k-item:not(.' + DISABLEDSTATE + ')', HOVERABLEITEMS = '.k-tabstrip-items > ' + NAVIGATABLEITEMS + ':not(.' + ACTIVESTATE + ')', templates = {
+        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, map = $.map, each = $.each, trim = $.trim, extend = $.extend, template = kendo.template, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, Widget = ui.Widget, excludedNodesRegExp = /^(a|div)$/i, NS = '.kendoTabStrip', IMG = 'img', HREF = 'href', PREV = 'prev', SHOW = 'show', LINK = 'k-link', LAST = 'k-last', CLICK = 'click', ERROR = 'error', EMPTY = ':empty', IMAGE = 'k-image', FIRST = 'k-first', SELECT = 'select', ACTIVATE = 'activate', CONTENT = 'k-content', CONTENTURL = 'contentUrl', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', DISABLEDSTATE = 'k-state-disabled', DEFAULTSTATE = 'k-state-default', ACTIVESTATE = 'k-state-active', FOCUSEDSTATE = 'k-state-focused', HOVERSTATE = 'k-state-hover', TABONTOP = 'k-tab-on-top', NAVIGATABLEITEMS = '.k-item:not(.' + DISABLEDSTATE + ')', HOVERABLEITEMS = '.k-tabstrip-items > ' + NAVIGATABLEITEMS + ':not(.' + ACTIVESTATE + ')', templates = {
                 content: template('<div class=\'k-content\'#= contentAttributes(data) # role=\'tabpanel\'>#= content(item) #</div>'),
                 itemWrapper: template('<#= tag(item) # class=\'k-link\'#= contentUrl(item) ##= textAttributes(item) #>' + '#= image(item) ##= sprite(item) ##= text(item) #' + '</#= tag(item) #>'),
                 item: template('<li class=\'#= wrapperCssClass(group, item) #\' role=\'tab\' #=item.active ? "aria-selected=\'true\'" : \'\'#>' + '#= itemWrapper(data) #' + '</li>'),
@@ -598,7 +598,7 @@
                     });
                 }
                 that.contentElements = that.contentAnimators = that.wrapper.children('div');
-                that.tabsHeight = that.tabGroup.outerHeight() + parseInt(that.wrapper.css('border-top-width'), 10) + parseInt(that.wrapper.css('border-bottom-width'), 10);
+                that.tabsHeight = outerHeight(that.tabGroup) + parseInt(that.wrapper.css('border-top-width'), 10) + parseInt(that.wrapper.css('border-bottom-width'), 10);
                 if (kendo.kineticScrollNeeded && kendo.mobile.ui.Scroller) {
                     kendo.touchScroller(that.contentElements);
                     that.contentElements = that.contentElements.children('.km-scroll-container');
@@ -627,7 +627,7 @@
             _setContentElementsDimensions: function () {
                 var that = this, tabPosition = that.options.tabPosition;
                 if (tabPosition == 'left' || tabPosition == 'right') {
-                    var contentDivs = that.wrapper.children('.k-content'), activeDiv = contentDivs.filter(':visible'), marginStyleProperty = 'margin-' + tabPosition, tabGroup = that.tabGroup, margin = tabGroup.outerWidth();
+                    var contentDivs = that.wrapper.children('.k-content'), activeDiv = contentDivs.filter(':visible'), marginStyleProperty = 'margin-' + tabPosition, tabGroup = that.tabGroup, margin = outerWidth(tabGroup);
                     var minHeight = Math.ceil(tabGroup.height()) - parseInt(activeDiv.css('padding-top'), 10) - parseInt(activeDiv.css('padding-bottom'), 10) - parseInt(activeDiv.css('border-top-width'), 10) - parseInt(activeDiv.css('border-bottom-width'), 10);
                     setTimeout(function () {
                         contentDivs.css(marginStyleProperty, margin).css('min-height', minHeight);
@@ -641,7 +641,7 @@
             _sizeScrollWrap: function (element) {
                 if (element.is(':visible')) {
                     var tabPosition = this.options.tabPosition;
-                    var h = Math.floor(element.outerHeight(true)) + (tabPosition === 'left' || tabPosition === 'right' ? 2 : this.tabsHeight);
+                    var h = Math.floor(outerHeight(element, true)) + (tabPosition === 'left' || tabPosition === 'right' ? 2 : this.tabsHeight);
                     this.scrollWrap.css('height', h).css('height');
                 }
             },
@@ -692,8 +692,8 @@
                         scrollPrevButton = that._scrollPrevButton = that.wrapper.children('.k-tabstrip-prev');
                         scrollNextButton = that._scrollNextButton = that.wrapper.children('.k-tabstrip-next');
                         that.tabGroup.css({
-                            marginLeft: scrollPrevButton.outerWidth() + 9,
-                            marginRight: scrollNextButton.outerWidth() + 12
+                            marginLeft: outerWidth(scrollPrevButton) + 9,
+                            marginRight: outerWidth(scrollNextButton) + 12
                         });
                         scrollPrevButton.on('mousedown' + NS, function () {
                             that._nowScrollingTabs = true;
@@ -729,7 +729,7 @@
                 return options.scrollable && !isNaN(options.scrollable.distance) && (options.tabPosition == 'top' || options.tabPosition == 'bottom');
             },
             _scrollTabsToItem: function (item) {
-                var that = this, tabGroup = that.tabGroup, currentScrollOffset = tabGroup.scrollLeft(), itemWidth = item.outerWidth(), itemOffset = that._isRtl ? item.position().left : item.position().left - tabGroup.children().first().position().left, tabGroupWidth = tabGroup[0].offsetWidth, tabGroupPadding = Math.ceil(parseFloat(tabGroup.css('padding-left'))), itemPosition;
+                var that = this, tabGroup = that.tabGroup, currentScrollOffset = tabGroup.scrollLeft(), itemWidth = outerWidth(item), itemOffset = that._isRtl ? item.position().left : item.position().left - tabGroup.children().first().position().left, tabGroupWidth = tabGroup[0].offsetWidth, tabGroupPadding = Math.ceil(parseFloat(tabGroup.css('padding-left'))), itemPosition;
                 if (that._isRtl) {
                     if (itemOffset < 0) {
                         itemPosition = currentScrollOffset + itemOffset - (tabGroupWidth - currentScrollOffset) - tabGroupPadding;
@@ -809,7 +809,7 @@
                     return false;
                 }
                 var visibleContents = contentAnimators.filter('.' + ACTIVESTATE), contentHolder = that.contentHolder(itemIndex), contentElement = contentHolder.closest('.k-content');
-                that.tabsHeight = that.tabGroup.outerHeight() + parseInt(that.wrapper.css('border-top-width'), 10) + parseInt(that.wrapper.css('border-bottom-width'), 10);
+                that.tabsHeight = outerHeight(that.tabGroup) + parseInt(that.wrapper.css('border-top-width'), 10) + parseInt(that.wrapper.css('border-bottom-width'), 10);
                 that._sizeScrollWrap(visibleContents);
                 if (contentHolder.length === 0) {
                     visibleContents.removeClass(ACTIVESTATE).attr('aria-hidden', true).kendoStop(true, true).kendoAnimate(close);

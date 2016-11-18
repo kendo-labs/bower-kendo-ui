@@ -32,7 +32,7 @@
         depends: ['draganddrop']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, START = 'start', BEFORE_MOVE = 'beforeMove', MOVE = 'move', END = 'end', CHANGE = 'change', CANCEL = 'cancel', ACTION_SORT = 'sort', ACTION_REMOVE = 'remove', ACTION_RECEIVE = 'receive', DEFAULT_FILTER = '>*', MISSING_INDEX = -1;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, START = 'start', BEFORE_MOVE = 'beforeMove', MOVE = 'move', END = 'end', CHANGE = 'change', CANCEL = 'cancel', ACTION_SORT = 'sort', ACTION_REMOVE = 'remove', ACTION_RECEIVE = 'receive', DEFAULT_FILTER = '>*', MISSING_INDEX = -1;
         function containsOrEqualTo(parent, child) {
             try {
                 return $.contains(parent, child) || parent == child;
@@ -308,8 +308,8 @@
                         top: e.y.location
                     }, lastItemOffset, delta;
                 lastItemOffset = kendo.getOffset(lastItem);
-                lastItemOffset.top += lastItem.outerHeight();
-                lastItemOffset.left += lastItem.outerWidth();
+                lastItemOffset.top += outerHeight(lastItem);
+                lastItemOffset.left += outerWidth(lastItem);
                 if (this._isFloating(lastItem)) {
                     delta = lastItemOffset.left - cursorOffset.left;
                 } else {
@@ -374,8 +374,8 @@
             _getElementCenter: function (element) {
                 var center = element.length ? kendo.getOffset(element) : null;
                 if (center) {
-                    center.top += element.outerHeight() / 2;
-                    center.left += element.outerWidth() / 2;
+                    center.top += outerHeight(element) / 2;
+                    center.left += outerWidth(element) / 2;
                 }
                 return center;
             },

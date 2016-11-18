@@ -41,7 +41,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Node = window.Node, mobile = kendo.mobile, ui = mobile.ui, DataSource = kendo.data.DataSource, Widget = ui.DataBoundWidget, ITEM_SELECTOR = '.km-list > li, > li:not(.km-group-container)', HIGHLIGHT_SELECTOR = '.km-listview-link, .km-listview-label', ICON_SELECTOR = '[' + kendo.attr('icon') + ']', proxy = $.proxy, attrValue = kendo.attrValue, GROUP_CLASS = 'km-group-title', ACTIVE_CLASS = 'km-state-active', GROUP_WRAPPER = '<div class="' + GROUP_CLASS + '"><div class="km-text"></div></div>', GROUP_TEMPLATE = kendo.template('<li><div class="' + GROUP_CLASS + '"><div class="km-text">#= this.headerTemplate(data) #</div></div><ul>#= kendo.render(this.template, data.items)#</ul></li>'), WRAPPER = '<div class="km-listview-wrapper" />', SEARCH_TEMPLATE = kendo.template('<form class="km-filter-form"><div class="km-filter-wrap"><input type="search" placeholder="#=placeholder#"/><a href="\\#" class="km-filter-reset" title="Clear"><span class="km-icon km-clear"></span><span class="km-text">Clear</span></a></div></form>'), NS = '.kendoMobileListView', STYLED = 'styled', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', ITEM_CHANGE = 'itemChange', CLICK = 'click', CHANGE = 'change', PROGRESS = 'progress', FUNCTION = 'function', whitespaceRegExp = /^\s+$/, buttonRegExp = /button/;
+        var kendo = window.kendo, Node = window.Node, mobile = kendo.mobile, ui = mobile.ui, outerHeight = kendo._outerHeight, DataSource = kendo.data.DataSource, Widget = ui.DataBoundWidget, ITEM_SELECTOR = '.km-list > li, > li:not(.km-group-container)', HIGHLIGHT_SELECTOR = '.km-listview-link, .km-listview-label', ICON_SELECTOR = '[' + kendo.attr('icon') + ']', proxy = $.proxy, attrValue = kendo.attrValue, GROUP_CLASS = 'km-group-title', ACTIVE_CLASS = 'km-state-active', GROUP_WRAPPER = '<div class="' + GROUP_CLASS + '"><div class="km-text"></div></div>', GROUP_TEMPLATE = kendo.template('<li><div class="' + GROUP_CLASS + '"><div class="km-text">#= this.headerTemplate(data) #</div></div><ul>#= kendo.render(this.template, data.items)#</ul></li>'), WRAPPER = '<div class="km-listview-wrapper" />', SEARCH_TEMPLATE = kendo.template('<form class="km-filter-form"><div class="km-filter-wrap"><input type="search" placeholder="#=placeholder#"/><a href="\\#" class="km-filter-reset" title="Clear"><span class="km-icon km-clear"></span><span class="km-text">Clear</span></a></div></form>'), NS = '.kendoMobileListView', STYLED = 'styled', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', ITEM_CHANGE = 'itemChange', CLICK = 'click', CHANGE = 'change', PROGRESS = 'progress', FUNCTION = 'function', whitespaceRegExp = /^\s+$/, buttonRegExp = /button/;
         function whitespace() {
             return this.nodeType === Node.TEXT_NODE && this.nodeValue.match(whitespaceRegExp);
         }
@@ -377,7 +377,7 @@
             },
             enable: function () {
                 this.element.show();
-                this.height = this.element.outerHeight(true);
+                this.height = outerHeight(this.element, true);
             },
             disable: function () {
                 this.element.hide();
@@ -404,7 +404,7 @@
                 buffer.bind('resize', function () {
                     loadMore._showLoadButton();
                 });
-                this.height = this.element.outerHeight(true);
+                this.height = outerHeight(this.element, true);
                 this.disable();
             },
             _hideShowButton: function () {
@@ -421,7 +421,7 @@
         var VirtualListViewItemBinder = kendo.Class.extend({
             init: function (listView) {
                 var binder = this;
-                this.chromeHeight = listView.wrapper.children().not(listView.element).outerHeight() || 0;
+                this.chromeHeight = outerHeight(listView.wrapper.children().not(listView.element));
                 this.listView = listView;
                 this.scroller = listView.scroller();
                 this.options = listView.options;
@@ -437,16 +437,20 @@
                     binder.list.refresh();
                 });
                 this.scroller.makeVirtual();
-                this.scroller.bind('scroll', function (e) {
+                this._scroll = function (e) {
                     binder.list.update(e.scrollTop);
-                });
-                this.scroller.bind('scrollEnd', function (e) {
+                };
+                this.scroller.bind('scroll', this._scroll);
+                this._scrollEnd = function (e) {
                     binder.list.batchUpdate(e.scrollTop);
-                });
+                };
+                this.scroller.bind('scrollEnd', this._scrollEnd);
             },
             destroy: function () {
                 this.list.unbind();
                 this.buffer.unbind();
+                this.scroller.unbind('scroll', this._scroll);
+                this.scroller.unbind('scrollEnd', this._scrollEnd);
             },
             setDataSource: function (dataSource, empty) {
                 var binder = this, options = this.options, listView = this.listView, scroller = listView.scroller(), pressToLoadMore = options.loadMore, pageSize, buffer, footer;

@@ -2205,8 +2205,10 @@ textarea.k-textbox,
   border-color: rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.1);
           box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.1);
-  -webkit-transition: -webkit-box-shadow 0.2s linear, border-color 0.2s linear;
-          transition: box-shadow 0.2s linear, border-color 0.2s linear;
+  -webkit-transition: border-color 0.2s linear, -webkit-box-shadow 0.2s linear;
+  transition: border-color 0.2s linear, -webkit-box-shadow 0.2s linear;
+  transition: box-shadow 0.2s linear, border-color 0.2s linear;
+  transition: box-shadow 0.2s linear, border-color 0.2s linear, -webkit-box-shadow 0.2s linear;
 }
 .k-chart .k-selection:hover {
   border-color: rgba(0, 0, 0, 0.3);

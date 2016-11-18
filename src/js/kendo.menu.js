@@ -33,7 +33,7 @@
         depends: ['popup']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, MOUSEDOWN = 'mousedown', CLICK = 'click', extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', mobile = touch || allPointers, DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', popupSelector = groupSelector + ',.k-animation-container', allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = exclusionSelector + ':eq(0)', lastSelector = exclusionSelector + ':last', templateSelector = '> div:not(.k-animation-container,.k-list-container)', touchPointerTypes = {
+        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, MOUSEDOWN = 'mousedown', CLICK = 'click', extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', mobile = touch || allPointers, DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', popupSelector = groupSelector + ',.k-animation-container', allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = exclusionSelector + ':eq(0)', lastSelector = exclusionSelector + ':last', templateSelector = 'div:not(.k-animation-container,.k-list-container)', touchPointerTypes = {
                 '2': 1,
                 'touch': 1
             }, templates = {
@@ -403,7 +403,7 @@
                 element.siblings().find('>.k-popup:visible,>.k-animation-container>.k-popup:visible').each(function () {
                     var popup = $(this).data('kendoPopup');
                     if (popup) {
-                        popup.close();
+                        popup.close(true);
                     }
                 });
                 element.each(function () {
@@ -418,7 +418,7 @@
                             if (!ul.find('.k-menu-group')[0] && ul.children('.k-item').length > 1) {
                                 var windowHeight = $(window).height(), setScrolling = function () {
                                         ul.css({
-                                            maxHeight: windowHeight - (ul.outerHeight() - ul.height()) - kendo.getShadows(ul).bottom,
+                                            maxHeight: windowHeight - (kendo._outerHeight(ul) - ul.height()) - kendo.getShadows(ul).bottom,
                                             overflow: 'auto'
                                         });
                                     };
@@ -588,8 +588,11 @@
                 }
             },
             _click: function (e) {
-                var that = this, openHandle, options = that.options, target = $(kendo.eventTarget(e)), nodeName = target[0] ? target[0].nodeName.toUpperCase() : '', formNode = nodeName == 'INPUT' || nodeName == 'SELECT' || nodeName == 'BUTTON' || nodeName == 'LABEL', link = target.closest('.' + LINK), element = target.closest(allItemsSelector), href = link.attr('href'), childGroup, childGroupVisible, targetHref = target.attr('href'), sampleHref = $('<a href=\'#\' />').attr('href'), isLink = !!href && href !== sampleHref, isLocalLink = isLink && !!href.match(/^#/), isTargetLink = !!targetHref && targetHref !== sampleHref, shouldCloseTheRootItem = options.openOnClick && childGroupVisible && that._isRootItem(element);
-                if (target.closest(templateSelector, element[0]).length) {
+                var that = this, openHandle, options = that.options, target = $(kendo.eventTarget(e)), targetElement = target[0], nodeName = target[0] ? target[0].nodeName.toUpperCase() : '', formNode = nodeName == 'INPUT' || nodeName == 'SELECT' || nodeName == 'BUTTON' || nodeName == 'LABEL', link = target.closest('.' + LINK), element = target.closest(allItemsSelector), itemElement = element[0], href = link.attr('href'), childGroup, childGroupVisible, targetHref = target.attr('href'), sampleHref = $('<a href=\'#\' />').attr('href'), isLink = !!href && href !== sampleHref, isLocalLink = isLink && !!href.match(/^#/), isTargetLink = !!targetHref && targetHref !== sampleHref, shouldCloseTheRootItem = options.openOnClick && childGroupVisible && that._isRootItem(element);
+                while (targetElement && targetElement.parentNode != itemElement) {
+                    targetElement = targetElement.parentNode;
+                }
+                if ($(targetElement).is(templateSelector)) {
                     return;
                 }
                 if (element.hasClass(DISABLEDSTATE)) {

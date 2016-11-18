@@ -33,7 +33,7 @@
         depends: ['draganddrop']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, extend = $.extend, format = kendo.format, parse = kendo.parseFloat, proxy = $.proxy, isArray = $.isArray, math = Math, support = kendo.support, pointers = support.pointers, msPointers = support.msPointers, CHANGE = 'change', SLIDE = 'slide', NS = '.slider', MOUSE_DOWN = 'touchstart' + NS + ' mousedown' + NS, TRACK_MOUSE_DOWN = pointers ? 'pointerdown' + NS : msPointers ? 'MSPointerDown' + NS : MOUSE_DOWN, MOUSE_UP = 'touchend' + NS + ' mouseup' + NS, TRACK_MOUSE_UP = pointers ? 'pointerup' : msPointers ? 'MSPointerUp' + NS : MOUSE_UP, MOVE_SELECTION = 'moveSelection', KEY_DOWN = 'keydown' + NS, CLICK = 'click' + NS, MOUSE_OVER = 'mouseover' + NS, FOCUS = 'focus' + NS, BLUR = 'blur' + NS, DRAG_HANDLE = '.k-draghandle', TRACK_SELECTOR = '.k-slider-track', TICK_SELECTOR = '.k-tick', STATE_SELECTED = 'k-state-selected', STATE_FOCUSED = 'k-state-focused', STATE_DEFAULT = 'k-state-default', STATE_DISABLED = 'k-state-disabled', DISABLED = 'disabled', UNDEFINED = 'undefined', TABINDEX = 'tabindex', getTouches = kendo.getTouches;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, extend = $.extend, format = kendo.format, parse = kendo.parseFloat, proxy = $.proxy, isArray = $.isArray, math = Math, support = kendo.support, pointers = support.pointers, msPointers = support.msPointers, CHANGE = 'change', SLIDE = 'slide', NS = '.slider', MOUSE_DOWN = 'touchstart' + NS + ' mousedown' + NS, TRACK_MOUSE_DOWN = pointers ? 'pointerdown' + NS : msPointers ? 'MSPointerDown' + NS : MOUSE_DOWN, MOUSE_UP = 'touchend' + NS + ' mouseup' + NS, TRACK_MOUSE_UP = pointers ? 'pointerup' : msPointers ? 'MSPointerUp' + NS : MOUSE_UP, MOVE_SELECTION = 'moveSelection', KEY_DOWN = 'keydown' + NS, CLICK = 'click' + NS, MOUSE_OVER = 'mouseover' + NS, FOCUS = 'focus' + NS, BLUR = 'blur' + NS, DRAG_HANDLE = '.k-draghandle', TRACK_SELECTOR = '.k-slider-track', TICK_SELECTOR = '.k-tick', STATE_SELECTED = 'k-state-selected', STATE_FOCUSED = 'k-state-focused', STATE_DEFAULT = 'k-state-default', STATE_DISABLED = 'k-state-disabled', DISABLED = 'disabled', UNDEFINED = 'undefined', TABINDEX = 'tabindex', getTouches = kendo.getTouches;
         var SliderBase = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -44,7 +44,7 @@
                 that._isRtl = that._isHorizontal && kendo.support.isRtl(element);
                 that._position = that._isHorizontal ? 'left' : 'bottom';
                 that._sizeFn = that._isHorizontal ? 'width' : 'height';
-                that._outerSize = that._isHorizontal ? 'outerWidth' : 'outerHeight';
+                that._outerSize = that._isHorizontal ? outerWidth : outerHeight;
                 options.tooltip.format = options.tooltip.enabled ? options.tooltip.format || '{0}' : '{0}';
                 if (options.smallStep <= 0) {
                     throw new Error('Kendo UI Slider smallStep must be a positive number.');
@@ -634,7 +634,7 @@
         });
         Slider.Selection = function (dragHandle, that, options) {
             function moveSelection(val) {
-                var selectionValue = val - options.min, index = that._valueIndex = math.ceil(round(selectionValue / options.smallStep)), selection = parseInt(that._pixelSteps[index], 10), selectionDiv = that._trackDiv.find('.k-slider-selection'), halfDragHanndle = parseInt(dragHandle[that._outerSize]() / 2, 10), rtlCorrection = that._isRtl ? 2 : 0;
+                var selectionValue = val - options.min, index = that._valueIndex = math.ceil(round(selectionValue / options.smallStep)), selection = parseInt(that._pixelSteps[index], 10), selectionDiv = that._trackDiv.find('.k-slider-selection'), halfDragHanndle = parseInt(that._outerSize(dragHandle) / 2, 10), rtlCorrection = that._isRtl ? 2 : 0;
                 selectionDiv[that._sizeFn](that._isRtl ? that._maxSelection - selection : selection);
                 dragHandle.css(that._position, selection - halfDragHanndle - rtlCorrection);
             }
@@ -813,7 +813,7 @@
                 }
             },
             moveTooltip: function () {
-                var that = this, owner = that.owner, top = 0, left = 0, element = that.element, offset = kendo.getOffset(element), margin = 8, viewport = $(window), callout = that.tooltipDiv.find('.k-callout'), width = that.tooltipDiv.outerWidth(), height = that.tooltipDiv.outerHeight(), dragHandles, sdhOffset, diff, anchorSize;
+                var that = this, owner = that.owner, top = 0, left = 0, element = that.element, offset = kendo.getOffset(element), margin = 8, viewport = $(window), callout = that.tooltipDiv.find('.k-callout'), width = outerWidth(that.tooltipDiv), height = outerHeight(that.tooltipDiv), dragHandles, sdhOffset, diff, anchorSize;
                 if (that.type) {
                     dragHandles = owner.wrapper.find(DRAG_HANDLE);
                     offset = kendo.getOffset(dragHandles.eq(0));
@@ -825,26 +825,26 @@
                         top = offset.top + (sdhOffset.top - offset.top) / 2;
                         left = sdhOffset.left;
                     }
-                    anchorSize = dragHandles.eq(0).outerWidth() + 2 * margin;
+                    anchorSize = outerWidth(dragHandles.eq(0)) + 2 * margin;
                 } else {
                     top = offset.top;
                     left = offset.left;
-                    anchorSize = element.outerWidth() + 2 * margin;
+                    anchorSize = outerWidth(element) + 2 * margin;
                 }
                 if (owner._isHorizontal) {
-                    left -= parseInt((width - element[owner._outerSize]()) / 2, 10);
+                    left -= parseInt((width - owner._outerSize(element)) / 2, 10);
                     top -= height + callout.height() + margin;
                 } else {
-                    top -= parseInt((height - element[owner._outerSize]()) / 2, 10);
+                    top -= parseInt((height - owner._outerSize(element)) / 2, 10);
                     left -= width + callout.width() + margin;
                 }
                 if (owner._isHorizontal) {
-                    diff = that._flip(top, height, anchorSize, viewport.outerHeight() + that._scrollOffset.top);
+                    diff = that._flip(top, height, anchorSize, outerHeight(viewport) + that._scrollOffset.top);
                     top += diff;
-                    left += that._fit(left, width, viewport.outerWidth() + that._scrollOffset.left);
+                    left += that._fit(left, width, outerWidth(viewport) + that._scrollOffset.left);
                 } else {
-                    diff = that._flip(left, width, anchorSize, viewport.outerWidth() + that._scrollOffset.left);
-                    top += that._fit(top, height, viewport.outerHeight() + that._scrollOffset.top);
+                    diff = that._flip(left, width, anchorSize, outerWidth(viewport) + that._scrollOffset.left);
+                    top += that._fit(top, height, outerHeight(viewport) + that._scrollOffset.top);
                     left += diff;
                 }
                 if (diff > 0 && callout) {
@@ -1150,7 +1150,7 @@
         RangeSlider.Selection = function (dragHandles, that, options) {
             function moveSelection(value) {
                 value = value || [];
-                var selectionStartValue = value[0] - options.min, selectionEndValue = value[1] - options.min, selectionStartIndex = math.ceil(round(selectionStartValue / options.smallStep)), selectionEndIndex = math.ceil(round(selectionEndValue / options.smallStep)), selectionStart = that._pixelSteps[selectionStartIndex], selectionEnd = that._pixelSteps[selectionEndIndex], halfHandle = parseInt(dragHandles.eq(0)[that._outerSize]() / 2, 10), rtlCorrection = that._isRtl ? 2 : 0;
+                var selectionStartValue = value[0] - options.min, selectionEndValue = value[1] - options.min, selectionStartIndex = math.ceil(round(selectionStartValue / options.smallStep)), selectionEndIndex = math.ceil(round(selectionEndValue / options.smallStep)), selectionStart = that._pixelSteps[selectionStartIndex], selectionEnd = that._pixelSteps[selectionEndIndex], halfHandle = parseInt(that._outerSize(dragHandles.eq(0)) / 2, 10), rtlCorrection = that._isRtl ? 2 : 0;
                 dragHandles.eq(0).css(that._position, selectionStart - halfHandle - rtlCorrection).end().eq(1).css(that._position, selectionEnd - halfHandle - rtlCorrection);
                 makeSelection(selectionStart, selectionEnd);
             }

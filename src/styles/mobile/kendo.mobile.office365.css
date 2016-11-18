@@ -81,7 +81,9 @@
   position: absolute;
   z-index: 2 !important;
   -webkit-transition: -webkit-transform 350ms ease-out;
-          transition: transform 350ms ease-out;
+  transition: -webkit-transform 350ms ease-out;
+  transition: transform 350ms ease-out;
+  transition: transform 350ms ease-out, -webkit-transform 350ms ease-out;
   -webkit-transform: translatex(-100%);
       -ms-transform: translatex(-100%);
           transform: translatex(-100%);
@@ -733,7 +735,7 @@ button.km-button {
 }
 .km-animated {
   -webkit-transition: all 0.2s ease-in-out;
-          transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 .km-hide-title {
   display: none;
@@ -1347,7 +1349,9 @@ button.km-button {
       -ms-transform: rotate(0deg);
           transform: rotate(0deg);
   -webkit-transition: -webkit-transform 300ms linear;
-          transition: transform 300ms linear;
+  transition: -webkit-transform 300ms linear;
+  transition: transform 300ms linear;
+  transition: transform 300ms linear, -webkit-transform 300ms linear;
 }
 .km-widget .km-scroller-release .km-icon {
   -webkit-transform: rotate(180deg);
@@ -1356,7 +1360,7 @@ button.km-button {
 }
 .km-widget .km-scroller-refresh .km-icon {
   -webkit-transition: none;
-          transition: none;
+  transition: none;
 }
 /* Scroller */
 .km-touch-scrollbar {
@@ -1371,7 +1375,7 @@ button.km-button {
       -ms-transform-origin: 0 0;
           transform-origin: 0 0;
   -webkit-transition: opacity 0.3s linear;
-          transition: opacity 0.3s linear;
+  transition: opacity 0.3s linear;
 }
 .km-vertical-scrollbar {
   height: 100%;
@@ -2910,7 +2914,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-end .k-fx-next,
 .k-fx-end .k-fx-current {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx {
   position: relative;
@@ -2986,7 +2990,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-slide.k-fx-end .k-fx-current .km-header,
 .k-fx-slide.k-fx-end .k-fx-current .km-footer {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx-slide.k-fx-start .k-fx-next .km-content {
   will-change: transform;
@@ -5087,14 +5091,12 @@ body:before {
   background: #fff;
   color: #333;
   border-top-color: #e5e5e5;
-  -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
-  -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
-          border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
-          border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+  border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+  border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+  border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
 }
 .km-office365 .km-actionsheet > li:nth-last-child(2) > a {
-  -webkit-border-image: none;
-          border-image: none;
+  border-image: none;
 }
 .km-office365 .km-footer .km-tabstrip .km-button:hover,
 .km-office365 .km-actionsheet > li > a:active {
@@ -5178,10 +5180,9 @@ body:before {
   background: #fff;
   border-color: #f4f4f4;
   border-top-color: #e5e5e5;
-  -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
-  -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
-          border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
-          border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+  border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+  border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+  border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
 }
 .km-office365 .km-list > li:hover {
   background-color: #fff;
@@ -5556,7 +5557,7 @@ body:before {
       -ms-transform: rotate(0deg);
           transform: rotate(0deg);
   -webkit-transition: none;
-          transition: none;
+  transition: none;
 }
 .km-office365 .km-load-more .km-icon:after,
 .km-office365 .km-scroller-pull .km-icon:after {
@@ -5567,7 +5568,9 @@ body:before {
       -ms-transform-origin: 62% 50%;
           transform-origin: 62% 50%;
   -webkit-transition: -webkit-transform 300ms linear;
-          transition: transform 300ms linear;
+  transition: -webkit-transform 300ms linear;
+  transition: transform 300ms linear;
+  transition: transform 300ms linear, -webkit-transform 300ms linear;
 }
 .km-office365 .km-scroller-release .km-icon:after {
   -webkit-transform: rotate(180deg);
@@ -5576,7 +5579,7 @@ body:before {
 }
 .km-office365 .km-scroller-refresh .km-icon:after {
   -webkit-transition: none;
-          transition: none;
+  transition: none;
 }
 .km-office365 .km-loading-left:before,
 .km-office365 .km-loading-right:before {

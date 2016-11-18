@@ -2122,8 +2122,10 @@ html .km-pane-wrapper .km-widget,
   border-color: #664e62;
   -webkit-box-shadow: inset 0 1px 12px rgba(0, 0, 0, 0.7);
           box-shadow: inset 0 1px 12px rgba(0, 0, 0, 0.7);
-  -webkit-transition: -webkit-box-shadow 0.2s linear, border-color 0.2s linear;
-          transition: box-shadow 0.2s linear, border-color 0.2s linear;
+  -webkit-transition: border-color 0.2s linear, -webkit-box-shadow 0.2s linear;
+  transition: border-color 0.2s linear, -webkit-box-shadow 0.2s linear;
+  transition: box-shadow 0.2s linear, border-color 0.2s linear;
+  transition: box-shadow 0.2s linear, border-color 0.2s linear, -webkit-box-shadow 0.2s linear;
 }
 .k-chart .k-selection:hover {
   border-color: #ffffff;

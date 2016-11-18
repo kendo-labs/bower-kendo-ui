@@ -2396,9 +2396,9 @@ div.k-window-iframecontent {
   border-top: 1px solid transparent;
   border-color: inherit;
   -webkit-transition: width 200ms linear;
-          transition: width 200ms linear;
+  transition: width 200ms linear;
   -webkit-transition: "width 200ms linear";
-          transition: "width 200ms linear";
+  transition: "width 200ms linear";
   -webkit-animation: k-tab-loader 1s ease-in-out infinite;
           animation: k-tab-loader 1s ease-in-out infinite;
 }
@@ -3073,9 +3073,11 @@ span.k-textbox:after {
 .k-numeric-wrap.k-state-focused,
 .k-numeric-wrap.k-state-hover {
   -webkit-transition: -webkit-box-shadow .15s ease-out;
-          transition: box-shadow .15s ease-out;
+  transition: -webkit-box-shadow .15s ease-out;
+  transition: box-shadow .15s ease-out;
+  transition: box-shadow .15s ease-out, -webkit-box-shadow .15s ease-out;
   -webkit-transition: "box-shadow .15s ease-out";
-          transition: "box-shadow .15s ease-out";
+  transition: "box-shadow .15s ease-out";
 }
 .k-textbox > input,
 .k-picker-wrap .k-input,
@@ -3161,6 +3163,14 @@ span.k-datetimepicker .k-select + .k-select {
   width: 0;
   height: 1.94em;
   padding-bottom: 0.3em;
+}
+.k-combobox-clearable .k-input {
+  padding-right: 1.9em;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 2.294em;
 }
 /* fix missing bottom border on browser zoom in Chrome */
 .k-webkit .k-combobox .k-dropdown-wrap:before,
@@ -5246,7 +5256,7 @@ span.k-tooltip {
 .k-fx-end .k-fx-next,
 .k-fx-end .k-fx-current {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx {
   position: relative;
@@ -5322,7 +5332,7 @@ span.k-tooltip {
 .k-fx-slide.k-fx-end .k-fx-current .km-header,
 .k-fx-slide.k-fx-end .k-fx-current .km-footer {
   -webkit-transition: all 350ms ease-out;
-          transition: all 350ms ease-out;
+  transition: all 350ms ease-out;
 }
 .k-fx-slide.k-fx-start .k-fx-next .km-content {
   will-change: transform;
@@ -5648,6 +5658,9 @@ input.k-textbox {
 .k-dropdown-wrap .k-input,
 .k-selectbox .k-input {
   padding: 0.167em 0;
+}
+.k-combobox-clearable .k-input {
+  padding-right: 1.9em;
 }
 .k-autocomplete > .k-i-close {
   margin-right: 8px;

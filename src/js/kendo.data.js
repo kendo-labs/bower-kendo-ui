@@ -2154,7 +2154,9 @@
                     promise = $.when.apply(null, promises).then(function () {
                         var idx, length;
                         for (idx = 0, length = arguments.length; idx < length; idx++) {
-                            that._accept(arguments[idx]);
+                            if (arguments[idx]) {
+                                that._accept(arguments[idx]);
+                            }
                         }
                         that._storeData(true);
                         that._change({ action: 'sync' });

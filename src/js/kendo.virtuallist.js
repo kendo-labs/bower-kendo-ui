@@ -765,7 +765,7 @@
                         break;
                     }
                 }
-                return this._getElementByIndex(element.index);
+                return element ? this._getElementByIndex(element.index) : $();
             },
             _clean: function () {
                 this.result = undefined;
