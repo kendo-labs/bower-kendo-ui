@@ -3787,6 +3787,12 @@ div.k-scheduler-marquee:after {
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button.k-primary {
   color: #00b0ff;
 }
+.k-rtl .k-grid-header .k-header:first-child,
+.k-rtl .k-filter-row th:first-child,
+.k-rtl .k-grid tbody td:first-child,
+.k-rtl .k-grid tfoot td:first-child {
+  border-left-width: 0;
+}
 .k-rtl .k-dialog a.k-dialog-action.k-dialog-close {
   left: 0;
 }

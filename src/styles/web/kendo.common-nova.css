@@ -3475,32 +3475,6 @@ html .k-grid-edit-row .k-tooltip {
   display: none !important;
 }
 @media only screen and (max-width: 1024px) {
-  .k-webkit .k-pager-wrap,
-  .k-ff .k-pager-wrap,
-  .k-ie11 .k-pager-wrap,
-  .k-edge .k-pager-wrap,
-  .k-safari .k-pager-wrap {
-    overflow: visible;
-    min-height: 2.1em;
-  }
-  .k-webkit .k-pager-wrap .k-pager-nav,
-  .k-ff .k-pager-wrap .k-pager-nav,
-  .k-ie11 .k-pager-wrap .k-pager-nav,
-  .k-edge .k-pager-wrap .k-pager-nav,
-  .k-safari .k-pager-wrap .k-pager-nav,
-  .k-webkit .k-pager-input,
-  .k-ff .k-pager-input,
-  .k-ie11 .k-pager-input,
-  .k-edge .k-pager-input,
-  .k-safari .k-pager-input {
-    display: inline-block;
-    vertical-align: top;
-  }
-  .k-webkit .k-pager-numbers,
-  .k-ff .k-pager-numbers,
-  .k-ie11 .k-pager-numbers,
-  .k-edge .k-pager-numbers,
-  .k-safari .k-pager-numbers,
   .k-webkit .k-grid .k-pager-numbers,
   .k-ff .k-grid .k-pager-numbers,
   .k-ie11 .k-grid .k-pager-numbers,
@@ -3520,11 +3494,6 @@ html .k-grid-edit-row .k-tooltip {
     overflow: visible;
     height: auto;
   }
-  .k-webkit .k-pager-numbers:first-child,
-  .k-ff .k-pager-numbers:first-child,
-  .k-ie11 .k-pager-numbers:first-child,
-  .k-edge .k-pager-numbers:first-child,
-  .k-safari .k-pager-numbers:first-child,
   .k-webkit .k-grid .k-pager-numbers:first-child,
   .k-ff .k-grid .k-pager-numbers:first-child,
   .k-ie11 .k-grid .k-pager-numbers:first-child,
@@ -3532,11 +3501,6 @@ html .k-grid-edit-row .k-tooltip {
   .k-safari .k-grid .k-pager-numbers:first-child {
     left: .2em;
   }
-  .k-webkit .k-pager-numbers.k-state-expanded,
-  .k-ff .k-pager-numbers.k-state-expanded,
-  .k-ie11 .k-pager-numbers.k-state-expanded,
-  .k-edge .k-pager-numbers.k-state-expanded,
-  .k-safari .k-pager-numbers.k-state-expanded,
   .k-webkit .k-grid .k-pager-numbers.k-state-expanded,
   .k-ff .k-grid .k-pager-numbers.k-state-expanded,
   .k-ie11 .k-grid .k-pager-numbers.k-state-expanded,
@@ -3546,11 +3510,6 @@ html .k-grid-edit-row .k-tooltip {
         transform: translatey(-100%);
     -webkit-transform: translatey(-100%);
   }
-  .k-webkit .km-pane-wrapper .k-pager-numbers,
-  .k-ff .km-pane-wrapper .k-pager-numbers,
-  .k-ie11 .km-pane-wrapper .k-pager-numbers,
-  .k-edge .km-pane-wrapper .k-pager-numbers,
-  .k-safari .km-pane-wrapper .k-pager-numbers,
   .k-webkit .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-ff .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-ie11 .km-pane-wrapper .k-grid .k-pager-numbers,
@@ -3562,34 +3521,6 @@ html .k-grid-edit-row .k-tooltip {
         transform: translate(-50%, -100%);
     -webkit-transform: translate(-50%, -100%);
   }
-  .k-webkit .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-ff .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-ie11 .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-edge .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-safari .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-webkit .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-ff .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-ie11 .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-edge .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-safari .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-webkit .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-ff .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-edge .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-safari .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-webkit .km-pane-wrapper .k-pager-wrap > .k-pager-info,
-  .k-ff .km-pane-wrapper .k-pager-wrap > .k-pager-info,
-  .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-pager-info,
-  .k-edge .km-pane-wrapper .k-pager-wrap > .k-pager-info,
-  .k-safari .km-pane-wrapper .k-pager-wrap > .k-pager-info {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-  .k-webkit .k-rtl .k-pager-numbers,
-  .k-ff .k-rtl .k-pager-numbers,
-  .k-ie11 .k-rtl .k-pager-numbers,
-  .k-edge .k-rtl .k-pager-numbers,
-  .k-safari .k-rtl .k-pager-numbers,
   .k-webkit .k-rtl .k-grid .k-pager-numbers,
   .k-ff .k-rtl .k-grid .k-pager-numbers,
   .k-ie11 .k-rtl .k-grid .k-pager-numbers,
@@ -3599,11 +3530,6 @@ html .k-grid-edit-row .k-tooltip {
     right: 4.8em;
     width: 4.5em;
   }
-  .k-webkit .k-rtl .k-pager-numbers:first-child,
-  .k-ff .k-rtl .k-pager-numbers:first-child,
-  .k-ie11 .k-rtl .k-pager-numbers:first-child,
-  .k-edge .k-rtl .k-pager-numbers:first-child,
-  .k-safari .k-rtl .k-pager-numbers:first-child,
   .k-webkit .k-rtl .k-grid .k-pager-numbers:first-child,
   .k-ff .k-rtl .k-grid .k-pager-numbers:first-child,
   .k-ie11 .k-rtl .k-grid .k-pager-numbers:first-child,
@@ -3612,11 +3538,6 @@ html .k-grid-edit-row .k-tooltip {
     left: auto;
     right: .2em;
   }
-  .k-webkit .k-rtl .km-pane-wrapper .k-pager-numbers,
-  .k-ff .k-rtl .km-pane-wrapper .k-pager-numbers,
-  .k-ie11 .k-rtl .km-pane-wrapper .k-pager-numbers,
-  .k-edge .k-rtl .km-pane-wrapper .k-pager-numbers,
-  .k-safari .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-webkit .k-rtl .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-ff .k-rtl .km-pane-wrapper .k-grid .k-pager-numbers,
   .k-ie11 .k-rtl .km-pane-wrapper .k-grid .k-pager-numbers,
@@ -3624,11 +3545,6 @@ html .k-grid-edit-row .k-tooltip {
   .k-safari .k-rtl .km-pane-wrapper .k-grid .k-pager-numbers {
     right: 5.8em;
   }
-  .k-webkit .k-pager-numbers .k-current-page,
-  .k-ff .k-pager-numbers .k-current-page,
-  .k-ie11 .k-pager-numbers .k-current-page,
-  .k-edge .k-pager-numbers .k-current-page,
-  .k-safari .k-pager-numbers .k-current-page,
   .k-webkit .k-grid .k-pager-numbers .k-current-page,
   .k-ff .k-grid .k-pager-numbers .k-current-page,
   .k-ie11 .k-grid .k-pager-numbers .k-current-page,
@@ -3637,11 +3553,6 @@ html .k-grid-edit-row .k-tooltip {
     display: block;
     border-left: 0;
   }
-  .k-webkit .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-ff .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-edge .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-safari .k-pager-numbers.k-state-expanded .k-current-page,
   .k-webkit .k-grid .k-pager-number.k-state-expanded .k-current-page,
   .k-ff .k-grid .k-pager-number.k-state-expanded .k-current-page,
   .k-ie11 .k-grid .k-pager-number.k-state-expanded .k-current-page,
@@ -3650,101 +3561,6 @@ html .k-grid-edit-row .k-tooltip {
     -ms-transform: translatey(100%);
         transform: translatey(100%);
     -webkit-transform: translatey(100%);
-  }
-  .k-webkit .k-pager-numbers li:not(.k-current-page),
-  .k-ff .k-pager-numbers li:not(.k-current-page),
-  .k-ie11 .k-pager-numbers li:not(.k-current-page),
-  .k-edge .k-pager-numbers li:not(.k-current-page),
-  .k-safari .k-pager-numbers li:not(.k-current-page) {
-    display: none;
-  }
-  .k-webkit .k-pager-numbers .k-current-page .k-link,
-  .k-ff .k-pager-numbers .k-current-page .k-link,
-  .k-ie11 .k-pager-numbers .k-current-page .k-link,
-  .k-edge .k-pager-numbers .k-current-page .k-link,
-  .k-safari .k-pager-numbers .k-current-page .k-link {
-    width: 3.2em;
-    padding: 0 .429em 0 .714em;
-    border-radius: 1.0833em;
-  }
-  .k-webkit .k-pager-numbers + .k-link,
-  .k-ff .k-pager-numbers + .k-link,
-  .k-ie11 .k-pager-numbers + .k-link,
-  .k-edge .k-pager-numbers + .k-link,
-  .k-safari .k-pager-numbers + .k-link {
-    margin-left: 4.8em;
-  }
-  .k-webkit .k-rtl .k-pager-numbers + .k-link,
-  .k-ff .k-rtl .k-pager-numbers + .k-link,
-  .k-ie11 .k-rtl .k-pager-numbers + .k-link,
-  .k-edge .k-rtl .k-pager-numbers + .k-link,
-  .k-safari .k-rtl .k-pager-numbers + .k-link {
-    margin-right: 5.1em;
-    margin-left: 0;
-  }
-  .k-webkit .k-pager-numbers .k-state-selected,
-  .k-ff .k-pager-numbers .k-state-selected,
-  .k-ie11 .k-pager-numbers .k-state-selected,
-  .k-edge .k-pager-numbers .k-state-selected,
-  .k-safari .k-pager-numbers .k-state-selected,
-  .k-webkit .k-pager-numbers .k-link,
-  .k-ff .k-pager-numbers .k-link,
-  .k-ie11 .k-pager-numbers .k-link,
-  .k-edge .k-pager-numbers .k-link,
-  .k-safari .k-pager-numbers .k-link {
-    display: block;
-    margin-right: 0;
-    padding: 1px 5px 1px 5px;
-    text-align: left;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded,
-  .k-ff .k-pager-numbers.k-state-expanded,
-  .k-ie11 .k-pager-numbers.k-state-expanded,
-  .k-edge .k-pager-numbers.k-state-expanded,
-  .k-safari .k-pager-numbers.k-state-expanded {
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-    padding: 2px 2px 0;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-ff .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-edge .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-safari .k-pager-numbers.k-state-expanded .k-current-page {
-    margin: -2em -3px 0;
-    padding: 0;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-  .k-ff .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-  .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-  .k-edge .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-  .k-safari .k-pager-numbers.k-state-expanded .k-current-page .k-link {
-    border-radius: 0 0 1.0833em 1.0833em;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded li,
-  .k-ff .k-pager-numbers.k-state-expanded li,
-  .k-ie11 .k-pager-numbers.k-state-expanded li,
-  .k-edge .k-pager-numbers.k-state-expanded li,
-  .k-safari .k-pager-numbers.k-state-expanded li {
-    display: inline-block;
-  }
-}
-@media only screen and (max-width: 640px) {
-  .k-webkit .k-pager-info,
-  .k-ff .k-pager-info,
-  .k-ie11 .k-pager-info,
-  .k-edge .k-pager-info,
-  .k-safari .k-pager-info {
-    display: none;
-  }
-}
-@media only screen and (max-width: 480px) {
-  .k-webkit .k-pager-sizes,
-  .k-ff .k-pager-sizes,
-  .k-ie11 .k-pager-sizes,
-  .k-edge .k-pager-sizes,
-  .k-safari .k-pager-sizes {
-    display: none;
   }
 }
 .k-treelist .k-status {
