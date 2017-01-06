@@ -1,5 +1,5 @@
 /** 
- * Copyright 2016 Telerik AD                                                                                                                                                                            
+ * Copyright 2017 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -946,7 +946,8 @@ div.k-filebrowser-dropzone em {
 .k-file-progress .k-progress {
   background-color: #d0f8ff;
 }
-.k-file-success {
+.k-file-success .k-file-name,
+.k-file-success .k-upload-pct {
   color: #32b600;
 }
 .k-file-success .k-progress {

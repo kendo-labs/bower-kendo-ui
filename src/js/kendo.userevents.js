@@ -1,5 +1,5 @@
 /** 
- * Copyright 2016 Telerik AD                                                                                                                                                                            
+ * Copyright 2017 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -261,8 +261,7 @@
                     if (support.browser.version < 11) {
                         element.css('-ms-touch-action', 'pinch-zoom double-tap-zoom');
                     } else {
-                        var defaultAction = kendo.support.browser.chrome ? 'pan-y' : 'none';
-                        element.css('touch-action', options.touchAction || defaultAction);
+                        element.css('touch-action', options.touchAction || 'none');
                     }
                 }
                 if (options.preventDragEvent) {

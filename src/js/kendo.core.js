@@ -1,5 +1,5 @@
 /** 
- * Copyright 2016 Telerik AD                                                                                                                                                                            
+ * Copyright 2017 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.3.1216'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.3.1306'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1459,8 +1459,6 @@
                 support.tbodyInnerHtml = false;
             }
             support.touch = 'ontouchstart' in window;
-            support.msPointers = window.MSPointerEvent;
-            support.pointers = window.PointerEvent;
             var transitions = support.transitions = false, transforms = support.transforms = false, elementProto = 'HTMLElement' in window ? HTMLElement.prototype : [];
             support.hasHW3D = 'WebKitCSSMatrix' in window && 'm11' in new window.WebKitCSSMatrix() || 'MozPerspective' in document.documentElement.style || 'msPerspective' in document.documentElement.style;
             each([
@@ -1557,7 +1555,6 @@
             };
             var mobileOS = support.mobileOS = support.detectOS(navigator.userAgent);
             support.wpDevicePixelRatio = mobileOS.wp ? screen.width / 320 : 0;
-            support.kineticScrollNeeded = mobileOS && (support.touch || support.msPointers || support.pointers);
             support.hasNativeScrolling = false;
             if (mobileOS.ios || mobileOS.android && mobileOS.majorVersion > 2 || mobileOS.wp) {
                 support.hasNativeScrolling = mobileOS;
@@ -1717,6 +1714,10 @@
             var documentMode = document.documentMode;
             support.hashChange = 'onhashchange' in window && !(support.browser.msie && (!documentMode || documentMode <= 8));
             support.customElements = 'registerElement' in window.document;
+            var chrome = support.browser.chrome;
+            support.msPointers = !chrome && window.MSPointerEvent;
+            support.pointers = !chrome && window.PointerEvent;
+            support.kineticScrollNeeded = mobileOS && (support.touch || support.msPointers || support.pointers);
         }());
         function size(obj) {
             var result = 0, key;
