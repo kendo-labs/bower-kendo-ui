@@ -918,7 +918,7 @@
                 this._loading = $('<span class="k-icon k-i-loading ' + HIDDENCLASS + '"></span>').insertAfter(this.input);
             },
             _clearButton: function () {
-                this._clear = $('<span deselectable="on" class="k-icon k-i-close" title="clear"></span>').attr({
+                this._clear = $('<span deselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
                     'role': 'button',
                     'tabIndex': -1
                 });

@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.3.1306'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2016.3.1317'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -20643,7 +20643,7 @@
                 this._loading = $('<span class="k-icon k-i-loading" style="display:none"></span>').insertAfter(this.element);
             },
             _clearButton: function () {
-                this._clear = $('<span unselectable="on" class="k-icon k-i-close" title="clear"></span>').attr({
+                this._clear = $('<span unselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
                     'role': 'button',
                     'tabIndex': -1
                 });
@@ -22312,7 +22312,7 @@
                 }
             },
             _clearButton: function () {
-                this._clear = $('<span unselectable="on" class="k-icon k-i-close" title="clear"></span>').attr({
+                this._clear = $('<span unselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
                     'role': 'button',
                     'tabIndex': -1
                 });
@@ -23305,7 +23305,7 @@
                 this._loading = $('<span class="k-icon k-i-loading ' + HIDDENCLASS + '"></span>').insertAfter(this.input);
             },
             _clearButton: function () {
-                this._clear = $('<span deselectable="on" class="k-icon k-i-close" title="clear"></span>').attr({
+                this._clear = $('<span deselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
                     'role': 'button',
                     'tabIndex': -1
                 });
