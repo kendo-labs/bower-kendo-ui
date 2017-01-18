@@ -297,7 +297,7 @@
                 }
                 element.wrap(createWrapper(options, element, that._isHorizontal)).hide();
                 if (options.showButtons) {
-                    element.before(createButton(options, 'increase', that._isHorizontal)).before(createButton(options, 'decrease', that._isHorizontal));
+                    element.before(createButton(options, 'increase', that._isHorizontal, that._isRtl)).before(createButton(options, 'decrease', that._isHorizontal, that._isRtl));
                 }
                 element.before(createTrack(options, element));
             },
@@ -378,12 +378,20 @@
             style = style ? ' style=\'' + style + '\'' : '';
             return '<div class=\'k-widget k-slider' + orientationCssClass + cssClasses + '\'' + style + '>' + '<div class=\'k-slider-wrap' + (options.showButtons ? ' k-slider-buttons' : '') + tickPlacementCssClass + '\'></div></div>';
         }
-        function createButton(options, type, isHorizontal) {
+        function createButton(options, type, isHorizontal, isRtl) {
             var buttonCssClass = '';
-            if (type == 'increase') {
-                buttonCssClass = isHorizontal ? 'k-i-arrow-e' : 'k-i-arrow-n';
+            if (isHorizontal) {
+                if (!isRtl && type == 'increase' || isRtl && type != 'increase') {
+                    buttonCssClass = 'k-i-arrow-60-right';
+                } else {
+                    buttonCssClass = 'k-i-arrow-60-left';
+                }
             } else {
-                buttonCssClass = isHorizontal ? 'k-i-arrow-w' : 'k-i-arrow-s';
+                if (type == 'increase') {
+                    buttonCssClass = 'k-i-arrow-60-up';
+                } else {
+                    buttonCssClass = 'k-i-arrow-60-down';
+                }
             }
             return '<a class=\'k-button k-button-' + type + '\' ' + 'title=\'' + options[type + 'ButtonTitle'] + '\' ' + 'aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
         }
@@ -640,11 +648,13 @@
             }
             moveSelection(options.value);
             that.bind([
-                CHANGE,
                 SLIDE,
                 MOVE_SELECTION
             ], function (e) {
                 moveSelection(parseFloat(e.value, 10));
+            });
+            that.bind(CHANGE, function (e) {
+                moveSelection(parseFloat(e.sender.value(), 10));
             });
         };
         Slider.Drag = function (element, type, owner, options) {

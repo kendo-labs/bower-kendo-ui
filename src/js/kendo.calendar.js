@@ -33,7 +33,7 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, support = kendo.support, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, parse = kendo.parseDate, adjustDST = kendo.date.adjustDST, extractFormat = kendo._extractFormat, template = kendo.template, getCulture = kendo.getCulture, transitions = kendo.support.transitions, transitionOrigin = transitions ? transitions.css + 'transform-origin' : '', cellTemplate = template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#">#=data.value#</a></td>', { useWithBlock: false }), emptyCellTemplate = template('<td role="gridcell">&nbsp;</td>', { useWithBlock: false }), browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9, outerHeight = kendo._outerHeight, outerWidth = kendo._outerWidth, ns = '.kendoCalendar', CLICK = 'click' + ns, KEYDOWN_NS = 'keydown' + ns, ID = 'id', MIN = 'min', LEFT = 'left', SLIDE = 'slideIn', MONTH = 'month', CENTURY = 'century', CHANGE = 'change', NAVIGATE = 'navigate', VALUE = 'value', HOVER = 'k-state-hover', DISABLED = 'k-state-disabled', FOCUSED = 'k-state-focused', OTHERMONTH = 'k-other-month', OTHERMONTHCLASS = ' class="' + OTHERMONTH + '"', TODAY = 'k-nav-today', CELLSELECTOR = 'td:has(.k-link)', BLUR = 'blur' + ns, FOCUS = 'focus', FOCUS_WITH_NS = FOCUS + ns, MOUSEENTER = support.touch ? 'touchstart' : 'mouseenter', MOUSEENTER_WITH_NS = support.touch ? 'touchstart' + ns : 'mouseenter' + ns, MOUSELEAVE = support.touch ? 'touchend' + ns + ' touchmove' + ns : 'mouseleave' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, PREVARROW = '_prevArrow', NEXTARROW = '_nextArrow', ARIA_DISABLED = 'aria-disabled', ARIA_SELECTED = 'aria-selected', proxy = $.proxy, extend = $.extend, DATE = Date, views = {
+        var kendo = window.kendo, support = kendo.support, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, parse = kendo.parseDate, adjustDST = kendo.date.adjustDST, weekInYear = kendo.date.weekInYear, extractFormat = kendo._extractFormat, template = kendo.template, getCulture = kendo.getCulture, transitions = kendo.support.transitions, transitionOrigin = transitions ? transitions.css + 'transform-origin' : '', cellTemplate = template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#">#=data.value#</a></td>', { useWithBlock: false }), emptyCellTemplate = template('<td role="gridcell">&nbsp;</td>', { useWithBlock: false }), weekNumberTemplate = template('<td class="k-alt">#= data.weekNumber #</td>', { useWithBlock: false }), browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9, outerHeight = kendo._outerHeight, outerWidth = kendo._outerWidth, ns = '.kendoCalendar', CLICK = 'click' + ns, KEYDOWN_NS = 'keydown' + ns, ID = 'id', MIN = 'min', LEFT = 'left', SLIDE = 'slideIn', MONTH = 'month', CENTURY = 'century', CHANGE = 'change', NAVIGATE = 'navigate', VALUE = 'value', HOVER = 'k-state-hover', DISABLED = 'k-state-disabled', FOCUSED = 'k-state-focused', OTHERMONTH = 'k-other-month', OTHERMONTHCLASS = ' class="' + OTHERMONTH + '"', TODAY = 'k-nav-today', CELLSELECTOR = 'td:has(.k-link)', BLUR = 'blur' + ns, FOCUS = 'focus', FOCUS_WITH_NS = FOCUS + ns, MOUSEENTER = support.touch ? 'touchstart' : 'mouseenter', MOUSEENTER_WITH_NS = support.touch ? 'touchstart' + ns : 'mouseenter' + ns, MOUSELEAVE = support.touch ? 'touchend' + ns + ' touchmove' + ns : 'mouseleave' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, PREVARROW = '_prevArrow', NEXTARROW = '_nextArrow', ARIA_DISABLED = 'aria-disabled', ARIA_SELECTED = 'aria-selected', proxy = $.proxy, extend = $.extend, DATE = Date, views = {
                 month: 0,
                 year: 1,
                 decade: 2,
@@ -50,7 +50,7 @@
                 that._templates();
                 that._header();
                 that._footer(that.footer);
-                id = element.addClass('k-widget k-calendar').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK, CELLSELECTOR, function (e) {
+                id = element.addClass('k-widget k-calendar ' + (options.weekNumber ? ' k-week-number' : '')).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK, CELLSELECTOR, function (e) {
                     var link = e.currentTarget.firstChild, value = that._toDateObject(link);
                     if (link.href.indexOf('#') != -1) {
                         e.preventDefault();
@@ -95,6 +95,7 @@
                 footer: '',
                 format: '',
                 month: {},
+                weekNumber: false,
                 start: MONTH,
                 depth: MONTH,
                 animation: {
@@ -215,8 +216,10 @@
                         dates: options.dates,
                         format: options.format,
                         culture: culture,
-                        disableDates: options.disableDates
+                        disableDates: options.disableDates,
+                        isWeekColumnVisible: options.weekNumber
                     }, that[currentView.name])));
+                    addClassToViewContainer(to, currentView.name);
                     makeUnselectable(to);
                     var replace = from && from.data('start') === to.data('start');
                     that._animate({
@@ -487,7 +490,7 @@
             _header: function () {
                 var that = this, element = that.element, links;
                 if (!element.find('.k-header')[0]) {
-                    element.html('<div class="k-header">' + '<a href="#" role="button" class="k-link k-nav-prev"><span class="k-icon k-i-arrow-w"></span></a>' + '<a href="#" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" role="button" class="k-link k-nav-next"><span class="k-icon k-i-arrow-e"></span></a>' + '</div>');
+                    element.html('<div class="k-header">' + '<a href="#" role="button" class="k-link k-nav-prev"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="#" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" role="button" class="k-link k-nav-next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>');
                 }
                 links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).click(false);
                 that._title = links.eq(1).on(CLICK, function () {
@@ -575,10 +578,11 @@
                 return value;
             },
             _templates: function () {
-                var that = this, options = that.options, footer = options.footer, month = options.month, content = month.content, empty = month.empty;
+                var that = this, options = that.options, footer = options.footer, month = options.month, content = month.content, weekNumber = month.weekNumber, empty = month.empty;
                 that.month = {
                     content: template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link#=data.linkClass#" href="#=data.url#" ' + kendo.attr('value') + '="#=data.dateString#" title="#=data.title#">' + (content || '#=data.value#') + '</a></td>', { useWithBlock: !!content }),
-                    empty: template('<td role="gridcell">' + (empty || '&nbsp;') + '</td>', { useWithBlock: !!empty })
+                    empty: template('<td role="gridcell">' + (empty || '&nbsp;') + '</td>', { useWithBlock: !!empty }),
+                    weekNumber: template('<td class="k-alt">' + (weekNumber || '#= data.weekNumber #') + '</td>', { useWithBlock: !!weekNumber })
                 };
                 that.footer = footer !== false ? template(footer || '#= kendo.toString(data,"D","' + options.culture + '") #', { useWithBlock: false }) : null;
             }
@@ -607,7 +611,10 @@
                         return getCalendarInfo(culture).months.names[date.getMonth()] + ' ' + date.getFullYear();
                     },
                     content: function (options) {
-                        var that = this, idx = 0, min = options.min, max = options.max, date = options.date, dates = options.dates, format = options.format, culture = options.culture, navigateUrl = options.url, hasUrl = navigateUrl && dates[0], currentCalendar = getCalendarInfo(culture), firstDayIdx = currentCalendar.firstDay, days = currentCalendar.days, names = shiftArray(days.names, firstDayIdx), shortNames = shiftArray(days.namesShort, firstDayIdx), start = calendar.firstVisibleDay(date, currentCalendar), firstDayOfMonth = that.first(date), lastDayOfMonth = that.last(date), toDateString = that.toDateString, today = new DATE(), html = '<table tabindex="0" role="grid" class="k-content" cellspacing="0" data-start="' + toDateString(start) + '"><thead><tr role="row">';
+                        var that = this, idx = 0, min = options.min, max = options.max, date = options.date, dates = options.dates, format = options.format, culture = options.culture, navigateUrl = options.url, isWeekColumnVisible = options.isWeekColumnVisible, hasUrl = navigateUrl && dates[0], currentCalendar = getCalendarInfo(culture), firstDayIdx = currentCalendar.firstDay, days = currentCalendar.days, names = shiftArray(days.names, firstDayIdx), shortNames = shiftArray(days.namesShort, firstDayIdx), start = calendar.firstVisibleDay(date, currentCalendar), firstDayOfMonth = that.first(date), lastDayOfMonth = that.last(date), toDateString = that.toDateString, today = new DATE(), html = '<table tabindex="0" role="grid" class="k-content" cellspacing="0" data-start="' + toDateString(start) + '"><thead><tr role="row">';
+                        if (isWeekColumnVisible) {
+                            html += '<th scope="col" class="k-alt"></th>';
+                        }
                         for (; idx < 7; idx++) {
                             html += '<th scope="col" title="' + names[idx] + '">' + shortNames[idx] + '</th>';
                         }
@@ -619,6 +626,8 @@
                             perRow: 7,
                             html: html += '</tr></thead><tbody><tr role="row">',
                             start: start,
+                            isWeekColumnVisible: isWeekColumnVisible,
+                            weekNumber: options.weekNumber,
                             min: new DATE(min.getFullYear(), min.getMonth(), min.getDate()),
                             max: new DATE(max.getFullYear(), max.getMonth(), max.getDate()),
                             content: options.content,
@@ -653,6 +662,12 @@
                                     cssClass: cssClass[0] ? ' class="' + cssClass.join(' ') + '"' : '',
                                     linkClass: linkClass,
                                     url: url
+                                };
+                            },
+                            weekNumberBuild: function (date) {
+                                return {
+                                    weekNumber: weekInYear(date, date),
+                                    currentDate: date
                                 };
                             }
                         });
@@ -854,10 +869,16 @@
             return start + '-' + end;
         }
         function view(options) {
-            var idx = 0, data, min = options.min, max = options.max, start = options.start, setter = options.setter, build = options.build, length = options.cells || 12, cellsPerRow = options.perRow || 4, content = options.content || cellTemplate, empty = options.empty || emptyCellTemplate, html = options.html || '<table tabindex="0" role="grid" class="k-content k-meta-view" cellspacing="0"><tbody><tr role="row">';
+            var idx = 0, data, min = options.min, max = options.max, start = options.start, setter = options.setter, build = options.build, weekNumberBuild = options.weekNumberBuild, length = options.cells || 12, isWeekColumnVisible = options.isWeekColumnVisible, cellsPerRow = options.perRow || 4, weekNumber = options.weekNumber || weekNumberTemplate, content = options.content || cellTemplate, empty = options.empty || emptyCellTemplate, html = options.html || '<table tabindex="0" role="grid" class="k-content k-meta-view" cellspacing="0"><tbody><tr role="row">';
+            if (isWeekColumnVisible) {
+                html += weekNumber(weekNumberBuild(start));
+            }
             for (; idx < length; idx++) {
                 if (idx > 0 && idx % cellsPerRow === 0) {
                     html += '</tr><tr role="row">';
+                    if (isWeekColumnVisible) {
+                        html += weekNumber(weekNumberBuild(start));
+                    }
                 }
                 start = new DATE(start.getFullYear(), start.getMonth(), start.getDate(), 0, 0, 0);
                 adjustDST(start, 0);
@@ -937,6 +958,9 @@
                 element.find('*').attr('unselectable', 'on');
             }
         }
+        function addClassToViewContainer(element, currentView) {
+            element.addClass('k-' + currentView);
+        }
         function inArray(date, dates) {
             for (var i = 0, length = dates.length; i < length; i++) {
                 if (date === +dates[i]) {
@@ -1011,6 +1035,7 @@
         calendar.makeUnselectable = makeUnselectable;
         calendar.restrictValue = restrictValue;
         calendar.isInRange = isInRange;
+        calendar.addClassToViewContainer = addClassToViewContainer;
         calendar.normalize = normalize;
         calendar.viewsEnum = views;
         calendar.disabled = getDisabledExpr;

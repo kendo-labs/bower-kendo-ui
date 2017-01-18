@@ -134,7 +134,7 @@
                 }
                 if (options.refresh) {
                     if (!that.element.find('.k-pager-refresh').length) {
-                        that.element.append('<a href="#" class="k-pager-refresh k-link" title="' + options.messages.refresh + '"><span class="k-icon k-i-refresh">' + options.messages.refresh + '</span></a>');
+                        that.element.append('<a href="#" class="k-pager-refresh k-link" title="' + options.messages.refresh + '"><span class="k-icon k-i-reload"></span></a>');
                     }
                     that.element.on(CLICK + NS, '.k-pager-refresh', proxy(that._refreshClick, that));
                 }

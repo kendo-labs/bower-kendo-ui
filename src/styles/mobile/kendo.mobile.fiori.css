@@ -1965,8 +1965,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-list .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc(48.39%);
-  width: calc(48.39%);
+  width: -webkit-calc((100% - 3.22em)/2);
+  width: calc((100% - 3.22em)/2);
   overflow: hidden;
   white-space: nowrap;
 }
@@ -5951,8 +5951,8 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc(48.39%);
-  width: calc(48.39%);
+  width: -webkit-calc((100% - 3.22em)/2);
+  width: calc((100% - 3.22em)/2);
   overflow: hidden;
   white-space: nowrap;
 }

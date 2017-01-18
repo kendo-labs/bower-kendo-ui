@@ -55,7 +55,7 @@
             white-space: pre;
             box-sizing: border-box;
             overflow: hidden;
-            padding: 1px;
+            padding: 1px 3px;
             background-clip: padding-box;
         }
     }
@@ -90,8 +90,8 @@
     }
 
     @formula-bar-height: 26px;
-    @formula-input-height: @formula-bar-height / 1.3;
-    @formula-input-padding: (@formula-bar-height - @formula-input-height) / 2;
+    @formula-input-height: (@formula-bar-height / 1.3);
+    @formula-input-padding: ((@formula-bar-height - @formula-input-height) / 2);
 
     .k-spreadsheet-action-bar {
         border-width: 0 0 1px;
@@ -145,7 +145,7 @@
 
             &::before {
                 .use-font-icon();
-                content: "\e659";
+                content: "\e691";
                 display: block;
                 position: absolute;
                 top: 50%;
@@ -332,15 +332,6 @@
     .k-vertical-resize & {
         cursor: row-resize;
     }
-}
-
-
-.k-font-icon,
-.k-font-icon.k-icon,
-.k-font-icon.k-tool-icon {
-    .use-font-icon();
-    background-image: none;
-    font-size: 16px;
 }
 
 .k-spreadsheet .k-colorpicker .k-tool-icon {
@@ -699,7 +690,7 @@ div.k-spreadsheet-window {
             padding-left: 26px;
         }
 
-        .k-icon.k-font-icon {
+        .k-icon.k-icon {
             margin-left: -26px;
             width: 26px;
         }
@@ -964,4 +955,36 @@ div.k-spreadsheet-window {
     display: block;
     content: "";
     clear: both;
+}
+
+.k-spreadsheet-filter-menu .k-i-arrow-45-down-right
+{
+    cursor: pointer;
+}
+
+.k-spreadsheet-import-errors {
+    .k--header-message {
+        font-weight: bold;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #888;
+        margin-bottom: 5px;
+    }
+    .k--errors {
+        max-height: 350px;
+        overflow: auto;
+
+        table {
+            border-collapse: collapse;
+            font-size: 90%;
+
+            td, th {
+                padding: 2px 4px;
+                border-bottom: 1px solid #bbb;
+            }
+            th {
+                text-align: left;
+                border-bottom: 1px solid #000;
+            }
+        }
+    }
 }

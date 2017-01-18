@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2016.3.1317'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.1.118'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1341,7 +1341,7 @@
                 } else {
                     propInit = null;
                 }
-                if (propInit && propInit !== Array && propInit !== ObservableArray && propInit !== LazyObservableArray && propInit !== DataSource && propInit !== HierarchicalDataSource) {
+                if (propInit && propInit !== Array && propInit !== ObservableArray && propInit !== LazyObservableArray && propInit !== DataSource && propInit !== HierarchicalDataSource && propInit !== RegExp) {
                     if (propValue instanceof Date) {
                         destination[property] = new Date(propValue.getTime());
                     } else if (isFunction(propValue.clone)) {
@@ -1459,8 +1459,10 @@
                 support.tbodyInnerHtml = false;
             }
             support.touch = 'ontouchstart' in window;
+            var docStyle = document.documentElement.style;
             var transitions = support.transitions = false, transforms = support.transforms = false, elementProto = 'HTMLElement' in window ? HTMLElement.prototype : [];
-            support.hasHW3D = 'WebKitCSSMatrix' in window && 'm11' in new window.WebKitCSSMatrix() || 'MozPerspective' in document.documentElement.style || 'msPerspective' in document.documentElement.style;
+            support.hasHW3D = 'WebKitCSSMatrix' in window && 'm11' in new window.WebKitCSSMatrix() || 'MozPerspective' in docStyle || 'msPerspective' in docStyle;
+            support.cssFlexbox = 'flexWrap' in docStyle || 'WebkitFlexWrap' in docStyle || 'msFlexWrap' in docStyle;
             each([
                 'Moz',
                 'webkit',
@@ -1630,7 +1632,7 @@
                     return 1;
                 }
             };
-            support.cssBorderSpacing = typeof document.documentElement.style.borderSpacing != 'undefined' && !(support.browser.msie && support.browser.version < 8);
+            support.cssBorderSpacing = typeof docStyle.borderSpacing != 'undefined' && !(support.browser.msie && support.browser.version < 8);
             (function (browser) {
                 var cssClass = '', docElement = $(document.documentElement), majorVersion = parseInt(browser.version, 10);
                 if (browser.msie) {
@@ -1651,6 +1653,9 @@
                 }
                 if (support.mobileOS) {
                     cssClass += ' k-mobile';
+                }
+                if (!support.cssFlexbox) {
+                    cssClass += ' k-no-flexbox';
                 }
                 docElement.addClass(cssClass);
             }(support.browser));
@@ -2231,7 +2236,11 @@
                 value = parseOption(element, option);
                 if (value !== undefined) {
                     if (templateRegExp.test(option)) {
-                        value = kendo.template($('#' + value).html());
+                        if (typeof value === 'string') {
+                            value = kendo.template($('#' + value).html());
+                        } else {
+                            value = element.getAttribute(option);
+                        }
                     }
                     result[option] = value;
                 }
@@ -2957,6 +2966,21 @@
                 }
                 return last;
             }
+            function weekInYear(date, weekStart) {
+                var year, days;
+                date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                adjustDST(date, 0);
+                year = date.getFullYear();
+                if (weekStart !== undefined) {
+                    setDayOfWeek(date, weekStart, -1);
+                    date.setDate(date.getDate() + 4);
+                } else {
+                    date.setDate(date.getDate() + (4 - (date.getDay() || 7)));
+                }
+                adjustDST(date, 0);
+                days = Math.floor((date.getTime() - new Date(year, 0, 1, -6)) / 86400000);
+                return 1 + Math.floor(days / 7);
+            }
             function getDate(date) {
                 date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
                 adjustDST(date, 0);
@@ -3052,6 +3076,7 @@
                 toInvariantTime: toInvariantTime,
                 firstDayOfMonth: firstDayOfMonth,
                 lastDayOfMonth: lastDayOfMonth,
+                weekInYear: weekInYear,
                 getMilliseconds: getMilliseconds
             };
         }();
@@ -4846,7 +4871,7 @@
                 DESTROY
             ], identity = function (o) {
                 return o;
-            }, getter = kendo.getter, stringify = kendo.stringify, math = Math, push = [].push, join = [].join, pop = [].pop, splice = [].splice, shift = [].shift, slice = [].slice, unshift = [].unshift, toString = {}.toString, stableSort = kendo.support.stableSort, dateRegExp = /^\/Date\((.*?)\)\/$/, newLineRegExp = /(\r+|\n+)/g, quoteRegExp = /(?=['\\])/g;
+            }, getter = kendo.getter, stringify = kendo.stringify, math = Math, push = [].push, join = [].join, pop = [].pop, splice = [].splice, shift = [].shift, slice = [].slice, unshift = [].unshift, toString = {}.toString, stableSort = kendo.support.stableSort, dateRegExp = /^\/Date\((.*?)\)\/$/;
         var ObservableArray = Observable.extend({
             init: function (array, type) {
                 var that = this;
@@ -5539,22 +5564,33 @@
             return result;
         };
         var operators = function () {
-            function quote(value) {
-                return value.replace(quoteRegExp, '\\').replace(newLineRegExp, '');
+            function quote(str) {
+                if (typeof str == 'string') {
+                    str = str.replace(/[\r\n]+/g, '');
+                }
+                return JSON.stringify(str);
+            }
+            function textOp(impl) {
+                return function (a, b, ignore) {
+                    b += '';
+                    if (ignore) {
+                        a = '(' + a + ' || \'\').toLowerCase()';
+                        b = b.toLowerCase();
+                    }
+                    return impl(a, quote(b), ignore);
+                };
             }
             function operator(op, a, b, ignore) {
-                var date;
                 if (b != null) {
                     if (typeof b === STRING) {
-                        b = quote(b);
-                        date = dateRegExp.exec(b);
+                        var date = dateRegExp.exec(b);
                         if (date) {
                             b = new Date(+date[1]);
                         } else if (ignore) {
-                            b = '\'' + b.toLowerCase() + '\'';
+                            b = quote(b.toLowerCase());
                             a = '((' + a + ' || \'\')+\'\').toLowerCase()';
                         } else {
-                            b = '\'' + b + '\'';
+                            b = quote(b);
                         }
                     }
                     if (b.getTime) {
@@ -5564,15 +5600,33 @@
                 }
                 return a + ' ' + op + ' ' + b;
             }
+            function getMatchRegexp(pattern) {
+                for (var rx = '/^', esc = false, i = 0; i < pattern.length; ++i) {
+                    var ch = pattern.charAt(i);
+                    if (esc) {
+                        rx += '\\' + ch;
+                    } else if (ch == '~') {
+                        esc = true;
+                        continue;
+                    } else if (ch == '*') {
+                        rx += '.*';
+                    } else if (ch == '?') {
+                        rx += '.';
+                    } else if ('.+^$()[]{}|\\/\n\r\u2028\u2029\xA0'.indexOf(ch) >= 0) {
+                        rx += '\\' + ch;
+                    } else {
+                        rx += ch;
+                    }
+                    esc = false;
+                }
+                return rx + '$/';
+            }
             return {
                 quote: function (value) {
                     if (value && value.getTime) {
                         return 'new Date(' + value.getTime() + ')';
                     }
-                    if (typeof value == 'string') {
-                        return '\'' + quote(value) + '\'';
-                    }
-                    return '' + value;
+                    return quote(value);
                 },
                 eq: function (a, b, ignore) {
                     return operator('==', a, b, ignore);
@@ -5592,78 +5646,34 @@
                 lte: function (a, b, ignore) {
                     return operator('<=', a, b, ignore);
                 },
-                startswith: function (a, b, ignore) {
-                    if (ignore) {
-                        a = '(' + a + ' || \'\').toLowerCase()';
-                        if (b) {
-                            b = b.toLowerCase();
-                        }
-                    }
-                    if (b) {
-                        b = quote(b);
-                    }
-                    return a + '.lastIndexOf(\'' + b + '\', 0) == 0';
-                },
-                doesnotstartwith: function (a, b, ignore) {
-                    if (ignore) {
-                        a = '(' + a + ' || \'\').toLowerCase()';
-                        if (b) {
-                            b = b.toLowerCase();
-                        }
-                    }
-                    if (b) {
-                        b = quote(b);
-                    }
-                    return a + '.lastIndexOf(\'' + b + '\', 0) == -1';
-                },
-                endswith: function (a, b, ignore) {
-                    if (ignore) {
-                        a = '(' + a + ' || \'\').toLowerCase()';
-                        if (b) {
-                            b = b.toLowerCase();
-                        }
-                    }
-                    if (b) {
-                        b = quote(b);
-                    }
-                    return a + '.indexOf(\'' + b + '\', ' + a + '.length - ' + (b || '').length + ') >= 0';
-                },
-                doesnotendwith: function (a, b, ignore) {
-                    if (ignore) {
-                        a = '(' + a + ' || \'\').toLowerCase()';
-                        if (b) {
-                            b = b.toLowerCase();
-                        }
-                    }
-                    if (b) {
-                        b = quote(b);
-                    }
-                    return a + '.indexOf(\'' + b + '\', ' + a + '.length - ' + (b || '').length + ') < 0';
-                },
-                contains: function (a, b, ignore) {
-                    if (ignore) {
-                        a = '(' + a + ' || \'\').toLowerCase()';
-                        if (b) {
-                            b = b.toLowerCase();
-                        }
-                    }
-                    if (b) {
-                        b = quote(b);
-                    }
-                    return a + '.indexOf(\'' + b + '\') >= 0';
-                },
-                doesnotcontain: function (a, b, ignore) {
-                    if (ignore) {
-                        a = '(' + a + ' || \'\').toLowerCase()';
-                        if (b) {
-                            b = b.toLowerCase();
-                        }
-                    }
-                    if (b) {
-                        b = quote(b);
-                    }
-                    return a + '.indexOf(\'' + b + '\') == -1';
-                },
+                startswith: textOp(function (a, b) {
+                    return a + '.lastIndexOf(' + b + ', 0) == 0';
+                }),
+                doesnotstartwith: textOp(function (a, b) {
+                    return a + '.lastIndexOf(' + b + ', 0) == -1';
+                }),
+                endswith: textOp(function (a, b) {
+                    var n = b ? b.length - 2 : 0;
+                    return a + '.indexOf(' + b + ', ' + a + '.length - ' + n + ') >= 0';
+                }),
+                doesnotendwith: textOp(function (a, b) {
+                    var n = b ? b.length - 2 : 0;
+                    return a + '.indexOf(' + b + ', ' + a + '.length - ' + n + ') < 0';
+                }),
+                contains: textOp(function (a, b) {
+                    return a + '.indexOf(' + b + ') >= 0';
+                }),
+                doesnotcontain: textOp(function (a, b) {
+                    return a + '.indexOf(' + b + ') == -1';
+                }),
+                matches: textOp(function (a, b) {
+                    b = b.substring(1, b.length - 1);
+                    return getMatchRegexp(b) + '.test(' + a + ')';
+                }),
+                doesnotmatch: textOp(function (a, b) {
+                    b = b.substring(1, b.length - 1);
+                    return '!' + getMatchRegexp(b) + '.test(' + a + ')';
+                }),
                 isempty: function (a) {
                     return a + ' === \'\'';
                 },
@@ -5671,10 +5681,10 @@
                     return a + ' !== \'\'';
                 },
                 isnull: function (a) {
-                    return '(' + a + ' === null || ' + a + ' === undefined)';
+                    return '(' + a + ' == null)';
                 },
                 isnotnull: function (a) {
-                    return '(' + a + ' !== null && ' + a + ' !== undefined)';
+                    return '(' + a + ' != null)';
                 }
             };
         }();
@@ -11575,7 +11585,7 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, NS = '.kendoValidator', INVALIDMSG = 'k-invalid-msg', invalidMsgRegExp = new RegExp(INVALIDMSG, 'i'), INVALIDINPUT = 'k-invalid', VALIDINPUT = 'k-valid', emailRegExp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i, urlRegExp = /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i, INPUTSELECTOR = ':input:not(:button,[type=submit],[type=reset],[disabled],[readonly])', CHECKBOXSELECTOR = ':checkbox:not([disabled],[readonly])', NUMBERINPUTSELECTOR = '[type=number],[type=range]', BLUR = 'blur', NAME = 'name', FORM = 'form', NOVALIDATE = 'novalidate', proxy = $.proxy, patternMatcher = function (value, pattern) {
+        var kendo = window.kendo, Widget = kendo.ui.Widget, NS = '.kendoValidator', INVALIDMSG = 'k-invalid-msg', invalidMsgRegExp = new RegExp(INVALIDMSG, 'i'), INVALIDINPUT = 'k-invalid', VALIDINPUT = 'k-valid', emailRegExp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/i, urlRegExp = /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i, INPUTSELECTOR = ':input:not(:button,[type=submit],[type=reset],[disabled],[readonly])', CHECKBOXSELECTOR = ':checkbox:not([disabled],[readonly])', NUMBERINPUTSELECTOR = '[type=number],[type=range]', BLUR = 'blur', NAME = 'name', FORM = 'form', NOVALIDATE = 'novalidate', VALIDATE = 'validate', CHANGE = 'change', VALIDATE_INPUT = 'validateInput', proxy = $.proxy, patternMatcher = function (value, pattern) {
                 if (typeof pattern === 'string') {
                     pattern = new RegExp('^(?:' + pattern + ')$');
                 }
@@ -11652,8 +11662,9 @@
                 that._isValidated = false;
             },
             events: [
-                'validate',
-                'change'
+                VALIDATE,
+                CHANGE,
+                VALIDATE_INPUT
             ],
             options: {
                 name: 'Validator',
@@ -11743,7 +11754,7 @@
                 var state = this.value();
                 this.validateInput(element);
                 if (this.value() !== state) {
-                    this.trigger('change');
+                    this.trigger(CHANGE);
                 }
             },
             _attachEvents: function () {
@@ -11790,9 +11801,9 @@
                 } else {
                     result = this.validateInput(this.element);
                 }
-                this.trigger('validate', { valid: result });
+                this.trigger(VALIDATE, { valid: result });
                 if (isValid !== result) {
-                    this.trigger('change');
+                    this.trigger(CHANGE);
                 }
                 return result;
             },
@@ -11805,7 +11816,7 @@
                             return element.attr(kendo.attr('for')) === fieldName;
                         }
                         return true;
-                    })).hide(), messageText;
+                    })).hide(), messageText, wasValid = !input.attr('aria-invalid');
                 input.removeAttr('aria-invalid');
                 if (!valid) {
                     messageText = that._extractMessage(input, result.key);
@@ -11823,6 +11834,12 @@
                     input.attr('aria-invalid', true);
                 } else {
                     delete that._errors[fieldName];
+                }
+                if (wasValid !== valid) {
+                    this.trigger(VALIDATE_INPUT, {
+                        valid: valid,
+                        input: input
+                    });
                 }
                 input.toggleClass(INVALIDINPUT, !valid);
                 input.toggleClass(VALIDINPUT, valid);
@@ -13519,15 +13536,15 @@
                         this._movePlaceholder(target, 'next', eventData);
                     }
                     if (this._isFloating(target.element)) {
-                        if (axisDelta.x < 0 && (moveOnDragEnter || offsetDelta.left < 0)) {
+                        if (axisDelta.x < 0 && moveOnDragEnter || !moveOnDragEnter && offsetDelta.left < 0) {
                             direction = 'prev';
-                        } else if (axisDelta.x > 0 && (moveOnDragEnter || offsetDelta.left > 0)) {
+                        } else if (axisDelta.x > 0 && moveOnDragEnter || !moveOnDragEnter && offsetDelta.left > 0) {
                             direction = 'next';
                         }
                     } else {
-                        if (axisDelta.y < 0 && (moveOnDragEnter || offsetDelta.top < 0)) {
+                        if (axisDelta.y < 0 && moveOnDragEnter || !moveOnDragEnter && offsetDelta.top < 0) {
                             direction = 'prev';
-                        } else if (axisDelta.y > 0 && (moveOnDragEnter || offsetDelta.top > 0)) {
+                        } else if (axisDelta.y > 0 && moveOnDragEnter || !moveOnDragEnter && offsetDelta.top > 0) {
                             direction = 'next';
                         }
                     }
@@ -13800,7 +13817,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-expand,span.k-icon.k-i-collapse', msie = kendo.support.browser.msie, supportEventDelegation = false;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up', msie = kendo.support.browser.msie, supportEventDelegation = false;
         (function ($) {
             (function () {
                 $('<div class="parent"><span /></div>').on('click', '>*', function () {
@@ -14310,7 +14327,7 @@
                 }
                 if (options.refresh) {
                     if (!that.element.find('.k-pager-refresh').length) {
-                        that.element.append('<a href="#" class="k-pager-refresh k-link" title="' + options.messages.refresh + '"><span class="k-icon k-i-refresh">' + options.messages.refresh + '</span></a>');
+                        that.element.append('<a href="#" class="k-pager-refresh k-link" title="' + options.messages.refresh + '"><span class="k-icon k-i-reload"></span></a>');
                     }
                     that.element.on(CLICK + NS, '.k-pager-refresh', proxy(that._refreshClick, that));
                 }
@@ -14531,7 +14548,7 @@
                     that.collisions.push(that.collisions[0]);
                 }
                 parentPopup = $(that.options.anchor).closest('.k-popup,.k-group').filter(':not([class^=km-])');
-                options.appendTo = $($(options.appendTo)[0] || parentPopup[0] || BODY);
+                options.appendTo = $($(options.appendTo)[0] || parentPopup[0] || document.body);
                 that.element.hide().addClass('k-popup k-group k-reset').toggleClass('k-rtl', !!options.isRtl).css({ position: ABSOLUTE }).appendTo(options.appendTo).on('mouseenter' + NS, function () {
                     that._hovered = true;
                 }).on('mouseleave' + NS, function () {
@@ -14969,7 +14986,7 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', KHIDING = 'k-hiding', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-#=typeIcon#">#=typeIcon#</span>' + '#=content#' + '<span class="k-icon k-i-close">Hide</span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', KHIDING = 'k-hiding', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-#=typeIcon#" title="#=typeIcon#"></span>' + '#=content#' + '<span class="k-icon k-i-close" title="Hide"></span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
         var Notification = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -15081,14 +15098,6 @@
                 function attachClick(target) {
                     target.on(CLICK + NS, function () {
                         that._hidePopup(popup);
-                    });
-                }
-                if (popup.options.anchor !== document.body && popup.options.origin.indexOf(RIGHT) > 0) {
-                    popup.bind('open', function () {
-                        var shadows = kendo.getShadows(popup.element);
-                        setTimeout(function () {
-                            popup.wrapper.css('left', parseFloat(popup.wrapper.css('left')) + shadows.left + shadows.right);
-                        });
                     });
                 }
                 if (options.hideOnClick) {
@@ -15339,7 +15348,7 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Popup = kendo.ui.Popup, isFunction = kendo.isFunction, isPlainObject = $.isPlainObject, extend = $.extend, proxy = $.proxy, DOCUMENT = $(document), isLocalUrl = kendo.isLocalUrl, ARIAIDSUFFIX = '_tt_active', DESCRIBEDBY = 'aria-describedby', SHOW = 'show', HIDE = 'hide', ERROR = 'error', CONTENTLOAD = 'contentLoad', REQUESTSTART = 'requestStart', KCONTENTFRAME = 'k-content-frame', TEMPLATE = '<div role="tooltip" class="k-widget k-tooltip#if (!autoHide) {# k-tooltip-closable#}#">#if (!autoHide) {# <div class="k-tooltip-button"><a href="\\#" class="k-icon k-i-close">close</a></div> #}#' + '<div class="k-tooltip-content"></div>' + '#if (callout){ #<div class="k-callout k-callout-#=dir#"></div>#}#' + '</div>', IFRAMETEMPLATE = kendo.template('<iframe frameborder=\'0\' class=\'' + KCONTENTFRAME + '\' ' + 'src=\'#= content.url #\'>' + 'This page requires frames in order to show content' + '</iframe>'), NS = '.kendoTooltip', POSITIONS = {
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Popup = kendo.ui.Popup, isFunction = kendo.isFunction, isPlainObject = $.isPlainObject, extend = $.extend, proxy = $.proxy, DOCUMENT = $(document), isLocalUrl = kendo.isLocalUrl, ARIAIDSUFFIX = '_tt_active', DESCRIBEDBY = 'aria-describedby', SHOW = 'show', HIDE = 'hide', ERROR = 'error', CONTENTLOAD = 'contentLoad', REQUESTSTART = 'requestStart', KCONTENTFRAME = 'k-content-frame', TEMPLATE = '<div role="tooltip" class="k-widget k-tooltip#if (!autoHide) {# k-tooltip-closable#}#">#if (!autoHide) {# <div class="k-tooltip-button"><a href="\\#" class="k-icon k-i-close" title="Close"></a></div> #}#' + '<div class="k-tooltip-content"></div>' + '#if (callout){ #<div class="k-callout k-callout-#=dir#"></div>#}#' + '</div>', IFRAMETEMPLATE = kendo.template('<iframe frameborder=\'0\' class=\'' + KCONTENTFRAME + '\' ' + 'src=\'#= content.url #\'>' + 'This page requires frames in order to show content' + '</iframe>'), NS = '.kendoTooltip', POSITIONS = {
                 bottom: {
                     origin: 'bottom center',
                     position: 'top center'
@@ -15805,7 +15814,7 @@
                 } else if (spriteCssClass) {
                     span = element.children('span.k-sprite').first();
                     if (!span[0]) {
-                        span = $('<span class="k-sprite"></span>').prependTo(element);
+                        span = $('<span class="k-sprite ' + ICON + '"></span>').prependTo(element);
                     }
                     span.addClass(spriteCssClass);
                 } else if (imageUrl) {
@@ -15986,7 +15995,7 @@
                 this.options = options;
                 this.toolbar = toolbar;
                 this.mainButton = new ToolBarButton($.extend({}, options, { hidden: false }), toolbar);
-                this.arrowButton = $('<a class="' + BUTTON + ' ' + SPLIT_BUTTON_ARROW + '"><span class="' + (options.mobile ? 'km-icon km-arrowdown' : 'k-icon k-i-arrow-s') + '"></span></a>');
+                this.arrowButton = $('<a class="' + BUTTON + ' ' + SPLIT_BUTTON_ARROW + '"><span class="' + (options.mobile ? 'km-icon km-arrowdown' : 'k-icon k-i-arrow-60-down') + '"></span></a>');
                 this.popupElement = $('<ul class="' + LIST_CONTAINER + '"></ul>');
                 this.mainButton.element.removeAttr('href tabindex').appendTo(element);
                 this.arrowButton.appendTo(element);
@@ -16545,7 +16554,7 @@
                     that.overflowAnchor.append('<span class="km-icon km-more"></span>');
                     overflowContainer = actionSheetWrap(overflowContainer);
                 } else {
-                    that.overflowAnchor.append('<span class="k-icon k-i-arrow-s"></span>');
+                    that.overflowAnchor.append('<span class="k-icon k-i-arrow-60-down"></span>');
                 }
                 that.popup = new kendo.ui.Popup(overflowContainer, {
                     origin: 'bottom ' + horizontalDirection,
@@ -17050,15 +17059,18 @@
                 if ((filter || removed) && that.trigger('filtering', { filter: filter })) {
                     return;
                 }
-                expression = {
-                    filters: expression.filters || [],
+                var newExpression = {
+                    filters: [],
                     logic: 'and'
                 };
-                if (filter) {
-                    expression.filters.push(filter);
+                if (isValidFilterExpr(filter)) {
+                    newExpression.filters.push(filter);
+                }
+                if (isValidFilterExpr(expression)) {
+                    newExpression.filters.push(expression);
                 }
                 if (that._cascading) {
-                    this.listView.setDSFilter(expression);
+                    this.listView.setDSFilter(newExpression);
                 }
                 var dataSourceState = extend({}, {
                     page: resetPageSettings ? 1 : dataSource.page(),
@@ -17067,7 +17079,7 @@
                     filter: dataSource.filter(),
                     group: dataSource.group(),
                     aggregate: dataSource.aggregate()
-                }, { filter: expression });
+                }, { filter: newExpression });
                 dataSource[force ? 'read' : 'query'](dataSource._mergeState(dataSourceState));
             },
             _angularElement: function (element, action) {
@@ -18624,6 +18636,15 @@
                 unchanged: unchanged
             };
         }
+        function isValidFilterExpr(expression) {
+            if (!expression || $.isEmptyObject(expression)) {
+                return false;
+            }
+            if (expression.filters && !expression.filters.length) {
+                return false;
+            }
+            return true;
+        }
         function removeFiltersForField(expression, field) {
             var filters;
             var found = false;
@@ -18659,7 +18680,7 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, support = kendo.support, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, parse = kendo.parseDate, adjustDST = kendo.date.adjustDST, extractFormat = kendo._extractFormat, template = kendo.template, getCulture = kendo.getCulture, transitions = kendo.support.transitions, transitionOrigin = transitions ? transitions.css + 'transform-origin' : '', cellTemplate = template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#">#=data.value#</a></td>', { useWithBlock: false }), emptyCellTemplate = template('<td role="gridcell">&nbsp;</td>', { useWithBlock: false }), browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9, outerHeight = kendo._outerHeight, outerWidth = kendo._outerWidth, ns = '.kendoCalendar', CLICK = 'click' + ns, KEYDOWN_NS = 'keydown' + ns, ID = 'id', MIN = 'min', LEFT = 'left', SLIDE = 'slideIn', MONTH = 'month', CENTURY = 'century', CHANGE = 'change', NAVIGATE = 'navigate', VALUE = 'value', HOVER = 'k-state-hover', DISABLED = 'k-state-disabled', FOCUSED = 'k-state-focused', OTHERMONTH = 'k-other-month', OTHERMONTHCLASS = ' class="' + OTHERMONTH + '"', TODAY = 'k-nav-today', CELLSELECTOR = 'td:has(.k-link)', BLUR = 'blur' + ns, FOCUS = 'focus', FOCUS_WITH_NS = FOCUS + ns, MOUSEENTER = support.touch ? 'touchstart' : 'mouseenter', MOUSEENTER_WITH_NS = support.touch ? 'touchstart' + ns : 'mouseenter' + ns, MOUSELEAVE = support.touch ? 'touchend' + ns + ' touchmove' + ns : 'mouseleave' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, PREVARROW = '_prevArrow', NEXTARROW = '_nextArrow', ARIA_DISABLED = 'aria-disabled', ARIA_SELECTED = 'aria-selected', proxy = $.proxy, extend = $.extend, DATE = Date, views = {
+        var kendo = window.kendo, support = kendo.support, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, parse = kendo.parseDate, adjustDST = kendo.date.adjustDST, weekInYear = kendo.date.weekInYear, extractFormat = kendo._extractFormat, template = kendo.template, getCulture = kendo.getCulture, transitions = kendo.support.transitions, transitionOrigin = transitions ? transitions.css + 'transform-origin' : '', cellTemplate = template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#">#=data.value#</a></td>', { useWithBlock: false }), emptyCellTemplate = template('<td role="gridcell">&nbsp;</td>', { useWithBlock: false }), weekNumberTemplate = template('<td class="k-alt">#= data.weekNumber #</td>', { useWithBlock: false }), browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9, outerHeight = kendo._outerHeight, outerWidth = kendo._outerWidth, ns = '.kendoCalendar', CLICK = 'click' + ns, KEYDOWN_NS = 'keydown' + ns, ID = 'id', MIN = 'min', LEFT = 'left', SLIDE = 'slideIn', MONTH = 'month', CENTURY = 'century', CHANGE = 'change', NAVIGATE = 'navigate', VALUE = 'value', HOVER = 'k-state-hover', DISABLED = 'k-state-disabled', FOCUSED = 'k-state-focused', OTHERMONTH = 'k-other-month', OTHERMONTHCLASS = ' class="' + OTHERMONTH + '"', TODAY = 'k-nav-today', CELLSELECTOR = 'td:has(.k-link)', BLUR = 'blur' + ns, FOCUS = 'focus', FOCUS_WITH_NS = FOCUS + ns, MOUSEENTER = support.touch ? 'touchstart' : 'mouseenter', MOUSEENTER_WITH_NS = support.touch ? 'touchstart' + ns : 'mouseenter' + ns, MOUSELEAVE = support.touch ? 'touchend' + ns + ' touchmove' + ns : 'mouseleave' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, PREVARROW = '_prevArrow', NEXTARROW = '_nextArrow', ARIA_DISABLED = 'aria-disabled', ARIA_SELECTED = 'aria-selected', proxy = $.proxy, extend = $.extend, DATE = Date, views = {
                 month: 0,
                 year: 1,
                 decade: 2,
@@ -18676,7 +18697,7 @@
                 that._templates();
                 that._header();
                 that._footer(that.footer);
-                id = element.addClass('k-widget k-calendar').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK, CELLSELECTOR, function (e) {
+                id = element.addClass('k-widget k-calendar ' + (options.weekNumber ? ' k-week-number' : '')).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK, CELLSELECTOR, function (e) {
                     var link = e.currentTarget.firstChild, value = that._toDateObject(link);
                     if (link.href.indexOf('#') != -1) {
                         e.preventDefault();
@@ -18721,6 +18742,7 @@
                 footer: '',
                 format: '',
                 month: {},
+                weekNumber: false,
                 start: MONTH,
                 depth: MONTH,
                 animation: {
@@ -18841,8 +18863,10 @@
                         dates: options.dates,
                         format: options.format,
                         culture: culture,
-                        disableDates: options.disableDates
+                        disableDates: options.disableDates,
+                        isWeekColumnVisible: options.weekNumber
                     }, that[currentView.name])));
+                    addClassToViewContainer(to, currentView.name);
                     makeUnselectable(to);
                     var replace = from && from.data('start') === to.data('start');
                     that._animate({
@@ -19113,7 +19137,7 @@
             _header: function () {
                 var that = this, element = that.element, links;
                 if (!element.find('.k-header')[0]) {
-                    element.html('<div class="k-header">' + '<a href="#" role="button" class="k-link k-nav-prev"><span class="k-icon k-i-arrow-w"></span></a>' + '<a href="#" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" role="button" class="k-link k-nav-next"><span class="k-icon k-i-arrow-e"></span></a>' + '</div>');
+                    element.html('<div class="k-header">' + '<a href="#" role="button" class="k-link k-nav-prev"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="#" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" role="button" class="k-link k-nav-next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>');
                 }
                 links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).click(false);
                 that._title = links.eq(1).on(CLICK, function () {
@@ -19201,10 +19225,11 @@
                 return value;
             },
             _templates: function () {
-                var that = this, options = that.options, footer = options.footer, month = options.month, content = month.content, empty = month.empty;
+                var that = this, options = that.options, footer = options.footer, month = options.month, content = month.content, weekNumber = month.weekNumber, empty = month.empty;
                 that.month = {
                     content: template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link#=data.linkClass#" href="#=data.url#" ' + kendo.attr('value') + '="#=data.dateString#" title="#=data.title#">' + (content || '#=data.value#') + '</a></td>', { useWithBlock: !!content }),
-                    empty: template('<td role="gridcell">' + (empty || '&nbsp;') + '</td>', { useWithBlock: !!empty })
+                    empty: template('<td role="gridcell">' + (empty || '&nbsp;') + '</td>', { useWithBlock: !!empty }),
+                    weekNumber: template('<td class="k-alt">' + (weekNumber || '#= data.weekNumber #') + '</td>', { useWithBlock: !!weekNumber })
                 };
                 that.footer = footer !== false ? template(footer || '#= kendo.toString(data,"D","' + options.culture + '") #', { useWithBlock: false }) : null;
             }
@@ -19233,7 +19258,10 @@
                         return getCalendarInfo(culture).months.names[date.getMonth()] + ' ' + date.getFullYear();
                     },
                     content: function (options) {
-                        var that = this, idx = 0, min = options.min, max = options.max, date = options.date, dates = options.dates, format = options.format, culture = options.culture, navigateUrl = options.url, hasUrl = navigateUrl && dates[0], currentCalendar = getCalendarInfo(culture), firstDayIdx = currentCalendar.firstDay, days = currentCalendar.days, names = shiftArray(days.names, firstDayIdx), shortNames = shiftArray(days.namesShort, firstDayIdx), start = calendar.firstVisibleDay(date, currentCalendar), firstDayOfMonth = that.first(date), lastDayOfMonth = that.last(date), toDateString = that.toDateString, today = new DATE(), html = '<table tabindex="0" role="grid" class="k-content" cellspacing="0" data-start="' + toDateString(start) + '"><thead><tr role="row">';
+                        var that = this, idx = 0, min = options.min, max = options.max, date = options.date, dates = options.dates, format = options.format, culture = options.culture, navigateUrl = options.url, isWeekColumnVisible = options.isWeekColumnVisible, hasUrl = navigateUrl && dates[0], currentCalendar = getCalendarInfo(culture), firstDayIdx = currentCalendar.firstDay, days = currentCalendar.days, names = shiftArray(days.names, firstDayIdx), shortNames = shiftArray(days.namesShort, firstDayIdx), start = calendar.firstVisibleDay(date, currentCalendar), firstDayOfMonth = that.first(date), lastDayOfMonth = that.last(date), toDateString = that.toDateString, today = new DATE(), html = '<table tabindex="0" role="grid" class="k-content" cellspacing="0" data-start="' + toDateString(start) + '"><thead><tr role="row">';
+                        if (isWeekColumnVisible) {
+                            html += '<th scope="col" class="k-alt"></th>';
+                        }
                         for (; idx < 7; idx++) {
                             html += '<th scope="col" title="' + names[idx] + '">' + shortNames[idx] + '</th>';
                         }
@@ -19245,6 +19273,8 @@
                             perRow: 7,
                             html: html += '</tr></thead><tbody><tr role="row">',
                             start: start,
+                            isWeekColumnVisible: isWeekColumnVisible,
+                            weekNumber: options.weekNumber,
                             min: new DATE(min.getFullYear(), min.getMonth(), min.getDate()),
                             max: new DATE(max.getFullYear(), max.getMonth(), max.getDate()),
                             content: options.content,
@@ -19279,6 +19309,12 @@
                                     cssClass: cssClass[0] ? ' class="' + cssClass.join(' ') + '"' : '',
                                     linkClass: linkClass,
                                     url: url
+                                };
+                            },
+                            weekNumberBuild: function (date) {
+                                return {
+                                    weekNumber: weekInYear(date, date),
+                                    currentDate: date
                                 };
                             }
                         });
@@ -19480,10 +19516,16 @@
             return start + '-' + end;
         }
         function view(options) {
-            var idx = 0, data, min = options.min, max = options.max, start = options.start, setter = options.setter, build = options.build, length = options.cells || 12, cellsPerRow = options.perRow || 4, content = options.content || cellTemplate, empty = options.empty || emptyCellTemplate, html = options.html || '<table tabindex="0" role="grid" class="k-content k-meta-view" cellspacing="0"><tbody><tr role="row">';
+            var idx = 0, data, min = options.min, max = options.max, start = options.start, setter = options.setter, build = options.build, weekNumberBuild = options.weekNumberBuild, length = options.cells || 12, isWeekColumnVisible = options.isWeekColumnVisible, cellsPerRow = options.perRow || 4, weekNumber = options.weekNumber || weekNumberTemplate, content = options.content || cellTemplate, empty = options.empty || emptyCellTemplate, html = options.html || '<table tabindex="0" role="grid" class="k-content k-meta-view" cellspacing="0"><tbody><tr role="row">';
+            if (isWeekColumnVisible) {
+                html += weekNumber(weekNumberBuild(start));
+            }
             for (; idx < length; idx++) {
                 if (idx > 0 && idx % cellsPerRow === 0) {
                     html += '</tr><tr role="row">';
+                    if (isWeekColumnVisible) {
+                        html += weekNumber(weekNumberBuild(start));
+                    }
                 }
                 start = new DATE(start.getFullYear(), start.getMonth(), start.getDate(), 0, 0, 0);
                 adjustDST(start, 0);
@@ -19563,6 +19605,9 @@
                 element.find('*').attr('unselectable', 'on');
             }
         }
+        function addClassToViewContainer(element, currentView) {
+            element.addClass('k-' + currentView);
+        }
         function inArray(date, dates) {
             for (var i = 0, length = dates.length; i < length; i++) {
                 if (date === +dates[i]) {
@@ -19637,6 +19682,7 @@
         calendar.makeUnselectable = makeUnselectable;
         calendar.restrictValue = restrictValue;
         calendar.isInRange = isInRange;
+        calendar.addClassToViewContainer = addClassToViewContainer;
         calendar.normalize = normalize;
         calendar.viewsEnum = views;
         calendar.disabled = getDisabledExpr;
@@ -19722,6 +19768,7 @@
                     max: options.max,
                     min: options.min,
                     month: options.month,
+                    weekNumber: options.weekNumber,
                     start: options.start,
                     disableDates: options.disableDates
                 });
@@ -21563,7 +21610,7 @@
                     this.filterInput = null;
                 }
                 if (this._isFilterEnabled()) {
-                    icon = '<span class="k-icon k-i-search"></span>';
+                    icon = '<span class="k-icon k-i-zoom"></span>';
                     this.filterInput = $('<input class="k-textbox"/>').attr({
                         placeholder: this.element.attr('placeholder'),
                         title: this.element.attr('title'),
@@ -21578,7 +21625,7 @@
                 var that = this, wrapper = that.wrapper, SELECTOR = 'span.k-input', span;
                 span = wrapper.find(SELECTOR);
                 if (!span[0]) {
-                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span unselectable="on" class="k-input">&nbsp;</span><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-s"></span></span></span>').append(that.element);
+                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span unselectable="on" class="k-input">&nbsp;</span><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
                     span = wrapper.find(SELECTOR);
                 }
                 that.span = span;
@@ -21813,7 +21860,8 @@
                 template: null,
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
-                clearButton: true
+                clearButton: true,
+                syncValueAndText: true
             },
             events: [
                 'open',
@@ -21841,6 +21889,25 @@
                 that._arrow.off(CLICK + ' ' + MOUSEDOWN);
                 that._clear.off(CLICK + ' ' + MOUSEDOWN);
                 Select.fn.destroy.call(that);
+            },
+            _change: function () {
+                var that = this;
+                var text = that.text();
+                var hasText = text && text !== that._oldText && text !== that.options.placeholder;
+                var index = that.selectedIndex;
+                var isCustom = index === -1;
+                if (!that.options.syncValueAndText && !that.value() && isCustom && hasText) {
+                    that._old = '';
+                    that._oldIndex = index;
+                    that._oldText = text;
+                    if (!that._typing) {
+                        that.element.trigger(CHANGE);
+                    }
+                    that.trigger(CHANGE);
+                    that._typing = false;
+                    return;
+                }
+                Select.fn._change.call(that);
             },
             _focusHandler: function () {
                 this.input.focus();
@@ -22077,7 +22144,10 @@
                 }
                 this.selectedIndex = idx;
                 if (idx === -1 && !dataItem) {
-                    value = text = this.input[0].value;
+                    text = this.input[0].value;
+                    if (this.options.syncValueAndText) {
+                        value = text;
+                    }
                     this.listView.focus(-1);
                 } else {
                     if (dataItem) {
@@ -22167,8 +22237,10 @@
                     return data === loweredText;
                 }).done(function () {
                     if (that.selectedIndex < 0) {
-                        that._accessor(text);
                         input.value = text;
+                        if (that.options.syncValueAndText) {
+                            that._accessor(text);
+                        }
                         that._triggerCascade();
                     }
                     that._prev = input.value;
@@ -22278,7 +22350,7 @@
                 }
                 input = wrapper.find(SELECTOR);
                 if (!input[0]) {
-                    wrapper.append('<span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default"><input ' + name + 'class="k-input" type="text" autocomplete="off"/><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-s"></span></span></span>').append(that.element);
+                    wrapper.append('<span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default"><input ' + name + 'class="k-input" type="text" autocomplete="off"/><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
                     input = wrapper.find(SELECTOR);
                 }
                 input[0].style.cssText = element.style.cssText;
@@ -22626,7 +22698,7 @@
                 var target = $(e.target);
                 var closeButton = target.hasClass('k-select') || target.hasClass('k-icon');
                 if (closeButton) {
-                    closeButton = !target.closest('.k-select').children('.k-i-arrow-s').length;
+                    closeButton = !target.closest('.k-select').children('.k-i-arrow-60-down').length;
                 }
                 if (notInput && !(closeButton && kendo.support.mobileOS)) {
                     e.preventDefault();
@@ -22692,7 +22764,7 @@
             },
             _tagListClick: function (e) {
                 var target = $(e.currentTarget);
-                if (!target.children('.k-i-arrow-s').length) {
+                if (!target.children('.k-i-arrow-60-down').length) {
                     this._removeTag(target.closest(LI));
                 }
             },
@@ -23298,7 +23370,7 @@
                 defaultTemplate = isMultiple ? kendo.template('#:' + kendo.expr(options.dataTextField, 'data') + '#', { useWithBlock: false }) : kendo.template('#:values.length# item(s) selected');
                 that.tagTextTemplate = tagTemplate = tagTemplate ? kendo.template(tagTemplate) : defaultTemplate;
                 that.tagTemplate = function (data) {
-                    return '<li class="k-button" deselectable="on"><span deselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" aria-label="' + (isMultiple ? 'delete' : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-s') + '">' + '</span></span></li>';
+                    return '<li class="k-button" deselectable="on"><span deselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" aria-label="' + (isMultiple ? 'delete' : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
                 };
             },
             _loader: function () {
@@ -23366,559 +23438,588 @@
         description: 'Color utilities used across components',
         depends: ['core']
     };
-    (function ($, parseFloat, parseInt) {
-        var Color = function (value) {
-            var color = this, formats = Color.formats, re, processor, parts, i, channels;
+    window.kendo = window.kendo || {};
+    var Class = kendo.Class;
+    var support = kendo.support;
+    var namedColors = {
+        aliceblue: 'f0f8ff',
+        antiquewhite: 'faebd7',
+        aqua: '00ffff',
+        aquamarine: '7fffd4',
+        azure: 'f0ffff',
+        beige: 'f5f5dc',
+        bisque: 'ffe4c4',
+        black: '000000',
+        blanchedalmond: 'ffebcd',
+        blue: '0000ff',
+        blueviolet: '8a2be2',
+        brown: 'a52a2a',
+        burlywood: 'deb887',
+        cadetblue: '5f9ea0',
+        chartreuse: '7fff00',
+        chocolate: 'd2691e',
+        coral: 'ff7f50',
+        cornflowerblue: '6495ed',
+        cornsilk: 'fff8dc',
+        crimson: 'dc143c',
+        cyan: '00ffff',
+        darkblue: '00008b',
+        darkcyan: '008b8b',
+        darkgoldenrod: 'b8860b',
+        darkgray: 'a9a9a9',
+        darkgrey: 'a9a9a9',
+        darkgreen: '006400',
+        darkkhaki: 'bdb76b',
+        darkmagenta: '8b008b',
+        darkolivegreen: '556b2f',
+        darkorange: 'ff8c00',
+        darkorchid: '9932cc',
+        darkred: '8b0000',
+        darksalmon: 'e9967a',
+        darkseagreen: '8fbc8f',
+        darkslateblue: '483d8b',
+        darkslategray: '2f4f4f',
+        darkslategrey: '2f4f4f',
+        darkturquoise: '00ced1',
+        darkviolet: '9400d3',
+        deeppink: 'ff1493',
+        deepskyblue: '00bfff',
+        dimgray: '696969',
+        dimgrey: '696969',
+        dodgerblue: '1e90ff',
+        firebrick: 'b22222',
+        floralwhite: 'fffaf0',
+        forestgreen: '228b22',
+        fuchsia: 'ff00ff',
+        gainsboro: 'dcdcdc',
+        ghostwhite: 'f8f8ff',
+        gold: 'ffd700',
+        goldenrod: 'daa520',
+        gray: '808080',
+        grey: '808080',
+        green: '008000',
+        greenyellow: 'adff2f',
+        honeydew: 'f0fff0',
+        hotpink: 'ff69b4',
+        indianred: 'cd5c5c',
+        indigo: '4b0082',
+        ivory: 'fffff0',
+        khaki: 'f0e68c',
+        lavender: 'e6e6fa',
+        lavenderblush: 'fff0f5',
+        lawngreen: '7cfc00',
+        lemonchiffon: 'fffacd',
+        lightblue: 'add8e6',
+        lightcoral: 'f08080',
+        lightcyan: 'e0ffff',
+        lightgoldenrodyellow: 'fafad2',
+        lightgray: 'd3d3d3',
+        lightgrey: 'd3d3d3',
+        lightgreen: '90ee90',
+        lightpink: 'ffb6c1',
+        lightsalmon: 'ffa07a',
+        lightseagreen: '20b2aa',
+        lightskyblue: '87cefa',
+        lightslategray: '778899',
+        lightslategrey: '778899',
+        lightsteelblue: 'b0c4de',
+        lightyellow: 'ffffe0',
+        lime: '00ff00',
+        limegreen: '32cd32',
+        linen: 'faf0e6',
+        magenta: 'ff00ff',
+        maroon: '800000',
+        mediumaquamarine: '66cdaa',
+        mediumblue: '0000cd',
+        mediumorchid: 'ba55d3',
+        mediumpurple: '9370d8',
+        mediumseagreen: '3cb371',
+        mediumslateblue: '7b68ee',
+        mediumspringgreen: '00fa9a',
+        mediumturquoise: '48d1cc',
+        mediumvioletred: 'c71585',
+        midnightblue: '191970',
+        mintcream: 'f5fffa',
+        mistyrose: 'ffe4e1',
+        moccasin: 'ffe4b5',
+        navajowhite: 'ffdead',
+        navy: '000080',
+        oldlace: 'fdf5e6',
+        olive: '808000',
+        olivedrab: '6b8e23',
+        orange: 'ffa500',
+        orangered: 'ff4500',
+        orchid: 'da70d6',
+        palegoldenrod: 'eee8aa',
+        palegreen: '98fb98',
+        paleturquoise: 'afeeee',
+        palevioletred: 'd87093',
+        papayawhip: 'ffefd5',
+        peachpuff: 'ffdab9',
+        peru: 'cd853f',
+        pink: 'ffc0cb',
+        plum: 'dda0dd',
+        powderblue: 'b0e0e6',
+        purple: '800080',
+        red: 'ff0000',
+        rosybrown: 'bc8f8f',
+        royalblue: '4169e1',
+        saddlebrown: '8b4513',
+        salmon: 'fa8072',
+        sandybrown: 'f4a460',
+        seagreen: '2e8b57',
+        seashell: 'fff5ee',
+        sienna: 'a0522d',
+        silver: 'c0c0c0',
+        skyblue: '87ceeb',
+        slateblue: '6a5acd',
+        slategray: '708090',
+        slategrey: '708090',
+        snow: 'fffafa',
+        springgreen: '00ff7f',
+        steelblue: '4682b4',
+        tan: 'd2b48c',
+        teal: '008080',
+        thistle: 'd8bfd8',
+        tomato: 'ff6347',
+        turquoise: '40e0d0',
+        violet: 'ee82ee',
+        wheat: 'f5deb3',
+        white: 'ffffff',
+        whitesmoke: 'f5f5f5',
+        yellow: 'ffff00',
+        yellowgreen: '9acd32'
+    };
+    var browser = support.browser;
+    var namedColorRegexp = ['transparent'];
+    for (var i in namedColors) {
+        if (namedColors.hasOwnProperty(i)) {
+            namedColorRegexp.push(i);
+        }
+    }
+    namedColorRegexp = new RegExp('^(' + namedColorRegexp.join('|') + ')(\\W|$)', 'i');
+    var BaseColor = Class.extend({
+        init: function () {
+        },
+        toHSV: function () {
+            return this;
+        },
+        toRGB: function () {
+            return this;
+        },
+        toHex: function () {
+            return this.toBytes().toHex();
+        },
+        toBytes: function () {
+            return this;
+        },
+        toCss: function () {
+            return '#' + this.toHex();
+        },
+        toCssRgba: function () {
+            var rgb = this.toBytes();
+            return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat(Number(this.a).toFixed(3)) + ')';
+        },
+        toDisplay: function () {
+            if (browser.msie && browser.version < 9) {
+                return this.toCss();
+            }
+            return this.toCssRgba();
+        },
+        equals: function (c) {
+            return c === this || c !== null && this.toCssRgba() === parseColor(c).toCssRgba();
+        },
+        diff: function (other) {
+            if (other === null) {
+                return NaN;
+            }
+            var c1 = this.toBytes();
+            var c2 = other.toBytes();
+            return Math.sqrt(Math.pow((c1.r - c2.r) * 0.3, 2) + Math.pow((c1.g - c2.g) * 0.59, 2) + Math.pow((c1.b - c2.b) * 0.11, 2));
+        },
+        clone: function () {
+            var c = this.toBytes();
+            if (c === this) {
+                c = new Bytes(c.r, c.g, c.b, c.a);
+            }
+            return c;
+        }
+    });
+    var RGB = BaseColor.extend({
+        init: function (r, g, b, a) {
+            BaseColor.fn.init.call(this);
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.a = a;
+        },
+        toHSV: function () {
+            var ref = this;
+            var r = ref.r;
+            var g = ref.g;
+            var b = ref.b;
+            var min = Math.min(r, g, b);
+            var max = Math.max(r, g, b);
+            var delta = max - min;
+            var v = max;
+            var h, s;
+            if (delta === 0) {
+                return new HSV(0, 0, v, this.a);
+            }
+            if (max !== 0) {
+                s = delta / max;
+                if (r === max) {
+                    h = (g - b) / delta;
+                } else if (g === max) {
+                    h = 2 + (b - r) / delta;
+                } else {
+                    h = 4 + (r - g) / delta;
+                }
+                h *= 60;
+                if (h < 0) {
+                    h += 360;
+                }
+            } else {
+                s = 0;
+                h = -1;
+            }
+            return new HSV(h, s, v, this.a);
+        },
+        toHSL: function () {
+            var ref = this;
+            var r = ref.r;
+            var g = ref.g;
+            var b = ref.b;
+            var max = Math.max(r, g, b);
+            var min = Math.min(r, g, b);
+            var h, s, l = (max + min) / 2;
+            if (max === min) {
+                h = s = 0;
+            } else {
+                var d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                case r:
+                    h = (g - b) / d + (g < b ? 6 : 0);
+                    break;
+                case g:
+                    h = (b - r) / d + 2;
+                    break;
+                case b:
+                    h = (r - g) / d + 4;
+                    break;
+                default:
+                    break;
+                }
+                h *= 60;
+                s *= 100;
+                l *= 100;
+            }
+            return new HSL(h, s, l, this.a);
+        },
+        toBytes: function () {
+            return new Bytes(this.r * 255, this.g * 255, this.b * 255, this.a);
+        }
+    });
+    var Bytes = RGB.extend({
+        init: function (r, g, b, a) {
+            RGB.fn.init.call(this, Math.round(r), Math.round(g), Math.round(b), a);
+        },
+        toRGB: function () {
+            return new RGB(this.r / 255, this.g / 255, this.b / 255, this.a);
+        },
+        toHSV: function () {
+            return this.toRGB().toHSV();
+        },
+        toHSL: function () {
+            return this.toRGB().toHSL();
+        },
+        toHex: function () {
+            return hex(this.r, 2) + hex(this.g, 2) + hex(this.b, 2);
+        },
+        toBytes: function () {
+            return this;
+        }
+    });
+    function hex(n, width, pad) {
+        if (pad === void 0) {
+            pad = '0';
+        }
+        var result = n.toString(16);
+        while (width > result.length) {
+            result = pad + result;
+        }
+        return result;
+    }
+    var HSV = BaseColor.extend({
+        init: function (h, s, v, a) {
+            BaseColor.fn.init.call(this);
+            this.h = h;
+            this.s = s;
+            this.v = v;
+            this.a = a;
+        },
+        toRGB: function () {
+            var ref = this;
+            var h = ref.h;
+            var s = ref.s;
+            var v = ref.v;
+            var r, g, b;
+            if (s === 0) {
+                r = g = b = v;
+            } else {
+                h /= 60;
+                var i = Math.floor(h);
+                var f = h - i;
+                var p = v * (1 - s);
+                var q = v * (1 - s * f);
+                var t = v * (1 - s * (1 - f));
+                switch (i) {
+                case 0:
+                    r = v;
+                    g = t;
+                    b = p;
+                    break;
+                case 1:
+                    r = q;
+                    g = v;
+                    b = p;
+                    break;
+                case 2:
+                    r = p;
+                    g = v;
+                    b = t;
+                    break;
+                case 3:
+                    r = p;
+                    g = q;
+                    b = v;
+                    break;
+                case 4:
+                    r = t;
+                    g = p;
+                    b = v;
+                    break;
+                default:
+                    r = v;
+                    g = p;
+                    b = q;
+                    break;
+                }
+            }
+            return new RGB(r, g, b, this.a);
+        },
+        toHSL: function () {
+            return this.toRGB().toHSL();
+        },
+        toBytes: function () {
+            return this.toRGB().toBytes();
+        }
+    });
+    var HSL = BaseColor.extend({
+        init: function (h, s, l, a) {
+            BaseColor.fn.init.call(this);
+            this.h = h;
+            this.s = s;
+            this.l = l;
+            this.a = a;
+        },
+        toRGB: function () {
+            var ref = this;
+            var h = ref.h;
+            var s = ref.s;
+            var l = ref.l;
+            var r, g, b;
+            if (s === 0) {
+                r = g = b = l;
+            } else {
+                h /= 360;
+                s /= 100;
+                l /= 100;
+                var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                var p = 2 * l - q;
+                r = hue2rgb(p, q, h + 1 / 3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1 / 3);
+            }
+            return new RGB(r, g, b, this.a);
+        },
+        toHSV: function () {
+            return this.toRGB().toHSV();
+        },
+        toBytes: function () {
+            return this.toRGB().toBytes();
+        }
+    });
+    function hue2rgb(p, q, s) {
+        var t = s;
+        if (t < 0) {
+            t += 1;
+        }
+        if (t > 1) {
+            t -= 1;
+        }
+        if (t < 1 / 6) {
+            return p + (q - p) * 6 * t;
+        }
+        if (t < 1 / 2) {
+            return q;
+        }
+        if (t < 2 / 3) {
+            return p + (q - p) * (2 / 3 - t) * 6;
+        }
+        return p;
+    }
+    function parseColor(value, safe) {
+        var m, ret;
+        if (value == null || value === 'none') {
+            return null;
+        }
+        if (value instanceof BaseColor) {
+            return value;
+        }
+        var color = value.toLowerCase();
+        if (m = namedColorRegexp.exec(color)) {
+            if (m[1] === 'transparent') {
+                color = new RGB(1, 1, 1, 0);
+            } else {
+                color = parseColor(namedColors[m[1]], safe);
+            }
+            color.match = [m[1]];
+            return color;
+        }
+        if (m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})\b/i.exec(color)) {
+            ret = new Bytes(parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16), 1);
+        } else if (m = /^#?([0-9a-f])([0-9a-f])([0-9a-f])\b/i.exec(color)) {
+            ret = new Bytes(parseInt(m[1] + m[1], 16), parseInt(m[2] + m[2], 16), parseInt(m[3] + m[3], 16), 1);
+        } else if (m = /^rgb\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/.exec(color)) {
+            ret = new Bytes(parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10), 1);
+        } else if (m = /^rgba\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9.]+)\s*\)/.exec(color)) {
+            ret = new Bytes(parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10), parseFloat(m[4]));
+        } else if (m = /^rgb\(\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*\)/.exec(color)) {
+            ret = new RGB(parseFloat(m[1]) / 100, parseFloat(m[2]) / 100, parseFloat(m[3]) / 100, 1);
+        } else if (m = /^rgba\(\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9.]+)\s*\)/.exec(color)) {
+            ret = new RGB(parseFloat(m[1]) / 100, parseFloat(m[2]) / 100, parseFloat(m[3]) / 100, parseFloat(m[4]));
+        }
+        if (ret) {
+            ret.match = m;
+        } else if (!safe) {
+            throw new Error('Cannot parse color: ' + color);
+        }
+        return ret;
+    }
+    var Color = Class.extend({
+        init: function (value) {
+            var this$1 = this;
             if (arguments.length === 1) {
-                value = color.resolveColor(value);
-                for (i = 0; i < formats.length; i++) {
-                    re = formats[i].re;
-                    processor = formats[i].process;
-                    parts = re.exec(value);
+                var formats = Color.formats;
+                var resolvedColor = this.resolveColor(value);
+                for (var idx = 0; idx < formats.length; idx++) {
+                    var formatRegex = formats[idx].re;
+                    var processor = formats[idx].process;
+                    var parts = formatRegex.exec(resolvedColor);
                     if (parts) {
-                        channels = processor(parts);
-                        color.r = channels[0];
-                        color.g = channels[1];
-                        color.b = channels[2];
+                        var channels = processor(parts);
+                        this$1.r = channels[0];
+                        this$1.g = channels[1];
+                        this$1.b = channels[2];
                     }
                 }
             } else {
-                color.r = arguments[0];
-                color.g = arguments[1];
-                color.b = arguments[2];
+                this.r = arguments[0];
+                this.g = arguments[1];
+                this.b = arguments[2];
             }
-            color.r = color.normalizeByte(color.r);
-            color.g = color.normalizeByte(color.g);
-            color.b = color.normalizeByte(color.b);
-        };
-        Color.prototype = {
-            toHex: function () {
-                var color = this, pad = color.padDigit, r = color.r.toString(16), g = color.g.toString(16), b = color.b.toString(16);
-                return '#' + pad(r) + pad(g) + pad(b);
-            },
-            resolveColor: function (value) {
-                value = value || 'black';
-                if (value.charAt(0) == '#') {
-                    value = value.substr(1, 6);
-                }
-                value = value.replace(/ /g, '');
-                value = value.toLowerCase();
-                value = Color.namedColors[value] || value;
-                return value;
-            },
-            normalizeByte: function (value) {
-                return value < 0 || isNaN(value) ? 0 : value > 255 ? 255 : value;
-            },
-            padDigit: function (value) {
-                return value.length === 1 ? '0' + value : value;
-            },
-            brightness: function (value) {
-                var color = this, round = Math.round;
-                color.r = round(color.normalizeByte(color.r * value));
-                color.g = round(color.normalizeByte(color.g * value));
-                color.b = round(color.normalizeByte(color.b * value));
-                return color;
-            },
-            percBrightness: function () {
-                var color = this;
-                return Math.sqrt(0.241 * color.r * color.r + 0.691 * color.g * color.g + 0.068 * color.b * color.b);
+            this.r = this.normalizeByte(this.r);
+            this.g = this.normalizeByte(this.g);
+            this.b = this.normalizeByte(this.b);
+        },
+        toHex: function () {
+            var pad = this.padDigit;
+            var r = this.r.toString(16);
+            var g = this.g.toString(16);
+            var b = this.b.toString(16);
+            return '#' + pad(r) + pad(g) + pad(b);
+        },
+        resolveColor: function (value) {
+            var color = value || 'black';
+            if (color.charAt(0) === '#') {
+                color = color.substr(1, 6);
             }
-        };
-        Color.formats = [
-            {
-                re: /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/,
-                process: function (parts) {
-                    return [
-                        parseInt(parts[1], 10),
-                        parseInt(parts[2], 10),
-                        parseInt(parts[3], 10)
-                    ];
-                }
-            },
-            {
-                re: /^(\w{2})(\w{2})(\w{2})$/,
-                process: function (parts) {
-                    return [
-                        parseInt(parts[1], 16),
-                        parseInt(parts[2], 16),
-                        parseInt(parts[3], 16)
-                    ];
-                }
-            },
-            {
-                re: /^(\w{1})(\w{1})(\w{1})$/,
-                process: function (parts) {
-                    return [
-                        parseInt(parts[1] + parts[1], 16),
-                        parseInt(parts[2] + parts[2], 16),
-                        parseInt(parts[3] + parts[3], 16)
-                    ];
-                }
-            }
-        ];
-        Color.namedColors = {
-            aliceblue: 'f0f8ff',
-            antiquewhite: 'faebd7',
-            aqua: '00ffff',
-            aquamarine: '7fffd4',
-            azure: 'f0ffff',
-            beige: 'f5f5dc',
-            bisque: 'ffe4c4',
-            black: '000000',
-            blanchedalmond: 'ffebcd',
-            blue: '0000ff',
-            blueviolet: '8a2be2',
-            brown: 'a52a2a',
-            burlywood: 'deb887',
-            cadetblue: '5f9ea0',
-            chartreuse: '7fff00',
-            chocolate: 'd2691e',
-            coral: 'ff7f50',
-            cornflowerblue: '6495ed',
-            cornsilk: 'fff8dc',
-            crimson: 'dc143c',
-            cyan: '00ffff',
-            darkblue: '00008b',
-            darkcyan: '008b8b',
-            darkgoldenrod: 'b8860b',
-            darkgray: 'a9a9a9',
-            darkgrey: 'a9a9a9',
-            darkgreen: '006400',
-            darkkhaki: 'bdb76b',
-            darkmagenta: '8b008b',
-            darkolivegreen: '556b2f',
-            darkorange: 'ff8c00',
-            darkorchid: '9932cc',
-            darkred: '8b0000',
-            darksalmon: 'e9967a',
-            darkseagreen: '8fbc8f',
-            darkslateblue: '483d8b',
-            darkslategray: '2f4f4f',
-            darkslategrey: '2f4f4f',
-            darkturquoise: '00ced1',
-            darkviolet: '9400d3',
-            deeppink: 'ff1493',
-            deepskyblue: '00bfff',
-            dimgray: '696969',
-            dimgrey: '696969',
-            dodgerblue: '1e90ff',
-            firebrick: 'b22222',
-            floralwhite: 'fffaf0',
-            forestgreen: '228b22',
-            fuchsia: 'ff00ff',
-            gainsboro: 'dcdcdc',
-            ghostwhite: 'f8f8ff',
-            gold: 'ffd700',
-            goldenrod: 'daa520',
-            gray: '808080',
-            grey: '808080',
-            green: '008000',
-            greenyellow: 'adff2f',
-            honeydew: 'f0fff0',
-            hotpink: 'ff69b4',
-            indianred: 'cd5c5c',
-            indigo: '4b0082',
-            ivory: 'fffff0',
-            khaki: 'f0e68c',
-            lavender: 'e6e6fa',
-            lavenderblush: 'fff0f5',
-            lawngreen: '7cfc00',
-            lemonchiffon: 'fffacd',
-            lightblue: 'add8e6',
-            lightcoral: 'f08080',
-            lightcyan: 'e0ffff',
-            lightgoldenrodyellow: 'fafad2',
-            lightgray: 'd3d3d3',
-            lightgrey: 'd3d3d3',
-            lightgreen: '90ee90',
-            lightpink: 'ffb6c1',
-            lightsalmon: 'ffa07a',
-            lightseagreen: '20b2aa',
-            lightskyblue: '87cefa',
-            lightslategray: '778899',
-            lightslategrey: '778899',
-            lightsteelblue: 'b0c4de',
-            lightyellow: 'ffffe0',
-            lime: '00ff00',
-            limegreen: '32cd32',
-            linen: 'faf0e6',
-            magenta: 'ff00ff',
-            maroon: '800000',
-            mediumaquamarine: '66cdaa',
-            mediumblue: '0000cd',
-            mediumorchid: 'ba55d3',
-            mediumpurple: '9370d8',
-            mediumseagreen: '3cb371',
-            mediumslateblue: '7b68ee',
-            mediumspringgreen: '00fa9a',
-            mediumturquoise: '48d1cc',
-            mediumvioletred: 'c71585',
-            midnightblue: '191970',
-            mintcream: 'f5fffa',
-            mistyrose: 'ffe4e1',
-            moccasin: 'ffe4b5',
-            navajowhite: 'ffdead',
-            navy: '000080',
-            oldlace: 'fdf5e6',
-            olive: '808000',
-            olivedrab: '6b8e23',
-            orange: 'ffa500',
-            orangered: 'ff4500',
-            orchid: 'da70d6',
-            palegoldenrod: 'eee8aa',
-            palegreen: '98fb98',
-            paleturquoise: 'afeeee',
-            palevioletred: 'd87093',
-            papayawhip: 'ffefd5',
-            peachpuff: 'ffdab9',
-            peru: 'cd853f',
-            pink: 'ffc0cb',
-            plum: 'dda0dd',
-            powderblue: 'b0e0e6',
-            purple: '800080',
-            red: 'ff0000',
-            rosybrown: 'bc8f8f',
-            royalblue: '4169e1',
-            saddlebrown: '8b4513',
-            salmon: 'fa8072',
-            sandybrown: 'f4a460',
-            seagreen: '2e8b57',
-            seashell: 'fff5ee',
-            sienna: 'a0522d',
-            silver: 'c0c0c0',
-            skyblue: '87ceeb',
-            slateblue: '6a5acd',
-            slategray: '708090',
-            slategrey: '708090',
-            snow: 'fffafa',
-            springgreen: '00ff7f',
-            steelblue: '4682b4',
-            tan: 'd2b48c',
-            teal: '008080',
-            thistle: 'd8bfd8',
-            tomato: 'ff6347',
-            turquoise: '40e0d0',
-            violet: 'ee82ee',
-            wheat: 'f5deb3',
-            white: 'ffffff',
-            whitesmoke: 'f5f5f5',
-            yellow: 'ffff00',
-            yellowgreen: '9acd32'
-        };
-        var namedColorRegexp = ['transparent'];
-        for (var i in Color.namedColors) {
-            if (Color.namedColors.hasOwnProperty(i)) {
-                namedColorRegexp.push(i);
-            }
-        }
-        namedColorRegexp = new RegExp('^(' + namedColorRegexp.join('|') + ')(\\W|$)', 'i');
-        function parseColor(color, nothrow) {
-            var m, ret;
-            if (color == null || color == 'none') {
-                return null;
-            }
-            if (color instanceof _Color) {
-                return color;
-            }
+            color = color.replace(/ /g, '');
             color = color.toLowerCase();
-            if (m = namedColorRegexp.exec(color)) {
-                if (m[1] == 'transparent') {
-                    color = new _RGB(1, 1, 1, 0);
-                } else {
-                    color = parseColor(Color.namedColors[m[1]], nothrow);
-                }
-                color.match = [m[1]];
-                return color;
+            color = Color.namedColors[color] || color;
+            return color;
+        },
+        normalizeByte: function (value) {
+            if (value < 0 || isNaN(value)) {
+                return 0;
             }
-            if (m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})\b/i.exec(color)) {
-                ret = new _Bytes(parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16), 1);
-            } else if (m = /^#?([0-9a-f])([0-9a-f])([0-9a-f])\b/i.exec(color)) {
-                ret = new _Bytes(parseInt(m[1] + m[1], 16), parseInt(m[2] + m[2], 16), parseInt(m[3] + m[3], 16), 1);
-            } else if (m = /^rgb\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*\)/.exec(color)) {
-                ret = new _Bytes(parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10), 1);
-            } else if (m = /^rgba\(\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9]+)\s*,\s*([0-9.]+)\s*\)/.exec(color)) {
-                ret = new _Bytes(parseInt(m[1], 10), parseInt(m[2], 10), parseInt(m[3], 10), parseFloat(m[4]));
-            } else if (m = /^rgb\(\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*\)/.exec(color)) {
-                ret = new _RGB(parseFloat(m[1]) / 100, parseFloat(m[2]) / 100, parseFloat(m[3]) / 100, 1);
-            } else if (m = /^rgba\(\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9]*\.?[0-9]+)%\s*,\s*([0-9.]+)\s*\)/.exec(color)) {
-                ret = new _RGB(parseFloat(m[1]) / 100, parseFloat(m[2]) / 100, parseFloat(m[3]) / 100, parseFloat(m[4]));
-            }
-            if (ret) {
-                ret.match = m;
-            } else if (!nothrow) {
-                throw new Error('Cannot parse color: ' + color);
-            }
-            return ret;
+            return value > 255 ? 255 : value;
+        },
+        padDigit: function (value) {
+            return value.length === 1 ? '0' + value : value;
+        },
+        brightness: function (value) {
+            var round = Math.round;
+            this.r = round(this.normalizeByte(this.r * value));
+            this.g = round(this.normalizeByte(this.g * value));
+            this.b = round(this.normalizeByte(this.b * value));
+            return this;
+        },
+        percBrightness: function () {
+            return Math.sqrt(0.241 * this.r * this.r + 0.691 * this.g * this.g + 0.068 * this.b * this.b);
         }
-        function hex(n, width, pad) {
-            if (!pad) {
-                pad = '0';
+    });
+    Color.fromBytes = function (r, g, b, a) {
+        return new Bytes(r, g, b, a != null ? a : 1);
+    };
+    Color.fromRGB = function (r, g, b, a) {
+        return new RGB(r, g, b, a != null ? a : 1);
+    };
+    Color.fromHSV = function (h, s, v, a) {
+        return new HSV(h, s, v, a != null ? a : 1);
+    };
+    Color.fromHSL = function (h, s, l, a) {
+        return new HSL(h, s, l, a != null ? a : 1);
+    };
+    Color.formats = [
+        {
+            re: /^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/,
+            process: function (parts) {
+                return [
+                    parseInt(parts[1], 10),
+                    parseInt(parts[2], 10),
+                    parseInt(parts[3], 10)
+                ];
             }
-            n = n.toString(16);
-            while (width > n.length) {
-                n = '0' + n;
+        },
+        {
+            re: /^(\w{2})(\w{2})(\w{2})$/,
+            process: function (parts) {
+                return [
+                    parseInt(parts[1], 16),
+                    parseInt(parts[2], 16),
+                    parseInt(parts[3], 16)
+                ];
             }
-            return n;
+        },
+        {
+            re: /^(\w{1})(\w{1})(\w{1})$/,
+            process: function (parts) {
+                return [
+                    parseInt(parts[1] + parts[1], 16),
+                    parseInt(parts[2] + parts[2], 16),
+                    parseInt(parts[3] + parts[3], 16)
+                ];
+            }
         }
-        function hue2rgb(p, q, t) {
-            if (t < 0) {
-                t += 1;
-            }
-            if (t > 1) {
-                t -= 1;
-            }
-            if (t < 1 / 6) {
-                return p + (q - p) * 6 * t;
-            }
-            if (t < 1 / 2) {
-                return q;
-            }
-            if (t < 2 / 3) {
-                return p + (q - p) * (2 / 3 - t) * 6;
-            }
-            return p;
-        }
-        var _Color = kendo.Class.extend({
-            toHSV: function () {
-                return this;
-            },
-            toRGB: function () {
-                return this;
-            },
-            toHex: function () {
-                return this.toBytes().toHex();
-            },
-            toBytes: function () {
-                return this;
-            },
-            toCss: function () {
-                return '#' + this.toHex();
-            },
-            toCssRgba: function () {
-                var rgb = this.toBytes();
-                return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat((+this.a).toFixed(3)) + ')';
-            },
-            toDisplay: function () {
-                if (kendo.support.browser.msie && kendo.support.browser.version < 9) {
-                    return this.toCss();
-                }
-                return this.toCssRgba();
-            },
-            equals: function (c) {
-                return c === this || c !== null && this.toCssRgba() == parseColor(c).toCssRgba();
-            },
-            diff: function (c2) {
-                if (c2 == null) {
-                    return NaN;
-                }
-                var c1 = this.toBytes();
-                c2 = c2.toBytes();
-                return Math.sqrt(Math.pow((c1.r - c2.r) * 0.3, 2) + Math.pow((c1.g - c2.g) * 0.59, 2) + Math.pow((c1.b - c2.b) * 0.11, 2));
-            },
-            clone: function () {
-                var c = this.toBytes();
-                if (c === this) {
-                    c = new _Bytes(c.r, c.g, c.b, c.a);
-                }
-                return c;
-            }
-        });
-        var _RGB = _Color.extend({
-            init: function (r, g, b, a) {
-                this.r = r;
-                this.g = g;
-                this.b = b;
-                this.a = a;
-            },
-            toHSV: function () {
-                var min, max, delta, h, s, v;
-                var r = this.r, g = this.g, b = this.b;
-                min = Math.min(r, g, b);
-                max = Math.max(r, g, b);
-                v = max;
-                delta = max - min;
-                if (delta === 0) {
-                    return new _HSV(0, 0, v, this.a);
-                }
-                if (max !== 0) {
-                    s = delta / max;
-                    if (r == max) {
-                        h = (g - b) / delta;
-                    } else if (g == max) {
-                        h = 2 + (b - r) / delta;
-                    } else {
-                        h = 4 + (r - g) / delta;
-                    }
-                    h *= 60;
-                    if (h < 0) {
-                        h += 360;
-                    }
-                } else {
-                    s = 0;
-                    h = -1;
-                }
-                return new _HSV(h, s, v, this.a);
-            },
-            toHSL: function () {
-                var r = this.r, g = this.g, b = this.b;
-                var max = Math.max(r, g, b), min = Math.min(r, g, b);
-                var h, s, l = (max + min) / 2;
-                if (max == min) {
-                    h = s = 0;
-                } else {
-                    var d = max - min;
-                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-                    switch (max) {
-                    case r:
-                        h = (g - b) / d + (g < b ? 6 : 0);
-                        break;
-                    case g:
-                        h = (b - r) / d + 2;
-                        break;
-                    case b:
-                        h = (r - g) / d + 4;
-                        break;
-                    }
-                    h *= 60;
-                    s *= 100;
-                    l *= 100;
-                }
-                return new _HSL(h, s, l, this.a);
-            },
-            toBytes: function () {
-                return new _Bytes(this.r * 255, this.g * 255, this.b * 255, this.a);
-            }
-        });
-        var _Bytes = _RGB.extend({
-            init: function (r, g, b, a) {
-                this.r = Math.round(r);
-                this.g = Math.round(g);
-                this.b = Math.round(b);
-                this.a = a;
-            },
-            toRGB: function () {
-                return new _RGB(this.r / 255, this.g / 255, this.b / 255, this.a);
-            },
-            toHSV: function () {
-                return this.toRGB().toHSV();
-            },
-            toHSL: function () {
-                return this.toRGB().toHSL();
-            },
-            toHex: function () {
-                return hex(this.r, 2) + hex(this.g, 2) + hex(this.b, 2);
-            },
-            toBytes: function () {
-                return this;
-            }
-        });
-        var _HSV = _Color.extend({
-            init: function (h, s, v, a) {
-                this.h = h;
-                this.s = s;
-                this.v = v;
-                this.a = a;
-            },
-            toRGB: function () {
-                var h = this.h, s = this.s, v = this.v;
-                var i, r, g, b, f, p, q, t;
-                if (s === 0) {
-                    r = g = b = v;
-                } else {
-                    h /= 60;
-                    i = Math.floor(h);
-                    f = h - i;
-                    p = v * (1 - s);
-                    q = v * (1 - s * f);
-                    t = v * (1 - s * (1 - f));
-                    switch (i) {
-                    case 0:
-                        r = v;
-                        g = t;
-                        b = p;
-                        break;
-                    case 1:
-                        r = q;
-                        g = v;
-                        b = p;
-                        break;
-                    case 2:
-                        r = p;
-                        g = v;
-                        b = t;
-                        break;
-                    case 3:
-                        r = p;
-                        g = q;
-                        b = v;
-                        break;
-                    case 4:
-                        r = t;
-                        g = p;
-                        b = v;
-                        break;
-                    default:
-                        r = v;
-                        g = p;
-                        b = q;
-                        break;
-                    }
-                }
-                return new _RGB(r, g, b, this.a);
-            },
-            toHSL: function () {
-                return this.toRGB().toHSL();
-            },
-            toBytes: function () {
-                return this.toRGB().toBytes();
-            }
-        });
-        var _HSL = _Color.extend({
-            init: function (h, s, l, a) {
-                this.h = h;
-                this.s = s;
-                this.l = l;
-                this.a = a;
-            },
-            toRGB: function () {
-                var h = this.h, s = this.s, l = this.l;
-                var r, g, b;
-                if (s === 0) {
-                    r = g = b = l;
-                } else {
-                    h /= 360;
-                    s /= 100;
-                    l /= 100;
-                    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-                    var p = 2 * l - q;
-                    r = hue2rgb(p, q, h + 1 / 3);
-                    g = hue2rgb(p, q, h);
-                    b = hue2rgb(p, q, h - 1 / 3);
-                }
-                return new _RGB(r, g, b, this.a);
-            },
-            toHSV: function () {
-                return this.toRGB().toHSV();
-            },
-            toBytes: function () {
-                return this.toRGB().toBytes();
-            }
-        });
-        Color.fromBytes = function (r, g, b, a) {
-            return new _Bytes(r, g, b, a != null ? a : 1);
-        };
-        Color.fromRGB = function (r, g, b, a) {
-            return new _RGB(r, g, b, a != null ? a : 1);
-        };
-        Color.fromHSV = function (h, s, v, a) {
-            return new _HSV(h, s, v, a != null ? a : 1);
-        };
-        Color.fromHSL = function (h, s, l, a) {
-            return new _HSL(h, s, l, a != null ? a : 1);
-        };
-        kendo.Color = Color;
-        kendo.parseColor = parseColor;
-    }(window.kendo.jQuery, parseFloat, parseInt));
+    ];
+    Color.namedColors = namedColors;
+    kendo.deepExtend(kendo, {
+        parseColor: parseColor,
+        Color: Color
+    });
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
     (a3 || a2)();
 }));
@@ -24197,7 +24298,7 @@
                 }
                 element.wrap(createWrapper(options, element, that._isHorizontal)).hide();
                 if (options.showButtons) {
-                    element.before(createButton(options, 'increase', that._isHorizontal)).before(createButton(options, 'decrease', that._isHorizontal));
+                    element.before(createButton(options, 'increase', that._isHorizontal, that._isRtl)).before(createButton(options, 'decrease', that._isHorizontal, that._isRtl));
                 }
                 element.before(createTrack(options, element));
             },
@@ -24278,12 +24379,20 @@
             style = style ? ' style=\'' + style + '\'' : '';
             return '<div class=\'k-widget k-slider' + orientationCssClass + cssClasses + '\'' + style + '>' + '<div class=\'k-slider-wrap' + (options.showButtons ? ' k-slider-buttons' : '') + tickPlacementCssClass + '\'></div></div>';
         }
-        function createButton(options, type, isHorizontal) {
+        function createButton(options, type, isHorizontal, isRtl) {
             var buttonCssClass = '';
-            if (type == 'increase') {
-                buttonCssClass = isHorizontal ? 'k-i-arrow-e' : 'k-i-arrow-n';
+            if (isHorizontal) {
+                if (!isRtl && type == 'increase' || isRtl && type != 'increase') {
+                    buttonCssClass = 'k-i-arrow-60-right';
+                } else {
+                    buttonCssClass = 'k-i-arrow-60-left';
+                }
             } else {
-                buttonCssClass = isHorizontal ? 'k-i-arrow-w' : 'k-i-arrow-s';
+                if (type == 'increase') {
+                    buttonCssClass = 'k-i-arrow-60-up';
+                } else {
+                    buttonCssClass = 'k-i-arrow-60-down';
+                }
             }
             return '<a class=\'k-button k-button-' + type + '\' ' + 'title=\'' + options[type + 'ButtonTitle'] + '\' ' + 'aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
         }
@@ -24540,11 +24649,13 @@
             }
             moveSelection(options.value);
             that.bind([
-                CHANGE,
                 SLIDE,
                 MOVE_SELECTION
             ], function (e) {
                 moveSelection(parseFloat(e.value, 10));
+            });
+            that.bind(CHANGE, function (e) {
+                moveSelection(parseFloat(e.sender.value(), 10));
             });
         };
         Slider.Drag = function (element, type, owner, options) {
@@ -25087,7 +25198,8 @@
         'kendo.color',
         'kendo.popup',
         'kendo.slider',
-        'kendo.userevents'
+        'kendo.userevents',
+        'kendo.button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -25100,13 +25212,16 @@
             'color',
             'popup',
             'slider',
-            'userevents'
+            'userevents',
+            'button'
         ]
     };
     (function ($, parseInt, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, parseColor = kendo.parseColor, Color = kendo.Color, KEYS = kendo.keys, BACKGROUNDCOLOR = 'background-color', ITEMSELECTEDCLASS = 'k-state-selected', SIMPLEPALETTE = '000000,7f7f7f,880015,ed1c24,ff7f27,fff200,22b14c,00a2e8,3f48cc,a349a4,ffffff,c3c3c3,b97a57,ffaec9,ffc90e,efe4b0,b5e61d,99d9ea,7092be,c8bfe7', WEBPALETTE = 'FFFFFF,FFCCFF,FF99FF,FF66FF,FF33FF,FF00FF,CCFFFF,CCCCFF,CC99FF,CC66FF,CC33FF,CC00FF,99FFFF,99CCFF,9999FF,9966FF,9933FF,9900FF,FFFFCC,FFCCCC,FF99CC,FF66CC,FF33CC,FF00CC,CCFFCC,CCCCCC,CC99CC,CC66CC,CC33CC,CC00CC,99FFCC,99CCCC,9999CC,9966CC,9933CC,9900CC,FFFF99,FFCC99,FF9999,FF6699,FF3399,FF0099,CCFF99,CCCC99,CC9999,CC6699,CC3399,CC0099,99FF99,99CC99,999999,996699,993399,990099,FFFF66,FFCC66,FF9966,FF6666,FF3366,FF0066,CCFF66,CCCC66,CC9966,CC6666,CC3366,CC0066,99FF66,99CC66,999966,996666,993366,990066,FFFF33,FFCC33,FF9933,FF6633,FF3333,FF0033,CCFF33,CCCC33,CC9933,CC6633,CC3333,CC0033,99FF33,99CC33,999933,996633,993333,990033,FFFF00,FFCC00,FF9900,FF6600,FF3300,FF0000,CCFF00,CCCC00,CC9900,CC6600,CC3300,CC0000,99FF00,99CC00,999900,996600,993300,990000,66FFFF,66CCFF,6699FF,6666FF,6633FF,6600FF,33FFFF,33CCFF,3399FF,3366FF,3333FF,3300FF,00FFFF,00CCFF,0099FF,0066FF,0033FF,0000FF,66FFCC,66CCCC,6699CC,6666CC,6633CC,6600CC,33FFCC,33CCCC,3399CC,3366CC,3333CC,3300CC,00FFCC,00CCCC,0099CC,0066CC,0033CC,0000CC,66FF99,66CC99,669999,666699,663399,660099,33FF99,33CC99,339999,336699,333399,330099,00FF99,00CC99,009999,006699,003399,000099,66FF66,66CC66,669966,666666,663366,660066,33FF66,33CC66,339966,336666,333366,330066,00FF66,00CC66,009966,006666,003366,000066,66FF33,66CC33,669933,666633,663333,660033,33FF33,33CC33,339933,336633,333333,330033,00FF33,00CC33,009933,006633,003333,000033,66FF00,66CC00,669900,666600,663300,660000,33FF00,33CC00,339900,336600,333300,330000,00FF00,00CC00,009900,006600,003300,000000', APPLY_CANCEL = {
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, parseColor = kendo.parseColor, Color = kendo.Color, KEYS = kendo.keys, BACKGROUNDCOLOR = 'background-color', ITEMSELECTEDCLASS = 'k-state-selected', SIMPLEPALETTE = '000000,7f7f7f,880015,ed1c24,ff7f27,fff200,22b14c,00a2e8,3f48cc,a349a4,ffffff,c3c3c3,b97a57,ffaec9,ffc90e,efe4b0,b5e61d,99d9ea,7092be,c8bfe7', WEBPALETTE = 'FFFFFF,FFCCFF,FF99FF,FF66FF,FF33FF,FF00FF,CCFFFF,CCCCFF,CC99FF,CC66FF,CC33FF,CC00FF,99FFFF,99CCFF,9999FF,9966FF,9933FF,9900FF,FFFFCC,FFCCCC,FF99CC,FF66CC,FF33CC,FF00CC,CCFFCC,CCCCCC,CC99CC,CC66CC,CC33CC,CC00CC,99FFCC,99CCCC,9999CC,9966CC,9933CC,9900CC,FFFF99,FFCC99,FF9999,FF6699,FF3399,FF0099,CCFF99,CCCC99,CC9999,CC6699,CC3399,CC0099,99FF99,99CC99,999999,996699,993399,990099,FFFF66,FFCC66,FF9966,FF6666,FF3366,FF0066,CCFF66,CCCC66,CC9966,CC6666,CC3366,CC0066,99FF66,99CC66,999966,996666,993366,990066,FFFF33,FFCC33,FF9933,FF6633,FF3333,FF0033,CCFF33,CCCC33,CC9933,CC6633,CC3333,CC0033,99FF33,99CC33,999933,996633,993333,990033,FFFF00,FFCC00,FF9900,FF6600,FF3300,FF0000,CCFF00,CCCC00,CC9900,CC6600,CC3300,CC0000,99FF00,99CC00,999900,996600,993300,990000,66FFFF,66CCFF,6699FF,6666FF,6633FF,6600FF,33FFFF,33CCFF,3399FF,3366FF,3333FF,3300FF,00FFFF,00CCFF,0099FF,0066FF,0033FF,0000FF,66FFCC,66CCCC,6699CC,6666CC,6633CC,6600CC,33FFCC,33CCCC,3399CC,3366CC,3333CC,3300CC,00FFCC,00CCCC,0099CC,0066CC,0033CC,0000CC,66FF99,66CC99,669999,666699,663399,660099,33FF99,33CC99,339999,336699,333399,330099,00FF99,00CC99,009999,006699,003399,000099,66FF66,66CC66,669966,666666,663366,660066,33FF66,33CC66,339966,336666,333366,330066,00FF66,00CC66,009966,006666,003366,000066,66FF33,66CC33,669933,666633,663333,660033,33FF33,33CC33,339933,336633,333333,330033,00FF33,00CC33,009933,006633,003333,000033,66FF00,66CC00,669900,666600,663300,660000,33FF00,33CC00,339900,336600,333300,330000,00FF00,00CC00,009900,006600,003300,000000', WHITE = '#ffffff', MESSAGES = {
                 apply: 'Apply',
-                cancel: 'Cancel'
+                cancel: 'Cancel',
+                noColor: 'no color',
+                clearColor: 'Clear color'
             }, NS = '.kendoColorTools', CLICK_NS = 'click' + NS, KEYDOWN_NS = 'keydown' + NS, browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9;
         var ColorSelector = Widget.extend({
             init: function (element, options) {
@@ -25353,7 +25468,11 @@
                         }, 10);
                     }
                 }).end().on(CLICK_NS, '.k-controls button.apply', function () {
-                    that._select(that._getHSV());
+                    if (that.options._clearedColor) {
+                        that.trigger('change');
+                    } else {
+                        that._select(that._getHSV());
+                    }
                 }).on(CLICK_NS, '.k-controls button.cancel', function () {
                     that._updateUI(that.color());
                     that._cancel();
@@ -25376,8 +25495,9 @@
                 buttons: false,
                 input: true,
                 preview: true,
+                clearButton: false,
                 autoupdate: true,
-                messages: APPLY_CANCEL
+                messages: MESSAGES
             },
             _applyIEFilter: function () {
                 var track = this.element.find('.k-hue-slider .k-slider-track')[0], url = track.currentStyle.backgroundImage;
@@ -25560,7 +25680,7 @@
             _selectOnHide: function () {
                 return this.options.buttons ? null : this._getHSV();
             },
-            _template: kendo.template('# if (preview) { #' + '<div class="k-selected-color"><div class="k-selected-color-display"><input class="k-color-value" #= !data.input ? \'style="visibility: hidden;"\' : "" #></div></div>' + '# } #' + '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"></div><div class="k-draghandle"></div></div>' + '<input class="k-hue-slider" />' + '# if (opacity) { #' + '<input class="k-transparency-slider" />' + '# } #' + '# if (buttons) { #' + '<div unselectable="on" class="k-controls"><button class="k-button k-primary apply">#: messages.apply #</button> <button class="k-button cancel">#: messages.cancel #</button></div>' + '# } #')
+            _template: kendo.template('# if (preview) { #' + '<div class="k-selected-color"><div class="k-selected-color-display"><div class="k-color-input"><input class="k-color-value" ' + '# if (clearButton && !_standalone) { #' + 'placeholder="#: messages.noColor #" ' + '# } #' + '#= !data.input ? \'style="visibility: hidden;"\' : "" #>' + '# if (clearButton && !_standalone) { #' + '<span class="k-clear-color k-button-bare" title="#: messages.clearColor #"></span>' + '# } #' + '</div></div></div>' + '# } #' + '# if (clearButton && !_standalone && !preview) { #' + '<div class="k-clear-color-container"><span class="k-clear-color k-button-bare">#: messages.clearColor #</span></div>' + '# } #' + '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"></div><div class="k-draghandle"></div></div>' + '<input class="k-hue-slider" />' + '# if (opacity) { #' + '<input class="k-transparency-slider" />' + '# } #' + '# if (buttons) { #' + '<div unselectable="on" class="k-controls"><button class="k-button k-primary apply">#: messages.apply #</button> <button class="k-button cancel">#: messages.cancel #</button></div>' + '# } #')
         });
         function relative(array, element, delta) {
             array = Array.prototype.slice.call(array);
@@ -25652,17 +25772,18 @@
                     that.close();
                 }
             },
-            _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker k-header">' + '<span class="k-picker-wrap k-state-default">' + '# if (toolIcon) { #' + '<span class="k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"></span>' + '# } #' + '<span class="k-select" unselectable="on" aria-label="select">' + '<span class="k-icon k-i-arrow-s"></span>' + '</span>' + '</span>' + '</span>'),
+            _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker k-header">' + '<span class="k-picker-wrap k-state-default">' + '# if (toolIcon) { #' + '<span class="k-icon k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"><span class="k-icon k-i-line" style="display: none;"></span></span>' + '# } #' + '<span class="k-select" unselectable="on" aria-label="select">' + '<span class="k-icon k-i-arrow-60-down"></span>' + '</span>' + '</span>' + '</span>'),
             options: {
                 name: 'ColorPicker',
                 palette: null,
                 columns: 10,
                 toolIcon: null,
                 value: null,
-                messages: APPLY_CANCEL,
+                messages: MESSAGES,
                 opacity: false,
                 buttons: true,
                 preview: true,
+                clearButton: false,
                 ARIATemplate: 'Current selected color is #=data || ""#'
             },
             events: [
@@ -25678,12 +25799,18 @@
                 }
             },
             close: function () {
+                var selOptions = this._selector && this._selector.options || {};
+                selOptions._closing = true;
                 this._getPopup().close();
+                delete selOptions._closing;
             },
             toggle: function () {
                 if (!this.element.prop('disabled')) {
                     this._getPopup().toggle();
                 }
+            },
+            _noColorIcon: function () {
+                return this.wrapper.find('.k-picker-wrap > .k-selected-color > .k-icon.k-i-line');
             },
             color: ColorSelector.fn.color,
             value: ColorSelector.fn.value,
@@ -25708,7 +25835,8 @@
                 }
                 this.wrapper.attr('aria-label', this._ariaTemplate(formattedValue));
                 this._triggerSelect(value);
-                this.wrapper.find('.k-selected-color').css(BACKGROUNDCOLOR, value ? value.toDisplay() : 'transparent');
+                this.wrapper.find('.k-selected-color').css(BACKGROUNDCOLOR, value ? value.toDisplay() : WHITE);
+                this._noColorIcon()[formattedValue ? 'hide' : 'show']();
             },
             _keydown: function (ev) {
                 var key = ev.keyCode;
@@ -25748,15 +25876,36 @@
                             height: 0
                         }
                     }).data('kendoPopup');
+                    selector.element.find('.k-clear-color').kendoButton({
+                        icon: 'reset-color',
+                        click: function (e) {
+                            selector.options._clearedColor = true;
+                            that.value(null);
+                            that._updateUI(null);
+                            selector._colorAsText.val('');
+                            selector._hsvHandle.css({
+                                top: '0px',
+                                left: '0px'
+                            });
+                            selector._selectedColor.css(BACKGROUNDCOLOR, WHITE);
+                            e.preventDefault();
+                        }
+                    });
                     selector.bind({
                         select: function (ev) {
                             that._updateUI(parseColor(ev.value));
+                            delete selector.options._clearedColor;
                         },
                         change: function () {
-                            that._select(selector.color());
+                            if (!selector.options._clearedColor) {
+                                that._select(selector.color());
+                            }
                             that.close();
                         },
                         cancel: function () {
+                            if (selector.options._clearedColor && !that.value() && selector.value()) {
+                                that._select(selector.color(), true);
+                            }
                             that.close();
                         }
                     });
@@ -25768,14 +25917,21 @@
                             }
                             that.wrapper.children('.k-picker-wrap').removeClass('k-state-focused');
                             var color = selector._selectOnHide();
+                            var selectorColor = selector.value();
+                            var value = that.value();
+                            var options = selector.options;
                             if (!color) {
                                 setTimeout(function () {
                                     if (that.wrapper) {
                                         that.wrapper.focus();
                                     }
                                 });
-                                that._updateUI(that.color());
-                            } else {
+                                if (!options._closing && options._clearedColor && !value && selectorColor) {
+                                    that._select(selectorColor, true);
+                                } else {
+                                    that._updateUI(that.color());
+                                }
+                            } else if (!(options._clearedColor && !value)) {
                                 that._select(color);
                             }
                         },
@@ -25829,7 +25985,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, extend = $.extend;
+        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, extend = $.extend;
         var NumericTextBox = Widget.extend({
             init: function (element, options) {
                 var that = this, isStep = options && options.step !== undefined, min, max, step, value, disabled;
@@ -25909,7 +26065,7 @@
                 element.off('keydown' + ns).off('keypress' + ns).off('paste' + ns);
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    text.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false);
+                    text.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
                     that._upArrowEventHandler.bind('press', function (e) {
                         e.preventDefault();
                         that._spin(1);
@@ -25923,7 +26079,7 @@
                     that.element.on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('paste' + ns, proxy(that._paste, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
-                    text.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
+                    text.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
             },
             readonly: function (readonly) {
@@ -26239,7 +26395,7 @@
                     }
                     value = value.replace(POINT, numberFormat[POINT]);
                 } else {
-                    value = '';
+                    value = null;
                 }
                 that.element.val(value);
                 that.element.add(that._text).attr('aria-valuenow', value);
@@ -26251,7 +26407,6 @@
                     input.val(this.options.placeholder);
                 }
                 input.attr('title', this._initialTitle || input.val());
-                input.attr('aria-title', this._initialTitle || input.val());
             },
             _wrapper: function () {
                 var that = this, element = that.element, DOMElement = element[0], wrapper;
@@ -26280,7 +26435,7 @@
             }
         });
         function buttonHtml(direction, text) {
-            var className = 'k-i-arrow-' + (direction === 'increase' ? 'n' : 's');
+            var className = 'k-i-arrow-' + (direction === 'increase' ? '60-up' : '60-down');
             return '<span unselectable="on" class="k-link k-link-' + direction + '" aria-label="' + text + '" title="' + text + '">' + '<span unselectable="on" class="k-icon ' + className + '"></span>' + '</span>';
         }
         function truncate(value, precision) {
@@ -27569,9 +27724,9 @@
                 arrowClass: function (item, group) {
                     var result = 'k-icon';
                     if (group.horizontal) {
-                        result += ' k-i-arrow-s';
+                        result += ' k-i-arrow-60-down';
                     } else {
-                        result += ' k-i-arrow-e';
+                        result += ' k-i-arrow-60-right';
                     }
                     return result;
                 },
@@ -27650,9 +27805,22 @@
             item = $(item);
             item.find('> .k-link > [class*=k-i-arrow]:not(.k-sprite)').remove();
             item.filter(':has(.k-menu-group)').children('.k-link:not(:has([class*=k-i-arrow]:not(.k-sprite)))').each(function () {
-                var item = $(this), parent = item.parent().parent();
-                item.append('<span class=\'k-icon ' + (parent.hasClass(MENU + '-horizontal') ? 'k-i-arrow-s' : 'k-i-arrow-e') + '\'/>');
+                var item = $(this), arrowCssClass = getArrowCssClass(item);
+                item.append('<span class=\'k-icon ' + arrowCssClass + '\'/>');
             });
+        }
+        function getArrowCssClass(item) {
+            var arrowCssClass, parent = item.parent().parent(), isRtl = kendo.support.isRtl(parent);
+            if (parent.hasClass(MENU + '-horizontal')) {
+                arrowCssClass = ' k-i-arrow-60-down';
+            } else {
+                if (isRtl) {
+                    arrowCssClass = ' k-i-arrow-60-left';
+                } else {
+                    arrowCssClass = ' k-i-arrow-60-right';
+                }
+            }
+            return arrowCssClass;
         }
         function updateFirstLast(item) {
             item = $(item);
@@ -28341,6 +28509,9 @@
             },
             _focusHandler: function (e) {
                 var that = this, item = $(kendo.eventTarget(e)).closest(allItemsSelector);
+                if (item.hasClass(DISABLEDSTATE)) {
+                    return;
+                }
                 setTimeout(function () {
                     that._moveHover([], item);
                     if (item.children('.k-content')[0]) {
@@ -28568,7 +28739,8 @@
                     collision: that.options.popupCollision || 'fit',
                     animation: that.options.animation,
                     activate: that._triggerProxy,
-                    deactivate: that._triggerProxy
+                    deactivate: that._triggerProxy,
+                    appendTo: that.options.appendTo
                 }).data('kendoPopup');
                 that._targetChild = contains(that.target[0], that.popup.element[0]);
             }
@@ -28591,19 +28763,15 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, extend = $.extend, each = $.each, template = kendo.template, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoPanelBar', IMG = 'img', HREF = 'href', LAST = 'k-last', LINK = 'k-link', LINKSELECTOR = '.' + LINK, ERROR = 'error', ITEM = '.k-item', GROUP = '.k-group', VISIBLEGROUP = GROUP + ':visible', IMAGE = 'k-image', FIRST = 'k-first', EXPAND = 'expand', SELECT = 'select', CONTENT = 'k-content', ACTIVATE = 'activate', COLLAPSE = 'collapse', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', ACTIVECLASS = 'k-state-active', GROUPS = '> .k-panel', CONTENTS = '> .k-content', FOCUSEDCLASS = 'k-state-focused', DISABLEDCLASS = 'k-state-disabled', SELECTEDCLASS = 'k-state-selected', SELECTEDSELECTOR = '.' + SELECTEDCLASS, HIGHLIGHTCLASS = 'k-state-highlight', ACTIVEITEMSELECTOR = ITEM + ':not(.k-state-disabled)', clickableItems = '> ' + ACTIVEITEMSELECTOR + ' > ' + LINKSELECTOR + ', .k-panel > ' + ACTIVEITEMSELECTOR + ' > ' + LINKSELECTOR, disabledItems = ITEM + '.k-state-disabled > .k-link', selectableItems = '> li > ' + SELECTEDSELECTOR + ', .k-panel > li > ' + SELECTEDSELECTOR, defaultState = 'k-state-default', ARIA_DISABLED = 'aria-disabled', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_SELECTED = 'aria-selected', VISIBLE = ':visible', EMPTY = ':empty', SINGLE = 'single', templates = {
-                content: template('<div role=\'region\' class=\'k-content\'#= contentAttributes(data) #>#= content(item) #</div>'),
-                group: template('<ul role=\'group\' aria-hidden=\'true\' class=\'#= groupCssClass(group) #\'#= groupAttributes(group) #>' + '#= renderItems(data) #' + '</ul>'),
-                itemWrapper: template('<#= tag(item) # class=\'#= textClass(item, group) #\' #= contentUrl(item) ##= textAttributes(item) #>' + '#= image(item) ##= sprite(item) ##= text(item) #' + '#= arrow(data) #' + '</#= tag(item) #>'),
-                item: template('<li role=\'menuitem\' #=aria(item)#class=\'#= wrapperCssClass(group, item) #\'>' + '#= itemWrapper(data) #' + '# if (item.items) { #' + '#= subGroup({ items: item.items, panelBar: panelBar, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
-                image: template('<img class=\'k-image\' alt=\'\' src=\'#= imageUrl #\' />'),
-                arrow: template('<span class=\'#= arrowClass(item) #\'></span>'),
-                sprite: template('<span class=\'k-sprite #= spriteCssClass #\'></span>'),
-                empty: template('')
-            }, rendering = {
+        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, extend = $.extend, proxy = $.proxy, each = $.each, isArray = $.isArray, template = kendo.template, Widget = ui.Widget, HierarchicalDataSource = kendo.data.HierarchicalDataSource, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoPanelBar', IMG = 'img', HREF = 'href', LAST = 'k-last', LINK = 'k-link', LINKSELECTOR = '.' + LINK, ERROR = 'error', ITEM = '.k-item', GROUP = '.k-group', VISIBLEGROUP = GROUP + ':visible', IMAGE = 'k-image', FIRST = 'k-first', CHANGE = 'change', EXPAND = 'expand', SELECT = 'select', CONTENT = 'k-content', ACTIVATE = 'activate', COLLAPSE = 'collapse', DATABOUND = 'dataBound', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', UNDEFINED = 'undefined', ACTIVECLASS = 'k-state-active', GROUPS = '> .k-panel', CONTENTS = '> .k-content', STRING = 'string', FOCUSEDCLASS = 'k-state-focused', DISABLEDCLASS = 'k-state-disabled', SELECTEDCLASS = 'k-state-selected', SELECTEDSELECTOR = '.' + SELECTEDCLASS, HIGHLIGHTCLASS = 'k-state-highlight', ACTIVEITEMSELECTOR = ITEM + ':not(.k-state-disabled)', clickableItems = '> ' + ACTIVEITEMSELECTOR + ' > ' + LINKSELECTOR + ', .k-panel > ' + ACTIVEITEMSELECTOR + ' > ' + LINKSELECTOR, disabledItems = ITEM + '.k-state-disabled > .k-link', selectableItems = '> li > ' + SELECTEDSELECTOR + ', .k-panel > li > ' + SELECTEDSELECTOR, defaultState = 'k-state-default', ARIA_DISABLED = 'aria-disabled', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_SELECTED = 'aria-selected', VISIBLE = ':visible', EMPTY = ':empty', SINGLE = 'single', bindings = {
+                text: 'dataTextField',
+                url: 'dataUrlField',
+                spriteCssClass: 'dataSpriteCssClassField',
+                imageUrl: 'dataImageUrlField'
+            }, itemIcon, rendering = {
                 aria: function (item) {
                     var attr = '';
-                    if (item.items || item.content || item.contentUrl) {
+                    if (item.items || item.content || item.contentUrl || item.expanded) {
                         attr += ARIA_EXPANDED + '=\'' + (item.expanded ? 'true' : 'false') + '\' ';
                     }
                     if (item.enabled === false) {
@@ -28638,19 +28806,16 @@
                     }
                     return result;
                 },
-                textAttributes: function (item) {
-                    return item.url ? ' href=\'' + item.url + '\'' : '';
+                textAttributes: function (url) {
+                    return url ? ' href=\'' + url + '\'' : '';
                 },
                 arrowClass: function (item) {
                     var result = 'k-icon';
-                    result += item.expanded ? ' k-i-arrow-n k-panelbar-collapse' : ' k-i-arrow-s k-panelbar-expand';
+                    result += item.expanded ? ' k-panelbar-collapse k-i-arrow-n' : ' k-panelbar-expand k-i-arrow-s';
                     return result;
                 },
                 text: function (item) {
                     return item.encoded === false ? item.text : kendo.htmlEncode(item.text);
-                },
-                tag: function (item) {
-                    return item.url || item.contentUrl ? 'a' : 'span';
                 },
                 groupAttributes: function (group) {
                     return group.expanded !== true ? ' style=\'display:none\'' : '';
@@ -28668,14 +28833,6 @@
                     return item.contentUrl ? 'href="' + item.contentUrl + '"' : '';
                 }
             };
-        function updateArrow(items) {
-            items = $(items);
-            items.children(LINKSELECTOR).children('.k-icon').remove();
-            items.filter(':has(.k-panel),:has(.k-content)').children('.k-link:not(:has([class*=k-i-arrow]))').each(function () {
-                var item = $(this), parent = item.parent();
-                item.append('<span class=\'k-icon ' + (parent.hasClass(ACTIVECLASS) ? 'k-i-arrow-n k-panelbar-collapse' : 'k-i-arrow-s k-panelbar-expand') + '\'/>');
-            });
-        }
         function updateFirstLast(items) {
             items = $(items);
             items.filter('.k-first:not(:first-child)').removeClass(FIRST);
@@ -28683,9 +28840,28 @@
             items.filter(':first-child').addClass(FIRST);
             items.filter(':last-child').addClass(LAST);
         }
-        var PanelBar = Widget.extend({
+        function updateItemHtml(item) {
+            var wrapper = item, group = item.children('ul'), toggleButton = wrapper.children('.k-link').children('.k-icon');
+            if (item.hasClass('k-panelbar')) {
+                return;
+            }
+            if (!toggleButton.length && group.length) {
+                toggleButton = $('<span class=\'k-icon\' />').appendTo(wrapper);
+            } else if (!group.length || !group.children().length) {
+                toggleButton.remove();
+                group.remove();
+            }
+        }
+        itemIcon = function (item) {
+            return item.children('span').children('.k-icon');
+        };
+        var PanelBar = kendo.ui.DataBoundWidget.extend({
             init: function (element, options) {
-                var that = this, content;
+                var that = this, content, hasDataSource;
+                if (isArray(options)) {
+                    options = { dataSource: options };
+                }
+                hasDataSource = options && !!options.dataSource;
                 Widget.fn.init.call(that, element, options);
                 element = that.wrapper = that.element.addClass('k-widget k-reset k-header k-panelbar');
                 options = that.options;
@@ -28693,14 +28869,17 @@
                     that._itemId = element[0].id + '_pb_active';
                 }
                 that._tabindex();
-                that._initData(options);
+                that._accessors();
+                that._dataSource();
+                that._templates();
+                that._initData(hasDataSource);
                 that._updateClasses();
                 that._animations(options);
                 element.on('click' + NS, clickableItems, function (e) {
                     if (that._click($(e.currentTarget))) {
                         e.preventDefault();
                     }
-                }).on(MOUSEENTER + NS + ' ' + MOUSELEAVE + NS, clickableItems, that._toggleHover).on('click' + NS, disabledItems, false).on('keydown' + NS, $.proxy(that._keydown, that)).on('focus' + NS, function () {
+                }).on(MOUSEENTER + NS + ' ' + MOUSELEAVE + NS, clickableItems, that._toggleHover).on('click' + NS, disabledItems, false).on('click' + NS, '.k-request-retry', proxy(that._retryRequest, that)).on('keydown' + NS, $.proxy(that._keydown, that)).on('focus' + NS, function () {
                     var item = that.select();
                     that._current(item[0] ? item : that._first());
                 }).on('blur' + NS, function () {
@@ -28710,7 +28889,7 @@
                 if (content[0]) {
                     that.expand(content.parent(), false);
                 }
-                if (options.dataSource) {
+                if (!options.dataSource) {
                     that._angularCompile();
                 }
                 kendo.notify(that);
@@ -28720,11 +28899,14 @@
                 COLLAPSE,
                 SELECT,
                 ACTIVATE,
+                CHANGE,
                 ERROR,
+                DATABOUND,
                 CONTENTLOAD
             ],
             options: {
                 name: 'PanelBar',
+                dataSource: {},
                 animation: {
                     expand: {
                         effects: 'expand:vertical',
@@ -28732,7 +28914,15 @@
                     },
                     collapse: { duration: 200 }
                 },
-                expandMode: 'multiple'
+                messages: {
+                    loading: 'Loading...',
+                    requestFailed: 'Request failed.',
+                    retry: 'Retry'
+                },
+                autoBind: true,
+                loadOnDemand: true,
+                expandMode: 'multiple',
+                dataTextField: null
             },
             _angularCompile: function () {
                 var that = this;
@@ -28740,6 +28930,17 @@
                     return {
                         elements: that.element.children('li'),
                         data: [{ dataItem: that.options.$angular }]
+                    };
+                });
+            },
+            _angularCompileElements: function (html, items) {
+                var that = this;
+                that.angular('compile', function () {
+                    return {
+                        elements: html,
+                        data: $.map(items, function (item) {
+                            return [{ dataItem: item }];
+                        })
                     };
                 });
             },
@@ -28755,19 +28956,40 @@
                 this._angularCleanup();
                 kendo.destroy(this.element);
             },
-            _initData: function (options) {
+            _initData: function (hasDataSource) {
                 var that = this;
-                if (options.dataSource) {
+                if (hasDataSource) {
                     that.element.empty();
-                    that.append(options.dataSource, that.element);
+                    if (that.options.autoBind) {
+                        that._progress(true);
+                        that.dataSource.fetch();
+                    }
                 }
+            },
+            _templates: function () {
+                var that = this, options = that.options, fieldAccessor = proxy(that._fieldAccessor, that);
+                if (options.template && typeof options.template == STRING) {
+                    options.template = template(options.template);
+                } else if (!options.template) {
+                    options.template = template('# var text = ' + fieldAccessor('text') + '(data.item); #' + '# if (typeof data.item.encoded != \'undefined\' && data.item.encoded === false) {#' + '#= text #' + '# } else { #' + '#: text #' + '# } #');
+                }
+                that.templates = {
+                    content: template('<div role=\'region\' class=\'k-content\'#= contentAttributes(data) #>#= content(item) #</div>'),
+                    group: template('<ul role=\'group\' aria-hidden=\'true\' class=\'#= groupCssClass(group) #\'#= groupAttributes(group) #>' + '#= renderItems(data) #' + '</ul>'),
+                    itemWrapper: template('# var url = ' + fieldAccessor('url') + '(item); #' + '# var imageUrl = ' + fieldAccessor('imageUrl') + '(item); #' + '# var spriteCssClass = ' + fieldAccessor('spriteCssClass') + '(item); #' + '# var contentUrl = contentUrl(item); #' + '# var tag = url||contentUrl ? \'a\' : \'span\'; #' + '<#= tag # class=\'#= textClass(item, group) #\' #= contentUrl ##= textAttributes(url) #>' + '# if (imageUrl) { #' + '<img class=\'k-image\' alt=\'\' src=\'#= imageUrl #\' />' + '# } #' + '# if (spriteCssClass) { #' + '<span class=\'k-sprite #= spriteCssClass #\'></span>' + '# } #' + '#= data.panelBar.options.template(data) #' + '#= arrow(data) #' + '</#= tag #>'),
+                    item: template('<li role=\'menuitem\' #=aria(item)#class=\'#= wrapperCssClass(group, item) #\'' + kendo.attr('uid') + '=\'#= item.uid #\'>' + '#= itemWrapper(data) #' + '# if (item.items) { #' + '#= subGroup({ items: item.items, panelBar: panelBar, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
+                    loading: template('<div class=\'k-item\'><span class=\'k-icon k-i-loading\'></span> #: data.messages.loading #</div>'),
+                    retry: template('#: data.messages.requestFailed # ' + '<button class=\'k-button k-request-retry\'>#: data.messages.retry #</button>'),
+                    arrow: template('<span class=\'#= arrowClass(item) #\'></span>'),
+                    empty: template('')
+                };
             },
             setOptions: function (options) {
                 var animation = this.options.animation;
                 this._animations(options);
                 options.animation = extend(true, animation, options.animation);
                 if ('dataSource' in options) {
-                    this._initData(options);
+                    this.setDataSource(options.dataSource);
                 }
                 Widget.fn.setOptions.call(this, options);
             },
@@ -28804,7 +29026,7 @@
                             };
                         }
                         if (!that._triggerEvent(EXPAND, item)) {
-                            that._toggleItem(item, false);
+                            that._toggleItem(item, false, false);
                         }
                         if (!useAnimation) {
                             that.options.animation = animBackup;
@@ -28843,9 +29065,345 @@
                 });
                 return that;
             },
+            updateArrow: function (items) {
+                var that = this;
+                items = $(items);
+                items.children(LINKSELECTOR).children('.k-panelbar-collapse, .k-panelbar-expand').remove();
+                items.filter(function () {
+                    var dataItem = that.dataItem(this);
+                    if (!dataItem) {
+                        return $(this).find('.k-panel').length > 0 || $(this).find('.k-content').length > 0;
+                    }
+                    return dataItem.hasChildren || dataItem.content || dataItem.contentUrl;
+                }).children('.k-link:not(:has([class*=k-i-arrow]))').each(function () {
+                    var item = $(this), parent = item.parent();
+                    item.append('<span class=\'k-icon ' + (parent.hasClass(ACTIVECLASS) ? ' k-panelbar-collapse k-i-arrow-n' : ' k-panelbar-expand k-i-arrow-s') + '\'/>');
+                });
+            },
+            _accessors: function () {
+                var that = this, options = that.options, i, field, textField, element = that.element;
+                for (i in bindings) {
+                    field = options[bindings[i]];
+                    textField = element.attr(kendo.attr(i + '-field'));
+                    if (!field && textField) {
+                        field = textField;
+                    }
+                    if (!field) {
+                        field = i;
+                    }
+                    if (!isArray(field)) {
+                        field = [field];
+                    }
+                    options[bindings[i]] = field;
+                }
+            },
+            _progress: function (item, showProgress) {
+                var element = this.element;
+                var loadingText = this.templates.loading({ messages: this.options.messages });
+                if (arguments.length == 1) {
+                    showProgress = item;
+                    if (showProgress) {
+                        element.html(loadingText);
+                    } else {
+                        element.empty();
+                    }
+                } else {
+                    itemIcon(item).toggleClass('k-i-loading', showProgress).removeClass('k-i-refresh');
+                }
+            },
+            _refreshRoot: function (items) {
+                var that = this;
+                var parent = that.element;
+                var groupData = {
+                    firstLevel: true,
+                    expanded: true,
+                    length: parent.children().length
+                };
+                this.element.empty();
+                var rootItemsHtml = $.map(items, function (value, idx) {
+                    if (typeof value === 'string') {
+                        return $(value);
+                    } else {
+                        value.items = [];
+                        return $(that.renderItem({
+                            group: groupData,
+                            item: extend(value, { index: idx })
+                        }));
+                    }
+                });
+                this.element.append(rootItemsHtml);
+                this._angularCompileElements(rootItemsHtml, items);
+            },
+            _refreshChildren: function (item, parentNode) {
+                var i, children, child;
+                parentNode.children('.k-group').empty();
+                var items = item.children.data();
+                if (!items.length) {
+                    updateItemHtml(parentNode);
+                    children = parentNode.children('.k-group').children('li');
+                    this._angularCompileElements(children, items);
+                } else {
+                    this.append(item.children, parentNode);
+                    children = parentNode.children('.k-group').children('li');
+                    for (i = 0; i < children.length; i++) {
+                        child = children.eq(i);
+                        this.trigger('itemChange', {
+                            item: child,
+                            data: this.dataItem(child),
+                            ns: ui
+                        });
+                    }
+                }
+            },
+            findByUid: function (uid) {
+                var items = this.element.find('.k-item');
+                var uidAttr = kendo.attr('uid');
+                var result;
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].getAttribute(uidAttr) == uid) {
+                        result = items[i];
+                        break;
+                    }
+                }
+                return $(result);
+            },
+            refresh: function (e) {
+                var options = this.options;
+                var node = e.node;
+                var action = e.action;
+                var items = e.items;
+                var parentNode = this.wrapper;
+                var loadOnDemand = options.loadOnDemand;
+                if (e.field) {
+                    if (!items[0] || !items[0].level) {
+                        return;
+                    }
+                    return this._updateItems(items, e.field);
+                }
+                if (node) {
+                    parentNode = this.findByUid(node.uid);
+                    this._progress(parentNode, false);
+                }
+                if (action == 'add') {
+                    this._appendItems(e.index, items, parentNode);
+                } else if (action == 'remove') {
+                    this.remove(this.findByUid(items[0].uid));
+                } else if (action == 'itemchange') {
+                    this._updateItems(items);
+                } else if (action == 'itemloaded') {
+                    this._refreshChildren(node, parentNode);
+                } else {
+                    this._refreshRoot(items);
+                }
+                if (action != 'remove') {
+                    for (var k = 0; k < items.length; k++) {
+                        if (!loadOnDemand || items[k].expanded) {
+                            var tempItem = items[k];
+                            if (tempItem.hasChildren && tempItem.items && tempItem.items.length === 0) {
+                                tempItem.load();
+                            }
+                        }
+                    }
+                }
+                this.trigger(DATABOUND, { node: node ? parentNode : undefined });
+            },
+            _error: function (e) {
+                var node = e.node && this.findByUid(e.node.uid);
+                var retryHtml = this.templates.retry({ messages: this.options.messages });
+                if (node) {
+                    this._progress(node, false);
+                    this._expanded(node, false);
+                    itemIcon(node).addClass('k-i-refresh');
+                    e.node.loaded(false);
+                } else {
+                    this._progress(false);
+                    this.element.html(retryHtml);
+                }
+            },
+            _retryRequest: function (e) {
+                e.preventDefault();
+                this.dataSource.fetch();
+            },
+            items: function () {
+                return this.element.find('.k-item > span:first-child');
+            },
+            setDataSource: function (dataSource) {
+                var options = this.options;
+                options.dataSource = dataSource;
+                this._dataSource();
+                if (this.options.autoBind) {
+                    this._progress(true);
+                    this.dataSource.fetch();
+                }
+            },
+            _bindDataSource: function () {
+                this._refreshHandler = proxy(this.refresh, this);
+                this._errorHandler = proxy(this._error, this);
+                this.dataSource.bind(CHANGE, this._refreshHandler);
+                this.dataSource.bind(ERROR, this._errorHandler);
+            },
+            _unbindDataSource: function () {
+                var dataSource = this.dataSource;
+                if (dataSource) {
+                    dataSource.unbind(CHANGE, this._refreshHandler);
+                    dataSource.unbind(ERROR, this._errorHandler);
+                }
+            },
+            _fieldAccessor: function (fieldName) {
+                var fieldBindings = this.options[bindings[fieldName]] || [], count = fieldBindings.length, result = '(function(item) {';
+                if (count === 0) {
+                    result += 'return item[\'' + fieldName + '\'];';
+                } else {
+                    result += 'var levels = [' + $.map(fieldBindings, function (x) {
+                        return 'function(d){ return ' + kendo.expr(x) + '}';
+                    }).join(',') + '];';
+                    result += 'if(item.level){return levels[Math.min(item.level(), ' + count + '-1)](item);}else';
+                    result += '{return levels[' + count + '-1](item)}';
+                }
+                result += '})';
+                return result;
+            },
+            _dataSource: function () {
+                var that = this, options = that.options, dataSource = options.dataSource;
+                if (!dataSource) {
+                    return;
+                }
+                dataSource = isArray(dataSource) ? { data: dataSource } : dataSource;
+                that._unbindDataSource();
+                if (!dataSource.fields) {
+                    dataSource.fields = [
+                        { field: 'text' },
+                        { field: 'url' },
+                        { field: 'spriteCssClass' },
+                        { field: 'imageUrl' }
+                    ];
+                }
+                that.dataSource = HierarchicalDataSource.create(dataSource);
+                that._bindDataSource();
+            },
+            _appendItems: function (index, items, parentNode) {
+                var that = this, children, wrapper, group;
+                if (parentNode.hasClass('k-panelbar')) {
+                    children = parentNode.children('li');
+                    wrapper = parentNode;
+                } else {
+                    wrapper = parentNode.children('.k-group');
+                    if (!wrapper.length) {
+                        group = $('<ul role="group" aria-hidden="true" class="k-group k-panel" style="display:none"></ul>');
+                        parentNode.append(group);
+                        wrapper = group;
+                    }
+                    children = wrapper.children('li');
+                }
+                var groupData = {
+                    firstLevel: parentNode.hasClass('k-panelbar'),
+                    expanded: true,
+                    length: children.length
+                };
+                var itemsHtml = $.map(items, function (value, idx) {
+                    if (typeof value === 'string') {
+                        return $(value);
+                    } else {
+                        return $(that.renderItem({
+                            group: groupData,
+                            item: extend(value, { index: idx })
+                        }));
+                    }
+                });
+                if (typeof index == UNDEFINED) {
+                    index = children.length;
+                }
+                for (var i = 0; i < itemsHtml.length; i++) {
+                    if (children.length === 0 || index === 0) {
+                        wrapper.append(itemsHtml[i]);
+                    } else {
+                        itemsHtml[i].insertAfter(children[index - 1]);
+                    }
+                }
+                that._angularCompileElements(itemsHtml, items);
+                if (that.dataItem(parentNode)) {
+                    that.dataItem(parentNode).hasChildren = true;
+                    that.updateArrow(parentNode);
+                }
+            },
+            _updateItems: function (items, field) {
+                var that = this;
+                var i, node, nodeWrapper, item;
+                var context = {
+                    panelBar: that.options,
+                    item: item,
+                    group: {}
+                };
+                var render = field != 'expanded';
+                if (field == 'selected') {
+                    if (items[0][field]) {
+                        var currentNode = that.findByUid(items[0].uid);
+                        if (!currentNode.hasClass(DISABLEDCLASS)) {
+                            that.select(currentNode);
+                        }
+                    } else {
+                        that.clearSelection();
+                    }
+                } else {
+                    var elements = $.map(items, function (item) {
+                        return that.findByUid(item.uid);
+                    });
+                    if (render) {
+                        that.angular('cleanup', function () {
+                            return { elements: elements };
+                        });
+                    }
+                    for (i = 0; i < items.length; i++) {
+                        context.item = item = items[i];
+                        context.panelBar = that;
+                        nodeWrapper = elements[i];
+                        node = nodeWrapper.parent();
+                        if (render) {
+                            context.group = {
+                                firstLevel: node.hasClass('k-panelbar'),
+                                expanded: nodeWrapper.parent().hasClass(ACTIVECLASS),
+                                length: nodeWrapper.children().length
+                            };
+                            nodeWrapper.children('.k-link').remove();
+                            nodeWrapper.prepend(that.templates.itemWrapper(extend(context, { arrow: item.hasChildren || item.content || item.contentUrl ? that.templates.arrow : that.templates.empty }, rendering)));
+                        }
+                        if (field == 'expanded') {
+                            that._toggleItem(nodeWrapper, !item[field], item[field] ? 'true' : true);
+                        } else if (field == 'enabled') {
+                            that.enable(nodeWrapper, item[field]);
+                            if (!item[field]) {
+                                if (item.selected) {
+                                    item.set('selected', false);
+                                }
+                            }
+                        }
+                        if (nodeWrapper.length) {
+                            this.trigger('itemChange', {
+                                item: nodeWrapper,
+                                data: item,
+                                ns: ui
+                            });
+                        }
+                    }
+                    if (render) {
+                        that.angular('compile', function () {
+                            return {
+                                elements: elements,
+                                data: $.map(items, function (item) {
+                                    return [{ dataItem: item }];
+                                })
+                            };
+                        });
+                    }
+                }
+            },
             _toggleDisabled: function (element, enable) {
                 element = this.element.find(element);
                 element.toggleClass(defaultState, enable).toggleClass(DISABLEDCLASS, !enable).attr(ARIA_DISABLED, !enable);
+            },
+            dataItem: function (item) {
+                var uid = $(item).closest(ITEM).attr(kendo.attr('uid')), dataSource = this.dataSource;
+                return dataSource && dataSource.getByUid(uid);
             },
             select: function (element) {
                 var that = this;
@@ -28886,7 +29444,7 @@
                     inserted.group.append(this);
                     updateFirstLast(this);
                 });
-                updateArrow(referenceItem);
+                this.updateArrow(referenceItem);
                 updateFirstLast(inserted.group.find('.k-first, .k-last'));
                 inserted.group.height('auto');
                 return this;
@@ -28922,7 +29480,7 @@
                 }
                 if (parent.length) {
                     parent = parent.eq(0);
-                    updateArrow(parent);
+                    that.updateArrow(parent);
                     updateFirstLast(parent);
                 }
                 return that;
@@ -29036,27 +29594,34 @@
                 }
                 groupData = {
                     firstLevel: parent.hasClass('k-panelbar'),
-                    expanded: parent.parent().hasClass(ACTIVECLASS),
+                    expanded: $(referenceItem).hasClass(ACTIVECLASS),
                     length: parent.children().length
                 };
                 if (isReferenceItem && !parent.length) {
-                    parent = $(PanelBar.renderGroup({ group: groupData })).appendTo(referenceItem);
+                    parent = $(that.renderGroup({
+                        group: groupData,
+                        options: that.options
+                    })).appendTo(referenceItem);
                 }
-                if (item instanceof kendo.Observable) {
-                    item = item.toJSON();
-                }
-                if (plain || $.isArray(item)) {
+                if (plain || $.isArray(item) || item instanceof HierarchicalDataSource) {
+                    if (item instanceof HierarchicalDataSource) {
+                        item = item.data();
+                    }
                     items = $.map(plain ? [item] : item, function (value, idx) {
                         if (typeof value === 'string') {
                             return $(value);
                         } else {
-                            return $(PanelBar.renderItem({
+                            return $(that.renderItem({
                                 group: groupData,
                                 item: extend(value, { index: idx })
                             }));
                         }
                     });
                     if (isReferenceItem) {
+                        var dataItem = that.dataItem(referenceItem);
+                        if (dataItem) {
+                            dataItem.hasChildren = true;
+                        }
                         referenceItem.attr(ARIA_EXPANDED, false);
                     }
                 } else {
@@ -29067,6 +29632,10 @@
                     }
                     that._updateItemsClasses(items);
                 }
+                if (!item.length) {
+                    item = [item];
+                }
+                that._angularCompileElements(items, item);
                 return {
                     items: items,
                     group: parent
@@ -29086,7 +29655,7 @@
                 panels.parent().attr(ARIA_EXPANDED, false).not('.' + ACTIVECLASS).children('ul').attr(ARIA_HIDDEN, true).hide();
                 items = that.element.add(panels).children();
                 that._updateItemsClasses(items);
-                updateArrow(items);
+                that.updateArrow(items);
                 updateFirstLast(items);
             },
             _updateItemsClasses: function (items) {
@@ -29167,19 +29736,35 @@
                 }
                 return prevent;
             },
-            _toggleItem: function (element, isVisible) {
-                var that = this, childGroup = element.find(GROUPS), link = element.find(LINKSELECTOR), url = link.attr(HREF), prevent, content;
-                if (childGroup.length) {
+            _toggleItem: function (element, isVisible, expanded) {
+                var that = this, childGroup = element.find(GROUPS), link = element.find(LINKSELECTOR), url = link.attr(HREF), prevent, content, dataItem = that.dataItem(element);
+                var loaded = dataItem && dataItem.loaded();
+                if (dataItem && !expanded) {
+                    dataItem.set('expanded', !isVisible);
+                    prevent = dataItem.hasChildren;
+                    return prevent;
+                }
+                if (dataItem && (!expanded || expanded === 'true') && !loaded) {
+                    if (that.options.loadOnDemand) {
+                        this._progress(element, true);
+                    }
                     this._toggleGroup(childGroup, isVisible);
-                    prevent = true;
+                    element.children('.k-group,.k-content').remove();
+                    prevent = dataItem.hasChildren;
+                    dataItem.load();
                 } else {
-                    content = element.children('.' + CONTENT);
-                    if (content.length) {
+                    if (childGroup.length) {
+                        this._toggleGroup(childGroup, isVisible);
                         prevent = true;
-                        if (!content.is(EMPTY) || url === undefined) {
-                            that._toggleGroup(content, isVisible);
-                        } else {
-                            that._ajaxRequest(element, content, isVisible);
+                    } else {
+                        content = element.children('.' + CONTENT);
+                        if (content.length) {
+                            prevent = true;
+                            if (!content.is(EMPTY) || url === undefined) {
+                                that._toggleGroup(content, isVisible);
+                            } else {
+                                that._ajaxRequest(element, content, isVisible);
+                            }
                         }
                     }
                 }
@@ -29191,7 +29776,7 @@
                     that._animating = false;
                     return;
                 }
-                element.parent().attr(ARIA_EXPANDED, !visibility).attr(ARIA_HIDDEN, visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-icon').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
+                element.parent().attr(ARIA_EXPANDED, !visibility).attr(ARIA_HIDDEN, visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse, .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
                 if (visibility) {
                     animation = extend(hasCollapseAnimation ? collapse : extend({ reverse: true }, animation), { hide: true });
                     animation.complete = function () {
@@ -29283,7 +29868,7 @@
                 return that.trigger(eventName, { item: element[0] });
             },
             _updateSelected: function (link) {
-                var that = this, element = that.element, item = link.parent(ITEM), selected = that._selected;
+                var that = this, element = that.element, item = link.parent(ITEM), selected = that._selected, dataItem = that.dataItem(item);
                 if (selected) {
                     selected.removeAttr(ARIA_SELECTED);
                 }
@@ -29293,6 +29878,10 @@
                 link.addClass(SELECTEDCLASS);
                 link.parentsUntil(element, ITEM).filter(':has(.k-header)').addClass(HIGHLIGHTCLASS);
                 that._current(item[0] ? item : null);
+                if (dataItem) {
+                    dataItem.set('selected', true);
+                }
+                that.trigger(CHANGE);
             },
             _animations: function (options) {
                 if (options && 'animation' in options && !options.animation) {
@@ -29304,30 +29893,29 @@
                         }
                     };
                 }
-            }
-        });
-        extend(PanelBar, {
+            },
             renderItem: function (options) {
+                var that = this;
                 options = extend({
-                    panelBar: {},
+                    panelBar: that,
                     group: {}
                 }, options);
-                var empty = templates.empty, item = options.item;
-                return templates.item(extend(options, {
-                    image: item.imageUrl ? templates.image : empty,
-                    sprite: item.spriteCssClass ? templates.sprite : empty,
-                    itemWrapper: templates.itemWrapper,
-                    renderContent: PanelBar.renderContent,
-                    arrow: item.items || item.content || item.contentUrl ? templates.arrow : empty,
-                    subGroup: PanelBar.renderGroup
+                var empty = that.templates.empty, item = options.item;
+                return that.templates.item(extend(options, {
+                    itemWrapper: that.templates.itemWrapper,
+                    renderContent: that.renderContent,
+                    arrow: item.items && item.items.length > 0 || item.hasChildren || item.content || item.contentUrl ? that.templates.arrow : empty,
+                    subGroup: !options.loadOnDemand || item.expanded ? that.renderGroup : empty
                 }, rendering));
             },
             renderGroup: function (options) {
+                var that = this;
+                var templates = that.templates || options.panelBar.templates;
                 return templates.group(extend({
                     renderItems: function (options) {
                         var html = '', i = 0, items = options.items, len = items ? items.length : 0, group = extend({ length: len }, options.group);
                         for (; i < len; i++) {
-                            html += PanelBar.renderItem(extend(options, {
+                            html += options.panelBar.renderItem(extend(options, {
                                 group: group,
                                 item: extend({ index: i }, items[i])
                             }));
@@ -29337,7 +29925,7 @@
                 }, options, rendering));
             },
             renderContent: function (options) {
-                return templates.content(extend(options, rendering));
+                return options.panelBar.templates.content(extend(options, rendering));
             }
         });
         kendo.ui.plugin(PanelBar);
@@ -29789,7 +30377,7 @@
         depends: ['data']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, map = $.map, each = $.each, trim = $.trim, extend = $.extend, template = kendo.template, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, Widget = ui.Widget, excludedNodesRegExp = /^(a|div)$/i, NS = '.kendoTabStrip', IMG = 'img', HREF = 'href', PREV = 'prev', SHOW = 'show', LINK = 'k-link', LAST = 'k-last', CLICK = 'click', ERROR = 'error', EMPTY = ':empty', IMAGE = 'k-image', FIRST = 'k-first', SELECT = 'select', ACTIVATE = 'activate', CONTENT = 'k-content', CONTENTURL = 'contentUrl', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', DISABLEDSTATE = 'k-state-disabled', DEFAULTSTATE = 'k-state-default', ACTIVESTATE = 'k-state-active', FOCUSEDSTATE = 'k-state-focused', HOVERSTATE = 'k-state-hover', TABONTOP = 'k-tab-on-top', NAVIGATABLEITEMS = '.k-item:not(.' + DISABLEDSTATE + ')', HOVERABLEITEMS = '.k-tabstrip-items > ' + NAVIGATABLEITEMS + ':not(.' + ACTIVESTATE + ')', templates = {
+        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, map = $.map, each = $.each, trim = $.trim, extend = $.extend, isFunction = kendo.isFunction, template = kendo.template, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, Widget = ui.Widget, excludedNodesRegExp = /^(a|div)$/i, NS = '.kendoTabStrip', IMG = 'img', HREF = 'href', PREV = 'prev', SHOW = 'show', LINK = 'k-link', LAST = 'k-last', CLICK = 'click', ERROR = 'error', EMPTY = ':empty', IMAGE = 'k-image', FIRST = 'k-first', SELECT = 'select', ACTIVATE = 'activate', CONTENT = 'k-content', CONTENTURL = 'contentUrl', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', DISABLEDSTATE = 'k-state-disabled', DEFAULTSTATE = 'k-state-default', ACTIVESTATE = 'k-state-active', FOCUSEDSTATE = 'k-state-focused', HOVERSTATE = 'k-state-hover', TABONTOP = 'k-tab-on-top', NAVIGATABLEITEMS = '.k-item:not(.' + DISABLEDSTATE + ')', HOVERABLEITEMS = '.k-tabstrip-items > ' + NAVIGATABLEITEMS + ':not(.' + ACTIVESTATE + ')', templates = {
                 content: template('<div class=\'k-content\'#= contentAttributes(data) # role=\'tabpanel\'>#= content(item) #</div>'),
                 itemWrapper: template('<#= tag(item) # class=\'k-link\'#= contentUrl(item) ##= textAttributes(item) #>' + '#= image(item) ##= sprite(item) ##= text(item) #' + '</#= tag(item) #>'),
                 item: template('<li class=\'#= wrapperCssClass(group, item) #\' role=\'tab\' #=item.active ? "aria-selected=\'true\'" : \'\'#>' + '#= itemWrapper(data) #' + '</li>'),
@@ -29844,7 +30432,7 @@
                 if (!item.children('.' + LINK).length) {
                     item.contents().filter(function () {
                         return !this.nodeName.match(excludedNodesRegExp) && !(this.nodeType == 3 && !trim(this.nodeValue));
-                    }).wrapAll('<span class=\'' + LINK + '\'/>');
+                    }).wrapAll('<span UNSELECTABLE=\'on\' class=\'' + LINK + '\'/>');
                 }
             });
         }
@@ -29864,6 +30452,7 @@
                 Widget.fn.init.call(that, element, options);
                 that._animations(that.options);
                 options = that.options;
+                that._contentUrls = options.contentUrls || [];
                 that._wrapper();
                 that._isRtl = kendo.support.isRtl(that.wrapper);
                 that._tabindex();
@@ -29874,10 +30463,15 @@
                 }
                 that._tabPosition();
                 that._scrollable();
-                if (that.options.contentUrls) {
+                if (that._contentUrls.length) {
                     that.wrapper.find('.k-tabstrip-items > .k-item').each(function (index, item) {
-                        $(item).find('>.' + LINK).data(CONTENTURL, that.options.contentUrls[index]);
+                        var url = that._contentUrls[index];
+                        if (typeof url === 'string') {
+                            $(item).find('>.' + LINK).data(CONTENTURL, url);
+                        }
                     });
+                } else {
+                    that._contentUrls.length = that.tabGroup.find('li.k-item').length;
                 }
                 that.wrapper.on(MOUSEENTER + NS + ' ' + MOUSELEAVE + NS, HOVERABLEITEMS, that._toggleHover).on('focus' + NS, $.proxy(that._active, that)).on('blur' + NS, function () {
                     that._current(null);
@@ -30061,9 +30655,13 @@
                     if (e.field === options.dataTextField) {
                         that.tabGroup.children().eq(idx).find('.k-link').text(view[0].get(e.field));
                     }
+                    if (e.field === options.dataUrlField) {
+                        that._contentUrls[idx] = view[0].get(e.field);
+                    }
                 } else {
                     that.trigger('dataBinding');
                     that.remove('li');
+                    that._contentUrls = [];
                     that.append(tabs);
                     that.trigger('dataBound');
                 }
@@ -30088,6 +30686,9 @@
             setOptions: function (options) {
                 var that = this, animation = that.options.animation;
                 that._animations(options);
+                if (options.contentUrls) {
+                    that._contentUrls = options.contentUrls;
+                }
                 options.animation = extend(true, animation, options.animation);
                 if (options.navigatable) {
                     that.wrapper.on('keydown' + NS, that._keyDownProxy);
@@ -30173,8 +30774,9 @@
             reload: function (element) {
                 element = this.tabGroup.find(element);
                 var that = this;
+                var contentUrls = that._contentUrls;
                 element.each(function () {
-                    var item = $(this), contentUrl = item.find('.' + LINK).data(CONTENTURL), content = that.contentHolder(item.index());
+                    var item = $(this), contentUrl = item.find('.' + LINK).data(CONTENTURL) || contentUrls[item.index()], content = that.contentHolder(item.index());
                     if (contentUrl) {
                         that.ajaxRequest(item, content, null, contentUrl);
                     }
@@ -30202,35 +30804,56 @@
                 that.resize(true);
                 return that;
             },
+            _appendUrlItem: function (url) {
+                this._contentUrls.push(url);
+            },
+            _moveUrlItem: function (from, to) {
+                this._contentUrls.splice(to, 0, this._contentUrls.splice(from, 1)[0]);
+            },
+            _removeUrlItem: function (index) {
+                this._contentUrls.splice(index, 1);
+            },
             insertBefore: function (tab, referenceTab) {
-                referenceTab = this.tabGroup.find(referenceTab);
-                var that = this, inserted = that._create(tab), referenceContent = $(that.contentElement(referenceTab.index()));
+                if ($(tab).is($(referenceTab))) {
+                    referenceTab = this.tabGroup.find(referenceTab).next();
+                } else {
+                    referenceTab = this.tabGroup.find(referenceTab);
+                }
+                var that = this, inserted = that._create(tab), referenceContent = that.element.find('#' + referenceTab.attr('aria-controls'));
                 each(inserted.tabs, function (idx) {
                     var contents = inserted.contents[idx];
+                    var fromIndex = inserted.newTabsCreated ? that._contentUrls.length - (inserted.tabs.length - idx) : $(contents).index() - 1;
                     referenceTab.before(this);
                     referenceContent.before(contents);
+                    that._moveUrlItem(fromIndex, $(this).index());
                     that.angular('compile', function () {
                         return { elements: [contents] };
                     });
                 });
                 updateFirstLast(that.tabGroup);
-                that._updateContentElements();
+                that._updateContentElements(inserted.newTabsCreated);
                 that.resize(true);
                 return that;
             },
             insertAfter: function (tab, referenceTab) {
-                referenceTab = this.tabGroup.find(referenceTab);
-                var that = this, inserted = that._create(tab), referenceContent = $(that.contentElement(referenceTab.index()));
+                if ($(tab).is($(referenceTab))) {
+                    referenceTab = this.tabGroup.find(referenceTab).prev();
+                } else {
+                    referenceTab = this.tabGroup.find(referenceTab);
+                }
+                var that = this, inserted = that._create(tab), referenceContent = that.element.find('#' + referenceTab.attr('aria-controls'));
                 each(inserted.tabs, function (idx) {
                     var contents = inserted.contents[idx];
+                    var fromIndex = inserted.newTabsCreated ? that._contentUrls.length - (inserted.tabs.length - idx) : $(contents).index() - 1;
                     referenceTab.after(this);
                     referenceContent.after(contents);
+                    that._moveUrlItem(fromIndex, $(this).index());
                     that.angular('compile', function () {
                         return { elements: [contents] };
                     });
                 });
                 updateFirstLast(that.tabGroup);
-                that._updateContentElements();
+                that._updateContentElements(inserted.newTabsCreated);
                 that.resize(true);
                 return that;
             },
@@ -30244,21 +30867,27 @@
                     elements = that.tabGroup.children().eq(elements);
                 }
                 contents = elements.map(function () {
-                    var content = that.contentElement($(this).index());
+                    var idx = $(this).index();
+                    var content = that.contentElement(idx);
                     kendo.destroy(content);
+                    that._removeUrlItem(idx);
                     return content;
                 });
                 elements.remove();
+                contents.empty();
                 contents.remove();
                 that._updateContentElements();
                 that.resize(true);
                 return that;
             },
             _create: function (tab) {
-                var plain = $.isPlainObject(tab), that = this, tabs, contents, content;
-                if (plain || $.isArray(tab)) {
+                var that = this, tabs, contents, content, newTabsCreated = false;
+                tab = tab instanceof kendo.data.ObservableArray ? tab.toJSON() : tab;
+                if ($.isPlainObject(tab) || $.isArray(tab)) {
                     tab = $.isArray(tab) ? tab : [tab];
+                    newTabsCreated = true;
                     tabs = map(tab, function (value, idx) {
+                        that._appendUrlItem(tab[idx].contentUrl || null);
                         return $(TabStrip.renderItem({
                             group: that.tabGroup,
                             item: extend(value, { index: idx })
@@ -30277,10 +30906,11 @@
                     }
                     contents = $();
                     tabs.each(function () {
-                        content = $('<div class=\'' + CONTENT + '\'/>');
                         if (/k-tabstrip-items/.test(this.parentNode.className)) {
-                            var index = parseInt(this.getAttribute('aria-controls').replace(/^.*-/, ''), 10) - 1;
-                            content = $(that.contentElement(index));
+                            var element = that.element.find('#' + this.getAttribute('aria-controls'));
+                            content = element;
+                        } else {
+                            content = $('<div class=\'' + CONTENT + '\'/>');
                         }
                         contents = contents.add(content);
                     });
@@ -30288,7 +30918,8 @@
                 }
                 return {
                     tabs: tabs,
-                    contents: contents
+                    contents: contents,
+                    newTabsCreated: newTabsCreated
                 };
             },
             _toggleDisabled: function (element, enable) {
@@ -30320,25 +30951,36 @@
                 if (tabs.length) {
                     updateTabClasses(tabs);
                     updateFirstLast(that.tabGroup);
-                    that._updateContentElements();
+                    that._updateContentElements(true);
                 }
             },
-            _updateContentElements: function () {
-                var that = this, contentUrls = that.options.contentUrls || [], items = that.tabGroup.find('.k-item'), tabStripID = (that.element.attr('id') || kendo.guid()) + '-', contentElements = that.wrapper.children('div');
+            _elementId: function (element, idx) {
+                var elementId = element.attr('id');
+                var wrapperId = this.element.attr('id');
+                if (!elementId || elementId.indexOf(wrapperId + '-') > -1) {
+                    var tabStripID = (wrapperId || kendo.guid()) + '-';
+                    return tabStripID + (idx + 1);
+                }
+                return elementId;
+            },
+            _updateContentElements: function (isInitialUpdate) {
+                var that = this, contentUrls = that._contentUrls, items = that.tabGroup.find('.k-item'), contentElements = that.wrapper.children('div'), _elementId = that._elementId.bind(that);
                 if (contentElements.length && items.length > contentElements.length) {
                     contentElements.each(function (idx) {
-                        var currentIndex = parseInt(this.id.replace(tabStripID, ''), 10), item = items.filter('[aria-controls=' + tabStripID + currentIndex + ']'), id = tabStripID + (idx + 1);
-                        item.data('aria', id);
+                        var id = _elementId($(this), idx);
+                        var item = items.filter('[aria-controls=' + (this.id || 0) + ']')[0];
+                        if (!item && isInitialUpdate) {
+                            item = items[idx];
+                        }
+                        if (item) {
+                            item.setAttribute('aria-controls', id);
+                        }
                         this.setAttribute('id', id);
-                    });
-                    items.each(function () {
-                        var item = $(this);
-                        this.setAttribute('aria-controls', item.data('aria'));
-                        item.removeData('aria');
                     });
                 } else {
                     items.each(function (idx) {
-                        var currentContent = contentElements.eq(idx), id = tabStripID + (idx + 1);
+                        var currentContent = contentElements.eq(idx);
+                        var id = _elementId(currentContent, idx);
                         this.setAttribute('aria-controls', id);
                         if (!currentContent.length && contentUrls[idx]) {
                             $('<div class=\'' + CONTENT + '\'/>').appendTo(that.wrapper).attr('id', id);
@@ -30405,14 +31047,14 @@
                 $(e.currentTarget).toggleClass(HOVERSTATE, e.type == MOUSEENTER);
             },
             _click: function (item) {
-                var that = this, link = item.find('.' + LINK), href = link.attr(HREF), collapse = that.options.collapsible, contentHolder = that.contentHolder(item.index()), prevent, isAnchor;
+                var that = this, link = item.find('.' + LINK), href = link.attr(HREF), collapse = that.options.collapsible, index = item.index(), contentHolder = that.contentHolder(index), prevent, isAnchor;
                 if (item.closest('.k-widget')[0] != that.wrapper[0]) {
                     return;
                 }
                 if (item.is('.' + DISABLEDSTATE + (!collapse ? ',.' + ACTIVESTATE : ''))) {
                     return true;
                 }
-                isAnchor = link.data(CONTENTURL) || href && (href.charAt(href.length - 1) == '#' || href.indexOf('#' + that.element[0].id + '-') != -1);
+                isAnchor = link.data(CONTENTURL) || that._contentUrls[index] || href && (href.charAt(href.length - 1) == '#' || href.indexOf('#' + that.element[0].id + '-') != -1);
                 prevent = !href || isAnchor;
                 if (that.tabGroup.children('[data-animating]').length) {
                     return prevent;
@@ -30444,22 +31086,24 @@
                     if (tabGroupScrollWidth > wrapperOffsetWidth && !that._scrollableModeActive) {
                         that._nowScrollingTabs = false;
                         that._isRtl = kendo.support.isRtl(that.element);
-                        that.wrapper.append(scrollButtonHtml('prev', 'k-i-arrow-w') + scrollButtonHtml('next', 'k-i-arrow-e'));
+                        var mouseDown = kendo.support.mobileOS ? 'touchstart' : 'mousedown';
+                        var mouseUp = kendo.support.mobileOS ? 'touchend' : 'mouseup';
+                        that.wrapper.append(scrollButtonHtml('prev', 'k-i-arrow-60-left') + scrollButtonHtml('next', 'k-i-arrow-60-right'));
                         scrollPrevButton = that._scrollPrevButton = that.wrapper.children('.k-tabstrip-prev');
                         scrollNextButton = that._scrollNextButton = that.wrapper.children('.k-tabstrip-next');
                         that.tabGroup.css({
                             marginLeft: outerWidth(scrollPrevButton) + 9,
                             marginRight: outerWidth(scrollNextButton) + 12
                         });
-                        scrollPrevButton.on('mousedown' + NS, function () {
+                        scrollPrevButton.on(mouseDown + NS, function () {
                             that._nowScrollingTabs = true;
                             that._scrollTabsByDelta(options.scrollable.distance * (that._isRtl ? 1 : -1));
                         });
-                        scrollNextButton.on('mousedown' + NS, function () {
+                        scrollNextButton.on(mouseDown + NS, function () {
                             that._nowScrollingTabs = true;
                             that._scrollTabsByDelta(options.scrollable.distance * (that._isRtl ? -1 : 1));
                         });
-                        scrollPrevButton.add(scrollNextButton).on('mouseup' + NS, function () {
+                        scrollPrevButton.add(scrollNextButton).on(mouseUp + NS, function () {
                             that._nowScrollingTabs = false;
                         });
                         that._scrollableModeActive = true;
@@ -30572,7 +31216,7 @@
                     return false;
                 }
                 item.attr('data-animating', true);
-                var isAjaxContent = (item.children('.' + LINK).data(CONTENTURL) || false) && contentHolder.is(EMPTY), showContentElement = function () {
+                var isAjaxContent = (item.children('.' + LINK).data(CONTENTURL) || that._contentUrls[itemIndex] || false) && contentHolder.is(EMPTY), showContentElement = function () {
                         that.tabGroup.find('.' + TABONTOP).removeClass(TABONTOP);
                         item.addClass(TABONTOP).css('z-index');
                         if (kendo.size(animation.effects)) {
@@ -30636,11 +31280,10 @@
                     return undefined;
                 }
                 var contentElements = this.contentElements && this.contentElements[0] && !kendo.kineticScrollNeeded ? this.contentElements : this.contentAnimators;
-                itemIndex = contentElements && itemIndex < 0 ? contentElements.length + itemIndex : itemIndex;
-                var idTest = new RegExp('-' + (itemIndex + 1) + '$');
+                var id = $(this.tabGroup.children()[itemIndex]).attr('aria-controls');
                 if (contentElements) {
                     for (var i = 0, len = contentElements.length; i < len; i++) {
-                        if (idTest.test(contentElements.eq(i).closest('.k-content')[0].id)) {
+                        if (contentElements.eq(i).closest('.k-content')[0].id == id) {
                             return contentElements[i];
                         }
                     }
@@ -30664,9 +31307,9 @@
                 if (kendo.support.browser.msie && kendo.support.browser.version < 10) {
                     setTimeout(oldProgressAnimation, 40);
                 }
-                url = url || link.data(CONTENTURL) || link.attr(HREF);
+                url = url || link.data(CONTENTURL) || that._contentUrls[element.index()] || link.attr(HREF);
                 that.inRequest = true;
-                that.xhr = $.ajax({
+                var ajaxOptions = {
                     type: 'GET',
                     cache: false,
                     url: url,
@@ -30761,7 +31404,14 @@
                             contentElement: content[0]
                         });
                     }
-                });
+                };
+                if (typeof url === 'object') {
+                    ajaxOptions = $.extend(true, {}, ajaxOptions, url);
+                    if (isFunction(ajaxOptions.url)) {
+                        ajaxOptions.url = ajaxOptions.url();
+                    }
+                }
+                that.xhr = $.ajax(ajaxOptions);
             }
         });
         extend(TabStrip, {
@@ -32150,7 +32800,7 @@
                 var catIconIf = function (iconType, condition) {
                         return condition ? '<div class=\'k-icon ' + iconType + '\' />' : '';
                     }, orientation = this.orientation, draggable = previousPane.resizable !== false && nextPane.resizable !== false, prevCollapsible = previousPane.collapsible, prevCollapsed = previousPane.collapsed, nextCollapsible = nextPane.collapsible, nextCollapsed = nextPane.collapsed;
-                splitbar.addClass('k-splitbar k-state-default k-splitbar-' + orientation).attr('role', 'separator').attr('aria-expanded', !(prevCollapsed || nextCollapsed)).removeClass('k-splitbar-' + orientation + '-hover').toggleClass('k-splitbar-draggable-' + orientation, draggable && !prevCollapsed && !nextCollapsed).toggleClass('k-splitbar-static-' + orientation, !draggable && !prevCollapsible && !nextCollapsible).html(catIconIf('k-collapse-prev k-i-sarrow-n', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-prev k-i-sarrow-w', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-prev k-i-sarrow-n', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-expand-prev k-i-sarrow-w', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-resize-handle k-i-hbar', draggable && orientation == VERTICAL) + catIconIf('k-resize-handle k-i-vbar', draggable && orientation == HORIZONTAL) + catIconIf('k-collapse-next k-i-sarrow-s', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-next k-i-sarrow-e', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-next k-i-sarrow-s', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-expand-next k-i-sarrow-e', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == HORIZONTAL));
+                splitbar.addClass('k-splitbar k-state-default k-splitbar-' + orientation).attr('role', 'separator').attr('aria-expanded', !(prevCollapsed || nextCollapsed)).removeClass('k-splitbar-' + orientation + '-hover').toggleClass('k-splitbar-draggable-' + orientation, draggable && !prevCollapsed && !nextCollapsed).toggleClass('k-splitbar-static-' + orientation, !draggable && !prevCollapsible && !nextCollapsible).html(catIconIf('k-collapse-prev k-i-arrow-60-up', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-prev k-i-arrow-60-left', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-prev k-i-arrow-60-down', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-expand-prev k-i-arrow-60-right', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-resize-handle k-i-hbar', draggable && orientation == VERTICAL) + catIconIf('k-resize-handle k-i-vbar', draggable && orientation == HORIZONTAL) + catIconIf('k-collapse-next k-i-arrow-60-down', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-next k-i-arrow-60-right', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-next k-i-arrow-60-up', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-expand-next k-i-arrow-60-left', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == HORIZONTAL));
                 if (!draggable && !prevCollapsible && !nextCollapsible) {
                     splitbar.removeAttr('tabindex');
                 }
@@ -32822,7 +33472,7 @@
                     var dom = $(this);
                     var object = that._object(dom);
                     var options = object && object.options;
-                    return options && options.modal && options.visible && dom.is(VISIBLE);
+                    return options && options.modal && that.options.appendTo == options.appendTo && options.visible && dom.is(VISIBLE);
                 }).sort(function (a, b) {
                     return +$(a).css('zIndex') - +$(b).css('zIndex');
                 });
@@ -32925,6 +33575,7 @@
                 maxHeight: Infinity,
                 content: null,
                 visible: null,
+                appendTo: BODY,
                 closable: true
             }
         });
@@ -33071,12 +33722,12 @@
         };
         templates = {
             wrapper: template('<div class=\'k-widget k-dialog k-window\' role=\'dialog\' />'),
-            action: template('<li class=\'k-button# if (data.primary) { # k-primary# } #\' role=\'button\'></li>'),
-            titlebar: template('<div class=\'k-window-titlebar k-header\'>' + '<span class=\'k-dialog-title\'>#= title #</span>' + '</div>'),
-            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-font-icon k-i-x\'></span></a>'),
-            actionbar: template('<ul class=\'k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
+            action: template('<button type=\'button\' class=\'k-button# if (data.primary) { # k-primary# } role=\'button\' #\'></button>'),
+            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-header\'>' + '<span class=\'k-window-title k-dialog-title\'>#= title #</span>' + '</div>'),
+            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
+            actionbar: template('<div class=\'k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
             overlay: '<div class=\'k-overlay\' />',
-            alertWrapper: template('<div class=\'k-widget k-dialog k-window k-dialog-centered\' role=\'alertdialog\' />'),
+            alertWrapper: template('<div class=\'k-widget k-dialog k-window\' role=\'alertdialog\' />'),
             alert: '<div />',
             confirm: '<div />',
             prompt: '<div />',
@@ -33146,7 +33797,7 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-minimize,.k-window-actions .k-i-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', isLocalUrl = kendo.isLocalUrl;
         function defined(x) {
             return typeof x != 'undefined';
         }
@@ -33363,8 +34014,12 @@
                 var actions = this.options.actions;
                 var titlebar = this.wrapper.children(KWINDOWTITLEBAR);
                 var container = titlebar.find('.k-window-actions');
+                var windowSpecificCommands = [
+                    'maximize',
+                    'minimize'
+                ];
                 actions = $.map(actions, function (action) {
-                    return { name: action };
+                    return { name: windowSpecificCommands.indexOf(action.toLowerCase()) > -1 ? 'window-' + action : action };
                 });
                 container.html(kendo.render(templates.action, actions));
             },
@@ -33508,12 +34163,12 @@
                 return overlay;
             },
             _actionForIcon: function (icon) {
-                var iconClass = /\bk-i-\w+\b/.exec(icon[0].className)[0];
+                var iconClass = /\bk-i(-\w+)+\b/.exec(icon[0].className)[0];
                 return {
                     'k-i-close': '_close',
-                    'k-i-maximize': 'maximize',
-                    'k-i-minimize': 'minimize',
-                    'k-i-restore': 'restore',
+                    'k-i-window-maximize': 'maximize',
+                    'k-i-window-minimize': 'minimize',
+                    'k-i-window-restore': 'restore',
                     'k-i-refresh': 'refresh',
                     'k-i-pin': 'pin',
                     'k-i-unpin': 'unpin'
@@ -33794,7 +34449,7 @@
                     top: restoreOptions.top,
                     width: restoreOptions.width,
                     height: restoreOptions.height
-                }).removeClass(MAXIMIZEDSTATE).find('.k-window-content,.k-resize-handle').show().end().find('.k-window-titlebar .k-i-restore').parent().remove().end().end().find(MINIMIZE_MAXIMIZE).parent().show().end().end().find(PIN_UNPIN).parent().show();
+                }).removeClass(MAXIMIZEDSTATE).find('.k-window-content,.k-resize-handle').show().end().find('.k-window-titlebar .k-i-window-restore').parent().remove().end().end().find(MINIMIZE_MAXIMIZE).parent().show().end().end().find(PIN_UNPIN).parent().show();
                 that.options.width = restoreOptions.width;
                 that.options.height = restoreOptions.height;
                 $('html, body').css(OVERFLOW, '');
@@ -33817,7 +34472,7 @@
                     width: style.width,
                     height: style.height
                 };
-                wrapper.children(KWINDOWRESIZEHANDLES).hide().end().children(KWINDOWTITLEBAR).find(MINIMIZE_MAXIMIZE).parent().hide().eq(0).before(templates.action({ name: 'Restore' }));
+                wrapper.children(KWINDOWRESIZEHANDLES).hide().end().children(KWINDOWTITLEBAR).find(MINIMIZE_MAXIMIZE).parent().hide().eq(0).before(templates.action({ name: 'window-restore' }));
                 callback.call(that);
                 that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().toggle(actionId !== 'maximize');
                 that.trigger(actionId);
@@ -37874,21 +38529,24 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.mobile.ui, Widget = ui.Widget, ACTIVE = 'km-state-active', DISABLE = 'km-state-disabled', SELECT = 'select', SELECTOR = 'li:not(.' + ACTIVE + ')';
+        var kendo = window.kendo, ui = kendo.mobile.ui, Widget = ui.Widget, ACTIVE = 'state-active', DISABLE = 'state-disabled', SELECT = 'select', SELECTOR = 'li:not(.km-' + ACTIVE + ')';
+        function className(name) {
+            return 'k-' + name + ' km-' + name;
+        }
         function createBadge(value) {
-            return $('<span class="km-badge">' + value + '</span>');
+            return $('<span class="' + className('badge') + '">' + value + '</span>');
         }
         var ButtonGroup = Widget.extend({
             init: function (element, options) {
                 var that = this;
                 Widget.fn.init.call(that, element, options);
-                that.element.addClass('km-buttongroup').find('li').each(that._button);
+                that.element.addClass('km-buttongroup k-widget k-button-group').find('li').each(that._button);
                 that.element.on(that.options.selectOn, SELECTOR, '_select');
                 that._enable = true;
                 that.select(that.options.index);
                 if (!that.options.enable) {
                     that._enable = false;
-                    that.wrapper.addClass(DISABLE);
+                    that.wrapper.addClass(className(DISABLE));
                 }
             },
             events: [SELECT],
@@ -37899,14 +38557,14 @@
                 enable: true
             },
             current: function () {
-                return this.element.find('.' + ACTIVE);
+                return this.element.find('.km-' + ACTIVE);
             },
             select: function (li) {
                 var that = this, index = -1;
-                if (li === undefined || li === -1 || !that._enable || $(li).is('.' + DISABLE)) {
+                if (li === undefined || li === -1 || !that._enable || $(li).is('.km-' + DISABLE)) {
                     return;
                 }
-                that.current().removeClass(ACTIVE);
+                that.current().removeClass(className(ACTIVE));
                 if (typeof li === 'number') {
                     index = li;
                     li = $(that.element[0].children[li]);
@@ -37914,7 +38572,7 @@
                     li = $(li);
                     index = li.index();
                 }
-                li.addClass(ACTIVE);
+                li.addClass(className(ACTIVE));
                 that.selectedIndex = index;
             },
             badge: function (item, value) {
@@ -37935,25 +38593,20 @@
                 return badge.html();
             },
             enable: function (enable) {
-                var wrapper = this.wrapper;
                 if (typeof enable == 'undefined') {
                     enable = true;
                 }
-                if (enable) {
-                    wrapper.removeClass(DISABLE);
-                } else {
-                    wrapper.addClass(DISABLE);
-                }
+                this.wrapper.toggleClass(className(DISABLE), !enable);
                 this._enable = this.options.enable = enable;
             },
             _button: function () {
-                var button = $(this).addClass('km-button'), icon = kendo.attrValue(button, 'icon'), badge = kendo.attrValue(button, 'badge'), span = button.children('span'), image = button.find('img').addClass('km-image');
+                var button = $(this).addClass(className('button')), icon = kendo.attrValue(button, 'icon'), badge = kendo.attrValue(button, 'badge'), span = button.children('span'), image = button.find('img').addClass(className('image'));
                 if (!span[0]) {
                     span = button.wrapInner('<span/>').children('span');
                 }
-                span.addClass('km-text');
+                span.addClass(className('text'));
                 if (!image[0] && icon) {
-                    button.prepend($('<span class="km-icon km-' + icon + '"/>'));
+                    button.prepend($('<span class="' + className('icon') + ' ' + className(icon) + '"/>'));
                 }
                 if (badge || badge === 0) {
                     createBadge(badge).appendTo(button);
@@ -39167,10 +39820,13 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, mobile = kendo.mobile, ui = mobile.ui, proxy = $.proxy, Transition = kendo.effects.Transition, Pane = kendo.ui.Pane, PaneDimensions = kendo.ui.PaneDimensions, Widget = ui.DataBoundWidget, DataSource = kendo.data.DataSource, Buffer = kendo.data.Buffer, BatchBuffer = kendo.data.BatchBuffer, math = Math, abs = math.abs, ceil = math.ceil, round = math.round, max = math.max, min = math.min, floor = math.floor, CHANGE = 'change', CHANGING = 'changing', REFRESH = 'refresh', CURRENT_PAGE_CLASS = 'km-current-page', VIRTUAL_PAGE_CLASS = 'km-virtual-page', FUNCTION = 'function', ITEM_CHANGE = 'itemChange', CLEANUP = 'cleanup', VIRTUAL_PAGE_COUNT = 3, LEFT_PAGE = -1, CETER_PAGE = 0, RIGHT_PAGE = 1, LEFT_SWIPE = -1, NUDGE = 0, RIGHT_SWIPE = 1;
+        var kendo = window.kendo, mobile = kendo.mobile, ui = mobile.ui, proxy = $.proxy, Transition = kendo.effects.Transition, Pane = kendo.ui.Pane, PaneDimensions = kendo.ui.PaneDimensions, Widget = ui.DataBoundWidget, DataSource = kendo.data.DataSource, Buffer = kendo.data.Buffer, BatchBuffer = kendo.data.BatchBuffer, math = Math, abs = math.abs, ceil = math.ceil, round = math.round, max = math.max, min = math.min, floor = math.floor, CHANGE = 'change', CHANGING = 'changing', REFRESH = 'refresh', CURRENT_PAGE_CLASS = 'current-page', VIRTUAL_PAGE_CLASS = 'virtual-page', FUNCTION = 'function', ITEM_CHANGE = 'itemChange', CLEANUP = 'cleanup', VIRTUAL_PAGE_COUNT = 3, LEFT_PAGE = -1, CETER_PAGE = 0, RIGHT_PAGE = 1, LEFT_SWIPE = -1, NUDGE = 0, RIGHT_SWIPE = 1;
+        function className(name) {
+            return 'k-' + name + ' km-' + name;
+        }
         var Pager = kendo.Class.extend({
             init: function (scrollView) {
-                var that = this, element = $('<ol class=\'km-pages\'/>');
+                var that = this, element = $('<ol class=\'' + className('pages') + '\'/>');
                 scrollView.element.append(element);
                 this._changeProxy = proxy(that, '_change');
                 this._refreshProxy = proxy(that, '_refresh');
@@ -39190,10 +39846,10 @@
                     pageHTML += '<li/>';
                 }
                 this.element.html(pageHTML);
-                this.items().eq(e.page).addClass(CURRENT_PAGE_CLASS);
+                this.items().eq(e.page).addClass(className(CURRENT_PAGE_CLASS));
             },
             _change: function (e) {
-                this.items().removeClass(CURRENT_PAGE_CLASS).eq(e.page).addClass(CURRENT_PAGE_CLASS);
+                this.items().removeClass(className(CURRENT_PAGE_CLASS)).eq(e.page).addClass(className(CURRENT_PAGE_CLASS));
             },
             destroy: function () {
                 this.scrollView.unbind(CHANGE, this._changeProxy);
@@ -39605,7 +40261,7 @@
         kendo.mobile.ui.VirtualScrollViewContent = VirtualScrollViewContent;
         var Page = kendo.Class.extend({
             init: function (container) {
-                this.element = $('<div class=\'' + VIRTUAL_PAGE_CLASS + '\'></div>');
+                this.element = $('<div class=\'' + className(VIRTUAL_PAGE_CLASS) + '\'></div>');
                 this.width = container.width();
                 this.element.width(this.width);
                 container.append(this.element);
@@ -39629,11 +40285,11 @@
                 options = that.options;
                 element = that.element;
                 kendo.stripWhitespace(element[0]);
-                element.wrapInner('<div/>').addClass('km-scrollview');
+                element.wrapInner('<div/>').addClass('k-widget ' + className('scrollview'));
                 if (this.options.enablePager) {
                     this.pager = new Pager(this);
                     if (this.options.pagerOverlay) {
-                        element.addClass('km-scrollview-overlay');
+                        element.addClass(className('scrollview-overlay'));
                     }
                 }
                 that.inner = element.children().first();
@@ -39781,7 +40437,7 @@
                 }
             },
             items: function () {
-                return this.element.find('.' + VIRTUAL_PAGE_CLASS);
+                return this.element.find('.km-' + VIRTUAL_PAGE_CLASS);
             },
             _syncWithContent: function () {
                 var pages = this._content.pages, buffer = this._content.buffer, data, element;
@@ -39842,11 +40498,14 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.mobile.ui, outerWidth = kendo._outerWidth, Widget = ui.Widget, support = kendo.support, CHANGE = 'change', SWITCHON = 'km-switch-on', SWITCHOFF = 'km-switch-off', MARGINLEFT = 'margin-left', ACTIVE_STATE = 'km-state-active', DISABLED_STATE = 'km-state-disabled', DISABLED = 'disabled', TRANSFORMSTYLE = support.transitions.css + 'transform', proxy = $.proxy;
+        var kendo = window.kendo, ui = kendo.mobile.ui, outerWidth = kendo._outerWidth, Widget = ui.Widget, support = kendo.support, CHANGE = 'change', SWITCHON = 'switch-on', SWITCHOFF = 'switch-off', MARGINLEFT = 'margin-left', ACTIVE_STATE = 'state-active', DISABLED_STATE = 'state-disabled', DISABLED = 'disabled', TRANSFORMSTYLE = support.transitions.css + 'transform', proxy = $.proxy;
+        function className(name) {
+            return 'k-' + name + ' km-' + name;
+        }
         function limitValue(value, minLimit, maxLimit) {
             return Math.max(minLimit, Math.min(maxLimit, value));
         }
-        var SWITCH_MARKUP = '<span class="km-switch km-widget">        <span class="km-switch-wrapper"><span class="km-switch-background"></span></span>         <span class="km-switch-container"><span class="km-switch-handle" >             <span class="km-switch-label-on">{0}</span>             <span class="km-switch-label-off">{1}</span>         </span>     </span>';
+        var SWITCH_MARKUP = '<span class="' + className('switch') + ' ' + className('widget') + '">        <span class="' + className('switch-wrapper') + '">            <span class="' + className('switch-background') + '"></span>        </span>         <span class="' + className('switch-container') + '">            <span class="' + className('switch-handle') + '">                 <span class="' + className('switch-label-on') + '">{0}</span>                 <span class="' + className('switch-label-off') + '">{1}</span>             </span>         </span>    </span>';
         var Switch = Widget.extend({
             init: function (element, options) {
                 var that = this, checked;
@@ -39899,7 +40558,7 @@
                 }
                 that._position(check ? that.constrain : 0);
                 element.checked = check;
-                that.wrapper.toggleClass(SWITCHON, check).toggleClass(SWITCHOFF, !check);
+                that.wrapper.toggleClass(className(SWITCHON), check).toggleClass(className(SWITCHOFF), !check);
             },
             value: function () {
                 return this.check.apply(this, arguments);
@@ -39923,7 +40582,7 @@
                 } else {
                     element.attr(DISABLED, DISABLED);
                 }
-                wrapper.toggleClass(DISABLED_STATE, !enable);
+                wrapper.toggleClass(className(DISABLED_STATE), !enable);
             },
             _resize: function () {
                 this.refresh();
@@ -39946,17 +40605,17 @@
                     this.userEvents.cancel();
                 } else {
                     this.userEvents.capture();
-                    this.handle.addClass(ACTIVE_STATE);
+                    this.handle.addClass(className(ACTIVE_STATE));
                 }
             },
             _stop: function () {
                 var that = this;
-                that.handle.removeClass(ACTIVE_STATE);
+                that.handle.removeClass(className(ACTIVE_STATE));
                 that._toggle(that.position > that.snapPoint);
             },
             _toggle: function (checked) {
                 var that = this, handle = that.handle, element = that.element[0], value = element.checked, duration = kendo.mobile.application && kendo.mobile.application.os.wp ? 100 : 200, distance;
-                that.wrapper.toggleClass(SWITCHON, checked).toggleClass(SWITCHOFF, !checked);
+                that.wrapper.toggleClass(className(SWITCHON), checked).toggleClass(className(SWITCHOFF), !checked);
                 that.position = distance = checked * that.constrain;
                 if (that._animateBackground) {
                     that.background.kendoStop(true, true).kendoAnimate({
@@ -40161,7 +40820,7 @@
                 Scheduler: 'SchedulerDataSource',
                 PivotGrid: 'PivotDataSource',
                 PivotConfigurator: 'PivotDataSource',
-                PanelBar: '$PLAIN',
+                PanelBar: 'HierarchicalDataSource',
                 Menu: '$PLAIN',
                 ContextMenu: '$PLAIN'
             };
@@ -40731,6 +41390,7 @@
             MobileDetailButton: 'a',
             ListView: 'ul',
             MobileListView: 'ul',
+            PanelBar: 'ul',
             TreeView: 'ul',
             Menu: 'ul',
             ContextMenu: 'ul',
@@ -41073,7 +41733,8 @@
         defadvice([
             'ui.Grid',
             'ui.ListView',
-            'ui.TreeView'
+            'ui.TreeView',
+            'ui.PanelBar'
         ], '$angular_makeEventHandler', function (event, scope, handler) {
             if (event != 'change') {
                 return this.next();
@@ -41326,6 +41987,7 @@
                 'MajorTimeHeaderTemplate',
                 'MinorTimeHeaderTemplate'
             ],
+            'PanelBar': ['Template'],
             'TreeView': ['Template'],
             'Validator': ['ErrorTemplate']
         };
@@ -41372,275 +42034,6 @@
         }());
     }(window.kendo.jQuery, window.angular));
     return window.kendo;
-}, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
-    (a3 || a2)();
-}));
-(function (f, define) {
-    define('kendo.webcomponents', ['kendo.core'], f);
-}(function () {
-    var __meta__ = {
-        id: 'webcomponents',
-        name: 'Web Components',
-        category: 'framework',
-        description: 'Adds Kendo UI custom elements for Web Components',
-        depends: ['core']
-    };
-    (function ($, angular, undefined) {
-        if (!kendo.support.customElements || kendo.webComponents.length) {
-            return;
-        }
-        if (angular && (angular.version.major == 1 || angular.injector)) {
-            return;
-        }
-        var TAGNAMES = {
-            editor: 'textarea',
-            numerictextbox: 'input',
-            datepicker: 'input',
-            datetimepicker: 'input',
-            timepicker: 'input',
-            autocomplete: 'input',
-            colorpicker: 'input',
-            maskedtextbox: 'input',
-            dropdownlist: 'select',
-            multiselect: 'select',
-            upload: 'input',
-            validator: 'form',
-            button: 'button',
-            mobilebutton: 'a',
-            mobilebackbutton: 'a',
-            mobiledetailbutton: 'a',
-            listview: 'ul',
-            mobilelistview: 'ul',
-            treeview: 'ul',
-            menu: 'ul',
-            contextmenu: 'ul',
-            actionsheet: 'ul'
-        };
-        var EVENT_PREFIX = 'on-';
-        var registered = [];
-        kendo.onWidgetRegistered(function (entry) {
-            var elementName = entry.prefix + entry.widget.prototype.options.name.toLowerCase();
-            if (registered.indexOf(elementName) === -1) {
-                registered.push(elementName);
-                registerElement(elementName, entry.widget);
-            }
-        });
-        var jsonRegExp = /^\s*(?:\{(?:.|\r\n|\n)*\}|\[(?:.|\r\n|\n)*\])\s*$/;
-        var jsonFormatRegExp = /^\{(\d+)(:[^\}]+)?\}|^\[[A-Za-z_]*\]$/;
-        var numberRegExp = /^(\+|-?)\d+(\.?)\d*$/;
-        function parseOption(element, option) {
-            var value = element.getAttribute(option);
-            if (value === null) {
-                value = undefined;
-            } else if (value === 'null') {
-                value = null;
-            } else if (value === 'true') {
-                value = true;
-            } else if (value === 'false') {
-                value = false;
-            } else if (numberRegExp.test(value)) {
-                value = parseFloat(value);
-            } else if (jsonRegExp.test(value) && !jsonFormatRegExp.test(value)) {
-                value = new Function('return (' + value + ')')();
-            }
-            return value;
-        }
-        function parseOptions(element, options) {
-            var result = {};
-            Object.keys(options).concat('dataSource').forEach(function (name) {
-                if (element.hasAttribute(kendo.toHyphens(name))) {
-                    result[name] = parseOption(element, kendo.toHyphens(name));
-                }
-            });
-            return result;
-        }
-        function cloneEvent(e) {
-            var result = {};
-            Object.keys(e).forEach(function (key) {
-                if (key[0] != '_') {
-                    result[key] = e[key];
-                }
-            });
-            return result;
-        }
-        function eventHandler(eventName, e) {
-            var event = document.createEvent('CustomEvent');
-            event.initCustomEvent(eventName, false, true, cloneEvent(e));
-            this.dispatchEvent(event);
-            if (event.defaultPrevented) {
-                e.preventDefault();
-            }
-        }
-        function expose(component, obj) {
-            var props = Object.keys(obj);
-            for (var idx = 0; idx <= props.length; idx++) {
-                if (typeof obj[props[idx]] === 'function') {
-                    if (!component[props[idx]]) {
-                        component[props[idx]] = obj[props[idx]].bind(component.widget);
-                    }
-                } else {
-                    if (props[idx] === 'options') {
-                        continue;
-                    }
-                    component[props[idx]] = component[props[idx]] || obj[props[idx]];
-                }
-            }
-        }
-        function registerElement(name, widget) {
-            var options = widget.prototype.options;
-            var prototype = Object.create(HTMLElement.prototype);
-            Object.defineProperty(prototype, 'options', {
-                get: function () {
-                    return this.widget.options;
-                },
-                set: function (options) {
-                    var instance = this.widget;
-                    options = $.extend(true, {}, instance.options, options);
-                    var _wrapper = $(instance.wrapper)[0];
-                    var _element = $(instance.element)[0];
-                    instance._destroy();
-                    var newElement = document.createElement(TAGNAMES[name] || 'div');
-                    if (_wrapper && _element) {
-                        _wrapper.parentNode.replaceChild(_element, _wrapper);
-                        $(_element).replaceWith(newElement);
-                    }
-                    if (instance.value) {
-                        options.value = instance.value();
-                    }
-                    instance.init(newElement, options);
-                    this.bindEvents();
-                }
-            });
-            prototype.bindEvents = function () {
-                if (widget.prototype.events.indexOf('init') < 0) {
-                    widget.prototype.events.push('init');
-                }
-                widget.prototype.events.forEach(function (eventName) {
-                    this.widget.bind(eventName, eventHandler.bind(this, eventName));
-                    if (this.hasAttribute(EVENT_PREFIX + eventName)) {
-                        this.bind(eventName, function (e) {
-                            window[this.getAttribute(EVENT_PREFIX + eventName)].call(this, e);
-                        }.bind(this));
-                    }
-                }.bind(this));
-            };
-            prototype.attachedCallback = function () {
-                var that = this;
-                var element = document.createElement(TAGNAMES[name] || 'div');
-                $(element).append(that.childNodes);
-                $(element).attr('class', $(that).attr('class'));
-                $(element).attr('style', $(that).attr('style'));
-                that.appendChild(element);
-                that.widget = new widget(element, parseOptions(that, options));
-                var obj = that.widget;
-                do {
-                    expose(that, obj);
-                } while (obj = Object.getPrototypeOf(obj));
-                this.bindEvents();
-                that.widget.trigger('init');
-            };
-            prototype.detachedCallback = function () {
-                kendo.destroy(this.element);
-            };
-            kendo.webComponents.push('kendo-' + name);
-            document.registerElement('kendo-' + name, { prototype: prototype });
-        }
-    }(window.kendo.jQuery, window.angular));
-    return window.kendo;
-}, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
-    (a3 || a2)();
-}));
-(function (f, define) {
-    define('kendo.angular2', [
-        'kendo.core',
-        'kendo.webcomponents'
-    ], f);
-}(function () {
-    var __meta__ = {
-        id: 'angular2',
-        name: 'Angular 2',
-        category: 'framework',
-        description: 'Supports angular2 value accessors',
-        depends: ['core']
-    };
-    (function (kendo, System) {
-        if (!System || !System.register) {
-            return;
-        }
-        var __decorate = this && this.__decorate || function (decorators, target, key, desc) {
-            if (typeof Reflect === 'object' && typeof Reflect.decorate === 'function') {
-                return Reflect.decorate(decorators, target, key, desc);
-            }
-            switch (arguments.length) {
-            case 2:
-                return decorators.reduceRight(function (o, d) {
-                    return d && d(o) || o;
-                }, target);
-            case 3:
-                return decorators.reduceRight(function (o, d) {
-                    return d && d(target, key), void 0;
-                }, void 0);
-            case 4:
-                return decorators.reduceRight(function (o, d) {
-                    return d && d(target, key, o) || o;
-                }, desc);
-            }
-        };
-        var __metadata = this && this.__metadata || function (k, v) {
-            if (typeof Reflect === 'object' && typeof Reflect.metadata === 'function') {
-                return Reflect.metadata(k, v);
-            }
-        };
-        System.register('kendo/angular2', ['angular2/angular2'], function (exports_1) {
-            var angular2_1;
-            var KendoValueAccessor;
-            return {
-                setters: [function (_angular2_1) {
-                        angular2_1 = _angular2_1;
-                    }],
-                execute: function () {
-                    KendoValueAccessor = function () {
-                        function KendoValueAccessor(cd, elementRef) {
-                            var _this = this;
-                            this.elementRef = elementRef;
-                            this.onChange = function (_) {
-                            };
-                            this.onTouched = function () {
-                            };
-                            this.element = elementRef.nativeElement;
-                            this.element.addEventListener('change', function () {
-                                _this.onChange(_this.element.value());
-                            });
-                            this.element.addEventListener('spin', function () {
-                                _this.onChange(_this.element.value());
-                            });
-                            cd.valueAccessor = this;
-                            this.cd = cd;
-                            cd.valueAccessor = this;
-                        }
-                        KendoValueAccessor.prototype.writeValue = function (value) {
-                            this.element.value(value);
-                        };
-                        KendoValueAccessor.prototype.registerOnChange = function (fn) {
-                            this.onChange = fn;
-                        };
-                        KendoValueAccessor.prototype.registerOnTouched = function (fn) {
-                            this.onTouched = fn;
-                        };
-                        KendoValueAccessor = __decorate([
-                            angular2_1.Directive({ selector: kendo.webComponents.join(',') }),
-                            __metadata('design:paramtypes', [
-                                angular2_1.NgControl,
-                                angular2_1.ElementRef
-                            ])
-                        ], KendoValueAccessor);
-                        return KendoValueAccessor;
-                    }();
-                    exports_1('KendoValueAccessor', KendoValueAccessor);
-                }
-            };
-        });
-    }(window.kendo, window.System));
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
     (a3 || a2)();
 }));
@@ -41712,9 +42105,7 @@
         'kendo.mobile.scrollview',
         'kendo.mobile.switch',
         'kendo.mobile.tabstrip',
-        'kendo.angular',
-        'kendo.webcomponents',
-        'kendo.angular2'
+        'kendo.angular'
     ], f);
 }(function () {
     'bundle all';

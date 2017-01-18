@@ -207,15 +207,18 @@
                 if ((filter || removed) && that.trigger('filtering', { filter: filter })) {
                     return;
                 }
-                expression = {
-                    filters: expression.filters || [],
+                var newExpression = {
+                    filters: [],
                     logic: 'and'
                 };
-                if (filter) {
-                    expression.filters.push(filter);
+                if (isValidFilterExpr(filter)) {
+                    newExpression.filters.push(filter);
+                }
+                if (isValidFilterExpr(expression)) {
+                    newExpression.filters.push(expression);
                 }
                 if (that._cascading) {
-                    this.listView.setDSFilter(expression);
+                    this.listView.setDSFilter(newExpression);
                 }
                 var dataSourceState = extend({}, {
                     page: resetPageSettings ? 1 : dataSource.page(),
@@ -224,7 +227,7 @@
                     filter: dataSource.filter(),
                     group: dataSource.group(),
                     aggregate: dataSource.aggregate()
-                }, { filter: expression });
+                }, { filter: newExpression });
                 dataSource[force ? 'read' : 'query'](dataSource._mergeState(dataSourceState));
             },
             _angularElement: function (element, action) {
@@ -1780,6 +1783,15 @@
                 changed: changed,
                 unchanged: unchanged
             };
+        }
+        function isValidFilterExpr(expression) {
+            if (!expression || $.isEmptyObject(expression)) {
+                return false;
+            }
+            if (expression.filters && !expression.filters.length) {
+                return false;
+            }
+            return true;
         }
         function removeFiltersForField(expression, field) {
             var filters;

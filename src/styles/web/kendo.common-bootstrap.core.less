@@ -95,24 +95,28 @@ input.k-textbox {
     margin-right: 8px;
 }
 
+.k-colorpicker {
+    @picker-icon-height: 2.28571428em;
+    .k-selected-color {
+        width: @picker-icon-height;
+        height: @picker-icon-height;
+
+        .k-i-line {
+            font-size: @picker-icon-height;
+        }
+    }
+}
+
 .k-combobox > .k-dropdown-wrap > .k-i-close {
     right: 2.55em;
 }
 
 .k-multiselect > .k-multiselect-wrap > .k-i-close {
-    top: @grid-size/2 - 1px;
+    top: (@grid-size/2 - 1px);
 }
 
 .k-numerictextbox .k-link {
     height: 1.15em;
-}
-
-.k-numerictextbox .k-select .k-link span.k-i-arrow-n {
-    background-position: 0 -1px;
-}
-
-.k-numerictextbox .k-select .k-link span.k-i-arrow-s {
-    background-position: 0 -36px;
 }
 
 .k-webkit .k-rtl .k-widget .k-dropdown-wrap .k-input,

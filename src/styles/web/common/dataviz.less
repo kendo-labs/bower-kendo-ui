@@ -132,30 +132,30 @@ span.k-sparkline,
     background-color: transparent;
 }
 
-.k-leftHandle {
+.k-left-handle {
     left: -4px;
 }
 
-.k-rightHandle {
+.k-right-handle {
     right: -4px;
 }
 
-.k-leftHandle div {
+.k-left-handle div {
     margin: -20px 0 0 -15px;
     padding: 40px 30px 0 0;
 }
 
-.k-leftHandle.k-handle-active div {
+.k-left-handle.k-handle-active div {
     margin-left: -40px;
     padding-right: 55px;
 }
 
-.k-rightHandle div {
+.k-right-handle div {
     margin: -20px 0 0 -15px;
     padding: 40px 0 0 30px;
 }
 
-.k-rightHandle.k-handle-active div {
+.k-right-handle.k-handle-active div {
     padding-left: 55px;
 }
 
@@ -338,28 +338,32 @@ div.k-navigator > .k-button
     line-height: 1px;
 }
 
-div.k-navigator .k-navigator-n
+div.k-navigator .k-navigator-n,
+div.k-navigator .k-navigator-up
 {
     top: 2px;
     left: 50%;
     margin-left: -9px;
 }
 
-div.k-navigator .k-navigator-e
+div.k-navigator .k-navigator-e,
+div.k-navigator .k-navigator-right
 {
     right: 2px;
     top: 50%;
     margin-top: -9px;
 }
 
-div.k-navigator .k-navigator-s
+div.k-navigator .k-navigator-s,
+div.k-navigator .k-navigator-down
 {
     bottom: 2px;
     left: 50%;
     margin-left: -9px;
 }
 
-div.k-navigator .k-navigator-w
+div.k-navigator .k-navigator-w,
+div.k-navigator .k-navigator-left
 {
     left: 2px;
     top: 50%;
@@ -395,7 +399,12 @@ div.k-navigator .k-navigator-w
 .k-button-wrap .k-button
 {
     position: relative;
-    font: bold 17px/1.18 monospace;
+    padding: 4px;
+    line-height: 16px;
+
+    .k-icon {
+        vertical-align: top;
+    }
 }
 
 .k-buttons-horizontal :first-child

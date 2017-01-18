@@ -41,10 +41,13 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, mobile = kendo.mobile, ui = mobile.ui, proxy = $.proxy, Transition = kendo.effects.Transition, Pane = kendo.ui.Pane, PaneDimensions = kendo.ui.PaneDimensions, Widget = ui.DataBoundWidget, DataSource = kendo.data.DataSource, Buffer = kendo.data.Buffer, BatchBuffer = kendo.data.BatchBuffer, math = Math, abs = math.abs, ceil = math.ceil, round = math.round, max = math.max, min = math.min, floor = math.floor, CHANGE = 'change', CHANGING = 'changing', REFRESH = 'refresh', CURRENT_PAGE_CLASS = 'km-current-page', VIRTUAL_PAGE_CLASS = 'km-virtual-page', FUNCTION = 'function', ITEM_CHANGE = 'itemChange', CLEANUP = 'cleanup', VIRTUAL_PAGE_COUNT = 3, LEFT_PAGE = -1, CETER_PAGE = 0, RIGHT_PAGE = 1, LEFT_SWIPE = -1, NUDGE = 0, RIGHT_SWIPE = 1;
+        var kendo = window.kendo, mobile = kendo.mobile, ui = mobile.ui, proxy = $.proxy, Transition = kendo.effects.Transition, Pane = kendo.ui.Pane, PaneDimensions = kendo.ui.PaneDimensions, Widget = ui.DataBoundWidget, DataSource = kendo.data.DataSource, Buffer = kendo.data.Buffer, BatchBuffer = kendo.data.BatchBuffer, math = Math, abs = math.abs, ceil = math.ceil, round = math.round, max = math.max, min = math.min, floor = math.floor, CHANGE = 'change', CHANGING = 'changing', REFRESH = 'refresh', CURRENT_PAGE_CLASS = 'current-page', VIRTUAL_PAGE_CLASS = 'virtual-page', FUNCTION = 'function', ITEM_CHANGE = 'itemChange', CLEANUP = 'cleanup', VIRTUAL_PAGE_COUNT = 3, LEFT_PAGE = -1, CETER_PAGE = 0, RIGHT_PAGE = 1, LEFT_SWIPE = -1, NUDGE = 0, RIGHT_SWIPE = 1;
+        function className(name) {
+            return 'k-' + name + ' km-' + name;
+        }
         var Pager = kendo.Class.extend({
             init: function (scrollView) {
-                var that = this, element = $('<ol class=\'km-pages\'/>');
+                var that = this, element = $('<ol class=\'' + className('pages') + '\'/>');
                 scrollView.element.append(element);
                 this._changeProxy = proxy(that, '_change');
                 this._refreshProxy = proxy(that, '_refresh');
@@ -64,10 +67,10 @@
                     pageHTML += '<li/>';
                 }
                 this.element.html(pageHTML);
-                this.items().eq(e.page).addClass(CURRENT_PAGE_CLASS);
+                this.items().eq(e.page).addClass(className(CURRENT_PAGE_CLASS));
             },
             _change: function (e) {
-                this.items().removeClass(CURRENT_PAGE_CLASS).eq(e.page).addClass(CURRENT_PAGE_CLASS);
+                this.items().removeClass(className(CURRENT_PAGE_CLASS)).eq(e.page).addClass(className(CURRENT_PAGE_CLASS));
             },
             destroy: function () {
                 this.scrollView.unbind(CHANGE, this._changeProxy);
@@ -479,7 +482,7 @@
         kendo.mobile.ui.VirtualScrollViewContent = VirtualScrollViewContent;
         var Page = kendo.Class.extend({
             init: function (container) {
-                this.element = $('<div class=\'' + VIRTUAL_PAGE_CLASS + '\'></div>');
+                this.element = $('<div class=\'' + className(VIRTUAL_PAGE_CLASS) + '\'></div>');
                 this.width = container.width();
                 this.element.width(this.width);
                 container.append(this.element);
@@ -503,11 +506,11 @@
                 options = that.options;
                 element = that.element;
                 kendo.stripWhitespace(element[0]);
-                element.wrapInner('<div/>').addClass('km-scrollview');
+                element.wrapInner('<div/>').addClass('k-widget ' + className('scrollview'));
                 if (this.options.enablePager) {
                     this.pager = new Pager(this);
                     if (this.options.pagerOverlay) {
-                        element.addClass('km-scrollview-overlay');
+                        element.addClass(className('scrollview-overlay'));
                     }
                 }
                 that.inner = element.children().first();
@@ -655,7 +658,7 @@
                 }
             },
             items: function () {
-                return this.element.find('.' + VIRTUAL_PAGE_CLASS);
+                return this.element.find('.km-' + VIRTUAL_PAGE_CLASS);
             },
             _syncWithContent: function () {
                 var pages = this._content.pages, buffer = this._content.buffer, data, element;

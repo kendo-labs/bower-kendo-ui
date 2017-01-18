@@ -1965,8 +1965,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-list .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc(48.39%);
-  width: calc(48.39%);
+  width: -webkit-calc((100% - 3.22em)/2);
+  width: calc((100% - 3.22em)/2);
   overflow: hidden;
   white-space: nowrap;
 }
@@ -6753,8 +6753,8 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc(48.39%);
-  width: calc(48.39%);
+  width: -webkit-calc((100% - 3.22em)/2);
+  width: calc((100% - 3.22em)/2);
   overflow: hidden;
   white-space: nowrap;
 }
@@ -8329,8 +8329,8 @@ html .km-ios7 .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc(48.39%);
-  width: calc(48.39%);
+  width: -webkit-calc((100% - 3.22em)/2);
+  width: calc((100% - 3.22em)/2);
   overflow: hidden;
   white-space: nowrap;
 }
@@ -16883,8 +16883,8 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-material .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc(48.39%);
-  width: calc(48.39%);
+  width: -webkit-calc((100% - 3.22em)/2);
+  width: calc((100% - 3.22em)/2);
   overflow: hidden;
   white-space: nowrap;
 }
@@ -19078,8 +19078,8 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-nova .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc(48.39%);
-  width: calc(48.39%);
+  width: -webkit-calc((100% - 3.22em)/2);
+  width: calc((100% - 3.22em)/2);
   overflow: hidden;
   white-space: nowrap;
 }

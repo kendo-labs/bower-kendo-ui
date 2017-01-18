@@ -440,7 +440,7 @@
                     var dom = $(this);
                     var object = that._object(dom);
                     var options = object && object.options;
-                    return options && options.modal && options.visible && dom.is(VISIBLE);
+                    return options && options.modal && that.options.appendTo == options.appendTo && options.visible && dom.is(VISIBLE);
                 }).sort(function (a, b) {
                     return +$(a).css('zIndex') - +$(b).css('zIndex');
                 });
@@ -543,6 +543,7 @@
                 maxHeight: Infinity,
                 content: null,
                 visible: null,
+                appendTo: BODY,
                 closable: true
             }
         });
@@ -689,12 +690,12 @@
         };
         templates = {
             wrapper: template('<div class=\'k-widget k-dialog k-window\' role=\'dialog\' />'),
-            action: template('<li class=\'k-button# if (data.primary) { # k-primary# } #\' role=\'button\'></li>'),
-            titlebar: template('<div class=\'k-window-titlebar k-header\'>' + '<span class=\'k-dialog-title\'>#= title #</span>' + '</div>'),
-            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-font-icon k-i-x\'></span></a>'),
-            actionbar: template('<ul class=\'k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
+            action: template('<button type=\'button\' class=\'k-button# if (data.primary) { # k-primary# } role=\'button\' #\'></button>'),
+            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-header\'>' + '<span class=\'k-window-title k-dialog-title\'>#= title #</span>' + '</div>'),
+            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
+            actionbar: template('<div class=\'k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
             overlay: '<div class=\'k-overlay\' />',
-            alertWrapper: template('<div class=\'k-widget k-dialog k-window k-dialog-centered\' role=\'alertdialog\' />'),
+            alertWrapper: template('<div class=\'k-widget k-dialog k-window\' role=\'alertdialog\' />'),
             alert: '<div />',
             confirm: '<div />',
             prompt: '<div />',
