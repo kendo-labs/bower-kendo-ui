@@ -786,7 +786,7 @@ span.k-numerictextbox
     margin: 0;
 }
 
-.k-numerictextbox .k-i-link-horizontal
+.k-numerictextbox .k-link
 {
     display: block;
     height: 1em;
@@ -794,13 +794,23 @@ span.k-numerictextbox
     vertical-align: middle;
     border-width: 0;
     padding: 0;
+    overflow: hidden;
 }
 
-.k-numerictextbox .k-icon
-{
-    display: block;
-    margin: auto;
-    height: 11px;
+.k-numerictextbox {
+    .k-icon {
+        display: block;
+        margin: auto;
+        height: 100%;
+    }
+
+    .k-i-arrow-60-up {
+        top: 2px;
+    }
+
+    .k-i-arrow-60-down {
+        bottom: 2px;
+    }
 }
 
 .k-numeric-wrap .k-input::-webkit-inner-spin-button
@@ -862,8 +872,8 @@ span.k-numerictextbox
     .k-select {
         cursor: pointer;
     }
-    .k-picker-wrap .k-icon {		
-        overflow:visible;		
+    .k-picker-wrap .k-icon {
+        overflow:visible;
     }
 }
 
@@ -1099,5 +1109,10 @@ span.k-numerictextbox
             filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',endColorstr='#00ffffff',GradientType=1) progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000',endColorstr='#ff000000',GradientType=0)";
         }
     }
+}
+
+.k-rtl .k-multiselect-wrap {
+    padding-right: 0;
+    padding-left: (@grid-size + (@grid-size/4 + 2px));
 }
 

@@ -1556,7 +1556,9 @@ html .km-pane-wrapper .km-widget,
   color: #cccccc;
 }
 .k-dropdown .k-input,
-.k-menu .k-popup {
+.k-menu .k-popup,
+.k-multiselect .k-button,
+.k-multiselect .k-button:hover {
   color: #787878;
 }
 .k-state-default > .k-select {

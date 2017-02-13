@@ -1356,6 +1356,15 @@ input.k-textbox:active {
   color: #fff;
   background-color: #ff4350;
 }
+/* ImageBrowser */
+.k-filebrowser .k-tile .k-folder,
+.k-filebrowser .k-tile .k-file,
+.k-filebrowser .k-tile .k-i-folder,
+.k-filebrowser .k-tile .k-i-file {
+  background-image: url('Nova/imagebrowser.png');
+  -webkit-background-size: auto auto;
+          background-size: auto auto;
+}
 /* Slider */
 .k-slider-track {
   background-color: #e0e0e0;

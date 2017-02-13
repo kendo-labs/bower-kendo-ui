@@ -1627,6 +1627,8 @@ textarea.k-textbox,
 }
 .k-dropdown .k-input,
 .k-dropdown .k-state-focused .k-input,
+.k-multiselect .k-button,
+.k-multiselect .k-button:hover,
 .k-menu .k-popup {
   color: #fff;
 }
