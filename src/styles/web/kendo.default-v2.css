@@ -61,7 +61,7 @@
 .k-treemap .k-treemap-title {
   color: #656565;
   background-color: #f6f6f6;
-  border-color: #f1f0f0;
+  border-color: #f1f1f1;
 }
 .editorToolbarWindow.k-header.k-window-content a.k-tool,
 .k-button,
@@ -98,6 +98,8 @@
 .editorToolbarWindow.k-header.k-window-content a.k-tool.k-state-hover,
 .editorToolbarWindow.k-header.k-window-content a.k-tool:hover,
 .k-action-buttons .k-button:hover,
+.k-button.k-flat.k-state-hover,
+.k-button.k-flat:hover,
 .k-button.k-state-hover,
 .k-button:hover,
 .k-calendar .k-nav-fast.k-state-hover,
@@ -162,6 +164,7 @@
 .k-editor .k-editor-toolbar-wrap a.k-tool:active,
 .k-multiselect li.k-button.k-state-active,
 .k-multiselect li.k-button:active,
+.k-numerictextbox .k-select > .k-state-selected,
 .k-scheduler-views li.k-state-selected,
 .k-splitbar.k-state-focused,
 .k-splitbar:active,
@@ -192,6 +195,8 @@
   background-image: linear-gradient(#ff6b58, #ff6358);
 }
 .k-action-buttons .k-primary:hover,
+.k-button.k-primary.k-flat.k-state-hover,
+.k-button.k-primary.k-flat:hover,
 .k-button.k-primary.k-state-hover,
 .k-button.k-primary:hover,
 .k-switch-on:hover .k-switch-handle {
@@ -203,6 +208,8 @@
   background-image: linear-gradient(#ff7458, #ff6b58);
 }
 .k-action-buttons .k-primary:active,
+.k-button.k-primary.k-flat.k-state-active,
+.k-button.k-primary.k-flat:active,
 .k-button.k-primary.k-state-active,
 .k-button.k-primary:active {
   color: #fff;
@@ -371,12 +378,6 @@ table.k-widget {
 .k-link:hover {
   color: inherit;
   text-decoration: none;
-}
-.k-button {
-  border-width: 1px;
-  border-style: solid;
-  font-size: inherit;
-  -webkit-appearance: none;
 }
 .k-content {
   outline: 0;
@@ -596,12 +597,14 @@ table.k-widget {
 }
 .k-icon.k-i-loading {
   position: relative;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border: 2px solid #fff;
   -webkit-box-shadow: inset 0 0 0 2px #ff6358;
           box-shadow: inset 0 0 0 2px #ff6358;
   border-radius: 50%;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
 }
 .k-icon.k-i-loading:after,
 .k-icon.k-i-loading:before {
@@ -610,27 +613,27 @@ table.k-widget {
 .k-i-loading:after,
 .k-i-loading:before {
   position: absolute;
-  width: 8px;
-  height: 16px;
+  width: 9px;
+  height: 18px;
   background: #fff;
 }
 .k-i-loading:before {
-  border-radius: 16px 0 0 16px;
+  border-radius: 18px 0 0 18px;
   top: -2px;
   left: -2px;
-  -webkit-transform-origin: 8px 8px;
-  -ms-transform-origin: 8px 8px;
-      transform-origin: 8px 8px;
+  -webkit-transform-origin: 9px 9px;
+  -ms-transform-origin: 9px 9px;
+      transform-origin: 9px 9px;
   -webkit-animation: k-loading-animation 2s infinite ease 1.5s;
   animation: k-loading-animation 2s infinite ease 1.5s;
 }
 .k-i-loading:after {
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 18px 18px 0;
   top: -2px;
-  left: 6px;
-  -webkit-transform-origin: 0 8px;
-  -ms-transform-origin: 0 8px;
-      transform-origin: 0 8px;
+  left: 7px;
+  -webkit-transform-origin: 0 9px;
+  -ms-transform-origin: 0 9px;
+      transform-origin: 0 9px;
   -webkit-animation: k-loading-animation 2s infinite ease;
   animation: k-loading-animation 2s infinite ease;
 }
@@ -3249,14 +3252,88 @@ table.k-widget {
 }
 .k-split-button.k-button-group .k-button.k-state-active,
 .k-split-button.k-button-group .k-button:active {
+  -webkit-box-shadow: inset 0 2px 2px 0 rgba(0, 0, 0, 0.06);
+          box-shadow: inset 0 2px 2px 0 rgba(0, 0, 0, 0.06);
+}
+.k-button.k-flat.k-state-active,
+.k-button.k-flat:active,
+.k-split-button.k-button-group .k-button.k-state-active,
+.k-split-button.k-button-group .k-button:active {
   border-color: rgba(0, 0, 0, 0.08);
   color: #656565;
   background-color: #f6f6f6;
   background-image: -webkit-linear-gradient(bottom, #f6f6f6, #f1f1f1);
   background-image: -webkit-gradient(linear, left bottom, left top, from(#f6f6f6), to(#f1f1f1));
   background-image: linear-gradient(0deg, #f6f6f6, #f1f1f1);
-  -webkit-box-shadow: inset 0 2px 2px 0 rgba(0, 0, 0, 0.06);
-          box-shadow: inset 0 2px 2px 0 rgba(0, 0, 0, 0.06);
+}
+.k-button.k-flat.k-state-active,
+.k-button.k-flat:active {
+  -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.06);
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.06);
+}
+.k-button.k-flat.k-state-focused,
+.k-button.k-flat:focus {
+  -webkit-box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.06);
+          box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.06);
+}
+.k-button.k-primary.k-flat {
+  color: #ff6358;
+}
+.k-button.k-primary.k-flat.k-state-focused,
+.k-button.k-primary.k-flat:focus {
+  -webkit-box-shadow: 0 3px 4px 0 rgba(255, 99, 88, 0.4);
+          box-shadow: 0 3px 4px 0 rgba(255, 99, 88, 0.4);
+}
+.k-button.k-outline {
+  border-color: #656565;
+  color: #656565;
+  background: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-button.k-outline.k-state-hover,
+.k-button.k-outline:hover {
+  border-color: #656565;
+  color: #ededed;
+  background: #656565;
+}
+.k-button.k-outline.k-state-active,
+.k-button.k-outline:active {
+  border-color: #fff;
+  color: #ff6358;
+  background: #fff;
+}
+.k-button.k-outline.k-state-focused,
+.k-button.k-outline:focus {
+  -webkit-box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.06);
+          box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.06);
+}
+.k-button.k-primary.k-outline {
+  border-color: #fff;
+  color: #fff;
+  background: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-button.k-primary.k-outline.k-state-hover,
+.k-button.k-primary.k-outline:hover {
+  border-color: #fff;
+  color: #ff6b58;
+  background: #fff;
+}
+.k-button.k-primary.k-outline.k-state-active,
+.k-button.k-primary.k-outline:active {
+  border-color: #fff;
+  color: #ff6358;
+  background: #fff;
+}
+.k-button.k-primary.k-outline.k-state-focused,
+.k-button.k-primary.k-outline:focus {
+  -webkit-box-shadow: 0 3px 4px 0 rgba(255, 99, 88, 0.4);
+          box-shadow: 0 3px 4px 0 rgba(255, 99, 88, 0.4);
+}
+.k-button.k-primary.k-bare {
+  color: #ff6358;
 }
 .k-action-buttons .k-button {
   color: inherit;
@@ -3293,6 +3370,7 @@ table.k-widget {
   user-select: none;
   cursor: pointer;
   outline: none;
+  -webkit-appearance: none;
 }
 .k-button::-moz-focus-inner {
   padding: 0;
@@ -3335,13 +3413,6 @@ table.k-widget {
   -ms-flex-pack: center;
   -webkit-justify-content: center;
           justify-content: center;
-}
-.k-button-bare {
-  border-width: 0!important;
-  color: inherit;
-  background: none!important;
-  -webkit-box-shadow: none !important;
-          box-shadow: none !important;
 }
 .k-button.k-compact,
 .k-compact .k-button {
@@ -3433,6 +3504,63 @@ table.k-widget {
 .k-split-button.k-button-group .k-button:nth-child(2) {
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
+}
+.k-button.k-flat {
+  border-color: transparent;
+  color: inherit;
+  background-color: transparent;
+  background-image: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-button.k-outline {
+  border-width: 0 !important;
+}
+.k-button.k-bare,
+.k-button.k-outline {
+  color: inherit;
+  background: none!important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+.k-button.k-bare {
+  border-color: transparent!important;
+  position: relative;
+  -webkit-transition: color 0.2s ease-in-out;
+  transition: color 0.2s ease-in-out;
+}
+.k-button.k-bare:before {
+  background-color: currentColor;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
+}
+.k-button.k-bare:after,
+.k-button.k-bare:before {
+  content: "";
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+}
+.k-button.k-bare:after {
+  border: 2px solid currentColor;
+}
+.k-button.k-bare.k-state-hover:before,
+.k-button.k-bare:hover:before {
+  opacity: 0.07;
+}
+.k-button.k-bare.k-state-active:before,
+.k-button.k-bare:active:before {
+  opacity: 0.08;
+}
+.k-button.k-bare.k-state-focused:after,
+.k-button.k-bare:focus:after {
+  opacity: 0.13;
 }
 .k-action-buttons {
   border-top-width: 1px;
@@ -3715,6 +3843,10 @@ table.k-widget {
   vertical-align: middle;
   text-overflow: ellipsis;
 }
+.k-grid td:focus,
+.k-grid th:focus {
+  outline: none;
+}
 .k-filter-row th,
 .k-grid-add-row td,
 .k-grouping-header {
@@ -3864,8 +3996,13 @@ td.k-hierarchy-cell > .k-icon {
   border-left-width: 1px;
 }
 .k-grouping-row p {
-  display: inline-block;
-  vertical-align: middle;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-line-pack: center;
+  -webkit-align-content: center;
+          align-content: center;
 }
 .k-grouping-row + tr td {
   border-top-width: 1px;
@@ -4018,7 +4155,7 @@ td.k-hierarchy-cell > .k-icon {
   font-weight: 700;
 }
 .k-grid .k-alt {
-  background-color: #f6f6f6;
+  background-color: #f5f5f5;
 }
 .k-grid tr.k-state-selected {
   color: #fff;
@@ -4310,13 +4447,14 @@ td.k-hierarchy-cell > .k-icon {
   vertical-align: middle;
 }
 .k-toolbar .k-overflow-anchor {
-  padding: 0;
-  width: -webkit-calc(1.42857em + 8px + 16px);
-  width: calc(1.42857em + 8px + 16px);
-  height: -webkit-calc(1.42857em + 8px + 16px);
-  height: calc(1.42857em + 8px + 16px);
-  -webkit-box-sizing: content-box;
-          box-sizing: content-box;
+  padding: 8px;
+  width: -webkit-calc(1.42857em + 8px + 2px + 16px);
+  width: calc(1.42857em + 8px + 2px + 16px);
+  height: -webkit-calc(1.42857em + 8px + 2px + 16px);
+  height: calc(1.42857em + 8px + 2px + 16px);
+  border-width: 0 0 0 1px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   -webkit-justify-content: center;
@@ -6022,6 +6160,13 @@ td.k-hierarchy-cell > .k-icon {
 .k-flatcolorpicker {
   background-color: #f6f6f6;
 }
+.k-combobox .k-dropdown-wrap > .k-i-loading {
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+  margin-right: 8px;
+}
 .k-combobox.k-compact .k-input,
 .k-compact .k-combobox .k-input {
   padding: 2px 4px;
@@ -6166,6 +6311,10 @@ td.k-hierarchy-cell > .k-icon {
 .k-datetimepicker .k-select .k-link:last-child:before {
   background-color: rgba(0, 0, 0, 0.08);
 }
+.k-dateinput .k-select {
+  -webkit-background-clip: padding-box;
+          background-clip: padding-box;
+}
 .k-editor {
   border-collapse: separate;
   border-spacing: 0;
@@ -6258,7 +6407,12 @@ table.k-editor {
 }
 .k-editor-toolbar .k-tool {
   padding: 4px;
-  width: 1.42857em;
+  width: -webkit-calc(1.42857em + 8px + 2px);
+  width: calc(1.42857em + 8px + 2px);
+  height: -webkit-calc(1.42857em + 8px + 2px);
+  height: calc(1.42857em + 8px + 2px);
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: -webkit-inline-flex;
@@ -6268,6 +6422,13 @@ table.k-editor {
   -ms-flex-direction: row;
   -webkit-flex-direction: row;
           flex-direction: row;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -ms-flex-line-pack: center;
+  -webkit-align-content: center;
+          align-content: center;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   -webkit-justify-content: center;
@@ -6560,7 +6721,7 @@ table.k-editor {
   width: 16px;
   height: 16px;
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.14286;
   border-width: 1px;
   border-style: solid;
@@ -6773,8 +6934,9 @@ fieldset legend {
 .k-multiselect-wrap .k-button:last-child {
   margin-bottom: 2px;
 }
-.k-multiselect-wrap .k-input,
-.k-multiselect-wrap .k-searchbar {
+.k-multiselect-wrap .k-searchbar .k-input {
+  display: inline-block;
+  width: auto;
   float: left;
 }
 .k-multiselect-wrap .k-i-loading {
@@ -6820,6 +6982,7 @@ fieldset legend {
           align-items: stretch;
 }
 .k-numerictextbox .k-link {
+  display: block;
   padding: 0 4px;
   height: -webkit-calc((1.42857em + 8px) / 2);
   height: calc((1.42857em + 8px) / 2);
@@ -6846,8 +7009,9 @@ fieldset legend {
 .k-numerictextbox.k-compact .k-select .k-link {
   padding: 0 2px;
 }
-.k-numerictextbox .k-select > .k-state-selected {
-  color: #fff;
+.k-numerictextbox .k-select {
+  -webkit-background-clip: padding-box;
+          background-clip: padding-box;
 }
 html .k-upload {
   position: relative;
@@ -8646,8 +8810,8 @@ html .k-upload {
   background-color: #fff;
 }
 .k-task-milestone {
-  border-color: #d9d6d6;
-  background-color: #f1f0f0;
+  border-color: #d7d7d7;
+  background-color: #f1f1f1;
 }
 .k-task-milestone.k-state-selected {
   border-color: #ff2a1b;
@@ -8777,6 +8941,10 @@ html .k-upload {
   -ms-flex-line-pack: center;
   -webkit-align-content: center;
           align-content: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
 }
 .k-gantt-views .k-link,
 .k-scheduler-footer,
