@@ -1632,6 +1632,14 @@ div.k-window-iframecontent {
     display: none;
   }
 }
+.k-rtl .k-pager-wrap .k-i-seek-e,
+.k-rtl .k-pager-wrap .k-i-seek-w,
+.k-rtl .k-pager-wrap .k-i-arrow-e,
+.k-rtl .k-pager-wrap .k-i-arrow-w {
+  -webkit-transform: scaleX(-1);
+      -ms-transform: scaleX(-1);
+          transform: scaleX(-1);
+}
 /* Menu */
 .k-menu {
   cursor: default;
@@ -11717,6 +11725,10 @@ div.k-spreadsheet-window {
 .kendo-pdf-hide-pseudo-elements:before,
 .kendo-pdf-hide-pseudo-elements:after {
   display: none !important;
+}
+.k-pdf-export sub,
+.k-pdf-export sup {
+  display: inline-block;
 }
 .k-icon {
   position: relative;

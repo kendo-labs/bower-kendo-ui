@@ -617,7 +617,7 @@
                     if (items[0][field]) {
                         var currentNode = that.findByUid(items[0].uid);
                         if (!currentNode.hasClass(DISABLEDCLASS)) {
-                            that.select(currentNode);
+                            that.select(currentNode, true);
                         }
                     } else {
                         that.clearSelection();
@@ -683,7 +683,7 @@
                 var uid = $(item).closest(ITEM).attr(kendo.attr('uid')), dataSource = this.dataSource;
                 return dataSource && dataSource.getByUid(uid);
             },
-            select: function (element) {
+            select: function (element, skipChange) {
                 var that = this;
                 if (element === undefined) {
                     return that.element.find(selectableItems).parent();
@@ -697,9 +697,7 @@
                         if (item.hasClass(DISABLEDCLASS)) {
                             return that;
                         }
-                        if (!that._triggerEvent(SELECT, item)) {
-                            that._updateSelected(link);
-                        }
+                        that._updateSelected(link, skipChange);
                     });
                 }
                 return that;
@@ -1167,7 +1165,7 @@
                 var that = this;
                 return that.trigger(eventName, { item: element[0] });
             },
-            _updateSelected: function (link) {
+            _updateSelected: function (link, skipChange) {
                 var that = this, element = that.element, item = link.parent(ITEM), selected = that._selected, dataItem = that.dataItem(item);
                 if (selected) {
                     selected.removeAttr(ARIA_SELECTED);
@@ -1181,7 +1179,9 @@
                 if (dataItem) {
                     dataItem.set('selected', true);
                 }
-                that.trigger(CHANGE);
+                if (!skipChange) {
+                    that.trigger(CHANGE);
+                }
             },
             _animations: function (options) {
                 if (options && 'animation' in options && !options.animation) {

@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.1.216'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.1.223'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -17617,7 +17617,7 @@
             _hideBusy: function () {
                 var that = this;
                 clearTimeout(that._busy);
-                that._arrow.removeClass(LOADING);
+                that._arrowIcon.removeClass(LOADING);
                 that._focused.attr('aria-busy', false);
                 that._busy = null;
                 that._showClear();
@@ -17629,9 +17629,9 @@
                     return;
                 }
                 that._busy = setTimeout(function () {
-                    if (that._arrow) {
+                    if (that._arrowIcon) {
                         that._focused.attr('aria-busy', true);
-                        that._arrow.addClass(LOADING);
+                        that._arrowIcon.addClass(LOADING);
                         that._hideClear();
                     }
                 }, 100);
@@ -20874,6 +20874,7 @@
                 that._inputWrapper.off(ns);
                 that._arrow.off();
                 that._arrow = null;
+                that._arrowIcon = null;
                 that.optionLabel.off();
             },
             open: function () {
@@ -21619,7 +21620,8 @@
                 }
                 that.span = span;
                 that._inputWrapper = $(wrapper[0].firstChild);
-                that._arrow = wrapper.find('.k-icon');
+                that._arrow = wrapper.find('.k-select');
+                that._arrowIcon = that._arrow.find('.k-icon');
             },
             _wrapper: function () {
                 var that = this, element = that.element, DOMelement = element[0], wrapper;
@@ -22368,6 +22370,7 @@
                     'role': 'button',
                     'tabIndex': -1
                 });
+                that._arrowIcon = that._arrow.find('.k-icon');
                 if (element.id) {
                     that._arrow.attr('aria-controls', that.ul[0].id);
                 }
@@ -24029,7 +24032,6 @@
                 var that = this;
                 Widget.fn.init.call(that, element, options);
                 options = that.options;
-                that._distance = round(options.max - options.min);
                 that._isHorizontal = options.orientation == 'horizontal';
                 that._isRtl = that._isHorizontal && kendo.support.isRtl(element);
                 that._position = that._isHorizontal ? 'left' : 'bottom';
@@ -24078,6 +24080,9 @@
                     format: '{0}'
                 }
             },
+            _distance: function () {
+                return round(this.options.max - this.options.min);
+            },
             _resize: function () {
                 this._setTrackDivWidth();
                 this.wrapper.find('.k-slider-items').remove();
@@ -24091,9 +24096,10 @@
             _sliderItemsInit: function () {
                 var that = this, options = that.options;
                 var sizeBetweenTicks = that._maxSelection / ((options.max - options.min) / options.smallStep);
-                var pixelWidths = that._calculateItemsWidth(math.floor(that._distance / options.smallStep));
+                var pixelWidths = that._calculateItemsWidth(math.floor(that._distance() / options.smallStep));
                 if (options.tickPlacement != 'none' && sizeBetweenTicks >= 2) {
-                    that._trackDiv.before(createSliderItems(options, that._distance));
+                    $(this.element).parent().find('.k-slider-items').remove();
+                    that._trackDiv.before(createSliderItems(options, that._distance()));
                     that._setItemsWidth(pixelWidths);
                     that._setItemsTitle();
                 }
@@ -24121,7 +24127,7 @@
                     $(items[last]).addClass('k-first')[that._sizeFn](pixelWidths[last]);
                     $(items[first]).addClass('k-last')[that._sizeFn](pixelWidths[last - 1]);
                 }
-                if (that._distance % options.smallStep !== 0 && !that._isHorizontal) {
+                if (that._distance() % options.smallStep !== 0 && !that._isHorizontal) {
                     for (i = 0; i < pixelWidths.length; i++) {
                         selection += pixelWidths[i];
                     }
@@ -24139,7 +24145,7 @@
             },
             _setItemsLargeTick: function () {
                 var that = this, options = that.options, items = that.wrapper.find(TICK_SELECTOR), i = 0, item, value;
-                if (removeFraction(options.largeStep) % removeFraction(options.smallStep) === 0 || that._distance / options.largeStep >= 3) {
+                if (removeFraction(options.largeStep) % removeFraction(options.smallStep) === 0 || that._distance() / options.largeStep >= 3) {
                     if (!that._isHorizontal && !that._isRtl) {
                         items = $.makeArray(items).reverse();
                     }
@@ -24157,9 +24163,9 @@
                 }
             },
             _calculateItemsWidth: function (itemsCount) {
-                var that = this, options = that.options, trackDivSize = parseFloat(that._trackDiv.css(that._sizeFn)) + 1, pixelStep = trackDivSize / that._distance, itemWidth, pixelWidths, i;
-                if (that._distance / options.smallStep - math.floor(that._distance / options.smallStep) > 0) {
-                    trackDivSize -= that._distance % options.smallStep * pixelStep;
+                var that = this, options = that.options, trackDivSize = parseFloat(that._trackDiv.css(that._sizeFn)) + 1, distance = that._distance(), pixelStep = trackDivSize / distance, itemWidth, pixelWidths, i;
+                if (distance / options.smallStep - math.floor(distance / options.smallStep) > 0) {
+                    trackDivSize -= distance % options.smallStep * pixelStep;
                 }
                 itemWidth = trackDivSize / itemsCount;
                 pixelWidths = [];
@@ -24189,8 +24195,8 @@
                 return pixelWidthsArray;
             },
             _calculateSteps: function (pixelWidths) {
-                var that = this, options = that.options, val = options.min, selection = 0, itemsCount = math.ceil(that._distance / options.smallStep), i = 1, lastItem;
-                itemsCount += that._distance / options.smallStep % 1 === 0 ? 1 : 0;
+                var that = this, options = that.options, val = options.min, selection = 0, distance = that._distance(), itemsCount = math.ceil(distance / options.smallStep), i = 1, lastItem;
+                itemsCount += distance / options.smallStep % 1 === 0 ? 1 : 0;
                 pixelWidths.splice(0, 0, pixelWidths[itemsCount - 2] * 2);
                 pixelWidths.splice(itemsCount - 1, 1, pixelWidths.pop() * 2);
                 that._pixelSteps = [selection];
@@ -24205,7 +24211,7 @@
                     that._values[i] = round(val);
                     i++;
                 }
-                lastItem = that._distance % options.smallStep === 0 ? itemsCount - 1 : itemsCount;
+                lastItem = distance % options.smallStep === 0 ? itemsCount - 1 : itemsCount;
                 that._pixelSteps[lastItem] = that._maxSelection;
                 that._values[lastItem] = options.max;
                 if (that._isRtl) {
@@ -24214,7 +24220,7 @@
                 }
             },
             _getValueFromPosition: function (mousePosition, dragableArea) {
-                var that = this, options = that.options, step = math.max(options.smallStep * (that._maxSelection / that._distance), 0), position = 0, halfStep = step / 2, i;
+                var that = this, options = that.options, step = math.max(options.smallStep * (that._maxSelection / that._distance()), 0), position = 0, halfStep = step / 2, i;
                 if (that._isHorizontal) {
                     position = mousePosition - dragableArea.startPoint;
                     if (that._isRtl) {
@@ -24350,6 +24356,23 @@
                 if (form[0]) {
                     that._form = form.on('reset', proxy(that._formResetHandler, that));
                 }
+            },
+            min: function (value) {
+                if (!value) {
+                    return this.options.min;
+                }
+                this.setOptions({ 'min': value });
+            },
+            max: function (value) {
+                if (!value) {
+                    return this.options.max;
+                }
+                this.setOptions({ 'max': value });
+            },
+            setOptions: function (options) {
+                Widget.fn.setOptions.call(this, options);
+                this._sliderItemsInit();
+                this._refresh();
             },
             destroy: function () {
                 if (this._form) {
@@ -24681,7 +24704,7 @@
                 that.element.addClass(STATE_FOCUSED + ' ' + STATE_SELECTED);
                 $(document.documentElement).css('cursor', 'pointer');
                 that.dragableArea = owner._getDraggableArea();
-                that.step = math.max(options.smallStep * (owner._maxSelection / owner._distance), 0);
+                that.step = math.max(options.smallStep * (owner._maxSelection / owner._distance()), 0);
                 if (that.type) {
                     that.selectionStart = options.selectionStart;
                     that.selectionEnd = options.selectionEnd;
@@ -26014,7 +26037,7 @@
                         }
                     });
                 }
-                element.attr('aria-valuemin', options.min).attr('aria-valuemax', options.max);
+                element.attr('aria-valuemin', options.min !== NULL ? options.min * options.factor : options.min).attr('aria-valuemax', options.max !== NULL ? options.max * options.factor : options.max);
                 options.format = extractFormat(options.format);
                 value = options.value;
                 that.value(value !== NULL ? value : element.val());
@@ -26039,6 +26062,7 @@
                 format: 'n',
                 spinners: true,
                 placeholder: '',
+                factor: 1,
                 upArrowText: 'Increase value',
                 downArrowText: 'Decrease value'
             },
@@ -26150,9 +26174,15 @@
                 that._downArrowEventHandler = new kendo.UserEvents(that._downArrow, { release: _release });
             },
             _blur: function () {
-                var that = this;
+                var that = this, factor = that.options.factor, curreValue = that.element.val();
                 that._toggleText(true);
-                that._change(that.element.val());
+                if (factor && factor !== 1) {
+                    curreValue = parseFloat(curreValue);
+                    if (curreValue !== null) {
+                        curreValue = curreValue / factor;
+                    }
+                }
+                that._change(curreValue);
             },
             _click: function (e) {
                 var that = this;
@@ -26236,8 +26266,8 @@
                 }
                 that._text = text.addClass(element.className).attr({
                     'role': 'spinbutton',
-                    'aria-valuemin': options.min,
-                    'aria-valuemax': options.max
+                    'aria-valuemin': options.min !== NULL ? options.min * options.factor : options.min,
+                    'aria-valuemax': options.max !== NULL ? options.max * options.factor : options.max
                 });
             },
             _keydown: function (e) {
@@ -26345,6 +26375,9 @@
                 if (activeElement() != element[0]) {
                     that._focusin();
                 }
+                if (that.options.factor && value) {
+                    value = value / that.options.factor;
+                }
                 value += that.options.step * step;
                 that._update(that._adjust(value));
                 that._typing = false;
@@ -26366,7 +26399,7 @@
                 return rounder(value, precision);
             },
             _update: function (value) {
-                var that = this, options = that.options, format = options.format, decimals = options.decimals, culture = that._culture(), numberFormat = that._format(format, culture), isNotNull;
+                var that = this, options = that.options, factor = options.factor, format = options.format, decimals = options.decimals, culture = that._culture(), numberFormat = that._format(format, culture), isNotNull;
                 if (decimals === NULL) {
                     decimals = numberFormat.decimals;
                 }
@@ -26378,6 +26411,9 @@
                 that._value = value = that._adjust(value);
                 that._placeholder(kendo.toString(value, format, culture));
                 if (isNotNull) {
+                    if (factor) {
+                        value = parseFloat(that._round(value * factor, decimals), 10);
+                    }
                     value = value.toString();
                     if (value.indexOf('e') !== -1) {
                         value = that._round(+value, decimals);
@@ -29336,7 +29372,7 @@
                     if (items[0][field]) {
                         var currentNode = that.findByUid(items[0].uid);
                         if (!currentNode.hasClass(DISABLEDCLASS)) {
-                            that.select(currentNode);
+                            that.select(currentNode, true);
                         }
                     } else {
                         that.clearSelection();
@@ -29402,7 +29438,7 @@
                 var uid = $(item).closest(ITEM).attr(kendo.attr('uid')), dataSource = this.dataSource;
                 return dataSource && dataSource.getByUid(uid);
             },
-            select: function (element) {
+            select: function (element, skipChange) {
                 var that = this;
                 if (element === undefined) {
                     return that.element.find(selectableItems).parent();
@@ -29416,9 +29452,7 @@
                         if (item.hasClass(DISABLEDCLASS)) {
                             return that;
                         }
-                        if (!that._triggerEvent(SELECT, item)) {
-                            that._updateSelected(link);
-                        }
+                        that._updateSelected(link, skipChange);
                     });
                 }
                 return that;
@@ -29886,7 +29920,7 @@
                 var that = this;
                 return that.trigger(eventName, { item: element[0] });
             },
-            _updateSelected: function (link) {
+            _updateSelected: function (link, skipChange) {
                 var that = this, element = that.element, item = link.parent(ITEM), selected = that._selected, dataItem = that.dataItem(item);
                 if (selected) {
                     selected.removeAttr(ARIA_SELECTED);
@@ -29900,7 +29934,9 @@
                 if (dataItem) {
                     dataItem.set('selected', true);
                 }
-                that.trigger(CHANGE);
+                if (!skipChange) {
+                    that.trigger(CHANGE);
+                }
             },
             _animations: function (options) {
                 if (options && 'animation' in options && !options.animation) {

@@ -79,7 +79,7 @@
                         }
                     });
                 }
-                element.attr('aria-valuemin', options.min).attr('aria-valuemax', options.max);
+                element.attr('aria-valuemin', options.min !== NULL ? options.min * options.factor : options.min).attr('aria-valuemax', options.max !== NULL ? options.max * options.factor : options.max);
                 options.format = extractFormat(options.format);
                 value = options.value;
                 that.value(value !== NULL ? value : element.val());
@@ -104,6 +104,7 @@
                 format: 'n',
                 spinners: true,
                 placeholder: '',
+                factor: 1,
                 upArrowText: 'Increase value',
                 downArrowText: 'Decrease value'
             },
@@ -215,9 +216,15 @@
                 that._downArrowEventHandler = new kendo.UserEvents(that._downArrow, { release: _release });
             },
             _blur: function () {
-                var that = this;
+                var that = this, factor = that.options.factor, curreValue = that.element.val();
                 that._toggleText(true);
-                that._change(that.element.val());
+                if (factor && factor !== 1) {
+                    curreValue = parseFloat(curreValue);
+                    if (curreValue !== null) {
+                        curreValue = curreValue / factor;
+                    }
+                }
+                that._change(curreValue);
             },
             _click: function (e) {
                 var that = this;
@@ -301,8 +308,8 @@
                 }
                 that._text = text.addClass(element.className).attr({
                     'role': 'spinbutton',
-                    'aria-valuemin': options.min,
-                    'aria-valuemax': options.max
+                    'aria-valuemin': options.min !== NULL ? options.min * options.factor : options.min,
+                    'aria-valuemax': options.max !== NULL ? options.max * options.factor : options.max
                 });
             },
             _keydown: function (e) {
@@ -410,6 +417,9 @@
                 if (activeElement() != element[0]) {
                     that._focusin();
                 }
+                if (that.options.factor && value) {
+                    value = value / that.options.factor;
+                }
                 value += that.options.step * step;
                 that._update(that._adjust(value));
                 that._typing = false;
@@ -431,7 +441,7 @@
                 return rounder(value, precision);
             },
             _update: function (value) {
-                var that = this, options = that.options, format = options.format, decimals = options.decimals, culture = that._culture(), numberFormat = that._format(format, culture), isNotNull;
+                var that = this, options = that.options, factor = options.factor, format = options.format, decimals = options.decimals, culture = that._culture(), numberFormat = that._format(format, culture), isNotNull;
                 if (decimals === NULL) {
                     decimals = numberFormat.decimals;
                 }
@@ -443,6 +453,9 @@
                 that._value = value = that._adjust(value);
                 that._placeholder(kendo.toString(value, format, culture));
                 if (isNotNull) {
+                    if (factor) {
+                        value = parseFloat(that._round(value * factor, decimals), 10);
+                    }
                     value = value.toString();
                     if (value.indexOf('e') !== -1) {
                         value = that._round(+value, decimals);
