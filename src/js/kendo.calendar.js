@@ -666,7 +666,7 @@
                             },
                             weekNumberBuild: function (date) {
                                 return {
-                                    weekNumber: weekInYear(date, date),
+                                    weekNumber: weekInYear(date, kendo.culture().calendar.firstDay),
                                     currentDate: date
                                 };
                             }
