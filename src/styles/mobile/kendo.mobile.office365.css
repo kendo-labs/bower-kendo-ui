@@ -5091,12 +5091,14 @@ body:before {
   background: #fff;
   color: #333;
   border-top-color: #e5e5e5;
-  border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
-  border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
-  border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+  -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+  -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+          border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+          border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
 }
 .km-office365 .km-actionsheet > li:nth-last-child(2) > a {
-  border-image: none;
+  -webkit-border-image: none;
+          border-image: none;
 }
 .km-office365 .km-footer .km-tabstrip .km-button:hover,
 .km-office365 .km-actionsheet > li > a:active {
@@ -5180,9 +5182,10 @@ body:before {
   background: #fff;
   border-color: #f4f4f4;
   border-top-color: #e5e5e5;
-  border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
-  border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
-  border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+  -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+  -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
+          border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, #e5e5e5), to(#e5e5e5)) 1 stretch;
+          border-image: linear-gradient(to right, transparent 1em, #e5e5e5 1em, #e5e5e5 100%) 1 stretch;
 }
 .km-office365 .km-list > li:hover {
   background-color: #fff;

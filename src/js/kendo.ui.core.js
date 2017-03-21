@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.1.307'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.1.321'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -15908,6 +15908,9 @@
                 if (options.hidden) {
                     this.hide();
                 }
+                if (options.togglable) {
+                    this.toggle(options.selected);
+                }
                 this.element.data({
                     type: 'button',
                     button: this
@@ -17080,7 +17083,11 @@
                     newExpression.filters.push(filter);
                 }
                 if (isValidFilterExpr(expression)) {
-                    newExpression.filters.push(expression);
+                    if (newExpression.logic === expression.logic) {
+                        newExpression.filters = newExpression.filters.concat(expression.filters);
+                    } else {
+                        newExpression.filters.push(expression);
+                    }
                 }
                 if (that._cascading) {
                     this.listView.setDSFilter(newExpression);
@@ -33136,7 +33143,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Class = kendo.Class, Widget = kendo.ui.Widget, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-content', KCONTENT = '.k-content', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = '.k-window-titlebar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', WIDTH = 'width', HUNDREDPERCENT = 100, OK_CANCEL = {
+        var kendo = window.kendo, Class = kendo.Class, Widget = kendo.ui.Widget, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-content k-window-content k-dialog-content', KCONTENT = '.k-content', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = KDIALOGTITLE + 'bar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', WIDTH = 'width', HUNDREDPERCENT = 100, OK_CANCEL = {
                 okText: 'OK',
                 cancel: 'Cancel'
             }, ceil = Math.ceil, templates, overlaySelector = ':not(link,meta,script,style)';
@@ -33303,13 +33310,13 @@
                 }
             },
             _createDialog: function () {
-                var that = this, content = that.element, options = that.options, isRtl = kendo.support.isRtl(content), titlebar = $(templates.titlebar(options)), titleId = (content.id || kendo.guid()) + '_title', wrapper = $(that.wrapperTemplate(options));
+                var that = this, content = that.element, options = that.options, isRtl = kendo.support.isRtl(content), titlebar = $(templates.titlebar(options)), titlebarActions = titlebar.find('.k-window-actions'), titleId = (content.id || kendo.guid()) + '_title', wrapper = $(that.wrapperTemplate(options));
                 wrapper.toggleClass('k-rtl', isRtl);
                 content.addClass(KCONTENTCLASS);
                 that.appendTo.append(wrapper);
                 if (options.closable !== false) {
                     if (options.title !== false) {
-                        titlebar.append(templates.close(options));
+                        titlebarActions.append(templates.close(options));
                     } else {
                         wrapper.append(templates.close(options));
                     }
@@ -33786,13 +33793,13 @@
             return promptDialog.result;
         };
         templates = {
-            wrapper: template('<div class=\'k-widget k-dialog k-window\' role=\'dialog\' />'),
+            wrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'dialog\' />'),
             action: template('<button type=\'button\' class=\'k-button# if (data.primary) { # k-primary# } role=\'button\' #\'></button>'),
-            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-header\'>' + '<span class=\'k-window-title k-dialog-title\'>#= title #</span>' + '</div>'),
-            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
-            actionbar: template('<div class=\'k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
+            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-header\'>' + '<span class=\'k-window-title k-dialog-title\'>#= title #</span>' + '<div class=\'k-window-actions k-dialog-actions\' />' + '</div>'),
+            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-window-action k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
+            actionbar: template('<div class=\'k-button-group k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
             overlay: '<div class=\'k-overlay\' />',
-            alertWrapper: template('<div class=\'k-widget k-dialog k-window\' role=\'alertdialog\' />'),
+            alertWrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'alertdialog\' />'),
             alert: '<div />',
             confirm: '<div />',
             prompt: '<div />',
@@ -34267,7 +34274,7 @@
             _object: function (element) {
                 var content = element.children(KWINDOWCONTENT);
                 var widget = kendo.widgetInstance(content);
-                if (widget instanceof Window) {
+                if (widget) {
                     return widget;
                 }
                 return undefined;

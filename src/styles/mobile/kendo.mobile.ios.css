@@ -7335,9 +7335,10 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-list > li {
   color: #000;
   border-top-color: rgba(180, 180, 180, 0.5);
-  border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, rgba(180, 180, 180, 0.5)), to(rgba(180, 180, 180, 0.5))) 1 stretch;
-  border-image: -webkit-linear-gradient(left, transparent 1em, rgba(180, 180, 180, 0.5) 1em, rgba(180, 180, 180, 0.5) 100%) 1 stretch;
-  border-image: linear-gradient(to right, transparent 1em, rgba(180, 180, 180, 0.5) 1em, rgba(180, 180, 180, 0.5) 100%) 1 stretch;
+  -webkit-border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, rgba(180, 180, 180, 0.5)), to(rgba(180, 180, 180, 0.5))) 1 stretch;
+  -webkit-border-image: -webkit-linear-gradient(left, transparent 1em, rgba(180, 180, 180, 0.5) 1em, rgba(180, 180, 180, 0.5) 100%) 1 stretch;
+          border-image: -webkit-gradient(linear, left top, right top, color-stop(1em, transparent), color-stop(1em, rgba(180, 180, 180, 0.5)), to(rgba(180, 180, 180, 0.5))) 1 stretch;
+          border-image: linear-gradient(to right, transparent 1em, rgba(180, 180, 180, 0.5) 1em, rgba(180, 180, 180, 0.5) 100%) 1 stretch;
 }
 .km-ios7 .km-list > li:last-child {
   -webkit-box-shadow: inset 0 -1px 0 rgba(180, 180, 180, 0.5);
@@ -7345,7 +7346,8 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 }
 .km-ios7 .km-list > li.km-state-active,
 .km-ios7 .km-list > li.km-state-active + li {
-  border-image: none;
+  -webkit-border-image: none;
+          border-image: none;
 }
 .km-ios7 .km-listview-link:after {
   color: #999ea9;

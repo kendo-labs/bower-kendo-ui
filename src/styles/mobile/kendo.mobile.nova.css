@@ -3841,7 +3841,8 @@ div.km-split-horizontal > .km-content > .km-pane {
   background: #fff;
 }
 .km-nova .km-actionsheet > li:nth-last-child(2) > a {
-  border-image: none;
+  -webkit-border-image: none;
+          border-image: none;
 }
 .km-nova .km-footer .km-tabstrip .km-button,
 .km-nova .km-actionsheet-wrapper,

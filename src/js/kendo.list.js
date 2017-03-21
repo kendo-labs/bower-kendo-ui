@@ -215,7 +215,11 @@
                     newExpression.filters.push(filter);
                 }
                 if (isValidFilterExpr(expression)) {
-                    newExpression.filters.push(expression);
+                    if (newExpression.logic === expression.logic) {
+                        newExpression.filters = newExpression.filters.concat(expression.filters);
+                    } else {
+                        newExpression.filters.push(expression);
+                    }
                 }
                 if (that._cascading) {
                     this.listView.setDSFilter(newExpression);
