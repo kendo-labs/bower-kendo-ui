@@ -890,7 +890,10 @@
                     var activeFilter = that.filterInput && that.filterInput[0] === activeElement();
                     if (current) {
                         dataItem = listView.dataItemByIndex(listView.getElementIndex(current));
-                        var shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
+                        var shouldTrigger = true;
+                        if (dataItem) {
+                            shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
+                        }
                         if (shouldTrigger && that.trigger(SELECT, {
                                 dataItem: dataItem,
                                 item: current

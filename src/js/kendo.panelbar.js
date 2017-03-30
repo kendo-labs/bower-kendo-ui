@@ -1059,7 +1059,7 @@
                     that._animating = false;
                     return;
                 }
-                element.parent().attr(ARIA_EXPANDED, !visibility).attr(ARIA_HIDDEN, visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse, .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
+                element.parent().attr(ARIA_EXPANDED, !visibility).attr(ARIA_HIDDEN, visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
                 if (visibility) {
                     animation = extend(hasCollapseAnimation ? collapse : extend({ reverse: true }, animation), { hide: true });
                     animation.complete = function () {

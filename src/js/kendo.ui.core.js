@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.1.321'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.1.330'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -17758,7 +17758,10 @@
                     var activeFilter = that.filterInput && that.filterInput[0] === activeElement();
                     if (current) {
                         dataItem = listView.dataItemByIndex(listView.getElementIndex(current));
-                        var shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
+                        var shouldTrigger = true;
+                        if (dataItem) {
+                            shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
+                        }
                         if (shouldTrigger && that.trigger(SELECT, {
                                 dataItem: dataItem,
                                 item: current
@@ -21518,17 +21521,18 @@
                 }
             },
             _focusItem: function () {
+                var options = this.options;
                 var listView = this.listView;
                 var focusedItem = listView.focus();
                 var index = listView.select();
                 index = index[index.length - 1];
-                if (index === undefined && this.options.highlightFirst && !focusedItem) {
+                if (index === undefined && options.highlightFirst && !focusedItem) {
                     index = 0;
                 }
                 if (index !== undefined) {
                     listView.focus(index);
                 } else {
-                    if (this.options.optionLabel) {
+                    if (options.optionLabel && (!options.virtual || options.virtual.mapValueTo !== 'dataItem')) {
                         this._focus(this.optionLabel);
                         this._select(this.optionLabel);
                     } else {
@@ -25910,6 +25914,7 @@
                         click: function (e) {
                             selector.options._clearedColor = true;
                             that.value(null);
+                            that.element.val(null);
                             that._updateUI(null);
                             selector._colorAsText.val('');
                             selector._hsvHandle.css({
@@ -25917,6 +25922,7 @@
                                 left: '0px'
                             });
                             selector._selectedColor.css(BACKGROUNDCOLOR, WHITE);
+                            that.trigger('change', { value: that.value() });
                             e.preventDefault();
                         }
                     });
@@ -28261,12 +28267,16 @@
                 }
             },
             _mouseleave: function (e) {
-                var that = this, element = $(e.currentTarget), hasChildren = element.children('.k-animation-container').length || element.children(groupSelector).length;
+                var that = this, element = $(e.currentTarget), hasChildren = element.children('.k-animation-container').length || element.children(groupSelector).length, $window = $(window);
                 if (element.parentsUntil('.k-animation-container', '.k-list-container,.k-calendar-container')[0]) {
                     e.stopImmediatePropagation();
                     return;
                 }
                 if (!that.options.openOnClick && !touch && !((pointers || msPointers) && e.originalEvent.pointerType in touchPointerTypes) && !contains(e.currentTarget, e.relatedTarget || e.target) && hasChildren && !contains(e.currentTarget, kendo._activeElement())) {
+                    that.close(element);
+                    return;
+                }
+                if (!e.toElement && !e.relatedTarget || e.clientX < 0 || e.clientY < 0 || e.clientY > $window.height() || e.clientX > $window.width()) {
                     that.close(element);
                 }
             },
@@ -29831,7 +29841,7 @@
                     that._animating = false;
                     return;
                 }
-                element.parent().attr(ARIA_EXPANDED, !visibility).attr(ARIA_HIDDEN, visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse, .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
+                element.parent().attr(ARIA_EXPANDED, !visibility).attr(ARIA_HIDDEN, visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
                 if (visibility) {
                     animation = extend(hasCollapseAnimation ? collapse : extend({ reverse: true }, animation), { hide: true });
                     animation.complete = function () {
@@ -33575,7 +33585,7 @@
                 that._stopCenterOnResize();
             },
             title: function (html) {
-                var that = this, wrapper = that.wrapper, options = that.options, titlebar = wrapper.children(KDIALOGTITLEBAR), title = titlebar.children(KDIALOGTITLE);
+                var that = this, wrapper = that.wrapper, options = that.options, titlebar = wrapper.children(KDIALOGTITLEBAR), title = titlebar.children(KDIALOGTITLE), encodedHtml = kendo.htmlEncode(html);
                 if (!arguments.length) {
                     return title.html();
                 }
@@ -33588,9 +33598,9 @@
                         title = titlebar.children(KDIALOGTITLE);
                         wrapper.removeClass(KTITLELESS);
                     }
-                    title.html(html);
+                    title.html(encodedHtml);
                 }
-                that.options.title = html;
+                that.options.title = encodedHtml;
                 return that;
             },
             content: function (html, data) {
@@ -33703,7 +33713,7 @@
             options: {
                 name: 'Alert',
                 modal: true,
-                actions: [{ text: '#= messages.okText #' }]
+                actions: [{ text: '#: messages.okText #' }]
             }
         });
         kendo.ui.plugin(Alert);
@@ -33722,14 +33732,14 @@
                 modal: true,
                 actions: [
                     {
-                        text: '#= messages.okText #',
+                        text: '#: messages.okText #',
                         primary: true,
                         action: function (e) {
                             e.sender.result.resolve();
                         }
                     },
                     {
-                        text: '#= messages.cancel #',
+                        text: '#: messages.cancel #',
                         action: function (e) {
                             e.sender.result.reject();
                         }
@@ -33767,7 +33777,7 @@
                 value: '',
                 actions: [
                     {
-                        text: '#= messages.okText #',
+                        text: '#: messages.okText #',
                         primary: true,
                         action: function (e) {
                             var sender = e.sender, value = sender.wrapper.find(KTEXTBOX).val();
@@ -33775,7 +33785,7 @@
                         }
                     },
                     {
-                        text: '#= messages.cancel #',
+                        text: '#: messages.cancel #',
                         action: function (e) {
                             var sender = e.sender, value = sender.wrapper.find(KTEXTBOX).val();
                             e.sender.result.reject(value);
@@ -33795,7 +33805,7 @@
         templates = {
             wrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'dialog\' />'),
             action: template('<button type=\'button\' class=\'k-button# if (data.primary) { # k-primary# } role=\'button\' #\'></button>'),
-            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-header\'>' + '<span class=\'k-window-title k-dialog-title\'>#= title #</span>' + '<div class=\'k-window-actions k-dialog-actions\' />' + '</div>'),
+            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-header\'>' + '<span class=\'k-window-title k-dialog-title\'>#: title #</span>' + '<div class=\'k-window-actions k-dialog-actions\' />' + '</div>'),
             close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-window-action k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
             actionbar: template('<div class=\'k-button-group k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
             overlay: '<div class=\'k-overlay\' />',
@@ -34312,7 +34322,7 @@
                         that._actions();
                         titleBar = wrapper.children(KWINDOWTITLEBAR);
                     } else {
-                        title.html(text);
+                        title.html(kendo.htmlEncode(text));
                     }
                     titleBarHeight = parseInt(outerHeight(titleBar), 10);
                     wrapper.css('padding-top', titleBarHeight);
@@ -34745,7 +34755,7 @@
         templates = {
             wrapper: template('<div class=\'k-widget k-window\' />'),
             action: template('<a role=\'button\' href=\'\\#\' class=\'k-window-action k-link\' aria-label=\'#= name #\'>' + '<span class=\'k-icon k-i-#= name.toLowerCase() #\'></span>' + '</a>'),
-            titlebar: template('<div class=\'k-window-titlebar k-header\'>&nbsp;' + '<span class=\'k-window-title\'>#= title #</span>' + '<div class=\'k-window-actions\' />' + '</div>'),
+            titlebar: template('<div class=\'k-window-titlebar k-header\'>&nbsp;' + '<span class=\'k-window-title\'>#: title #</span>' + '<div class=\'k-window-actions\' />' + '</div>'),
             overlay: '<div class=\'k-overlay\' />',
             contentFrame: template('<iframe frameborder=\'0\' title=\'#= title #\' class=\'' + KCONTENTFRAME + '\' ' + 'src=\'#= content.url #\'>' + 'This page requires frames in order to show content' + '</iframe>'),
             resizeHandle: template('<div class=\'k-resize-handle k-resize-#= data #\'></div>')
