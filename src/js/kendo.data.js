@@ -1988,7 +1988,11 @@
                 }
                 return model;
             },
-            pushCreate: function (items) {
+            pushInsert: function (index, items) {
+                if (!items) {
+                    items = index;
+                    index = 0;
+                }
                 if (!isArray(items)) {
                     items = [items];
                 }
@@ -1998,13 +2002,14 @@
                 try {
                     for (var idx = 0; idx < items.length; idx++) {
                         var item = items[idx];
-                        var result = this.add(item);
+                        var result = this.insert(index, item);
                         pushed.push(result);
                         var pristine = result.toJSON();
                         if (this._isServerGrouped()) {
                             pristine = this._wrapInEmptyGroup(pristine);
                         }
                         this._pristineData.push(pristine);
+                        index++;
                     }
                 } finally {
                     this.options.autoSync = autoSync;
@@ -2015,6 +2020,9 @@
                         items: pushed
                     });
                 }
+            },
+            pushCreate: function (items) {
+                this.pushInsert(this._data.length, items);
             },
             pushUpdate: function (items) {
                 if (!isArray(items)) {
@@ -2296,6 +2304,7 @@
             _submit: function (promises, data) {
                 var that = this;
                 that.trigger(REQUESTSTART, { type: 'submit' });
+                that.trigger(PROGRESS);
                 that.transport.submit(extend({
                     success: function (response, type) {
                         var promise = $.grep(promises, function (x) {
@@ -2352,6 +2361,7 @@
                 var that = this;
                 return $.Deferred(function (deferred) {
                     that.trigger(REQUESTSTART, { type: type });
+                    that.trigger(PROGRESS);
                     that.transport[type].call(that.transport, extend({
                         success: function (response) {
                             deferred.resolve({
@@ -3426,6 +3436,13 @@
                         method = 'read';
                     }
                     children.one(CHANGE, proxy(this._childrenLoaded, this));
+                    if (this._matchFilter) {
+                        options.filter = {
+                            field: '_matchFilter',
+                            operator: 'eq',
+                            value: true
+                        };
+                    }
                     promise = children[method](options);
                 } else {
                     this.loaded(true);
@@ -3459,6 +3476,10 @@
         var HierarchicalDataSource = DataSource.extend({
             init: function (options) {
                 var node = Node.define({ children: options });
+                if (options.filter) {
+                    this._hierarchicalFilter = options.filter;
+                    options.filter = null;
+                }
                 DataSource.fn.init.call(this, extend(true, {}, {
                     schema: {
                         modelBase: node,
@@ -3472,6 +3493,13 @@
                 that._data.bind(ERROR, function (e) {
                     that.trigger(ERROR, e);
                 });
+            },
+            read: function (data) {
+                var result = DataSource.fn.read.call(this, data);
+                if (this._hierarchicalFilter) {
+                    this.filter(this._hierarchicalFilter);
+                }
+                return result;
             },
             remove: function (node) {
                 var parentNode = node.parentNode(), dataSource = this, result;
@@ -3493,6 +3521,71 @@
                     parentNode._initChildren();
                 }
                 return DataSource.fn.insert.call(this, index, model);
+            },
+            filter: function (val) {
+                if (val === undefined) {
+                    return this._filter;
+                }
+                if (!this.options.serverFiltering) {
+                    this._markHierarchicalQuery(val);
+                    val = {
+                        logic: 'or',
+                        filters: [
+                            val,
+                            {
+                                field: '_matchFilter',
+                                operator: 'equals',
+                                value: true
+                            }
+                        ]
+                    };
+                }
+                this.trigger('reset');
+                this._query({
+                    filter: val,
+                    page: 1
+                });
+            },
+            _markHierarchicalQuery: function (expressions) {
+                var compiled;
+                var predicate;
+                var fields;
+                var operators;
+                var filter;
+                expressions = normalizeFilter(expressions);
+                if (!expressions || expressions.filters.length === 0) {
+                    return this;
+                }
+                compiled = Query.filterExpr(expressions);
+                fields = compiled.fields;
+                operators = compiled.operators;
+                predicate = filter = new Function('d, __f, __o', 'return ' + compiled.expression);
+                if (fields.length || operators.length) {
+                    filter = function (d) {
+                        return predicate(d, fields, operators);
+                    };
+                }
+                this._updateHierarchicalFilter(filter);
+            },
+            _updateHierarchicalFilter: function (filter) {
+                var current;
+                var data = this._data;
+                var result = false;
+                for (var idx = 0; idx < data.length; idx++) {
+                    current = data[idx];
+                    if (current.hasChildren) {
+                        current._matchFilter = current.children._updateHierarchicalFilter(filter);
+                        if (!current._matchFilter) {
+                            current._matchFilter = filter(current);
+                        }
+                    } else {
+                        current._matchFilter = filter(current);
+                    }
+                    if (current._matchFilter) {
+                        result = true;
+                    }
+                }
+                return result;
             },
             _find: function (method, value) {
                 var idx, length, node, children;

@@ -23,7 +23,7 @@
 
 */
 (function (f, define) {
-    define('kendo.panelbar', ['kendo.core'], f);
+    define('kendo.panelbar', ['kendo.data'], f);
 }(function () {
     var __meta__ = {
         id: 'panelbar',
@@ -32,6 +32,7 @@
         description: 'The PanelBar widget displays hierarchical data as a multi-level expandable panel bar.',
         depends: [
             'core',
+            'data',
             'data.odata'
         ]
     };
@@ -1054,14 +1055,17 @@
                 return prevent;
             },
             _toggleGroup: function (element, visibility) {
-                var that = this, animationSettings = that.options.animation, animation = animationSettings.expand, collapse = extend({}, animationSettings.collapse), hasCollapseAnimation = collapse && 'effects' in collapse;
+                var that = this, animationSettings = that.options.animation, animation = animationSettings.expand, hasCollapseAnimation = animationSettings.collapse && 'effects' in animationSettings.collapse, collapse = extend({}, animationSettings.expand, animationSettings.collapse);
+                if (!hasCollapseAnimation) {
+                    collapse = extend(collapse, { reverse: true });
+                }
                 if (element.is(VISIBLE) != visibility) {
                     that._animating = false;
                     return;
                 }
                 element.parent().attr(ARIA_EXPANDED, !visibility).attr(ARIA_HIDDEN, visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
                 if (visibility) {
-                    animation = extend(hasCollapseAnimation ? collapse : extend({ reverse: true }, animation), { hide: true });
+                    animation = extend(collapse, { hide: true });
                     animation.complete = function () {
                         that._animationCallback();
                     };

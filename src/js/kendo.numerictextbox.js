@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, extend = $.extend;
+        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', CLASS_ICON = 'k-icon', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', STATE_INVALID = 'k-state-invalid', ARIA_DISABLED = 'aria-disabled', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, extend = $.extend;
         var NumericTextBox = Widget.extend({
             init: function (element, options) {
                 var that = this, isStep = options && options.step !== undefined, min, max, step, value, disabled;
@@ -63,6 +63,7 @@
                 that._reset();
                 that._wrapper();
                 that._arrows();
+                that._validation();
                 that._input();
                 if (!kendo.support.mobileOS) {
                     that._text.on(FOCUS + ns, proxy(that._click, that));
@@ -117,7 +118,7 @@
                 that._toggleText(true);
                 that._upArrowEventHandler.unbind('press');
                 that._downArrowEventHandler.unbind('press');
-                element.off('keydown' + ns).off('keypress' + ns).off('paste' + ns);
+                element.off('keydown' + ns).off('keypress' + ns).off('keyup' + ns).off('paste' + ns);
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
                     text.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
@@ -131,7 +132,7 @@
                         that._spin(-1);
                         that._downArrow.addClass(SELECTED);
                     });
-                    that.element.on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('paste' + ns, proxy(that._paste, that));
+                    that.element.on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('keyup' + ns, proxy(that._keyup, that)).on('paste' + ns, proxy(that._paste, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     text.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
@@ -201,7 +202,7 @@
                         clearTimeout(that._spinning);
                         arrows.removeClass(SELECTED);
                     }, options = that.options, spinners = options.spinners, element = that.element;
-                arrows = element.siblings('.k-icon');
+                arrows = element.siblings('.' + CLASS_ICON);
                 if (!arrows[0]) {
                     arrows = $(buttonHtml('increase', options.upArrowText) + buttonHtml('decrease', options.downArrowText)).insertAfter(element);
                     arrows.wrapAll('<span class="k-select"/>');
@@ -215,16 +216,15 @@
                 that._downArrow = arrows.eq(1);
                 that._downArrowEventHandler = new kendo.UserEvents(that._downArrow, { release: _release });
             },
+            _validation: function () {
+                var that = this;
+                var element = that.element;
+                that._validationIcon = $('<span class=\'' + CLASS_ICON + ' k-i-warning\'></span>').hide().insertAfter(element);
+            },
             _blur: function () {
-                var that = this, factor = that.options.factor, curreValue = that.element.val();
+                var that = this;
                 that._toggleText(true);
-                if (factor && factor !== 1) {
-                    curreValue = parseFloat(curreValue);
-                    if (curreValue !== null) {
-                        curreValue = curreValue / factor;
-                    }
-                }
-                that._change(curreValue);
+                that._change(that.element.val());
             },
             _click: function (e) {
                 var that = this;
@@ -249,7 +249,13 @@
                 });
             },
             _change: function (value) {
-                var that = this;
+                var that = this, factor = that.options.factor;
+                if (factor && factor !== 1) {
+                    value = parseFloat(value);
+                    if (value !== null) {
+                        value = value / factor;
+                    }
+                }
                 that._update(value);
                 value = that._value;
                 if (that._old != value) {
@@ -275,6 +281,7 @@
                 clearTimeout(that._focusing);
                 that._inputWrapper.removeClass(FOCUSED).removeClass(HOVER);
                 that._blur();
+                that._removeInvalidState();
             },
             _format: function (format, culture) {
                 var numberFormat = this._culture(culture).numberFormat;
@@ -350,9 +357,23 @@
                     caret(element, selectionStart + character.length);
                     e.preventDefault();
                 } else if (min !== null && min >= 0 && value.charAt(0) === '-' || !isValid) {
+                    that._addInvalidState();
                     e.preventDefault();
                 }
                 that._key = 0;
+            },
+            _keyup: function () {
+                this._removeInvalidState();
+            },
+            _addInvalidState: function () {
+                var that = this;
+                that._inputWrapper.addClass(STATE_INVALID);
+                that._validationIcon.show();
+            },
+            _removeInvalidState: function () {
+                var that = this;
+                that._inputWrapper.removeClass(STATE_INVALID);
+                that._validationIcon.hide();
             },
             _numericRegex: function (numberFormat) {
                 var that = this;
@@ -503,7 +524,7 @@
         });
         function buttonHtml(direction, text) {
             var className = 'k-i-arrow-' + (direction === 'increase' ? '60-up' : '60-down');
-            return '<span unselectable="on" class="k-link k-link-' + direction + '" aria-label="' + text + '" title="' + text + '">' + '<span unselectable="on" class="k-icon ' + className + '"></span>' + '</span>';
+            return '<span unselectable="on" class="k-link k-link-' + direction + '" aria-label="' + text + '" title="' + text + '">' + '<span unselectable="on" class="' + CLASS_ICON + ' ' + className + '"></span>' + '</span>';
         }
         function truncate(value, precision) {
             var parts = parseFloat(value, 10).toString().split(POINT);

@@ -39,9 +39,10 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Class = kendo.Class, Widget = kendo.ui.Widget, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-content k-window-content k-dialog-content', KCONTENT = '.k-content', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = KDIALOGTITLE + 'bar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', WIDTH = 'width', HUNDREDPERCENT = 100, OK_CANCEL = {
+        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-content k-window-content k-dialog-content', KCONTENT = '.k-content', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = KDIALOGTITLE + 'bar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', WIDTH = 'width', HUNDREDPERCENT = 100, messages = {
                 okText: 'OK',
-                cancel: 'Cancel'
+                cancel: 'Cancel',
+                promptInput: 'Input'
             }, ceil = Math.ceil, templates, overlaySelector = ':not(link,meta,script,style)';
         function defined(x) {
             return typeof x != 'undefined';
@@ -587,7 +588,7 @@
             options: {
                 title: window.location.host,
                 closable: false,
-                messages: OK_CANCEL
+                messages: messages
             }
         });
         var Alert = PopupBox.extend({
@@ -647,7 +648,7 @@
                 that.result = $.Deferred();
             },
             _createPrompt: function () {
-                var value = this.options.value, promptContainer = $(templates.promptInputContainer).insertAfter(this.element);
+                var value = this.options.value, promptContainer = $(templates.promptInputContainer(this.options)).insertAfter(this.element);
                 if (value) {
                     promptContainer.children(KTEXTBOX).val(value);
                 }
@@ -692,54 +693,15 @@
             wrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'dialog\' />'),
             action: template('<button type=\'button\' class=\'k-button# if (data.primary) { # k-primary# } role=\'button\' #\'></button>'),
             titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-header\'>' + '<span class=\'k-window-title k-dialog-title\'>#: title #</span>' + '<div class=\'k-window-actions k-dialog-actions\' />' + '</div>'),
-            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button-bare k-window-action k-dialog-action k-dialog-close\' title=\'#= messages.close #\' aria-label=\'#= messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
-            actionbar: template('<div class=\'k-button-group k-dialog-buttongroup k-dialog-button-layout-#= buttonLayout #\' role=\'toolbar\' />'),
+            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button k-bare k-button-icon k-window-action k-dialog-action k-dialog-close\' title=\'#: messages.close #\' aria-label=\'#: messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
+            actionbar: template('<div class=\'k-button-group k-dialog-buttongroup k-dialog-button-layout-#: buttonLayout #\' role=\'toolbar\' />'),
             overlay: '<div class=\'k-overlay\' />',
             alertWrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'alertdialog\' />'),
             alert: '<div />',
             confirm: '<div />',
             prompt: '<div />',
-            promptInputContainer: '<div class=\'k-prompt-container\'><input type=\'text\' class=\'k-textbox\' /></div>'
+            promptInputContainer: template('<div class=\'k-prompt-container\'><input type=\'text\' class=\'k-textbox\' title=\'#: messages.promptInput #\' aria-label=\'#: messages.promptInput #\' /></div>')
         };
-        var tabKeyTrapNS = 'kendoTabKeyTrap';
-        var focusableNodesSelector = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex], *[contenteditable]';
-        var TabKeyTrap = Class.extend({
-            init: function (element) {
-                this.element = $(element);
-                this.element.autoApplyNS(tabKeyTrapNS);
-            },
-            trap: function () {
-                this.element.on('keydown', proxy(this._keepInTrap, this));
-            },
-            removeTrap: function () {
-                this.element.kendoDestroy(tabKeyTrapNS);
-            },
-            destroy: function () {
-                this.element.kendoDestroy(tabKeyTrapNS);
-                this.element = undefined;
-            },
-            _keepInTrap: function (e) {
-                if (e.which !== 9) {
-                    return;
-                }
-                var target = e.target;
-                var focusableItems = this.element.find(focusableNodesSelector).filter(':visible[tabindex!=-1]');
-                var focusableItemsCount = focusableItems.length;
-                var lastIndex = focusableItemsCount - 1;
-                var focusedItemIndex = focusableItems.index(target);
-                if (e.shiftKey) {
-                    if (focusedItemIndex === 0) {
-                        focusableItems.get(lastIndex).focus();
-                        e.preventDefault();
-                    }
-                } else {
-                    if (focusedItemIndex === lastIndex) {
-                        focusableItems.get(0).focus();
-                        e.preventDefault();
-                    }
-                }
-            }
-        });
         kendo.alert = kendoAlert;
         kendo.confirm = kendoConfirm;
         kendo.prompt = kendoPrompt;

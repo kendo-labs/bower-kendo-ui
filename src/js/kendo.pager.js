@@ -134,7 +134,7 @@
                 }
                 if (options.refresh) {
                     if (!that.element.find('.k-pager-refresh').length) {
-                        that.element.append('<a href="#" class="k-pager-refresh k-link" title="' + options.messages.refresh + '"><span class="k-icon k-i-reload"></span></a>');
+                        that.element.append('<a href="#" class="k-pager-refresh k-link" title="' + options.messages.refresh + '" aria-label="' + options.messages.refresh + '"><span class="k-icon k-i-reload"></span></a>');
                     }
                     that.element.on(CLICK + NS, '.k-pager-refresh', proxy(that._refreshClick, that));
                 }
@@ -232,7 +232,7 @@
                     that.element.find('.k-pager-info').html(html);
                 }
                 if (options.input) {
-                    that.element.find('.k-pager-input').html(that.options.messages.page + '<input class="k-textbox">' + kendo.format(options.messages.of, totalPages)).find('input').val(page).attr(DISABLED, total < 1).toggleClass('k-state-disabled', total < 1);
+                    that.element.find('.k-pager-input').html(that.options.messages.page + '<input class="k-textbox" aria-label="' + page + '">' + kendo.format(options.messages.of, totalPages)).find('input').val(page).attr(DISABLED, total < 1).toggleClass('k-state-disabled', total < 1);
                 }
                 if (options.previousNext) {
                     first(that.element, page, totalPages);
@@ -248,7 +248,7 @@
                         pageSize = 'all';
                         text = options.messages.allPages;
                     }
-                    that.element.find('.k-pager-sizes select').val(pageSize).filter('[' + kendo.attr('role') + '=dropdownlist]').kendoDropDownList('value', pageSize).kendoDropDownList('text', text);
+                    that.element.find('.k-pager-sizes select').val(pageSize).attr('aria-label', pageSize).filter('[' + kendo.attr('role') + '=dropdownlist]').kendoDropDownList('value', pageSize).kendoDropDownList('text', text);
                 }
             },
             _keydown: function (e) {

@@ -106,21 +106,6 @@
   border-color: transparent;
 }
 /* main colors */
-.k-icon {
-  color: #333333;
-}
-.k-icon:hover {
-  color: #333333;
-}
-.k-button .k-icon {
-  color: #333333;
-}
-.k-button .k-icon:hover {
-  color: #333333;
-}
-.k-widget.k-notification .k-icon {
-  color: inherit;
-}
 .k-splitbar .k-resize-handle {
   background-color: #333333;
 }
@@ -518,9 +503,9 @@ html .km-pane-wrapper .k-header {
 .k-grouping-row .k-state-focused {
   border-color: #76abd9;
 }
-html .k-mediaplayer-toolbar .k-button-bare:active,
-html .k-mediaplayer-toolbar .k-button-bare.k-state-active,
-html .k-mediaplayer-toolbar .k-button-bare.k-state-active:hover {
+.k-mediaplayer-toolbar .k-button.k-bare:active,
+.k-mediaplayer-toolbar .k-button.k-bare.k-state-active,
+.k-mediaplayer-toolbar .k-button.k-bare.k-state-active:hover {
   color: #428bca;
 }
 .k-calendar .k-link {
@@ -683,7 +668,8 @@ td.k-state-focused.k-state-selected {
 .k-mobile-list .k-item > .k-link:active,
 .k-mobile-list .k-item > .k-label:active,
 .k-mobile-list .k-edit-label.k-check:active,
-.k-mobile-list .k-recur-view .k-check:active {
+.k-mobile-list .k-recur-view .k-check:active,
+.k-listbox .k-item:hover:not(.k-state-disabled) {
   color: #333333;
   background-color: #ebebeb;
   border-color: #aeaeae;
@@ -711,7 +697,8 @@ td.k-state-focused.k-state-selected {
 .k-pager-wrap .k-link:hover,
 .k-other-month.k-state-hover .k-link,
 div.k-filebrowser-dropzone em,
-.k-draghandle:hover {
+.k-draghandle:hover,
+.k-listbox .k-item:hover {
   background-image: none;
 }
 .k-pager-wrap {
@@ -1352,7 +1339,8 @@ div.k-filebrowser-dropzone em {
 .k-list .k-state-selected,
 .k-fieldselector .k-list .k-item,
 .k-list-optionlabel,
-.k-dropzone {
+.k-dropzone,
+.k-listbox .k-item {
   border-radius: 3px;
 }
 .k-slider .k-button,
@@ -1746,6 +1734,8 @@ html .km-pane-wrapper .km-widget,
   background: #fff;
   border-radius: 3px;
 }
+.k-checkbox:hover + .k-checkbox-label:before,
+.k-checkbox:checked:hover + .k-checkbox-label:before,
 .k-checkbox-label:hover:before,
 .k-checkbox:checked + .k-checkbox-label:hover:before {
   border-color: #aeaeae;
@@ -1757,12 +1747,14 @@ html .km-pane-wrapper .km-widget,
   border-color: #cccccc;
   color: #428bca;
 }
+.k-checkbox:active + .k-checkbox-label:before,
 .k-checkbox-label:active:before {
   -webkit-box-shadow: 0 0 2px 0 #76abd9;
           box-shadow: 0 0 2px 0 #76abd9;
   border-color: #76abd9;
 }
-.k-checkbox:checked + .k-checkbox-label:active:before {
+.k-checkbox:checked:active + .k-checkbox-label:before,
+.k-checkbox:checked + .k-checkbox-label:before {
   -webkit-box-shadow: 0 0 2px 0 #76abd9;
           box-shadow: 0 0 2px 0 #76abd9;
   border-color: #76abd9;
@@ -2135,7 +2127,8 @@ thead.k-grid-header th.k-header:last-child {
   background-image: none;
 }
 .k-menu .k-link.k-state-active,
-.k-menu .k-state-hover > .k-link {
+.k-menu .k-state-hover > .k-link,
+.k-menu .k-menu-scroll-button:hover {
   color: #333333;
   background-color: #ebebeb;
   border-color: #aeaeae;
@@ -2343,6 +2336,9 @@ td.k-state-focused.k-state-selected,
 .k-dropzone .k-upload-status {
   color: #333333;
 }
+.k-file .k-upload-status {
+  color: #333333;
+}
 .k-menu .k-group,
 .k-grid .k-filter-options,
 .k-time-popup,
@@ -2419,7 +2415,8 @@ td.k-state-focused.k-state-selected,
 .k-state-disabled .k-button:hover,
 .k-button.k-state-disabled:hover,
 .k-state-disabled .k-button:active,
-.k-button.k-state-disabled:active {
+.k-button.k-state-disabled:active,
+.k-listbox .k-button.k-state-disabled {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -3094,6 +3091,12 @@ td.k-state-focused.k-state-selected,
 .k-spreadsheet .k-widget[data-property='fontFamily'] {
   width: 130px;
 }
+.k-window .k-popup-edit-form .k-edit-field input.k-checkbox {
+  margin-top: 1.1em;
+}
+.k-window .k-popup-edit-form .k-edit-field label.k-checkbox-label {
+  margin-top: 0.8em;
+}
 /* Dialog */
 .k-dialog .k-window-titlebar {
   padding: 1.1em 1em;
@@ -3176,6 +3179,94 @@ td.k-state-focused.k-state-selected,
 }
 .k-editor-dialog .k-tabstrip-items {
   border-color: #cccccc;
+}
+.k-numeric-wrap .k-i-warning {
+  color: #d92800;
+  position: absolute;
+  top: 0;
+  right: 1.9em;
+  width: 1.9em;
+}
+.k-numeric-wrap.k-state-invalid {
+  border-color: #d92800;
+}
+.k-numeric-wrap.k-state-invalid .k-select {
+  border-color: #d92800;
+}
+.k-numeric-wrap.k-state-invalid input {
+  color: #d92800;
+}
+.k-rtl .k-numeric-wrap.k-state-invalid .k-i-warning {
+  right: auto;
+  left: 1.9em;
+}
+.k-maskedtextbox.k-state-invalid .k-textbox {
+  border-color: #d92800;
+  color: #d92800;
+}
+.k-maskedtextbox.k-state-invalid .k-i-warning {
+  color: #d92800;
+}
+.k-dateinput.k-state-invalid .k-textbox {
+  color: #d92800;
+  border-color: #d92800;
+}
+.k-dateinput.k-state-invalid .k-i-warning {
+  margin-left: 0;
+  margin-right: 0.7em;
+  color: #d92800;
+}
+.k-rtl .k-dateinput .k-i-warning {
+  margin-right: 0;
+  margin-left: 0.7em;
+}
+.k-datepicker .k-picker-wrap.k-state-invalid {
+  border-color: #d92800;
+}
+.k-datepicker .k-picker-wrap.k-state-invalid .k-input {
+  color: #d92800;
+}
+.k-datepicker .k-picker-wrap .k-i-warning {
+  color: #d92800;
+  margin-left: 0;
+  margin-right: 2.1em;
+}
+.k-rtl .k-datepicker .k-picker-wrap .k-i-warning {
+  margin-right: 0;
+  margin-left: 2.1em;
+}
+.k-listbox .k-list-scroller {
+  padding: 2px;
+  border-color: #cccccc;
+  background-color: #fff;
+}
+.k-listbox .k-item:hover {
+  border-color: transparent;
+}
+.k-listbox .k-item.k-state-focused {
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 0 2px 0 #428bca, inset 0 0 7px 0 #76abd9;
+          box-shadow: inset 0 0 2px 0 #428bca, inset 0 0 7px 0 #76abd9;
+}
+.k-listbox .k-drop-hint {
+  height: 0;
+  border-top: 1px solid #428bca;
+}
+.k-grid-header .k-i-sort-asc-sm,
+.k-grid-header .k-i-sort-desc-sm,
+.k-grid-header .k-sort-order {
+  color: #428bca;
+}
+.k-grid-header .k-sort-order {
+  font-size: .7em;
+  vertical-align: bottom;
+}
+.k-menu-scroll-button {
+  border-color: #cccccc;
+  color: #333333;
+  background-image: none;
+  background-position: 50% 50%;
+  background-color: #f5f5f5;
 }
 /*
 Uncomment the following two @import statements if you want to compile a Kendo UI Bootstrap theme with a custom color scheme, based on a custom Bootstrap Less file.

@@ -178,7 +178,8 @@
 .k-rtl .k-tile strong {
   float: right;
 }
-.k-rtl .k-i-indent-increase {
+.k-rtl .k-i-indent-increase,
+.k-rtl .k-i-indent-decrease {
   -webkit-transform: scaleX(-1);
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
@@ -771,4 +772,16 @@
   border-left-width: 0;
   border-right-width: 0;
   border-bottom-right-radius: 0;
+}
+.k-rtl .k-maskedtextbox .k-i-warning {
+  right: auto;
+  left: 0;
+}
+.k-rtl .k-dateinput .k-i-warning {
+  right: auto;
+  left: 0;
+}
+.k-rtl .k-datepicker .k-picker-wrap .k-i-warning {
+  left: 0;
+  right: auto;
 }

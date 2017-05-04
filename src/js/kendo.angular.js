@@ -365,7 +365,7 @@
             var onChange = function (pristine) {
                 return function () {
                     var formPristine;
-                    if (haveChangeOnElement) {
+                    if (haveChangeOnElement && !element.is('select')) {
                         return;
                     }
                     if (pristine && ngForm) {

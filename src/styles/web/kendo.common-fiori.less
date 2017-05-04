@@ -59,14 +59,13 @@ input.k-textbox,
     height: 2.857em;
 }
 
-.k-button-bare,
 .k-button {
     line-height: 1.143em;
     padding: .82em 14px;
 }
 
-html .k-mediaplayer-toolbar .k-button-bare {
-	padding: .82em;
+.k-mediaplayer-toolbar .k-button.k-bare {
+    padding: .82em;
 }
 
 .k-tabstrip > .k-content,
@@ -369,6 +368,7 @@ span.k-combobox-clearable .k-input {
 }
 
 .k-popup .k-list .k-item,
+.k-popup > .k-group-header,
 .k-fieldselector .k-list .k-item {
     min-height: 2.143em;
     line-height: 2.143em;
@@ -528,7 +528,6 @@ table.k-editor {
 }
 
 .k-toolbar .k-button,
-.k-toolbar .k-button-bare,
 .k-toolbar .k-split-button,
 .k-toolbar .k-button-group,
 .k-toolbar .k-textbox
@@ -659,7 +658,7 @@ span.k-tooltip
 .k-gantt .k-grid-content tr,
 .k-gantt-rows tr,
 .k-gantt-tasks tr {
-	height: 3.458em;
+    height: 3.458em;
 }
 
 .k-notification-wrap {
@@ -725,7 +724,13 @@ span.k-tooltip
     }
 
     .k-selected-color {
-        height: @input-height;
+        @selected-icon-height: 2.57142857em;
+        height: @selected-icon-height;
+        width: @selected-icon-height;
+        .k-i-line {
+            line-height: @selected-icon-height;
+            font-size: @selected-icon-height;
+        }
     }
 }
 
@@ -1111,4 +1116,17 @@ div.k-spreadsheet-window {
 
 .k-editor-dialog.k-editor-table-wizard-dialog .k-edit-buttons {
     padding: 0.6em 1.3em;
+}
+
+.k-grid {
+    .k-edit-cell {
+        input[type='checkbox'],
+        input.k-checkbox {
+            margin-left: calc(1em + 4px);
+
+            + label.k-checkbox-label {
+                margin-left: 1em;
+            }
+        }
+    }
 }

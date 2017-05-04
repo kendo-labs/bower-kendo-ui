@@ -160,6 +160,7 @@ input.k-textbox
 }
 
 .k-popup .k-list .k-item,
+.k-popup > .k-group-header,
 .k-fieldselector .k-list .k-item,
 .k-list-optionlabel, .k-popup > .k-static-header {
     padding: 1px 7px 1px 7px;
@@ -176,6 +177,11 @@ input.k-textbox
 
 .k-notification-wrap {
     padding: 1.75em;
+
+    > .k-i-close {
+        top: 50%;
+        transform: translateY(-50%);
+    }
 }
 
 .k-notification-time {
@@ -437,7 +443,7 @@ span.k-tooltip {
 .k-gantt .k-grid-content tr,
 .k-gantt-rows tr,
 .k-gantt-tasks tr {
-	height: 2.174em;
+    height: 2.174em;
 }
 
 .k-tabstrip.k-header {
@@ -863,4 +869,17 @@ div.k-spreadsheet-window {
 .k-editor-dialog ul.k-tabstrip-items {
     padding: 0;
     border: 0;
+}
+
+.k-grid {
+    .k-edit-cell {
+        input[type='checkbox'],
+        input.k-checkbox {
+            margin-left: calc(1em + 4px);
+
+            + label.k-checkbox-label {
+                margin-left: 1em;
+            }
+        }
+    }
 }

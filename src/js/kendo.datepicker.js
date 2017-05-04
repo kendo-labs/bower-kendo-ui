@@ -255,6 +255,15 @@
                 } else {
                     that.readonly(element.is('[readonly]'));
                 }
+                if (options.dateInput) {
+                    that._dateInput = new ui.DateInput(element, {
+                        culture: options.culture,
+                        format: options.format,
+                        min: options.min,
+                        max: options.max,
+                        value: options.value
+                    });
+                }
                 that._old = that._update(options.value || that.element.val());
                 that._oldText = element.val();
                 kendo.notify(that);
@@ -278,7 +287,8 @@
                 animation: {},
                 month: {},
                 dates: [],
-                ARIATemplate: 'Current focused date is #=kendo.toString(data.current, "D")#'
+                ARIATemplate: 'Current focused date is #=kendo.toString(data.current, "D")#',
+                dateInput: false
             },
             setOptions: function (options) {
                 var that = this;
@@ -289,6 +299,15 @@
                 options.max = parse(options.max);
                 normalize(options);
                 that.dateView.setOptions(options);
+                if (that._dateInput) {
+                    that._dateInput.setOptions({
+                        culture: options.culture,
+                        format: options.format,
+                        min: options.min,
+                        max: options.max,
+                        value: options.value
+                    });
+                }
                 if (value) {
                     that.element.val(kendo.toString(value, options.format, options.culture));
                     that._updateARIA(value);
@@ -396,6 +415,8 @@
                     that._updateARIA(dateView._current);
                     if (!handled) {
                         that._typing = true;
+                    } else if (that._dateInput && e.stopImmediatePropagation) {
+                        e.stopImmediatePropagation();
                     }
                 }
             },
@@ -444,7 +465,11 @@
                 }
                 that._value = date;
                 that.dateView.value(date);
-                that.element.val(kendo.toString(date || value, options.format, options.culture));
+                if (that._dateInput) {
+                    that._dateInput.value(date || value);
+                } else {
+                    that.element.val(kendo.toString(date || value, options.format, options.culture));
+                }
                 that._updateARIA(date);
                 return date;
             },

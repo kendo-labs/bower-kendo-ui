@@ -51,7 +51,8 @@
                 apply: 'Apply',
                 cancel: 'Cancel',
                 noColor: 'no color',
-                clearColor: 'Clear color'
+                clearColor: 'Clear color',
+                previewInput: 'Color Hexadecimal Code'
             }, NS = '.kendoColorTools', CLICK_NS = 'click' + NS, KEYDOWN_NS = 'keydown' + NS, browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9;
         var ColorSelector = Widget.extend({
             init: function (element, options) {
@@ -271,6 +272,7 @@
                 var that = this;
                 ColorSelector.fn.init.call(that, element, options);
                 options = that.options;
+                options.messages = options.options ? $.extend(that.options.messages, options.options.messages) : that.options.messages;
                 element = that.element;
                 that.wrapper = element.addClass('k-widget k-flatcolorpicker').append(that._template(options));
                 that._hueElements = $('.k-hsv-rectangle, .k-transparency-slider .k-slider-track', element);
@@ -335,11 +337,12 @@
                 track.style.filter = 'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'' + url + '\', sizingMethod=\'scale\')';
             },
             _sliders: function () {
-                var that = this, element = that.element;
+                var that = this, element = that.element, hueSlider = element.find('.k-hue-slider'), opacitySlider = element.find('.k-transparency-slider');
                 function hueChange(e) {
                     that._updateUI(that._getHSV(e.value, null, null, null));
                 }
-                that._hueSlider = element.find('.k-hue-slider').kendoSlider({
+                hueSlider.attr('aria-label', 'hue saturation');
+                that._hueSlider = hueSlider.kendoSlider({
                     min: 0,
                     max: 360,
                     tickPlacement: 'none',
@@ -350,7 +353,8 @@
                 function opacityChange(e) {
                     that._updateUI(that._getHSV(null, null, null, e.value / 100));
                 }
-                that._opacitySlider = element.find('.k-transparency-slider').kendoSlider({
+                opacitySlider.attr('aria-label', 'opacity');
+                that._opacitySlider = opacitySlider.kendoSlider({
                     min: 0,
                     max: 100,
                     tickPlacement: 'none',
@@ -490,6 +494,7 @@
                 if (!color) {
                     return;
                 }
+                this._colorAsText.attr('title', that.options.messages.previewInput);
                 this._colorAsText.removeClass('k-state-error');
                 that._selectedColor.css(BACKGROUNDCOLOR, color.toDisplay());
                 if (!dontChangeInput) {
@@ -510,7 +515,7 @@
             _selectOnHide: function () {
                 return this.options.buttons ? null : this._getHSV();
             },
-            _template: kendo.template('# if (preview) { #' + '<div class="k-selected-color"><div class="k-selected-color-display"><div class="k-color-input"><input class="k-color-value" ' + '# if (clearButton && !_standalone) { #' + 'placeholder="#: messages.noColor #" ' + '# } #' + '#= !data.input ? \'style="visibility: hidden;"\' : "" #>' + '# if (clearButton && !_standalone) { #' + '<span class="k-clear-color k-button-bare" title="#: messages.clearColor #"></span>' + '# } #' + '</div></div></div>' + '# } #' + '# if (clearButton && !_standalone && !preview) { #' + '<div class="k-clear-color-container"><span class="k-clear-color k-button-bare">#: messages.clearColor #</span></div>' + '# } #' + '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"></div><div class="k-draghandle"></div></div>' + '<input class="k-hue-slider" />' + '# if (opacity) { #' + '<input class="k-transparency-slider" />' + '# } #' + '# if (buttons) { #' + '<div unselectable="on" class="k-controls"><button class="k-button k-primary apply">#: messages.apply #</button> <button class="k-button cancel">#: messages.cancel #</button></div>' + '# } #')
+            _template: kendo.template('# if (preview) { #' + '<div class="k-selected-color"><div class="k-selected-color-display"><div class="k-color-input"><input class="k-color-value" ' + '# if (clearButton && !_standalone) { #' + 'placeholder="#: messages.noColor #" ' + '# } #' + '#= !data.input ? \'style="visibility: hidden;"\' : "" #>' + '# if (clearButton && !_standalone) { #' + '<span class="k-clear-color k-button k-bare" title="#: messages.clearColor #"></span>' + '# } #' + '</div></div></div>' + '# } #' + '# if (clearButton && !_standalone && !preview) { #' + '<div class="k-clear-color-container"><span class="k-clear-color k-button k-bare">#: messages.clearColor #</span></div>' + '# } #' + '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"></div><div class="k-draghandle"></div></div>' + '<input class="k-hue-slider" />' + '# if (opacity) { #' + '<input class="k-transparency-slider" />' + '# } #' + '# if (buttons) { #' + '<div unselectable="on" class="k-controls"><button class="k-button k-primary apply">#: messages.apply #</button> <button class="k-button cancel">#: messages.cancel #</button></div>' + '# } #')
         });
         function relative(array, element, delta) {
             array = Array.prototype.slice.call(array);

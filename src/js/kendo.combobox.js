@@ -94,6 +94,7 @@
                     that.enable(false);
                 }
                 kendo.notify(that);
+                that._toggleCloseVisibility();
             },
             options: {
                 name: 'ComboBox',
@@ -168,6 +169,7 @@
                     return;
                 }
                 Select.fn._change.call(that);
+                that._toggleCloseVisibility();
             },
             _focusHandler: function () {
                 this.input.focus();
@@ -425,6 +427,13 @@
             },
             refresh: function () {
                 this.listView.refresh();
+            },
+            _toggleCloseVisibility: function () {
+                if (this.text()) {
+                    this._showClear();
+                } else {
+                    this._hideClear();
+                }
             },
             suggest: function (word) {
                 var that = this;
@@ -697,6 +706,7 @@
                             that.listView.select(-1);
                         }
                         that.search(value);
+                        that._toggleCloseVisibility();
                     }
                     that._typingTimeout = null;
                 }, that.options.delay);

@@ -100,7 +100,7 @@
             tabs.filter(':last-child').addClass(LAST);
         }
         function scrollButtonHtml(buttonClass, iconClass) {
-            return '<span class=\'k-button k-button-icon k-button-bare k-tabstrip-' + buttonClass + '\' unselectable=\'on\'><span class=\'k-icon ' + iconClass + '\'></span></span>';
+            return '<span class=\'k-button k-button-icon k-bare k-tabstrip-' + buttonClass + '\' unselectable=\'on\'><span class=\'k-icon ' + iconClass + '\'></span></span>';
         }
         var TabStrip = Widget.extend({
             init: function (element, options) {
@@ -620,7 +620,7 @@
                 return elementId;
             },
             _updateContentElements: function (isInitialUpdate) {
-                var that = this, contentUrls = that._contentUrls, items = that.tabGroup.find('.k-item'), contentElements = that.wrapper.children('div'), _elementId = that._elementId.bind(that);
+                var that = this, contentUrls = that._contentUrls, items = that.tabGroup.children('.k-item'), contentElements = that.wrapper.children('div'), _elementId = that._elementId.bind(that);
                 if (contentElements.length && items.length > contentElements.length) {
                     contentElements.each(function (idx) {
                         var id = _elementId($(this), idx);

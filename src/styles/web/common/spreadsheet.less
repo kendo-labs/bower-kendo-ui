@@ -123,6 +123,7 @@
                     border-color: transparent;
                     background: transparent;
                     box-shadow: none;
+                    border-width: 0;
 
                     .k-input {
                         border-radius: 0;
@@ -140,8 +141,6 @@
         .k-spreadsheet-formula-bar {
             width: 100%;
             padding-left: 31px; // XXX: Move to code
-            height: @input-height;
-            vertical-align: middle;
 
             &::before {
                 .use-font-icon();
@@ -159,12 +158,16 @@
 
         .k-spreadsheet-formula-input {
             overflow: hidden;
-            height: 100%;
+            height: (@input-height + .354em);
+            max-height: (@input-height + .354em);
             line-height: @input-height;
-            padding: .177em 0;
             text-indent: @input-indent;
             border: 0;
             margin: 0;
+        }
+
+        .k-state-border-down {
+            padding-bottom: 0;
         }
     }
 
@@ -176,7 +179,7 @@
         width: 100%;
         box-sizing: border-box;
         white-space: pre;
-        padding: @formula-input-padding .5em 0;
+        padding: @formula-input-padding .5em;
     }
 
     .k-spreadsheet-cell-editor {
@@ -225,6 +228,10 @@
 
     .k-spreadsheet-column-header {
         position: absolute;
+    }
+
+    .k-filter-wrapper {
+        pointer-events: none;
     }
 
     .k-spreadsheet-sheets-bar {
@@ -292,6 +299,18 @@
     .k-auto-fill-wrapper {
         position: relative;
     }
+
+    .k-spreadsheet-vborder {
+      position: absolute;
+      border-left-style: solid;
+      border-left-width: 1px;
+    }
+
+    .k-spreadsheet-hborder {
+      position: absolute;
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
 }
 
 .k-spreadsheet-names-popup {
@@ -357,6 +376,7 @@
 .k-spreadsheet-filter {
     position: absolute;
     cursor: pointer;
+    pointer-events: all;
 }
 
 .k-spreadsheet-sample {
@@ -365,7 +385,7 @@
 
 .k-spreadsheet-clipboard-paste,
 .k-spreadsheet-clipboard {
-    position: absolute;
+    position: fixed;
     opacity: 0;
     top: 0;
     left: 0;

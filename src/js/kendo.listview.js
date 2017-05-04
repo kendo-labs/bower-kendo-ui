@@ -203,7 +203,11 @@
                     that.current(items.eq(0));
                 }
                 that._angularItems('compile');
-                that.trigger(DATABOUND);
+                that.trigger(DATABOUND, {
+                    action: e.action || 'rebind',
+                    items: e.items,
+                    index: e.index
+                });
             },
             _pageable: function () {
                 var that = this, pageable = that.options.pageable, settings, pagerId;

@@ -33,18 +33,40 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo;
+        var global = window;
+        var min = global.Math.min;
+        var kendo = global.kendo;
         var caret = kendo.caret;
         var keys = kendo.keys;
         var ui = kendo.ui;
         var Widget = ui.Widget;
-        var ns = '.kendoMaskedTextBox';
+        var NS = '.kendoMaskedTextBox';
         var proxy = $.proxy;
-        var INPUT_EVENT_NAME = (kendo.support.propertyChangeEvent ? 'propertychange' : 'input') + ns;
+        var setTimeout = window.setTimeout;
         var STATEDISABLED = 'k-state-disabled';
+        var STATEINVALID = 'k-state-invalid';
         var DISABLED = 'disabled';
         var READONLY = 'readonly';
         var CHANGE = 'change';
+        var MOUSEUP = 'mouseup';
+        var DROP = 'drop';
+        var KEYDOWN = 'keydown';
+        var PASTE = 'paste';
+        var INPUT = 'input';
+        function ns(name) {
+            return name + NS;
+        }
+        var INPUT_EVENT_NAME = ns(kendo.support.propertyChangeEvent ? 'propertychange' : INPUT);
+        function stringDiffStart(str1, str2) {
+            var i = 0;
+            while (i < str2.length) {
+                if (str1[i] !== str2[i]) {
+                    break;
+                }
+                i++;
+            }
+            return i;
+        }
         var MaskedTextBox = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -53,10 +75,10 @@
                 that._rules = $.extend({}, that.rules, that.options.rules);
                 element = that.element;
                 DOMElement = element[0];
-                that.wrapper = element;
+                that._wrapper();
                 that._tokenize();
                 that._form();
-                that.element.addClass('k-textbox').attr('autocomplete', 'off').on('focus' + ns, function () {
+                that.element.addClass('k-textbox').attr('autocomplete', 'off').on('focus' + NS, function () {
                     var value = DOMElement.value;
                     if (!value) {
                         DOMElement.value = that._old = that._emptyMask;
@@ -67,7 +89,7 @@
                     that._timeoutId = setTimeout(function () {
                         caret(element, 0, value ? that._maskLength : 0);
                     });
-                }).on('focusout' + ns, function () {
+                }).on('focusout' + NS, function () {
                     var value = element.val();
                     clearTimeout(that._timeoutId);
                     DOMElement.value = that._old = '';
@@ -84,6 +106,7 @@
                     that.readonly(element.is('[readonly]'));
                 }
                 that.value(that.options.value || element.val());
+                that._validationIcon = $('<span class=\'k-icon k-i-warning\'></span>').insertAfter(element);
                 kendo.notify(that);
             },
             options: {
@@ -119,7 +142,7 @@
             },
             destroy: function () {
                 var that = this;
-                that.element.off(ns);
+                that.element.off(NS);
                 if (that._formElement) {
                     that._formElement.off('reset', that._resetHandler);
                     that._formElement.off('submit', that._submitHandler);
@@ -140,12 +163,14 @@
                     value = '';
                 }
                 if (!emptyMask) {
+                    this._oldValue = value;
                     element.val(value);
                     return;
                 }
                 value = this._unmask(value + '');
                 element.val(value ? emptyMask : '');
                 this._mask(0, this._maskLength, value);
+                this._unmaskedValue = null;
                 value = element.val();
                 this._oldValue = value;
                 if (kendo._activeElement() !== element) {
@@ -183,23 +208,48 @@
             _bindInput: function () {
                 var that = this;
                 if (that._maskLength) {
-                    that.element.on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('paste' + ns, proxy(that._paste, that)).on(INPUT_EVENT_NAME, proxy(that._propertyChange, that));
+                    if (that.options.$angular) {
+                        that.element.off(INPUT);
+                    }
+                    that.element.on(ns(KEYDOWN), proxy(that._keydown, that)).on(ns(DROP), proxy(that._drop, that)).on(ns(CHANGE), proxy(that._trackChange, that)).on(INPUT_EVENT_NAME, proxy(that._inputHandler, that));
+                    if (kendo.support.browser.msie) {
+                        var version = kendo.support.browser.version;
+                        if (version > 8 && version < 11) {
+                            var events = [
+                                ns(MOUSEUP),
+                                ns(DROP),
+                                ns(KEYDOWN),
+                                ns(PASTE)
+                            ].join(' ');
+                            that.element.on(events, proxy(that._legacyIEInputHandler, that));
+                        }
+                    }
                 }
             },
             _unbindInput: function () {
-                this.element.off('keydown' + ns).off('keypress' + ns).off('paste' + ns).off(INPUT_EVENT_NAME);
+                var events = [
+                    INPUT_EVENT_NAME,
+                    ns(KEYDOWN),
+                    ns(MOUSEUP),
+                    ns(DROP),
+                    ns(PASTE)
+                ].join(' ');
+                this.element.off(events);
             },
             _editable: function (options) {
                 var that = this;
                 var element = that.element;
+                var wrapper = that.wrapper;
                 var disable = options.disable;
                 var readonly = options.readonly;
                 that._unbindInput();
                 if (!readonly && !disable) {
-                    element.removeAttr(DISABLED).removeAttr(READONLY).removeClass(STATEDISABLED);
+                    element.removeAttr(DISABLED).removeAttr(READONLY);
+                    wrapper.removeClass(STATEDISABLED);
                     that._bindInput();
                 } else {
-                    element.attr(DISABLED, disable).attr(READONLY, readonly).toggleClass(STATEDISABLED, disable);
+                    element.attr(DISABLED, disable).attr(READONLY, readonly);
+                    wrapper.toggleClass(STATEDISABLED, disable);
                 }
             },
             _change: function () {
@@ -209,42 +259,78 @@
                     that._oldValue = value;
                     that.trigger(CHANGE);
                     that.element.trigger(CHANGE);
+                } else if (value === '' && that.__changing) {
+                    that.element.trigger(CHANGE);
                 }
             },
-            _propertyChange: function () {
+            inputChange: function (backward) {
                 var that = this;
+                var old = that._old;
                 var element = that.element[0];
                 var value = element.value;
-                var unmasked;
-                var start;
-                if (kendo._activeElement() !== element) {
+                var selection = caret(element);
+                var cursor = selection[1];
+                var lengthDiff = value.length - old.length;
+                var mobile = kendo.support.mobileOS;
+                if (that.__dropping && lengthDiff < 0) {
                     return;
                 }
-                if (value !== that._old && !that._pasting) {
-                    start = caret(element)[0];
-                    unmasked = that._unmask(value.substring(start), start);
-                    element.value = that._old = value.substring(0, start) + that._emptyMask.substring(start);
-                    that._mask(start, start, unmasked);
-                    caret(element, start);
+                if (lengthDiff === -1 && mobile.android && mobile.browser === 'chrome') {
+                    backward = true;
                 }
+                var contentStart = min(cursor, stringDiffStart(value, old));
+                var content = value.substring(contentStart, cursor);
+                element.value = value.substring(0, contentStart) + that._emptyMask.substring(contentStart);
+                var caretPos = that._mask(contentStart, cursor, content);
+                var endContent = that._trimStartPromptChars(value.substring(cursor), min(lengthDiff, caretPos - contentStart));
+                var unmasked = that._unmask(endContent, old.length - endContent.length);
+                that._mask(caretPos, caretPos, unmasked);
+                if (backward) {
+                    caretPos = that._findCaretPosBackwards(contentStart);
+                }
+                caret(element, caretPos);
+                that.__dropping = false;
             },
-            _paste: function (e) {
+            _trimStartPromptChars: function (content, count) {
+                var promptChar = this.options.promptChar;
+                while (count-- > 0 && content.indexOf(promptChar) === 0) {
+                    content = content.substring(1);
+                }
+                return content;
+            },
+            _findCaretPosBackwards: function (pos) {
+                var caretStart = this._find(pos, true);
+                if (caretStart < pos) {
+                    caretStart += 1;
+                }
+                return caretStart;
+            },
+            _inputHandler: function () {
+                if (kendo._activeElement() !== this.element[0]) {
+                    return;
+                }
+                this.inputChange(this.__backward);
+            },
+            _legacyIEInputHandler: function (e) {
                 var that = this;
-                var element = e.target;
-                var position = caret(element);
-                var start = position[0];
-                var end = position[1];
-                var unmasked = that._unmask(element.value.substring(end), end);
-                that._pasting = true;
+                var input = that.element[0];
+                var value = input.value;
+                var type = e.type;
+                that.__pasting = type === 'paste';
                 setTimeout(function () {
-                    var value = element.value;
-                    var pasted = value.substring(start, caret(element)[0]);
-                    element.value = that._old = value.substring(0, start) + that._emptyMask.substring(start);
-                    that._mask(start, start, pasted);
-                    start = caret(element)[0];
-                    that._mask(start, start, unmasked);
-                    caret(element, start);
-                    that._pasting = false;
+                    if (type === 'mouseup' && that.__pasting) {
+                        return;
+                    }
+                    if (input.value !== value) {
+                        that.inputChange(that.__backward);
+                    }
+                });
+            },
+            _trackChange: function () {
+                var that = this;
+                that.__changing = true;
+                setTimeout(function () {
+                    that.__changing = false;
                 });
             },
             _form: function () {
@@ -269,44 +355,13 @@
             },
             _keydown: function (e) {
                 var key = e.keyCode;
-                var element = this.element[0];
-                var selection = caret(element);
-                var start = selection[0];
-                var end = selection[1];
-                var placeholder;
-                var backward = key === keys.BACKSPACE;
-                if (backward || key === keys.DELETE) {
-                    if (start === end) {
-                        if (backward) {
-                            start -= 1;
-                        } else {
-                            end += 1;
-                        }
-                        placeholder = this._find(start, backward);
-                    }
-                    if (placeholder !== undefined && placeholder !== start) {
-                        if (backward) {
-                            placeholder += 1;
-                        }
-                        caret(element, placeholder);
-                    } else if (start > -1) {
-                        this._mask(start, end, '', backward);
-                    }
-                    e.preventDefault();
-                } else if (key === keys.ENTER) {
+                this.__backward = key === keys.BACKSPACE;
+                if (key === keys.ENTER) {
                     this._change();
                 }
             },
-            _keypress: function (e) {
-                if (e.which === 0 || e.metaKey || e.ctrlKey || e.keyCode === keys.ENTER) {
-                    return;
-                }
-                var character = String.fromCharCode(e.which);
-                var selection = caret(this.element);
-                this._mask(selection[0], selection[1], character);
-                if (e.keyCode === keys.BACKSPACE || character) {
-                    e.preventDefault();
-                }
+            _drop: function () {
+                this.__dropping = true;
             },
             _find: function (idx, backward) {
                 var value = this.element.val() || this._emptyMask;
@@ -359,10 +414,14 @@
                     }
                     caret(element, idx);
                 }
+                return idx;
             },
             _unmask: function (value, idx) {
                 if (!value) {
                     return '';
+                }
+                if (this._unmaskedValue === value) {
+                    return this._unmaskedValue;
                 }
                 value = (value + '').split('');
                 var chr;
@@ -381,9 +440,13 @@
                         chrIdx += 1;
                         tokenIdx += 1;
                     } else if (typeof token !== 'string') {
-                        if (token.test && token.test(chr) || $.isFunction(token) && token(chr)) {
+                        if (token && token.test && token.test(chr) || $.isFunction(token) && token(chr)) {
                             result += chr;
                             tokenIdx += 1;
+                        } else {
+                            if (valueLength === 1) {
+                                this._blinkInvalidState();
+                            }
                         }
                         chrIdx += 1;
                     } else {
@@ -393,7 +456,28 @@
                         break;
                     }
                 }
+                this._unmaskedValue = result;
                 return result;
+            },
+            _wrapper: function () {
+                var that = this;
+                var element = that.element;
+                var DOMElement = element[0];
+                var wrapper = element.wrap('<span class=\'k-widget k-maskedtextbox\'></span>').parent();
+                wrapper[0].style.cssText = DOMElement.style.cssText;
+                DOMElement.style.width = '100%';
+                that.wrapper = wrapper.addClass(DOMElement.className);
+            },
+            _blinkInvalidState: function () {
+                var that = this;
+                that.wrapper.addClass(STATEINVALID);
+                clearTimeout(that._invalidStateTimeout);
+                that._invalidStateTimeout = setTimeout(proxy(that._removeInvalidState, that), 100);
+            },
+            _removeInvalidState: function () {
+                var that = this;
+                that.wrapper.removeClass(STATEINVALID);
+                that._invalidStateTimeout = null;
             },
             _tokenize: function () {
                 var tokens = [];

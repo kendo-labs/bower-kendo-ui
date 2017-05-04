@@ -72,6 +72,15 @@
                 } else {
                     that.readonly(element.is('[readonly]'));
                 }
+                if (options.dateInput) {
+                    that._dateInput = new ui.DateInput(element, {
+                        culture: options.culture,
+                        format: options.format,
+                        min: options.min,
+                        max: options.max,
+                        value: options.value
+                    });
+                }
                 that._old = that._update(options.value || that.element.val());
                 that._oldText = element.val();
                 kendo.notify(that);
@@ -351,12 +360,17 @@
                         timeView.bind();
                     }
                 }
-                that.element.val(kendo.toString(date || value, options.format, options.culture));
+                if (that._dateInput) {
+                    that._dateInput.value(date || value);
+                } else {
+                    that.element.val(kendo.toString(date || value, options.format, options.culture));
+                }
                 that._updateARIA(date);
                 return date;
             },
             _keydown: function (e) {
                 var that = this, dateView = that.dateView, timeView = that.timeView, value = that.element.val(), isDateViewVisible = dateView.popup.visible();
+                var stopPropagation = that._dateInput && e.stopImmediatePropagation;
                 if (e.altKey && e.keyCode === kendo.keys.DOWN) {
                     that.toggle(isDateViewVisible ? 'time' : 'date');
                 } else if (isDateViewVisible) {
@@ -368,6 +382,10 @@
                     that._change(value);
                 } else {
                     that._typing = true;
+                    stopPropagation = false;
+                }
+                if (stopPropagation) {
+                    e.stopImmediatePropagation();
                 }
             },
             _views: function () {
@@ -561,7 +579,7 @@
                 options.parseFormats.unshift('yyyy-MM-ddTHH:mm:ss');
             }
             if ($.inArray(timeFormat, options.parseFormats) === -1) {
-                options.parseFormats.splice(1, 0, timeFormat);
+                options.parseFormats.push(timeFormat);
             }
         }
         ui.plugin(DateTimePicker);

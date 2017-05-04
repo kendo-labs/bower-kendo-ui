@@ -32,6 +32,7 @@
 @scheduler-link-padding: 0 1.1em;
 @grid-header-padding: .429em .2em .429em 1em;
 @icon-positioning: "material";
+@spreadsheet-action-bar-font-size: 14px;
 
 @import "common/all.less";
 
@@ -383,6 +384,7 @@
 }
 
 .k-popup .k-list .k-item,
+.k-popup > .k-group-header,
 .k-fieldselector .k-list .k-item {
     min-height: 2.143em;
     line-height: 2.143em;
@@ -750,7 +752,7 @@ div.editorToolbarWindow.k-window-content {
 .k-gantt .k-grid-content tr,
 .k-gantt-rows tr,
 .k-gantt-tasks tr {
-	height: 3.5em;
+    height: 3.5em;
 }
 
 .k-notification-wrap {
@@ -800,7 +802,13 @@ div.editorToolbarWindow.k-window-content {
     }
 
     .k-selected-color {
-        height: @input-height;
+        @selected-icon-height: 2.57142857em;
+        height: @selected-icon-height;
+        width: @selected-icon-height;
+        .k-i-line {
+            line-height: @selected-icon-height;
+            font-size: @selected-icon-height;
+        }
     }
 }
 
@@ -1073,6 +1081,10 @@ form.k-filter-menu .k-textbox {
     width: auto;
 }
 
+.k-spreadsheet .k-spreadsheet-action-bar {
+    font-size: @spreadsheet-action-bar-font-size;
+}
+
 .k-spreadsheet-window {
     .k-edit-label,
     .k-edit-field {
@@ -1154,4 +1166,17 @@ div.k-spreadsheet-window {
 
 .k-editor-dialog.k-editor-table-wizard-dialog .k-edit-buttons {
     padding: 0.6em 1.3em;
+}
+
+.k-grid {
+    .k-edit-cell {
+        input[type='checkbox'],
+        input.k-checkbox {
+            margin-left: calc(1em + 4px);
+
+            + label.k-checkbox-label {
+                margin-left: 1em;
+            }
+        }
+    }
 }

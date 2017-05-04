@@ -394,6 +394,15 @@
                 } else {
                     that.readonly(element.is('[readonly]'));
                 }
+                if (options.dateInput) {
+                    that._dateInput = new ui.DateInput(element, {
+                        culture: options.culture,
+                        format: options.format,
+                        min: options.min,
+                        max: options.max,
+                        value: options.value
+                    });
+                }
                 that._old = that._update(options.value || that.element.val());
                 that._oldText = element.val();
                 kendo.notify(that);
@@ -533,6 +542,9 @@
                 var that = this, key = e.keyCode, timeView = that.timeView, value = that.element.val();
                 if (timeView.popup.visible() || e.altKey) {
                     timeView.move(e);
+                    if (that._dateInput && e.stopImmediatePropagation) {
+                        e.stopImmediatePropagation();
+                    }
                 } else if (key === keys.ENTER && value !== that._oldText) {
                     that._change(value);
                 } else {
@@ -562,7 +574,11 @@
                     date = null;
                 }
                 that._value = date;
-                that.element.val(kendo.toString(date || value, options.format, options.culture));
+                if (that._dateInput) {
+                    that._dateInput.value(date || value);
+                } else {
+                    that.element.val(kendo.toString(date || value, options.format, options.culture));
+                }
                 timeView.value(date);
                 return date;
             },

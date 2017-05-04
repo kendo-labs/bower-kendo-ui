@@ -50,7 +50,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = kendo.keys, activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', HIDDENCLASS = 'k-loading-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = kendo.keys, activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', HIDDENCLASS = 'k-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
                 'font-family',
                 'font-size',
                 'font-stretch',
@@ -105,6 +105,7 @@
                     that.enable(false);
                 }
                 kendo.notify(that);
+                that._toggleCloseVisibility();
             },
             options: {
                 name: 'MultiSelect',
@@ -310,8 +311,14 @@
                 }
             },
             _clearClick: function () {
-                this.value(null);
-                this.trigger('change');
+                var that = this;
+                that.tagList.children().each(function (index, tag) {
+                    that._removeTag($(tag));
+                });
+                that.input.val('');
+                that._search();
+                that.trigger('change');
+                that.focus();
             },
             _editable: function (options) {
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), tagList = that.tagList.off(ns), input = that.element.add(that.input.off(ns));
@@ -520,6 +527,7 @@
                     that.trigger(CHANGE);
                     that.element.trigger(CHANGE);
                 }
+                that._toggleCloseVisibility();
             },
             _click: function (e) {
                 var that = this;
@@ -774,12 +782,20 @@
             _search: function () {
                 var that = this;
                 that._typingTimeout = setTimeout(function () {
-                    var value = that.input.val();
+                    var value = that._inputValue();
                     if (that._prev !== value) {
                         that._prev = value;
                         that.search(value);
+                        that._toggleCloseVisibility();
                     }
                 }, that.options.delay);
+            },
+            _toggleCloseVisibility: function () {
+                if (this.value().length || this.input.val() && this.input.val() !== this.options.placeholder) {
+                    this._showClear();
+                } else {
+                    this._hideClear();
+                }
             },
             _allowOpening: function () {
                 return this._allowSelection() && List.fn._allowOpening.call(this);

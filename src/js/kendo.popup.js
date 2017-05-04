@@ -33,7 +33,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, support = kendo.support, getOffset = kendo.getOffset, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, OPEN = 'open', CLOSE = 'close', DEACTIVATE = 'deactivate', ACTIVATE = 'activate', CENTER = 'center', LEFT = 'left', RIGHT = 'right', TOP = 'top', BOTTOM = 'bottom', ABSOLUTE = 'absolute', HIDDEN = 'hidden', BODY = 'body', LOCATION = 'location', POSITION = 'position', VISIBLE = 'visible', EFFECTS = 'effects', ACTIVE = 'k-state-active', ACTIVEBORDER = 'k-state-border', ACTIVEBORDERREGEXP = /k-state-border-(\w+)/, ACTIVECHILDREN = '.k-picker-wrap, .k-dropdown-wrap, .k-link', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), WINDOW = $(window), SCROLL = 'scroll', cssPrefix = support.transitions.css, TRANSFORM = cssPrefix + 'transform', extend = $.extend, NS = '.kendoPopup', styles = [
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, Class = kendo.Class, support = kendo.support, getOffset = kendo.getOffset, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, OPEN = 'open', CLOSE = 'close', DEACTIVATE = 'deactivate', ACTIVATE = 'activate', CENTER = 'center', LEFT = 'left', RIGHT = 'right', TOP = 'top', BOTTOM = 'bottom', ABSOLUTE = 'absolute', HIDDEN = 'hidden', BODY = 'body', LOCATION = 'location', POSITION = 'position', VISIBLE = 'visible', EFFECTS = 'effects', ACTIVE = 'k-state-active', ACTIVEBORDER = 'k-state-border', ACTIVEBORDERREGEXP = /k-state-border-(\w+)/, ACTIVECHILDREN = '.k-picker-wrap, .k-dropdown-wrap, .k-link', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), proxy = $.proxy, WINDOW = $(window), SCROLL = 'scroll', cssPrefix = support.transitions.css, TRANSFORM = cssPrefix + 'transform', extend = $.extend, NS = '.kendoPopup', styles = [
                 'font-size',
                 'font-family',
                 'font-stretch',
@@ -219,6 +219,35 @@
                     }
                     element.data(EFFECTS, animation.effects).kendoStop(true).kendoAnimate(animation);
                 }
+            },
+            _location: function (isFixed) {
+                var that = this, element = that.element, options = that.options, wrapper, anchor = $(options.anchor), mobile = element[0] && element.hasClass('km-widget');
+                if (options.copyAnchorStyles) {
+                    if (mobile && styles[0] == 'font-size') {
+                        styles.shift();
+                    }
+                    element.css(kendo.getComputedStyles(anchor[0], styles));
+                }
+                that.wrapper = wrapper = kendo.wrap(element, options.autosize).css({
+                    overflow: HIDDEN,
+                    display: 'block',
+                    position: ABSOLUTE
+                });
+                if (support.mobileOS.android) {
+                    wrapper.css(TRANSFORM, 'translatez(0)');
+                }
+                wrapper.css(POSITION);
+                if ($(options.appendTo)[0] == document.body) {
+                    wrapper.css(TOP, '-10000px');
+                }
+                that._position(isFixed || {});
+                var offset = wrapper.offset();
+                return {
+                    width: kendo._outerWidth(wrapper),
+                    height: kendo._outerHeight(wrapper),
+                    left: offset.left,
+                    top: offset.top
+                };
             },
             _openAnimation: function () {
                 var animation = extend(true, {}, this.options.animation.open);
@@ -474,6 +503,55 @@
             }
         });
         ui.plugin(Popup);
+        var tabKeyTrapNS = 'kendoTabKeyTrap';
+        var focusableNodesSelector = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex], *[contenteditable]';
+        var TabKeyTrap = Class.extend({
+            init: function (element) {
+                this.element = $(element);
+                this.element.autoApplyNS(tabKeyTrapNS);
+            },
+            trap: function () {
+                this.element.on('keydown', proxy(this._keepInTrap, this));
+            },
+            removeTrap: function () {
+                this.element.kendoDestroy(tabKeyTrapNS);
+            },
+            destroy: function () {
+                this.element.kendoDestroy(tabKeyTrapNS);
+                this.element = undefined;
+            },
+            shouldTrap: function () {
+                return true;
+            },
+            _keepInTrap: function (e) {
+                if (e.which !== 9 || !this.shouldTrap()) {
+                    return;
+                }
+                var target = e.target;
+                var elements = this.element.find(focusableNodesSelector).filter(':visible[tabindex!=-1]');
+                var focusableItems = elements.sort(function (prevEl, nextEl) {
+                    return prevEl.tabIndex - nextEl.tabIndex;
+                });
+                var focusableItemsCount = focusableItems.length;
+                var lastIndex = focusableItemsCount - 1;
+                var focusedItemIndex = focusableItems.index(target);
+                if (e.shiftKey) {
+                    if (focusedItemIndex === 0) {
+                        focusableItems.get(lastIndex).focus();
+                    } else {
+                        focusableItems.get(focusedItemIndex - 1).focus();
+                    }
+                } else {
+                    if (focusedItemIndex === lastIndex) {
+                        focusableItems.get(0).focus();
+                    } else {
+                        focusableItems.get(focusedItemIndex + 1).focus();
+                    }
+                }
+                e.preventDefault();
+            }
+        });
+        ui.Popup.TabKeyTrap = TabKeyTrap;
     }(window.kendo.jQuery));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {

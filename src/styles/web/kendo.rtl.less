@@ -235,7 +235,8 @@
     float: right;
 }
 
-.k-rtl .k-i-indent-increase 
+.k-rtl .k-i-indent-increase,
+.k-rtl .k-i-indent-decrease
 {
     transform: scaleX(-1);
 }
@@ -1099,5 +1100,22 @@
                 border-bottom-right-radius: 0;
             }
         }
+    }
+}
+
+.k-rtl .k-maskedtextbox .k-i-warning {
+    right: auto;
+    left: 0;
+}
+
+.k-rtl .k-dateinput .k-i-warning {
+    right: auto;
+    left: 0;
+}
+
+.k-rtl .k-datepicker .k-picker-wrap {
+    .k-i-warning {
+        left: 0;
+        right: auto;
     }
 }

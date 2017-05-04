@@ -560,6 +560,7 @@
                                 that._blur();
                             }
                         });
+                        e.preventDefault();
                     }
                 }
                 if (!altKey && !handled && that.filterInput) {
