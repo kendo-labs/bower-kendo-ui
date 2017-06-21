@@ -332,11 +332,14 @@
                 var isActive = that.input[0] === activeElement();
                 var data = that.dataSource.flatView();
                 var skip = that.listView.skip();
+                var length = data.length;
+                var groupsLength = that.dataSource._group.length;
                 var isFirstPage = skip === undefined || skip === 0;
                 that._presetValue = false;
                 that._renderFooter();
                 that._renderNoData();
-                that._toggleNoData(!data.length);
+                that._toggleNoData(!length);
+                that._toggleHeader(!!groupsLength && !!length);
                 that._resizePopup();
                 that.popup.position();
                 that._buildOptions(data);
@@ -412,7 +415,7 @@
                     }
                     this.listView.focus(-1);
                 } else {
-                    if (dataItem) {
+                    if (dataItem || dataItem === 0) {
                         value = this._dataValue(dataItem);
                         text = this._text(dataItem);
                     }
@@ -420,10 +423,29 @@
                         value = '';
                     }
                 }
-                this._prev = this.input[0].value = text;
+                this._setDomInputValue(text);
                 this._accessor(value !== undefined ? value : text, idx);
                 this._placeholder();
                 this._triggerCascade();
+            },
+            _setDomInputValue: function (text) {
+                var that = this;
+                var currentCaret = caret(this.input);
+                var caretStart;
+                if (currentCaret && currentCaret.length) {
+                    caretStart = currentCaret[0];
+                }
+                this._prev = this.input[0].value = text;
+                if (caretStart && this.selectedIndex === -1) {
+                    var mobile = support.mobileOS;
+                    if (mobile.wp || mobile.android) {
+                        setTimeout(function () {
+                            that.input[0].setSelectionRange(caretStart, caretStart);
+                        }, 0);
+                    } else {
+                        this.input[0].setSelectionRange(caretStart, caretStart);
+                    }
+                }
             },
             refresh: function () {
                 this.listView.refresh();

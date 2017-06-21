@@ -175,7 +175,7 @@
             },
             _bindInput: function () {
                 var that = this;
-                that.element.on('keydown' + ns, proxy(that._keydown, that)).on(INPUT_EVENT_NAME, proxy(that._input, that)).on('mouseup' + ns, proxy(that._mouseUp, that)).on('DOMMouseScroll' + ns + ' mousewheel' + ns, proxy(that._scroll, that));
+                that.element.on('paste' + ns, proxy(that._paste, that)).on('keydown' + ns, proxy(that._keydown, that)).on(INPUT_EVENT_NAME, proxy(that._input, that)).on('mouseup' + ns, proxy(that._mouseUp, that)).on('DOMMouseScroll' + ns + ' mousewheel' + ns, proxy(that._scroll, that));
             },
             _unbindInput: function () {
                 this.element.off('keydown' + ns).off('paste' + ns).off(INPUT_EVENT_NAME).off('mouseup' + ns).off('DOMMouseScroll' + ns + ' mousewheel' + ns);
@@ -299,6 +299,9 @@
                     };
                     that._formElement = form.on('reset', that._resetHandler);
                 }
+            },
+            _paste: function (e) {
+                e.preventDefault();
             },
             _keydown: function (e) {
                 var key = e.keyCode;

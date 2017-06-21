@@ -211,6 +211,10 @@ td.k-group-cell,
   border-color: #cccccc;
   background-color: #ebebeb;
 }
+.k-maskedtextbox.k-state-disabled > .k-textbox:hover,
+.k-dateinput.k-state-disabled > .k-textbox:hover {
+  border-color: #cccccc;
+}
 .k-textbox > input,
 .k-autocomplete .k-input,
 .k-dropdown-wrap .k-input,
@@ -3220,20 +3224,39 @@ td.k-state-focused.k-state-selected,
   margin-right: 0;
   margin-left: 0.7em;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid {
+.k-datepicker .k-picker-wrap.k-state-invalid,
+.k-timepicker .k-picker-wrap.k-state-invalid {
   border-color: #d92800;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid .k-input {
+.k-datepicker .k-picker-wrap.k-state-invalid .k-input,
+.k-timepicker .k-picker-wrap.k-state-invalid .k-input {
   color: #d92800;
 }
-.k-datepicker .k-picker-wrap .k-i-warning {
+.k-datepicker .k-picker-wrap .k-i-warning,
+.k-timepicker .k-picker-wrap .k-i-warning {
   color: #d92800;
   margin-left: 0;
   margin-right: 2.1em;
 }
-.k-rtl .k-datepicker .k-picker-wrap .k-i-warning {
+.k-rtl .k-datepicker .k-picker-wrap .k-i-warning,
+.k-rtl .k-timepicker .k-picker-wrap .k-i-warning {
   margin-right: 0;
   margin-left: 2.1em;
+}
+.k-datetimepicker .k-picker-wrap.k-state-invalid {
+  border-color: #d92800;
+}
+.k-datetimepicker .k-picker-wrap.k-state-invalid .k-input {
+  color: #d92800;
+}
+.k-datetimepicker .k-picker-wrap .k-i-warning {
+  color: #d92800;
+  margin-left: 0;
+  margin-right: 4.3em;
+}
+.k-rtl .k-datetimepicker .k-picker-wrap .k-icon.k-i-warning {
+  margin-right: 0;
+  margin-left: 4.3em;
 }
 .k-listbox .k-list-scroller {
   padding: 2px;
@@ -3256,10 +3279,6 @@ td.k-state-focused.k-state-selected,
 .k-grid-header .k-i-sort-desc-sm,
 .k-grid-header .k-sort-order {
   color: #428bca;
-}
-.k-grid-header .k-sort-order {
-  font-size: .7em;
-  vertical-align: bottom;
 }
 .k-menu-scroll-button {
   border-color: #cccccc;

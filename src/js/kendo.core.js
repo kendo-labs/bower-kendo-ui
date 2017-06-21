@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.2.504'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.2.621'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1284,7 +1284,7 @@
                 var width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height);
                 percentage = percentWidth || percentHeight;
                 if (!percentWidth && (!autosize || autosize && width)) {
-                    width = outerWidth(element);
+                    width = autosize ? outerWidth(element) + 1 : outerWidth(element);
                 }
                 if (!percentHeight && (!autosize || autosize && height)) {
                     height = outerHeight(element);
@@ -1310,7 +1310,7 @@
                 percentage = percentRegExp.test(wrapperStyle.width) || percentRegExp.test(wrapperStyle.height);
                 if (!percentage) {
                     wrapper.css({
-                        width: outerWidth(element),
+                        width: autosize ? outerWidth(element) + 1 : outerWidth(element),
                         height: outerHeight(element),
                         boxSizing: 'content-box',
                         mozBoxSizing: 'content-box',
@@ -1746,7 +1746,7 @@
             };
             if (support.browser.msie && (support.pointers || support.msPointers) && !positioned) {
                 var sign = support.isRtl(element) ? 1 : -1;
-                result.top -= window.pageYOffset + sign * document.documentElement.scrollTop;
+                result.top -= window.pageYOffset - document.documentElement.scrollTop;
                 result.left -= window.pageXOffset + sign * document.documentElement.scrollLeft;
             }
             return result;

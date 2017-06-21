@@ -470,7 +470,7 @@ html .k-error-colored {
 .k-animation-container *:after,
 .k-block .k-header,
 .k-list-container,
-div.k-window-content {
+.k-dialog .k-window-content {
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
 }
@@ -483,7 +483,8 @@ div.k-window-content {
 .k-grid-edit-row .k-widget,
 .k-grid-edit-row .text-box,
 .km-actionsheet > li,
-.km-shim {
+.km-shim,
+div.k-window-content {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
@@ -714,6 +715,12 @@ input.k-checkbox + label {
   display: inline-block;
   overflow: hidden;
   -ms-high-contrast-adjust: none;
+}
+.k-list-container .k-footer:before,
+.k-list-container .k-footer:after {
+  content: "";
+  display: block;
+  overflow: hidden;
 }
 /* responsive panel */
 .k-rpanel-left {
@@ -2559,20 +2566,22 @@ html .k-grid-edit-row .k-tooltip {
 .k-autofitting .k-detail-row {
   display: none !important;
 }
-.k-grid .k-edit-cell input.k-checkbox,
-.k-grid .k-grid-edit-row input.k-checkbox {
-  position: absolute;
-  width: 14px;
-  height: 15px;
-  z-index: 1;
-}
-.k-grid .k-edit-cell input.k-checkbox + label.k-checkbox-label,
-.k-grid .k-grid-edit-row input.k-checkbox + label.k-checkbox-label {
-  cursor: default;
-}
-.k-grid .k-grid-edit-row input.k-checkbox {
+.k-grid input.k-checkbox {
+  width: 16px;
+  height: 16px;
   margin-left: 1px;
   margin-top: 4px;
+  position: absolute;
+  z-index: 1;
+}
+.k-grid input.k-checkbox + label.k-checkbox-label {
+  cursor: default;
+}
+.k-grid .k-checkbox-label.k-no-text {
+  padding: 0;
+}
+.k-grid th input.k-checkbox {
+  margin-top: 1px;
 }
 .k-grid .k-edit-cell input[type='checkbox'],
 .k-grid .k-edit-cell input.k-checkbox {
@@ -2596,6 +2605,24 @@ html .k-grid-edit-row .k-tooltip {
 }
 .k-window .k-popup-edit-form .k-edit-field label.k-checkbox-label {
   margin-top: 0.6em;
+}
+.k-grid-header .k-i-sort-asc-sm,
+.k-grid-header .k-i-sort-desc-sm {
+  margin-left: 7px;
+}
+.k-grid-header .k-sort-order {
+  display: inline-block;
+  height: 16px;
+  line-height: 16px;
+  margin-top: 1px;
+  margin-left: -1px;
+  vertical-align: text-top;
+  font-size: 12px;
+}
+.k-grid-header .k-link .k-icon.k-i-sort-asc-sm,
+.k-grid-header .k-link .k-icon.k-i-sort-desc-sm {
+  margin-top: 1px;
+  vertical-align: text-top;
 }
 @media only screen and (max-width: 1024px) {
   .k-webkit .k-grid .k-pager-numbers,
@@ -4697,7 +4724,9 @@ div.k-flatcolorpicker {
 .k-dateinput.k-state-invalid .k-i-warning {
   display: inline-block;
 }
-.k-datepicker .k-picker-wrap .k-i-warning {
+.k-datepicker .k-picker-wrap .k-i-warning,
+.k-timepicker .k-picker-wrap .k-i-warning,
+.k-datetimepicker .k-picker-wrap .k-i-warning {
   display: none;
   position: absolute;
   right: 0;
@@ -4707,7 +4736,9 @@ div.k-flatcolorpicker {
           transform: translateY(-50%);
   overflow: visible;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid .k-i-warning {
+.k-datepicker .k-picker-wrap.k-state-invalid .k-i-warning,
+.k-timepicker .k-picker-wrap.k-state-invalid .k-i-warning,
+.k-datetimepicker .k-picker-wrap.k-state-invalid .k-i-warning {
   display: inline-block;
 }
 .k-listbox {
@@ -12170,6 +12201,10 @@ div.k-spreadsheet-window {
 .k-grid-header th.k-header,
 .k-filter-row th {
   padding: .786em .6em .786em 1.286em;
+}
+.k-rtl .k-grid-header th.k-header,
+.k-rtl .k-filter-row th {
+  padding: .786em 1.286em .786em .6em;
 }
 .k-filtercell > span {
   padding-right: 5.714em;

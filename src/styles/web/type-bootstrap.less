@@ -343,6 +343,12 @@ td.k-group-cell,
     background-color: @select-background-color;
 }
 
+.k-maskedtextbox.k-state-disabled > .k-textbox:hover,
+.k-dateinput.k-state-disabled > .k-textbox:hover
+{
+    border-color: @widget-border-color;
+}
+
 .k-textbox > input,
 .k-autocomplete .k-input,
 .k-dropdown-wrap .k-input,
@@ -3499,7 +3505,8 @@ td.k-state-focused.k-state-selected,
     margin-left: 0.7em;
 }
 
-.k-datepicker .k-picker-wrap {
+.k-datepicker .k-picker-wrap,
+.k-timepicker .k-picker-wrap {
     &.k-state-invalid {
         border-color: @input-validation-error;
 
@@ -3513,12 +3520,35 @@ td.k-state-focused.k-state-selected,
         margin-left:0;
         margin-right: 2.1em;
     }
+
+    .k-rtl & {
+        .k-i-warning {
+            margin-right: 0;
+            margin-left: 2.1em;
+        }
+    }
 }
 
-.k-rtl .k-datepicker .k-picker-wrap {
+.k-datetimepicker .k-picker-wrap {
+    &.k-state-invalid {
+        border-color: @input-validation-error;
+
+        .k-input {
+            color: @input-validation-error;
+        }
+    }
+
     .k-i-warning {
-        margin-right: 0;
-        margin-left: 2.1em;
+        color: @input-validation-error;
+        margin-left:0;
+        margin-right: 4.3em;
+    }
+
+    .k-rtl & {
+        .k-icon.k-i-warning {
+            margin-right: 0;
+            margin-left: 4.3em;
+        }
     }
 }
 
@@ -3551,11 +3581,6 @@ td.k-state-focused.k-state-selected,
     .k-i-sort-desc-sm,
     .k-sort-order {
         color: @accent;
-    }
-
-    .k-sort-order {
-        font-size: .7em;
-        vertical-align: bottom;
     }
 }
 

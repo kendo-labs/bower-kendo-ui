@@ -259,7 +259,9 @@
 .k-tooltip,
 .k-button-group .k-tool,
 .k-upload-files,
-.k-popup.k-align .k-list .k-item:last-child
+.k-popup.k-align .k-list .k-item:last-child,
+.k-maskedtextbox.k-state-disabled > .k-textbox:hover,
+.k-dateinput.k-state-disabled > .k-textbox:hover
 {
     border-color: @widget-border-color;
 }
@@ -2706,7 +2708,8 @@ html .km-pane-wrapper .km-widget,
     margin-left: 0.6em;
 }
 
-.k-datepicker .k-picker-wrap {
+.k-datepicker .k-picker-wrap,
+.k-timepicker .k-picker-wrap {
     &.k-state-invalid {
         border-color: @input-validation-error;
 
@@ -2720,12 +2723,34 @@ html .km-pane-wrapper .km-widget,
         margin-left:0;
         margin-right: 2.1em;
     }
+    .k-rtl & {
+        .k-i-warning {
+            margin-right: 0;
+            margin-left: 2.1em;
+        }
+    }
 }
 
-.k-rtl .k-datepicker .k-picker-wrap {
+.k-datetimepicker .k-picker-wrap {
+    &.k-state-invalid {
+        border-color: @input-validation-error;
+
+        .k-input {
+            color: @input-validation-error;
+        }
+    }
+
     .k-i-warning {
-        margin-right: 0;
-        margin-left: 2.1em;
+        color: @input-validation-error;
+        margin-left:0;
+        margin-right: 4.3em;
+    }
+
+    .k-rtl & {
+        .k-icon.k-i-warning {
+            margin-right: 0;
+            margin-left: 4.3em;
+        }
     }
 }
 
@@ -2753,10 +2778,5 @@ html .km-pane-wrapper .km-widget,
     .k-i-sort-desc-sm,
     .k-sort-order {
         color: @accent;
-    }
-
-    .k-sort-order {
-        font-size: .7em;
-        vertical-align: bottom;
     }
 }

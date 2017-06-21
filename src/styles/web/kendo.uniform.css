@@ -1598,7 +1598,9 @@ html .km-pane-wrapper .km-widget,
 }
 input.k-textbox,
 textarea.k-textbox,
-.k-multiselect.k-header {
+.k-multiselect.k-header,
+.k-maskedtextbox.k-state-disabled > .k-textbox:hover,
+.k-dateinput.k-state-disabled > .k-textbox:hover {
   border-color: #dbdbdb;
 }
 .k-multiselect.k-header.k-state-hover {
@@ -2584,20 +2586,39 @@ textarea.k-textbox,
   margin-right: 0;
   margin-left: 0.6em;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid {
+.k-datepicker .k-picker-wrap.k-state-invalid,
+.k-timepicker .k-picker-wrap.k-state-invalid {
   border-color: #f45835;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid .k-input {
+.k-datepicker .k-picker-wrap.k-state-invalid .k-input,
+.k-timepicker .k-picker-wrap.k-state-invalid .k-input {
   color: #f45835;
 }
-.k-datepicker .k-picker-wrap .k-i-warning {
+.k-datepicker .k-picker-wrap .k-i-warning,
+.k-timepicker .k-picker-wrap .k-i-warning {
   color: #f45835;
   margin-left: 0;
   margin-right: 2.1em;
 }
-.k-rtl .k-datepicker .k-picker-wrap .k-i-warning {
+.k-rtl .k-datepicker .k-picker-wrap .k-i-warning,
+.k-rtl .k-timepicker .k-picker-wrap .k-i-warning {
   margin-right: 0;
   margin-left: 2.1em;
+}
+.k-datetimepicker .k-picker-wrap.k-state-invalid {
+  border-color: #f45835;
+}
+.k-datetimepicker .k-picker-wrap.k-state-invalid .k-input {
+  color: #f45835;
+}
+.k-datetimepicker .k-picker-wrap .k-i-warning {
+  color: #f45835;
+  margin-left: 0;
+  margin-right: 4.3em;
+}
+.k-rtl .k-datetimepicker .k-picker-wrap .k-icon.k-i-warning {
+  margin-right: 0;
+  margin-left: 4.3em;
 }
 .k-listbox .k-list-scroller {
   padding: 2px;
@@ -2617,8 +2638,4 @@ textarea.k-textbox,
 .k-grid-header .k-i-sort-desc-sm,
 .k-grid-header .k-sort-order {
   color: inherit;
-}
-.k-grid-header .k-sort-order {
-  font-size: .7em;
-  vertical-align: bottom;
 }

@@ -664,7 +664,7 @@ html .k-error-colored
 .k-animation-container *:after,
 .k-block .k-header,
 .k-list-container,
-div.k-window-content
+.k-dialog .k-window-content
 {
     .box-sizing(content-box);
 }
@@ -678,7 +678,8 @@ div.k-window-content
 .k-grid-edit-row .k-widget,
 .k-grid-edit-row .text-box,
 .km-actionsheet > li,
-.km-shim
+.km-shim,
+div.k-window-content
 {
     .box-sizing(border-box);
 }
@@ -925,4 +926,19 @@ input.k-checkbox + label {
     display: inline-block;
     overflow: hidden;
     .disable-high-contrast();
+}
+
+// Header/Footer templates
+.k-list-container {
+
+    .k-footer {
+
+        // ensure right calculating of popup - expanding parent to children with margin
+        &:before,
+        &:after {
+            content: "";
+            display: block;
+            overflow: hidden;
+        }
+    }
 }

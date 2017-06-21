@@ -470,7 +470,7 @@ html .k-error-colored {
 .k-animation-container *:after,
 .k-block .k-header,
 .k-list-container,
-div.k-window-content {
+.k-dialog .k-window-content {
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
 }
@@ -483,7 +483,8 @@ div.k-window-content {
 .k-grid-edit-row .k-widget,
 .k-grid-edit-row .text-box,
 .km-actionsheet > li,
-.km-shim {
+.km-shim,
+div.k-window-content {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
@@ -714,6 +715,12 @@ input.k-checkbox + label {
   display: inline-block;
   overflow: hidden;
   -ms-high-contrast-adjust: none;
+}
+.k-list-container .k-footer:before,
+.k-list-container .k-footer:after {
+  content: "";
+  display: block;
+  overflow: hidden;
 }
 /* responsive panel */
 .k-rpanel-left {
@@ -2965,7 +2972,9 @@ div.k-flatcolorpicker {
 .k-dateinput.k-state-invalid .k-i-warning {
   display: inline-block;
 }
-.k-datepicker .k-picker-wrap .k-i-warning {
+.k-datepicker .k-picker-wrap .k-i-warning,
+.k-timepicker .k-picker-wrap .k-i-warning,
+.k-datetimepicker .k-picker-wrap .k-i-warning {
   display: none;
   position: absolute;
   right: 0;
@@ -2975,7 +2984,9 @@ div.k-flatcolorpicker {
           transform: translateY(-50%);
   overflow: visible;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid .k-i-warning {
+.k-datepicker .k-picker-wrap.k-state-invalid .k-i-warning,
+.k-timepicker .k-picker-wrap.k-state-invalid .k-i-warning,
+.k-datetimepicker .k-picker-wrap.k-state-invalid .k-i-warning {
   display: inline-block;
 }
 .k-listbox {

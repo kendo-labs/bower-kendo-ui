@@ -215,7 +215,9 @@ a.k-state-active.k-button-icon .k-icon:hover,
 .k-tooltip,
 .k-button-group .k-tool,
 .k-upload-files,
-.k-popup.k-align .k-list .k-item:last-child {
+.k-popup.k-align .k-list .k-item:last-child,
+.k-maskedtextbox.k-state-disabled > .k-textbox:hover,
+.k-dateinput.k-state-disabled > .k-textbox:hover {
   border-color: #e0e0e0;
 }
 .k-group,
@@ -2638,8 +2640,7 @@ html .km-pane-wrapper .km-widget,
 .k-spreadsheet-toolbar > .k-button {
   border-color: transparent;
 }
-.k-grid .k-edit-cell input.k-checkbox,
-.k-grid .k-grid-edit-row input.k-checkbox {
+.k-grid input.k-checkbox {
   width: 16px;
   height: 17px;
 }
@@ -2799,20 +2800,39 @@ html .km-pane-wrapper .km-widget,
   margin-right: 0;
   margin-left: 0.8em;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid {
+.k-datepicker .k-picker-wrap.k-state-invalid,
+.k-timepicker .k-picker-wrap.k-state-invalid {
   border-color: #ff404e;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid .k-input {
+.k-datepicker .k-picker-wrap.k-state-invalid .k-input,
+.k-timepicker .k-picker-wrap.k-state-invalid .k-input {
   color: #ff404e;
 }
-.k-datepicker .k-picker-wrap .k-i-warning {
+.k-datepicker .k-picker-wrap .k-i-warning,
+.k-timepicker .k-picker-wrap .k-i-warning {
   color: #ff404e;
   margin-left: 0;
   margin-right: 2.8em;
 }
-.k-rtl .k-datepicker .k-picker-wrap .k-i-warning {
+.k-rtl .k-datepicker .k-picker-wrap .k-i-warning,
+.k-rtl .k-timepicker .k-picker-wrap .k-i-warning {
   margin-right: 0;
   margin-left: 2.8em;
+}
+.k-datetimepicker .k-picker-wrap.k-state-invalid {
+  border-color: #ff404e;
+}
+.k-datetimepicker .k-picker-wrap.k-state-invalid .k-input {
+  color: #ff404e;
+}
+.k-datetimepicker .k-picker-wrap .k-i-warning {
+  color: #ff404e;
+  margin-left: 0;
+  margin-right: 5.3em;
+}
+.k-rtl .k-datetimepicker .k-picker-wrap .k-icon.k-i-warning {
+  margin-right: 0;
+  margin-left: 5.3em;
 }
 .k-listbox .k-list-scroller {
   margin: 0;
@@ -2863,11 +2883,7 @@ html .km-pane-wrapper .km-widget,
 .k-grid-header .k-sort-order {
   color: #ff4350;
   opacity: 1;
-}
-.k-grid-header .k-sort-order {
-  font-size: .7em;
-  vertical-align: text-top;
-  line-height: 1.5em;
+  margin-bottom: -1px;
 }
 .k-menu-scroll-button {
   border-width: 0;

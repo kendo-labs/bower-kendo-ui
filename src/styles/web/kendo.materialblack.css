@@ -2055,6 +2055,12 @@ span.k-colorpicker {
   -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 3px rgba(0, 0, 0, 0.05);
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 3px rgba(0, 0, 0, 0.05);
 }
+.k-maskedtextbox.k-state-disabled > .k-textbox:hover,
+.k-dateinput.k-state-disabled > .k-textbox:hover {
+  border-color: #616161;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
 .k-textbox:focus,
 .k-autocomplete.k-state-focused,
 .k-picker-wrap.k-state-focused,
@@ -3676,12 +3682,19 @@ div.k-scheduler-marquee:after {
 .k-spreadsheet-toolbar > .k-button:not(.k-overflow-anchor) {
   line-height: 2em;
 }
-.k-grid .k-edit-cell input.k-checkbox,
-.k-grid .k-grid-edit-row input.k-checkbox {
+.k-grid input.k-checkbox {
   margin-top: 5px;
   width: 16px;
   height: 16px;
   z-index: 2;
+}
+.k-rtl .k-grid .k-checkbox:focus + .k-checkbox-label:after,
+.k-rtl .k-grid .k-checkbox:active + .k-checkbox-label:after,
+.k-rtl .k-grid .k-checkbox + .k-checkbox-label:active:after,
+.k-rtl .k-grid .k-checkbox:checked:active + .k-checkbox-label:after,
+.k-rtl .k-grid .k-checkbox:checked + .k-checkbox-label:active:after {
+  left: auto;
+  right: 1px;
 }
 .k-window .k-popup-edit-form .k-edit-field input.k-checkbox {
   width: 16px;
@@ -3828,20 +3841,39 @@ div.k-scheduler-marquee:after {
   margin-right: 0;
   margin-left: 0.7em;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid {
+.k-datepicker .k-picker-wrap.k-state-invalid,
+.k-timepicker .k-picker-wrap.k-state-invalid {
   border-color: #c93b31;
 }
-.k-datepicker .k-picker-wrap.k-state-invalid .k-input {
+.k-datepicker .k-picker-wrap.k-state-invalid .k-input,
+.k-timepicker .k-picker-wrap.k-state-invalid .k-input {
   color: #c93b31;
 }
-.k-datepicker .k-picker-wrap .k-i-warning {
+.k-datepicker .k-picker-wrap .k-i-warning,
+.k-timepicker .k-picker-wrap .k-i-warning {
   color: #c93b31;
   margin-left: 0;
   margin-right: 2.8em;
 }
-.k-rtl .k-datepicker .k-picker-wrap .k-i-warning {
+.k-rtl .k-datepicker .k-picker-wrap .k-i-warning,
+.k-rtl .k-timepicker .k-picker-wrap .k-i-warning {
   margin-right: 0;
   margin-left: 2.8em;
+}
+.k-datetimepicker .k-picker-wrap.k-state-invalid {
+  border-color: #c93b31;
+}
+.k-datetimepicker .k-picker-wrap.k-state-invalid .k-input {
+  color: #c93b31;
+}
+.k-datetimepicker .k-picker-wrap .k-i-warning {
+  color: #c93b31;
+  margin-left: 0;
+  margin-right: 5.6em;
+}
+.k-rtl .k-datetimepicker .k-picker-wrap .k-icon.k-i-warning {
+  margin-right: 0;
+  margin-left: 5.6em;
 }
 .k-listbox .k-list-scroller {
   border-color: #4d4d4d;
@@ -3873,11 +3905,7 @@ div.k-scheduler-marquee:after {
 .k-grid-header .k-sort-order {
   color: inherit;
   opacity: 1;
-}
-.k-grid-header .k-sort-order {
-  font-size: .7em;
-  vertical-align: text-top;
-  line-height: 1.5em;
+  margin-bottom: -1px;
 }
 .k-menu-scroll-button {
   border-width: 0;

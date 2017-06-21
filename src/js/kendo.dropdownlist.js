@@ -859,7 +859,7 @@
                     idx = -1;
                 }
                 this._resetOptionLabel(' k-state-selected');
-                if (dataItem) {
+                if (dataItem || dataItem === 0) {
                     text = dataItem;
                     value = that._dataValue(dataItem);
                     if (optionLabel) {

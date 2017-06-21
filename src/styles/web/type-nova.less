@@ -145,7 +145,9 @@ a.k-state-active.k-button-icon .k-icon,
 .k-tooltip,
 .k-button-group .k-tool,
 .k-upload-files,
-.k-popup.k-align .k-list .k-item:last-child {
+.k-popup.k-align .k-list .k-item:last-child,
+.k-maskedtextbox.k-state-disabled > .k-textbox:hover,
+.k-dateinput.k-state-disabled > .k-textbox:hover {
     border-color: @widget-border-color;
 }
 
@@ -2260,8 +2262,7 @@ html .km-pane-wrapper .km-widget,
 @spreadsheet-page-orientation-border-color: lighten(@hover-text-color, 8%);
 
 .k-grid {
-    .k-edit-cell input.k-checkbox,
-    .k-grid-edit-row input.k-checkbox {
+    input.k-checkbox {
         width: 16px;
         height: 17px;
     }
@@ -2457,7 +2458,8 @@ html .km-pane-wrapper .km-widget,
     margin-left: 0.8em;
 }
 
-.k-datepicker .k-picker-wrap {
+.k-datepicker .k-picker-wrap,
+.k-timepicker .k-picker-wrap {
     &.k-state-invalid {
         border-color: @input-validation-error;
 
@@ -2471,12 +2473,35 @@ html .km-pane-wrapper .km-widget,
         margin-left:0;
         margin-right: 2.8em;
     }
+
+    .k-rtl & {
+        .k-i-warning {
+            margin-right: 0;
+            margin-left: 2.8em;
+        }
+    }
 }
 
-.k-rtl .k-datepicker .k-picker-wrap {
+.k-datetimepicker .k-picker-wrap {
+    &.k-state-invalid {
+        border-color: @input-validation-error;
+
+        .k-input {
+            color: @input-validation-error;
+        }
+    }
+
     .k-i-warning {
-        margin-right: 0;
-        margin-left: 2.8em;
+        color: @input-validation-error;
+        margin-left:0;
+        margin-right: 5.3em;
+    }
+
+    .k-rtl & {
+        .k-icon.k-i-warning {
+            margin-right: 0;
+            margin-left: 5.3em;
+        }
     }
 }
 
@@ -2542,12 +2567,7 @@ html .km-pane-wrapper .km-widget,
     .k-sort-order {
         color: @accent;
         opacity: 1;
-    }
-
-    .k-sort-order {
-        font-size: .7em;
-        vertical-align: text-top;
-        line-height: 1.5em;
+        margin-bottom: -1px;
     }
 }
 
