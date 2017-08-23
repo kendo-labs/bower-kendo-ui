@@ -11933,6 +11933,9 @@ div.k-spreadsheet-window {
   margin-left: 2px;
   padding: 0 !important;
 }
+.k-spreadsheet-editor-button.k-spreadsheet-last-column {
+  margin-left: -21px;
+}
 .k-spreadsheet-editor-button span {
   position: absolute;
   top: 50%;

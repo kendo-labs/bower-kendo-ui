@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.2.621'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.2.823'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -8326,7 +8326,13 @@
             read: function (data) {
                 var result = DataSource.fn.read.call(this, data);
                 if (this._hierarchicalFilter) {
-                    this.filter(this._hierarchicalFilter);
+                    if (this._data && this._data.length > 0) {
+                        this.filter(this._hierarchicalFilter);
+                    } else {
+                        this.options.filter = this._hierarchicalFilter;
+                        this._filter = normalizeFilter(this.options.filter);
+                        this._hierarchicalFilter = null;
+                    }
                 }
                 return result;
             },
@@ -8355,8 +8361,7 @@
                 if (val === undefined) {
                     return this._filter;
                 }
-                if (!this.options.serverFiltering) {
-                    this._markHierarchicalQuery(val);
+                if (!this.options.serverFiltering && this._markHierarchicalQuery(val)) {
                     val = {
                         logic: 'or',
                         filters: [
@@ -8383,7 +8388,10 @@
                 var filter;
                 expressions = normalizeFilter(expressions);
                 if (!expressions || expressions.filters.length === 0) {
-                    return this;
+                    this._updateHierarchicalFilter(function () {
+                        return true;
+                    });
+                    return false;
                 }
                 compiled = Query.filterExpr(expressions);
                 fields = compiled.fields;
@@ -8395,6 +8403,7 @@
                     };
                 }
                 this._updateHierarchicalFilter(filter);
+                return true;
             },
             _updateHierarchicalFilter: function (filter) {
                 var current;
