@@ -653,7 +653,7 @@ $.extend(true, kendo.spreadsheet.messages.dialogs,{
       "typeMessage": "Tyypin viesti"
     }
   },
-  "saveAsDialog": {
+  "exportAsDialog": {
     "title": "Tallenna nimellä...",
     "labels": {
       "fileName": "Tiedostonimi",

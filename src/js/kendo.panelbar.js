@@ -94,6 +94,9 @@
                 groupAttributes: function (group) {
                     return group.expanded !== true ? ' style=\'display:none\'' : '';
                 },
+                ariaHidden: function (group) {
+                    return group.expanded !== true;
+                },
                 groupCssClass: function () {
                     return 'k-group k-panel';
                 },
@@ -249,7 +252,7 @@
                 }
                 that.templates = {
                     content: template('<div role=\'region\' class=\'k-content\'#= contentAttributes(data) #>#= content(item) #</div>'),
-                    group: template('<ul role=\'group\' aria-hidden=\'true\' class=\'#= groupCssClass(group) #\'#= groupAttributes(group) #>' + '#= renderItems(data) #' + '</ul>'),
+                    group: template('<ul role=\'group\' aria-hidden=\'#= ariaHidden(group) #\' class=\'#= groupCssClass(group) #\'#= groupAttributes(group) #>' + '#= renderItems(data) #' + '</ul>'),
                     itemWrapper: template('# var url = ' + fieldAccessor('url') + '(item); #' + '# var imageUrl = ' + fieldAccessor('imageUrl') + '(item); #' + '# var spriteCssClass = ' + fieldAccessor('spriteCssClass') + '(item); #' + '# var contentUrl = contentUrl(item); #' + '# var tag = url||contentUrl ? \'a\' : \'span\'; #' + '<#= tag # class=\'#= textClass(item, group) #\' #= contentUrl ##= textAttributes(url) #>' + '# if (imageUrl) { #' + '<img class=\'k-image\' alt=\'\' src=\'#= imageUrl #\' />' + '# } #' + '# if (spriteCssClass) { #' + '<span class=\'k-sprite #= spriteCssClass #\'></span>' + '# } #' + '#= data.panelBar.options.template(data) #' + '#= arrow(data) #' + '</#= tag #>'),
                     item: template('<li role=\'menuitem\' #=aria(item)#class=\'#= wrapperCssClass(group, item) #\'' + kendo.attr('uid') + '=\'#= item.uid #\'>' + '#= itemWrapper(data) #' + '# if (item.items && item.items.length > 0) { #' + '#= subGroup({ items: item.items, panelBar: panelBar, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
                     loading: template('<div class=\'k-item\'><span class=\'k-icon k-i-loading\'></span> #: data.messages.loading #</div>'),
@@ -898,8 +901,10 @@
                         var dataItem = that.dataItem(referenceItem);
                         if (dataItem) {
                             dataItem.hasChildren = true;
+                            referenceItem.attr(ARIA_EXPANDED, dataItem.expanded).not('.' + ACTIVECLASS).children('ul').attr(ARIA_HIDDEN, !dataItem.expanded);
+                        } else {
+                            referenceItem.attr(ARIA_EXPANDED, false);
                         }
-                        referenceItem.attr(ARIA_EXPANDED, false);
                     }
                 } else {
                     if (typeof item == 'string' && item.charAt(0) != '<') {
@@ -925,11 +930,14 @@
                 }
             },
             _updateClasses: function () {
-                var that = this, panels, items;
+                var that = this, panels, items, expanded, panelsParent, dataItem;
                 panels = that.element.find('li > ul').not(function () {
                     return $(this).parentsUntil('.k-panelbar', 'div').length;
                 }).addClass('k-group k-panel').attr('role', 'group');
-                panels.parent().attr(ARIA_EXPANDED, false).not('.' + ACTIVECLASS).children('ul').attr(ARIA_HIDDEN, true).hide();
+                panelsParent = panels.parent();
+                dataItem = that.dataItem(panelsParent);
+                expanded = dataItem && dataItem.expanded || false;
+                panels.parent().attr(ARIA_EXPANDED, expanded).not('.' + ACTIVECLASS).children('ul').attr(ARIA_HIDDEN, !expanded).hide();
                 items = that.element.add(panels).children();
                 that._updateItemsClasses(items);
                 that.updateArrow(items);
@@ -1063,7 +1071,8 @@
                     that._animating = false;
                     return;
                 }
-                element.parent().attr(ARIA_EXPANDED, !visibility).attr(ARIA_HIDDEN, visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
+                element.attr(ARIA_HIDDEN, !!visibility);
+                element.parent().attr(ARIA_EXPANDED, !visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
                 if (visibility) {
                     animation = extend(collapse, { hide: true });
                     animation.complete = function () {

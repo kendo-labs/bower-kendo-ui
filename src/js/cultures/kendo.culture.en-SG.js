@@ -50,7 +50,7 @@
             currency: {
                 name: "Singapore Dollar",
                 abbr: "SGD",
-                pattern: ["($n)","$n"],
+                pattern: ["-$n","$n"],
                 decimals: 2,
                 ",": ",",
                 ".": ".",
@@ -63,7 +63,7 @@
                 days: {
                     names: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
                     namesAbbr: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
-                    namesShort: ["S","M","T","W","T","F","S"]
+                    namesShort: ["Su","Mo","Tu","We","Th","Fr","Sa"]
                 },
                 months: {
                     names: ["January","February","March","April","May","June","July","August","September","October","November","December"],

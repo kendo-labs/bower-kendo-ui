@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.2.621'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.3.913'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -790,7 +790,9 @@
                         newGroupSize = groupSizes.shift();
                         groupSize = newGroupSize !== undefined ? newGroupSize : groupSize;
                         if (groupSize === 0) {
-                            parts.push(integer.substring(0, idx));
+                            if (idx > 0) {
+                                parts.push(integer.substring(0, idx));
+                            }
                             break;
                         }
                     }
@@ -920,7 +922,7 @@
                 }
                 return newLocalInfo;
             }
-            function parseExact(value, format, culture) {
+            function parseExact(value, format, culture, strict) {
                 if (!value) {
                     return null;
                 }
@@ -1112,6 +1114,9 @@
                         }
                     }
                 }
+                if (strict && !/^\s*$/.test(value.substr(valueIdx))) {
+                    return null;
+                }
                 hasTime = hours !== null || minutes !== null || seconds || null;
                 if (year === null && month === null && day === null && hasTime) {
                     year = defaultYear;
@@ -1168,7 +1173,7 @@
                 }
                 return formats;
             }
-            kendo.parseDate = function (value, formats, culture) {
+            function internalParseDate(value, formats, culture, strict) {
                 if (objectToString.call(value) === '[object Date]') {
                     return value;
                 }
@@ -1197,12 +1202,18 @@
                 formats = isArray(formats) ? formats : [formats];
                 length = formats.length;
                 for (; idx < length; idx++) {
-                    date = parseExact(value, formats[idx], culture);
+                    date = parseExact(value, formats[idx], culture, strict);
                     if (date) {
                         return date;
                     }
                 }
                 return date;
+            }
+            kendo.parseDate = function (value, formats, culture) {
+                return internalParseDate(value, formats, culture, false);
+            };
+            kendo.parseExactDate = function (value, formats, culture) {
+                return internalParseDate(value, formats, culture, true);
             };
             kendo.parseInt = function (value, culture) {
                 var result = kendo.parseFloat(value, culture);
@@ -1305,7 +1316,10 @@
             } else {
                 var wrapper = element.parent('.k-animation-container'), wrapperStyle = wrapper[0].style;
                 if (wrapper.is(':hidden')) {
-                    wrapper.show();
+                    wrapper.css({
+                        display: '',
+                        position: ''
+                    });
                 }
                 percentage = percentRegExp.test(wrapperStyle.width) || percentRegExp.test(wrapperStyle.height);
                 if (!percentage) {
@@ -2364,15 +2378,22 @@
             Widget: Widget,
             DataBoundWidget: DataBoundWidget,
             roles: {},
-            progress: function (container, toggle) {
-                var mask = container.find('.k-loading-mask'), support = kendo.support, browser = support.browser, isRtl, leftRight, webkitCorrection, containerScrollLeft;
+            progress: function (container, toggle, options) {
+                var mask = container.find('.k-loading-mask'), support = kendo.support, browser = support.browser, isRtl, leftRight, webkitCorrection, containerScrollLeft, cssClass;
+                options = $.extend({}, {
+                    width: '100%',
+                    height: '100%',
+                    top: container.scrollTop(),
+                    opacity: false
+                }, options);
+                cssClass = options.opacity ? 'k-loading-mask k-opaque' : 'k-loading-mask';
                 if (toggle) {
                     if (!mask.length) {
                         isRtl = support.isRtl(container);
                         leftRight = isRtl ? 'right' : 'left';
                         containerScrollLeft = container.scrollLeft();
                         webkitCorrection = browser.webkit ? !isRtl ? 0 : container[0].scrollWidth - container.width() - 2 * containerScrollLeft : 0;
-                        mask = $('<div class=\'k-loading-mask\'><span class=\'k-loading-text\'>' + kendo.ui.progress.messages.loading + '</span><div class=\'k-loading-image\'/><div class=\'k-loading-color\'/></div>').width('100%').height('100%').css('top', container.scrollTop()).css(leftRight, Math.abs(containerScrollLeft) + webkitCorrection).prependTo(container);
+                        mask = $(kendo.format('<div class=\'{0}\'><span class=\'k-loading-text\'>{1}</span><div class=\'k-loading-image\'/><div class=\'k-loading-color\'/></div>', cssClass, kendo.ui.progress.messages.loading)).width(options.width).height(options.height).css('top', options.top).css(leftRight, Math.abs(containerScrollLeft) + webkitCorrection).prependTo(container);
                     }
                 } else if (mask) {
                     mask.remove();
@@ -2904,6 +2925,8 @@
                 return base;
             }
             function convert(date, fromOffset, toOffset) {
+                var tempToOffset = toOffset;
+                var diff;
                 if (typeof fromOffset == STRING) {
                     fromOffset = this.offset(date, fromOffset);
                 }
@@ -2913,7 +2936,11 @@
                 var fromLocalOffset = date.getTimezoneOffset();
                 date = new Date(date.getTime() + (fromOffset - toOffset) * 60000);
                 var toLocalOffset = date.getTimezoneOffset();
-                return new Date(date.getTime() + (toLocalOffset - fromLocalOffset) * 60000);
+                if (typeof tempToOffset == STRING) {
+                    tempToOffset = this.offset(date, tempToOffset);
+                }
+                diff = toLocalOffset - fromLocalOffset + (toOffset - tempToOffset);
+                return new Date(date.getTime() + diff * 60000);
             }
             function apply(date, timezone) {
                 return this.convert(date, date.getTimezoneOffset(), timezone);
@@ -2980,6 +3007,9 @@
                 return 1 + Math.floor(days / 7);
             }
             function weekInYear(date, weekStartDay) {
+                if (weekStartDay === undefined) {
+                    weekStartDay = kendo.culture().calendar.firstDay;
+                }
                 var prevWeekDate = addDays(date, -7);
                 var nextWeekDate = addDays(date, 7);
                 var weekNumber = calcWeekInYear(date, weekStartDay);
@@ -3000,7 +3030,7 @@
                 return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
             }
             function getMilliseconds(date) {
-                return date.getTime() - getDate(date);
+                return toInvariantTime(date).getTime() - getDate(toInvariantTime(date));
             }
             function isInTimeRange(value, min, max) {
                 var msMin = getMilliseconds(min), msMax = getMilliseconds(max), msValue;

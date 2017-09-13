@@ -43,7 +43,7 @@
 .km-root.km-retina textarea {
   font-size: 1em;
 }
-.km-root a {
+.km-root a:not(.k-button) {
   color: inherit;
 }
 .km-tablet {
@@ -676,6 +676,12 @@ button.km-button {
   line-height: 2.3em;
   margin-left: auto;
   margin-right: auto;
+}
+.km-view-title:before,
+.km-dialog-title:before {
+  content: "";
+  display: inline-block;
+  width: 0;
 }
 .km-horizontal .km-view-title {
   line-height: 2em;
@@ -5116,19 +5122,19 @@ body:before {
 .km-listgroupinset li:first-child > .km-listview-link,
 .km-listinset li:first-child > .km-listview-label,
 .km-listgroupinset li:first-child > .km-listview-label {
-  border-radius: 12px 12px 0 0;
+  border-radius: 2px 2px 0 0;
 }
 .km-listinset li:last-child > .km-listview-link,
 .km-listgroupinset li:last-child > .km-listview-link,
 .km-listinset li:last-child > .km-listview-label,
 .km-listgroupinset li:last-child > .km-listview-label {
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 2px 2px;
 }
 .km-listinset li:first-child:last-child > .km-listview-link,
 .km-listgroupinset li:first-child:last-child > .km-listview-link,
 .km-listinset li:first-child:last-child > .km-listview-label,
 .km-listgroupinset li:first-child:last-child > .km-listview-label {
-  border-radius: 12px;
+  border-radius: 2px;
 }
 .km-group-title {
   border-style: solid;
@@ -5368,19 +5374,19 @@ body:before {
 }
 /* Border-radius */
 .km-buttongroup > *:first-child {
-  border-radius: 13px 0 0 13px;
+  border-radius: 3px 0 0 3px;
 }
 .km-buttongroup > *:last-child {
-  border-radius: 0 13px 13px 0;
+  border-radius: 0 3px 3px 0;
 }
 .km-listinset > li:first-child,
 .km-popover-root .km-popup .km-header,
 .km-listgroupinset .km-list > li:first-child {
-  border-radius: 13px 13px 0 0;
+  border-radius: 3px 3px 0 0;
 }
 .km-listinset > li:last-child,
 .km-listgroupinset .km-list > li:last-child {
-  border-radius: 0 0 13px 13px;
+  border-radius: 0 0 3px 3px;
 }
 .km-button,
 .km-switch-handle,
@@ -5391,15 +5397,15 @@ body:before {
 .km-listview-label input[type=checkbox],
 .km-listinset > li:first-child:last-child,
 .km-listgroupinset .km-list > li:first-child:last-child {
-  border-radius: 13px;
+  border-radius: 3px;
 }
 .km-switch-wrapper,
 .km-switch-container,
 .km-switch-background {
-  border-radius: 14px;
+  border-radius: 4px;
 }
 .km-actionsheet-wrapper.km-popup {
-  padding: 13px 0;
+  padding: 3px 0;
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
           box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
@@ -5463,10 +5469,10 @@ body:before {
 .km-switch-wrapper,
 .km-switch-container,
 .km-switch-background {
-  border-radius: 14px;
+  border-radius: 4px;
 }
 .km-switch-handle {
-  border-radius: 13px;
+  border-radius: 3px;
 }
 .km-switch-container,
 .km-switch-wrapper {

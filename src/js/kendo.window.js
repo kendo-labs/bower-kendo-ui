@@ -45,7 +45,7 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', WINDOWEVENTSHANDLED = 'WindowEventsHandled', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl;
         function defined(x) {
             return typeof x != 'undefined';
         }
@@ -57,12 +57,13 @@
         }
         var Window = Widget.extend({
             init: function (element, options) {
-                var that = this, wrapper, offset = {}, visibility, display, position, isVisible = false, content, windowContent, suppressActions = options && options.actions && !options.actions.length, id;
+                var that = this, wrapper, offset = {}, visibility, display, position, isVisible = false, content, windowContent, windowFrame, globalWindow, suppressActions = options && options.actions && !options.actions.length, id;
                 Widget.fn.init.call(that, element, options);
                 options = that.options;
                 position = options.position;
                 element = that.element;
                 content = options.content;
+                globalWindow = $(window);
                 if (suppressActions) {
                     options.actions = [];
                 }
@@ -117,11 +118,27 @@
                 if (options.visible && options.modal) {
                     that._overlay(wrapper.is(VISIBLE)).css({ opacity: 0.5 });
                 }
-                wrapper.on('mouseenter' + NS, TITLEBAR_BUTTONS, proxy(that._buttonEnter, that)).on('mouseleave' + NS, TITLEBAR_BUTTONS, proxy(that._buttonLeave, that)).on('click' + NS, '> ' + TITLEBAR_BUTTONS, proxy(that._windowActionHandler, that));
+                wrapper.on('mouseenter' + NS, TITLEBAR_BUTTONS, proxy(that._buttonEnter, that)).on('mouseleave' + NS, TITLEBAR_BUTTONS, proxy(that._buttonLeave, that)).on('click' + NS, '> ' + TITLEBAR_BUTTONS, proxy(that._windowActionHandler, that)).on('keydown' + NS, proxy(that._keydown, that)).on('focus' + NS, proxy(that._focus, that)).on('blur' + NS, proxy(that._blur, that));
                 windowContent.on('keydown' + NS, proxy(that._keydown, that)).on('focus' + NS, proxy(that._focus, that)).on('blur' + NS, proxy(that._blur, that));
+                windowFrame = windowContent.find('.' + KCONTENTFRAME)[0];
+                if (windowFrame && !globalWindow.data(WINDOWEVENTSHANDLED)) {
+                    globalWindow.on('blur' + NS, function () {
+                        var element = $(document.activeElement).parent(KWINDOWCONTENT);
+                        if (element.length) {
+                            var windowInstance = kendo.widgetInstance(element);
+                            windowInstance._focus();
+                        }
+                    });
+                    globalWindow.on('focus' + NS, function () {
+                        $(KWINDOWCONTENT).each(function (i, element) {
+                            kendo.widgetInstance($(element))._blur();
+                        });
+                    });
+                    globalWindow.data(WINDOWEVENTSHANDLED, true);
+                }
                 this._resizable();
                 this._draggable();
-                if (options.pinned) {
+                if (options.pinned && isVisible) {
                     that.pin();
                 }
                 id = element.attr('id');
@@ -186,7 +203,7 @@
                     this.element.css('maxHeight', maxHeight);
                 }
                 if (width) {
-                    if (width.toString().indexOf('%') > 0) {
+                    if (isNaN(width) && width.toString().indexOf('px') < 0) {
                         wrapper.width(width);
                     } else {
                         wrapper.width(constrain(width, options.minWidth, options.maxWidth));
@@ -195,7 +212,7 @@
                     wrapper.width('');
                 }
                 if (height) {
-                    if (height.toString().indexOf('%') > 0) {
+                    if (isNaN(height) && height.toString().indexOf('px') < 0) {
                         wrapper.height(height);
                     } else {
                         wrapper.height(constrain(height, options.minHeight, options.maxHeight));
@@ -282,6 +299,9 @@
                 container.html(kendo.render(templates.action, actions));
             },
             setOptions: function (options) {
+                var cachedOptions = JSON.parse(JSON.stringify(options));
+                extend(options.position, this.options.position);
+                extend(options.position, cachedOptions.position);
                 Widget.fn.setOptions.call(this, options);
                 var scrollable = this.options.scrollable !== false;
                 this.restore();
@@ -360,14 +380,41 @@
                 })) > -1;
             },
             _keydown: function (e) {
-                var that = this, options = that.options, keys = kendo.keys, keyCode = e.keyCode, wrapper = that.wrapper, offset, handled, distance = 10, isMaximized = that.options.isMaximized, newWidth, newHeight, w, h;
+                var that = this, options = that.options, keys = kendo.keys, keyCode = e.keyCode, wrapper = that.wrapper, offset, handled, distance = 10, isMaximized = that.options.isMaximized, isMinimized = that.options.isMinimized, newWidth, newHeight, w, h;
                 if (keyCode == keys.ESC && that._closable()) {
                     that._close(false);
                 }
                 if (e.target != e.currentTarget || that._closing) {
                     return;
                 }
-                if (options.draggable && !e.ctrlKey && !isMaximized) {
+                if (e.altKey && keyCode == 82) {
+                    that.refresh();
+                }
+                if (e.altKey && keyCode == 80) {
+                    if (that.options.pinned) {
+                        that.unpin();
+                    } else {
+                        that.pin();
+                    }
+                }
+                if (e.altKey && keyCode == keys.UP) {
+                    if (isMinimized) {
+                        that.restore();
+                        that.element.focus();
+                    } else if (!isMaximized) {
+                        that.maximize();
+                        that.element.focus();
+                    }
+                } else if (e.altKey && keyCode == keys.DOWN) {
+                    if (!isMinimized && !isMaximized) {
+                        that.minimize();
+                        that.wrapper.focus();
+                    } else if (isMaximized) {
+                        that.restore();
+                        that.element.focus();
+                    }
+                }
+                if (options.draggable && !e.ctrlKey && !e.altKey && !isMaximized) {
                     offset = kendo.getOffset(wrapper);
                     if (keyCode == keys.UP) {
                         handled = wrapper.css('top', offset.top - distance);
@@ -379,7 +426,7 @@
                         handled = wrapper.css('left', offset.left + distance);
                     }
                 }
-                if (options.resizable && e.ctrlKey && !isMaximized) {
+                if (options.resizable && e.ctrlKey && !isMaximized && !isMinimized) {
                     if (keyCode == keys.UP) {
                         handled = true;
                         newHeight = wrapper.height() - distance;
@@ -573,7 +620,10 @@
                 if (options.isMaximized) {
                     that._documentScrollTop = doc.scrollTop();
                     that._documentScrollLeft = doc.scrollLeft();
-                    $('html, body').css(OVERFLOW, HIDDEN);
+                    that._stopDocumentScrolling();
+                }
+                if (options.pinned && !that._isPinned) {
+                    that.pin();
                 }
                 return that;
             },
@@ -628,7 +678,7 @@
                     });
                 }
                 if (that.options.isMaximized) {
-                    $('html, body').css(OVERFLOW, '');
+                    that._enableDocumentScrolling();
                     if (that._documentScrollTop && that._documentScrollTop > 0) {
                         doc.scrollTop(that._documentScrollTop);
                     }
@@ -676,7 +726,15 @@
                 }
                 that.element.find('> .k-overlay').remove();
                 if (that._shouldFocus(target)) {
-                    that.element.focus();
+                    if (that.isMinimized()) {
+                        that.wrapper.focus();
+                    } else if ($(target).is(KOVERLAY)) {
+                        setTimeout(function () {
+                            that.element.focus();
+                        });
+                    } else {
+                        that.element.focus();
+                    }
                     var scrollTop = $(window).scrollTop(), windowTop = parseInt(wrapper.position().top, 10);
                     if (!that.options.pinned && windowTop > 0 && windowTop < scrollTop) {
                         if (scrollTop > 0) {
@@ -714,9 +772,14 @@
                     width: restoreOptions.width,
                     height: restoreOptions.height
                 }).removeClass(MAXIMIZEDSTATE).find('.k-window-content,.k-resize-handle').show().end().find('.k-window-titlebar .k-i-window-restore').parent().remove().end().end().find(MINIMIZE_MAXIMIZE).parent().show().end().end().find(PIN_UNPIN).parent().show();
+                if (options.isMaximized) {
+                    that.wrapper.find('.k-i-window-maximize').parent().focus();
+                } else if (options.isMinimized) {
+                    that.wrapper.find('.k-i-window-minimize').parent().focus();
+                }
                 that.options.width = restoreOptions.width;
                 that.options.height = restoreOptions.height;
-                $('html, body').css(OVERFLOW, '');
+                that._enableDocumentScrolling();
                 if (this._documentScrollTop && this._documentScrollTop > 0) {
                     doc.scrollTop(this._documentScrollTop);
                 }
@@ -724,6 +787,8 @@
                     doc.scrollLeft(this._documentScrollLeft);
                 }
                 options.isMaximized = options.isMinimized = false;
+                this.wrapper.removeAttr('tabindex');
+                this.wrapper.removeAttr('aria-labelled-by');
                 that.resize();
                 return that;
             },
@@ -740,6 +805,7 @@
                 callback.call(that);
                 that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().toggle(actionId !== 'maximize');
                 that.trigger(actionId);
+                wrapper.find('.k-i-window-restore').parent().focus();
                 return that;
             },
             maximize: function () {
@@ -756,11 +822,40 @@
                     }).addClass(MAXIMIZEDSTATE);
                     this._documentScrollTop = doc.scrollTop();
                     this._documentScrollLeft = doc.scrollLeft();
-                    $('html, body').css(OVERFLOW, HIDDEN);
+                    that._stopDocumentScrolling();
                     that.options.isMaximized = true;
                     that._onDocumentResize();
                 });
                 return this;
+            },
+            _stopDocumentScrolling: function () {
+                var that = this;
+                var $body = $('body');
+                that._storeOverflowRule($body);
+                $body.css(OVERFLOW, HIDDEN);
+                var $html = $('html');
+                that._storeOverflowRule($html);
+                $html.css(OVERFLOW, HIDDEN);
+            },
+            _enableDocumentScrolling: function () {
+                var that = this;
+                that._restoreOverflowRule($(document.body));
+                that._restoreOverflowRule($('html'));
+            },
+            _storeOverflowRule: function ($element) {
+                var overflowRule = $element.get(0).style.overflow;
+                if (overflowRule) {
+                    $element.data(DATADOCOVERFLOWRULE, overflowRule);
+                }
+            },
+            _restoreOverflowRule: function ($element) {
+                var overflowRule = $element.data(DATADOCOVERFLOWRULE);
+                if (overflowRule) {
+                    $element.css(OVERFLOW, overflowRule);
+                    $element.removeData(DATADOCOVERFLOWRULE);
+                } else {
+                    $element.css(OVERFLOW, '');
+                }
             },
             isMaximized: function () {
                 return this.options.isMaximized;
@@ -775,6 +870,8 @@
                     that.element.hide();
                     that.options.isMinimized = true;
                 });
+                this.wrapper.attr('tabindex', 0);
+                this.wrapper.attr('aria-labelled-by', this.element.attr('aria-labelled-by'));
                 return this;
             },
             isMinimized: function () {
@@ -789,6 +886,7 @@
                         left: left - win.scrollLeft()
                     });
                     wrapper.children(KWINDOWTITLEBAR).find(KPIN).addClass('k-i-unpin').removeClass('k-i-pin');
+                    that._isPinned = true;
                     that.options.pinned = true;
                     that.options.draggable = false;
                 }
@@ -802,6 +900,7 @@
                         left: left + win.scrollLeft()
                     });
                     wrapper.children(KWINDOWTITLEBAR).find(KUNPIN).addClass('k-i-pin').removeClass('k-i-unpin');
+                    that._isPinned = false;
                     that.options.pinned = false;
                     that.options.draggable = true;
                 }
@@ -811,8 +910,10 @@
                 if (!that.options.isMaximized) {
                     return;
                 }
-                w = wnd.width() / zoomLevel;
-                h = wnd.height() / zoomLevel - parseInt(wrapper.css('padding-top'), 10);
+                var lrBorderWidth = parseInt(wrapper.css('border-left-width'), 10) + parseInt(wrapper.css('border-right-width'), 10);
+                var tbBorderWidth = parseInt(wrapper.css('border-top-width'), 10) + parseInt(wrapper.css('border-bottom-width'), 10);
+                w = wnd.width() / zoomLevel - lrBorderWidth;
+                h = wnd.height() / zoomLevel - parseInt(wrapper.css('padding-top'), 10) - tbBorderWidth;
                 wrapper.css({
                     width: w,
                     height: h

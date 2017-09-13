@@ -34,13 +34,13 @@
     kendo.cultures["ar-LY"] = {
         name: "ar-LY",
         numberFormat: {
-            pattern: ["n-"],
+            pattern: ["-n"],
             decimals: 3,
             ",": ",",
             ".": ".",
             groupSize: [3],
             percent: {
-                pattern: ["-n %","n %"],
+                pattern: ["-n%","n%"],
                 decimals: 3,
                 ",": ",",
                 ".": ".",
@@ -50,12 +50,12 @@
             currency: {
                 name: "Libyan Dinar",
                 abbr: "LYD",
-                pattern: ["$n-","$n"],
+                pattern: ["-n $","n $"],
                 decimals: 3,
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
-                symbol: "د.ل.‏‏"
+                symbol: "د.ل.‏"
             }
         },
         calendars: {

@@ -25,7 +25,8 @@
 (function (f, define) {
     define('kendo.dropdownlist', [
         'kendo.list',
-        'kendo.mobile.scroller'
+        'kendo.mobile.scroller',
+        'kendo.virtuallist'
     ], f);
 }(function () {
     var __meta__ = {
@@ -185,6 +186,7 @@
                     }
                     if (that.filterInput && that.options.minLength !== 1) {
                         that.refresh();
+                        that._dataSource();
                         that.popup.one('activate', that._focusInputHandler);
                         that.popup.open();
                         that._resizeFilterInput();
@@ -192,7 +194,9 @@
                         that._filterSource();
                     }
                 } else if (that._allowOpening()) {
+                    that._open = true;
                     that.popup.one('activate', that._focusInputHandler);
+                    that.popup._hovered = true;
                     that.popup.open();
                     that._resizeFilterInput();
                     that._focusItem();
@@ -476,6 +480,7 @@
                 e.preventDefault();
                 this.popup.unbind('activate', this._focusInputHandler);
                 this._focused = this.wrapper;
+                this._prevent = false;
                 this._toggle();
             },
             _editable: function (options) {
@@ -533,6 +538,9 @@
                 if (key === keys.ENTER && that._typingTimeout && that.filterInput && isPopupVisible) {
                     e.preventDefault();
                     return;
+                }
+                if (key === keys.SPACEBAR) {
+                    that.toggle(!isPopupVisible);
                 }
                 handled = that._move(e);
                 if (handled) {
@@ -691,7 +699,7 @@
                 if (filterInput && filterInput[0] === element[0] && touchEnabled) {
                     return;
                 }
-                if (filterInput && compareElement[0] === active) {
+                if (filterInput && (compareElement[0] === active || this._open)) {
                     this._prevent = true;
                     this._focused = element.focus();
                 }

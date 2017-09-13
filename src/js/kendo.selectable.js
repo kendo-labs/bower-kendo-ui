@@ -56,6 +56,7 @@
                 that.element.addClass(SELECTABLE);
                 that.relatedTarget = that.options.relatedTarget;
                 multiple = that.options.multiple;
+                INPUTSELECTOR = that.options.inputSelectors;
                 if (this.options.aria && multiple) {
                     that.element.attr('aria-multiselectable', true);
                 }
@@ -73,6 +74,7 @@
             options: {
                 name: 'Selectable',
                 filter: '>*',
+                inputSelectors: INPUTSELECTOR,
                 multiple: false,
                 relatedTarget: $.noop
             },
@@ -102,13 +104,13 @@
                 }
                 target = target.add(that.relatedTarget(target));
                 if (shiftKey) {
-                    that.selectRange(that._firstSelectee(), target);
+                    that.selectRange(that._firstSelectee(), target, e);
                 } else {
                     if (selected && ctrlKey) {
                         that._unselect(target);
-                        that._notify(CHANGE);
+                        that._notify(CHANGE, e);
                     } else {
-                        that.value(target);
+                        that.value(target, e);
                     }
                     that._lastActive = that._downTarget = target;
                 }
@@ -158,13 +160,13 @@
                 that._invalidateSelectables(position, e.event.ctrlKey || e.event.metaKey);
                 e.preventDefault();
             },
-            _end: function () {
+            _end: function (e) {
                 var that = this;
                 that._marquee.remove();
                 that._unselect(that.element.find(that.options.filter + '.' + UNSELECTING)).removeClass(UNSELECTING);
                 var target = that.element.find(that.options.filter + '.' + ACTIVE);
                 target = target.add(that.relatedTarget(target));
-                that.value(target);
+                that.value(target, e);
                 that._lastActive = that._downTarget;
                 that._items = null;
             },
@@ -190,13 +192,13 @@
                     }
                 }
             },
-            value: function (val) {
+            value: function (val, e) {
                 var that = this, selectElement = proxy(that._selectElement, that);
                 if (val) {
                     val.each(function () {
                         selectElement(this);
                     });
-                    that._notify(CHANGE);
+                    that._notify(CHANGE, e);
                     return;
                 }
                 return that.element.find(that.options.filter + '.' + SELECTED);
@@ -252,7 +254,7 @@
                 var items = this.element.find(this.options.filter + '.' + SELECTED);
                 this._unselect(items);
             },
-            selectRange: function (start, end) {
+            selectRange: function (start, end, e) {
                 var that = this, idx, tmp, items;
                 that.clear();
                 if (that.element.length > 1) {
@@ -274,7 +276,7 @@
                 for (idx = start; idx <= end; idx++) {
                     that._selectElement(items[idx]);
                 }
-                that._notify(CHANGE);
+                that._notify(CHANGE, e);
             },
             destroy: function () {
                 var that = this;

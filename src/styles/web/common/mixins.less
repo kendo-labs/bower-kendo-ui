@@ -86,6 +86,14 @@
     box-sizing: @sizing;
 }
 
+.button-inner-size( @multiplier: 1 ) {
+    @button-inner-size: calc( (2 * @button-padding-y + @line-height) * @multiplier );
+}
+
+.button-size( @multiplier: 1, @button-border-width: 1px ) {
+    @button-size: calc( (2 * @button-border-width + 2 * @button-padding-y + @line-height) * @multiplier );
+}
+
 .transform(...) {
     transform: @arguments;
 }
@@ -110,7 +118,7 @@
     border-radius: @value;
 }
 
-.box-shadow(...) {
+.box-shadow(@shadow; @rest...) when not (@shadow = false) {
     box-shadow: @arguments;
 }
 

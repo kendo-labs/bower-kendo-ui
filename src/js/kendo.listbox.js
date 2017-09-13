@@ -1246,7 +1246,7 @@
                 tools: []
             },
             _initTemplates: function () {
-                this.templates = { tool: kendoTemplate('<li>' + '<a href=\'\\\\#\' class=\'k-button k-button-icon k-tool\' data-command=\'#= command #\' title=\'#= text #\' aria-label=\'#= text #\' role=\'button\'>' + '<span class=\'k-icon #= iconClass #\'></span>' + '</a>' + '</li>') };
+                this.templates = { tool: kendoTemplate('<li>' + '<a href=\'\\\\#\' class=\'k-button k-button-icon\' data-command=\'#= command #\' title=\'#= text #\' aria-label=\'#= text #\' role=\'button\'>' + '<span class=\'k-icon #= iconClass #\'></span>' + '</a>' + '</li>') };
             },
             _createTools: function () {
                 var that = this;

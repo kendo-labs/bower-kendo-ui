@@ -25,7 +25,8 @@
 (function (f, define) {
     define('kendo.autocomplete', [
         'kendo.list',
-        'kendo.mobile.scroller'
+        'kendo.mobile.scroller',
+        'kendo.virtuallist'
     ], f);
 }(function () {
     var __meta__ = {
@@ -93,6 +94,7 @@
                 }).on('focusout' + ns, function () {
                     that._change();
                     that._placeholder();
+                    that.close();
                     wrapper.removeClass(FOCUSED);
                 }).attr({
                     autocomplete: 'off',
@@ -380,6 +382,13 @@
                 this._accessor(this.value().split(this._separator()).join(this._defaultSeparator()));
                 return this;
             },
+            _preselect: function (value, text) {
+                this._inputValue(text);
+                this._accessor(value);
+                this._old = this.oldText = this._accessor();
+                this.listView.setValue(value);
+                this._placeholder();
+            },
             _change: function () {
                 var that = this;
                 var value = that._unifySeparators().value();
@@ -424,6 +433,8 @@
                 if (key === keys.DOWN) {
                     if (visible) {
                         this._move(current ? 'focusNext' : 'focusFirst');
+                    } else if (that.value()) {
+                        that.popup.open();
                     }
                     e.preventDefault();
                 } else if (key === keys.UP) {
@@ -431,6 +442,10 @@
                         this._move(current ? 'focusPrev' : 'focusLast');
                     }
                     e.preventDefault();
+                } else if (key === keys.HOME) {
+                    this._move('focusFirst');
+                } else if (key === keys.END) {
+                    this._move('focusLast');
                 } else if (key === keys.ENTER || key === keys.TAB) {
                     if (key === keys.ENTER && visible) {
                         e.preventDefault();
@@ -449,6 +464,8 @@
                 } else if (key === keys.ESC) {
                     if (visible) {
                         e.preventDefault();
+                    } else {
+                        that._clearValue();
                     }
                     that.close();
                 } else if (that.popup.visible() && (key === keys.PAGEDOWN || key === keys.PAGEUP)) {
@@ -558,6 +575,7 @@
                 });
                 if (this.options.clearButton) {
                     this._clear.insertAfter(this.element);
+                    this.wrapper.addClass('k-autocomplete-clearable');
                 }
             },
             _toggleHover: function (e) {

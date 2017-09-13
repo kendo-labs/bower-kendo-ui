@@ -37,7 +37,6 @@
 /* main gradient */
 
 .k-block,
-.k-button,
 .k-header,
 .k-grid-header,
 .k-toolbar,
@@ -78,9 +77,7 @@
 .k-input[type="text"],
 .k-input[type="number"],
 .k-textbox,
-.k-picker-wrap .k-input,
-.k-button
-{
+.k-picker-wrap .k-input {
     font-size: 100%;
     font-family: inherit;
     border-style: solid;
@@ -120,48 +117,6 @@
 
 /* button */
 
-.k-button
-{
-    display: inline-block;
-    margin: 0;
-    padding: @button-padding;
-    font-family: inherit;
-    line-height: 1.72em;
-    text-align: center;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.k-button[disabled],
-.k-button.k-state-disabled,
-.k-state-disabled .k-button,
-.k-state-disabled .k-button:hover,
-.k-button.k-state-disabled:hover,
-.k-state-disabled .k-button:active,
-.k-button.k-state-disabled:active
-{
-    cursor: default;
-}
-
-a.k-button
-{
-    .prohibit-selection;
-    text-decoration: none;
-}
-
-/* Override the important default line-height in Firefox 4+ */
-.k-ff input.k-button {
-    padding-bottom: 0.37em;
-    padding-top: 0.37em;
-}
-
-button.k-button::-moz-focus-inner,
-input.k-button::-moz-focus-inner
-{
-    padding: 0;
-    border: 0;
-}
-
 a.k-button-expand
 {
     display: block;
@@ -175,81 +130,9 @@ input[type="reset"].k-button-expand
     width: 100%;
 }
 
-body .k-button-icon,
-body .k-split-button-arrow
-{
-    padding-left: .4em;
-    padding-right: .4em;
-}
-
-.k-button-icontext
-{
-    overflow: visible; /*IE9*/
-}
-
 .k-toolbar .k-button-icontext
 {
     padding-right: .8em;
-}
-
-.k-button-icontext .k-icon,
-.k-button-icontext .k-image,
-.k-button-icontext .k-sprite
-{
-    margin-right: 3px;
-    margin-right: .3rem;
-    margin-left: -3px;
-    margin-left: -.3rem;
-}
-
-.k-button.k-button-icontext .k-icon,
-.k-button.k-button-icontext .k-image
-{
-    vertical-align: text-top;
-}
-
-// Bare button
-.k-button.k-bare {
-    border-color: transparent !important;
-    color: inherit;
-    background: none !important;
-    box-shadow: none !important;
-    opacity: .7;
-
-    &:hover,
-    &.k-state-hover,
-    &:active,
-    &.k-state-active,
-    &.k-state-active:hover {
-        color: inherit;
-    }
-
-    &:focus,
-    .k-state-focused {
-        opacity: .8;
-    }
-
-    &:hover,
-    &.k-state-hover,
-    &:active,
-    &.k-state-active {
-        opacity: 1;
-    }
-
-    // Icon
-    .k-icon,
-    .k-font-icon {
-        overflow: visible;
-    }
-
-    &:focus,
-    .k-state-focused {
-        .k-icon,
-        .k-font-icon {
-            text-shadow: 0 0 3px currentColor;
-        }
-    }
-
 }
 
 /* link */
@@ -271,7 +154,6 @@ body .k-split-button-arrow
 .k-state-disabled,
 .k-state-disabled .k-link,
 .k-state-disabled .k-icon,
-.k-state-disabled .k-button,
 .k-state-disabled .k-draghandle,
 .k-state-disabled .k-upload-button input
 {
@@ -301,115 +183,9 @@ body .k-split-button-arrow
 
 @grid-size: 16px;
 
-// outputs background-position
-.sprite-position(@row, @column) when (ispixel(@column)) {
-    background-position: @row @column;
-}
-
-// outputs background-position in a grid
-.sprite-position(@row, @column, @size: @grid-size) when not (ispixel(@column)) {
-    background-position: (-@row * @size) (-@column * @size);
-}
-
-// outputs background-position and hover state background position
-.sprite-hoverable(@row, @column, @size: @grid-size) when (ispixel(@column)) {
-    .sprite-position(@row, @column);
-
-    .k-link:not(.k-state-disabled):hover > &,
-    .k-state-hover > &,
-    .k-state-hover > * > &,
-    .k-button:not(.k-state-disabled):hover &,
-    .k-textbox:hover &,
-    .k-button:active & {
-        .sprite-position((@row - @size), @column);
-    }
-}
-
-// outputs background-position and hover state background position
-.sprite-hoverable-rtl(@row, @column, @size: @grid-size) when (ispixel(@column)) {
-
-    .k-rtl & {
-        .sprite-position(@row, @column);
-    }
-
-    .k-rtl .k-link:not(.k-state-disabled):hover > &,
-    .k-rtl .k-state-hover > &,
-    .k-rtl .k-state-hover > * > &,
-    .k-rtl .k-button:not(.k-state-disabled):hover &,
-    .k-rtl .k-textbox:hover &,
-    .k-rtl .k-button:active & {
-        .sprite-position(@row - @size, @column);
-
-        & when (@icon-positioning = "material") {
-            .sprite-position(@row, @column);
-        }
-    }
-}
-
-// outputs background-position and hover state background position, aligned in a grid
-.sprite-hoverable(@row, @column, @size: @grid-size) when not (ispixel(@column)) and not (@icon-positioning = "material") {
-    .sprite-position(@row, @column, @size);
-
-    .k-link:not(.k-state-disabled):hover > &,
-    .k-state-hover > &,
-    .k-state-hover > * > &,
-    .k-button:not(.k-state-disabled):hover &,
-    .k-textbox:hover &,
-    .k-button:active & {
-        .sprite-position((@row + 1), @column, @size);
-    }
-}
-
-// sprite positioning for material theme
-.sprite-hoverable(@row, @column, @size: @grid-size) when not (ispixel(@column)) and (@icon-positioning = "material") {
-    .sprite-position(@row, @column, @size);
-
-    .k-link:not(.k-state-disabled):hover > &,
-    .k-state-hover > &,
-    .k-state-hover > * > &,
-    .k-button:not(.k-state-disabled):hover &,
-    .k-textbox:hover &,
-    .k-button:active & {
-        .sprite-position(@row, @column, @size);
-    }
-}
-
-// outputs background-position and hover state background position, aligned in a grid
-.sprite-hoverable-rtl(@row, @column, @size: @grid-size) when not (ispixel(@column)) {
-    .k-rtl & {
-        .sprite-position(@row, @column, @size);
-    }
-
-    .k-rtl .k-link:not(.k-state-disabled):hover > &,
-    .k-rtl .k-state-hover > &,
-    .k-rtl .k-state-hover > * > &,
-    .k-rtl .k-button:not(.k-state-disabled):hover &,
-    .k-rtl .k-textbox:hover &,
-    .k-rtl .k-button:active & {
-        .sprite-position((@row + 1), @column, @size);
-
-        & when (@icon-positioning = "material") {
-            .sprite-position(@row, @column);
-        }
-    }
-}
-
 .k-icon.k-i-none
 {
     background-image: none !important; /* should never be a background on these */
-}
-
-/* In IE7 vertical align: middle can't be overridden */
-.k-ie8 .k-icon,
-.k-ie8 .k-sprite,
-.k-ie8 .k-tool-icon
-{
-    vertical-align: middle;
-}
-
-.k-file > .k-icon
-{
-    background-position:-115px -91px;
 }
 
 .k-image
@@ -477,6 +253,13 @@ html .k-error-colored
 .k-loading-mask
 {
     z-index: 100;
+}
+
+.k-loading-mask.k-opaque
+{
+    .k-loading-color {
+        opacity: 1;
+    }
 }
 
 .k-loading-mask .k-loading-progress {
@@ -568,8 +351,8 @@ html .k-error-colored
     height: 4px;
 }
 
-.k-reorder-cue .k-i-arrow-60-down { top: -4px; background-position: -4px -166px; }
-.k-reorder-cue .k-i-arrow-60-up { bottom: -4px; background-position: -4px -134px; }
+.k-reorder-cue .k-i-arrow-60-down { top: -4px; }
+.k-reorder-cue .k-i-arrow-60-up { bottom: -4px; }
 
 /* virtual scrollbar */
 
@@ -669,7 +452,6 @@ html .k-error-colored
     .box-sizing(content-box);
 }
 
-.k-button,
 .k-textbox,
 .k-autocomplete,
 .k-tabstrip > .k-content > .km-scroll-container,
@@ -693,11 +475,6 @@ div.k-window-content
 .form-control.k-widget
 {
     padding: 0;
-}
-
-a.k-button:hover
-{
-    text-decoration: none;
 }
 
 /* override iOS styles in mobile Kendo */
@@ -738,7 +515,7 @@ input.k-checkbox,
 .k-radio-label {
    display: inline-block;
    position: relative;
-   padding-left: (@checkbox-size + (4 * @checkbox-border-width));
+   padding-left: (@checkbox-size * 1.8);
    vertical-align: text-top;
    line-height: 16px;
    cursor: pointer;
@@ -808,24 +585,6 @@ input.k-checkbox,
    cursor: auto;
 }
 
-// Remove Checkboxes / Radio buttons styling for IE 8
-.k-ie8 input.k-checkbox,
-.k-ie8 .k-radio {
-    display: inline-block;
-    width: auto;
-}
-
-.k-ie8 .k-checkbox-label,
-.k-ie8 .k-radio-label {
-    padding-left: 0;
-}
-
-.k-ie8 .k-checkbox-label:before,
-.k-ie8 .k-radio-label:before,
-.k-ie8 .k-radio-label:after {
-    display: none;
-}
-
 /* RTL for checkboxes and radio buttons */
 .k-rtl .k-checkbox-label,
 .k-rtl .k-radio-label {
@@ -863,24 +622,25 @@ input.k-checkbox + label {
     -ms-scroll-snap-type: proximity;
 }
 
-/* Font Icons */
-.k-icon,
-.k-font-icon,
-.k-font-icon.k-icon,
-.k-font-icon.k-tool-icon {
-    .use-font-icon();
-    overflow: visible;
-    color: inherit;
-}
-.k-icon:before,
-.k-font-icon:before {
-    width: 1em;
-    height: 1em;
-    display: inline-block;
+// Horizontal rule
+.k-hr {
+    margin: .5em auto;
+    padding: 0;
+    height: 0;
+    border-width: 1px 0 0;
+    border-style: solid;
+    display: block;
+    float: none;
+    clear: both;
 }
 
+/* Font Icons */
 .k-icon,
-.k-tool-icon,
+.k-tool-icon {
+    .use-font-icon();
+    color: inherit;
+}
+
 .k-i-drag-and-drop,
 .k-column-menu .k-sprite,
 .k-grid-mobile .k-resize-handle-inner:before,
@@ -891,22 +651,23 @@ input.k-checkbox + label {
     .use-font-icon();
 }
 .k-icon:before {
-    width: initial;
-    height: initial;
+    margin: auto;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    display: inline-block;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    margin: auto;
-    height: 1em;
-    line-height: 1;
 }
 
 .k-button.k-button-icon .k-icon,
 .k-grid-filter .k-icon,
 .k-header .k-icon {
     text-indent: -99999px;
+    overflow: hidden;
 
     &:before {
         text-indent: 0;
@@ -924,6 +685,7 @@ input.k-checkbox + label {
     background-repeat: no-repeat;
     background-color: transparent;
     display: inline-block;
+    vertical-align: middle;
     overflow: hidden;
     .disable-high-contrast();
 }
@@ -940,5 +702,31 @@ input.k-checkbox + label {
             display: block;
             overflow: hidden;
         }
+    }
+}
+
+// Reorder cue
+.k-reorder-cue {
+    position: absolute;
+
+    &::before,
+    &::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border: 3px solid transparent;
+        position: absolute;
+        transform: translateX(-50%);
+    }
+
+    &::before {
+        border-bottom-width: 0;
+        border-top-color: currentColor;
+        top: -4px;
+    }
+    &::after {
+        border-top-width: 0;
+        border-bottom-color: currentColor;
+        bottom: -4px;
     }
 }

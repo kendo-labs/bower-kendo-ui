@@ -729,7 +729,9 @@
                         view = e.addedDataItems || dataSource.flatView();
                         parents = this.bindings[bindingName]._parents();
                         for (idx = 0, length = view.length; idx < length; idx++) {
-                            bindElement(items[idx], view[idx], this._ns(e.ns), [view[idx]].concat(parents));
+                            if (items[idx]) {
+                                bindElement(items[idx], view[idx], this._ns(e.ns), [view[idx]].concat(parents));
+                            }
                         }
                     }
                 },

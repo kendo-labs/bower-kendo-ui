@@ -26,7 +26,9 @@
 @input-indent: .8em;
 @editor-icon-size: 36px;
 @menu-link-padding: 1.071em;
-@button-padding: 10px 14px;
+@button-padding-x: 14px;
+@button-padding-y: 10px;
+@button-padding: @button-padding-y @button-padding-x;
 @treeview-inner-padding: 0.429em 0.6667em 0.429em 0.5833em;
 @treeview-inner-margin: 1px 0 1px 0.3333em;
 @scheduler-link-padding: 0 1.1em;
@@ -41,7 +43,12 @@
 
 .k-button {
     line-height: 1.143em;
-    padding: 10px 14px;
+}
+
+.k-button-icon,
+.k-split-button-arrow {
+    height: calc(1.143em + (2*@button-padding-y) + 2px); // ensure inline-flex height
+    width: calc(1.143em + (2*@button-padding-y) + 2px);
 }
 
 .k-widget.k-tabstrip
@@ -487,6 +494,9 @@
 .k-multiselect-wrap li span {
     margin-right: .4em;
 }
+.k-multiselect-wrap li span.k-icon {
+    margin: 0;
+}
 
 .k-multiselect-wrap .k-select
 {
@@ -539,7 +549,11 @@ table.k-editor {
     border-spacing: 0;
 }
 
-.k-editor .k-editable-area {
+.k-editor.k-resizable .k-editable-area {
+    padding-bottom: 20px;
+}
+
+.k-editor .k-editable-area .k-content {
     border-width: 1px 0 0;
 }
 
@@ -552,14 +566,6 @@ table.k-editor {
 }
 
 .k-toolbar {
-    .k-button-group,
-    .k-button-group .k-button {
-        line-height: inherit;
-    }
-
-    .k-button-group .k-button {
-        padding: 0 11px;
-    }
 
     .k-button,
     .k-split-button,
@@ -568,11 +574,6 @@ table.k-editor {
     label,
     .k-separator {
         line-height: 1.143em;
-    }
-
-    .k-button {
-        padding-top: 9px;
-        padding-bottom: 9px;
     }
 
     .k-input {
@@ -659,24 +660,8 @@ table.k-editor {
 }
 
 .k-filebrowser {
-    .k-filebrowser-toolbar {
-        line-height: 3.5em;
-    }
-
-    .k-filebrowser-toolbar .k-upload {
-        margin-top: 3px;
-    }
-
-    .k-filebrowser-toolbar .k-button-icon {
-        margin-top: -3px;
-    }
-
-    .k-upload .k-upload-button {
-        vertical-align: bottom;
-    }
 
     .k-search-wrap .k-search {
-        top: 25%;
         right: 4px;
     }
 
@@ -723,18 +708,18 @@ span.k-tooltip
     right: 0;
 }
 
+.k-dialog .k-dialog-titlebar .k-dialog-actions {
+    top: 0;
+    right: 0;
+}
+
 .k-window-titlebar .k-window-action
 {
-    width: 48px;
-    height: 48px;
+    width: 3.342em;
+    height: 3.342em;
     text-align: center;
     padding: 0;
     border-width: 0;
-}
-
-.k-window-titlebar .k-window-action > .k-icon
-{
-    margin-top: 16px;
 }
 
 div.k-window {
@@ -807,7 +792,7 @@ div.editorToolbarWindow.k-window-content {
     }
 
     .k-task-draghandle {
-        margin-left: 24px;
+        margin: 0 23px;
         border-width: 8px;
         border-radius: 0 50% 50% 50%;
         border-style: solid;
@@ -829,16 +814,20 @@ div.editorToolbarWindow.k-window-content {
     padding: 1.786em;
 }
 
+.k-gantt-edit-form > .k-edit-form-container {
+    .k-textbox,
+    .k-numerictextbox
+    {
+        width: 19.5em;
+    }
+}
+
 .k-notification-wrap > .k-i-close {
     top: 21px;
 }
 
 .k-slider-track {
     border-width: 0;
-}
-
-.k-slider .k-button .k-icon {
-    margin-top: 5px;
 }
 
 .k-slider-horizontal .k-slider-track,
@@ -903,16 +892,6 @@ div.editorToolbarWindow.k-window-content {
             line-height: @selected-icon-height;
             font-size: @selected-icon-height;
         }
-    }
-}
-
-/* Editor */
-.editor-icon(@x, @y) {
-    background-position: @x @y;
-
-    .k-state-hover &,
-    .k-state-selected & {
-        background-position: @x @y;
     }
 }
 
@@ -1091,6 +1070,21 @@ form.k-filter-menu .k-textbox {
     margin: 0 6px;
 }
 
+.k-rtl {
+
+    .k-gantt {
+
+        .k-task-template {
+            padding: .643em .6em .643em 1.4em;
+        }
+
+        .k-task-draghandle {
+            border-width: 8px;
+            border-radius: 50% 0 50% 50%;
+        }
+    }
+}
+
 .km-pane-wrapper .k-pager-numbers .k-link,
 .km-pane-wrapper .k-pager-numbers .k-state-selected,
 .km-pane-wrapper .k-pager-wrap>.k-link {
@@ -1147,13 +1141,6 @@ li.k-item.k-last.k-state-selected {
 }
 
 .k-spreadsheet-window {
-    .k-page-orientation {
-        top: 27%;
-    }
-
-    .k-page-landscape {
-        top: 30%;
-    }
 
     .k-edit-label,
     .k-edit-field {

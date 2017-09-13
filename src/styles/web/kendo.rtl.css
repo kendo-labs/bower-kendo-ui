@@ -309,6 +309,12 @@
   float: left;
   margin-left: 0;
 }
+.k-rtl button.k-gantt-toggle {
+  float: right;
+  margin-right: 0;
+  margin-left: .5em;
+}
+/* Grid */
 .k-rtl .k-grid tbody td:last-child,
 .k-rtl .k-grid thead th:last-child {
   border-left-width: 0;
@@ -355,9 +361,6 @@
 .k-rtl .k-task-actions {
   right: auto;
   left: 4px;
-}
-.k-rtl .k-task-draghandle {
-  margin-right: 16px;
 }
 .k-rtl .k-task-dot:after {
   margin-right: 4px;
@@ -786,9 +789,6 @@
 .k-rtl .k-datetimepicker .k-picker-wrap .k-icon.k-i-warning {
   right: auto;
   left: 0;
-}
-.k-rtl .k-grid td {
-  position: relative;
 }
 .k-rtl .k-grid th .k-checkbox {
   margin-top: 0;

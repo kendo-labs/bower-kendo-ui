@@ -198,43 +198,9 @@
     border-radius: @border-radius;
 }
 
-.k-spreadsheet-window {
-    .export-config,
-    .k-edit-field > .k-orientation-label {
-        border-color: @widget-border-color;
-    }
-
-    .k-edit-field > input[type="radio"]:checked+.k-orientation-label {
-        .composite-background(@spreadsheet-page-orientation-gradient);
-        background-color: @accent;
-        color: lighten(@selected-text-color, 12%);
-    }
-
-    .k-page-orientation {
-        border-color: @spreadsheet-page-orientation-border-color;
-        box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.1)
-    }
-
-    .k-page-orientation:before {
-        background: @spreadsheet-page-orientation-background;
-        border-color: transparent;
-        border-bottom-color: @spreadsheet-page-orientation-border-color;
-        border-left-color: @spreadsheet-page-orientation-border-color;
-    }
-
-    .k-margins-horizontal,
-    .k-margins-vertical {
-        background: transparent;
-        border-color: @widget-border-color;
-    }
-
-    .hint-wrapper:before {
-        background: @widget-border-color;
-    }
-}
-
 .k-spreadsheet-toolbar {
-    &.k-toolbar .k-button-group .k-button {
+
+    &.k-toolbar .k-button-group .k-button:not(.k-toggle-button) {
         border-radius: @border-radius;
     }
 

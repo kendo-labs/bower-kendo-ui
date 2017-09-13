@@ -45,7 +45,7 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', KHIDING = 'k-hiding', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-#=typeIcon#" title="#=typeIcon#"></span>' + '#=content#' + '<span class="k-icon k-i-close" title="Hide"></span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', KHIDING = 'k-hiding', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-popup k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-#=typeIcon#" title="#=typeIcon#"></span>' + '#=content#' + '<span class="k-icon k-i-close" title="Hide"></span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
         var Notification = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -201,6 +201,7 @@
                     }
                 });
                 that._attachPopupEvents(options, popup);
+                wrapper.removeClass('k-group k-reset');
                 if (openPopup[0]) {
                     popup.open();
                 } else {
@@ -266,7 +267,7 @@
             },
             _showStatic: function (wrapper, options) {
                 var that = this, autoHideAfter = options.autoHideAfter, animation = options.animation, insertionMethod = options.stacking == UP || options.stacking == LEFT ? 'prependTo' : 'appendTo';
-                wrapper.addClass(that._guid)[insertionMethod](options.appendTo).hide().kendoAnimate(animation.open || false);
+                wrapper.removeClass('k-popup').addClass(that._guid)[insertionMethod](options.appendTo).hide().kendoAnimate(animation.open || false);
                 that._attachStaticEvents(options, wrapper);
                 if (autoHideAfter > 0) {
                     setTimeout(function () {

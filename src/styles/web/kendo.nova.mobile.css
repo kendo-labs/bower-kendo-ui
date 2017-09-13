@@ -43,7 +43,7 @@
 .km-root.km-retina textarea {
   font-size: 1em;
 }
-.km-root a {
+.km-root a:not(.k-button) {
   color: inherit;
 }
 .km-tablet {
@@ -676,6 +676,12 @@ button.km-button {
   line-height: 2.3em;
   margin-left: auto;
   margin-right: auto;
+}
+.km-view-title:before,
+.km-dialog-title:before {
+  content: "";
+  display: inline-block;
+  width: 0;
 }
 .km-horizontal .km-view-title {
   line-height: 2em;
@@ -5406,11 +5412,11 @@ body:before {
 .km-widget,
 .km-content,
 .km-popover-root .km-content .km-widget {
-  color: #4c5356;
+  color: #32364c;
   background: #fff;
 }
 .km-navbar {
-  color: #4c5356;
+  color: #32364c;
   background: #fff;
 }
 .km-view {
@@ -5418,12 +5424,12 @@ body:before {
 }
 /* NavBar */
 .km-navbar {
-  border-color: rgba(76, 83, 86, 0.2);
+  border-color: rgba(50, 54, 76, 0.2);
 }
 /* Button */
 .km-button {
   background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(76, 83, 86, 0.2);
+  border-color: rgba(50, 54, 76, 0.2);
 }
 .km-state-active[style*=background] {
   -webkit-box-shadow: inset 0 0 0 1000px rgba(128, 128, 128, 0.4);
@@ -5431,8 +5437,8 @@ body:before {
 }
 /* Badges and Details */
 .km-detail {
-  color: #4c5356;
-  border-color: rgba(76, 83, 86, 0.2);
+  color: #32364c;
+  border-color: rgba(50, 54, 76, 0.2);
   background-color: #fff;
 }
 .km-detail:active,
@@ -5475,37 +5481,37 @@ body:before {
 /* ListView */
 .km-list > li {
   background: #f2f2f2;
-  border-color: rgba(76, 83, 86, 0.2);
+  border-color: rgba(50, 54, 76, 0.2);
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
           box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .km-listinset > li:first-child,
 .km-listgroupinset .km-list > li:first-child {
-  border-color: rgba(76, 83, 86, 0.2);
+  border-color: rgba(50, 54, 76, 0.2);
 }
 .km-listinset > li:last-child,
 .km-listgroupinset .km-list > li:last-child {
-  border-color: rgba(76, 83, 86, 0.2);
+  border-color: rgba(50, 54, 76, 0.2);
 }
 .km-listview-link:after {
-  color: #97a0a4;
+  color: #747ba3;
 }
 .km-group-title {
   background: #fff;
-  border-color: rgba(76, 83, 86, 0.2);
+  border-color: rgba(50, 54, 76, 0.2);
 }
 /* ScrollView */
 .km-pages li {
-  background: rgba(76, 83, 86, 0.2);
+  background: rgba(50, 54, 76, 0.2);
 }
 /* Filter box */
 .km-filter-wrap:before,
 .km-filter-reset .km-clear {
-  color: #4c5356;
+  color: #32364c;
 }
 .km-filter-wrap > input {
-  color: #4c5356;
-  border-color: rgba(76, 83, 86, 0.2);
+  color: #32364c;
+  border-color: rgba(50, 54, 76, 0.2);
 }
 .km-filter-wrap > input:focus {
   border-color: #000;
@@ -5528,10 +5534,10 @@ body:before {
 .km-list select:not([multiple]),
 .km-list .k-dropdown-wrap,
 .km-list textarea {
-  color: #4c5356;
+  color: #32364c;
 }
 .km-list .k-dropdown-wrap .k-input {
-  color: #4c5356;
+  color: #32364c;
 }
 .km-list select:not([multiple]) option {
   color: #333;
@@ -5557,7 +5563,7 @@ body:before {
 /* Checkboxes and Radios */
 .km-listview-label input[type=radio],
 .km-listview-label input[type=checkbox] {
-  border-color: rgba(76, 83, 86, 0.2);
+  border-color: rgba(50, 54, 76, 0.2);
   background: #fff;
 }
 .km-listview-label input[type=checkbox]:checked:after {
@@ -5611,7 +5617,7 @@ body:before {
   background: rgba(0, 0, 0, 0.05);
 }
 .km-loader h1 {
-  color: #4c5356;
+  color: #32364c;
 }
 /* Active States */
 .km-tabstrip {

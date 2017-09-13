@@ -65,8 +65,13 @@
                 }
                 parentPopup = $(that.options.anchor).closest('.k-popup,.k-group').filter(':not([class^=km-])');
                 options.appendTo = $($(options.appendTo)[0] || parentPopup[0] || document.body);
-                that.element.hide().addClass('k-popup k-group k-reset').toggleClass('k-rtl', !!options.isRtl).css({ position: ABSOLUTE }).appendTo(options.appendTo).on('mouseenter' + NS, function () {
+                that.element.hide().addClass('k-popup k-group k-reset').toggleClass('k-rtl', !!options.isRtl).css({ position: ABSOLUTE }).appendTo(options.appendTo).attr('aria-hidden', true).on('mouseenter' + NS, function () {
                     that._hovered = true;
+                }).on('wheel' + NS, function (e) {
+                    var scrollArea = $(this).find('.k-list').parent();
+                    if (scrollArea.scrollTop() === 0 && e.originalEvent.deltaY < 0 || scrollArea.scrollTop() === scrollArea.prop('scrollHeight') - scrollArea.prop('offsetHeight') && e.originalEvent.deltaY > 0) {
+                        e.preventDefault();
+                    }
                 }).on('mouseleave' + NS, function () {
                     that._hovered = false;
                 });
@@ -204,7 +209,7 @@
                         overflow: HIDDEN,
                         display: 'block',
                         position: ABSOLUTE
-                    });
+                    }).attr('aria-hidden', false);
                     if (support.mobileOS.android) {
                         wrapper.css(TRANSFORM, 'translatez(0)');
                     }
@@ -217,7 +222,7 @@
                     if (options.anchor != BODY) {
                         that._showDirClass(animation);
                     }
-                    element.data(EFFECTS, animation.effects).kendoStop(true).kendoAnimate(animation);
+                    element.data(EFFECTS, animation.effects).kendoStop(true).kendoAnimate(animation).attr('aria-hidden', false);
                 }
             },
             _location: function (isFixed) {
@@ -313,8 +318,8 @@
                         }
                         that._closing = true;
                     }
-                    that.element.kendoStop(true);
-                    wrap.css({ overflow: HIDDEN });
+                    that.element.kendoStop(true).attr('aria-hidden', true);
+                    wrap.css({ overflow: HIDDEN }).attr('aria-hidden', true);
                     that.element.kendoAnimate(animation);
                     if (skipEffects) {
                         that._animationClose();
@@ -504,6 +509,7 @@
             }
         });
         ui.plugin(Popup);
+        var stableSort = kendo.support.stableSort;
         var tabKeyTrapNS = 'kendoTabKeyTrap';
         var focusableNodesSelector = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex], *[contenteditable]';
         var TabKeyTrap = Class.extend({
@@ -525,31 +531,56 @@
                 return true;
             },
             _keepInTrap: function (e) {
-                if (e.which !== 9 || !this.shouldTrap()) {
+                if (e.which !== 9 || !this.shouldTrap() || e.isDefaultPrevented()) {
                     return;
                 }
-                var target = e.target;
-                var elements = this.element.find(focusableNodesSelector).filter(':visible[tabindex!=-1]');
-                var focusableItems = elements.sort(function (prevEl, nextEl) {
-                    return prevEl.tabIndex - nextEl.tabIndex;
-                });
-                var focusableItemsCount = focusableItems.length;
-                var lastIndex = focusableItemsCount - 1;
-                var focusedItemIndex = focusableItems.index(target);
-                if (e.shiftKey) {
-                    if (focusedItemIndex === 0) {
-                        focusableItems.get(lastIndex).focus();
-                    } else {
-                        focusableItems.get(focusedItemIndex - 1).focus();
-                    }
-                } else {
-                    if (focusedItemIndex === lastIndex) {
-                        focusableItems.get(0).focus();
-                    } else {
-                        focusableItems.get(focusedItemIndex + 1).focus();
-                    }
-                }
+                var elements = this._focusableElements();
+                var sortedElements = this._sortFocusableElements(elements);
+                var next = this._nextFocusable(e, sortedElements);
+                this._focus(next);
                 e.preventDefault();
+            },
+            _focusableElements: function () {
+                var elements = this.element.find(focusableNodesSelector).filter(function (i, item) {
+                    return item.tabIndex >= 0 && $(item).is(':visible');
+                });
+                if (this.element.is('[tabindex]')) {
+                    elements.push(this.element[0]);
+                }
+                return elements;
+            },
+            _sortFocusableElements: function (elements) {
+                var sortedElements;
+                if (stableSort) {
+                    sortedElements = elements.sort(function (prev, next) {
+                        return prev.tabIndex - next.tabIndex;
+                    });
+                } else {
+                    var attrName = '__k_index';
+                    elements.each(function (i, item) {
+                        item.setAttribute(attrName, i);
+                    });
+                    sortedElements = elements.sort(function (prev, next) {
+                        return prev.tabIndex === next.tabIndex ? parseInt(prev.getAttribute(attrName), 10) - parseInt(next.getAttribute(attrName), 10) : prev.tabIndex - next.tabIndex;
+                    });
+                    elements.removeAttr(attrName);
+                }
+                return sortedElements;
+            },
+            _nextFocusable: function (e, elements) {
+                var count = elements.length;
+                var current = elements.index(e.target);
+                return elements.get((current + (e.shiftKey ? -1 : 1)) % count);
+            },
+            _focus: function (element) {
+                element.focus();
+                if (element.nodeName == 'INPUT' && element.setSelectionRange && this._haveSelectionRange(element)) {
+                    element.setSelectionRange(0, element.value.length);
+                }
+            },
+            _haveSelectionRange: function (element) {
+                var elementType = element.type.toLowerCase();
+                return elementType === 'text' || elementType === 'search' || elementType === 'url' || elementType === 'tel' || elementType === 'password';
             }
         });
         ui.Popup.TabKeyTrap = TabKeyTrap;

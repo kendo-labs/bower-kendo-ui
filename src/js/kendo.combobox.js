@@ -25,7 +25,8 @@
 (function (f, define) {
     define('kendo.combobox', [
         'kendo.list',
-        'kendo.mobile.scroller'
+        'kendo.mobile.scroller',
+        'kendo.virtuallist'
     ], f);
 }(function () {
     var __meta__ = {
@@ -333,7 +334,7 @@
                 var data = that.dataSource.flatView();
                 var skip = that.listView.skip();
                 var length = data.length;
-                var groupsLength = that.dataSource._group.length;
+                var groupsLength = that.dataSource._group ? that.dataSource._group.length : 0;
                 var isFirstPage = skip === undefined || skip === 0;
                 that._presetValue = false;
                 that._renderFooter();
@@ -690,8 +691,14 @@
                 that._last = key;
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = null;
-                if (key != keys.TAB && !that._move(e)) {
+                if (key === keys.HOME) {
+                    that._firstItem();
+                } else if (key === keys.END) {
+                    that._lastItem();
+                } else if (key != keys.TAB && !that._move(e)) {
                     that._search();
+                } else if (key === keys.ESC && !that.popup.visible()) {
+                    that._clearValue();
                 }
             },
             _placeholder: function (show) {
@@ -766,6 +773,7 @@
                 this._placeholder();
                 this._initialIndex = null;
                 this._presetValue = true;
+                this._toggleCloseVisibility();
             }
         });
         ui.plugin(ComboBox);
