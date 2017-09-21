@@ -186,13 +186,15 @@
         yellowgreen: '9acd32'
     };
     var browser = support.browser;
-    var namedColorRegexp = ['transparent'];
-    for (var i in namedColors) {
-        if (namedColors.hasOwnProperty(i)) {
-            namedColorRegexp.push(i);
-        }
-    }
-    namedColorRegexp = new RegExp('^(' + namedColorRegexp.join('|') + ')(\\W|$)', 'i');
+    var matchNamedColor = function (color) {
+        var colorNames = Object.keys(namedColors);
+        colorNames.push('transparent');
+        var regexp = new RegExp('^(' + colorNames.join('|') + ')(\\W|$)', 'i');
+        matchNamedColor = function (color) {
+            return regexp.exec(color);
+        };
+        return regexp.exec(color);
+    };
     var BaseColor = Class.extend({
         init: function () {
         },
@@ -474,7 +476,7 @@
             return value;
         }
         var color = value.toLowerCase();
-        if (m = namedColorRegexp.exec(color)) {
+        if (m = matchNamedColor(color)) {
             if (m[1] === 'transparent') {
                 color = new RGB(1, 1, 1, 0);
             } else {

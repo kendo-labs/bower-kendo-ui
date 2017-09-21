@@ -94,7 +94,9 @@
             };
         function restoreTitle(element) {
             while (element.length) {
-                restoreTitleAttributeForElement(element);
+                if (restoreTitleAttributeForElement(element)) {
+                    break;
+                }
                 element = element.parent();
             }
         }
@@ -103,6 +105,7 @@
             if (title) {
                 element.attr('title', title);
                 element.removeData(kendo.ns + 'title');
+                return true;
             }
         }
         function saveTitleAttributeForElement(element) {
@@ -110,11 +113,14 @@
             if (title) {
                 element.data(kendo.ns + 'title', title);
                 element.attr('title', '');
+                return true;
             }
         }
         function saveTitleAttributes(element) {
             while (element.length && !element.is('body')) {
-                saveTitleAttributeForElement(element);
+                if (saveTitleAttributeForElement(element)) {
+                    break;
+                }
                 element = element.parent();
             }
         }
@@ -125,9 +131,15 @@
                 axis = that.options.position.match(/left|right/) ? 'horizontal' : 'vertical';
                 that.dimensions = DIMENSIONS[axis];
                 that._documentKeyDownHandler = proxy(that._documentKeyDown, that);
-                that.element.on(that.options.showOn + NS, that.options.filter, proxy(that._showOn, that)).on('mouseenter' + NS, that.options.filter, proxy(that._mouseenter, that));
-                if (this.options.autoHide) {
+                that.element.on(that.options.showOn + NS, that.options.filter, proxy(that._showOn, that));
+                if (!this._isShownOnFocus()) {
+                    that.element.on('mouseenter' + NS, that.options.filter, proxy(that._mouseenter, that));
+                }
+                if (this.options.autoHide && !this._isShownOnFocus()) {
                     that.element.on('mouseleave' + NS, that.options.filter, proxy(that._mouseleave, that));
+                }
+                if (this.options.autoHide && this._isShownOnFocus()) {
+                    that.element.on('blur' + NS, that.options.filter, proxy(that._blur, that));
                 }
             },
             options: {
@@ -147,7 +159,6 @@
                         duration: 0
                     },
                     close: {
-                        effects: 'fade:out',
                         duration: 40,
                         hide: true
                     }
@@ -160,13 +171,19 @@
                 ERROR,
                 REQUESTSTART
             ],
+            _isShownOnFocus: function () {
+                return this.options.showOn && this.options.showOn.match(/focus/);
+            },
             _mouseenter: function (e) {
                 saveTitleAttributes($(e.currentTarget));
             },
             _showOn: function (e) {
                 var that = this;
                 var currentTarget = $(e.currentTarget);
-                if (that.options.showOn && that.options.showOn.match(/click|focus/)) {
+                if (that.options.showOn && that.options.showOn.match(/click/)) {
+                    that._show(currentTarget);
+                } else if (that._isShownOnFocus()) {
+                    saveTitleAttributes(currentTarget);
                     that._show(currentTarget);
                 } else {
                     clearTimeout(that.timeout);
@@ -309,7 +326,7 @@
                 });
                 that.content = wrapper.find('.k-tooltip-content');
                 that.arrow = wrapper.find('.k-callout');
-                if (options.autoHide) {
+                if (options.autoHide && !this._isShownOnFocus()) {
                     wrapper.on('mouseleave' + NS, proxy(that._mouseleave, that));
                 } else {
                     wrapper.on('click' + NS, '.k-tooltip-button', proxy(that._closeButtonClick, that));
@@ -320,18 +337,18 @@
                 this.hide();
             },
             _mouseleave: function (e) {
+                this._closePopup(e.currentTarget);
+                clearTimeout(this.timeout);
+            },
+            _blur: function (e) {
+                this._closePopup(e.currentTarget);
+            },
+            _closePopup: function (target) {
                 if (this.popup) {
-                    var element = $(e.currentTarget), offset = element.offset(), pageX = e.pageX, pageY = e.pageY;
-                    offset.right = offset.left + kendo._outerWidth(element);
-                    offset.bottom = offset.top + kendo._outerHeight(element);
-                    if (pageX > offset.left && pageX < offset.right && pageY > offset.top && pageY < offset.bottom) {
-                        return;
-                    }
                     this.popup.close();
                 } else {
-                    restoreTitle($(e.currentTarget));
+                    restoreTitle($(target));
                 }
-                clearTimeout(this.timeout);
             },
             _positionCallout: function () {
                 var that = this, position = that.options.position, dimensions = that.dimensions, offset = dimensions.offset, popup = that.popup, anchor = popup.options.anchor, anchorOffset = $(anchor).offset(), arrowBorder = parseInt(that.arrow.css('border-top-width'), 10), elementOffset = $(popup.element).offset(), cssClass = DIRCLASSES[popup.flipped ? REVERSE[position] : position], offsetAmount = anchorOffset[offset] - elementOffset[offset] + $(anchor)[dimensions.size]() / 2 - arrowBorder;

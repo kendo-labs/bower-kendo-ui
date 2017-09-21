@@ -104,7 +104,9 @@
                 month: {},
                 ARIATemplate: 'Current focused date is #=kendo.toString(data.current, "d")#',
                 dateButtonText: 'Open the date view',
-                timeButtonText: 'Open the time view'
+                timeButtonText: 'Open the time view',
+                dateInput: false,
+                weekNumber: false
             },
             events: [
                 OPEN,

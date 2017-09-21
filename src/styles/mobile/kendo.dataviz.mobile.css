@@ -43,7 +43,7 @@
 .km-root.km-retina textarea {
   font-size: 1em;
 }
-.km-root a {
+.km-root a:not(.k-button) {
   color: inherit;
 }
 .km-tablet {
@@ -760,6 +760,12 @@ button.km-button {
   line-height: 2.3em;
   margin-left: auto;
   margin-right: auto;
+}
+.km-view-title:before,
+.km-dialog-title:before {
+  content: "";
+  display: inline-block;
+  width: 0;
 }
 .km-horizontal .km-view-title {
   line-height: 2em;
@@ -15582,6 +15588,9 @@ html .km-wp .k-overflow-container.km-actionsheet > li {
 .k-chart,
 .k-stockchart {
   height: 400px;
+}
+.k-chart > canvas {
+  vertical-align: top;
 }
 div.k-chart,
 div.k-gauge,

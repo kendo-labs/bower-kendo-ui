@@ -34,13 +34,13 @@
     kendo.cultures["ar-OM"] = {
         name: "ar-OM",
         numberFormat: {
-            pattern: ["n-"],
+            pattern: ["-n"],
             decimals: 2,
             ",": ",",
             ".": ".",
             groupSize: [3],
             percent: {
-                pattern: ["-n %","n %"],
+                pattern: ["-n%","n%"],
                 decimals: 2,
                 ",": ",",
                 ".": ".",
@@ -50,12 +50,12 @@
             currency: {
                 name: "Omani Rial",
                 abbr: "OMR",
-                pattern: ["$n-","$ n"],
+                pattern: ["-n $","n $"],
                 decimals: 3,
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
-                symbol: "ر.ع.‏‏"
+                symbol: "ر.ع.‏"
             }
         },
         calendars: {

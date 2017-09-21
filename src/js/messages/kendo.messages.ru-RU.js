@@ -463,5 +463,20 @@ $.extend(true, kendo.ui.Prompt.prototype.options.localization, {
 });
 }
 
+/* DateInput */
+if (kendo.ui.DateInput) {
+kendo.ui.DateInput.prototype.options.messages =
+$.extend(true, kendo.ui.DateInput.prototype.options.messages, {
+  "year": "год",
+  "month": "месяц",
+  "day": "день",
+  "weekday": "день недели",
+  "hour": "час",
+  "minute": "минута",
+  "second": "секунда",
+  "dayperiod": "AM/PM"
+});
+}
+
 })(window.kendo.jQuery);
 }));

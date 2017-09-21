@@ -245,12 +245,15 @@
                 wrapper.append(actionbar);
             },
             _addButtons: function (actionbar) {
-                var that = this, o = that.options, actionClick = proxy(that._actionClick, that), actionKeyHandler = proxy(that._actionKeyHandler, that), actions = that.options.actions, length = actions.length, buttonSize = HUNDREDPERCENT / length, action, text;
+                var that = this, o = that.options, actionClick = proxy(that._actionClick, that), actionKeyHandler = proxy(that._actionKeyHandler, that), actions = that.options.actions, length = actions.length, buttonSize = Math.round(HUNDREDPERCENT / length), action, text;
                 for (var i = 0; i < length; i++) {
                     action = actions[i];
                     text = that._mergeTextWithOptions(action);
                     var btn = $(templates.action(action)).autoApplyNS(NS).html(text).appendTo(actionbar).data('action', action.action).on('click', actionClick).on('keydown', actionKeyHandler);
                     if (o.buttonLayout === 'stretched') {
+                        if (i == length - 1) {
+                            buttonSize = HUNDREDPERCENT - i * buttonSize;
+                        }
                         btn.css(WIDTH, buttonSize + '%');
                     }
                 }

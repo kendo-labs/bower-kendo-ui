@@ -1,0 +1,231 @@
+/*!
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+                                                                                                                                                                                                       
+
+*/
+// Button
+.k-button {
+    margin: 0;
+    padding: @button-padding;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    background-repeat: repeat-x;
+    background-position: 0 center;
+    font: inherit;
+    line-height: 1.72em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    overflow: hidden;
+    user-select: none;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+
+    // No flexbox
+    .k-no-flexbox & {
+        display: inline-block;
+    }
+
+    &::-moz-focus-inner {
+        padding: 0;
+        border: 0;
+        outline: 0;
+    }
+
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        outline: 0;
+    }
+
+    .k-icon,
+    .k-image,
+    .k-sprite {
+        color: inherit;
+        align-self: center;
+    }
+
+
+    // Button variants
+    &-icontext {
+        overflow: visible; // IE9
+
+        .k-icon,
+        .k-image,
+        .k-sprite {
+            margin-right: 3px;
+            margin-right: .3rem;
+            margin-left: -3px;
+            margin-left: -.3rem;
+        }
+    }
+
+    // Disabled state
+    &[disabled]
+    .k-state-disabled &
+    &.k-state-disabled {
+        cursor: default;
+        outline: 0;
+    }
+
+}
+
+.k-ie9 .k-button {
+    display: inline-block;
+}
+
+a.k-button-expand
+{
+    display: block;
+}
+
+button.k-button-expand,
+input[type="submit"].k-button-expand,
+input[type="button"].k-button-expand,
+input[type="reset"].k-button-expand
+{
+    width: 100%;
+}
+
+.k-button-icon,
+.k-split-button-arrow {
+    height: calc(1.72em + (2*@button-padding-y) + 2px); // proper vertical alignment for elastic behavior
+    width: calc(1.72em + (2*@button-padding-y) + 2px);
+    padding: @button-padding-y calc(@button-padding-x/2);
+}
+.k-overflow-group .k-button-icon {
+    width: auto;
+}
+
+.k-toolbar .k-button-icontext
+{
+    padding-right: .8em;
+}
+
+
+
+
+// Bare button
+.k-button.k-bare {
+    border-color: transparent !important;
+    color: inherit !important;
+    background: none !important;
+    box-shadow: none !important;
+    opacity: .7;
+
+    &:hover,
+    &.k-state-hover,
+    &:active,
+    &.k-state-active,
+    &.k-state-active:hover {
+        color: inherit;
+    }
+
+    &:focus,
+    .k-state-focused {
+        opacity: .8;
+    }
+
+    &:hover,
+    &.k-state-hover,
+    &:active,
+    &.k-state-active {
+        opacity: 1;
+    }
+
+    // Icon
+    .k-icon {
+        overflow: visible;
+    }
+
+    &:focus,
+    .k-state-focused {
+        .k-icon {
+            text-shadow: 0 0 3px currentColor;
+        }
+    }
+
+}
+
+
+
+
+// Button group
+.k-button-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    white-space: nowrap;
+    display: inline-block;
+    display: inline-flex;
+    flex-direction: row;
+    vertical-align: middle;
+    position: relative;
+
+    .k-button {
+        // .border-radius( 0 );
+        position: relative;
+    }
+
+    .k-button:active,
+    .k-button.k-state-active {
+        z-index: 2;
+    }
+    .k-button:hover,
+    .k-button.k-state-hover {
+        z-index: 3;
+    }
+    .k-button:focus,
+    .k-button.k-state-focused {
+        z-index: 4;
+    }
+
+    .k-group-start,
+    .k-button:first-child {
+        // .border-left-radius();
+    }
+    .k-group-end,
+    .k-button:last-child {
+        // .border-right-radius();
+    }
+    .k-group-start.k-group-end,
+    .k-button:first-child:last-child {
+        // .border-radius();
+    }
+
+    > input[type="radio"],
+    > input[type="checkbox"],
+    label input[type="radio"],
+    label input[type="checkbox"] {
+        margin: 0;
+        padding: 0;
+        clip: rect(0, 0, 0, 0);
+        position: absolute;
+        pointer-events: none;
+    }
+
+}

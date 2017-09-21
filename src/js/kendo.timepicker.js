@@ -427,7 +427,8 @@
                 value: null,
                 interval: 30,
                 height: 200,
-                animation: {}
+                animation: {},
+                dateInput: false
             },
             events: [
                 OPEN,

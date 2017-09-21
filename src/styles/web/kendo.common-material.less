@@ -26,7 +26,9 @@
 @input-indent: .8em;
 @editor-icon-size: 36px;
 @menu-link-padding: 1.071em;
-@button-padding: 10px 14px;
+@button-padding-x: 14px;
+@button-padding-y: 10px;
+@button-padding: @button-padding-y @button-padding-x;
 @treeview-inner-padding: 0.429em 0.6667em 0.429em 0.5833em;
 @treeview-inner-margin: 1px 0 1px 0.3333em;
 @scheduler-link-padding: 0 1.1em;
@@ -40,10 +42,16 @@
 @spreadsheet-popup-button-padding: .6em 1.2em .6em 1em;
 @calendar-cell-width: ((38px / 14px) * 1em);
 
-.k-button,
-.k-toolbar .k-button {
+.k-button {
     line-height: 1.143em;
-    padding: 9px 14px;
+    padding: @button-padding;
+}
+
+.k-button-icon,
+.k-split-button-arrow {
+    padding: @button-padding-y calc(@button-padding-x/2);
+    height: calc(1em + (2*@button-padding-y) + 2px); // ensure inline-flex height
+    width: calc(1em + (2*@button-padding-y) + 2px);
 }
 
 .k-widget.k-tabstrip
@@ -58,6 +66,10 @@
     padding: 0;
 }
 
+.k-tabstrip > .k-button.k-bare {
+    top: .3em;
+}
+
 .k-tabstrip > div.k-content,
 .k-panelbar .k-tabstrip > div.k-content
 {
@@ -67,14 +79,6 @@
 .k-panelbar > .k-item > .k-link,
 .k-panel > .k-item > .k-link {
     line-height: 3.5em;
-}
-
-.k-panelbar .k-image {
-    margin-top: 12px;
-}
-
-.k-panelbar .k-link > .k-sprite {
-    margin-top: 16px;
 }
 
 .k-tabstrip > .k-tabstrip-items > .k-item {
@@ -470,6 +474,9 @@
 .k-multiselect-wrap li span {
     margin-right: .4em;
 }
+.k-multiselect-wrap li span.k-icon {
+    margin: 0;
+}
 
 .k-multiselect-wrap .k-select
 {
@@ -530,7 +537,11 @@ table.k-editor {
     border-spacing: 0;
 }
 
-.k-editor .k-editable-area {
+.k-editor.k-resizable .k-editable-area {
+    padding-bottom: 20px;
+}
+
+.k-editor .k-editable-area .k-content {
     border-width: 1px 0 0;
 }
 
@@ -564,9 +575,17 @@ table.k-editor {
     line-height: 3.286em;
 }
 
+.k-toolbar .k-button-icon,
+.k-toolbar .k-split-button-arrow {
+    line-height: (26/14);
+    height: calc((26/14)*1em + (2*@button-padding-y) + 2px); // ensure inline-flex height
+    width: calc((26/14)*1em + (2*@button-padding-y) + 2px);
+}
+
 .k-toolbar .k-button-group .k-button {
     line-height: inherit;
     padding: 0 .857em;
+    margin: 0;
 }
 
 .k-toolbar .k-input {
@@ -595,11 +614,6 @@ table.k-editor {
     margin: 6px 0;
 }
 
-.k-toolbar .k-split-button-arrow {
-    padding-left: .4em;
-    padding-right: .4em;
-}
-
 .k-editor-toolbar li.k-tool-group,
 .k-editor-toolbar li.k-overflow-tools {
     padding: 0;
@@ -622,16 +636,14 @@ table.k-editor {
 }
 
 .k-filebrowser {
+
     .k-filebrowser-toolbar {
-        line-height: 3.5em;
+        display: flex;
     }
 
-    .k-filebrowser-toolbar .k-upload {
-        margin-top: 3px;
-    }
-
-    .k-filebrowser-toolbar .k-button-icon {
-        margin-top: -3px;
+    .k-toolbar-wrap {
+        display: inline-flex;
+        align-items: center;
     }
 
     .k-upload .k-upload-button {
@@ -639,7 +651,6 @@ table.k-editor {
     }
 
     .k-search-wrap .k-search {
-        top: 25%;
         right: 4px;
     }
 
@@ -647,8 +658,12 @@ table.k-editor {
         padding: 2px .3em;
     }
 
-    .k-tiles-arrange .k-dropdown {
-        width: 80px;
+    .k-tiles-arrange {
+        margin-left: auto;
+
+        .k-dropdown {
+            width: 80px;
+        }
     }
 }
 
@@ -668,8 +683,7 @@ span.k-tooltip
 }
 
 .k-window-titlebar .k-window-actions {
-    right: 0.929em;
-    padding-top: .45em;
+    right: 0.6em;
 }
 
 div.k-window {
@@ -741,7 +755,7 @@ div.editorToolbarWindow.k-window-content {
     }
 
     .k-task-draghandle {
-        margin-left: 24px;
+        margin: 0 23px;
         border-width: 8px;
         border-radius: 0 50% 50% 50%;
         border-style: solid;
@@ -759,6 +773,14 @@ div.editorToolbarWindow.k-window-content {
     height: 3.5em;
 }
 
+.k-gantt-edit-form > .k-edit-form-container {
+    .k-textbox,
+    .k-numerictextbox
+    {
+        width: 19.5em;
+    }
+}
+
 .k-notification-wrap {
     padding: 1.786em;
 }
@@ -769,10 +791,6 @@ div.editorToolbarWindow.k-window-content {
 
 .k-slider-track {
     border-width: 0;
-}
-
-.k-slider .k-button .k-icon {
-    margin-top: 5px;
 }
 
 .k-slider-horizontal .k-slider-track,
@@ -838,16 +856,6 @@ div.editorToolbarWindow.k-window-content {
     left: -4px;
 }
 
-/* Editor */
-.editor-icon(@x, @y) {
-    background-position: @x @y;
-
-    .k-state-hover &,
-    .k-state-selected & {
-        background-position: @x @y;
-    }
-}
-
 /* PanelBar */
 .k-panelbar-expand,
 .k-panelbar-collapse {
@@ -870,6 +878,10 @@ div.editorToolbarWindow.k-window-content {
 
 .k-grid .k-icon {
     opacity: 0.45;
+}
+
+.k-grid-filter .k-icon {
+    opacity: .7;
 }
 
 .k-grid {
@@ -1110,12 +1122,6 @@ form.k-filter-menu .k-textbox {
             margin-top: -2px;
         }
     }
-
-    .hint-wrapper:before {
-        margin-left: -1em;
-        padding-right: 1em;
-        padding-left: 1em;
-    }
 }
 
 div.k-spreadsheet-window {
@@ -1135,6 +1141,11 @@ div.k-spreadsheet-window {
 .k-edit-label,
 .k-edit-form-container .editor-label {
     padding: 0.8em 0 1em;
+}
+
+.k-edit-form-container
+{
+    width: 410px;
 }
 
 .k-editor-dialog .k-root-tabs {
@@ -1181,6 +1192,28 @@ div.k-spreadsheet-window {
             + label.k-checkbox-label {
                 margin-left: 1em;
             }
+        }
+    }
+}
+
+// RTL
+.k-rtl {
+
+    .k-combobox-clearable {
+
+        .k-input {
+            padding-left: 2.5em;
+        }
+    }
+
+    .k-gantt {
+
+        .k-task-template {
+            padding: .643em .6em .643em 1.4em;
+        }
+
+        .k-task-draghandle {
+            border-radius: 50% 0 50% 50%;
         }
     }
 }

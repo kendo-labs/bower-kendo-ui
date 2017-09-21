@@ -759,7 +759,7 @@
                             var options = selector.options;
                             if (!color) {
                                 setTimeout(function () {
-                                    if (that.wrapper) {
+                                    if (that.wrapper && !that.wrapper.is('[unselectable=\'on\']')) {
                                         that.wrapper.focus();
                                     }
                                 });

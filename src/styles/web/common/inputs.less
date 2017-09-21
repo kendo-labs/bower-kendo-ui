@@ -72,13 +72,6 @@ span.k-dropdown,
     transform: translateY(-50%);
 }
 
-.k-ie8 {
-    .k-autocomplete > .k-i-close,
-    .k-combobox > .k-dropdown-wrap > .k-i-close {
-        margin-top: (-(@grid-size/2));
-    }
-}
-
 .k-combobox > .k-dropdown-wrap > .k-i-close {
     font-size: 100%;
     right: 2.4em;
@@ -210,6 +203,10 @@ span.k-dropdown,
 .k-header-column-menu
 {
     -webkit-touch-callout: none;
+}
+
+.k-header-column-menu {
+    color: inhert;
 }
 
 .k-list-scroller
@@ -417,16 +414,6 @@ span.k-datetimepicker .k-select+.k-select
     width: 0;
     height: @input-height;
     padding-bottom: 0.3em;
-}
-
-.k-combobox-clearable {
-    .k-input {
-        padding-right: 1.9em;
-        box-sizing: border-box;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        height: (@input-height + .354em);
-    }
 }
 
 /* fix missing bottom border on browser zoom in Chrome */
@@ -675,6 +662,19 @@ body .k-datetimepicker .k-select
     padding: .03em .2em;
 }
 
+/* Inputs */
+.k-autocomplete-clearable,
+.k-multiselect-clearable,
+.k-combobox-clearable {
+    .k-input {
+        padding-right: 1.9em;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: (@input-height + .354em);
+    }
+}
+
 /* Date/Time Pickers */
 
 .k-datetimepicker .k-picker-wrap
@@ -708,7 +708,6 @@ body .k-datetimepicker .k-select
     cursor: pointer;
 }
 
-.k-button,
 .k-textbox,
 .k-timepicker,
 .k-datepicker,
@@ -932,7 +931,7 @@ span.k-numerictextbox
     width: 265px;
     padding-bottom: 5px;
 
-    div& {
+    & {
         background-color: transparent;
         background-image: none;
     }
@@ -1090,24 +1089,6 @@ span.k-numerictextbox
             background:
             url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+),
             url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-        }
-    }
-}
-
-.k-ie8 {
-    .k-flatcolorpicker {
-        .k-hue-slider {
-            .k-slider-track {
-                background: url("../textures/hue.png") repeat 0 50%;
-            }
-        }
-        .k-transparency-slider {
-            .k-slider-track {
-                background: url("../textures/transparency.png") repeat 0 50%;
-            }
-        }
-        .k-hsv-gradient {
-            filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff',endColorstr='#00ffffff',GradientType=1) progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000',endColorstr='#ff000000',GradientType=0)";
         }
     }
 }
@@ -1284,5 +1265,18 @@ span.k-numerictextbox
 
     .k-ghost {
         opacity: .5;
+    }
+}
+
+// RTL
+.k-rtl {
+
+    .k-autocomplete-clearable,
+    .k-multiselect-clearable,
+    .k-combobox-clearable {
+        .k-input {
+            padding-left: 1.9em;
+            padding-right: 0.177em;
+        }
     }
 }

@@ -40,7 +40,7 @@
             ".": ".",
             groupSize: [3,2],
             percent: {
-                pattern: ["-n %","n %"],
+                pattern: ["-n%","n%"],
                 decimals: 2,
                 ",": ",",
                 ".": ".",
@@ -50,7 +50,7 @@
             currency: {
                 name: "",
                 abbr: "",
-                pattern: ["$ -n","$ n"],
+                pattern: ["$ -n","$n"],
                 decimals: 2,
                 ",": ",",
                 ".": ".",

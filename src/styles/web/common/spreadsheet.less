@@ -216,6 +216,7 @@
         .k-button {
             padding: .3em;
             line-height: 1.4em;
+            height: auto;
         }
     }
 
@@ -285,7 +286,8 @@
     }
 
     .k-auto-fill,
-    .k-auto-fill-punch {
+    .k-auto-fill-punch,
+    .k-auto-fill-br-hint {
         position: absolute;
         box-sizing: border-box;
     }
@@ -504,7 +506,7 @@ div.k-spreadsheet-window {
     }
 
     .k-edit-label {
-        width: 27%;
+        width: 25%;
         margin: 0 0 0 .75em;
     }
 
@@ -534,14 +536,13 @@ div.k-spreadsheet-window {
         width: 100%;
     }
 
-    .export-config {
-        border-width: 1px 0 0;
-        border-style: solid;
-        padding: 1em;
-        margin: 0 -1em;
+    .k-export-config {}
+    .k-export-config .k-hr {
+        margin-left: 15px;
+        margin-right: 15px;
     }
 
-    .export-config .k-edit-field {
+    .k-export-config .k-edit-field {
         width: 40%;
         float: left;
         margin-left: 30px;
@@ -554,92 +555,19 @@ div.k-spreadsheet-window {
         margin: 0;
     }
 
-    .k-edit-field > .k-orientation-label {
-        position: relative;
-        display: inline-block;
-        text-align: center;
-        width: 28px;
-        height: 28px;
-        line-height: 28px;
-        border-width: 1px;
-        border-style: solid;
-    }
-
-    .k-edit-field > .k-orientation-label:before {
-        font-family: 'KendoUIGlyphs';
-        font-size: 16px;
-    }
-
-    .k-orientation-portrait-label:before {
-        content: "\e639";
-    }
-
-    .k-orientation-landscape-label:before {
-        content: "\e901";
-    }
-
     .k-page-orientation {
         position: absolute;
         right: 2em;
         top: 25%;
-        width: 64px;
-        height: 92px;
-        border-width: 1px;
-        border-style: solid;
+
+        .k-icon {
+            font-size: 6em;
+        }
     }
 
-    .k-page-orientation:before {
-        position: absolute;
-        top: 0;
-        right: 0;
+    .k-export-config:after,
+    > div:after {
         content: "";
-        display: inline-block;
-        width: 0;
-        height: 0;
-        border-width: 3px;
-        border-style: solid;
-        margin-top: -1px;
-        margin-right: -1px;
-    }
-
-    .k-page-landscape {
-        top: 29%;
-        width: 92px;
-        height: 64px;
-    }
-
-    .k-margins-horizontal {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 100%;
-        height: 62px;
-        border-width: 1px 0;
-        border-style: solid;
-    }
-
-    .k-margins-vertical {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 34px;
-        height: 100%;
-        border-width: 0 1px;
-        border-style: solid;
-    }
-
-    .k-page-landscape .k-margins-horizontal {
-        height: 34px;
-    }
-
-    .k-page-landscape .k-margins-vertical {
-        width: 62px;
-    }
-
-    .export-config:after,
-    >div:after {
-        content: " ";
         display: block;
         clear: both;
         height: 0;
@@ -710,7 +638,7 @@ div.k-spreadsheet-window {
             padding-left: 26px;
         }
 
-        .k-icon.k-icon {
+        .k-icon {
             margin-left: -26px;
             width: 26px;
         }
@@ -866,6 +794,15 @@ div.k-spreadsheet-window {
         border-color: transparent;
     }
 
+    [data-tool=alignment],
+    [data-tool=backgroundColor],
+    [data-tool=borders],
+    [data-tool=freeze],
+    [data-tool=merge],
+    [data-tool=textColor] {
+        width: auto;
+    }
+
     .k-separator {
         margin: 0 3px;
         width: 0;
@@ -963,16 +900,6 @@ div.k-spreadsheet-window {
 
 .hint-wrapper {
     margin-top: 1em;
-}
-
-.hint-wrapper:before {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 1px;
-    margin-left: -.917em;
-    padding-right: .917em;
-    padding-left: .917em;
 }
 
 .k-edit-form-container > div:after {

@@ -35,13 +35,13 @@
         name: "sn-Latn",
         numberFormat: {
             pattern: ["-n"],
-            decimals: 0,
+            decimals: 2,
             ",": ",",
             ".": ".",
             groupSize: [3],
             percent: {
-                pattern: ["-n %","n %"],
-                decimals: 0,
+                pattern: ["-n%","n%"],
+                decimals: 2,
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
@@ -50,12 +50,12 @@
             currency: {
                 name: "",
                 abbr: "",
-                pattern: ["($n)","$n"],
+                pattern: ["-$n","$n"],
                 decimals: 2,
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
-                symbol: "US$"
+                symbol: "$"
             }
         },
         calendars: {
@@ -88,7 +88,7 @@
                 },
                 "/": "/",
                 ":": ":",
-                firstDay: 1
+                firstDay: 0
             }
         }
     }

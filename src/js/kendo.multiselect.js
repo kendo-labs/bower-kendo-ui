@@ -25,7 +25,8 @@
 (function (f, define) {
     define('kendo.multiselect', [
         'kendo.list',
-        'kendo.mobile.scroller'
+        'kendo.mobile.scroller',
+        'kendo.virtuallist'
     ], f);
 }(function () {
     var __meta__ = {
@@ -50,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = kendo.keys, activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', HIDDENCLASS = 'k-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = $.extend({ A: 65 }, kendo.keys), activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', SELECTEDCLASS = 'k-state-selected', HIDDENCLASS = 'k-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
                 'font-family',
                 'font-size',
                 'font-stretch',
@@ -159,6 +160,7 @@
                 this._accessors();
                 this._aria(this.tagList.attr(ID));
                 this._tagTemplate();
+                this._placeholder();
             },
             currentTag: function (candidate) {
                 var that = this;
@@ -357,6 +359,7 @@
                 List.fn._filterSource.call(this, filter, force);
             },
             close: function () {
+                this._activeItem = null;
                 this.popup.close();
             },
             open: function () {
@@ -370,6 +373,7 @@
                     that.listView.skipUpdate(true);
                     that._filterSource();
                 } else if (that._allowOpening()) {
+                    that.popup._hovered = true;
                     that.popup.open();
                     that._focusItem();
                 }
@@ -534,43 +538,64 @@
                 var item = e.item;
                 e.preventDefault();
                 that._select(item).done(function () {
+                    that._activeItem = item;
                     that._change();
                     that._close();
                 });
+            },
+            _getActiveItem: function () {
+                return this._activeItem || $(this.listView.items()[this.listView._selectedIndices.length - 1]) || this.listView.focus();
             },
             _keydown: function (e) {
                 var that = this;
                 var key = e.keyCode;
                 var tag = that._currentTag;
                 var listView = that.listView;
-                var current = listView.focus();
                 var hasValue = that.input.val();
                 var isRtl = kendo.support.isRtl(that.wrapper);
                 var visible = that.popup.visible();
+                var dir = 0;
+                var activeItemIdx;
                 if (key === keys.DOWN) {
                     e.preventDefault();
                     if (!visible) {
                         that.open();
-                        if (!current) {
+                        if (!listView.focus()) {
                             listView.focusFirst();
                         }
                         return;
                     }
-                    if (current) {
+                    if (listView.focus()) {
+                        if (!that._activeItem && e.shiftKey) {
+                            that._activeItem = listView.focus();
+                            dir = -1;
+                        }
+                        activeItemIdx = listView.getElementIndex(that._getActiveItem()[0]);
                         listView.focusNext();
                         if (!listView.focus()) {
                             listView.focusLast();
+                        } else {
+                            if (e.shiftKey) {
+                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
+                            }
                         }
                     } else {
                         listView.focusFirst();
                     }
                 } else if (key === keys.UP) {
                     if (visible) {
-                        if (current) {
-                            listView.focusPrev();
+                        if (!that._activeItem && e.shiftKey) {
+                            that._activeItem = listView.focus();
+                            dir = 1;
                         }
+                        activeItemIdx = listView.getElementIndex(that._getActiveItem()[0]);
+                        listView.focusPrev();
                         if (!listView.focus()) {
                             that.close();
+                        } else {
+                            if (e.shiftKey) {
+                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
+                            }
                         }
                     }
                     e.preventDefault();
@@ -586,21 +611,46 @@
                         tag = tag.next();
                         that.currentTag(tag[0] ? tag : null);
                     }
+                } else if (e.ctrlKey && key === keys.A && visible) {
+                    if (listView._selectedIndices.length === listView.items().length) {
+                        that._activeItem = null;
+                    }
+                    that._selectRange(0, listView.items().length - 1);
                 } else if (key === keys.ENTER && visible) {
-                    that._select(current).done(function () {
+                    that._select(listView.focus()).done(function () {
                         that._change();
                         that._close();
                     });
+                    e.preventDefault();
+                } else if (key === keys.SPACEBAR && e.ctrlKey && visible) {
+                    if (that._activeItem && listView.focus()[0] === that._activeItem[0]) {
+                        that._activeItem = null;
+                    }
+                    if (!$(listView.focus()[0]).hasClass(SELECTEDCLASS)) {
+                        that._activeItem = listView.focus();
+                    }
+                    that._select(listView.focus()).done(function () {
+                        that._change();
+                    });
+                } else if (key === keys.SPACEBAR && e.shiftKey && visible) {
+                    var activeIndex = listView.getElementIndex(that._getActiveItem()[0]);
+                    var currentIndex = listView.getElementIndex(listView.focus()[0]);
+                    that._selectRange(activeIndex, currentIndex);
                     e.preventDefault();
                 } else if (key === keys.ESC) {
                     if (visible) {
                         e.preventDefault();
                     } else {
-                        that.currentTag(null);
+                        that.tagList.children().each(function (index, tag) {
+                            that._removeTag($(tag));
+                        });
                     }
                     that.close();
                 } else if (key === keys.HOME) {
                     if (visible) {
+                        if (e.ctrlKey && e.shiftKey) {
+                            that._selectRange(listView.getElementIndex(listView.focus()[0]), 0);
+                        }
                         listView.focusFirst();
                     } else if (!hasValue) {
                         tag = that.tagList[0].firstChild;
@@ -610,6 +660,9 @@
                     }
                 } else if (key === keys.END) {
                     if (visible) {
+                        if (e.ctrlKey && e.shiftKey) {
+                            that._selectRange(listView.getElementIndex(listView.focus()[0]), listView.element.children().length - 1);
+                        }
                         listView.focusLast();
                     } else if (!hasValue) {
                         tag = that.tagList[0].lastChild;
@@ -690,7 +743,7 @@
                 that._scale();
             },
             _scale: function () {
-                var that = this, wrapper = that.wrapper, wrapperWidth = wrapper.width(), span = that._span.text(that.input.val()), textWidth;
+                var that = this, wrapper = that.wrapper.find('.k-multiselect-wrap'), wrapperWidth = wrapper.width(), span = that._span.text(that.input.val()), textWidth;
                 if (!wrapper.is(':visible')) {
                     span.appendTo(document.documentElement);
                     wrapperWidth = textWidth = span.width() + 25;
@@ -889,6 +942,39 @@
                     }
                 });
             },
+            _selectRange: function (startIndex, endIndex) {
+                var that = this;
+                var listView = that.listView;
+                var indices = listView._selectedIndices.slice();
+                var toggle = function (index) {
+                    if (listView._selectedIndices.indexOf(index) == -1) {
+                        indices.push(index);
+                    } else {
+                        indices.splice(indices.indexOf(index), 1);
+                    }
+                };
+                if (startIndex < endIndex) {
+                    for (var i = startIndex; i <= endIndex; i++) {
+                        toggle(i);
+                    }
+                } else {
+                    for (var j = startIndex; j >= endIndex; j--) {
+                        toggle(j);
+                    }
+                }
+                return listView.select(indices).done(function () {
+                    indices.forEach(function (index) {
+                        var dataItem = listView.dataItemByIndex(index);
+                        var candidate = listView.element.children()[index];
+                        var isSelected = $(candidate).hasClass('k-state-selected');
+                        that.trigger(isSelected ? SELECT : DESELECT, {
+                            dataItem: dataItem,
+                            item: candidate
+                        });
+                    });
+                    that._change();
+                });
+            },
             _input: function () {
                 var that = this;
                 var element = that.element;
@@ -940,6 +1026,7 @@
                 });
                 if (this.options.clearButton) {
                     this._clear.insertAfter(this.input);
+                    this.wrapper.addClass('k-multiselect-clearable');
                 }
             },
             _textContainer: function () {

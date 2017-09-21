@@ -25,7 +25,8 @@
 (function (f, define) {
     define('kendo.dropdownlist', [
         'kendo.list',
-        'kendo.mobile.scroller'
+        'kendo.mobile.scroller',
+        'kendo.virtuallist'
     ], f);
 }(function () {
     var __meta__ = {
@@ -173,6 +174,7 @@
             },
             open: function () {
                 var that = this;
+                var isFiltered = that.dataSource.filter() ? that.dataSource.filter().filters.length > 0 : false;
                 if (that.popup.visible()) {
                     return;
                 }
@@ -183,7 +185,7 @@
                         that.filterInput.val('');
                         that._prev = '';
                     }
-                    if (that.filterInput && that.options.minLength !== 1) {
+                    if (that.filterInput && that.options.minLength !== 1 && !isFiltered) {
                         that.refresh();
                         that.popup.one('activate', that._focusInputHandler);
                         that.popup.open();
@@ -192,7 +194,9 @@
                         that._filterSource();
                     }
                 } else if (that._allowOpening()) {
+                    that._open = true;
                     that.popup.one('activate', that._focusInputHandler);
+                    that.popup._hovered = true;
                     that.popup.open();
                     that._resizeFilterInput();
                     that._focusItem();
@@ -373,7 +377,7 @@
                 if (that.hasOptionLabel()) {
                     return $.isPlainObject(optionLabel) ? new ObservableObject(optionLabel) : that._assignInstance(that._optionLabelText(), '');
                 }
-                return null;
+                return undefined;
             },
             _buildOptions: function (data) {
                 var that = this;
@@ -476,6 +480,7 @@
                 e.preventDefault();
                 this.popup.unbind('activate', this._focusInputHandler);
                 this._focused = this.wrapper;
+                this._prevent = false;
                 this._toggle();
             },
             _editable: function (options) {
@@ -533,6 +538,10 @@
                 if (key === keys.ENTER && that._typingTimeout && that.filterInput && isPopupVisible) {
                     e.preventDefault();
                     return;
+                }
+                if (key === keys.SPACEBAR && !isInputActive) {
+                    that.toggle(!isPopupVisible);
+                    e.preventDefault();
                 }
                 handled = that._move(e);
                 if (handled) {
@@ -691,7 +700,7 @@
                 if (filterInput && filterInput[0] === element[0] && touchEnabled) {
                     return;
                 }
-                if (filterInput && compareElement[0] === active) {
+                if (filterInput && (compareElement[0] === active || this._open)) {
                     this._prevent = true;
                     this._focused = element.focus();
                 }

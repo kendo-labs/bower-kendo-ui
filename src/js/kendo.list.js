@@ -658,7 +658,8 @@
             },
             _triggerCascade: function () {
                 var that = this;
-                if (!that._cascadeTriggered || that._old !== that.value() || that._oldIndex !== that.selectedIndex) {
+                var noDataItemSelection = that._oldIndex == -1 || that.selectedIndex == -1;
+                if (!that._cascadeTriggered || that._old !== that.value() || noDataItemSelection && that._oldIndex !== that.selectedIndex) {
                     that._cascadeTriggered = true;
                     that.trigger(CASCADE, { userTriggered: that._userTriggered });
                 }
@@ -904,6 +905,7 @@
                             if (!that.popup.visible()) {
                                 that._blur();
                             }
+                            that._oldIndex = that.selectedIndex;
                         });
                     }
                     e.preventDefault();
@@ -1048,7 +1050,7 @@
                     options.autoBind = false;
                     parent.bind('set', function () {
                         that.one('set', function (e) {
-                            that._selectedValue = e.value;
+                            that._selectedValue = e.value || that._accessor();
                         });
                     });
                     parent.first(CASCADE, that._cascadeHandlerProxy);
@@ -1160,6 +1162,9 @@
                 }).on('mouseleave' + STATIC_LIST_NS, 'li', function () {
                     $(this).removeClass(HOVER);
                 });
+                if (this.options.selectable === 'multiple') {
+                    this.element.attr('aria-multiselectable', true);
+                }
                 this.content = this.element.wrap('<div class=\'k-list-scroller\' unselectable=\'on\'></div>').parent();
                 this.header = this.content.before('<div class="k-group-header" style="display:none"></div>').prev();
                 this.bound(false);
@@ -1314,7 +1319,7 @@
                 candidate = last(that._get(candidate));
                 candidate = $(this.element[0].children[candidate]);
                 if (that._current) {
-                    that._current.removeClass(FOCUSED).removeAttr('aria-selected').removeAttr(ID);
+                    that._current.removeClass(FOCUSED).removeAttr(ID);
                     that.trigger('deactivate');
                 }
                 hasCandidate = !!candidate[0];
@@ -1464,7 +1469,7 @@
                 indices = indices.slice();
                 if (selectable === true || !indices.length) {
                     for (; i < selectedIndices.length; i++) {
-                        $(children[selectedIndices[i]]).removeClass('k-state-selected');
+                        $(children[selectedIndices[i]]).removeClass('k-state-selected').attr('aria-selected', false);
                         removed.push({
                             position: i,
                             dataItem: dataItems[i]
@@ -1482,7 +1487,7 @@
                         for (j = 0; j < selectedIndices.length; j++) {
                             selectedIndex = selectedIndices[j];
                             if (selectedIndex === index) {
-                                $(children[selectedIndex]).removeClass('k-state-selected');
+                                $(children[selectedIndex]).removeClass('k-state-selected').attr('aria-selected', false);
                                 removed.push({
                                     position: j + removedIndices,
                                     dataItem: dataItems.splice(j, 1)[0]
@@ -1672,7 +1677,7 @@
                 if (selected) {
                     item += ' k-state-selected';
                 }
-                item += '"' + (selected ? ' aria-selected="true"' : '') + ' data-offset-index="' + context.index + '">';
+                item += '" aria-selected="' + (selected ? 'true' : 'false') + '" data-offset-index="' + context.index + '">';
                 item += this.templates.template(dataItem);
                 if (notFirstItem && context.newGroup) {
                     item += '<div class="k-group">' + this.templates.groupTemplate(context.group) + '</div>';

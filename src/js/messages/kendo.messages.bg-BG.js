@@ -212,18 +212,11 @@ $.extend(true, kendo.spreadsheet.messages.dialogs,{
       "showWarning": "Покажи предупреждение",
       "showHint": "Покажи входно съобщение",
       "hintTitle": "Заглавие",
-      "hintMessage": "СъобщениеHint message"
+      "hintMessage": "Съобщение"
     },
     "placeholders": {
       "typeTitle": "Напишете заглавие",
       "typeMessage": "Напишете съобщение"
-    }
-  },
-  "saveAsDialog": {
-    "title": "Запиши като...",
-    "labels": {
-      "fileName": "Име на файл",
-      "saveAsType": "Запиши като"
     }
   },
   "modifyMergedDialog": {
@@ -280,6 +273,16 @@ $.extend(true, kendo.spreadsheet.messages.filterMenu,{
       "lt": "Е по-малко от"
     }
   }
+});
+}
+
+if (kendo.spreadsheet && kendo.spreadsheet.messages.colorPicker) {
+kendo.spreadsheet.messages.colorPicker =
+$.extend(true, kendo.spreadsheet.messages.colorPicker,{
+  "reset": "Махни цвета",
+  "customColor": "Избери цвят...",
+  "apply": "Приложи",
+  "cancel": "Откажи"
 });
 }
 

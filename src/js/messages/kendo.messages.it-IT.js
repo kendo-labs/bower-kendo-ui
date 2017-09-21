@@ -553,7 +553,7 @@ $.extend(true, kendo.spreadsheet.messages.dialogs,{
       "typeMessage": "Tipo di messaggio"
     }
   },
-  "saveAsDialog": {
+  "exportAsDialog": {
     "title": "Salva con nome...",
     "labels": {
       "fileName": "Nome file",

@@ -288,7 +288,8 @@
                 month: {},
                 dates: [],
                 ARIATemplate: 'Current focused date is #=kendo.toString(data.current, "D")#',
-                dateInput: false
+                dateInput: false,
+                weekNumber: false
             },
             setOptions: function (options) {
                 var that = this;

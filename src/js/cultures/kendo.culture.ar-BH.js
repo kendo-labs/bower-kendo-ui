@@ -34,13 +34,13 @@
     kendo.cultures["ar-BH"] = {
         name: "ar-BH",
         numberFormat: {
-            pattern: ["n-"],
+            pattern: ["-n"],
             decimals: 3,
             ",": ",",
             ".": ".",
             groupSize: [3],
             percent: {
-                pattern: ["-n %","n %"],
+                pattern: ["-n%","n%"],
                 decimals: 3,
                 ",": ",",
                 ".": ".",
@@ -50,7 +50,7 @@
             currency: {
                 name: "Bahraini Dinar",
                 abbr: "BHD",
-                pattern: ["$n-","$ n"],
+                pattern: ["-n $","n $"],
                 decimals: 3,
                 ",": ",",
                 ".": ".",

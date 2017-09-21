@@ -40,7 +40,7 @@
             ".": ".",
             groupSize: [3],
             percent: {
-                pattern: ["% n-","% n"],
+                pattern: ["-n%","n%"],
                 decimals: 2,
                 ",": ",",
                 ".": ".",
@@ -48,7 +48,7 @@
                 symbol: "%"
             },
             currency: {
-                name: "Pakistan Rupee",
+                name: "Pakistani Rupee",
                 abbr: "PKR",
                 pattern: ["-$ n","$ n"],
                 decimals: 2,
