@@ -206,7 +206,9 @@
                 }
             },
             focus: function () {
-                this.wrapper.focus();
+                if (this.wrapper && !this.wrapper.is('[unselectable=\'on\']')) {
+                    this.wrapper.focus();
+                }
             },
             options: {
                 name: 'ColorPalette',

@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.3.921'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.3.927'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -15228,7 +15228,7 @@
                 return location.left != flipPos.left || location.top != flipPos.top;
             },
             _align: function (origin, position) {
-                var that = this, element = that.wrapper, anchor = $(that.options.anchor), verticalOrigin = origin[0], horizontalOrigin = origin[1], verticalPosition = position[0], horizontalPosition = position[1], anchorOffset = getOffset(anchor), appendTo = $(that.options.appendTo), appendToOffset, width = outerWidth(element), height = outerHeight(element), anchorWidth = outerWidth(anchor), anchorHeight = outerHeight(anchor), top = anchorOffset.top, left = anchorOffset.left, round = Math.round;
+                var that = this, element = that.wrapper, anchor = $(that.options.anchor), verticalOrigin = origin[0], horizontalOrigin = origin[1], verticalPosition = position[0], horizontalPosition = position[1], anchorOffset = getOffset(anchor), appendTo = $(that.options.appendTo), appendToOffset, width = outerWidth(element), height = outerHeight(element) || outerHeight(element.children().first()), anchorWidth = outerWidth(anchor), anchorHeight = outerHeight(anchor), top = anchorOffset.top, left = anchorOffset.left, round = Math.round;
                 if (appendTo[0] != document.body) {
                     appendToOffset = getOffset(appendTo);
                     top -= appendToOffset.top;
@@ -19279,6 +19279,7 @@
                 min: new DATE(1900, 0, 1),
                 max: new DATE(2099, 11, 31),
                 dates: [],
+                disableDates: null,
                 url: '',
                 culture: '',
                 footer: '',
@@ -20375,13 +20376,14 @@
                 calendar.views[0].setDate(startDate, endDate);
                 calendar.views[0].setDate(endDate, new Date(temp));
             }
-            return Math.floor((+endDate - +startDate) / kendo.date.MS_PER_DAY);
+            var fromDateUTC = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+            var endDateUTC = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+            return Math.ceil((+endDateUTC - +fromDateUTC) / kendo.date.MS_PER_DAY);
         }
         function addDaysToArray(array, numberOfDays, fromDate, disableDates) {
             for (var i = 0; i <= numberOfDays; i++) {
-                var nextDayUTC = Date.UTC(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
-                var nextDay = new Date(nextDayUTC + i * kendo.date.MS_PER_DAY);
-                nextDay.setHours(0, 0, 0, 0);
+                var nextDay = new Date(fromDate.getTime());
+                nextDay = new Date(nextDay.setDate(nextDay.getDate() + i));
                 if (!disableDates(nextDay)) {
                     array.push(nextDay);
                 }
@@ -21567,6 +21569,7 @@
                 animation: {},
                 month: {},
                 dates: [],
+                disableDates: null,
                 ARIATemplate: 'Current focused date is #=kendo.toString(data.current, "D")#',
                 dateInput: false,
                 weekNumber: false
@@ -21912,6 +21915,9 @@
             if (!data.item) {
                 itemTemplate = templates.placeholderTemplate;
             }
+            if (data.index === 0 && this.header && data.group) {
+                this.header.html(templates.fixedGroupTemplate(data.group));
+            }
             this.angular('cleanup', function () {
                 return { elements: [element] };
             });
@@ -22021,7 +22027,7 @@
                 template: '#:data#',
                 placeholderTemplate: 'loading...',
                 groupTemplate: '#:data#',
-                fixedGroupTemplate: 'fixed header template',
+                fixedGroupTemplate: '#:data#',
                 mapValueTo: 'index',
                 valueMapper: null
             },
@@ -25728,9 +25734,13 @@
             },
             _clearClick: function () {
                 var that = this;
-                that.tagList.children().each(function (index, tag) {
-                    that._removeTag($(tag));
-                });
+                if (that.options.tagMode === 'single') {
+                    that.value([]);
+                } else {
+                    that.tagList.children().each(function (index, tag) {
+                        that._removeTag($(tag));
+                    });
+                }
                 that.input.val('');
                 that._search();
                 that.trigger('change');
@@ -28462,7 +28472,9 @@
                 }
             },
             focus: function () {
-                this.wrapper.focus();
+                if (this.wrapper && !this.wrapper.is('[unselectable=\'on\']')) {
+                    this.wrapper.focus();
+                }
             },
             options: {
                 name: 'ColorPalette',
@@ -29616,7 +29628,7 @@
             return field.type || $.type(field) || 'string';
         }
         function convertToValueBinding(container) {
-            container.find(':input:not(:button, [' + kendo.attr('role') + '=listbox], [' + kendo.attr('role') + '=upload], [' + kendo.attr('skip') + '], [type=file])').each(function () {
+            container.find(':input:not(:button, [role=\'combobox\'], [' + kendo.attr('role') + '=listbox], [' + kendo.attr('role') + '=upload], [' + kendo.attr('skip') + '], [type=file])').each(function () {
                 var bindAttr = kendo.attr('bind'), binding = this.getAttribute(bindAttr) || '', bindingName = this.type === 'checkbox' || this.type === 'radio' ? 'checked:' : 'value:', fieldName = this.name;
                 if (binding.indexOf(bindingName) === -1 && fieldName) {
                     binding += (binding.length ? ',' : '') + bindingName + fieldName;
@@ -37419,6 +37431,7 @@
                 culture: '',
                 parseFormats: [],
                 dates: [],
+                disableDates: null,
                 min: new DATE(MIN),
                 max: new DATE(MAX),
                 interval: 30,

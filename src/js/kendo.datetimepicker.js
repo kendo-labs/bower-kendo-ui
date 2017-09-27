@@ -93,6 +93,7 @@
                 culture: '',
                 parseFormats: [],
                 dates: [],
+                disableDates: null,
                 min: new DATE(MIN),
                 max: new DATE(MAX),
                 interval: 30,

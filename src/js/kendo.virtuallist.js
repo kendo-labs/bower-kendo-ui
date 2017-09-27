@@ -133,6 +133,9 @@
             if (!data.item) {
                 itemTemplate = templates.placeholderTemplate;
             }
+            if (data.index === 0 && this.header && data.group) {
+                this.header.html(templates.fixedGroupTemplate(data.group));
+            }
             this.angular('cleanup', function () {
                 return { elements: [element] };
             });
@@ -242,7 +245,7 @@
                 template: '#:data#',
                 placeholderTemplate: 'loading...',
                 groupTemplate: '#:data#',
-                fixedGroupTemplate: 'fixed header template',
+                fixedGroupTemplate: '#:data#',
                 mapValueTo: 'index',
                 valueMapper: null
             },

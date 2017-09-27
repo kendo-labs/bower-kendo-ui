@@ -314,9 +314,13 @@
             },
             _clearClick: function () {
                 var that = this;
-                that.tagList.children().each(function (index, tag) {
-                    that._removeTag($(tag));
-                });
+                if (that.options.tagMode === 'single') {
+                    that.value([]);
+                } else {
+                    that.tagList.children().each(function (index, tag) {
+                        that._removeTag($(tag));
+                    });
+                }
                 that.input.val('');
                 that._search();
                 that.trigger('change');
