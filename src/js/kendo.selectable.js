@@ -64,7 +64,8 @@
                     global: true,
                     allowSelection: true,
                     filter: (!supportEventDelegation ? '.' + SELECTABLE + ' ' : '') + that.options.filter,
-                    tap: proxy(that._tap, that)
+                    tap: proxy(that._tap, that),
+                    touchAction: multiple ? 'none' : 'pan-x pan-y'
                 });
                 if (multiple) {
                     that.userEvents.bind('start', proxy(that._start, that)).bind('move', proxy(that._move, that)).bind('end', proxy(that._end, that)).bind('select', proxy(that._select, that));

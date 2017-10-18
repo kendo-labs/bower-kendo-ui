@@ -116,7 +116,7 @@
             return typeof value === 'undefined';
         }
         function defaultHint(element) {
-            return element.clone().removeClass(DRAGGEDCLASS).addClass(kendo.format('{0} {1} {2}', SELECTED_STATE_CLASS, RESET, DRAG_CLUE_CLASS)).width(element.width());
+            return element.clone().removeClass(DRAGGEDCLASS).removeClass(FOCUSED_CLASS).addClass(kendo.format('{0} {1} {2}', SELECTED_STATE_CLASS, RESET, DRAG_CLUE_CLASS)).width(element.width());
         }
         function defaultPlaceholder() {
             return $('<li>').addClass(DROP_HINT_CLASS);
@@ -413,7 +413,7 @@
                 }
             },
             focus: function () {
-                this._getList().focus();
+                kendo.focusElement(this._getList());
             },
             _createDraggable: function () {
                 var that = this;
@@ -655,6 +655,8 @@
                 that._clear();
                 that._draggable.dropped = true;
                 that.trigger(DRAGEND, extend({}, eventData, { draggableEvent: e }));
+                that._updateToolbar();
+                that._updateAllToolbars();
             },
             reorder: function (item, index) {
                 var that = this;
@@ -920,7 +922,7 @@
             },
             _destroySelectable: function () {
                 var that = this;
-                if (that.selectable) {
+                if (that.selectable && that.selectable.element) {
                     that.selectable.destroy();
                     that.selectable = null;
                 }

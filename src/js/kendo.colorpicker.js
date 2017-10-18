@@ -206,7 +206,9 @@
                 }
             },
             focus: function () {
-                this.wrapper.focus();
+                if (this.wrapper && !this.wrapper.is('[unselectable=\'on\']')) {
+                    this.wrapper.focus();
+                }
             },
             options: {
                 name: 'ColorPalette',
@@ -759,7 +761,7 @@
                             var options = selector.options;
                             if (!color) {
                                 setTimeout(function () {
-                                    if (that.wrapper) {
+                                    if (that.wrapper && !that.wrapper.is('[unselectable=\'on\']')) {
                                         that.wrapper.focus();
                                     }
                                 });

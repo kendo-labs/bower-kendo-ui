@@ -300,7 +300,7 @@
                 var that = this, navigatable = that.options.navigatable, element = that.element, clickCallback = function (e) {
                         that.current($(e.currentTarget));
                         if (!$(e.target).is(':button,a,:input,a>.k-icon,textarea')) {
-                            element.focus();
+                            kendo.focusElement(element);
                         }
                     };
                 if (navigatable) {

@@ -3290,6 +3290,10 @@ td.k-state-focused.k-state-selected,
   background-position: 50% 50%;
   background-color: #f5f5f5;
 }
+.k-multicheck-wrap .k-item .k-label {
+  font-weight: 400;
+  margin-bottom: 0;
+}
 /*
 Uncomment the following two @import statements if you want to compile a Kendo UI Bootstrap theme with a custom color scheme, based on a custom Bootstrap Less file.
 

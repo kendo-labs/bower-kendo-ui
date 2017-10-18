@@ -2455,7 +2455,7 @@
                 return this.reader.aggregates(data);
             },
             success: function (data) {
-                var that = this, options = that.options;
+                var that = this, options = that.options, requestParams;
                 that.trigger(REQUESTEND, {
                     response: data,
                     type: 'read'
@@ -2470,7 +2470,8 @@
                     if (that._aggregate && options.serverAggregates) {
                         that._aggregateResult = that._readAggregates(data);
                     }
-                    data = that._readData(data);
+                    requestParams = arguments.length > 1 ? arguments[1] : undefined;
+                    data = that._readData(data, requestParams);
                     that._destroyed = [];
                 } else {
                     data = that._readData(data);
@@ -2903,18 +2904,10 @@
             pageSize: function (val) {
                 var that = this;
                 if (val !== undefined) {
-                    if (that.options.inPlaceSort) {
-                        that._query({
-                            pageSize: val,
-                            page: 1,
-                            sort: {}
-                        });
-                    } else {
-                        that._query({
-                            pageSize: val,
-                            page: 1
-                        });
-                    }
+                    that._query({
+                        pageSize: val,
+                        page: 1
+                    });
                     return;
                 }
                 return that.take();

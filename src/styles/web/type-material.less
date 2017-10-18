@@ -209,6 +209,7 @@
 @secondary-header-color: rgba(256, 256, 256, 0.5);
 @secondary-header-background-color: darken(@accent, 10%);
 @input-validation-error: contrast(@error, @error, darken(@error, 30%), 0.5);
+@grid-sort-icon-color: @selected-text-color;
 
 /* Kendo skin */
 
@@ -1957,7 +1958,7 @@ html .km-pane-wrapper .km-widget,
     .box-shadow(@focused-shadow);
 }
 
-.k-tabstrip-items .k-state-default .k-link,
+.k-tabstrip-items .k-item .k-link,
 .k-panelbar > li.k-state-default > .k-link
 {
     color: @tabstrip-tabs-color;
@@ -3668,15 +3669,6 @@ div.k-scheduler-marquee:after {
 
 @spreadsheet-page-orientation-border-color: @widget-border-color;
 
-.k-grid {
-    input.k-checkbox {
-        margin-top: 5px;
-        width: 16px;
-        height: 16px;
-        z-index: 2;
-    }
-}
-
 .k-rtl .k-grid {
 .k-checkbox:focus + .k-checkbox-label:after,
 .k-checkbox:active + .k-checkbox-label:after,
@@ -3689,13 +3681,6 @@ div.k-scheduler-marquee:after {
 }
 
 .k-window .k-popup-edit-form .k-edit-field {
-    input.k-checkbox {
-        width: 16px;
-        height: 17px;
-        margin-top: 1.1em;
-        z-index: 2;
-    }
-
     label.k-checkbox-label {
         margin-top: 0.8em;
     }
@@ -3716,7 +3701,7 @@ div.k-scheduler-marquee:after {
         border-width: 0;
         color: @normal-text-color;
     }
-    .k-header {
+    & > .k-header {
         background: none;
     }
     &.k-alert .k-window-titlebar,
@@ -3947,7 +3932,7 @@ div.k-scheduler-marquee:after {
     .k-i-sort-asc-sm,
     .k-i-sort-desc-sm,
     .k-sort-order {
-        color: inherit;
+        color: @grid-sort-icon-color;
         opacity: 1;
         margin-bottom: -1px;
     }

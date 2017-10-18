@@ -174,6 +174,7 @@
             },
             open: function () {
                 var that = this;
+                var isFiltered = that.dataSource.filter() ? that.dataSource.filter().filters.length > 0 : false;
                 if (that.popup.visible()) {
                     return;
                 }
@@ -184,9 +185,8 @@
                         that.filterInput.val('');
                         that._prev = '';
                     }
-                    if (that.filterInput && that.options.minLength !== 1) {
+                    if (that.filterInput && that.options.minLength !== 1 && !isFiltered) {
                         that.refresh();
-                        that._dataSource();
                         that.popup.one('activate', that._focusInputHandler);
                         that.popup.open();
                         that._resizeFilterInput();
@@ -377,7 +377,7 @@
                 if (that.hasOptionLabel()) {
                     return $.isPlainObject(optionLabel) ? new ObservableObject(optionLabel) : that._assignInstance(that._optionLabelText(), '');
                 }
-                return null;
+                return undefined;
             },
             _buildOptions: function (data) {
                 var that = this;
@@ -534,13 +534,16 @@
                 }
                 if (that._state === STATE_FILTER && key === keys.ESC) {
                     that._clearFilter();
+                    that._open = false;
+                    that._state = STATE_ACCEPT;
                 }
                 if (key === keys.ENTER && that._typingTimeout && that.filterInput && isPopupVisible) {
                     e.preventDefault();
                     return;
                 }
-                if (key === keys.SPACEBAR) {
+                if (key === keys.SPACEBAR && !isInputActive) {
                     that.toggle(!isPopupVisible);
+                    e.preventDefault();
                 }
                 handled = that._move(e);
                 if (handled) {

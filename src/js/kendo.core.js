@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.3.913'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.3.1018'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -3325,6 +3325,24 @@
                     e.preventDefault();
                     focus(lastElement);
                 }
+            });
+        };
+        kendo.focusElement = function (element) {
+            var scrollTopPositions = [];
+            var scrollableParents = element.parentsUntil('body').filter(function (index, element) {
+                var computedStyle = kendo.getComputedStyles(element, ['overflow']);
+                return computedStyle.overflow !== 'visible';
+            }).add(window);
+            scrollableParents.each(function (index, parent) {
+                scrollTopPositions[index] = $(parent).scrollTop();
+            });
+            try {
+                element[0].setActive();
+            } catch (e) {
+                element[0].focus();
+            }
+            scrollableParents.each(function (index, parent) {
+                $(parent).scrollTop(scrollTopPositions[index]);
             });
         };
         (function () {

@@ -626,6 +626,21 @@ input.k-checkbox + label {
   border-bottom-color: currentColor;
   bottom: -4px;
 }
+.k-flip-h {
+  -webkit-transform: scaleX(-1);
+      -ms-transform: scaleX(-1);
+          transform: scaleX(-1);
+}
+.k-flip-v {
+  -webkit-transform: scaleY(-1);
+      -ms-transform: scaleY(-1);
+          transform: scaleY(-1);
+}
+.k-flip-h.k-flip-v {
+  -webkit-transform: scale(-1, -1);
+      -ms-transform: scale(-1, -1);
+          transform: scale(-1, -1);
+}
 .k-button {
   margin: 0;
   padding: 0.82em 14px;
@@ -1048,6 +1063,7 @@ div.k-window-iframecontent {
   background-color: #000;
   filter: alpha(opacity=50);
   opacity: .5;
+  -webkit-backface-visibility: hidden;
 }
 .k-window .k-overlay {
   position: absolute;
@@ -2685,29 +2701,14 @@ html .k-grid-edit-row .k-tooltip {
 .k-autofitting .k-detail-row {
   display: none !important;
 }
-.k-grid input.k-checkbox {
-  width: 16px;
-  height: 16px;
-  margin-left: 1px;
-  margin-top: 4px;
-  position: absolute;
-  z-index: 1;
-}
 .k-grid input.k-checkbox + label.k-checkbox-label {
   cursor: default;
+  outline: 0;
 }
 .k-grid .k-checkbox-label.k-no-text {
   padding: 0;
 }
-.k-grid th input.k-checkbox {
-  margin-top: 1px;
-}
 .k-grid .k-edit-cell input[type='checkbox'],
-.k-grid .k-edit-cell input.k-checkbox {
-  margin-left: -webkit-calc(0.3em + 3px);
-  margin-left: calc(0.3em + 3px);
-}
-.k-grid .k-edit-cell input[type='checkbox'] + label.k-checkbox-label,
 .k-grid .k-edit-cell input.k-checkbox + label.k-checkbox-label {
   margin-left: .3em;
 }
@@ -11140,6 +11141,12 @@ div.k-navigator .k-navigator-left {
 .k-i-page-landscape::before {
   content: "\e922";
 }
+.k-rtl .k-i-collapse:before {
+  content: "\e002";
+}
+.k-rtl .k-i-expand:before {
+  content: "\e007";
+}
 .k-spreadsheet {
   width: 800px;
   height: 600px;
@@ -12871,12 +12878,6 @@ div.k-spreadsheet-window {
 .k-editor-dialog.k-editor-table-wizard-dialog .k-edit-buttons {
   padding: 0.6em 1.3em;
 }
-.k-grid .k-edit-cell input[type='checkbox'],
-.k-grid .k-edit-cell input.k-checkbox {
-  margin-left: -webkit-calc(1em + 4px);
-  margin-left: calc(1em + 4px);
-}
-.k-grid .k-edit-cell input[type='checkbox'] + label.k-checkbox-label,
 .k-grid .k-edit-cell input.k-checkbox + label.k-checkbox-label {
   margin-left: 1em;
 }

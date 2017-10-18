@@ -85,7 +85,7 @@
                 },
                 arrowClass: function (item) {
                     var result = 'k-icon';
-                    result += item.expanded ? ' k-panelbar-collapse k-i-arrow-n' : ' k-panelbar-expand k-i-arrow-s';
+                    result += item.expanded ? ' k-panelbar-collapse k-i-arrow-60-up' : ' k-panelbar-expand k-i-arrow-60-down';
                     return result;
                 },
                 text: function (item) {
@@ -358,7 +358,7 @@
                     return dataItem.hasChildren || dataItem.content || dataItem.contentUrl;
                 }).children('.k-link:not(:has([class*=k-i-arrow]))').each(function () {
                     var item = $(this), parent = item.parent();
-                    item.append('<span class=\'k-icon ' + (parent.hasClass(ACTIVECLASS) ? ' k-panelbar-collapse k-i-arrow-n' : ' k-panelbar-expand k-i-arrow-s') + '\'/>');
+                    item.append('<span class=\'k-icon ' + (parent.hasClass(ACTIVECLASS) ? ' k-panelbar-collapse k-i-arrow-60-up' : ' k-panelbar-expand k-i-arrow-60-down') + '\'/>');
                 });
             },
             _accessors: function () {
@@ -1030,10 +1030,10 @@
                 return item.items && item.items.length > 0 || item.hasChildren;
             },
             _toggleItem: function (element, isVisible, expanded) {
-                var that = this, childGroup = element.find(GROUPS), link = element.find(LINKSELECTOR), url = link.attr(HREF), prevent, content, dataItem = that.dataItem(element);
+                var that = this, childGroup = element.find(GROUPS), link = element.find(LINKSELECTOR), url = link.attr(HREF), prevent, content, dataItem = that.dataItem(element), notVisible = !isVisible;
                 var loaded = dataItem && dataItem.loaded();
-                if (dataItem && !expanded) {
-                    dataItem.set('expanded', !isVisible);
+                if (dataItem && !expanded && dataItem.expanded !== notVisible) {
+                    dataItem.set('expanded', notVisible);
                     prevent = dataItem.hasChildren || !!dataItem.content || !!dataItem.contentUrl;
                     return prevent;
                 }
@@ -1072,7 +1072,7 @@
                     return;
                 }
                 element.attr(ARIA_HIDDEN, !!visibility);
-                element.parent().attr(ARIA_EXPANDED, !visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
+                element.parent().attr(ARIA_EXPANDED, !visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand').toggleClass('k-i-arrow-60-up', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-60-down', visibility).toggleClass('k-panelbar-expand', visibility);
                 if (visibility) {
                     animation = extend(collapse, { hide: true });
                     animation.complete = function () {

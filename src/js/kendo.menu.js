@@ -226,6 +226,23 @@
             item.filter(':first-child').addClass(FIRST);
             item.filter(':last-child').addClass(LAST);
         }
+        function updateHasAriaPopup(parents) {
+            if (parents && parents.length) {
+                for (var index in parents) {
+                    var parentLi = parents.eq(index);
+                    if (parentLi.find('ul').length) {
+                        parentLi.attr('aria-haspopup', true);
+                    } else {
+                        parentLi.removeAttr('aria-haspopup');
+                    }
+                }
+            }
+        }
+        function getParentLiItems(group) {
+            if (!group.hasClass(MENU)) {
+                return group.parentsUntil('.' + MENU, 'li');
+            }
+        }
         function storeItemSelectEventHandler(element, options) {
             var selectHandler = getItemSelectEventHandler(options);
             if (selectHandler) {
@@ -597,6 +614,7 @@
                 });
                 updateArrow(referenceItem);
                 updateFirstLast(inserted.group.find('.k-first, .k-last').add(inserted.items));
+                updateHasAriaPopup(getParentLiItems(inserted.group));
                 return this;
             },
             insertBefore: function (item, referenceItem) {
@@ -670,12 +688,14 @@
                 var that = this, parent = element.parentsUntil(that.element, allItemsSelector), group = element.parent('ul:not(.k-menu)');
                 element.remove();
                 if (group && !group.children(allItemsSelector).length) {
+                    var parentItems = getParentLiItems(group);
                     var container = group.parent(animationContainerSelector);
                     if (container.length) {
                         container.remove();
                     } else {
                         group.remove();
                     }
+                    updateHasAriaPopup(parentItems);
                 }
                 if (parent.length) {
                     parent = parent.eq(0);
@@ -806,6 +826,7 @@
                             }
                             ul.removeAttr('aria-hidden');
                             that._configurePopupOverflow(popup, li);
+                            popup._hovered = true;
                             popup.open();
                             that._initPopupScrolling(popup);
                         }
@@ -998,7 +1019,7 @@
                 element.addClass('k-widget k-reset k-header k-menu-init ' + MENU).addClass(MENU + '-' + this.options.orientation);
                 element.find('li > ul').filter(function () {
                     return !kendo.support.matchesSelector.call(this, nonContentGroupsSelector);
-                }).addClass('k-group k-menu-group').attr('role', 'menu').attr('aria-hidden', element.is(':visible')).end().find('li > div').addClass('k-content').attr('tabindex', '-1');
+                }).addClass('k-group k-menu-group').attr('role', 'menu').attr('aria-hidden', element.is(':visible')).parent('li').attr('aria-haspopup', 'true').end().find('li > div').addClass('k-content').attr('tabindex', '-1');
                 items = element.find('> li,.k-menu-group > li');
                 element.removeClass('k-menu-init');
                 items.each(function () {
@@ -1361,6 +1382,7 @@
                     if (!nextItem.length) {
                         nextItem = item.prevAll(lastSelector);
                     }
+                    that.close(item);
                 } else if (hasChildren && !item.hasClass(DISABLEDSTATE)) {
                     that.open(item);
                     nextItem = that._childPopupElement(item).children().first();
@@ -1389,6 +1411,7 @@
                     if (!nextItem.length) {
                         nextItem = item.nextAll(lastSelector);
                     }
+                    that.close(item);
                 } else {
                     nextItem = item.parent().closest('.k-item');
                     overflowWrapper = that._overflowWrapper();

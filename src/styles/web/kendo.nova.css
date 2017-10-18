@@ -2649,15 +2649,6 @@ html .km-pane-wrapper .km-widget,
 .k-spreadsheet-toolbar > .k-button {
   border-color: transparent;
 }
-.k-grid input.k-checkbox {
-  width: 16px;
-  height: 17px;
-}
-.k-window .k-popup-edit-form .k-edit-field input.k-checkbox {
-  width: 16px;
-  height: 17px;
-  margin-top: 1.1em;
-}
 .k-window .k-popup-edit-form .k-edit-field label.k-checkbox-label {
   margin-top: 0.8em;
 }

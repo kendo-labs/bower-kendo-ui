@@ -880,6 +880,10 @@ div.editorToolbarWindow.k-window-content {
     opacity: 0.45;
 }
 
+.k-grid-filter .k-icon {
+    opacity: .7;
+}
+
 .k-grid {
     th.k-group-cell,
     td.k-group-cell {
@@ -1181,13 +1185,8 @@ div.k-spreadsheet-window {
 
 .k-grid {
     .k-edit-cell {
-        input[type='checkbox'],
-        input.k-checkbox {
-            margin-left: calc(1em + 4px);
-
-            + label.k-checkbox-label {
-                margin-left: 1em;
-            }
+        input.k-checkbox + label.k-checkbox-label {
+            margin-left: 1em;
         }
     }
 }

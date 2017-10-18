@@ -414,7 +414,7 @@
             },
             _urlChanged: function (e) {
                 var url = e.url;
-                var decode = typeof e.decode === 'undefined';
+                var decode = !!e.decode;
                 var back = e.backButtonPressed;
                 if (!url) {
                     url = '/';

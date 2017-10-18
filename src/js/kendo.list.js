@@ -350,6 +350,17 @@
                 that._open = options.open;
                 that._filterSource(expression);
             },
+            _clearButton: function () {
+                if (!this._clear) {
+                    this._clear = $('<span unselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
+                        'role': 'button',
+                        'tabIndex': -1
+                    });
+                }
+                if (!this.options.clearButton) {
+                    this._clear.remove();
+                }
+            },
             search: function (word) {
                 var options = this.options;
                 word = typeof word === 'string' ? word : this._inputValue();
@@ -437,7 +448,7 @@
                 var focusedElm = that._focused;
                 var inputElm = that.element;
                 var inputId = inputElm.attr('id');
-                var labelElm = $('label[for=\'' + inputId + '\']');
+                var labelElm = $('label[for="' + inputId + '"]');
                 var ariaLabel = inputElm.attr('aria-label');
                 var ariaLabelledBy = inputElm.attr('aria-labelledby');
                 if (focusedElm === inputElm) {
@@ -719,6 +730,7 @@
                 that._dataSource();
                 if (that.listView.bound()) {
                     that._initialIndex = null;
+                    that.listView._current = null;
                 }
                 that.listView.setDataSource(that.dataSource);
                 if (that.options.autoBind) {
@@ -904,6 +916,7 @@
                             if (!that.popup.visible()) {
                                 that._blur();
                             }
+                            that._oldIndex = that.selectedIndex;
                         });
                     }
                     e.preventDefault();

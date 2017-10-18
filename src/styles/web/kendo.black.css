@@ -585,7 +585,8 @@ html .km-pane-wrapper .k-header {
 .k-scheduler-times {
   border-color: #464646;
 }
-.k-nonwork-hour {
+.k-nonwork-hour,
+.k-scheduler-dayview .k-today.k-nonwork-hour {
   background-color: #2f2f2f;
 }
 .k-gantt .k-nonwork-hour {

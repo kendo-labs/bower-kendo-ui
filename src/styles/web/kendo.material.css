@@ -1626,7 +1626,7 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 3px rgba(0, 0, 0, 0.05);
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 3px rgba(0, 0, 0, 0.05);
 }
-.k-tabstrip-items .k-state-default .k-link,
+.k-tabstrip-items .k-item .k-link,
 .k-panelbar > li.k-state-default > .k-link {
   color: #ffffff;
 }
@@ -3611,12 +3611,6 @@ div.k-scheduler-marquee:after {
 .k-spreadsheet-tabstrip .k-state-active .k-link {
   color: #ffffff;
 }
-.k-grid input.k-checkbox {
-  margin-top: 5px;
-  width: 16px;
-  height: 16px;
-  z-index: 2;
-}
 .k-rtl .k-grid .k-checkbox:focus + .k-checkbox-label:after,
 .k-rtl .k-grid .k-checkbox:active + .k-checkbox-label:after,
 .k-rtl .k-grid .k-checkbox + .k-checkbox-label:active:after,
@@ -3624,12 +3618,6 @@ div.k-scheduler-marquee:after {
 .k-rtl .k-grid .k-checkbox:checked + .k-checkbox-label:active:after {
   left: auto;
   right: 1px;
-}
-.k-window .k-popup-edit-form .k-edit-field input.k-checkbox {
-  width: 16px;
-  height: 17px;
-  margin-top: 1.1em;
-  z-index: 2;
 }
 .k-window .k-popup-edit-form .k-edit-field label.k-checkbox-label {
   margin-top: 0.8em;
@@ -3647,7 +3635,7 @@ div.k-scheduler-marquee:after {
   border-width: 0;
   color: #444444;
 }
-.k-dialog .k-header {
+.k-dialog > .k-header {
   background: none;
 }
 .k-dialog.k-alert .k-window-titlebar,
@@ -3828,7 +3816,7 @@ div.k-scheduler-marquee:after {
 .k-grid-header .k-i-sort-asc-sm,
 .k-grid-header .k-i-sort-desc-sm,
 .k-grid-header .k-sort-order {
-  color: inherit;
+  color: #3f51b5;
   opacity: 1;
   margin-bottom: -1px;
 }
