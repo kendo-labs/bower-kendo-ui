@@ -534,6 +534,8 @@
                 }
                 if (that._state === STATE_FILTER && key === keys.ESC) {
                     that._clearFilter();
+                    that._open = false;
+                    that._state = STATE_ACCEPT;
                 }
                 if (key === keys.ENTER && that._typingTimeout && that.filterInput && isPopupVisible) {
                     e.preventDefault();

@@ -3168,15 +3168,6 @@ input.k-textbox:focus {
 .k-spreadsheet-sheets-bar .k-item.k-state-active {
   border-color: #dadada;
 }
-.k-grid input.k-checkbox {
-  width: 18px;
-  height: 19px;
-}
-.k-window .k-popup-edit-form .k-edit-field input.k-checkbox {
-  width: 18px;
-  height: 18px;
-  margin-top: 0.7em;
-}
 .k-window .k-popup-edit-form .k-edit-field label.k-checkbox-label {
   margin-top: 0.5em;
 }

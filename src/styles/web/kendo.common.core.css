@@ -626,6 +626,21 @@ input.k-checkbox + label {
   border-bottom-color: currentColor;
   bottom: -4px;
 }
+.k-flip-h {
+  -webkit-transform: scaleX(-1);
+      -ms-transform: scaleX(-1);
+          transform: scaleX(-1);
+}
+.k-flip-v {
+  -webkit-transform: scaleY(-1);
+      -ms-transform: scaleY(-1);
+          transform: scaleY(-1);
+}
+.k-flip-h.k-flip-v {
+  -webkit-transform: scale(-1, -1);
+      -ms-transform: scale(-1, -1);
+          transform: scale(-1, -1);
+}
 .k-button {
   margin: 0;
   padding: 0.2em 0.7em;
@@ -1048,6 +1063,7 @@ div.k-window-iframecontent {
   background-color: #000;
   filter: alpha(opacity=50);
   opacity: .5;
+  -webkit-backface-visibility: hidden;
 }
 .k-window .k-overlay {
   position: absolute;
@@ -5906,6 +5922,12 @@ span.k-tooltip {
 }
 .k-i-page-landscape::before {
   content: "\e922";
+}
+.k-rtl .k-i-collapse:before {
+  content: "\e002";
+}
+.k-rtl .k-i-expand:before {
+  content: "\e007";
 }
 /* animation classes */
 .k-fx-end .k-fx-next,

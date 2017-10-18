@@ -948,6 +948,9 @@
                     cell = options.selectable.indexOf('cell') !== -1;
                     multiple = options.selectable.indexOf('multiple') !== -1;
                 }
+                if (widget._checkBoxSelection) {
+                    multiple = true;
+                }
                 elems = locals.selected = this.select();
                 items = locals.data = [];
                 columns = locals.columns = [];

@@ -960,7 +960,8 @@
                 if (firstVisibleDataItem && firstVisibleDataItem.item) {
                     var firstVisibleGroup = firstVisibleDataItem.group;
                     if (firstVisibleGroup !== group) {
-                        this.header[0].innerHTML = firstVisibleGroup || '';
+                        var fixedGroupText = firstVisibleGroup || '';
+                        this.header.html(this.templates.fixedGroupTemplate(fixedGroupText));
                         this.currentVisibleGroup = firstVisibleGroup;
                     }
                 }

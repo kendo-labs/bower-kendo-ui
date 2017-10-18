@@ -23,7 +23,10 @@
 
 */
 (function (f, define) {
-    define('kendo.timepicker', ['kendo.popup'], f);
+    define('kendo.timepicker', [
+        'kendo.popup',
+        'kendo.dateinput'
+    ], f);
 }(function () {
     var __meta__ = {
         id: 'timepicker',
@@ -580,12 +583,19 @@
                 $(e.currentTarget).toggleClass(HOVER, e.type === 'mouseenter');
             },
             _update: function (value) {
-                var that = this, options = that.options, timeView = that.timeView, date = timeView._parse(value);
+                var that = this, options = that.options, timeView = that.timeView, date = timeView._parse(value), current = that._value, isSameType = date === null && current === null || date instanceof Date && current instanceof Date, formattedValue;
                 if (!isInRange(date, options.min, options.max)) {
                     date = null;
                 }
+                if (+date === +current && isSameType) {
+                    formattedValue = kendo.toString(date, options.format, options.culture);
+                    if (formattedValue !== value) {
+                        that.element.val(date === null ? value : formattedValue);
+                    }
+                    return date;
+                }
                 that._value = date;
-                if (that._dateInput) {
+                if (that._dateInput && date) {
                     that._dateInput.value(date || value);
                 } else {
                     that.element.val(kendo.toString(date || value, options.format, options.culture));

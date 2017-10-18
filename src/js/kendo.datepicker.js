@@ -25,7 +25,8 @@
 (function (f, define) {
     define('kendo.datepicker', [
         'kendo.calendar',
-        'kendo.popup'
+        'kendo.popup',
+        'kendo.dateinput'
     ], f);
 }(function () {
     var __meta__ = {
@@ -467,7 +468,7 @@
                 }
                 that._value = date;
                 that.dateView.value(date);
-                if (that._dateInput) {
+                if (that._dateInput && date) {
                     that._dateInput.value(date || value);
                 } else {
                     that.element.val(kendo.toString(date || value, options.format, options.culture));

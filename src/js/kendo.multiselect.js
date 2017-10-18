@@ -161,6 +161,7 @@
                 this._aria(this.tagList.attr(ID));
                 this._tagTemplate();
                 this._placeholder();
+                this._clearButton();
             },
             currentTag: function (candidate) {
                 var that = this;
@@ -270,6 +271,10 @@
                     that._state = ACCEPT;
                     that.listView.skipUpdate(true);
                 }
+                if (that.listView.bound() && that.listView.isFiltered()) {
+                    that.persistTagList = true;
+                    that._clearFilter();
+                }
                 that.element.blur();
             },
             _removeTag: function (tag) {
@@ -297,6 +302,7 @@
                     that._close();
                 };
                 if (customIndex === undefined) {
+                    that.persistTagList = false;
                     listView.select(listView.select()[position]).done(done);
                 } else {
                     option = that.element[0].children[customIndex];
@@ -375,7 +381,9 @@
                     that._open = true;
                     that._state = REBIND;
                     that.listView.skipUpdate(true);
+                    that.persistTagList = true;
                     that._filterSource();
+                    that._focusItem();
                 } else if (that._allowOpening()) {
                     that.popup._hovered = true;
                     that.popup.open();
@@ -436,11 +444,13 @@
                     value = value.slice(0, maxSelectedItems);
                 }
                 if (clearFilters) {
+                    that.persistTagList = false;
                     that._clearFilter();
                 }
                 listView.value(value);
                 that._old = listView.value();
                 if (!clearFilters) {
+                    that.persistTagList = false;
                     that._fetchData();
                 }
             },
@@ -548,7 +558,10 @@
                 });
             },
             _getActiveItem: function () {
-                return this._activeItem || $(this.listView.items()[this.listView._selectedIndices.length - 1]) || this.listView.focus();
+                return this._activeItem || $(this.listView.items()[this._getSelectedIndices().length - 1]) || this.listView.focus();
+            },
+            _getSelectedIndices: function () {
+                return this.listView._selectedIndices || this.listView._selectedIndexes;
             },
             _keydown: function (e) {
                 var that = this;
@@ -616,10 +629,12 @@
                         that.currentTag(tag[0] ? tag : null);
                     }
                 } else if (e.ctrlKey && key === keys.A && visible) {
-                    if (listView._selectedIndices.length === listView.items().length) {
+                    if (this._getSelectedIndices().length === listView.items().length) {
                         that._activeItem = null;
                     }
-                    that._selectRange(0, listView.items().length - 1);
+                    if (listView.items().length) {
+                        that._selectRange(0, listView.items().length - 1);
+                    }
                 } else if (key === keys.ENTER && visible) {
                     that._select(listView.focus()).done(function () {
                         that._change();
@@ -627,19 +642,22 @@
                     });
                     e.preventDefault();
                 } else if (key === keys.SPACEBAR && e.ctrlKey && visible) {
-                    if (that._activeItem && listView.focus()[0] === that._activeItem[0]) {
+                    if (that._activeItem && listView.focus() && listView.focus()[0] === that._activeItem[0]) {
                         that._activeItem = null;
                     }
-                    if (!$(listView.focus()[0]).hasClass(SELECTEDCLASS)) {
+                    if (!$(listView.focus()).hasClass(SELECTEDCLASS)) {
                         that._activeItem = listView.focus();
                     }
                     that._select(listView.focus()).done(function () {
                         that._change();
                     });
+                    e.preventDefault();
                 } else if (key === keys.SPACEBAR && e.shiftKey && visible) {
-                    var activeIndex = listView.getElementIndex(that._getActiveItem()[0]);
-                    var currentIndex = listView.getElementIndex(listView.focus()[0]);
-                    that._selectRange(activeIndex, currentIndex);
+                    var activeIndex = listView.getElementIndex(that._getActiveItem());
+                    var currentIndex = listView.getElementIndex(listView.focus());
+                    if (activeIndex !== undefined && currentIndex !== undefined) {
+                        that._selectRange(activeIndex, currentIndex);
+                    }
                     e.preventDefault();
                 } else if (key === keys.ESC) {
                     if (visible) {
@@ -652,10 +670,14 @@
                     that.close();
                 } else if (key === keys.HOME) {
                     if (visible) {
-                        if (e.ctrlKey && e.shiftKey) {
-                            that._selectRange(listView.getElementIndex(listView.focus()[0]), 0);
+                        if (!listView.focus()) {
+                            that.close();
+                        } else {
+                            if (e.ctrlKey && e.shiftKey) {
+                                that._selectRange(listView.getElementIndex(listView.focus()[0]), 0);
+                            }
+                            listView.focusFirst();
                         }
-                        listView.focusFirst();
                     } else if (!hasValue) {
                         tag = that.tagList[0].firstChild;
                         if (tag) {
@@ -664,10 +686,14 @@
                     }
                 } else if (key === keys.END) {
                     if (visible) {
-                        if (e.ctrlKey && e.shiftKey) {
-                            that._selectRange(listView.getElementIndex(listView.focus()[0]), listView.element.children().length - 1);
+                        if (!listView.focus()) {
+                            that.close();
+                        } else {
+                            if (e.ctrlKey && e.shiftKey) {
+                                that._selectRange(listView.getElementIndex(listView.focus()[0]), listView.element.children().length - 1);
+                            }
+                            listView.focusLast();
                         }
-                        listView.focusLast();
                     } else if (!hasValue) {
                         tag = that.tagList[0].lastChild;
                         if (tag) {
@@ -675,6 +701,7 @@
                         }
                     }
                 } else if ((key === keys.DELETE || key === keys.BACKSPACE) && !hasValue) {
+                    that._state = '';
                     if (that.options.tagMode === 'single') {
                         listView.value([]);
                         that._change();
@@ -872,6 +899,16 @@
                     };
                 });
             },
+            updatePersistTagList: function (added, removed) {
+                if (this.persistTagList.added && this.persistTagList.added.length === removed.length && this.persistTagList.removed && this.persistTagList.removed.length === added.length) {
+                    this.persistTagList = false;
+                } else {
+                    this.persistTagList = {
+                        added: added,
+                        removed: removed
+                    };
+                }
+            },
             _selectValue: function (added, removed) {
                 var that = this;
                 var values = that.value();
@@ -881,6 +918,10 @@
                 var removedItem;
                 var addedItem;
                 var idx;
+                if (this.persistTagList) {
+                    this.updatePersistTagList(added, removed);
+                    return;
+                }
                 that._angularTagItems('cleanup');
                 if (that.options.tagMode === 'multiple') {
                     for (idx = removed.length - 1; idx > -1; idx--) {
@@ -928,7 +969,7 @@
                 if (that._state === REBIND) {
                     that._state = '';
                 }
-                if (!that._allowSelection()) {
+                if (!that._allowSelection() && !isSelected) {
                     return resolved;
                 }
                 if (that.trigger(isSelected ? DESELECT : SELECT, {
@@ -938,6 +979,7 @@
                     that._close();
                     return resolved;
                 }
+                that.persistTagList = false;
                 return listView.select(candidate).done(function () {
                     that._placeholder();
                     if (that._state === FILTER) {
@@ -948,24 +990,35 @@
             },
             _selectRange: function (startIndex, endIndex) {
                 var that = this;
-                var listView = that.listView;
-                var indices = listView._selectedIndices.slice();
-                var toggle = function (index) {
-                    if (listView._selectedIndices.indexOf(index) == -1) {
+                var listView = this.listView;
+                var maxSelectedItems = this.options.maxSelectedItems;
+                var indices = this._getSelectedIndices().slice();
+                var indicesToSelect = [];
+                var i;
+                if (startIndex < endIndex) {
+                    for (i = startIndex; i <= endIndex; i++) {
+                        indicesToSelect.push(i);
+                    }
+                } else {
+                    for (i = startIndex; i >= endIndex; i--) {
+                        indicesToSelect.push(i);
+                    }
+                }
+                if (maxSelectedItems !== null && indicesToSelect.length > maxSelectedItems) {
+                    indicesToSelect = indicesToSelect.slice(0, maxSelectedItems);
+                }
+                for (i = 0; i < indicesToSelect.length; i++) {
+                    var index = indicesToSelect[i];
+                    if (this._getSelectedIndices().indexOf(index) == -1) {
                         indices.push(index);
                     } else {
                         indices.splice(indices.indexOf(index), 1);
                     }
-                };
-                if (startIndex < endIndex) {
-                    for (var i = startIndex; i <= endIndex; i++) {
-                        toggle(i);
-                    }
-                } else {
-                    for (var j = startIndex; j >= endIndex; j--) {
-                        toggle(j);
-                    }
                 }
+                if (!indices.length) {
+                    return;
+                }
+                that.persistTagList = false;
                 return listView.select(indices).done(function () {
                     indices.forEach(function (index) {
                         var dataItem = listView.dataItemByIndex(index);
@@ -1024,10 +1077,7 @@
                 this._loading = $('<span class="k-icon k-i-loading ' + HIDDENCLASS + '"></span>').insertAfter(this.input);
             },
             _clearButton: function () {
-                this._clear = $('<span deselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
-                    'role': 'button',
-                    'tabIndex': -1
-                });
+                List.fn._clearButton.call(this);
                 if (this.options.clearButton) {
                     this._clear.insertAfter(this.input);
                     this.wrapper.addClass('k-multiselect-clearable');

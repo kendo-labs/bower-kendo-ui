@@ -173,6 +173,7 @@
                 this.listView.setOptions(listOptions);
                 this._accessors();
                 this._aria();
+                this._clearButton();
             },
             _listOptions: function (options) {
                 var listOptions = List.fn._listOptions.call(this, $.extend(options, { skipUpdateOnBind: true }));
@@ -570,10 +571,7 @@
                 this._loading = $('<span class="k-icon k-i-loading" style="display:none"></span>').insertAfter(this.element);
             },
             _clearButton: function () {
-                this._clear = $('<span unselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
-                    'role': 'button',
-                    'tabIndex': -1
-                });
+                List.fn._clearButton.call(this);
                 if (this.options.clearButton) {
                     this._clear.insertAfter(this.element);
                     this.wrapper.addClass('k-autocomplete-clearable');

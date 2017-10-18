@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.3.927'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.3.1018'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -3327,6 +3327,24 @@
                 }
             });
         };
+        kendo.focusElement = function (element) {
+            var scrollTopPositions = [];
+            var scrollableParents = element.parentsUntil('body').filter(function (index, element) {
+                var computedStyle = kendo.getComputedStyles(element, ['overflow']);
+                return computedStyle.overflow !== 'visible';
+            }).add(window);
+            scrollableParents.each(function (index, parent) {
+                scrollTopPositions[index] = $(parent).scrollTop();
+            });
+            try {
+                element[0].setActive();
+            } catch (e) {
+                element[0].focus();
+            }
+            scrollableParents.each(function (index, parent) {
+                $(parent).scrollTop(scrollTopPositions[index]);
+            });
+        };
         (function () {
             function postToProxy(dataURI, fileName, proxyURL, proxyTarget) {
                 var form = $('<form>').attr({
@@ -3803,7 +3821,7 @@
             },
             _urlChanged: function (e) {
                 var url = e.url;
-                var decode = typeof e.decode === 'undefined';
+                var decode = !!e.decode;
                 var back = e.backButtonPressed;
                 if (!url) {
                     url = '/';
@@ -4075,7 +4093,8 @@
                 }
                 if (support.pointers || support.msPointers) {
                     if (support.browser.version < 11) {
-                        element.css('-ms-touch-action', 'pinch-zoom double-tap-zoom');
+                        var defaultAction = 'pinch-zoom double-tap-zoom';
+                        element.css('-ms-touch-action', options.touchAction && options.touchAction != 'none' ? defaultAction + ' ' + options.touchAction : defaultAction);
                     } else {
                         element.css('touch-action', options.touchAction || 'none');
                     }
@@ -7309,7 +7328,7 @@
                 return this.reader.aggregates(data);
             },
             success: function (data) {
-                var that = this, options = that.options;
+                var that = this, options = that.options, requestParams;
                 that.trigger(REQUESTEND, {
                     response: data,
                     type: 'read'
@@ -7324,7 +7343,8 @@
                     if (that._aggregate && options.serverAggregates) {
                         that._aggregateResult = that._readAggregates(data);
                     }
-                    data = that._readData(data);
+                    requestParams = arguments.length > 1 ? arguments[1] : undefined;
+                    data = that._readData(data, requestParams);
                     that._destroyed = [];
                 } else {
                     data = that._readData(data);
@@ -12127,9 +12147,12 @@
                 container.attr('role', 'alert');
             },
             _extractMessage: function (input, ruleKey) {
-                var that = this, customMessage = that.options.messages[ruleKey], fieldName = input.attr(NAME);
+                var that = this, customMessage = that.options.messages[ruleKey], fieldName = input.attr(NAME), nonDefaultMessage;
+                if (!kendo.ui.Validator.prototype.options.messages[ruleKey]) {
+                    nonDefaultMessage = kendo.isFunction(customMessage) ? customMessage(input) : customMessage;
+                }
                 customMessage = kendo.isFunction(customMessage) ? customMessage(input) : customMessage;
-                return kendo.format(input.attr(kendo.attr(ruleKey + '-msg')) || input.attr('validationMessage') || input.attr('title') || customMessage || '', fieldName, input.attr(ruleKey) || input.attr(kendo.attr(ruleKey)));
+                return kendo.format(input.attr(kendo.attr(ruleKey + '-msg')) || input.attr('validationMessage') || nonDefaultMessage || input.attr('title') || customMessage || '', fieldName, input.attr(ruleKey) || input.attr(kendo.attr(ruleKey)));
             },
             _checkValidity: function (input) {
                 var rules = this.options.rules, rule;
@@ -14097,7 +14120,8 @@
                     global: true,
                     allowSelection: true,
                     filter: (!supportEventDelegation ? '.' + SELECTABLE + ' ' : '') + that.options.filter,
-                    tap: proxy(that._tap, that)
+                    tap: proxy(that._tap, that),
+                    touchAction: multiple ? 'none' : 'pan-x pan-y'
                 });
                 if (multiple) {
                     that.userEvents.bind('start', proxy(that._start, that)).bind('move', proxy(that._move, that)).bind('end', proxy(that._end, that)).bind('select', proxy(that._select, that));
@@ -15298,7 +15322,7 @@
             },
             _focusableElements: function () {
                 var elements = this.element.find(focusableNodesSelector).filter(function (i, item) {
-                    return item.tabIndex >= 0 && $(item).is(':visible');
+                    return item.tabIndex >= 0 && $(item).is(':visible') && !$(item).is(':disabled');
                 });
                 if (this.element.is('[tabindex]')) {
                     elements.push(this.element[0]);
@@ -17680,6 +17704,17 @@
                 that._open = options.open;
                 that._filterSource(expression);
             },
+            _clearButton: function () {
+                if (!this._clear) {
+                    this._clear = $('<span unselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
+                        'role': 'button',
+                        'tabIndex': -1
+                    });
+                }
+                if (!this.options.clearButton) {
+                    this._clear.remove();
+                }
+            },
             search: function (word) {
                 var options = this.options;
                 word = typeof word === 'string' ? word : this._inputValue();
@@ -17767,7 +17802,7 @@
                 var focusedElm = that._focused;
                 var inputElm = that.element;
                 var inputId = inputElm.attr('id');
-                var labelElm = $('label[for=\'' + inputId + '\']');
+                var labelElm = $('label[for="' + inputId + '"]');
                 var ariaLabel = inputElm.attr('aria-label');
                 var ariaLabelledBy = inputElm.attr('aria-labelledby');
                 if (focusedElm === inputElm) {
@@ -17988,8 +18023,7 @@
             },
             _triggerCascade: function () {
                 var that = this;
-                var noDataItemSelection = that._oldIndex == -1 || that.selectedIndex == -1;
-                if (!that._cascadeTriggered || that._old !== that.value() || noDataItemSelection && that._oldIndex !== that.selectedIndex) {
+                if (!that._cascadeTriggered || that._old !== that.value() || that._oldIndex !== that.selectedIndex) {
                     that._cascadeTriggered = true;
                     that.trigger(CASCADE, { userTriggered: that._userTriggered });
                 }
@@ -18050,6 +18084,7 @@
                 that._dataSource();
                 if (that.listView.bound()) {
                     that._initialIndex = null;
+                    that.listView._current = null;
                 }
                 that.listView.setDataSource(that.dataSource);
                 if (that.options.autoBind) {
@@ -20683,8 +20718,14 @@
                     element.removeAttr(DISABLED).removeAttr(READONLY);
                     that._bindInput();
                 } else {
-                    wrapper.addClass(STATEDISABLED).removeClass(STATEDEFAULT);
-                    element.attr(DISABLED, disable).attr(READONLY, readonly);
+                    if (disable) {
+                        wrapper.addClass(STATEDISABLED).removeClass(STATEDEFAULT);
+                        element.attr(DISABLED, disable);
+                        element.removeAttr(READONLY);
+                    }
+                    if (readonly) {
+                        element.attr(READONLY, readonly);
+                    }
                 }
             },
             _change: function () {
@@ -21307,7 +21348,8 @@
 (function (f, define) {
     define('kendo.datepicker', [
         'kendo.calendar',
-        'kendo.popup'
+        'kendo.popup',
+        'kendo.dateinput'
     ], f);
 }(function () {
     var __meta__ = {
@@ -21749,7 +21791,7 @@
                 }
                 that._value = date;
                 that.dateView.value(date);
-                if (that._dateInput) {
+                if (that._dateInput && date) {
                     that._dateInput.value(date || value);
                 } else {
                     that.element.val(kendo.toString(date || value, options.format, options.culture));
@@ -22742,7 +22784,8 @@
                 if (firstVisibleDataItem && firstVisibleDataItem.item) {
                     var firstVisibleGroup = firstVisibleDataItem.group;
                     if (firstVisibleGroup !== group) {
-                        this.header[0].innerHTML = firstVisibleGroup || '';
+                        var fixedGroupText = firstVisibleGroup || '';
+                        this.header.html(this.templates.fixedGroupTemplate(fixedGroupText));
                         this.currentVisibleGroup = firstVisibleGroup;
                     }
                 }
@@ -23206,6 +23249,7 @@
                 this.listView.setOptions(listOptions);
                 this._accessors();
                 this._aria();
+                this._clearButton();
             },
             _listOptions: function (options) {
                 var listOptions = List.fn._listOptions.call(this, $.extend(options, { skipUpdateOnBind: true }));
@@ -23603,10 +23647,7 @@
                 this._loading = $('<span class="k-icon k-i-loading" style="display:none"></span>').insertAfter(this.element);
             },
             _clearButton: function () {
-                this._clear = $('<span unselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
-                    'role': 'button',
-                    'tabIndex': -1
-                });
+                List.fn._clearButton.call(this);
                 if (this.options.clearButton) {
                     this._clear.insertAfter(this.element);
                     this.wrapper.addClass('k-autocomplete-clearable');
@@ -24157,6 +24198,8 @@
                 }
                 if (that._state === STATE_FILTER && key === keys.ESC) {
                     that._clearFilter();
+                    that._open = false;
+                    that._state = STATE_ACCEPT;
                 }
                 if (key === keys.ENTER && that._typingTimeout && that.filterInput && isPopupVisible) {
                     e.preventDefault();
@@ -24796,10 +24839,12 @@
                 'set'
             ],
             setOptions: function (options) {
+                var listOptions = this._listOptions(options);
                 Select.fn.setOptions.call(this, options);
-                this.listView.setOptions(options);
+                this.listView.setOptions(listOptions);
                 this._accessors();
                 this._aria();
+                this._clearButton();
             },
             destroy: function () {
                 var that = this;
@@ -25337,10 +25382,7 @@
                 }
             },
             _clearButton: function () {
-                this._clear = $('<span unselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
-                    'role': 'button',
-                    'tabIndex': -1
-                });
+                List.fn._clearButton.call(this);
                 if (this.options.clearButton) {
                     this._clear.insertAfter(this.input);
                     this.wrapper.addClass('k-combobox-clearable');
@@ -25581,6 +25623,7 @@
                 this._aria(this.tagList.attr(ID));
                 this._tagTemplate();
                 this._placeholder();
+                this._clearButton();
             },
             currentTag: function (candidate) {
                 var that = this;
@@ -25690,6 +25733,10 @@
                     that._state = ACCEPT;
                     that.listView.skipUpdate(true);
                 }
+                if (that.listView.bound() && that.listView.isFiltered()) {
+                    that.persistTagList = true;
+                    that._clearFilter();
+                }
                 that.element.blur();
             },
             _removeTag: function (tag) {
@@ -25717,6 +25764,7 @@
                     that._close();
                 };
                 if (customIndex === undefined) {
+                    that.persistTagList = false;
                     listView.select(listView.select()[position]).done(done);
                 } else {
                     option = that.element[0].children[customIndex];
@@ -25795,7 +25843,9 @@
                     that._open = true;
                     that._state = REBIND;
                     that.listView.skipUpdate(true);
+                    that.persistTagList = true;
                     that._filterSource();
+                    that._focusItem();
                 } else if (that._allowOpening()) {
                     that.popup._hovered = true;
                     that.popup.open();
@@ -25856,11 +25906,13 @@
                     value = value.slice(0, maxSelectedItems);
                 }
                 if (clearFilters) {
+                    that.persistTagList = false;
                     that._clearFilter();
                 }
                 listView.value(value);
                 that._old = listView.value();
                 if (!clearFilters) {
+                    that.persistTagList = false;
                     that._fetchData();
                 }
             },
@@ -25968,7 +26020,10 @@
                 });
             },
             _getActiveItem: function () {
-                return this._activeItem || $(this.listView.items()[this.listView._selectedIndices.length - 1]) || this.listView.focus();
+                return this._activeItem || $(this.listView.items()[this._getSelectedIndices().length - 1]) || this.listView.focus();
+            },
+            _getSelectedIndices: function () {
+                return this.listView._selectedIndices || this.listView._selectedIndexes;
             },
             _keydown: function (e) {
                 var that = this;
@@ -26036,10 +26091,12 @@
                         that.currentTag(tag[0] ? tag : null);
                     }
                 } else if (e.ctrlKey && key === keys.A && visible) {
-                    if (listView._selectedIndices.length === listView.items().length) {
+                    if (this._getSelectedIndices().length === listView.items().length) {
                         that._activeItem = null;
                     }
-                    that._selectRange(0, listView.items().length - 1);
+                    if (listView.items().length) {
+                        that._selectRange(0, listView.items().length - 1);
+                    }
                 } else if (key === keys.ENTER && visible) {
                     that._select(listView.focus()).done(function () {
                         that._change();
@@ -26047,19 +26104,22 @@
                     });
                     e.preventDefault();
                 } else if (key === keys.SPACEBAR && e.ctrlKey && visible) {
-                    if (that._activeItem && listView.focus()[0] === that._activeItem[0]) {
+                    if (that._activeItem && listView.focus() && listView.focus()[0] === that._activeItem[0]) {
                         that._activeItem = null;
                     }
-                    if (!$(listView.focus()[0]).hasClass(SELECTEDCLASS)) {
+                    if (!$(listView.focus()).hasClass(SELECTEDCLASS)) {
                         that._activeItem = listView.focus();
                     }
                     that._select(listView.focus()).done(function () {
                         that._change();
                     });
+                    e.preventDefault();
                 } else if (key === keys.SPACEBAR && e.shiftKey && visible) {
-                    var activeIndex = listView.getElementIndex(that._getActiveItem()[0]);
-                    var currentIndex = listView.getElementIndex(listView.focus()[0]);
-                    that._selectRange(activeIndex, currentIndex);
+                    var activeIndex = listView.getElementIndex(that._getActiveItem());
+                    var currentIndex = listView.getElementIndex(listView.focus());
+                    if (activeIndex !== undefined && currentIndex !== undefined) {
+                        that._selectRange(activeIndex, currentIndex);
+                    }
                     e.preventDefault();
                 } else if (key === keys.ESC) {
                     if (visible) {
@@ -26072,10 +26132,14 @@
                     that.close();
                 } else if (key === keys.HOME) {
                     if (visible) {
-                        if (e.ctrlKey && e.shiftKey) {
-                            that._selectRange(listView.getElementIndex(listView.focus()[0]), 0);
+                        if (!listView.focus()) {
+                            that.close();
+                        } else {
+                            if (e.ctrlKey && e.shiftKey) {
+                                that._selectRange(listView.getElementIndex(listView.focus()[0]), 0);
+                            }
+                            listView.focusFirst();
                         }
-                        listView.focusFirst();
                     } else if (!hasValue) {
                         tag = that.tagList[0].firstChild;
                         if (tag) {
@@ -26084,10 +26148,14 @@
                     }
                 } else if (key === keys.END) {
                     if (visible) {
-                        if (e.ctrlKey && e.shiftKey) {
-                            that._selectRange(listView.getElementIndex(listView.focus()[0]), listView.element.children().length - 1);
+                        if (!listView.focus()) {
+                            that.close();
+                        } else {
+                            if (e.ctrlKey && e.shiftKey) {
+                                that._selectRange(listView.getElementIndex(listView.focus()[0]), listView.element.children().length - 1);
+                            }
+                            listView.focusLast();
                         }
-                        listView.focusLast();
                     } else if (!hasValue) {
                         tag = that.tagList[0].lastChild;
                         if (tag) {
@@ -26095,6 +26163,7 @@
                         }
                     }
                 } else if ((key === keys.DELETE || key === keys.BACKSPACE) && !hasValue) {
+                    that._state = '';
                     if (that.options.tagMode === 'single') {
                         listView.value([]);
                         that._change();
@@ -26292,6 +26361,16 @@
                     };
                 });
             },
+            updatePersistTagList: function (added, removed) {
+                if (this.persistTagList.added && this.persistTagList.added.length === removed.length && this.persistTagList.removed && this.persistTagList.removed.length === added.length) {
+                    this.persistTagList = false;
+                } else {
+                    this.persistTagList = {
+                        added: added,
+                        removed: removed
+                    };
+                }
+            },
             _selectValue: function (added, removed) {
                 var that = this;
                 var values = that.value();
@@ -26301,6 +26380,10 @@
                 var removedItem;
                 var addedItem;
                 var idx;
+                if (this.persistTagList) {
+                    this.updatePersistTagList(added, removed);
+                    return;
+                }
                 that._angularTagItems('cleanup');
                 if (that.options.tagMode === 'multiple') {
                     for (idx = removed.length - 1; idx > -1; idx--) {
@@ -26348,7 +26431,7 @@
                 if (that._state === REBIND) {
                     that._state = '';
                 }
-                if (!that._allowSelection()) {
+                if (!that._allowSelection() && !isSelected) {
                     return resolved;
                 }
                 if (that.trigger(isSelected ? DESELECT : SELECT, {
@@ -26358,6 +26441,7 @@
                     that._close();
                     return resolved;
                 }
+                that.persistTagList = false;
                 return listView.select(candidate).done(function () {
                     that._placeholder();
                     if (that._state === FILTER) {
@@ -26368,24 +26452,35 @@
             },
             _selectRange: function (startIndex, endIndex) {
                 var that = this;
-                var listView = that.listView;
-                var indices = listView._selectedIndices.slice();
-                var toggle = function (index) {
-                    if (listView._selectedIndices.indexOf(index) == -1) {
+                var listView = this.listView;
+                var maxSelectedItems = this.options.maxSelectedItems;
+                var indices = this._getSelectedIndices().slice();
+                var indicesToSelect = [];
+                var i;
+                if (startIndex < endIndex) {
+                    for (i = startIndex; i <= endIndex; i++) {
+                        indicesToSelect.push(i);
+                    }
+                } else {
+                    for (i = startIndex; i >= endIndex; i--) {
+                        indicesToSelect.push(i);
+                    }
+                }
+                if (maxSelectedItems !== null && indicesToSelect.length > maxSelectedItems) {
+                    indicesToSelect = indicesToSelect.slice(0, maxSelectedItems);
+                }
+                for (i = 0; i < indicesToSelect.length; i++) {
+                    var index = indicesToSelect[i];
+                    if (this._getSelectedIndices().indexOf(index) == -1) {
                         indices.push(index);
                     } else {
                         indices.splice(indices.indexOf(index), 1);
                     }
-                };
-                if (startIndex < endIndex) {
-                    for (var i = startIndex; i <= endIndex; i++) {
-                        toggle(i);
-                    }
-                } else {
-                    for (var j = startIndex; j >= endIndex; j--) {
-                        toggle(j);
-                    }
                 }
+                if (!indices.length) {
+                    return;
+                }
+                that.persistTagList = false;
                 return listView.select(indices).done(function () {
                     indices.forEach(function (index) {
                         var dataItem = listView.dataItemByIndex(index);
@@ -26444,10 +26539,7 @@
                 this._loading = $('<span class="k-icon k-i-loading ' + HIDDENCLASS + '"></span>').insertAfter(this.input);
             },
             _clearButton: function () {
-                this._clear = $('<span deselectable="on" class="k-icon k-clear-value k-i-close" title="clear"></span>').attr({
-                    'role': 'button',
-                    'tabIndex': -1
-                });
+                List.fn._clearButton.call(this);
                 if (this.options.clearButton) {
                     this._clear.insertAfter(this.input);
                     this.wrapper.addClass('k-multiselect-clearable');
@@ -29628,7 +29720,7 @@
             return field.type || $.type(field) || 'string';
         }
         function convertToValueBinding(container) {
-            container.find(':input:not(:button, [role=\'combobox\'], [' + kendo.attr('role') + '=listbox], [' + kendo.attr('role') + '=upload], [' + kendo.attr('skip') + '], [type=file])').each(function () {
+            container.find(':input:not(:button, .k-combobox .k-input, [' + kendo.attr('role') + '=listbox], [' + kendo.attr('role') + '=upload], [' + kendo.attr('skip') + '], [type=file])').each(function () {
                 var bindAttr = kendo.attr('bind'), binding = this.getAttribute(bindAttr) || '', bindingName = this.type === 'checkbox' || this.type === 'radio' ? 'checked:' : 'value:', fieldName = this.name;
                 if (binding.indexOf(bindingName) === -1 && fieldName) {
                     binding += (binding.length ? ',' : '') + bindingName + fieldName;
@@ -30117,7 +30209,7 @@
                 var that = this, navigatable = that.options.navigatable, element = that.element, clickCallback = function (e) {
                         that.current($(e.currentTarget));
                         if (!$(e.target).is(':button,a,:input,a>.k-icon,textarea')) {
-                            element.focus();
+                            kendo.focusElement(element);
                         }
                     };
                 if (navigatable) {
@@ -30452,7 +30544,7 @@
             return typeof value === 'undefined';
         }
         function defaultHint(element) {
-            return element.clone().removeClass(DRAGGEDCLASS).addClass(kendo.format('{0} {1} {2}', SELECTED_STATE_CLASS, RESET, DRAG_CLUE_CLASS)).width(element.width());
+            return element.clone().removeClass(DRAGGEDCLASS).removeClass(FOCUSED_CLASS).addClass(kendo.format('{0} {1} {2}', SELECTED_STATE_CLASS, RESET, DRAG_CLUE_CLASS)).width(element.width());
         }
         function defaultPlaceholder() {
             return $('<li>').addClass(DROP_HINT_CLASS);
@@ -30749,7 +30841,7 @@
                 }
             },
             focus: function () {
-                this._getList().focus();
+                kendo.focusElement(this._getList());
             },
             _createDraggable: function () {
                 var that = this;
@@ -30991,6 +31083,8 @@
                 that._clear();
                 that._draggable.dropped = true;
                 that.trigger(DRAGEND, extend({}, eventData, { draggableEvent: e }));
+                that._updateToolbar();
+                that._updateAllToolbars();
             },
             reorder: function (item, index) {
                 var that = this;
@@ -32388,6 +32482,23 @@
             item.filter(':first-child').addClass(FIRST);
             item.filter(':last-child').addClass(LAST);
         }
+        function updateHasAriaPopup(parents) {
+            if (parents && parents.length) {
+                for (var index in parents) {
+                    var parentLi = parents.eq(index);
+                    if (parentLi.find('ul').length) {
+                        parentLi.attr('aria-haspopup', true);
+                    } else {
+                        parentLi.removeAttr('aria-haspopup');
+                    }
+                }
+            }
+        }
+        function getParentLiItems(group) {
+            if (!group.hasClass(MENU)) {
+                return group.parentsUntil('.' + MENU, 'li');
+            }
+        }
         function storeItemSelectEventHandler(element, options) {
             var selectHandler = getItemSelectEventHandler(options);
             if (selectHandler) {
@@ -32759,6 +32870,7 @@
                 });
                 updateArrow(referenceItem);
                 updateFirstLast(inserted.group.find('.k-first, .k-last').add(inserted.items));
+                updateHasAriaPopup(getParentLiItems(inserted.group));
                 return this;
             },
             insertBefore: function (item, referenceItem) {
@@ -32832,12 +32944,14 @@
                 var that = this, parent = element.parentsUntil(that.element, allItemsSelector), group = element.parent('ul:not(.k-menu)');
                 element.remove();
                 if (group && !group.children(allItemsSelector).length) {
+                    var parentItems = getParentLiItems(group);
                     var container = group.parent(animationContainerSelector);
                     if (container.length) {
                         container.remove();
                     } else {
                         group.remove();
                     }
+                    updateHasAriaPopup(parentItems);
                 }
                 if (parent.length) {
                     parent = parent.eq(0);
@@ -32968,6 +33082,7 @@
                             }
                             ul.removeAttr('aria-hidden');
                             that._configurePopupOverflow(popup, li);
+                            popup._hovered = true;
                             popup.open();
                             that._initPopupScrolling(popup);
                         }
@@ -34055,7 +34170,7 @@
                 },
                 arrowClass: function (item) {
                     var result = 'k-icon';
-                    result += item.expanded ? ' k-panelbar-collapse k-i-arrow-n' : ' k-panelbar-expand k-i-arrow-s';
+                    result += item.expanded ? ' k-panelbar-collapse k-i-arrow-60-up' : ' k-panelbar-expand k-i-arrow-60-down';
                     return result;
                 },
                 text: function (item) {
@@ -34328,7 +34443,7 @@
                     return dataItem.hasChildren || dataItem.content || dataItem.contentUrl;
                 }).children('.k-link:not(:has([class*=k-i-arrow]))').each(function () {
                     var item = $(this), parent = item.parent();
-                    item.append('<span class=\'k-icon ' + (parent.hasClass(ACTIVECLASS) ? ' k-panelbar-collapse k-i-arrow-n' : ' k-panelbar-expand k-i-arrow-s') + '\'/>');
+                    item.append('<span class=\'k-icon ' + (parent.hasClass(ACTIVECLASS) ? ' k-panelbar-collapse k-i-arrow-60-up' : ' k-panelbar-expand k-i-arrow-60-down') + '\'/>');
                 });
             },
             _accessors: function () {
@@ -35042,7 +35157,7 @@
                     return;
                 }
                 element.attr(ARIA_HIDDEN, !!visibility);
-                element.parent().attr(ARIA_EXPANDED, !visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand').toggleClass('k-i-arrow-n', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-s', visibility).toggleClass('k-panelbar-expand', visibility);
+                element.parent().attr(ARIA_EXPANDED, !visibility).toggleClass(ACTIVECLASS, !visibility).find('> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand').toggleClass('k-i-arrow-60-up', !visibility).toggleClass('k-panelbar-collapse', !visibility).toggleClass('k-i-arrow-60-down', visibility).toggleClass('k-panelbar-expand', visibility);
                 if (visibility) {
                     animation = extend(collapse, { hide: true });
                     animation.complete = function () {
@@ -35706,7 +35821,7 @@
             tabs.children(IMG).addClass(IMAGE);
             tabs.children('a').addClass(LINK).children(IMG).addClass(IMAGE);
             tabs.filter(':not([disabled]):not([class*=k-state-disabled])').addClass(DEFAULTSTATE);
-            tabs.filter('li[disabled]').addClass(DISABLEDSTATE).removeAttr('disabled');
+            tabs.filter('li[disabled]').addClass(DISABLEDSTATE).attr('aria-disabled', 'true').removeAttr('disabled');
             tabs.filter(':not([class*=k-state])').children('a').filter(':focus').parent().addClass(ACTIVESTATE + ' ' + TABONTOP);
             tabs.attr('role', 'tab');
             tabs.filter('.' + ACTIVESTATE).attr('aria-selected', true);
@@ -35836,9 +35951,7 @@
                     return focused;
                 }
                 if (focused) {
-                    if (focused[0].id === id) {
-                        focused.removeAttr('id');
-                    }
+                    that.tabGroup.children('#' + id).removeAttr('id');
                     focused.removeClass(FOCUSEDSTATE);
                 }
                 if (candidate) {
@@ -36218,7 +36331,7 @@
             _toggleDisabled: function (element, enable) {
                 element = this.tabGroup.find(element);
                 element.each(function () {
-                    $(this).toggleClass(DEFAULTSTATE, enable).toggleClass(DISABLEDSTATE, !enable);
+                    $(this).toggleClass(DEFAULTSTATE, enable).toggleClass(DISABLEDSTATE, !enable).attr('aria-disabled', !enable);
                 });
             },
             _updateClasses: function () {
@@ -36347,9 +36460,8 @@
                 if (item.is('.' + DISABLEDSTATE + (!collapse ? ',.' + ACTIVESTATE : ''))) {
                     oldFocusedTab.removeClass(FOCUSEDSTATE);
                     that._focused = item;
-                    if (item.is('.' + DISABLEDSTATE)) {
-                        item.addClass(FOCUSEDSTATE);
-                    }
+                    item.addClass(FOCUSEDSTATE);
+                    that._current(item);
                     if (that._scrollableModeActive) {
                         that._scrollTabsToItem(item);
                     }
@@ -36747,7 +36859,10 @@
     (a3 || a2)();
 }));
 (function (f, define) {
-    define('kendo.timepicker', ['kendo.popup'], f);
+    define('kendo.timepicker', [
+        'kendo.popup',
+        'kendo.dateinput'
+    ], f);
 }(function () {
     var __meta__ = {
         id: 'timepicker',
@@ -37304,12 +37419,19 @@
                 $(e.currentTarget).toggleClass(HOVER, e.type === 'mouseenter');
             },
             _update: function (value) {
-                var that = this, options = that.options, timeView = that.timeView, date = timeView._parse(value);
+                var that = this, options = that.options, timeView = that.timeView, date = timeView._parse(value), current = that._value, isSameType = date === null && current === null || date instanceof Date && current instanceof Date, formattedValue;
                 if (!isInRange(date, options.min, options.max)) {
                     date = null;
                 }
+                if (+date === +current && isSameType) {
+                    formattedValue = kendo.toString(date, options.format, options.culture);
+                    if (formattedValue !== value) {
+                        that.element.val(date === null ? value : formattedValue);
+                    }
+                    return date;
+                }
                 that._value = date;
-                if (that._dateInput) {
+                if (that._dateInput && date) {
                     that._dateInput.value(date || value);
                 } else {
                     that.element.val(kendo.toString(date || value, options.format, options.culture));
@@ -37701,7 +37823,7 @@
                         timeView.bind();
                     }
                 }
-                if (that._dateInput) {
+                if (that._dateInput && date) {
                     that._dateInput.value(date || value);
                 } else {
                     that.element.val(kendo.toString(date || value, options.format, options.culture));
@@ -39133,7 +39255,7 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', WINDOWEVENTSHANDLED = 'WindowEventsHandled', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KDIALOGCONTENT = '.k-dialog-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', WINDOWEVENTSHANDLED = 'WindowEventsHandled', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl;
         function defined(x) {
             return typeof x != 'undefined';
         }
@@ -39218,7 +39340,7 @@
                         }
                     });
                     globalWindow.on('focus' + NS, function () {
-                        $(KWINDOWCONTENT).each(function (i, element) {
+                        $(KWINDOWCONTENT).not(KDIALOGCONTENT).each(function (i, element) {
                             kendo.widgetInstance($(element))._blur();
                         });
                     });
@@ -45955,6 +46077,9 @@
                 if (angular.isString(options.selectable)) {
                     cell = options.selectable.indexOf('cell') !== -1;
                     multiple = options.selectable.indexOf('multiple') !== -1;
+                }
+                if (widget._checkBoxSelection) {
+                    multiple = true;
                 }
                 elems = locals.selected = this.select();
                 items = locals.data = [];

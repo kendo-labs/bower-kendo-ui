@@ -192,8 +192,14 @@
                     element.removeAttr(DISABLED).removeAttr(READONLY);
                     that._bindInput();
                 } else {
-                    wrapper.addClass(STATEDISABLED).removeClass(STATEDEFAULT);
-                    element.attr(DISABLED, disable).attr(READONLY, readonly);
+                    if (disable) {
+                        wrapper.addClass(STATEDISABLED).removeClass(STATEDEFAULT);
+                        element.attr(DISABLED, disable);
+                        element.removeAttr(READONLY);
+                    }
+                    if (readonly) {
+                        element.attr(READONLY, readonly);
+                    }
                 }
             },
             _change: function () {
