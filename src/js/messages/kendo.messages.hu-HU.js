@@ -107,6 +107,7 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
   "style": "Stílusok",
   "emptyFolder": "Üres mappa",
   "uploadFile": "Feltöltés",
+  "overflowAnchor": "További eszközök",
   "orderBy": "Rendezés:",
   "orderBySize": "Méret",
   "orderByName": "Név",
@@ -145,6 +146,7 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
   "summary": "Összegzés",
   "width": "Szélesség",
   "height": "Magasság",
+  "units": "Mértékegységek",
   "cellSpacing": "Cella térköz",
   "cellPadding": "Cella párnázás",
   "cellMargin": "Cella margó",
@@ -190,7 +192,7 @@ $.extend(true, kendo.ui.FileBrowser.prototype.options.messages,{
   "deleteFile": "Biztos, hogy törli a fájlt: \"{0}\"?",
   "invalidFileType": "A fájl \"{0}\" nem megfelelő típusú. Támogatott fájltípusok: {1}.",
   "overwriteFile": "A mappában már létezik \"{0}\" nevű fájl. Kívánja felülírni?",
-  "dropFilesHere": "húzza ide a fájlt a feltöltéshez",
+  "dropFilesHere": "Húzza ide a feltöltendő fájlokat",
   "search": "Keresés"
 });
 }
@@ -357,7 +359,7 @@ $.extend(true, kendo.ui.Gantt.prototype.options.messages,{
     "resourcesHeader": "Erőforrások",
     "start": "Indítás",
     "title": "Cím",
-    "unitsHeader": "Egységek"
+    "unitsHeader": "Mértékegységek"
   },
   "save": "Mentés",
   "views": {
@@ -393,7 +395,8 @@ $.extend(true, kendo.ui.Grid.prototype.options.messages,{
     "confirmation": "Biztos, hogy törli az elemet?",
     "confirmDelete": "Törlés"
   },
-  "noRecords": "Nincsenek elérhető elemek."
+  "noRecords": "Nincsenek elérhető elemek.",
+  "expandCollapseColumnHeader": ""
 });
 }
 
@@ -837,6 +840,16 @@ $.extend(true, kendo.spreadsheet.messages.filterMenu,{
 });
 }
 
+if (kendo.spreadsheet && kendo.spreadsheet.messages.colorPicker) {
+kendo.spreadsheet.messages.colorPicker =
+$.extend(true, kendo.spreadsheet.messages.colorPicker,{
+  "reset": "Alapértelmezett szín",
+  "customColor": "Egyéni szín...",
+  "apply": "Alkalmaz",
+  "cancel": "Mégse"
+});
+}
+
 if (kendo.spreadsheet && kendo.spreadsheet.messages.toolbar) {
 kendo.spreadsheet.messages.toolbar =
 $.extend(true, kendo.spreadsheet.messages.toolbar,{
@@ -947,6 +960,23 @@ $.extend(true, kendo.ui.Slider.prototype.options,{
 });
 }
 
+/* ListBox messaages */
+
+if (kendo.ui.ListBox) {
+kendo.ui.ListBox.prototype.options.messages =
+$.extend(true, kendo.ui.ListBox.prototype.options.messages,{
+  "tools": {
+    "remove": "Törlés",
+    "moveUp": "Mozgatás felfelé",
+    "moveDown": "Mozgatás lefelé",
+    "transferTo": "Felvétel",
+    "transferFrom": "Eltávolítás",
+    "transferAllTo": "Összes felvétele",
+    "transferAllFrom": "Összes eltávolítása"
+  }
+});
+}
+
 /* TreeList messages */
 
 if (kendo.ui.TreeList) {
@@ -1003,7 +1033,7 @@ $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "remove": "Eltávolítás",
   "clearSelectedFiles": "Törlés",
   "uploadSelectedFiles": "Fájlok feltöltése",
-  "dropFilesHere": "húzza ide a feltöltendő fájlokat",
+  "dropFilesHere": "Húzza ide a feltöltendő fájlokat",
   "statusUploading": "feltöltés",
   "statusUploaded": "feltöltve",
   "statusWarning": "figyelem",
@@ -1050,6 +1080,14 @@ $.extend(true, kendo.ui.Dialog.prototype.options.localization, {
 });
 }
 
+/* Calendar */
+if (kendo.ui.Calendar) {
+kendo.ui.Calendar.prototype.options.messages =
+$.extend(true, kendo.ui.Calendar.prototype.options.messages, {
+  "weekColumnHeader": ""
+});
+}
+
 /* Alert */
 
 if (kendo.ui.Alert) {
@@ -1076,6 +1114,21 @@ $.extend(true, kendo.ui.Prompt.prototype.options.localization, {
   "okText": "OK",
   "cancel": "Mégse"
 });
+}
+
+/* DateInput */
+if (kendo.ui.DateInput) {
+  kendo.ui.DateInput.prototype.options.messages =
+    $.extend(true, kendo.ui.DateInput.prototype.options.messages, {
+      "year": "év",
+      "month": "hónap",
+      "day": "nap",
+      "weekday": "a hét napja",
+      "hour": "órák",
+      "minute": "prcek",
+      "second": "másodpercek",
+      "dayperiod": "DE/DU"
+    });
 }
 
 })(window.kendo.jQuery);
