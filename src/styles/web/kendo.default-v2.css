@@ -746,7 +746,7 @@ kendo-sortable {
   -webkit-box-sizing: inherit;
           box-sizing: inherit;
   border-radius: 50%;
-  border: .03em solid currentColor;
+  border: .05em solid currentColor;
   border-top-color: transparent;
   border-bottom-color: transparent;
   background-color: transparent;
@@ -3223,41 +3223,29 @@ kendo-sortable {
 .k-space-right .k-icon {
   right: 3px;
 }
-.k-widget.ng-invalid.ng-dirty .k-dateinput-wrap,
-.k-widget.ng-invalid.ng-dirty .k-dropdown-wrap,
-.k-widget.ng-invalid.ng-dirty .k-numeric-wrap,
-.k-widget.ng-invalid.ng-dirty .k-picker-wrap,
-.k-widget.ng-invalid.ng-touched .k-dateinput-wrap,
-.k-widget.ng-invalid.ng-touched .k-dropdown-wrap,
-.k-widget.ng-invalid.ng-touched .k-numeric-wrap,
-.k-widget.ng-invalid.ng-touched .k-picker-wrap,
-.ng-invalid.ng-dirty.k-block .k-dateinput-wrap,
-.ng-invalid.ng-dirty.k-block .k-dropdown-wrap,
-.ng-invalid.ng-dirty.k-block .k-numeric-wrap,
-.ng-invalid.ng-dirty.k-block .k-picker-wrap,
-.ng-invalid.ng-touched.k-block .k-dateinput-wrap,
-.ng-invalid.ng-touched.k-block .k-dropdown-wrap,
-.ng-invalid.ng-touched.k-block .k-numeric-wrap,
-.ng-invalid.ng-touched.k-block .k-picker-wrap {
+.ng-invalid.ng-dirty.k-autocomplete,
+.ng-invalid.ng-dirty .k-dateinput-wrap,
+.ng-invalid.ng-dirty.k-maskedtextbox > .k-textbox,
+.ng-invalid.ng-dirty > .k-dropdown-wrap,
+.ng-invalid.ng-dirty > .k-numeric-wrap,
+.ng-invalid.ng-dirty > .k-picker-wrap,
+.ng-invalid.ng-touched.k-autocomplete,
+.ng-invalid.ng-touched .k-dateinput-wrap,
+.ng-invalid.ng-touched.k-maskedtextbox > .k-textbox,
+.ng-invalid.ng-touched > .k-dropdown-wrap,
+.ng-invalid.ng-touched > .k-numeric-wrap,
+.ng-invalid.ng-touched > .k-picker-wrap {
   color: #f31700;
   border-color: rgba(243, 23, 0, 0.5);
 }
-.k-widget.ng-invalid.ng-dirty .k-dateinput-wrap .k-select,
-.k-widget.ng-invalid.ng-dirty .k-dropdown-wrap .k-select,
-.k-widget.ng-invalid.ng-dirty .k-numeric-wrap .k-select,
-.k-widget.ng-invalid.ng-dirty .k-picker-wrap .k-select,
-.k-widget.ng-invalid.ng-touched .k-dateinput-wrap .k-select,
-.k-widget.ng-invalid.ng-touched .k-dropdown-wrap .k-select,
-.k-widget.ng-invalid.ng-touched .k-numeric-wrap .k-select,
-.k-widget.ng-invalid.ng-touched .k-picker-wrap .k-select,
-.ng-invalid.ng-dirty.k-block .k-dateinput-wrap .k-select,
-.ng-invalid.ng-dirty.k-block .k-dropdown-wrap .k-select,
-.ng-invalid.ng-dirty.k-block .k-numeric-wrap .k-select,
-.ng-invalid.ng-dirty.k-block .k-picker-wrap .k-select,
-.ng-invalid.ng-touched.k-block .k-dateinput-wrap .k-select,
-.ng-invalid.ng-touched.k-block .k-dropdown-wrap .k-select,
-.ng-invalid.ng-touched.k-block .k-numeric-wrap .k-select,
-.ng-invalid.ng-touched.k-block .k-picker-wrap .k-select {
+.ng-invalid.ng-dirty .k-dateinput-wrap .k-select,
+.ng-invalid.ng-dirty > .k-dropdown-wrap .k-select,
+.ng-invalid.ng-dirty > .k-numeric-wrap .k-select,
+.ng-invalid.ng-dirty > .k-picker-wrap .k-select,
+.ng-invalid.ng-touched .k-dateinput-wrap .k-select,
+.ng-invalid.ng-touched > .k-dropdown-wrap .k-select,
+.ng-invalid.ng-touched > .k-numeric-wrap .k-select,
+.ng-invalid.ng-touched > .k-picker-wrap .k-select {
   color: inherit;
 }
 .form-control.k-block,
@@ -4336,6 +4324,9 @@ kendo-sortable {
   border-right-style: solid;
   margin-left: 0;
 }
+.k-action-buttons {
+  border-color: rgba(0, 0, 0, 0.08);
+}
 .k-action-buttons .k-button {
   color: inherit;
 }
@@ -4446,6 +4437,9 @@ kendo-sortable {
 .k-edit-field .k-checkbox-label,
 .k-edit-field .k-radio-label {
   margin-right: 1em;
+}
+.k-edit-field .k-checkbox-label {
+  margin-top: 4px;
 }
 .k-edit-field .k-reset > li + li {
   margin-top: 0.5em;
@@ -5468,10 +5462,14 @@ div.k-grid-header {
 .k-header.k-drag-clue {
   overflow: hidden;
 }
-.k-filter-menu {
-  padding: 2px;
+.k-grid-no-scrollbar .k-grid-header-wrap {
+  border-width: 0;
 }
-.k-filter-menu .k-button {
+.k-filter-menu .k-filter-menu-container,
+.k-filter-menu > div:not(.k-animation-container) {
+  padding: 0.5em 1em;
+}
+.k-filter-menu > div > div > .k-button {
   margin: .5em 1% 0;
   width: 48%;
   -webkit-box-sizing: border-box;
@@ -5479,19 +5477,23 @@ div.k-grid-header {
   display: inline-block;
 }
 .k-filter-menu .k-block,
+.k-filter-menu .k-radio-list,
 .k-filter-menu .k-textbox,
 .k-filter-menu .k-widget {
-  margin: .5em 0 0;
+  margin: .5em 0;
   width: 100%;
   display: block;
-}
-.k-filter-menu .k-textbox {
-  margin-bottom: 3px;
 }
 .k-filter-menu .k-filter-and.k-block,
 .k-filter-menu .k-widget.k-filter-and {
   width: 6em;
-  margin: 0.5em 0;
+  margin: 1em 0;
+}
+.k-filter-menu .k-action-buttons {
+  margin: 1em -1em -0.5em;
+}
+.k-filter-menu .k-action-buttons .k-button {
+  margin: 0;
 }
 .k-multicheck-wrap {
   max-height: 300px;
@@ -6422,33 +6424,27 @@ th.k-sorted {
 .k-spreadsheet-fixed-container {
   width: 100%;
   height: 100%;
-  border-color: inherit;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  position: absolute;
   z-index: 2;
 }
+.k-spreadsheet-fixed-container,
 .k-spreadsheet-pane {
-  padding: 0 1px 0 0;
-  border: 1px solid;
   border-color: inherit;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   position: absolute;
+}
+.k-spreadsheet-pane {
+  padding: 0 1px 0 0;
+  border-width: 2px 0 0 2px;
+  border-style: solid;
   overflow: hidden;
 }
 .k-spreadsheet-pane.k-top {
   border-top-width: 0;
-}
-.k-spreadsheet-pane.k-right {
-  border-right-width: 0;
-}
-.k-spreadsheet-pane.k-bottom {
-  border-bottom-width: 0;
 }
 .k-spreadsheet-pane.k-left {
   border-left-width: 0;
@@ -6561,8 +6557,8 @@ th.k-sorted {
 }
 .k-spreadsheet .k-single-selection:after {
   content: "";
-  margin-bottom: -5px;
-  margin-right: -5px;
+  margin-bottom: -4px;
+  margin-right: -4px;
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -6571,6 +6567,11 @@ th.k-sorted {
   bottom: 0;
   right: 0;
   z-index: 100;
+}
+.k-spreadsheet-selection.k-bottom:after,
+.k-spreadsheet-selection.k-right:after {
+  margin-right: -2px;
+  margin-bottom: -2px;
 }
 .k-spreadsheet .k-autofill-wrapper {
   position: relative;
@@ -6840,22 +6841,35 @@ th.k-sorted {
 .k-spreadsheet-selection {
   border-color: #ff6358;
   background-color: rgba(255, 99, 88, 0.25);
-  -webkit-box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #ff6358;
-          box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #ff6358;
+  -webkit-box-shadow: inset 0 0 0 1px #ff6358;
+          box-shadow: inset 0 0 0 1px #ff6358;
 }
 .k-spreadsheet .k-single-selection:after {
   border-color: #fff;
   background-color: #ff6358;
 }
 .k-spreadsheet-active-cell {
-  border-color: #ff6358;
+  -webkit-box-shadow: inset 0 0 0 1px #ff6358;
+          box-shadow: inset 0 0 0 1px #ff6358;
   background-color: #fff;
+}
+.k-spreadsheet-active-cell.k-right {
+  -webkit-box-shadow: inset 0 0 0 1px #ff6358, inset -1px 0 0 1px #ff6358;
+          box-shadow: inset 0 0 0 1px #ff6358, inset -1px 0 0 1px #ff6358;
+}
+.k-spreadsheet-active-cell.k-bottom.k-right {
+  -webkit-box-shadow: inset 0 0 0 1px #ff6358, inset -1px -1px 0 1px #ff6358;
+          box-shadow: inset 0 0 0 1px #ff6358, inset -1px -1px 0 1px #ff6358;
+}
+.k-spreadsheet-active-cell.k-bottom.k-left {
+  -webkit-box-shadow: inset 0 0 0 1px #ff6358, inset 0 -1px 0 1px #ff6358;
+          box-shadow: inset 0 0 0 1px #ff6358, inset 0 -1px 0 1px #ff6358;
 }
 .k-spreadsheet .k-auto-fill {
   border-color: #ff6358;
   background-color: rgba(255, 99, 88, 0.25);
-  -webkit-box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #ff6358;
-          box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #ff6358;
+  -webkit-box-shadow: inset 0 0 0 1px #ff6358;
+          box-shadow: inset 0 0 0 1px #ff6358;
 }
 .k-spreadsheet .k-auto-fill-punch {
   background-color: rgba(255, 255, 255, 0.5);
@@ -8727,9 +8741,10 @@ th.k-sorted {
 .k-timepicker .k-dateinput {
   width: 100%;
   -webkit-box-flex: 1;
-  -ms-flex: 1;
-  -webkit-flex: 1;
-          flex: 1;
+  -ms-flex: 1 1 0%;
+  -webkit-flex: 1 1 0%;
+          flex: 1 1 0%;
+  margin: 0;
 }
 .k-datepicker .k-dateinput-wrap,
 .k-datetimepicker .k-dateinput-wrap,
@@ -10422,6 +10437,9 @@ table.k-editor {
   -ms-transform: scale(1);
       transform: scale(1);
 }
+.k-radio-list .k-radio-label {
+  line-height: 20px;
+}
 .k-fieldset {
   margin: 30px;
   border-width: 1px 0 0;
@@ -10751,6 +10769,7 @@ fieldset legend {
 }
 .k-multiselect[dir=rtl] .k-multiselect-wrap .k-button,
 .k-rtl .k-multiselect .k-multiselect-wrap .k-button {
+  width: auto;
   margin: 2px 2px 0 0;
 }
 .k-multiselect[dir=rtl] .k-multiselect-wrap .k-button .k-select,
@@ -10965,14 +10984,6 @@ fieldset legend {
 .k-switch [type=checkbox] {
   display: none;
 }
-.k-switch[dir=rtl] .k-switch-label-off {
-  left: -2.4em;
-  margin-left: -2px;
-}
-.k-switch[dir=rtl] .k-switch-label-on {
-  left: 2.4em;
-  margin-left: 3px;
-}
 .k-switch,
 .k-switch-container,
 .k-switch-handle,
@@ -11007,12 +11018,10 @@ fieldset legend {
   vertical-align: middle;
 }
 .k-switch-label-off {
-  left: 2.4em;
-  margin-left: 3px;
+  left: 3em;
 }
 .k-switch-label-on {
   left: -2.4em;
-  margin-left: -2px;
 }
 .k-switch-label-off,
 .k-switch-label-on {
@@ -11029,6 +11038,12 @@ fieldset legend {
 .k-switch-wrapper {
   border-width: 1px;
   border-style: solid;
+}
+.k-switch[dir=rtl] .k-switch-label-off {
+  left: -2.4em;
+}
+.k-switch[dir=rtl] .k-switch-label-on {
+  left: 3em;
 }
 .k-switch,
 .k-switch-container,
@@ -13646,6 +13661,12 @@ fieldset legend {
   position: absolute;
 }
 .k-menu-group .k-menu-group {
+  padding: 0;
+}
+.k-popups-wrapper {
+  position: relative;
+  border: 0;
+  margin: 0;
   padding: 0;
 }
 .k-menu.k-context-menu {
