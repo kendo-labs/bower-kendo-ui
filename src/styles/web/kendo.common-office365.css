@@ -6600,7 +6600,17 @@ div[name="recurrenceRule"] > .k-dropdown {
 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
   display: none;
 }
-.k-scheduler-toolbar li.k-nav-current .k-sm-date-format {
+.k-scheduler-toolbar .k-nav-current .k-lg-date-format,
+.k-scheduler-toolbar .k-nav-current .k-sm-date-format {
+  vertical-align: top;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.k-scheduler-toolbar .k-nav-current .k-lg-date-format {
+  display: inline-block;
+}
+.k-scheduler-toolbar .k-nav-current .k-sm-date-format {
   display: none;
 }
 .k-scheduler-refresh {
@@ -6626,7 +6636,7 @@ div[name="recurrenceRule"] > .k-dropdown {
     display: none;
   }
   .k-scheduler-toolbar li.k-nav-current .k-sm-date-format {
-    display: inline;
+    display: inline-block;
   }
   .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
     display: block;
