@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.3.1102'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.3.1115'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -17462,6 +17462,7 @@
                 var that = this;
                 var currentOptions = that.options;
                 var virtual = currentOptions.virtual;
+                var changeEventOption = { change: proxy(that._listChange, that) };
                 var listBoundHandler = proxy(that._listBound, that);
                 virtual = typeof virtual === 'object' ? virtual : {};
                 options = $.extend({
@@ -17469,7 +17470,6 @@
                     selectable: true,
                     dataSource: that.dataSource,
                     click: proxy(that._click, that),
-                    change: proxy(that._listChange, that),
                     activate: proxy(that._activateItem, that),
                     deactivate: proxy(that._deactivateItem, that),
                     dataBinding: function () {
@@ -17482,7 +17482,7 @@
                     groupTemplate: currentOptions.groupTemplate,
                     fixedGroupTemplate: currentOptions.fixedGroupTemplate,
                     template: currentOptions.template
-                }, options, virtual);
+                }, options, virtual, changeEventOption);
                 if (!options.template) {
                     options.template = '#:' + kendo.expr(options.dataTextField, 'data') + '#';
                 }
@@ -33599,7 +33599,7 @@
                 if (!item || !item.length || !item[0].nodeType) {
                     return false;
                 }
-                return item.children('ul.k-menu-group, div.k-animation-container').length > 0 || !!item.data(POPUP_OPENER_ATTR) && !!this._overflowWrapper().children(popupGroupSelector(item.data(POPUP_OPENER_ATTR)));
+                return item.children('.k-menu-group, div.k-animation-container').length > 0 || !!item.data(POPUP_OPENER_ATTR) && !!this._overflowWrapper().children(popupGroupSelector(item.data(POPUP_OPENER_ATTR)));
             },
             _moveHover: function (item, nextItem) {
                 var that = this, id = that._ariaId;

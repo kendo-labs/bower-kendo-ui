@@ -2410,14 +2410,13 @@ kendo-sortable {
 .k-i-page-landscape:before {
   content: "\E922";
 }
+.k-rtl .k-i-collapse,
+.k-rtl .k-i-expand,
 .k-rtl .k-i-indent-decrease,
 .k-rtl .k-i-indent-increase {
   -webkit-transform: scaleX(-1);
   -ms-transform: scaleX(-1);
       transform: scaleX(-1);
-}
-.k-rtl .k-i-expand:before {
-  content: "\E007";
 }
 .k-sprite {
   width: 16px;
@@ -4439,7 +4438,7 @@ kendo-sortable {
   margin-right: 1em;
 }
 .k-edit-field .k-checkbox-label {
-  margin-top: 4px;
+  margin-top: 5px;
 }
 .k-edit-field .k-reset > li + li {
   margin-top: 0.5em;
@@ -4902,12 +4901,6 @@ kendo-sortable {
   border-left-width: 1px;
   border-right-width: 0;
 }
-.k-grid[dir=rtl] td,
-.k-grid[dir=rtl] th,
-.k-rtl .k-grid td,
-.k-rtl .k-grid th {
-  position: relative;
-}
 .k-grid[dir=rtl] td:first-child,
 .k-grid[dir=rtl] th:first-child,
 .k-rtl .k-grid td:first-child,
@@ -4942,6 +4935,24 @@ kendo-sortable {
 .k-rtl .k-grid .k-dirty {
   left: auto;
   right: 0;
+}
+.k-grid[dir=rtl] .k-edit-cell > .k-block,
+.k-grid[dir=rtl] .k-edit-cell > .k-textbox,
+.k-grid[dir=rtl] .k-edit-cell > .k-widget,
+.k-grid[dir=rtl] .k-edit-cell > .text-box,
+.k-grid[dir=rtl] .k-grid-edit-row > td > .k-block,
+.k-grid[dir=rtl] .k-grid-edit-row > td > .k-textbox,
+.k-grid[dir=rtl] .k-grid-edit-row > td > .k-widget,
+.k-grid[dir=rtl] .k-grid-edit-row > td > .text-box,
+.k-rtl .k-grid .k-edit-cell > .k-block,
+.k-rtl .k-grid .k-edit-cell > .k-textbox,
+.k-rtl .k-grid .k-edit-cell > .k-widget,
+.k-rtl .k-grid .k-edit-cell > .text-box,
+.k-rtl .k-grid .k-grid-edit-row > td > .k-block,
+.k-rtl .k-grid .k-grid-edit-row > td > .k-textbox,
+.k-rtl .k-grid .k-grid-edit-row > td > .k-widget,
+.k-rtl .k-grid .k-grid-edit-row > td > .text-box {
+  margin-right: -9px;
 }
 .k-grid .k-tooltip.k-tooltip-validation {
   display: -webkit-box;
@@ -5151,6 +5162,12 @@ div.k-grid-header {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.k-ff .k-grid-header .k-header > .k-link {
+  -webkit-margin-start: 0;
+  margin-inline-start: 0;
+  -webkit-padding-start: 0;
+  padding-inline-start: 0;
 }
 .k-grid-header .k-header.k-filterable > .k-link {
   margin-right: -webkit-calc(10px + 1.42857em);
@@ -11553,6 +11570,15 @@ fieldset legend {
 .k-treemap .k-leaf {
   padding: 4px;
 }
+.k-arcgauge {
+  display: inline-block;
+}
+.k-arcgauge-label {
+  position: absolute;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
 .k-var--accent {
   background-color: #ff6358;
 }
@@ -11615,6 +11641,12 @@ fieldset legend {
 }
 .k-var--series-f {
   background-color: #aa46be;
+}
+.k-var--gauge-pointer {
+  background-color: #ff6358;
+}
+.k-var--gauge-track {
+  background-color: #e6e6e6;
 }
 .k-var--chart-inactive {
   background-color: rgba(102, 102, 102, 0.5);

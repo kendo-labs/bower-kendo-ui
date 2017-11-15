@@ -1343,7 +1343,7 @@
                 if (!item || !item.length || !item[0].nodeType) {
                     return false;
                 }
-                return item.children('ul.k-menu-group, div.k-animation-container').length > 0 || !!item.data(POPUP_OPENER_ATTR) && !!this._overflowWrapper().children(popupGroupSelector(item.data(POPUP_OPENER_ATTR)));
+                return item.children('.k-menu-group, div.k-animation-container').length > 0 || !!item.data(POPUP_OPENER_ATTR) && !!this._overflowWrapper().children(popupGroupSelector(item.data(POPUP_OPENER_ATTR)));
             },
             _moveHover: function (item, nextItem) {
                 var that = this, id = that._ariaId;
