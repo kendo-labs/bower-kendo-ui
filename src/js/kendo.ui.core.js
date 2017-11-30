@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2017.3.1116'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2017.3.1130'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -39727,6 +39727,9 @@
                 if (that.options.isMaximized) {
                     return that;
                 }
+                if (that.options.pinned && !that._isPinned) {
+                    that.pin();
+                }
                 if (!that.options.pinned) {
                     scrollTop = documentWindow.scrollTop();
                     scrollLeft = documentWindow.scrollLeft();
@@ -39867,11 +39870,11 @@
             },
             _close: function (systemTriggered) {
                 var that = this, wrapper = that.wrapper, options = that.options, showOptions = this._animationOptions('open'), hideOptions = this._animationOptions('close'), doc = $(document);
+                if (that._closing) {
+                    return;
+                }
+                that._closing = true;
                 if (wrapper.is(VISIBLE) && !that.trigger(CLOSE, { userTriggered: !systemTriggered })) {
-                    if (that._closing) {
-                        return;
-                    }
-                    that._closing = true;
                     options.visible = false;
                     $(KWINDOW).each(function (i, element) {
                         var contentElement = $(element).children(KWINDOWCONTENT);
@@ -40098,7 +40101,6 @@
                     wrapper.children(KWINDOWTITLEBAR).find(KPIN).addClass('k-i-unpin').removeClass('k-i-pin');
                     that._isPinned = true;
                     that.options.pinned = true;
-                    that.options.draggable = false;
                 }
             },
             unpin: function () {
@@ -40112,7 +40114,6 @@
                     wrapper.children(KWINDOWTITLEBAR).find(KUNPIN).addClass('k-i-pin').removeClass('k-i-unpin');
                     that._isPinned = false;
                     that.options.pinned = false;
-                    that.options.draggable = true;
                 }
             },
             _onDocumentResize: function () {

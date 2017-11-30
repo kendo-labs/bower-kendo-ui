@@ -4464,9 +4464,6 @@ input.k-textbox {
 .k-ie input.k-textbox {
   text-indent: 0.2855em;
 }
-.k-ff input.k-textbox {
-  height: 2.17em;
-}
 textarea.k-textbox {
   height: auto;
 }

@@ -504,12 +504,6 @@ kendo-sortable {
   -webkit-filter: grayscale(0);
   filter: grayscale(0);
 }
-.k-state-error {
-  border-style: ridge;
-}
-.k-state-empty {
-  font-style: italic;
-}
 .k-dirty {
   border-color: #dc3545 #dc3545 transparent transparent;
 }
@@ -4958,6 +4952,11 @@ div.k-grid-header {
   border-style: solid;
   border-width: 0 1px 0 0;
 }
+.k-grid-content-locked + .k-grid-content.k-auto-scrollable,
+.k-grid-footer-locked + .k-grid-content.k-auto-scrollable,
+.k-grid-header-locked + .k-grid-content.k-auto-scrollable {
+  display: inline-block;
+}
 .k-grid-content,
 .k-grid-footer-wrap,
 .k-grid-header-wrap {
@@ -4967,6 +4966,11 @@ div.k-grid-header {
           flex: 1 1 auto;
   display: inline-block;
   vertical-align: top;
+}
+.k-grid-content.k-auto-scrollable,
+.k-grid-footer-wrap.k-auto-scrollable,
+.k-grid-header-wrap.k-auto-scrollable {
+  display: block;
 }
 .k-grid-header-locked > table,
 .k-grid-header-wrap > table {
@@ -5801,24 +5805,34 @@ div.k-grid-header {
 .k-spreadsheet-fixed-container {
   width: 100%;
   height: 100%;
+  border-color: inherit;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  position: absolute;
   z-index: 2;
 }
-.k-spreadsheet-fixed-container,
+.k-spreadsheet-overflow {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.k-spreadsheet-overflow,
 .k-spreadsheet-pane {
-  border-color: inherit;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
   position: absolute;
+  overflow: hidden;
+  border-color: inherit;
 }
 .k-spreadsheet-pane {
   padding: 0 1px 0 0;
   border-width: 2px 0 0 2px;
   border-style: solid;
-  overflow: hidden;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 .k-spreadsheet-pane.k-top {
   border-top-width: 0;
@@ -9024,9 +9038,6 @@ table.k-editor {
           flex: 1 1 auto;
   width: auto;
 }
-.k-textbox-container.k-state-empty {
-  font-style: normal;
-}
 .k-textbox-container.k-state-empty > .k-label {
   -webkit-transform: translate(0) scale(1);
   -ms-transform: translate(0) scale(1);
@@ -9589,6 +9600,10 @@ fieldset legend {
   -ms-flex: 1 1 0px;
   -webkit-flex: 1 1 0;
           flex: 1 1 0;
+}
+.k-numeric-wrap > .k-input:invalid {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-numerictextbox .k-numeric-wrap,
 .k-numerictextbox .k-select {
@@ -12926,10 +12941,10 @@ html .k-upload {
   display: block;
 }
 .k-splitbar-draggable-horizontal {
-  cursor: w-resize;
+  cursor: col-resize;
 }
 .k-splitbar-draggable-vertical {
-  cursor: n-resize;
+  cursor: row-resize;
 }
 .k-collapse-next,
 .k-collapse-prev,
@@ -13014,6 +13029,67 @@ html .k-upload {
 .k-pane > .k-splitter-overlay {
   opacity: 0;
   position: absolute;
+}
+.k-splitter-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  height: auto;
+}
+.k-splitter-flex .k-pane {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  -webkit-flex: 1 1 auto;
+          flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 0;
+  max-height: 100%;
+}
+.k-splitter-flex .k-pane-static {
+  -webkit-box-flex: 0;
+  -ms-flex-positive: 0;
+  -webkit-flex-grow: 0;
+          flex-grow: 0;
+  -ms-flex-negative: 0;
+  -webkit-flex-shrink: 0;
+          flex-shrink: 0;
+}
+.k-splitter-flex .k-pane-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+.k-splitter-flex .k-splitbar {
+  position: static;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  -webkit-flex: 0 0 auto;
+          flex: 0 0 auto;
+}
+.k-splitter-flex.k-splitter-horizontal {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  -webkit-flex-direction: row;
+          flex-direction: row;
+}
+.k-splitter-flex.k-splitter-horizontal[dir=rtl] {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: row-reverse;
+  -webkit-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+}
+.k-splitter-flex.k-splitter-vertical {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  -webkit-flex-direction: column;
+          flex-direction: column;
 }
 .k-splitbar {
   color: #000;
@@ -13494,7 +13570,7 @@ html .k-upload {
   white-space: nowrap;
 }
 .k-progressbar > .k-state-selected {
-  position: relative;
+  position: absolute;
   overflow: hidden;
   border-style: solid;
   border-width: 0;

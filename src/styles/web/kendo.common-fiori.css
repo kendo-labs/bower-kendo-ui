@@ -4464,9 +4464,6 @@ input.k-textbox {
 .k-ie input.k-textbox {
   text-indent: 0.4em;
 }
-.k-ff input.k-textbox {
-  height: 2.17em;
-}
 textarea.k-textbox {
   height: auto;
 }
@@ -12112,10 +12109,6 @@ div.k-spreadsheet-window {
   line-height: 1.571em;
   padding: .5em 0;
   text-indent: .714em;
-}
-input.k-textbox,
-.k-ff input.k-textbox {
-  height: 2.857em;
 }
 .k-button {
   line-height: 1.143em;
