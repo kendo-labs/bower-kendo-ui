@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -200,16 +200,21 @@
                 }
                 return -1;
             },
-            forEach: function (callback) {
-                var idx = 0, length = this.length;
+            forEach: function (callback, thisArg) {
+                var idx = 0;
+                var length = this.length;
+                var context = thisArg || window;
                 for (; idx < length; idx++) {
-                    callback(this[idx], idx, this);
+                    callback.call(context, this[idx], idx, this);
                 }
             },
-            map: function (callback) {
-                var idx = 0, result = [], length = this.length;
+            map: function (callback, thisArg) {
+                var idx = 0;
+                var result = [];
+                var length = this.length;
+                var context = thisArg || window;
                 for (; idx < length; idx++) {
-                    result[idx] = callback(this[idx], idx, this);
+                    result[idx] = callback.call(context, this[idx], idx, this);
                 }
                 return result;
             },
@@ -237,40 +242,53 @@
                 }
                 return result;
             },
-            filter: function (callback) {
-                var idx = 0, result = [], item, length = this.length;
+            filter: function (callback, thisArg) {
+                var idx = 0;
+                var result = [];
+                var item;
+                var length = this.length;
+                var context = thisArg || window;
                 for (; idx < length; idx++) {
                     item = this[idx];
-                    if (callback(item, idx, this)) {
+                    if (callback.call(context, item, idx, this)) {
                         result[result.length] = item;
                     }
                 }
                 return result;
             },
-            find: function (callback) {
-                var idx = 0, item, length = this.length;
+            find: function (callback, thisArg) {
+                var idx = 0;
+                var item;
+                var length = this.length;
+                var context = thisArg || window;
                 for (; idx < length; idx++) {
                     item = this[idx];
-                    if (callback(item, idx, this)) {
+                    if (callback.call(context, item, idx, this)) {
                         return item;
                     }
                 }
             },
-            every: function (callback) {
-                var idx = 0, item, length = this.length;
+            every: function (callback, thisArg) {
+                var idx = 0;
+                var item;
+                var length = this.length;
+                var context = thisArg || window;
                 for (; idx < length; idx++) {
                     item = this[idx];
-                    if (!callback(item, idx, this)) {
+                    if (!callback.call(context, item, idx, this)) {
                         return false;
                     }
                 }
                 return true;
             },
-            some: function (callback) {
-                var idx = 0, item, length = this.length;
+            some: function (callback, thisArg) {
+                var idx = 0;
+                var item;
+                var length = this.length;
+                var context = thisArg || window;
                 for (; idx < length; idx++) {
                     item = this[idx];
-                    if (callback(item, idx, this)) {
+                    if (callback.call(context, item, idx, this)) {
                         return true;
                     }
                 }
@@ -1374,6 +1392,7 @@
                     add: noop
                 };
                 parameterMap = options.parameterMap;
+                that.submit = options.submit;
                 if (isFunction(options.push)) {
                     that.push = options.push;
                 }
@@ -1701,14 +1720,13 @@
                 }
             }
         }
-        function removeModel(data, model, skip, take) {
+        function removeModel(data, model) {
             var length = data.length;
-            var startIndex = skip || 0;
-            var endIndex = typeof take !== 'undefined' ? math.min(startIndex + take, length) : length;
+            var dataItem;
             var idx;
-            for (idx = startIndex; idx < endIndex; idx++) {
-                var dataItem = data.at(idx);
-                if (dataItem.uid == model.uid) {
+            for (idx = 0; idx < length; idx++) {
+                dataItem = data[idx];
+                if (dataItem.uid && dataItem.uid == model.uid) {
                     data.splice(idx, 1);
                     return dataItem;
                 }
@@ -2129,11 +2147,7 @@
             remove: function (model) {
                 var result, that = this, hasGroups = that._isServerGrouped();
                 this._eachItem(that._data, function (items) {
-                    if (that.options.useRanges && !that.options.serverPaging) {
-                        result = removeModel(items, model, that.currentRangeStart(), that.take());
-                    } else {
-                        result = removeModel(items, model);
-                    }
+                    result = removeModel(items, model);
                     if (result && hasGroups) {
                         if (!result.isNew || !result.isNew()) {
                             that._destroyed.push(result);
@@ -3265,20 +3279,13 @@
             },
             _removeModelFromRanges: function (model) {
                 var that = this;
-                var result, found, range;
+                var result, range;
                 for (var idx = 0, length = this._ranges.length; idx < length; idx++) {
                     range = this._ranges[idx];
                     this._eachItem(range.data, function (items) {
-                        if (that.options.useRanges && !that.options.serverPaging) {
-                            result = removeModel(items, model, that.currentRangeStart(), that.take());
-                        } else {
-                            result = removeModel(items, model);
-                        }
-                        if (result) {
-                            found = true;
-                        }
+                        result = removeModel(items, model);
                     });
-                    if (found) {
+                    if (result) {
                         break;
                     }
                 }

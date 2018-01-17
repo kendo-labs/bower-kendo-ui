@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -130,12 +130,6 @@
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
 }
-.k-button:focus,
-.k-button.k-state-focused {
-  border-color: #a3d0e4;
-  -webkit-box-shadow: inset 0 0 3px 1px #8bc4dd;
-          box-shadow: inset 0 0 3px 1px #8bc4dd;
-}
 .k-button:active,
 .k-button.k-state-active {
   color: #fff;
@@ -145,31 +139,29 @@
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.0)), to(rgba(255,255,255,.23)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-button.k-state-active:hover {
   color: #ffffff;
   border-color: #1cb1ef;
   background-color: #157299;
 }
-.k-button:focus:active:not(.k-state-disabled):not([disabled]) {
+.k-button:focus,
+.k-button.k-state-focused {
+  border-color: #a3d0e4;
+  -webkit-box-shadow: inset 0 0 3px 1px #8bc4dd;
+          box-shadow: inset 0 0 3px 1px #8bc4dd;
+}
+.k-button:focus:active {
   -webkit-box-shadow: inset 0 0 3px 1px #0e4a64;
           box-shadow: inset 0 0 3px 1px #0e4a64;
 }
 .k-button[disabled],
-.k-button[disabled]:hover,
-.k-button[disabled]:focus,
-.k-button[disabled]:active,
-.k-button[disabled]:hover:active,
 .k-state-disabled .k-button,
 .k-state-disabled .k-button:hover,
-.k-state-disabled .k-button:focus,
-.k-state-disabled .k-button:active,
-.k-state-disabled .k-button:active:active,
 .k-button.k-state-disabled,
-.k-button.k-state-disabled:hover,
-.k-button.k-state-disabled:focus,
-.k-button.k-state-disabled:active,
-.k-button.k-state-disabled:hover:active {
+.k-button.k-state-disabled:hover {
   color: #9fcee2;
   border-color: #a3d0e4;
   background-color: #daecf4;
@@ -177,6 +169,10 @@
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,.0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
+}
+.k-button[disabled],
+.k-button.k-state-disabled,
+.k-button.k-state-disabled:active {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -220,60 +216,24 @@
           box-shadow: 0 0 3px 0 #13688c;
 }
 .k-primary[disabled],
-.k-primary[disabled]:hover,
-.k-primary[disabled]:focus,
-.k-primary[disabled]:active,
-.k-primary[disabled]:hover:active,
 .k-state-disabled .k-primary,
 .k-state-disabled .k-primary:hover,
-.k-state-disabled .k-primary:focus,
-.k-state-disabled .k-primary:active,
-.k-state-disabled .k-primary:hover:active,
 .k-primary.k-state-disabled,
-.k-primary.k-state-disabled:hover,
-.k-primary.k-state-disabled:focus,
-.k-primary.k-state-disabled:active,
-.k-primary.k-state-disabled:hover:active {
+.k-primary.k-state-disabled:hover {
   color: #e6e6e6;
   border-color: #e6e6e6;
   background-color: #1883b0;
-  background-image: url('textures/highlight.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.0)), to(rgba(255,255,255,.23)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   -webkit-box-shadow: none;
           box-shadow: none;
-}
-.k-button-group .k-button {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-button-group .k-button:focus,
-.k-button-group .k-button.k-state-focused,
-.k-button-group > input[type="radio"]:focus + .k-button,
-.k-button-group > input[type="checkbox"]:focus + .k-button {
-  -webkit-box-shadow: inset 0 0 3px 1px #8bc4dd;
-          box-shadow: inset 0 0 3px 1px #8bc4dd;
-}
-.k-button-group .k-button:active,
-.k-button-group .k-button.k-state-active,
-.k-button-group > input[type="radio"]:checked + .k-button,
-.k-button-group > input[type="checkbox"]:checked + .k-button {
-  color: #fff;
-  background-color: #13688c;
-  border-color: #146b90;
   background-image: url('textures/highlight.png');
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.0)), to(rgba(255,255,255,.23)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
 }
-.k-button-group .k-button:active:hover,
-.k-button-group .k-button.k-state-active:hover,
-.k-button-group > input[type="radio"]:checked + .k-button:hover,
-.k-button-group > input[type="checkbox"]:checked + .k-button:hover {
-  color: #ffffff;
-  border-color: #1cb1ef;
-  background-color: #157299;
+.k-primary[disabled],
+.k-primary.k-state-disabled {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-button-group .k-button {
   border-radius: 0;
@@ -290,6 +250,51 @@
 }
 .k-button-group .k-group-start.k-group-end,
 .k-button-group .k-button:first-child:last-child {
+  border-radius: 4px;
+}
+.k-button-group .k-button[disabled],
+.k-state-disabled .k-button-group .k-button,
+.k-button-group .k-button.k-state-disabled {
+  color: #9fcee2;
+  border-color: #a3d0e4;
+  background-color: #daecf4;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,.0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,.0) 100%);
+}
+.k-button-group .k-button.k-state-active {
+  color: #fff;
+  background-color: #13688c;
+  border-color: #146b90;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.0)), to(rgba(255,255,255,.23)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.0) 0%, rgba(255,255,255,.23) 100%);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-button-group .k-button:focus,
+.k-button-group .k-button.k-state-focused {
+  border-color: #a3d0e4;
+  -webkit-box-shadow: inset 0 0 3px 1px #8bc4dd;
+          box-shadow: inset 0 0 3px 1px #8bc4dd;
+}
+.k-rtl .k-button-group .k-button {
+  border-radius: 0;
+}
+.k-rtl .k-button-group .k-group-start,
+.k-rtl .k-button-group .k-button:first-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.k-rtl .k-button-group .k-group-end,
+.k-rtl .k-button-group .k-button:last-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.k-rtl .k-button-group .k-group-start.k-group-end,
+.k-rtl .k-button-group .k-button:first-child:last-child {
   border-radius: 4px;
 }
 .k-in,
@@ -533,6 +538,12 @@ html .km-pane-wrapper .k-header {
 .k-mobile-list .k-edit-field [type=radio]:checked {
   opacity: 0.9;
 }
+/* Badge */
+.k-badge {
+  background-color: #13688c;
+  color: #fff;
+  border-radius: 3px;
+}
 .k-tool {
   border-color: transparent;
 }
@@ -542,6 +553,15 @@ html .km-pane-wrapper .k-header {
 .k-mobile-list .k-edit-field [type=radio]:checked {
   background-image: url('BlueOpal/sprite.png');
   border-color: transparent;
+}
+.k-mobile-list .k-check:checked,
+.k-mobile-list .k-edit-field [type=checkbox]:checked {
+  font-family: 'WebComponentsIcons';
+  background-image: none;
+}
+.k-mobile-list .k-check:checked:before,
+.k-mobile-list .k-edit-field [type=checkbox]:checked:before {
+  content: "\e118";
 }
 .k-i-loading {
   background-image: url('BlueOpal/loading.gif');
@@ -586,7 +606,8 @@ html .km-pane-wrapper .k-header {
   border-color: #a3d0e4;
 }
 .k-nonwork-hour,
-.k-scheduler-dayview .k-today.k-nonwork-hour {
+.k-scheduler-dayview .k-today.k-nonwork-hour,
+.k-scheduler-timelineview .k-today.k-nonwork-hour {
   background-color: #e6f2f8;
 }
 .k-gantt .k-nonwork-hour {
@@ -609,7 +630,7 @@ html .km-pane-wrapper .k-header {
 .k-event,
 .k-task-complete {
   border-color: #5ec0e9;
-  background: #1ea4dd 0 -257px url('textures/highlight.png') repeat-x;
+  background: #1ea4dd 0 -257px none repeat-x;
   color: #003f59;
 }
 .k-event-inverse {
@@ -856,6 +877,10 @@ td.k-state-focused.k-state-selected {
   background-color: #7bd2f6;
   border-color: #8bc4dd;
 }
+.k-pager-wrap .k-link.k-state-disabled {
+  color: #003f59;
+  border-color: #bbdceb;
+}
 /* this selector should be used separately, otherwise old IEs ignore the whole rule */
 .k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active {
   color: #003f59;
@@ -883,7 +908,6 @@ div.k-filebrowser-dropzone em,
   background-color: #d9ecf5;
   color: #00435e;
 }
-.k-autocomplete.k-state-active,
 .k-picker-wrap.k-state-active,
 .k-numeric-wrap.k-state-active,
 .k-dropdown-wrap.k-state-active,
@@ -907,22 +931,6 @@ div.k-filebrowser-dropzone em,
 .k-other-month.k-state-hover .k-link,
 div.k-filebrowser-dropzone em {
   color: #003f59;
-}
-.k-autocomplete.k-state-hover,
-.k-autocomplete.k-state-focused,
-.k-picker-wrap.k-state-hover,
-.k-picker-wrap.k-state-focused,
-.k-numeric-wrap.k-state-hover,
-.k-numeric-wrap.k-state-focused,
-.k-dropdown-wrap.k-state-hover,
-.k-dropdown-wrap.k-state-focused {
-  background-color: #7ad2f7;
-  background-image: url('textures/highlight.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
-  background-position: 50% 50%;
-  border-color: #8bc4dd;
 }
 .km-pane-wrapper .k-mobile-list input:not([type="checkbox"]):not([type="radio"]),
 .km-pane-wrapper .km-pane .k-mobile-list select:not([multiple]),
@@ -1646,7 +1654,8 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-mobile-list > ul > li > .k-link,
 .km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-label:nth-child(3),
 .km-pane-wrapper #recurrence .km-scroll-container > .k-edit-label:first-child {
-  color: #3690b7;
+  color: #00435e;
+  opacity: 0.7;
 }
 .km-pane-wrapper .k-mobile-list > ul > li > .k-link {
   border-bottom: 1px solid #a3d0e4;
@@ -1685,7 +1694,6 @@ html .km-pane-wrapper .km-widget,
   background-color: #deeef5;
   border-color: #a3d0e4;
 }
-.k-autocomplete.k-state-hover,
 .k-picker-wrap.k-state-hover,
 .k-numeric-wrap.k-state-hover,
 .k-dropdown-wrap.k-state-hover {
@@ -1695,6 +1703,10 @@ html .km-pane-wrapper .km-widget,
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
+  border-color: #8bc4dd;
+}
+.k-autocomplete.k-state-hover,
+.k-multiselect.k-header.k-state-hover {
   border-color: #8bc4dd;
 }
 input.k-textbox,
@@ -1707,17 +1719,21 @@ textarea.k-textbox,
 .k-multiselect.k-header.k-state-hover {
   border-color: #8bc4dd;
 }
-.k-autocomplete.k-state-focused,
 .k-picker-wrap.k-state-focused,
 .k-numeric-wrap.k-state-focused,
-.k-dropdown-wrap.k-state-focused,
-.k-multiselect.k-header.k-state-focused {
+.k-dropdown-wrap.k-state-focused {
   background-color: #7ad2f7;
   background-image: url('textures/highlight.png');
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.4)), to(rgba(255,255,255,.0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
+  border-color: #bdbdbd;
+  -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+}
+.k-autocomplete.k-state-focused,
+.k-multiselect.k-header.k-state-focused {
   border-color: #bdbdbd;
   -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
           box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
@@ -1774,8 +1790,8 @@ textarea.k-textbox,
   background-image: none;
   border-color: #68b1d2;
 }
-.k-tabstrip-top .k-tabstrip-items .k-state-active,
-.k-panelbar .k-tabstrip-top .k-tabstrip-items .k-state-active {
+.k-tabstrip-top > .k-tabstrip-items .k-state-active,
+.k-panelbar .k-tabstrip-top > .k-tabstrip-items .k-state-active {
   border-bottom-color: #fff;
 }
 .k-tabstrip .k-content.k-state-active {
@@ -2194,6 +2210,16 @@ textarea.k-textbox,
   .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
     position: absolute;
   }
+  .k-grid .k-pager-numbers:not(.k-state-expanded) {
+    -webkit-transform: none;
+        -ms-transform: none;
+            transform: none;
+  }
+  .k-grid .k-pager-numbers:not(.k-state-expanded) .k-current-page {
+    -webkit-transform: none;
+        -ms-transform: none;
+            transform: none;
+  }
 }
 .k-chart .k-mask {
   background-color: #fff;
@@ -2296,15 +2322,31 @@ textarea.k-textbox,
 .k-auto-fill,
 .k-spreadsheet-selection {
   border-color: #13688c;
-  -webkit-box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #13688c;
-          box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #13688c;
+  -webkit-box-shadow: inset 0 0 0 1px #13688c;
+          box-shadow: inset 0 0 0 1px #13688c;
+}
+.k-auto-fill-wrapper .k-tooltip {
+  background: #fff;
 }
 .k-spreadsheet-selection {
   background-color: rgba(19, 104, 140, 0.2);
 }
 .k-spreadsheet-active-cell {
-  border-color: #13688c !important;
+  -webkit-box-shadow: inset 0 0 0 1px #13688c;
+          box-shadow: inset 0 0 0 1px #13688c;
   background-color: #fff;
+}
+.k-spreadsheet-active-cell.k-right {
+  -webkit-box-shadow: inset 0 0 0 1px #13688c, inset -1px 0 0 1px #13688c;
+          box-shadow: inset 0 0 0 1px #13688c, inset -1px 0 0 1px #13688c;
+}
+.k-spreadsheet-active-cell.k-bottom {
+  -webkit-box-shadow: inset 0 0 0 1px #13688c, inset 0 -1px 0 1px #13688c;
+          box-shadow: inset 0 0 0 1px #13688c, inset 0 -1px 0 1px #13688c;
+}
+.k-spreadsheet-active-cell.k-bottom.k-right {
+  -webkit-box-shadow: inset 0 0 0 1px #13688c, inset -1px -1px 0 1px #13688c;
+          box-shadow: inset 0 0 0 1px #13688c, inset -1px -1px 0 1px #13688c;
 }
 .k-spreadsheet-active-cell.k-single {
   color: #003f59;

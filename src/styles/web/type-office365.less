@@ -133,7 +133,7 @@
 @alt-background-color: @background;
 @nested-alt-background-color: darken(@alt-background-color, 8%);
 @cell-border-color: darken(@background, 21%);
-@column-highlight-background-color: @background;
+@column-highlight-background-color: darken(@background, 3%);
 @active-filter-background-color: @background;
 @scheduler-background-color: @background;
 @current-time-color: darken(@background, 14%);
@@ -213,7 +213,8 @@
 @theme-name: ~"office365";
 
 @import "common/mixins.less";
-@import "mixins/all.less";
+@import "mixins/gradients.less";
+@import "mixins/border-radius.less";
 @import "themes/type.less";
 @import "themes/button.less";
 
@@ -505,6 +506,13 @@ html .km-pane-wrapper .k-header {
     opacity: @default-icon-opacity;
 }
 
+/* Badge */
+.k-badge {
+    background-color: @accent;
+    color: contrast(@accent, @normal-background, @normal-text-color, 0.5);
+    border-radius: @inner-border-radius;
+}
+
 .k-tool
 {
     border-color: transparent;
@@ -517,6 +525,17 @@ html .km-pane-wrapper .k-header {
 {
     background-image: @sprite-image;
     border-color: transparent;
+}
+
+.k-mobile-list .k-check:checked,
+.k-mobile-list .k-edit-field [type=checkbox]:checked {
+  font-family: 'WebComponentsIcons';
+  background-image: none;
+}
+
+.k-mobile-list .k-check:checked:before,
+.k-mobile-list .k-edit-field [type=checkbox]:checked:before {
+  content: "\e118";
 }
 
 .k-i-loading {
@@ -585,11 +604,45 @@ html .km-pane-wrapper .k-header {
     background-color: rgba(0,0,0, .2);
 }
 
-.k-scheduler-table .k-today,
+.k-scheduler-monthview .k-today {
+    background-color: @column-highlight-background-color;
+}
 .k-today > .k-scheduler-datecolumn,
 .k-today > .k-scheduler-groupcolumn
 {
-    background-color: @column-highlight-background-color;
+    color: @select-border-color;
+}
+
+.k-scheduler-weekview,
+.k-scheduler-workWeekview {
+
+    .k-scheduler-header th.k-today {
+        position: relative;
+
+        &:before {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            border-bottom: 3px solid @select-border-color;
+        }
+    }
+}
+
+.k-scheduler-monthview .k-today {
+    position: relative;
+
+    &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        border-top: 3px solid @select-border-color;
+    }
 }
 
 .k-scheduler-now-arrow
@@ -888,6 +941,10 @@ td.k-state-focused.k-state-selected
     color: @hover-text-color;
     background-color: @hover-background-color;
     border-color: @hover-border-color;
+}
+
+.k-pager-wrap .k-link.k-state-disabled {
+    color: @link-text-color;
 }
 
 /* this selector should be used separately, otherwise old IEs ignore the whole rule */
@@ -2259,6 +2316,20 @@ html .km-pane-wrapper .km-widget,
         {
           position: absolute;
         }
+
+        .km-pane-wrapper .k-pager-numbers,
+        .km-pane-wrapper .k-grid .k-pager-numbers {
+            transform: translate(-50%, -100%);
+            -webkit-transform: translate(-50%, -100%);
+        }
+    }
+
+    .k-grid .k-pager-numbers:not(.k-state-expanded) {
+        transform: none;
+    }
+
+    .k-grid .k-pager-numbers:not(.k-state-expanded) .k-current-page {
+        transform: none;
     }
 }
 
@@ -2302,6 +2373,7 @@ div.k-splitbar.k-state-focused .k-icon,
 }
 
 .k-state-disabled .k-icon,
+.k-state-disabled .k-button .k-icon,
 .k-button.k-state-disabled .k-icon
 {
     opacity: .3;
@@ -3105,6 +3177,18 @@ input.k-textbox:focus {
         }
     }
 }
+
+.km-pane-wrapper .k-grid .k-pager-numbers .k-link,
+.km-pane-wrapper .k-grid .k-pager-numbers .k-state-selected
+{
+    width: auto;
+    height: auto;
+    padding-top: .35em;
+    min-width: 2em;
+    border-radius: 0;
+    margin-top: -0.35em;
+}
+
 /* Default Theme */
 
 .k-chart .k-mask {
@@ -3183,7 +3267,7 @@ input.k-textbox:focus {
 
 .k-window .k-popup-edit-form .k-edit-field {
     label.k-checkbox-label {
-        margin-top: 0.5em;
+        margin-top: 0.3em;
     }
 }
 

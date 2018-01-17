@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -22,12 +22,13 @@
                                                                                                                                                                                                        
 
 */
-@input-height: 2.214em;
+@input-height: 2.07142857em;
+@input-padding-y: 0.17857143em;
 @input-indent: .8em;
 @editor-icon-size: 36px;
 @menu-link-padding: 1.071em;
 @button-padding-x: 14px;
-@button-padding-y: 10px;
+@button-padding-y: 8px;
 @button-padding: @button-padding-y @button-padding-x;
 @treeview-inner-padding: 0.429em 0.6667em 0.429em 0.5833em;
 @treeview-inner-margin: 1px 0 1px 0.3333em;
@@ -43,15 +44,15 @@
 @calendar-cell-width: ((38px / 14px) * 1em);
 
 .k-button {
-    line-height: 1.143em;
+    line-height: 1.28571428em;
     padding: @button-padding;
 }
 
 .k-button-icon,
 .k-split-button-arrow {
     padding: @button-padding-y calc(@button-padding-x/2);
-    height: calc(1em + (2*@button-padding-y) + 2px); // ensure inline-flex height
-    width: calc(1em + (2*@button-padding-y) + 2px);
+    height: ~"calc(1.28571428em + (2*@{button-padding-y}) + 2px)"; // ensure inline-flex height
+    width: ~"calc(1.28571428em + (2*@{button-padding-y}) + 2px)";
 }
 
 .k-widget.k-tabstrip
@@ -219,7 +220,8 @@
     line-height: 2.6;
 }
 
-.k-grid-content tr:last-child > td {
+.k-grid-content tr:last-child > td,
+.k-grid-content-locked tr:last-child > td {
     border-bottom-width: 0;
 }
 
@@ -319,20 +321,20 @@
 
 .k-autocomplete > .k-i-close,
 .k-multiselect > .k-multiselect-wrap > .k-i-close {
-    margin-right: 10px;
+    right: 10px;
 }
 
 .k-dropdown-wrap,
 .k-picker-wrap,
 .k-numeric-wrap {
-    padding: 0 2.571em 0 0;
+    padding: 0 2.42857142em 0 0;
 }
 
 .k-picker-wrap .k-select,
 .k-numeric-wrap .k-select,
 .k-dropdown-wrap .k-select
 {
-    width: 2.571em;
+    width: 2.42857142em;
 }
 
 .k-datetimepicker {
@@ -460,15 +462,12 @@
     border: 0;
 }
 
-.k-multiselect-wrap .k-input {
-    height: @input-height;
-}
-
 .k-multiselect-wrap li {
     border-radius: 1.071em;
     margin: 3px 0 3px 3px;
     padding: 0 1.6em 0 .857em;
-    line-height: 1.86em;
+    line-height: calc(@input-height - 0.214em);
+    min-height: calc((@input-height + 0.357em) - 6px);
 }
 
 .k-multiselect-wrap li span {
@@ -550,48 +549,39 @@ table.k-editor {
 }
 
 .k-toolbar {
-    line-height: 3.42em;
-}
+    padding: 0.42857143em;
+    @toolbar-button-padding: 14px;
 
-.k-toolbar > div > label {
-    line-height: 3.42em;
-}
+    .k-button {
+        padding: @toolbar-button-padding 14px;
+    }
+    .k-button,
+    .k-split-button {
+        margin-top: -0.42857143em;
+        margin-bottom: -0.42857143em;
+    }
+    .k-split-button .k-button {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 
-.k-toolbar .k-overflow-anchor > .k-icon {
-    margin-top: -6px;
-    margin-bottom: -6px;
-}
+    .k-button-icon,
+    .k-split-button-arrow {
+        height: ~"calc(1.28571428em + (2*@{toolbar-button-padding}) + 2px)"; // ensure inline-flex height
+        width: ~"calc(1.28571428em + (2*@{toolbar-button-padding}) + 2px)";
+    }
 
-.k-toolbar .k-dropdown {
-    margin-top: -1px;
-}
-
-.k-toolbar .k-split-button .k-button {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-.k-toolbar .k-button-group {
-    line-height: 3.286em;
-}
-
-.k-toolbar .k-button-icon,
-.k-toolbar .k-split-button-arrow {
-    line-height: (26/14);
-    height: calc((26/14)*1em + (2*@button-padding-y) + 2px); // ensure inline-flex height
-    width: calc((26/14)*1em + (2*@button-padding-y) + 2px);
+    & > .k-button:first-child:not(.k-overflow-anchor),
+    .k-overflow-anchor + .k-button {
+        margin-left: -0.42857143em;
+    }
 }
 
 .k-toolbar .k-button-group .k-button {
-    line-height: inherit;
-    padding: 0 .857em;
-    margin: 0;
+    margin-left: 0;
 }
 
 .k-toolbar .k-input {
-    height: @input-height;
-    line-height: @input-height;
-    padding: 0.177em 0;
     text-indent: @input-indent;
     border: 0;
     margin: 0;
@@ -599,10 +589,9 @@ table.k-editor {
 
 .k-toolbar .k-overflow-anchor {
     border-width: 0;
-    line-height: 3.286em;
     width: 3.42em;
-    height: 3.42em;
     padding: 0;
+    margin: 0;
 }
 
 .k-overflow-container .k-overflow-button,
@@ -617,6 +606,7 @@ table.k-editor {
 .k-editor-toolbar li.k-tool-group,
 .k-editor-toolbar li.k-overflow-tools {
     padding: 0;
+    box-shadow: none;
 }
 
 .k-editor-toolbar .k-button-group .k-tool {
@@ -820,11 +810,11 @@ div.editorToolbarWindow.k-window-content {
 .k-colorpicker
 {
     .k-picker-wrap {
-        line-height: @input-height;
+        line-height: (@input-height + @input-padding-y*2);
     }
 
     .k-selected-color {
-        @selected-icon-height: 2.57142857em;
+        @selected-icon-height: 2.42857142em;
         height: @selected-icon-height;
         width: @selected-icon-height;
         .k-i-line {
@@ -1201,6 +1191,15 @@ div.k-spreadsheet-window {
         }
     }
 
+
+    .k-toolbar {
+        & > .k-button:first-child:not(.k-overflow-anchor),
+        .k-overflow-anchor + .k-button {
+            margin-right: -0.42857143em;
+            margin-right: 0.2em;
+        }
+    }
+
     .k-gantt {
 
         .k-task-template {
@@ -1211,4 +1210,9 @@ div.k-spreadsheet-window {
             border-radius: 50% 0 50% 50%;
         }
     }
+}
+
+.k-safari.k-mobile .k-picker-wrap .k-input,
+.k-safari.k-mobile .k-numeric-wrap .k-input {
+    height: 2.15em;
 }

@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -251,7 +251,7 @@
             _change: function (value) {
                 var that = this, factor = that.options.factor;
                 if (factor && factor !== 1) {
-                    value = parseFloat(value);
+                    value = kendo.parseFloat(value);
                     if (value !== null) {
                         value = value / factor;
                     }

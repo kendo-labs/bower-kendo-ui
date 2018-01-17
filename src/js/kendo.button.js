@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -43,7 +43,9 @@
                 element.addClass(KBUTTON).attr('role', 'button');
                 options.enable = options.enable && !element.attr(DISABLED);
                 that.enable(options.enable);
-                that._tabindex();
+                if (options.enable) {
+                    that._tabindex();
+                }
                 that._graphics();
                 element.on(CLICK + NS, proxy(that._click, that)).on('focus' + NS, proxy(that._focus, that)).on('blur' + NS, proxy(that._blur, that)).on('keydown' + NS, proxy(that._keydown, that)).on('keyup' + NS, proxy(that._keyup, that));
                 kendo.notify(that);
@@ -141,6 +143,9 @@
                 enable = !!enable;
                 that.options.enable = enable;
                 element.toggleClass(DISABLEDSTATE, !enable).attr('aria-disabled', !enable).attr(DISABLED, !enable);
+                if (enable) {
+                    that._tabindex();
+                }
                 try {
                     element.blur();
                 } catch (err) {

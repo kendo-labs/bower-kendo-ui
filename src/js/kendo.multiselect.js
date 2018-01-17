@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -148,6 +148,7 @@
                 this.options.dataSource = dataSource;
                 this._state = '';
                 this._dataSource();
+                this.persistTagList = false;
                 this.listView.setDataSource(this.dataSource);
                 if (this.options.autoBind) {
                     this.dataSource.fetch();
@@ -226,6 +227,7 @@
                         break;
                     }
                 }
+                this.persistTagList = false;
                 this._selectValue(e.added, e.removed);
             },
             _selectedItemChange: function (e) {
@@ -277,7 +279,7 @@
                 }
                 that.element.blur();
             },
-            _removeTag: function (tag) {
+            _removeTag: function (tag, shouldTrigger) {
                 var that = this;
                 var state = that._state;
                 var position = tag.index();
@@ -298,7 +300,9 @@
                 }
                 var done = function () {
                     that.currentTag(null);
-                    that._change();
+                    if (shouldTrigger) {
+                        that._change();
+                    }
                     that._close();
                 };
                 if (customIndex === undefined) {
@@ -315,7 +319,7 @@
             _tagListClick: function (e) {
                 var target = $(e.currentTarget);
                 if (!target.children('.k-i-arrow-60-down').length) {
-                    this._removeTag(target.closest(LI));
+                    this._removeTag(target.closest(LI), true);
                 }
             },
             _clearClick: function () {
@@ -324,12 +328,12 @@
                     that.value([]);
                 } else {
                     that.tagList.children().each(function (index, tag) {
-                        that._removeTag($(tag));
+                        that._removeTag($(tag), false);
                     });
                 }
                 that.input.val('');
                 that._search();
-                that.trigger('change');
+                that.trigger(CHANGE);
                 that.focus();
             },
             _editable: function (options) {
@@ -438,19 +442,19 @@
                 if (value === undefined) {
                     return oldValue;
                 }
+                that._toggleCloseVisibility();
+                that.persistTagList = false;
                 that.requireValueMapper(that.options, value);
                 value = that._normalizeValues(value);
                 if (maxSelectedItems !== null && value.length > maxSelectedItems) {
                     value = value.slice(0, maxSelectedItems);
                 }
                 if (clearFilters) {
-                    that.persistTagList = false;
                     that._clearFilter();
                 }
                 listView.value(value);
                 that._old = listView.value();
                 if (!clearFilters) {
-                    that.persistTagList = false;
                     that._fetchData();
                 }
             },
@@ -664,8 +668,9 @@
                         e.preventDefault();
                     } else {
                         that.tagList.children().each(function (index, tag) {
-                            that._removeTag($(tag));
+                            that._removeTag($(tag), false);
                         });
+                        that.trigger(CHANGE);
                     }
                     that.close();
                 } else if (key === keys.HOME) {
@@ -701,7 +706,7 @@
                         }
                     }
                 } else if ((key === keys.DELETE || key === keys.BACKSPACE) && !hasValue) {
-                    that._state = '';
+                    that._state = ACCEPT;
                     if (that.options.tagMode === 'single') {
                         listView.value([]);
                         that._change();
@@ -712,7 +717,7 @@
                         tag = $(that.tagList[0].lastChild);
                     }
                     if (tag && tag[0]) {
-                        that._removeTag(tag);
+                        that._removeTag(tag, true);
                     }
                 } else if (that.popup.visible() && (key === keys.PAGEDOWN || key === keys.PAGEUP)) {
                     e.preventDefault();
@@ -733,7 +738,7 @@
                 that._loading.addClass(HIDDENCLASS);
                 that._request = false;
                 that._busy = null;
-                that._showClear();
+                that._toggleCloseVisibility();
             },
             _showBusyHandler: function () {
                 this.input.attr('aria-busy', true);
@@ -995,6 +1000,23 @@
                 var indices = this._getSelectedIndices().slice();
                 var indicesToSelect = [];
                 var i;
+                var selectIndices = function (indices) {
+                    listView.select(indices).done(function () {
+                        indices.forEach(function (index) {
+                            var dataItem = listView.dataItemByIndex(index);
+                            var candidate = listView.element.children()[index];
+                            var isSelected = $(candidate).hasClass('k-state-selected');
+                            that.trigger(isSelected ? SELECT : DESELECT, {
+                                dataItem: dataItem,
+                                item: candidate
+                            });
+                        });
+                        that._change();
+                    });
+                };
+                if (indices.length - 1 === endIndex - startIndex) {
+                    return selectIndices(indices);
+                }
                 if (startIndex < endIndex) {
                     for (i = startIndex; i <= endIndex; i++) {
                         indicesToSelect.push(i);
@@ -1019,18 +1041,7 @@
                     return;
                 }
                 that.persistTagList = false;
-                return listView.select(indices).done(function () {
-                    indices.forEach(function (index) {
-                        var dataItem = listView.dataItemByIndex(index);
-                        var candidate = listView.element.children()[index];
-                        var isSelected = $(candidate).hasClass('k-state-selected');
-                        that.trigger(isSelected ? SELECT : DESELECT, {
-                            dataItem: dataItem,
-                            item: candidate
-                        });
-                    });
-                    that._change();
-                });
+                return selectIndices(indices);
             },
             _input: function () {
                 var that = this;

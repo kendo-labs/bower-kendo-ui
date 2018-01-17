@@ -74,6 +74,7 @@
 /* widget */
 
 .k-textbox > input,
+.k-multiselect .k-input,
 .k-input[type="text"],
 .k-input[type="number"],
 .k-textbox,
@@ -191,6 +192,19 @@ input[type="reset"].k-button-expand
 .k-image
 {
     border: 0;
+}
+
+/* Badges */
+.k-badge {
+    max-width: 100%;
+    font-size: .7em;
+    line-height: 2em;
+    margin-left: 6px;
+    padding: 0 6px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
 }
 
 
@@ -487,7 +501,7 @@ div.k-window-content
     background-clip: border-box;
 }
 
-@checkbox-tick-icon-content: "\2713";
+@checkbox-tick-icon-content: "\e118";
 @checkbox-border-width: 1px;
 @checkbox-size: 14px;
 @checkbox-check-size: @checkbox-size;
@@ -524,6 +538,7 @@ input.k-checkbox,
 }
 
 .k-checkbox-label:before {
+  font: @checkbox-size "WebComponentsIcons", monospace;
   content: "";
   position: absolute;
   top: 0;

@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -1287,8 +1287,8 @@ button.km-button {
 }
 .km-list textarea {
   position: relative;
-  width: -webkit-calc(50% + .7em);
-  width: calc(50% + .7em);
+  width: -webkit-calc(50% + 0.7em);
+  width: calc(50% + 0.7em);
   margin-right: -0.7em;
 }
 .km-list input,
@@ -1443,8 +1443,8 @@ button.km-button {
 .km-list .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc((100% - 3.22em)/2);
-  width: calc((100% - 3.22em)/2);
+  width: -webkit-calc(50% - 1.61em);
+  width: calc(50% - 1.61em);
   overflow: hidden;
   white-space: nowrap;
 }

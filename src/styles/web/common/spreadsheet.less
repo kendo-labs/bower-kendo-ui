@@ -39,16 +39,25 @@
 
     cursor: default;
 
+
+
     .k-spreadsheet-pane {
         padding-right: 1px;
         position: absolute;
         border-width: 1px;
+        border-bottom-width: 0;
+        border-right-width: 0;
         border-style: solid;
-        overflow: hidden;
         box-sizing: border-box;
+        overflow: hidden;
 
-        &.k-top { border-top-width: 0; }
-        &.k-left { border-left-width: 0; }
+
+        &.k-top {
+            border-top-width: 0;
+        }
+        &.k-left {
+            border-left-width: 0;
+        }
 
         .k-spreadsheet-cell {
             position: absolute;
@@ -86,6 +95,7 @@
 
     .k-spreadsheet-active-cell {
         position: absolute;
+        outline-color: transparent !important;
         box-sizing: border-box;
     }
 
@@ -153,6 +163,17 @@
                 border-style: solid;
                 width: 24px;
                 margin-left: -24px;
+            }
+
+            .k-spreadsheet-formula-input.k-spreadsheet-array-formula {
+                &:before {
+                    content: "{";
+                    font-weight: bold;
+                }
+                &:after {
+                    content: "}";
+                    font-weight: bold;
+                }
             }
         }
 
@@ -262,6 +283,10 @@
         border-color: #f00 #f00 transparent transparent;
     }
 
+    .k-single-selection {
+        cursor: crosshair;
+    }
+
     .k-single-selection::after {
         content: " ";
         height: 6px;
@@ -271,12 +296,11 @@
         bottom: 0;
         right: 0;
         border-radius: 50%;
-        margin-bottom: -5px;
-        margin-right: -5px;
+        margin-bottom: -4px;
+        margin-right: -4px;
         border-width: 1px;
         border-style: solid;
         z-index: 100;
-        cursor: crosshair;
     }
 
     .k-spreadsheet-edit-container {
@@ -300,6 +324,7 @@
 
     .k-auto-fill-wrapper {
         position: relative;
+
     }
 
     .k-spreadsheet-vborder {
@@ -442,6 +467,7 @@ textarea.k-spreadsheet-clipboard {
     box-sizing: border-box;
     z-index: 2;
     user-select: none;
+    overflow: hidden;
 }
 
 .k-spreadsheet-view-size {
@@ -638,7 +664,7 @@ div.k-spreadsheet-window {
             padding-left: 26px;
         }
 
-        .k-icon {
+        .k-link .k-icon {
             margin-left: -26px;
             width: 26px;
         }

@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -127,12 +127,6 @@
   background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, rgba(255,255,255,.2) 0%, rgba(255,255,255,.0) 100%);
   background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, rgba(255,255,255,.2) 0%, rgba(255,255,255,.0) 100%);
 }
-.k-button:focus,
-.k-button.k-state-focused {
-  border-color: #674c63;
-  -webkit-box-shadow: inset 0 0 3px 1px #fff;
-          box-shadow: inset 0 0 3px 1px #fff;
-}
 .k-button:active,
 .k-button.k-state-active {
   color: #fff;
@@ -142,35 +136,37 @@
   background-image: url(textures/glass-lighter.png), -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.3)), to(rgba(255,255,255,.1)));
   background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, rgba(255,255,255,.3) 0%, rgba(255,255,255,.1) 100%);
   background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, rgba(255,255,255,.3) 0%, rgba(255,255,255,.1) 100%);
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-button.k-state-active:hover {
   color: #fff;
   border-color: #a5028e;
   background-color: #a5028e;
 }
-.k-button:focus:active:not(.k-state-disabled):not([disabled]) {
+.k-button:focus,
+.k-button.k-state-focused {
+  border-color: #674c63;
+  -webkit-box-shadow: inset 0 0 3px 1px #fff;
+          box-shadow: inset 0 0 3px 1px #fff;
+}
+.k-button:focus:active {
   -webkit-box-shadow: inset 0 0 3px 1px #fff;
           box-shadow: inset 0 0 3px 1px #fff;
 }
 .k-button[disabled],
-.k-button[disabled]:hover,
-.k-button[disabled]:focus,
-.k-button[disabled]:active,
-.k-button[disabled]:hover:active,
 .k-state-disabled .k-button,
 .k-state-disabled .k-button:hover,
-.k-state-disabled .k-button:focus,
-.k-state-disabled .k-button:active,
-.k-state-disabled .k-button:active:active,
 .k-button.k-state-disabled,
-.k-button.k-state-disabled:hover,
-.k-button.k-state-disabled:focus,
-.k-button.k-state-disabled:active,
-.k-button.k-state-disabled:hover:active {
+.k-button.k-state-disabled:hover {
   color: #808080;
   border-color: #674c63;
   background-color: #2c232b;
   background-image: url(textures/glass-lighter.png);
+}
+.k-button[disabled],
+.k-button.k-state-disabled,
+.k-button.k-state-disabled:active {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -214,60 +210,24 @@
           box-shadow: 0 0 3px 0 #fff;
 }
 .k-primary[disabled],
-.k-primary[disabled]:hover,
-.k-primary[disabled]:focus,
-.k-primary[disabled]:active,
-.k-primary[disabled]:hover:active,
 .k-state-disabled .k-primary,
 .k-state-disabled .k-primary:hover,
-.k-state-disabled .k-primary:focus,
-.k-state-disabled .k-primary:active,
-.k-state-disabled .k-primary:hover:active,
 .k-primary.k-state-disabled,
-.k-primary.k-state-disabled:hover,
-.k-primary.k-state-disabled:focus,
-.k-primary.k-state-disabled:active,
-.k-primary.k-state-disabled:hover:active {
+.k-primary.k-state-disabled:hover {
   color: #b5b5b5;
   border-color: #a5028e;
   background-color: #880075;
-  background-image: url(textures/glass-lighter.png);
-  background-image: url(textures/glass-lighter.png), -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.3)), to(rgba(255,255,255,.1)));
-  background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, rgba(255,255,255,.3) 0%, rgba(255,255,255,.1) 100%);
-  background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, rgba(255,255,255,.3) 0%, rgba(255,255,255,.1) 100%);
   -webkit-box-shadow: none;
           box-shadow: none;
-}
-.k-button-group .k-button {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-button-group .k-button:focus,
-.k-button-group .k-button.k-state-focused,
-.k-button-group > input[type="radio"]:focus + .k-button,
-.k-button-group > input[type="checkbox"]:focus + .k-button {
-  -webkit-box-shadow: inset 0 0 3px 1px #fff;
-          box-shadow: inset 0 0 3px 1px #fff;
-}
-.k-button-group .k-button:active,
-.k-button-group .k-button.k-state-active,
-.k-button-group > input[type="radio"]:checked + .k-button,
-.k-button-group > input[type="checkbox"]:checked + .k-button {
-  color: #fff;
-  background-color: #870074;
-  border-color: #870074;
   background-image: url(textures/glass-lighter.png);
   background-image: url(textures/glass-lighter.png), -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.3)), to(rgba(255,255,255,.1)));
   background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, rgba(255,255,255,.3) 0%, rgba(255,255,255,.1) 100%);
   background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, rgba(255,255,255,.3) 0%, rgba(255,255,255,.1) 100%);
 }
-.k-button-group .k-button:active:hover,
-.k-button-group .k-button.k-state-active:hover,
-.k-button-group > input[type="radio"]:checked + .k-button:hover,
-.k-button-group > input[type="checkbox"]:checked + .k-button:hover {
-  color: #fff;
-  border-color: #a5028e;
-  background-color: #a5028e;
+.k-primary[disabled],
+.k-primary.k-state-disabled {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-button-group .k-button {
   border-radius: 0;
@@ -286,6 +246,48 @@
 .k-button-group .k-button:first-child:last-child {
   border-radius: 13px;
 }
+.k-button-group .k-button[disabled],
+.k-state-disabled .k-button-group .k-button,
+.k-button-group .k-button.k-state-disabled {
+  color: #808080;
+  border-color: #674c63;
+  background-color: #2c232b;
+  background-image: url(textures/glass-lighter.png);
+}
+.k-button-group .k-button.k-state-active {
+  color: #fff;
+  background-color: #870074;
+  border-color: #870074;
+  background-image: url(textures/glass-lighter.png);
+  background-image: url(textures/glass-lighter.png), -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.3)), to(rgba(255,255,255,.1)));
+  background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, rgba(255,255,255,.3) 0%, rgba(255,255,255,.1) 100%);
+  background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, rgba(255,255,255,.3) 0%, rgba(255,255,255,.1) 100%);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-button-group .k-button:focus,
+.k-button-group .k-button.k-state-focused {
+  border-color: #674c63;
+  -webkit-box-shadow: inset 0 0 3px 1px #fff;
+          box-shadow: inset 0 0 3px 1px #fff;
+}
+.k-rtl .k-button-group .k-button {
+  border-radius: 0;
+}
+.k-rtl .k-button-group .k-group-start,
+.k-rtl .k-button-group .k-button:first-child {
+  border-top-right-radius: 13px;
+  border-bottom-right-radius: 13px;
+}
+.k-rtl .k-button-group .k-group-end,
+.k-rtl .k-button-group .k-button:last-child {
+  border-top-left-radius: 13px;
+  border-bottom-left-radius: 13px;
+}
+.k-rtl .k-button-group .k-group-start.k-group-end,
+.k-rtl .k-button-group .k-button:first-child:last-child {
+  border-radius: 13px;
+}
 .k-in,
 .k-item,
 .k-window-action {
@@ -298,6 +300,9 @@
 .k-block,
 .k-widget {
   background-color: #1b141a;
+}
+.k-maskedtextbox {
+  background-color: transparent;
 }
 .k-block,
 .k-widget,
@@ -368,7 +373,8 @@
 }
 .k-grouping-row td,
 td.k-group-cell,
-.k-resize-handle-inner {
+.k-resize-handle-inner,
+.k-grid .k-state-selected:hover .k-group-cell {
   background-color: #2c232b;
 }
 .k-list-container {
@@ -482,7 +488,7 @@ textarea.k-textbox:hover,
   background-color: #2c232b;
 }
 .k-widget.k-tooltip {
-  background-image: url('textures/highlight.png');
+  background-image: url(textures/glass-lighter.png);
 }
 .k-block,
 .k-header,
@@ -524,6 +530,12 @@ html .km-pane-wrapper .k-header {
 .k-mobile-list .k-edit-field [type=radio]:checked {
   opacity: 1;
 }
+/* Badge */
+.k-badge {
+  background-color: #870074;
+  color: #fff;
+  border-radius: 12px;
+}
 .k-tool {
   border-color: transparent;
 }
@@ -533,6 +545,15 @@ html .km-pane-wrapper .k-header {
 .k-mobile-list .k-edit-field [type=radio]:checked {
   background-image: url('HighContrast/sprite.png');
   border-color: transparent;
+}
+.k-mobile-list .k-check:checked,
+.k-mobile-list .k-edit-field [type=checkbox]:checked {
+  font-family: 'WebComponentsIcons';
+  background-image: none;
+}
+.k-mobile-list .k-check:checked:before,
+.k-mobile-list .k-edit-field [type=checkbox]:checked:before {
+  content: "\e118";
 }
 .k-i-loading {
   background-image: url('HighContrast/loading.gif');
@@ -576,7 +597,9 @@ html .km-pane-wrapper .k-header {
 .k-scheduler-times {
   border-color: #674c63;
 }
-.k-nonwork-hour {
+.k-scheduler-table .k-nonwork-hour,
+.k-scheduler-dayview .k-today.k-nonwork-hour,
+.k-scheduler-timelineview .k-today.k-nonwork-hour {
   background-color: #51404f;
 }
 .k-gantt .k-nonwork-hour {
@@ -599,7 +622,7 @@ html .km-pane-wrapper .k-header {
 .k-event,
 .k-task-complete {
   border-color: #f0f0f0;
-  background: #c9c9c9 0 -257px url('textures/highlight.png') repeat-x;
+  background: #c9c9c9 0 -257px url(textures/glass-lighter.png) repeat-x;
   color: #000000;
 }
 .k-event-inverse {
@@ -799,6 +822,10 @@ td.k-state-focused.k-state-selected {
   color: #fff;
   background-color: #a7008f;
   border-color: #a7008f;
+}
+.k-pager-wrap .k-link.k-state-disabled {
+  color: #fff;
+  border-color: #674c63;
 }
 /* this selector should be used separately, otherwise old IEs ignore the whole rule */
 .k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active {
@@ -1542,7 +1569,8 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-mobile-list > ul > li > .k-link,
 .km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-label:nth-child(3),
 .km-pane-wrapper #recurrence .km-scroll-container > .k-edit-label:first-child {
-  color: #0f0b0f;
+  color: #fff;
+  opacity: 0.7;
 }
 .km-pane-wrapper .k-mobile-list > ul > li > .k-link {
   border-bottom: 1px solid #674c63;
@@ -1666,8 +1694,8 @@ html .km-pane-wrapper .km-widget,
   background-image: url(textures/glass-lighter.png);
   border-color: #a7008f;
 }
-.k-tabstrip-top .k-tabstrip-items .k-state-active,
-.k-panelbar .k-tabstrip-top .k-tabstrip-items .k-state-active {
+.k-tabstrip-top > .k-tabstrip-items .k-state-active,
+.k-panelbar .k-tabstrip-top > .k-tabstrip-items .k-state-active {
   border-bottom-color: #2c232b;
 }
 .k-tabstrip .k-content.k-state-active {
@@ -2209,15 +2237,31 @@ html .km-pane-wrapper .km-widget,
 .k-auto-fill,
 .k-spreadsheet-selection {
   border-color: #870074;
-  -webkit-box-shadow: inset 0 0 0 1px #1b141a, 0 0 0 1px #870074;
-          box-shadow: inset 0 0 0 1px #1b141a, 0 0 0 1px #870074;
+  -webkit-box-shadow: inset 0 0 0 1px #870074;
+          box-shadow: inset 0 0 0 1px #870074;
+}
+.k-auto-fill-wrapper .k-tooltip {
+  background: #1b141a;
 }
 .k-spreadsheet-selection {
   background-color: rgba(135, 0, 116, 0.2);
 }
 .k-spreadsheet-active-cell {
-  border-color: #870074 !important;
+  -webkit-box-shadow: inset 0 0 0 1px #870074;
+          box-shadow: inset 0 0 0 1px #870074;
   background-color: #1b141a;
+}
+.k-spreadsheet-active-cell.k-right {
+  -webkit-box-shadow: inset 0 0 0 1px #870074, inset -1px 0 0 1px #870074;
+          box-shadow: inset 0 0 0 1px #870074, inset -1px 0 0 1px #870074;
+}
+.k-spreadsheet-active-cell.k-bottom {
+  -webkit-box-shadow: inset 0 0 0 1px #870074, inset 0 -1px 0 1px #870074;
+          box-shadow: inset 0 0 0 1px #870074, inset 0 -1px 0 1px #870074;
+}
+.k-spreadsheet-active-cell.k-bottom.k-right {
+  -webkit-box-shadow: inset 0 0 0 1px #870074, inset -1px -1px 0 1px #870074;
+          box-shadow: inset 0 0 0 1px #870074, inset -1px -1px 0 1px #870074;
 }
 .k-spreadsheet-active-cell.k-single {
   color: #fff;

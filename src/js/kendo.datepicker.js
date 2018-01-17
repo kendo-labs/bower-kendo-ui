@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -158,7 +158,9 @@
                         e.preventDefault();
                         return true;
                     }
-                    that._current = calendar._move(e);
+                    if (key != keys.SPACEBAR) {
+                        that._current = calendar._move(e);
+                    }
                     handled = true;
                 }
                 return handled;

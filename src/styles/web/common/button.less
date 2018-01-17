@@ -39,7 +39,6 @@
     align-items: center;
     justify-content: center;
     vertical-align: middle;
-    overflow: hidden;
     user-select: none;
     cursor: pointer;
     outline: none;
@@ -62,11 +61,16 @@
         outline: 0;
     }
 
+    .k-text {
+        overflow: hidden;
+    }
+
     .k-icon,
     .k-image,
     .k-sprite {
         color: inherit;
         align-self: center;
+        pointer-events: none;
     }
 
 
@@ -78,18 +82,19 @@
         .k-image,
         .k-sprite {
             margin-right: 3px;
-            margin-right: .3rem;
-            margin-left: -3px;
-            margin-left: -.3rem;
+            margin-right: .1875em;
+            margin-left: -2px;
+            margin-left: -.125em;
         }
     }
 
     // Disabled state
-    &[disabled]
-    .k-state-disabled &
+    &[disabled],
+    .k-state-disabled &,
     &.k-state-disabled {
         cursor: default;
         outline: 0;
+        box-shadow: none;
     }
 
 }
@@ -98,31 +103,34 @@
     display: inline-block;
 }
 
-a.k-button-expand
-{
+a.k-button-expand {
     display: block;
 }
 
 button.k-button-expand,
 input[type="submit"].k-button-expand,
 input[type="button"].k-button-expand,
-input[type="reset"].k-button-expand
-{
+input[type="reset"].k-button-expand {
     width: 100%;
 }
 
+// TODO improve elastic behavior
+.k-button-icon {
+    height: ~"calc(1.72em + (2*@{button-padding-y}) + 2px)"; // proper vertical alignment for elastic behavior
+}
+.k-split-button-arrow {
+    display: inline-block; // fix height
+}
 .k-button-icon,
 .k-split-button-arrow {
-    height: calc(1.72em + (2*@button-padding-y) + 2px); // proper vertical alignment for elastic behavior
-    width: calc(1.72em + (2*@button-padding-y) + 2px);
+    width: ~"calc(1.72em + (2*@{button-padding-y}) + 2px)";
     padding: @button-padding-y calc(@button-padding-x/2);
 }
 .k-overflow-group .k-button-icon {
     width: auto;
 }
 
-.k-toolbar .k-button-icontext
-{
+.k-toolbar .k-button-icontext {
     padding-right: .8em;
 }
 
@@ -178,6 +186,7 @@ input[type="reset"].k-button-expand
 .k-button-group {
     margin: 0;
     padding: 0;
+    border-width: 0;
     list-style: none;
     white-space: nowrap;
     display: inline-block;
@@ -190,6 +199,17 @@ input[type="reset"].k-button-expand
         // .border-radius( 0 );
         position: relative;
     }
+    .k-button + .k-button {
+        margin-left: -1px;
+    }
+
+    // stretched button group
+    &.k-button-group-stretched {
+
+        .k-button {
+            flex: 1 0 auto;
+        }
+    }
 
     .k-button:active,
     .k-button.k-state-active {
@@ -198,6 +218,10 @@ input[type="reset"].k-button-expand
     .k-button:hover,
     .k-button.k-state-hover {
         z-index: 3;
+    }
+    .k-button.k-state-disabled,
+    &.k-state-disabled .k-button {
+        z-index: auto;
     }
     .k-button:focus,
     .k-button.k-state-focused {
@@ -228,4 +252,29 @@ input[type="reset"].k-button-expand
         pointer-events: none;
     }
 
+}
+.k-rtl .k-button-group {
+
+    .k-button {
+        margin-left: 0;
+    }
+    .k-button + .k-button {
+        margin-right: -1px;
+    }
+
+}
+.k-ie9 .k-button-group {
+
+    &:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    .k-button {
+        float: left;
+    }
+}
+.k-ie9 .k-rtl .k-button-group .k-button {
+    float: right;
 }

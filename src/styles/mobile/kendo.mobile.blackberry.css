@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -1815,8 +1815,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-list textarea {
   position: relative;
-  width: -webkit-calc(50% + .7em);
-  width: calc(50% + .7em);
+  width: -webkit-calc(50% + 0.7em);
+  width: calc(50% + 0.7em);
   margin-right: -0.7em;
 }
 .km-list input,
@@ -1971,8 +1971,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-list .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc((100% - 3.22em)/2);
-  width: calc((100% - 3.22em)/2);
+  width: -webkit-calc(50% - 1.61em);
+  width: calc(50% - 1.61em);
   overflow: hidden;
   white-space: nowrap;
 }
@@ -5269,7 +5269,7 @@ body:before {
 .km-blackberry .km-navbar,
 .km-blackberry .km-popup.km-pane .km-header {
   background-color: #015e98;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(40%, rgba(255, 255, 255, 0.2)), color-stop(40%, rgba(255, 255, 255, 0)), color-stop(40%, left), color-stop(0, rgba(255, 255, 255, 0)), color-stop(0, rgba(255, 255, 255, 0.3)));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(40%, rgba(255, 255, 255, 0.2)), color-stop(rgba(255, 255, 255, 0)), color-stop(left), color-stop(0, rgba(255, 255, 255, 0)), to(rgba(255, 255, 255, 0.3)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.2) 40%, rgba(255, 255, 255, 0), left, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.3));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 40%, rgba(255, 255, 255, 0), left, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.3));
 }
@@ -5512,12 +5512,12 @@ body:before {
   border-color: #777;
 }
 .km-blackberry .k-dropdown.k-state-border-up {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#777), color-stop(10%, #777), color-stop(10%, transparent), color-stop(10%, top), color-stop(10%, #777), color-stop(10%, #777), color-stop(10%, transparent), color-stop(10%, top), color-stop(10%, #fff), color-stop(10%, #fff), color-stop(10%, transparent));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#777), color-stop(10%, #777), color-stop(10%, transparent), color-stop(top), color-stop(#777), color-stop(10%, #777), color-stop(10%, transparent), color-stop(top), color-stop(#fff), color-stop(10%, #fff), color-stop(10%, transparent));
   background-image: -webkit-linear-gradient(top, #777, #777 10%, transparent 10%, top, #777, #777 10%, transparent 10%, top, #fff, #fff 10%, transparent 10%);
   background-image: linear-gradient(to bottom, #777, #777 10%, transparent 10%, top, #777, #777 10%, transparent 10%, top, #fff, #fff 10%, transparent 10%);
 }
 .km-blackberry .k-dropdown.k-state-border-down {
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(90%, transparent), color-stop(90%, #777), color-stop(90%, #777), color-stop(90%, top), color-stop(90%, transparent), color-stop(90%, #777), color-stop(90%, #777), color-stop(90%, top), color-stop(90%, transparent), color-stop(90%, #fff), color-stop(90%, #fff));
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(90%, transparent), color-stop(90%, #777), color-stop(#777), color-stop(top), color-stop(90%, transparent), color-stop(90%, #777), color-stop(#777), color-stop(top), color-stop(90%, transparent), color-stop(90%, #fff), to(#fff));
   background-image: -webkit-linear-gradient(top, transparent 90%, #777 90%, #777, top, transparent 90%, #777 90%, #777, top, transparent 90%, #fff 90%, #fff);
   background-image: linear-gradient(to bottom, transparent 90%, #777 90%, #777, top, transparent 90%, #777 90%, #777, top, transparent 90%, #fff 90%, #fff);
 }
@@ -5546,7 +5546,7 @@ body:before {
 }
 .km-root .km-blackberry.km-pane .km-listview-label input[type=radio]:checked:after {
   -webkit-background-clip: inherit;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), color-stop(10%, #eee));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), to(#eee));
   background-image: -webkit-linear-gradient(top, #fff, #f9f9f9 10%, #eee);
   background-image: linear-gradient(to bottom, #fff, #f9f9f9 10%, #eee);
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
@@ -5705,7 +5705,7 @@ body:before {
 }
 .km-blackberry input.km-radio:checked + .km-radio-label:after {
   -webkit-background-clip: inherit;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), color-stop(10%, #eee));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), to(#eee));
   background-image: -webkit-linear-gradient(top, #fff, #f9f9f9 10%, #eee);
   background-image: linear-gradient(to bottom, #fff, #f9f9f9 10%, #eee);
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
@@ -6343,8 +6343,8 @@ html .km-blackberry .k-overflow-container.km-actionsheet > li {
 .km-blackberry textarea:focus {
   border-width: 2px;
   border-style: solid;
-  padding: -webkit-calc(.4em - 1px);
-  padding: calc(.4em - 1px);
+  padding: -webkit-calc(0.4em - 1px);
+  padding: calc(0.4em - 1px);
 }
 .km-blackberry .km-list .k-dropdown .k-input {
   background-color: transparent;

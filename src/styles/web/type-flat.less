@@ -197,7 +197,8 @@
 @theme-name: ~"flat";
 
 @import "common/mixins.less";
-@import "mixins/all.less";
+@import "mixins/gradients.less";
+@import "mixins/border-radius.less";
 @import "themes/type.less";
 @import "themes/button.less";
 
@@ -232,7 +233,6 @@
 .k-textbox > input,
 .k-autocomplete,
 .k-dropdown-wrap,
-.k-toolbar,
 .k-group-footer td,
 .k-grid-footer,
 .k-footer-template td,
@@ -262,7 +262,6 @@
 .k-splitbar,
 .k-dropzone-active,
 .k-tiles,
-.k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
 .k-upload-files,
@@ -271,6 +270,10 @@
 .k-dateinput.k-state-disabled > .k-textbox:hover
 {
     border-color: @widget-border-color;
+}
+
+.k-toolbar .k-separator {
+    border-color: @button-border-color
 }
 
 .k-group,
@@ -289,7 +292,8 @@
 
 .k-grouping-row td,
 td.k-group-cell,
-.k-resize-handle-inner
+.k-resize-handle-inner,
+.k-grid .k-state-selected:hover .k-group-cell
 {
     background-color: @header-background-color;
 }
@@ -309,12 +313,15 @@ td.k-group-cell,
 }
 
 .k-alt,
-.k-separator,
 .k-resource.k-alt,
 .k-pivot-layout > tbody > tr:first-child > td:first-child,
 .k-calendar .k-alt
 {
     background-color: @alt-background-color;
+}
+
+.k-separator {
+    background-color: fade(@alt-background-color, 10);
 }
 
 .k-pivot-rowheaders .k-alt .k-alt,
@@ -496,6 +503,13 @@ html .km-pane-wrapper .k-header
     opacity: @default-icon-opacity;
 }
 
+/* Badge */
+.k-badge {
+    background-color: @accent;
+    color: contrast(@accent, @normal-background, @normal-text-color, 0.5);
+    border-radius: @inner-border-radius;
+}
+
 .k-tool
 {
     border-color: transparent;
@@ -508,6 +522,17 @@ html .km-pane-wrapper .k-header
 {
     background-image: @sprite-image;
     border-color: transparent;
+}
+
+.k-mobile-list .k-check:checked,
+.k-mobile-list .k-edit-field [type=checkbox]:checked {
+  font-family: 'WebComponentsIcons';
+  background-image: none;
+}
+
+.k-mobile-list .k-check:checked:before,
+.k-mobile-list .k-edit-field [type=checkbox]:checked:before {
+  content: "\e118";
 }
 
 .k-i-loading {
@@ -867,6 +892,11 @@ td.k-state-focused.k-state-selected
     color: @hover-text-color;
     background-color: @hover-background-color;
     border-color: @hover-border-color;
+}
+
+.k-pager-wrap .k-link.k-state-disabled {
+    color: @link-text-color;
+    border-color: @secondary-border-color;
 }
 
 /* this selector should be used separately, otherwise old IEs ignore the whole rule */
@@ -1802,6 +1832,10 @@ html .km-pane-wrapper .km-widget,
     color: @widget-text-color;
 }
 
+.k-ie .km-pane-wrapper .k-grid .k-pager-wrap {
+    color: @header-text-color;
+}
+
 @media screen and (-ms-high-contrast: active)
               and (-ms-high-contrast: none) {
     div.km-pane-wrapper a
@@ -2292,6 +2326,12 @@ html .km-pane-wrapper .km-widget,
 
         .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
             position: absolute;
+        }
+
+        .km-pane-wrapper .k-pager-numbers,
+        .km-pane-wrapper .k-grid .k-pager-numbers {
+            transform: translate(-50%, -100%);
+            -webkit-transform: translate(-50%, -100%);
         }
     }
 }

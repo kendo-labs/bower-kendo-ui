@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', LOADING = 'k-i-loading', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy, newLineRegEx = /(\r\n|\n|\r)/gm;
         var ComboBox = Select.extend({
             init: function (element, options) {
                 var that = this, text, disabled;
@@ -187,6 +187,7 @@
             _inputFocusout: function () {
                 var that = this;
                 var value = that.value();
+                that._userTriggered = true;
                 that._inputWrapper.removeClass(FOCUSED);
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = null;
@@ -232,22 +233,26 @@
             open: function () {
                 var that = this;
                 var state = that._state;
+                var isFiltered = that.dataSource.filter() ? that.dataSource.filter().filters.length > 0 : false;
                 if (that.popup.visible()) {
                     return;
                 }
                 if (!that.listView.bound() && state !== STATE_FILTER || state === STATE_ACCEPT) {
                     that._open = true;
                     that._state = STATE_REBIND;
-                    if (that.options.minLength !== 1) {
+                    if (that.options.minLength !== 1 && !that.value() || isFiltered && that.selectedIndex === -1) {
                         that.refresh();
                         that._openPopup();
+                        that.listView.bound(false);
                     } else {
                         that._filterSource();
                     }
                 } else if (that._allowOpening()) {
                     that.popup._hovered = true;
                     that._openPopup();
-                    that._focusItem();
+                    if (that.options.virtual) {
+                        that._focusItem();
+                    }
                 }
             },
             _scrollToFocusedItem: function () {
@@ -412,8 +417,11 @@
                     idx = -1;
                 }
                 this.selectedIndex = idx;
+                if (this.options.autoBind) {
+                    this._valueBeforeCascade = this._old;
+                }
                 if (idx === -1 && !dataItem) {
-                    text = this.input[0].value;
+                    text = this._accessor();
                     if (this.options.syncValueAndText) {
                         value = text;
                     }
@@ -514,19 +522,19 @@
                     return;
                 }
                 dataItem = that.dataItem();
-                if (dataItem && that._text(dataItem) === text) {
+                if (dataItem && that._text(dataItem).replace && that._text(dataItem).replace(newLineRegEx, '') === text) {
                     value = that._value(dataItem);
                     if (value === List.unifyType(that._old, typeof value)) {
                         that._triggerCascade();
                         return;
                     }
                 }
-                if (ignoreCase && !that.listView.value().length) {
+                if (ignoreCase) {
                     loweredText = loweredText.toLowerCase();
                 }
                 that._select(function (data) {
                     data = that._text(data);
-                    if (ignoreCase && !that.listView.value().length) {
+                    if (ignoreCase) {
                         data = (data + '').toLowerCase();
                     }
                     return data === loweredText;
@@ -536,6 +544,7 @@
                         if (that.options.syncValueAndText) {
                             that._accessor(text);
                         }
+                        that._cascadeTriggered = true;
                         that._triggerCascade();
                     }
                     that._prev = input.value;
@@ -552,6 +561,7 @@
                     value = that._accessor() || that.listView.value()[0];
                     return value === undefined || value === null ? '' : value;
                 }
+                that._toggleCloseVisibility();
                 that.requireValueMapper(that.options, value);
                 that.trigger('set', { value: value });
                 if (value === options.value && that.input.val() === options.text) {
@@ -577,6 +587,14 @@
                     }
                 });
             },
+            _hideBusy: function () {
+                var that = this;
+                clearTimeout(that._busy);
+                that._arrowIcon.removeClass(LOADING);
+                that._focused.attr('aria-busy', false);
+                that._busy = null;
+                that._toggleCloseVisibility();
+            },
             _click: function (e) {
                 var that = this;
                 var item = e.item;
@@ -593,6 +611,9 @@
                 that._select(item).done(function () {
                     that._blur();
                 });
+            },
+            _syncValueAndText: function () {
+                return this.options.syncValueAndText;
             },
             _inputValue: function () {
                 return this.text();
@@ -655,7 +676,7 @@
                     input[0].maxLength = maxLength;
                 }
                 input.addClass(element.className).css({
-                    width: '100%',
+                    width: '',
                     height: element.style.height
                 }).attr({
                     'role': 'combobox',
@@ -731,7 +752,7 @@
                     var value = that.text();
                     if (that._prev !== value) {
                         that._prev = value;
-                        if (that.options.filter === 'none') {
+                        if (that.options.filter === 'none' && that.options.virtual) {
                             that.listView.select(-1);
                         }
                         that.search(value);

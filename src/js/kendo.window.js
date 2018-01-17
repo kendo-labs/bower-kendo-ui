@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -138,7 +138,7 @@
                 }
                 this._resizable();
                 this._draggable();
-                if (options.pinned && isVisible) {
+                if (options.pinned && this.wrapper.is(':visible')) {
                     that.pin();
                 }
                 id = element.attr('id');
@@ -606,7 +606,7 @@
                         }
                         overlay.show();
                         $(window).on('focus', function () {
-                            if (contentElement.data('isFront')) {
+                            if (contentElement.data('isFront') && !$(document.activeElement).closest(contentElement).length) {
                                 that.element.focus();
                             }
                         });
@@ -1009,6 +1009,7 @@
                 }
                 this.wrapper.off(NS).children(KWINDOWCONTENT).off(NS).end().find('.k-resize-handle,.k-window-titlebar').off(NS);
                 $(window).off('resize' + NS + this._marker);
+                $(window).off(NS);
                 clearTimeout(this._loadingIconTimeout);
                 Widget.fn.destroy.call(this);
                 this.unbind(undefined);

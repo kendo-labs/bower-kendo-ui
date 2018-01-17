@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -1815,8 +1815,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-list textarea {
   position: relative;
-  width: -webkit-calc(50% + .7em);
-  width: calc(50% + .7em);
+  width: -webkit-calc(50% + 0.7em);
+  width: calc(50% + 0.7em);
   margin-right: -0.7em;
 }
 .km-list input,
@@ -1971,8 +1971,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-list .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc((100% - 3.22em)/2);
-  width: calc((100% - 3.22em)/2);
+  width: -webkit-calc(50% - 1.61em);
+  width: calc(50% - 1.61em);
   overflow: hidden;
   white-space: nowrap;
 }
@@ -5091,7 +5091,7 @@ body:before {
 .km-meego .km-switch-container {
   overflow: hidden;
   border-radius: .8rem;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), color-stop(98%, rgba(0, 0, 0, 0)), color-stop(98%, rgba(0, 0, 0, 0.2)));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), color-stop(98%, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.2)));
   background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 98%, rgba(0, 0, 0, 0.2));
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 98%, rgba(0, 0, 0, 0.2));
   padding: 0;
@@ -5111,7 +5111,7 @@ body:before {
   width: 3.6rem;
 }
 .km-meego .km-switch-handle {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(5%, #d7d7d7), color-stop(5%, #ffffff));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), color-stop(5%, #d7d7d7), to(#ffffff));
   background-image: -webkit-linear-gradient(top, #ffffff, #d7d7d7 5%, #ffffff);
   background-image: linear-gradient(to bottom, #ffffff, #d7d7d7 5%, #ffffff);
   width: 1.6rem;
@@ -5125,13 +5125,13 @@ body:before {
 }
 .km-meego .km-switch-on .km-switch-wrapper {
   background: #1080DD;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.2)), color-stop(10%, rgba(255, 255, 255, 0.3)), color-stop(10%, rgba(255, 255, 255, 0)));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.2)), color-stop(10%, rgba(255, 255, 255, 0.3)), to(rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.3) 10%, rgba(255, 255, 255, 0));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.3) 10%, rgba(255, 255, 255, 0));
 }
 .km-meego .km-badge,
 .km-meego .km-detail {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.2)), color-stop(50%, rgba(255, 255, 255, 0.1)), color-stop(50%, rgba(255, 255, 255, 0)));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.2)), color-stop(50%, rgba(255, 255, 255, 0.1)), to(rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   color: #FFF;
@@ -5595,7 +5595,7 @@ body:before {
 }
 .km-meego .k-slider-track {
   border-width: 1px;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.3)), color-stop(30%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(0, 0, 0, 0.4)), color-stop(bottom, to), color-stop(bottom, #dbdbdb), color-stop(bottom, #ffffff));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.3)), color-stop(30%, rgba(0, 0, 0, 0)), color-stop(90%, rgba(0, 0, 0, 0)), color-stop(rgba(0, 0, 0, 0.4)), color-stop(bottom, to), color-stop(#dbdbdb), to(#ffffff));
   background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0.4), to bottom, #dbdbdb, #ffffff);
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0.4), to bottom, #dbdbdb, #ffffff);
 }
@@ -5917,7 +5917,7 @@ body:before {
 }
 .km-meego .km-listview-label input[type=radio]:checked:after,
 .km-meego .km-listview-label input[type=checkbox]:checked:after {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), color-stop(10%, #eee));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), color-stop(10%, #f9f9f9), to(#eee));
   background-image: -webkit-linear-gradient(top, #fff, #f9f9f9 10%, #eee);
   background-image: linear-gradient(to bottom, #fff, #f9f9f9 10%, #eee);
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);

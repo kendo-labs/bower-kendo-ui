@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -22,12 +22,15 @@
                                                                                                                                                                                                        
 
 */
-@input-height: 2.214em;
+@line-height: (20/14);
+@line-height-em: ((20/14)*1em);
+@input-height: 2.214285714em;
+@input-padding-y: 0.17857143em;
 @input-indent: .8em;
 @editor-icon-size: 36px;
 @menu-link-padding: 1.071em;
 @button-padding-x: 14px;
-@button-padding-y: 10px;
+@button-padding-y: 9px;
 @button-padding: @button-padding-y @button-padding-x;
 @treeview-inner-padding: 0.429em 0.6667em 0.429em 0.5833em;
 @treeview-inner-margin: 1px 0 1px 0.3333em;
@@ -42,13 +45,14 @@
 @calendar-cell-width: ((38px / 14px) * 1em);
 
 .k-button {
-    line-height: 1.143em;
+    line-height: @line-height;
 }
 
 .k-button-icon,
 .k-split-button-arrow {
-    height: calc(1.143em + (2*@button-padding-y) + 2px); // ensure inline-flex height
-    width: calc(1.143em + (2*@button-padding-y) + 2px);
+    display: inline-flex; // TODO improve elastic behavior
+    height: ~"calc(@{line-height-em} + (2*@{button-padding-y}) + 2px)"; // ensure inline-flex height
+    width: ~"calc(@{line-height-em} + (2*@{button-padding-y}) + 2px)";
 }
 
 .k-widget.k-tabstrip
@@ -289,7 +293,7 @@
 }
 
 .k-pager-wrap input.k-textbox {
-    height: 2.571em;
+    height: 2.57142857em;
 }
 
 .k-pager-info {
@@ -313,11 +317,7 @@
 .k-dropdown-wrap,
 .k-picker-wrap,
 .k-numeric-wrap {
-    padding: 0 2.571em 0 0;
-}
-
-.k-combobox-clearable .k-input {
-    height: (@input-height + .354em);
+    padding-right: 2.57142857em;
 }
 
 .k-combobox > .k-dropdown-wrap > .k-i-close {
@@ -337,7 +337,7 @@
 .k-numeric-wrap .k-select,
 .k-dropdown-wrap .k-select
 {
-    width: 2.571em;
+    width: 2.57142857em;
 }
 
 .k-datetimepicker {
@@ -475,32 +475,20 @@
 
 .k-multiselect-wrap .k-input {
     font-size: inherit;
-    height: 2em;
-    padding-top: 0;
-    padding-bottom: 0;
+    height: @input-height;
 }
 
 .k-multiselect-wrap li {
     border-radius: 1.071em;
-    line-height: 1.86em;
+    margin: 3px 0 3px 3px;
     padding: 0 1.6em 0 .857em;
-}
-
-.k-multiselect-wrap .k-input,
-.k-multiselect-wrap li {
-    margin: .286em 0 .286em .286em;
-}
-
-.k-multiselect-wrap li span {
-    margin-right: .4em;
-}
-.k-multiselect-wrap li span.k-icon {
-    margin: 0;
+    line-height: calc(@input-height - 0.214em);
+    min-height: calc((@input-height + 0.357em) - 6px);
 }
 
 .k-multiselect-wrap .k-select
 {
-    padding-top: 0;
+    right: 5px;
 }
 
 .k-numeric-wrap .k-select {
@@ -562,45 +550,28 @@ table.k-editor {
 }
 
 .k-toolbar {
-    line-height: 45px;
+    padding: 0.35714285em calc(0.35714285em - 0.2em);
 }
 
 .k-toolbar {
 
-    .k-button,
-    .k-split-button,
-    .k-widget,
-    .k-textbox,
-    label,
     .k-separator {
-        line-height: 1.143em;
+        line-height: 2.71428571em;
     }
 
     .k-input {
-        height: @input-height;
-        line-height: @input-height;
-        padding: 0.11em 0;
         text-indent: @input-indent;
         border: 0;
         margin: 0;
     }
 
-    .k-overflow-anchor {
-        width: 3.357em;
-        border-left-width: 1px;
-        padding-top: 2px;
-        line-height: inherit;
-        height: 100%;
-        padding-bottom: 0;
-    }
-
-    .k-separator {
-        line-height: 47px;
-    }
-
     .k-button-group {
         border-width: 0 1px;
         border-style: solid;
+    }
+
+    .k-overflow-anchor {
+        width: calc((50/14)*1em);
     }
 
     .k-overflow-anchor + .k-button-group,
@@ -880,9 +851,6 @@ div.editorToolbarWindow.k-window-content {
 }
 
 .k-colorpicker {
-    .k-picker-wrap {
-        line-height: @input-height;
-    }
 
     .k-selected-color {
         @selected-icon-height: 2.57142857em;
@@ -1046,7 +1014,7 @@ form.k-filter-menu .k-textbox {
 .k-rtl .k-widget .k-dropdown-wrap,
 .k-rtl .k-widget .k-picker-wrap,
 .k-rtl .k-widget .k-numeric-wrap {
-    padding-left: 2.5em;
+    padding-left: 2.57142857em;
 }
 
 .k-rtl .k-widget.k-autocomplete > .k-i-close,
@@ -1223,4 +1191,9 @@ div.k-spreadsheet-window {
             margin-left: 1em;
         }
     }
+}
+
+.k-safari.k-mobile .k-picker-wrap .k-input,
+.k-safari.k-mobile .k-numeric-wrap .k-input {
+    height: 2.1em;
 }

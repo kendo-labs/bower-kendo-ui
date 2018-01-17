@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -194,7 +194,7 @@
                         that._filterSource();
                     }
                 } else if (that._allowOpening()) {
-                    that._open = true;
+                    that._focusFilter = true;
                     that.popup.one('activate', that._focusInputHandler);
                     that.popup._hovered = true;
                     that.popup.open();
@@ -702,7 +702,8 @@
                 if (filterInput && filterInput[0] === element[0] && touchEnabled) {
                     return;
                 }
-                if (filterInput && (compareElement[0] === active || this._open)) {
+                if (filterInput && (compareElement[0] === active || this._focusFilter)) {
+                    this._focusFilter = false;
                     this._prevent = true;
                     this._focused = element.focus();
                 }

@@ -209,7 +209,8 @@
 @theme-name: ~"fiori";
 
 @import "common/mixins.less";
-@import "mixins/all.less";
+@import "mixins/gradients.less";
+@import "mixins/border-radius.less";
 @import "themes/type.less";
 @import "themes/button.less";
 
@@ -302,7 +303,8 @@
 
 .k-grouping-row td,
 td.k-group-cell,
-.k-resize-handle-inner
+.k-resize-handle-inner,
+.k-grid .k-state-selected:hover .k-group-cell
 {
     background-color: @header-background-color;
 }
@@ -465,6 +467,27 @@ html .km-pane-wrapper .k-header
     background-color: @header-background-color;
 }
 
+.k-overflow-container > li > .k-button,
+.k-split-container > li > .k-button,
+.k-toolbar .k-button-group .k-button
+{
+    border-color: transparent;
+}
+
+.k-overflow-container > li > .k-button,
+.k-split-container > li > .k-button,
+.k-toolbar .k-button-group .k-button
+{
+    border-color: transparent;
+}
+
+.k-overflow-container > li > .k-button,
+.k-split-container > li > .k-button,
+.k-toolbar .k-button-group .k-button
+{
+    border-color: transparent;
+}
+
 .k-mediaplayer-toolbar
 {
     background-color: fade(@header-background-color, 85%);
@@ -502,6 +525,13 @@ html .km-pane-wrapper .k-header
     opacity: @default-icon-opacity;
 }
 
+/* Badge */
+.k-badge {
+    background-color: @accent;
+    color: contrast(@accent, @normal-background, @normal-text-color, 0.5);
+    border-radius: @inner-border-radius;
+}
+
 .k-tool
 {
     border-color: transparent;
@@ -514,6 +544,17 @@ html .km-pane-wrapper .k-header
 {
     background-image: @sprite-image;
     border-color: transparent;
+}
+
+.k-mobile-list .k-check:checked,
+.k-mobile-list .k-edit-field [type=checkbox]:checked {
+  font-family: 'WebComponentsIcons';
+  background-image: none;
+}
+
+.k-mobile-list .k-check:checked:before,
+.k-mobile-list .k-edit-field [type=checkbox]:checked:before {
+  content: "\e118";
 }
 
 .k-i-loading {
@@ -567,7 +608,36 @@ html .km-pane-wrapper .k-header
     border-color: @cell-border-color;
 }
 
-.k-nonwork-hour
+.k-scheduler-monthview .k-today {
+    background: @column-highlight-background-color;
+}
+
+.k-scheduler-weekview,
+.k-scheduler-workWeekview {
+
+    .k-scheduler-header th.k-today {
+        position: relative;
+
+        &:before {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            border-bottom: 3px solid @select-border-color;
+        }
+    }
+}
+.k-today > .k-scheduler-datecolumn,
+.k-today > .k-scheduler-groupcolumn
+{
+    background-color: @column-highlight-background-color;
+}
+
+.k-nonwork-hour,
+.k-scheduler-dayview .k-today.k-nonwork-hour,
+.k-scheduler-timelineview .k-today.k-nonwork-hour
 {
     background-color: @scheduler-nonwork-background-color;
 }
@@ -580,13 +650,6 @@ html .km-pane-wrapper .k-header
 .k-gantt .k-header.k-nonwork-hour
 {
     background-color: rgba(0,0,0, .2);
-}
-
-.k-scheduler-table .k-today,
-.k-today > .k-scheduler-datecolumn,
-.k-today > .k-scheduler-groupcolumn
-{
-    background-color: @column-highlight-background-color;
 }
 
 .k-scheduler-now-arrow
@@ -915,6 +978,10 @@ td.k-state-focused.k-state-selected
     color: @hover-text-color;
     background-color: @hover-background-color;
     border-color: @hover-border-color;
+}
+
+.k-pager-wrap .k-link.k-state-disabled {
+    color: @normal-text-color;
 }
 
 /* this selector should be used separately, otherwise old IEs ignore the whole rule */
@@ -2300,6 +2367,25 @@ html .km-pane-wrapper .km-widget,
         {
           position: absolute;
         }
+
+
+        .km-pane-wrapper .k-pager-numbers,
+        .km-pane-wrapper .k-grid .k-pager-numbers {
+            transform: translate(-50%, -100%);
+            -webkit-transform: translate(-50%, -100%);
+
+            .k-current-page .k-link {
+                height: auto;
+            }
+        }
+    }
+
+    .k-grid .k-pager-numbers:not(.k-state-expanded) {
+        transform: none;
+    }
+
+    .k-grid .k-pager-numbers:not(.k-state-expanded) .k-current-page {
+        transform: none;
     }
 }
 
@@ -2642,7 +2728,8 @@ div.k-window.k-state-focused
 }
 
 .k-scheduler-table .k-other-month,
-.k-scheduler-header th
+.k-scheduler-header th,
+.k-scheduler-dayview .k-scheduler-header .k-scheduler-header-wrap th.k-today,
 {
     background: #fff;
 }
@@ -2965,6 +3052,17 @@ div.k-window.k-state-focused
     }
 }
 
+.km-pane-wrapper .k-grid .k-pager-numbers .k-link,
+.km-pane-wrapper .k-grid .k-pager-numbers .k-state-selected
+{
+    width: auto;
+    height: auto;
+    line-height: 2.2em;
+    padding: .571em 0 .571em 0.250em;
+    min-width: 2em;
+    border-radius: 0;
+}
+
 .k-chart .k-mask {
     background-color: #fff;
     filter: alpha(opacity=68);
@@ -3029,7 +3127,7 @@ div.k-window.k-state-focused
 
 .k-window .k-popup-edit-form .k-edit-field {
     label.k-checkbox-label {
-        margin-top: 0.8em;
+        margin-top: 0.7em;
     }
 }
 

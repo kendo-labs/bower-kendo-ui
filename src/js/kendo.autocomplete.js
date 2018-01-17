@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -435,7 +435,15 @@
                     if (visible) {
                         this._move(current ? 'focusNext' : 'focusFirst');
                     } else if (that.value()) {
-                        that.popup.open();
+                        that._filterSource({
+                            value: that.ignoreCase ? that.value().toLowerCase() : that.value(),
+                            operator: that.options.filter,
+                            field: that.options.dataTextField,
+                            ignoreCase: that.ignoreCase
+                        }).done(function () {
+                            that._resetFocusItem();
+                            that.popup.open();
+                        });
                     }
                     e.preventDefault();
                 } else if (key === keys.UP) {
@@ -597,7 +605,7 @@
                 wrapper.attr('role', 'presentation');
                 wrapper[0].style.cssText = DOMelement.style.cssText;
                 element.css({
-                    width: '100%',
+                    width: '',
                     height: DOMelement.style.height
                 });
                 that._focused = that.element;

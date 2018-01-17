@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -572,7 +572,7 @@
                 }
             },
             _start: function (e) {
-                var that = this, options = that.options, container = options.container, hint = options.hint;
+                var that = this, options = that.options, container = options.container ? $(options.container) : null, hint = options.hint;
                 if (this._shouldIgnoreTarget(e.touch.initialTouch) || options.holdToDrag && !that._activated) {
                     that.userEvents.cancel();
                     return;

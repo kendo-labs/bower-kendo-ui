@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -550,10 +550,16 @@
                 return this.dataSource._findRange(skip, Math.min(skip + take, this.dataSource.total()));
             },
             dataItemByIndex: function (index) {
-                var take = this.itemCount;
-                var skip = this._getSkip(index, take);
-                var view = this._getRange(skip, take);
-                return this._findDataItem(view, [index - skip]);
+                var that = this;
+                var take = that.itemCount;
+                var skip = that._getSkip(index, take);
+                if (!that._getRange(skip, take).length) {
+                    return null;
+                }
+                that.mute(function () {
+                    that.dataSource.range(skip, take);
+                });
+                return that._findDataItem(that.dataSource.view(), [index - skip]);
             },
             selectedDataItems: function () {
                 return this._selectedDataItems.slice();
@@ -1115,10 +1121,10 @@
                 indices = indices.slice();
                 if (selectable === true || !indices.length) {
                     for (var idx = 0; idx < selectedIndexes.length; idx++) {
-                        if (selectedDataItems[idx]) {
-                            this._getElementByDataItem(selectedDataItems[idx]).removeClass(SELECTED);
-                        } else if (selectedIndexes[idx] !== undefined) {
+                        if (selectedIndexes[idx] !== undefined) {
                             this._getElementByIndex(selectedIndexes[idx]).removeClass(SELECTED);
+                        } else if (selectedDataItems[idx]) {
+                            this._getElementByDataItem(selectedDataItems[idx]).removeClass(SELECTED);
                         }
                         removed.push({
                             index: selectedIndexes[idx],

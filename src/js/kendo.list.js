@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -232,7 +232,7 @@
                     group: dataSource.group(),
                     aggregate: dataSource.aggregate()
                 }, { filter: newExpression });
-                dataSource[force ? 'read' : 'query'](dataSource._mergeState(dataSourceState));
+                return dataSource[force ? 'read' : 'query'](dataSource._mergeState(dataSourceState));
             },
             _angularElement: function (element, action) {
                 if (!element) {
@@ -484,11 +484,17 @@
                 }
                 if (value !== unifyType(that._old, typeof value)) {
                     trigger = true;
-                } else if (index !== undefined && index !== that._oldIndex) {
+                } else if (that._valueBeforeCascade !== undefined && that._valueBeforeCascade !== unifyType(that._old, typeof that._valueBeforeCascade) && that._userTriggered) {
+                    trigger = true;
+                } else if (index !== undefined && index !== that._oldIndex && !that.listView.isFiltered()) {
                     trigger = true;
                 }
                 if (trigger) {
-                    that._old = value;
+                    if (that._old === null) {
+                        that._old = value;
+                    } else {
+                        that._old = that.dataItem() ? that.dataItem()[that.options.dataValueField] : null;
+                    }
                     that._oldIndex = index;
                     if (!that._typing) {
                         that.element.trigger(CHANGE);
@@ -669,7 +675,7 @@
             },
             _triggerCascade: function () {
                 var that = this;
-                if (!that._cascadeTriggered || that._old !== that.value() || that._oldIndex !== that.selectedIndex) {
+                if (!that._cascadeTriggered || that.value() !== unifyType(that._old, typeof that.value())) {
                     that._cascadeTriggered = true;
                     that.trigger(CASCADE, { userTriggered: that._userTriggered });
                 }
@@ -790,6 +796,9 @@
                     }
                 }
             },
+            _syncValueAndText: function () {
+                return true;
+            },
             _custom: function (value) {
                 var that = this;
                 var element = that.element;
@@ -878,7 +887,7 @@
                     if (e.altKey) {
                         that.toggle(down);
                     } else {
-                        if (!listView.bound()) {
+                        if (!listView.bound() && !that.ul[0].firstChild) {
                             if (!that._fetch) {
                                 that.dataSource.one(CHANGE, function () {
                                     that._fetch = false;
@@ -916,7 +925,11 @@
                             if (!that.popup.visible()) {
                                 that._blur();
                             }
-                            that._oldIndex = that.selectedIndex;
+                            if (that._old === null) {
+                                that._old = that.value();
+                            } else {
+                                that._old = that.dataItem() ? that.dataItem()[that.options.dataValueField] : null;
+                            }
                         });
                     }
                     e.preventDefault();
@@ -945,7 +958,9 @@
                         }
                         that._select(current);
                     } else if (that.input) {
-                        that._accessor(that.input.val());
+                        if (that._syncValueAndText() || that._isSelect) {
+                            that._accessor(that.input.val());
+                        }
                         that.listView.value(that.input.val());
                     }
                     if (that._focusElement) {
@@ -1126,7 +1141,7 @@
             _cascadeSelect: function (parent, valueBeforeCascade) {
                 var that = this;
                 var dataItem = parent.dataItem();
-                var filterValue = dataItem ? parent._value(dataItem) : null;
+                var filterValue = dataItem ? dataItem[that.options.cascadeFromField] || parent._value(dataItem) : null;
                 var valueField = that.options.cascadeFromField || parent.options.dataValueField;
                 var expressions;
                 that._valueBeforeCascade = valueBeforeCascade !== undefined ? valueBeforeCascade : that.value();

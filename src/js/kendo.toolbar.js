@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -37,7 +37,7 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Class = kendo.Class, Widget = kendo.ui.Widget, proxy = $.proxy, isFunction = kendo.isFunction, keys = kendo.keys, outerWidth = kendo._outerWidth, TOOLBAR = 'k-toolbar', BUTTON = 'k-button', OVERFLOW_BUTTON = 'k-overflow-button', TOGGLE_BUTTON = 'k-toggle-button', BUTTON_GROUP = 'k-button-group', SPLIT_BUTTON = 'k-split-button', SEPARATOR = 'k-separator', POPUP = 'k-popup', RESIZABLE_TOOLBAR = 'k-toolbar-resizable', STATE_ACTIVE = 'k-state-active', STATE_DISABLED = 'k-state-disabled', STATE_HIDDEN = 'k-state-hidden', GROUP_START = 'k-group-start', GROUP_END = 'k-group-end', PRIMARY = 'k-primary', ICON = 'k-icon', ICON_PREFIX = 'k-i-', BUTTON_ICON = 'k-button-icon', BUTTON_ICON_TEXT = 'k-button-icontext', LIST_CONTAINER = 'k-list-container k-split-container', SPLIT_BUTTON_ARROW = 'k-split-button-arrow', OVERFLOW_ANCHOR = 'k-overflow-anchor', OVERFLOW_CONTAINER = 'k-overflow-container', FIRST_TOOLBAR_VISIBLE = 'k-toolbar-first-visible', LAST_TOOLBAR_VISIBLE = 'k-toolbar-last-visible', CLICK = 'click', TOGGLE = 'toggle', OPEN = 'open', CLOSE = 'close', OVERFLOW_OPEN = 'overflowOpen', OVERFLOW_CLOSE = 'overflowClose', OVERFLOW_NEVER = 'never', OVERFLOW_AUTO = 'auto', OVERFLOW_ALWAYS = 'always', OVERFLOW_HIDDEN = 'k-overflow-hidden', KENDO_UID_ATTR = kendo.attr('uid');
+        var kendo = window.kendo, Class = kendo.Class, Widget = kendo.ui.Widget, proxy = $.proxy, isFunction = kendo.isFunction, keys = kendo.keys, outerWidth = kendo._outerWidth, TOOLBAR = 'k-toolbar', BUTTON = 'k-button', OVERFLOW_BUTTON = 'k-overflow-button', TOGGLE_BUTTON = 'k-toggle-button', BUTTON_GROUP = 'k-button-group', SPLIT_BUTTON = 'k-split-button', SEPARATOR = 'k-separator', POPUP = 'k-popup', RESIZABLE_TOOLBAR = 'k-toolbar-resizable', STATE_ACTIVE = 'k-state-active', STATE_DISABLED = 'k-state-disabled', STATE_HIDDEN = 'k-state-hidden', GROUP_START = 'k-group-start', GROUP_END = 'k-group-end', PRIMARY = 'k-primary', ICON = 'k-icon', ICON_PREFIX = 'k-i-', BUTTON_ICON = 'k-button-icon', BUTTON_ICON_TEXT = 'k-button-icontext', LIST_CONTAINER = 'k-list-container k-split-container', SPLIT_BUTTON_ARROW = 'k-split-button-arrow', OVERFLOW_ANCHOR = 'k-overflow-anchor', OVERFLOW_CONTAINER = 'k-overflow-container', FIRST_TOOLBAR_VISIBLE = 'k-toolbar-first-visible', LAST_TOOLBAR_VISIBLE = 'k-toolbar-last-visible', CLICK = 'click', TOGGLE = 'toggle', OPEN = 'open', CLOSE = 'close', OVERFLOW_OPEN = 'overflowOpen', OVERFLOW_CLOSE = 'overflowClose', OVERFLOW_NEVER = 'never', OVERFLOW_AUTO = 'auto', OVERFLOW_ALWAYS = 'always', OVERFLOW_HIDDEN = 'k-overflow-hidden', OPTION_LIST_SUFFIX = '_optionlist', KENDO_UID_ATTR = kendo.attr('uid');
         kendo.toolbar = {};
         var components = {
             overflowAnchor: '<div tabindex="0" class="k-overflow-anchor"></div>',
@@ -77,6 +77,9 @@
             },
             hide: function () {
                 this.element.addClass(STATE_HIDDEN).hide();
+                if (this.overflow && this.overflowHidden) {
+                    this.overflowHidden();
+                }
                 this.options.hidden = true;
             },
             remove: function () {
@@ -91,7 +94,9 @@
             },
             twin: function () {
                 var uid = this.element.attr(KENDO_UID_ATTR);
-                if (this.overflow) {
+                if (this.overflow && this.options.splitContainerId) {
+                    return $('#' + this.options.splitContainerId).find('[' + KENDO_UID_ATTR + '=\'' + uid + '\']').data(this.options.type);
+                } else if (this.overflow) {
                     return this.toolbar.element.find('[' + KENDO_UID_ATTR + '=\'' + uid + '\']').data(this.options.type);
                 } else if (this.toolbar.options.resizable) {
                     return this.toolbar.popup.element.find('[' + KENDO_UID_ATTR + '=\'' + uid + '\']').data(this.options.type);
@@ -228,7 +233,7 @@
         var OverflowButton = Button.extend({
             init: function (options, toolbar) {
                 this.overflow = true;
-                Button.fn.init.call(this, options, toolbar);
+                Button.fn.init.call(this, $.extend({}, options), toolbar);
                 var element = this.element;
                 if (options.showText != 'toolbar' && options.text) {
                     if (options.mobile) {
@@ -419,9 +424,10 @@
                 }
             },
             createPopup: function () {
+                var that = this;
                 var options = this.options;
                 var element = this.element;
-                this.popupElement.attr('id', options.id + '_optionlist').attr(KENDO_UID_ATTR, options.rootUid);
+                this.popupElement.attr('id', options.id + OPTION_LIST_SUFFIX).attr(KENDO_UID_ATTR, options.rootUid);
                 if (options.mobile) {
                     this.popupElement = actionSheetWrap(this.popupElement);
                 }
@@ -431,15 +437,39 @@
                     isRtl: this.toolbar._isRtl,
                     copyAnchorStyles: false,
                     animation: options.animation,
-                    open: adjustPopupWidth,
+                    open: function (e) {
+                        var isDefaultPrevented = that.toolbar.trigger(OPEN, { target: element });
+                        if (isDefaultPrevented) {
+                            e.preventDefault();
+                            return;
+                        }
+                        that.adjustPopupWidth(e.sender);
+                    },
                     activate: function () {
                         this.element.find(':kendoFocusable').first().focus();
                     },
-                    close: function () {
+                    close: function (e) {
+                        var isDefaultPrevented = that.toolbar.trigger(CLOSE, { target: element });
+                        if (isDefaultPrevented) {
+                            e.preventDefault();
+                        }
                         element.focus();
                     }
                 }).data('kendoPopup');
                 this.popup.element.on(CLICK, 'a.k-button', preventClick);
+            },
+            adjustPopupWidth: function (popup) {
+                var anchor = popup.options.anchor, computedWidth = outerWidth(anchor), width;
+                kendo.wrap(popup.element).addClass('k-split-wrapper');
+                if (popup.element.css('box-sizing') !== 'border-box') {
+                    width = computedWidth - (outerWidth(popup.element) - popup.element.width());
+                } else {
+                    width = computedWidth;
+                }
+                popup.element.css({
+                    fontFamily: anchor.css('font-family'),
+                    'min-width': width
+                });
             },
             remove: function () {
                 this.popup.element.off(CLICK, 'a.k-button');
@@ -474,16 +504,18 @@
         kendo.toolbar.ToolBarSplitButton = ToolBarSplitButton;
         var OverflowSplitButton = Item.extend({
             init: function (options, toolbar) {
-                var element = this.element = $('<li class="' + SPLIT_BUTTON + '"></li>'), items = options.menuButtons, item;
+                var element = this.element = $('<li class="' + SPLIT_BUTTON + '"></li>'), items = options.menuButtons, item, splitContainerId;
                 this.options = options;
                 this.toolbar = toolbar;
                 this.overflow = true;
-                this.mainButton = new OverflowButton($.extend({ isChild: true }, options));
+                splitContainerId = (options.id || options.uid) + OPTION_LIST_SUFFIX;
+                this.mainButton = new OverflowButton($.extend({}, options));
                 this.mainButton.element.appendTo(element);
                 for (var i = 0; i < items.length; i++) {
                     item = new OverflowButton($.extend({
                         mobile: options.mobile,
-                        isChild: true
+                        type: 'button',
+                        splitContainerId: splitContainerId
                     }, items[i]), this.toolbar);
                     item.element.appendTo(element);
                 }
@@ -589,19 +621,6 @@
             }
         });
         kendo.toolbar.OverflowTemplateItem = OverflowTemplateItem;
-        function adjustPopupWidth() {
-            var anchor = this.options.anchor, computedWidth = outerWidth(anchor), width;
-            kendo.wrap(this.element).addClass('k-split-wrapper');
-            if (this.element.css('box-sizing') !== 'border-box') {
-                width = computedWidth - (outerWidth(this.element) - this.element.width());
-            } else {
-                width = computedWidth;
-            }
-            this.element.css({
-                fontFamily: anchor.css('font-family'),
-                'min-width': width
-            });
-        }
         function toggleActive(e) {
             if (!e.target.is('.k-toggle-button')) {
                 e.target.toggleClass(STATE_ACTIVE, e.type == 'press');
@@ -919,7 +938,7 @@
                     that.overflowAnchor.append('<span class="km-icon km-more"></span>');
                     overflowContainer = actionSheetWrap(overflowContainer);
                 } else {
-                    that.overflowAnchor.append('<span class="k-icon k-i-arrow-60-down"></span>');
+                    that.overflowAnchor.append('<span class="k-icon k-i-more-vertical"></span>');
                 }
                 that.popup = new kendo.ui.Popup(overflowContainer, {
                     origin: 'bottom ' + horizontalDirection,
@@ -1133,7 +1152,7 @@
                     return;
                 }
                 if (keyCode === keys.HOME) {
-                    if (target.is('.k-dropdown')) {
+                    if (target.is('.k-dropdown') || target.is('input')) {
                         return;
                     }
                     if (this.overflowAnchor) {
@@ -1143,7 +1162,7 @@
                     }
                     e.preventDefault();
                 } else if (keyCode === keys.END) {
-                    if (target.is('.k-dropdown')) {
+                    if (target.is('.k-dropdown') || target.is('input')) {
                         return;
                     }
                     if (this.overflowAnchor && $(this.overflowAnchor).css('visibility') != 'hidden') {
@@ -1217,19 +1236,12 @@
                 }
             },
             _toggle: function (e) {
-                var splitButton = $(e.target).closest('.' + SPLIT_BUTTON).data('splitButton'), isDefaultPrevented;
+                var splitButton = $(e.target).closest('.' + SPLIT_BUTTON).data('splitButton');
                 e.preventDefault();
                 if (!splitButton.options.enable) {
                     return;
                 }
-                if (splitButton.popup.element.is(':visible')) {
-                    isDefaultPrevented = this.trigger(CLOSE, { target: splitButton.element });
-                } else {
-                    isDefaultPrevented = this.trigger(OPEN, { target: splitButton.element });
-                }
-                if (!isDefaultPrevented) {
-                    splitButton.toggle();
-                }
+                splitButton.toggle();
             },
             _toggleOverflow: function () {
                 this.popup.toggle();

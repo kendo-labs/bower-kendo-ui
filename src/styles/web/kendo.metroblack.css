@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -121,12 +121,6 @@
   background-image: none, -webkit-linear-gradient(top, false);
   background-image: none, linear-gradient(to bottom, false);
 }
-.k-button:focus,
-.k-button.k-state-focused {
-  border-color: #00cfcc;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
 .k-button:active,
 .k-button.k-state-active {
   color: #fff;
@@ -136,35 +130,37 @@
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
   background-image: none, -webkit-linear-gradient(top, false);
   background-image: none, linear-gradient(to bottom, false);
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-button.k-state-active:hover {
   color: #ffffff;
   border-color: #00aba9;
   background-color: #00aba9;
 }
-.k-button:focus:active:not(.k-state-disabled):not([disabled]) {
+.k-button:focus,
+.k-button.k-state-focused {
+  border-color: #00cfcc;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-button:focus:active {
   -webkit-box-shadow: inset 0 0 3px 1px #003c3b;
           box-shadow: inset 0 0 3px 1px #003c3b;
 }
 .k-button[disabled],
-.k-button[disabled]:hover,
-.k-button[disabled]:focus,
-.k-button[disabled]:active,
-.k-button[disabled]:hover:active,
 .k-state-disabled .k-button,
 .k-state-disabled .k-button:hover,
-.k-state-disabled .k-button:focus,
-.k-state-disabled .k-button:active,
-.k-state-disabled .k-button:active:active,
 .k-button.k-state-disabled,
-.k-button.k-state-disabled:hover,
-.k-button.k-state-disabled:focus,
-.k-button.k-state-disabled:active,
-.k-button.k-state-disabled:hover:active {
+.k-button.k-state-disabled:hover {
   color: #797979;
   border-color: #323232;
   background-color: #0e0e0e;
   background-image: none;
+}
+.k-button[disabled],
+.k-button.k-state-disabled,
+.k-button.k-state-disabled:active {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
@@ -208,57 +204,24 @@
           box-shadow: none;
 }
 .k-primary[disabled],
-.k-primary[disabled]:hover,
-.k-primary[disabled]:focus,
-.k-primary[disabled]:active,
-.k-primary[disabled]:hover:active,
 .k-state-disabled .k-primary,
 .k-state-disabled .k-primary:hover,
-.k-state-disabled .k-primary:focus,
-.k-state-disabled .k-primary:active,
-.k-state-disabled .k-primary:hover:active,
 .k-primary.k-state-disabled,
-.k-primary.k-state-disabled:hover,
-.k-primary.k-state-disabled:focus,
-.k-primary.k-state-disabled:active,
-.k-primary.k-state-disabled:hover:active {
+.k-primary.k-state-disabled:hover {
   color: #111111;
   border-color: #009290;
   background-color: #009290;
+  -webkit-box-shadow: none;
+          box-shadow: none;
   background-image: none;
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
   background-image: none, -webkit-linear-gradient(top, false);
   background-image: none, linear-gradient(to bottom, false);
+}
+.k-primary[disabled],
+.k-primary.k-state-disabled {
   -webkit-box-shadow: none;
           box-shadow: none;
-}
-.k-button-group .k-button {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-button-group .k-button:focus,
-.k-button-group .k-button.k-state-focused,
-.k-button-group > input[type="radio"]:focus + .k-button,
-.k-button-group > input[type="checkbox"]:focus + .k-button {
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-button-group .k-button:active,
-.k-button-group .k-button.k-state-active,
-.k-button-group > input[type="radio"]:checked + .k-button,
-.k-button-group > input[type="checkbox"]:checked + .k-button {
-  color: #fff;
-  background-color: #008886;
-  border-color: #008886;
-  background-image: none;
-}
-.k-button-group .k-button:active:hover,
-.k-button-group .k-button.k-state-active:hover,
-.k-button-group > input[type="radio"]:checked + .k-button:hover,
-.k-button-group > input[type="checkbox"]:checked + .k-button:hover {
-  color: #ffffff;
-  border-color: #00aba9;
-  background-color: #00aba9;
 }
 .k-button-group .k-button {
   border-radius: 0;
@@ -275,6 +238,48 @@
 }
 .k-button-group .k-group-start.k-group-end,
 .k-button-group .k-button:first-child:last-child {
+  border-radius: 0;
+}
+.k-button-group .k-button[disabled],
+.k-state-disabled .k-button-group .k-button,
+.k-button-group .k-button.k-state-disabled {
+  color: #797979;
+  border-color: #323232;
+  background-color: #0e0e0e;
+  background-image: none;
+}
+.k-button-group .k-button.k-state-active {
+  color: #fff;
+  background-color: #008886;
+  border-color: #008886;
+  background-image: none;
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
+  background-image: none, -webkit-linear-gradient(top, false);
+  background-image: none, linear-gradient(to bottom, false);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-button-group .k-button:focus,
+.k-button-group .k-button.k-state-focused {
+  border-color: #00cfcc;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-rtl .k-button-group .k-button {
+  border-radius: 0;
+}
+.k-rtl .k-button-group .k-group-start,
+.k-rtl .k-button-group .k-button:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.k-rtl .k-button-group .k-group-end,
+.k-rtl .k-button-group .k-button:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.k-rtl .k-button-group .k-group-start.k-group-end,
+.k-rtl .k-button-group .k-button:first-child:last-child {
   border-radius: 0;
 }
 .k-in,
@@ -513,6 +518,12 @@ html .km-pane-wrapper .k-header {
 .k-mobile-list .k-edit-field [type=radio]:checked {
   opacity: 1;
 }
+/* Badge */
+.k-badge {
+  background-color: #008886;
+  color: #fff;
+  border-radius: 0;
+}
 .k-tool {
   border-color: transparent;
 }
@@ -522,6 +533,15 @@ html .km-pane-wrapper .k-header {
 .k-mobile-list .k-edit-field [type=radio]:checked {
   background-image: url('MetroBlack/sprite.png');
   border-color: transparent;
+}
+.k-mobile-list .k-check:checked,
+.k-mobile-list .k-edit-field [type=checkbox]:checked {
+  font-family: 'WebComponentsIcons';
+  background-image: none;
+}
+.k-mobile-list .k-check:checked:before,
+.k-mobile-list .k-edit-field [type=checkbox]:checked:before {
+  content: "\e118";
 }
 .k-i-loading {
   background-image: url('MetroBlack/loading.gif');
@@ -565,7 +585,12 @@ html .km-pane-wrapper .k-header {
 .k-scheduler-times {
   border-color: #323232;
 }
-.k-nonwork-hour {
+.k-scheduler-table .k-today,
+.k-today > .k-scheduler-datecolumn,
+.k-today > .k-scheduler-groupcolumn {
+  background-color: #222222;
+}
+.k-scheduler-table .k-nonwork-hour {
   background-color: #393939;
 }
 .k-gantt .k-nonwork-hour {
@@ -573,11 +598,6 @@ html .km-pane-wrapper .k-header {
 }
 .k-gantt .k-header.k-nonwork-hour {
   background-color: rgba(0, 0, 0, 0.2);
-}
-.k-scheduler-table .k-today,
-.k-today > .k-scheduler-datecolumn,
-.k-today > .k-scheduler-groupcolumn {
-  background-color: #222222;
 }
 .k-scheduler-now-arrow {
   border-left-color: #e20000;
@@ -815,6 +835,10 @@ td.k-state-focused.k-state-selected {
   color: #fff;
   background-color: #00aba9;
   border-color: #00aba9;
+}
+.k-pager-wrap .k-link.k-state-disabled {
+  color: #fff;
+  border-color: #323232;
 }
 /* this selector should be used separately, otherwise old IEs ignore the whole rule */
 .k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active {
@@ -1567,7 +1591,8 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-mobile-list > ul > li > .k-link,
 .km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-label:nth-child(3),
 .km-pane-wrapper #recurrence .km-scroll-container > .k-edit-label:first-child {
-  color: #000000;
+  color: #fff;
+  opacity: 0.7;
 }
 .km-pane-wrapper .k-mobile-list > ul > li > .k-link {
   border-bottom: 1px solid #323232;
@@ -1685,8 +1710,8 @@ html .km-pane-wrapper .km-widget,
   background-image: none;
   border-color: #008886;
 }
-.k-tabstrip-top .k-tabstrip-items .k-state-active,
-.k-panelbar .k-tabstrip-top .k-tabstrip-items .k-state-active {
+.k-tabstrip-top > .k-tabstrip-items .k-state-active,
+.k-panelbar .k-tabstrip-top > .k-tabstrip-items .k-state-active {
   border-bottom-color: #1d1d1d;
 }
 .k-tabstrip .k-content.k-state-active {
@@ -2229,15 +2254,31 @@ html .km-pane-wrapper .km-widget,
 .k-auto-fill,
 .k-spreadsheet-selection {
   border-color: #00aba9;
-  -webkit-box-shadow: inset 0 0 0 1px #0e0e0e, 0 0 0 1px #00aba9;
-          box-shadow: inset 0 0 0 1px #0e0e0e, 0 0 0 1px #00aba9;
+  -webkit-box-shadow: inset 0 0 0 1px #00aba9;
+          box-shadow: inset 0 0 0 1px #00aba9;
+}
+.k-auto-fill-wrapper .k-tooltip {
+  background: #0e0e0e;
 }
 .k-spreadsheet-selection {
   background-color: rgba(0, 171, 169, 0.2);
 }
 .k-spreadsheet-active-cell {
-  border-color: #00aba9 !important;
+  -webkit-box-shadow: inset 0 0 0 1px #00aba9;
+          box-shadow: inset 0 0 0 1px #00aba9;
   background-color: #0e0e0e;
+}
+.k-spreadsheet-active-cell.k-right {
+  -webkit-box-shadow: inset 0 0 0 1px #00aba9, inset -1px 0 0 1px #00aba9;
+          box-shadow: inset 0 0 0 1px #00aba9, inset -1px 0 0 1px #00aba9;
+}
+.k-spreadsheet-active-cell.k-bottom {
+  -webkit-box-shadow: inset 0 0 0 1px #00aba9, inset 0 -1px 0 1px #00aba9;
+          box-shadow: inset 0 0 0 1px #00aba9, inset 0 -1px 0 1px #00aba9;
+}
+.k-spreadsheet-active-cell.k-bottom.k-right {
+  -webkit-box-shadow: inset 0 0 0 1px #00aba9, inset -1px -1px 0 1px #00aba9;
+          box-shadow: inset 0 0 0 1px #00aba9, inset -1px -1px 0 1px #00aba9;
 }
 .k-spreadsheet-active-cell.k-single {
   color: #fff;

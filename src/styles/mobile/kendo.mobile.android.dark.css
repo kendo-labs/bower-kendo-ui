@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -1815,8 +1815,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-list textarea {
   position: relative;
-  width: -webkit-calc(50% + .7em);
-  width: calc(50% + .7em);
+  width: -webkit-calc(50% + 0.7em);
+  width: calc(50% + 0.7em);
   margin-right: -0.7em;
 }
 .km-list input,
@@ -1971,8 +1971,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-list .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc((100% - 3.22em)/2);
-  width: calc((100% - 3.22em)/2);
+  width: -webkit-calc(50% - 1.61em);
+  width: calc(50% - 1.61em);
   overflow: hidden;
   white-space: nowrap;
 }
@@ -5270,7 +5270,7 @@ html .km-android .km-navbar .km-notext {
 .km-android .km-badge,
 .km-android .km-detail,
 .km-android .km-rowdelete {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.1)), color-stop(50%, rgba(255, 255, 255, 0)));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(255, 255, 255, 0.1)), to(rgba(255, 255, 255, 0)));
   background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0));
   border-color: #fff;
@@ -5279,7 +5279,7 @@ html .km-android .km-navbar .km-notext {
 .km-android-light .km-badge,
 .km-android-light .km-detail,
 .km-android-light .km-rowdelete {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(34, 34, 34, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(34, 34, 34, 0.1)), color-stop(50%, rgba(34, 34, 34, 0)));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(34, 34, 34, 0.5)), color-stop(50%, rgba(204, 204, 204, 0.5)), color-stop(50%, rgba(34, 34, 34, 0.1)), to(rgba(34, 34, 34, 0)));
   background-image: -webkit-linear-gradient(top, rgba(34, 34, 34, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(34, 34, 34, 0.1) 50%, rgba(34, 34, 34, 0));
   background-image: linear-gradient(to bottom, rgba(34, 34, 34, 0.5), rgba(204, 204, 204, 0.5) 50%, rgba(34, 34, 34, 0.1) 50%, rgba(34, 34, 34, 0));
   border-color: #222;
@@ -6405,8 +6405,8 @@ html .km-android .k-toolbar .km-state-active {
 }
 .km-native-scrolling .km-android .km-list .k-dropdown {
   width: 48%;
-  width: -webkit-calc(50% - .7em);
-  width: calc(50% - .7em);
+  width: -webkit-calc(50% - 0.7em);
+  width: calc(50% - 0.7em);
   margin-right: .7em;
 }
 .km-android .k-dropdown .k-dropdown-wrap {

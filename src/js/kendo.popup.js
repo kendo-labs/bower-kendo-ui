@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -68,8 +68,9 @@
                 that.element.hide().addClass('k-popup k-group k-reset').toggleClass('k-rtl', !!options.isRtl).css({ position: ABSOLUTE }).appendTo(options.appendTo).attr('aria-hidden', true).on('mouseenter' + NS, function () {
                     that._hovered = true;
                 }).on('wheel' + NS, function (e) {
-                    var scrollArea = $(this).find('.k-list').parent();
-                    if (scrollArea.scrollTop() === 0 && e.originalEvent.deltaY < 0 || scrollArea.scrollTop() === scrollArea.prop('scrollHeight') - scrollArea.prop('offsetHeight') && e.originalEvent.deltaY > 0) {
+                    var list = $(e.target).find('.k-list');
+                    var scrollArea = list.parent();
+                    if (list.length && list.is(':visible') && (scrollArea.scrollTop() === 0 && e.originalEvent.deltaY < 0 || scrollArea.scrollTop() === scrollArea.prop('scrollHeight') - scrollArea.prop('offsetHeight') && e.originalEvent.deltaY > 0)) {
                         e.preventDefault();
                     }
                 }).on('mouseleave' + NS, function () {
@@ -573,6 +574,10 @@
                 return elements.get((current + (e.shiftKey ? -1 : 1)) % count);
             },
             _focus: function (element) {
+                if (element.nodeName == 'IFRAME') {
+                    element.contentWindow.document.body.focus();
+                    return;
+                }
                 element.focus();
                 if (element.nodeName == 'INPUT' && element.setSelectionRange && this._haveSelectionRange(element)) {
                     element.setSelectionRange(0, element.value.length);

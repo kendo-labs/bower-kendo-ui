@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -161,6 +161,9 @@
                             var first = $(options[0]);
                             if (!/\S/.test(first.text()) && /^\?/.test(first.val())) {
                                 first.remove();
+                            }
+                            for (var i = 0; i < options.length; i++) {
+                                $(options[i]).off('$destroy');
                             }
                         }
                     }(element[0].options));

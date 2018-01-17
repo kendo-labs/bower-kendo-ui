@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -56,7 +56,6 @@
                 that.element.addClass(SELECTABLE);
                 that.relatedTarget = that.options.relatedTarget;
                 multiple = that.options.multiple;
-                INPUTSELECTOR = that.options.inputSelectors;
                 if (this.options.aria && multiple) {
                     that.element.attr('aria-multiselectable', true);
                 }
@@ -235,13 +234,13 @@
             },
             _select: function (e) {
                 if (this._allowSelection(e.event.target)) {
-                    if (!msie || msie && !$(kendo._activeElement()).is(INPUTSELECTOR)) {
+                    if (!msie || msie && !$(kendo._activeElement()).is(this.options.inputSelectors)) {
                         e.preventDefault();
                     }
                 }
             },
             _allowSelection: function (target) {
-                if ($(target).is(INPUTSELECTOR)) {
+                if ($(target).is(this.options.inputSelectors)) {
                     this.userEvents.cancel();
                     this._downTarget = null;
                     return false;

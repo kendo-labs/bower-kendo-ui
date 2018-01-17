@@ -1,5 +1,5 @@
 /** 
- * Copyright 2017 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik AD                                                                                                                                                                            
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -117,6 +117,7 @@
                 this.events.cancel();
             },
             destroy: function () {
+                Widget.fn.destroy.call(this);
                 this.events.destroy();
             },
             _triggerTouch: function (type, e) {
