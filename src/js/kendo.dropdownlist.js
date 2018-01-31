@@ -79,6 +79,7 @@
                 that._ignoreCase();
                 that._filterHeader();
                 that._aria();
+                that.wrapper.attr('aria-live', 'polite');
                 that._enable();
                 that._oldIndex = that.selectedIndex = -1;
                 if (index !== undefined) {
@@ -88,6 +89,11 @@
                 that.requireValueMapper(that.options);
                 that._initList();
                 that._cascade();
+                that.one('set', function (e) {
+                    if (!e.sender.listView.bound() && that.hasOptionLabel()) {
+                        that._textAccessor(that._optionLabelText());
+                    }
+                });
                 if (options.autoBind) {
                     that.dataSource.fetch();
                 } else if (that.selectedIndex === -1) {
@@ -135,7 +141,8 @@
                 valueTemplate: null,
                 optionLabelTemplate: null,
                 groupTemplate: '#:data#',
-                fixedGroupTemplate: '#:data#'
+                fixedGroupTemplate: '#:data#',
+                autoWidth: false
             },
             events: [
                 'open',

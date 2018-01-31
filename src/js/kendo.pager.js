@@ -33,7 +33,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), MAX_SAFE_INTEGER = 9007199254740991, iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
         function button(template, idx, text, numeric, title) {
             return template({
                 idx: idx,
@@ -244,7 +244,7 @@
                 }
                 if (options.pageSizes) {
                     var hasAll = that.element.find('.k-pager-sizes option[value=\'all\']').length > 0;
-                    var selectAll = hasAll && pageSize === this.dataSource.total();
+                    var selectAll = hasAll && (pageSize === this.dataSource.total() || pageSize == MAX_SAFE_INTEGER);
                     var text = pageSize;
                     if (selectAll) {
                         pageSize = 'all';
@@ -274,7 +274,7 @@
                 if (!isNaN(pageSize)) {
                     dataSource.pageSize(pageSize);
                 } else if ((value + '').toLowerCase() == 'all') {
-                    dataSource.pageSize(dataSource.total());
+                    dataSource.pageSize(dataSource.total() ? dataSource.total() : MAX_SAFE_INTEGER);
                 }
             },
             _toggleActive: function () {

@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.1.117'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.1.131'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2237,7 +2237,7 @@
                 value = true;
             } else if (value === 'false') {
                 value = false;
-            } else if (numberRegExp.test(value)) {
+            } else if (numberRegExp.test(value) && option != 'mask') {
                 value = parseFloat(value);
             } else if (jsonRegExp.test(value) && !jsonFormatRegExp.test(value)) {
                 value = new Function('return (' + value + ')')();

@@ -2088,6 +2088,11 @@ html .km-pane-wrapper .km-widget,
     box-shadow: inset 0 1px 0 lighten(@secondary-border-color, 30%);
 }
 
+.k-toolbar .k-button.k-state-disabled:focus {
+    border-color: @button-focused-border-color;
+    .box-shadow(@button-focused-shadow);
+}
+
 .k-column-menu .k-separator
 {
     border-color: @secondary-border-color;
@@ -2185,7 +2190,7 @@ html .km-pane-wrapper .km-widget,
 
 .k-split-button:focus > .k-button {
     background: transparent;
-    border-color: transparent;
+    border-color: @button-focused-border-color;
 }
 
 .k-editor .k-tool:focus
@@ -2435,34 +2440,13 @@ html .km-pane-wrapper .km-widget,
     }
     .k-dialog-buttongroup {
         &.k-dialog-button-layout-stretched {
-            width: 100%;
             .k-button {
-                display: inline-block;
-                padding: 0.9em 0 0.9em 0;
-                border-radius: 0;
-                border-bottom: 0;
-                border-width: 1px 0 0 1px;
-            }
-            .k-button:first-child {
-            border-bottom-left-radius: @border-radius;
-            border-left: 0;
-            }
-            .k-button:last-child {
-                border-bottom-right-radius: @border-radius;
-                border-right: 0;
+                padding: 12px;
             }
         }
         &.k-dialog-button-layout-normal {
-            width: auto;
-            margin: 0;
-            padding: 1em;
-            text-align: left;
             .k-button {
-                padding: 0.2em 1.5em;
-                margin-left: 0.5em;
-                &:first-child {
-                    margin-left: 0;
-                }
+                border-radius: @border-radius;
             }
         }
     }
@@ -2477,12 +2461,10 @@ html .km-pane-wrapper .km-widget,
             .k-button:first-child {
                 border-right-width: 0;
                 border-left-width: 1px;
-                border-bottom-right-radius: @border-radius;
             }
             .k-button:last-child {
                 border-left-width: 0;
                 border-right-width: 1px;
-                border-bottom-left-radius: @border-radius;
             }
         }
         &.k-dialog-button-layout-normal {

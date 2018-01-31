@@ -128,6 +128,7 @@ input.k-textbox,
 .k-tabstrip > .k-button.k-bare {
     padding: 0;
     top: 0;
+    bottom: 0;
     height: auto;
 }
 
@@ -148,7 +149,7 @@ input.k-textbox,
 }
 
 .k-tabstrip-top > .k-tabstrip-items .k-link {
-    padding: 0 0 .6em;
+    padding: 0 0 8px;
 }
 
 .k-tabstrip-left > .k-tabstrip-items > .k-item {
@@ -584,8 +585,8 @@ span.k-tooltip
 }
 
 .k-window-titlebar .k-window-actions {
-    padding-top: 0.4em;
-    right: 0.5em;
+    top: 0.4em;
+    right: 0.4em;
 }
 
 .k-file {
@@ -898,7 +899,8 @@ span.k-tooltip
 @checkbox-size: 16px;
 
 .k-checkbox-label,
-.k-radio-label {
+.k-radio-label,
+.k-checkbox-wrapper {
     line-height: 20px;
 }
 
@@ -972,31 +974,33 @@ span.k-tooltip
     }
 
     .k-spreadsheet-sheets-bar {
-        height: 36px;
 
         .k-button {
             padding: 5px;
         }
 
         .k-spreadsheet-sheets-remove {
-            margin-left: 5px;
-            padding-left: 5px;
-            padding-right: 5px;
+            margin: 0 5px;
         }
 
         .k-tabstrip-items .k-item {
             background-color: transparent;
         }
+
+        .k-link {
+            padding-bottom: .75em;
+        }
+    }
+
+    .k-spreadsheet-sheets-bar-add {
+        bottom: -1px;
+        left: -1px;
     }
 
     .k-spreadsheet-quick-access-toolbar {
         .k-button {
             margin: 0 2px;
         }
-    }
-
-    .k-tabstrip-items  .k-link {
-        padding-top: .4em;
     }
 }
 
@@ -1021,6 +1025,10 @@ span.k-tooltip
         > .k-radio-label:after {
             margin-top: -4px;
         }
+    }
+
+    .k-root-tabs {
+        margin: -0.5em -0.5em 0;
     }
 }
 

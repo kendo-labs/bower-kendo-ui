@@ -107,7 +107,6 @@
         border-width: 0 0 1px;
         border-style: solid;
         position: relative;
-        .force-font();
 
         display: table;
         width: 100%;
@@ -115,6 +114,7 @@
         .k-spreadsheet-name-editor,
         .k-spreadsheet-formula-bar {
             display: table-cell;
+            vertical-align: middle;
         }
 
         .k-spreadsheet-name-editor {
@@ -179,9 +179,6 @@
 
         .k-spreadsheet-formula-input {
             overflow: hidden;
-            height: (@input-height + .354em);
-            max-height: (@input-height + .354em);
-            line-height: @input-height;
             text-indent: @input-indent;
             border: 0;
             margin: 0;

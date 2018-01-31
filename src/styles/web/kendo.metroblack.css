@@ -164,6 +164,9 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-split-button {
+  border-radius: 0;
+}
 .k-primary {
   color: #ffffff;
   border-color: #008886;
@@ -1740,6 +1743,11 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: inset 0 1px 0 #7e7e7e;
           box-shadow: inset 0 1px 0 #7e7e7e;
 }
+.k-toolbar .k-button.k-state-disabled:focus {
+  border-color: #00cfcc;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
 .k-column-menu .k-separator {
   border-color: #323232;
   background-color: transparent;
@@ -1815,7 +1823,7 @@ html .km-pane-wrapper .km-widget,
 }
 .k-split-button:focus > .k-button {
   background: transparent;
-  border-color: transparent;
+  border-color: #00cfcc;
 }
 .k-editor .k-tool:focus {
   outline: 0;
@@ -2458,36 +2466,11 @@ html .km-pane-wrapper .km-widget,
 .k-dialog .k-dialog-title {
   color: #ffffff;
 }
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched {
-  width: 100%;
-}
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
-  display: inline-block;
-  padding: 0.9em 0 0.9em 0;
-  border-radius: 0;
-  border-bottom: 0;
-  border-width: 1px 0 0 1px;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:first-child {
-  border-bottom-left-radius: 0;
-  border-left: 0;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:last-child {
-  border-bottom-right-radius: 0;
-  border-right: 0;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
-  width: auto;
-  margin: 0;
-  padding: 1em;
-  text-align: left;
+  padding: 12px;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
-  padding: 0.2em 1.5em;
-  margin-left: 0.5em;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
-  margin-left: 0;
+  border-radius: 0;
 }
 .k-rtl .k-dialog a.k-dialog-action.k-dialog-close {
   top: 1em;
@@ -2496,12 +2479,10 @@ html .km-pane-wrapper .km-widget,
 .k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:first-child {
   border-right-width: 0;
   border-left-width: 1px;
-  border-bottom-right-radius: 0;
 }
 .k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:last-child {
   border-left-width: 0;
   border-right-width: 1px;
-  border-bottom-left-radius: 0;
 }
 .k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
   text-align: right;

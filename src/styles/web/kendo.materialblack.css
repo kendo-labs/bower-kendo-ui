@@ -170,6 +170,9 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-split-button {
+  border-radius: 2px;
+}
 .k-primary {
   color: #ffffff;
   border-color: #3f51b5;
@@ -3751,41 +3754,13 @@ div.k-scheduler-marquee:after {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched {
-  width: 100%;
-}
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
-  display: inline-block;
-  padding: 1.5em 0;
-  border-radius: 0;
-  border-bottom: 0;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:first-child {
-  border-bottom-left-radius: 2px;
-  border-left: 0;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:last-child {
-  border-bottom-right-radius: 2px;
-  border-right: 0;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
-  width: auto;
-  margin: 0;
-  padding: 1em;
-  text-align: right;
+  padding: 15px;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
-  margin-left: 0.5em;
   background: none;
   border: none;
-  border-radius: 0;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
-  margin-left: 0;
+  margin: 0;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button.k-primary {
   color: #00b0ff;

@@ -297,7 +297,7 @@
                         return +that._validateValue(new Date(value.setHours(0, 0, 0, 0))) === +value;
                     }
                 });
-                that._selectDates = validSelectedDates.length > 0 ? validSelectedDates : that._selectDates;
+                that._selectDates = validSelectedDates.length > 0 ? validSelectedDates : datesUnique.length === 0 ? datesUnique : that._selectDates;
                 that._visualizeSelectedDatesInView();
             },
             value: function (value) {

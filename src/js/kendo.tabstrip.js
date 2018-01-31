@@ -861,7 +861,7 @@
                     return;
                 }
                 item = this.tabGroup.find(item);
-                var that = this, animationSettings = that.options.animation, animation = animationSettings.open, close = extend({}, animationSettings.close), hasCloseAnimation = close && 'effects' in close, neighbours = item.parent().children(), oldTab = neighbours.filter('.' + ACTIVESTATE), itemIndex = neighbours.index(item);
+                var that = this, animationSettings = that.options.animation, animation = animationSettings.open, close = extend({}, animationSettings.close), hasCloseAnimation = close && 'effects' in close, neighbours = item.parent().children(), oldTab = neighbours.filter('.' + ACTIVESTATE), itemIndex = neighbours.index(item), isAnimationEnabled = animation && 'duration' in animation && 'effects' in animation;
                 close = extend(hasCloseAnimation ? close : extend({ reverse: true }, animation), { hide: true });
                 if (kendo.size(animation.effects)) {
                     oldTab.kendoRemoveClass(ACTIVESTATE, { duration: close.duration });
@@ -916,7 +916,7 @@
                                 });
                                 kendo.resize(contentHolder);
                                 that.scrollWrap.css('height', '').css('height');
-                                if (kendo.support.browser.msie || kendo.support.browser.edge) {
+                                if (isAnimationEnabled && (kendo.support.browser.msie || kendo.support.browser.edge)) {
                                     contentHolder.finish().animate({ opacity: 0.9 }, 'fast', 'linear', function () {
                                         contentHolder.finish().animate({ opacity: 1 }, 'fast', 'linear');
                                     });

@@ -158,6 +158,9 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-split-button {
+  border-radius: 0;
+}
 .k-primary {
   color: #ffffff;
   border-color: #0072c6;
@@ -2369,6 +2372,10 @@ input.k-textbox:focus {
   background-color: #f4f4f4;
   background-image: none;
 }
+.k-toolbar .k-toggle-button.k-state-disabled:focus,
+.k-toolbar .k-toggle-button.k-state-disabled:focus:hover {
+  border-color: #0072c6;
+}
 .k-toolbar .k-overflow-anchor {
   background-color: #fff;
   border-color: #c9c9c9;
@@ -3279,25 +3286,8 @@ input.k-textbox:focus {
 }
 /* Dialog */
 .k-dialog .k-window-titlebar {
-  height: auto;
-  width: auto;
-  display: block;
   font-size: 1em;
   padding: 1em;
-}
-.k-dialog .k-window-titlebar .k-dialog-title {
-  display: inline-block;
-  padding: 0;
-  padding-right: 2em;
-  margin: 0;
-  width: auto;
-  white-space: normal;
-  overflow: unset;
-  text-overflow: inherit;
-  font-size: 1.2em;
-  line-height: 1.2em;
-  -webkit-box-sizing: content-box;
-          box-sizing: content-box;
 }
 .k-dialog a.k-dialog-action.k-dialog-close.k-button.k-bare:before {
   content: normal;
@@ -3329,15 +3319,8 @@ input.k-textbox:focus {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched {
-  width: 100%;
-}
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
-  display: inline-block;
-  padding: 1em 0 1em 0;
-  border-radius: 0;
-  border-bottom: 0;
-  border-width: 1px 0 0 1px;
+  padding: 12px;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:first-child {
   border-bottom-left-radius: 0;
@@ -3347,16 +3330,11 @@ input.k-textbox:focus {
   border-bottom-right-radius: 0;
   border-right: 0;
 }
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
-  width: auto;
-  margin: 0;
-  padding: 1em;
-  text-align: right;
-}
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
   padding-left: 2em;
   padding-right: 2em;
   margin-left: 1em;
+  border-radius: 0;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
   margin-left: 0;

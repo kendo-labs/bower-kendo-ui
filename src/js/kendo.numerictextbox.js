@@ -386,7 +386,7 @@
                 if (precision === NULL) {
                     precision = numberFormat.decimals;
                 }
-                if (precision === 0) {
+                if (precision === 0 && that.options.restrictDecimals) {
                     return INTEGER_REGEXP;
                 }
                 if (that.options.restrictDecimals) {

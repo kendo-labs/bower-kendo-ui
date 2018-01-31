@@ -158,6 +158,9 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-split-button {
+  border-radius: 0;
+}
 .k-primary {
   color: #fff;
   border-color: #0089d4;
@@ -1730,6 +1733,9 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: inset 0 1px 0 #ffffff;
           box-shadow: inset 0 1px 0 #ffffff;
 }
+.k-toolbar .k-button.k-state-disabled:focus {
+  border-color: #007cc0;
+}
 .k-column-menu .k-separator {
   border-color: #c9c9c9;
   background-color: transparent;
@@ -2401,10 +2407,6 @@ div.k-window.k-state-focused {
   width: 150px;
   padding-left: 7px;
   padding-right: 7px;
-}
-.k-state-disabled {
-  filter: alpha(opacity=50);
-  opacity: .5;
 }
 .k-dropdown .k-dropdown-wrap {
   background-color: #fff;
@@ -3168,7 +3170,7 @@ div.k-window.k-state-focused {
 .k-dialog .k-window-titlebar {
   font-size: 1em;
   line-height: unset;
-  padding: 0.6em 1em 1em 1em;
+  padding: 0.85em 1em;
 }
 .k-dialog .k-window-titlebar .k-dialog-title {
   font-size: 1.2em;
@@ -3191,37 +3193,13 @@ div.k-window.k-state-focused {
 .k-dialog .k-dialog-buttongroup .k-button:not(.k-primary):focus {
   border-color: #007cc0;
 }
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched {
-  width: 100%;
-}
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
-  display: inline-block;
-  padding: 0.9em 0 0.9em 0;
-  border-radius: 0;
-  border-bottom: 0;
-  border-width: 1px 0 0 1px;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:first-child {
-  border-bottom-left-radius: 0;
-  border-left: 0;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:last-child {
-  border-bottom-right-radius: 0;
-  border-right: 0;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
-  width: auto;
-  margin: 0;
-  padding: 1em;
-  text-align: right;
+  padding: 0.9em;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
   padding-left: 1.7em;
   padding-right: 1.7em;
-  margin-left: 0.5em;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
-  margin-left: 0;
+  border-radius: 0;
 }
 .k-rtl .k-dialog .k-window-titlebar .k-dialog-title {
   padding-right: 0;

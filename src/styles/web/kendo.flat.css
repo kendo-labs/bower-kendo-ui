@@ -164,6 +164,9 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-split-button {
+  border-radius: 3px;
+}
 .k-primary {
   color: #ffffff;
   border-color: #10c4b2;
@@ -910,9 +913,6 @@ div.k-filebrowser-dropzone em {
   border-color: #3f434b;
   background-color: #fff;
   color: #3f434b;
-}
-.k-state-disabled {
-  opacity: .7;
 }
 .k-tile-empty.k-state-selected,
 .k-loading-mask.k-state-selected {
@@ -1793,8 +1793,12 @@ html .km-pane-wrapper .km-widget,
           box-shadow: 0 0 0px 1px #0c9083;
 }
 .k-split-button:focus > .k-button {
-  background: transparent;
   border-color: transparent;
+}
+.k-toolbar .k-button.k-state-disabled:focus {
+  border-color: #0c9083;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-editor .k-tool:focus {
   outline: 0;
@@ -2543,35 +2547,11 @@ html .km-pane-wrapper .km-widget,
 .k-dialog.k-prompt .k-dialog-title {
   color: #4c5356;
 }
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched {
-  width: 100%;
-}
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
-  display: inline-block;
-  padding: 0.9em 0 0.9em 0;
-  border-radius: 0;
-  border-bottom: 0;
-  border-width: 1px 0 0 1px;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:first-child {
-  border-bottom-left-radius: 3px;
-  border-left: 0;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:last-child {
-  border-bottom-right-radius: 3px;
-  border-right: 0;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
-  width: auto;
-  margin: 0;
-  padding: 1em;
-  text-align: right;
+  padding: 0.9em;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
-  margin-left: 0.5em;
-}
-.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
-  margin-left: 0;
+  border-radius: 3px;
 }
 .k-rtl .k-dialog a.k-dialog-action.k-dialog-close {
   top: 1em;

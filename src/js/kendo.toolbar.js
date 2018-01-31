@@ -477,13 +477,16 @@
                 this.element.remove();
             },
             toggle: function () {
-                this.popup.toggle();
+                if (this.options.enable || this.popup.visible()) {
+                    this.popup.toggle();
+                }
             },
             enable: function (isEnabled) {
                 if (isEnabled === undefined) {
                     isEnabled = true;
                 }
                 this.mainButton.enable(isEnabled);
+                this.element.toggleClass(STATE_DISABLED, !isEnabled);
                 this.options.enable = isEnabled;
             },
             focus: function () {
@@ -631,7 +634,9 @@
             return element.hasClass('km-actionsheet') ? element.closest('.km-popup-wrapper') : element.addClass('km-widget km-actionsheet').wrap('<div class="km-actionsheet-wrapper km-actionsheet-tablet km-widget km-popup"></div>').parent().wrap('<div class="km-popup-wrapper k-popup"></div>').parent();
         }
         function preventClick(e) {
-            e.preventDefault();
+            if ($(e.target).closest('a.k-button').length) {
+                e.preventDefault();
+            }
         }
         function findFocusableSibling(element, dir) {
             var getSibling = dir === 'next' ? $.fn.next : $.fn.prev;
@@ -710,6 +715,7 @@
                     for (var i = 0; i < options.items.length; i++) {
                         that.add(options.items[i]);
                     }
+                    that._shrink(that.element.innerWidth());
                 }
                 that.userEvents = new kendo.UserEvents(document, {
                     threshold: 5,
@@ -810,13 +816,7 @@
                         tool = new component.toolbar(options, that);
                     }
                     if (tool) {
-                        if (that.options.resizable) {
-                            tool.element.appendTo(that.element).css('visibility', 'hidden');
-                            that._shrink(that.element.innerWidth());
-                            tool.element.css('visibility', 'visible');
-                        } else {
-                            tool.element.appendTo(that.element);
-                        }
+                        tool.element.appendTo(that.element);
                         that.angular('compile', function () {
                             return { elements: tool.element.get() };
                         });

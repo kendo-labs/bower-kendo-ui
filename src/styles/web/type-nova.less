@@ -257,6 +257,11 @@ textarea.k-textbox:hover,
     box-shadow: inset 0 0 0 1px darken(@widget-border-color, 35%);
 }
 
+.k-split-button:focus
+{
+    outline:none;
+}
+
 .k-state-hover,
 .k-state-hover:hover,
 .k-splitbar-horizontal-hover:hover,
@@ -372,6 +377,10 @@ textarea.k-textbox:hover,
 .k-state-disabled .k-button .k-icon,
 .k-button.k-state-disabled .k-icon {
     opacity: .2;
+}
+
+.k-split-button.k-state-disabled .k-icon {
+    opacity: 1;
 }
 
 /* Loading indicator */
@@ -1360,6 +1369,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
         border-color: @widget-border-color;
     }
 
+    // Active state
     .k-button:active,
     .k-button.k-state-active {
         color: @inversed-text-color;
@@ -1386,12 +1396,22 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
         border-color: @selected-background;
     }
 
+    // Disabled state
     .k-button.k-state-disabled,
     .k-button.k-state-disabled:hover,
-    .k-button.k-state-disabled:active {
+    .k-button.k-state-disabled:active,
+    .k-state-disabled.k-split-button > .k-button {
         color: @disabled-text-color;
         border-color: lighten(@hover-text-color, 20%);
         background-color: @widget-background-color;
+    }
+
+    // Focused state
+    .k-button:focus,
+    .k-button.k-state-disabled:focus,
+    .k-split-button:focus > .k-button {
+        border-color: @button-focused-border-color;
+        .box-shadow(@button-focused-shadow);
     }
 }
 
@@ -2254,31 +2274,7 @@ html .km-pane-wrapper .km-widget,
 /* Dialog */
 
 .k-dialog {
-    .k-window-titlebar {
-        height: auto;
-        width: auto;
-        display: block;
-        font-size: 1em;
-        padding: 1em;
-        .k-dialog-title {
-            display: inline-block;
-            padding: 0;
-            padding-right: 2em;
-            margin: 0;
-            width: auto;
-            white-space: normal;
-            overflow: unset;
-            text-overflow: inherit;
-            font-size: 1em;
-            line-height: 1.2em;
-            box-sizing: content-box;
-        }
-    }
-    a.k-dialog-action.k-dialog-close.k-button.k-bare {
-        &:before {
-            content: normal;
-        }
-    }
+
     &.k-alert .k-window-titlebar,
     &.k-confirm .k-window-titlebar,
     &.k-prompt .k-window-titlebar {
@@ -2297,33 +2293,13 @@ html .km-pane-wrapper .km-widget,
     }
     .k-dialog-buttongroup {
         &.k-dialog-button-layout-stretched {
-            width: 100%;
             .k-button {
-                display: inline-block;
-                padding: 1em 0 1em 0;
-                border-radius: 0;
-                border-bottom: 0;
-                border-width: 1px 0 0 1px;
-            }
-            .k-button:first-child {
-            border-bottom-left-radius: @border-radius;
-            border-left: 0;
-            }
-            .k-button:last-child {
-                border-bottom-right-radius: @border-radius;
-                border-right: 0;
+                padding: 1em;
             }
         }
         &.k-dialog-button-layout-normal {
-            width: auto;
-            margin: 0;
-            padding: 1em;
-            text-align: right;
             .k-button {
-                margin-left: 0.5em;
-                &:first-child {
-                    margin-left: 0;
-                }
+                border-radius: @border-radius;
             }
         }
     }
@@ -2469,7 +2445,6 @@ html .km-pane-wrapper .km-widget,
 
 .k-listbox {
     .k-list-scroller {
-        margin: 0;
         border-color: @widget-border-color;
         background-color: @background;
     }

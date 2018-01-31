@@ -416,6 +416,13 @@
     margin: 0 -11px;
 }
 
+.k-listbox,
+.k-spreadsheet-format-cells {
+    .k-list-scroller {
+        margin: 0;
+    }
+}
+
 .k-list-filter {
     margin: 0 0 11px;
 }
@@ -670,37 +677,46 @@ span.k-tooltip
 .k-block > .k-header,
 .k-window-titlebar {
     padding: 0.49em 0;
-    height: 2.362em;
     border-width: 0;
 }
 
-.k-window-titlebar .k-window-actions {
-    padding-top: 0;
-    right: 0;
+.k-dialog .k-dialog-titlebar {
+    font-size: 1em;
+    padding: 1em;
+
+    .k-dialog-title {
+        max-width: calc(100% - 22px - 1.8em);
+    }
+
+    .k-dialog-actions {
+        top: 0;
+        right: 0;
+    }
 }
 
-.k-dialog .k-dialog-titlebar .k-dialog-actions {
-    top: 0;
-    right: 0;
-}
-
-.k-window-titlebar .k-window-action
-{
-    width: 3.342em;
-    height: 3.342em;
-    text-align: center;
-    padding: 0;
+.k-window {
     border-width: 0;
 }
 
-div.k-window {
-    border-width: 0;
+.k-window-titlebar {
+
+    .k-window-actions {
+        padding-top: 0;
+    }
+
+    .k-window-action {
+        width: 3.342em;
+        height: 3.342em;
+        right: 0;
+        padding-top: 0;
+        border-width: 0;
+        text-align: center;
+    }
 }
 
 .k-window-title {
-    right: 1.143em;
-    left: 1.143em;
     line-height: 2.362em;
+    padding: 0 1em;
 }
 
 div.k-window-content {
@@ -991,7 +1007,8 @@ form.k-filter-menu .k-textbox {
 @checkbox-size: 16px;
 
 .k-checkbox-label,
-.k-radio-label {
+.k-radio-label,
+.k-checkbox-wrapper {
     line-height: 18px;
 }
 
@@ -1096,7 +1113,7 @@ li.k-item.k-last.k-state-selected {
 
 // spreadsheet
 .k-spreadsheet-window .k-root-tabs {
-    margin: -1.333em -1.333em 0;
+    margin: -1em 0 0;
     padding: 0;
 
     .k-tabstrip-items {

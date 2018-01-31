@@ -673,7 +673,8 @@ span.k-tooltip
 }
 
 .k-window-titlebar .k-window-actions {
-    right: 0.6em;
+    top: 0.3em;
+    right: 0.8em;
 }
 
 div.k-window {
@@ -681,12 +682,15 @@ div.k-window {
 }
 
 .k-window-title {
-    right: 1.143em;
-    left: 1.143em;
+    padding: 0 12px;
 }
 
 div.k-window-content {
     padding: 1.333em;
+}
+
+.k-dialog .k-dialog-titlebar .k-dialog-title {
+    max-width: calc(100% - 22px - 1.8em);
 }
 
 div.editorToolbarWindow.k-window-content {
@@ -997,7 +1001,8 @@ form.k-filter-menu .k-textbox {
 @checkbox-size: 16px;
 
 .k-checkbox-label,
-.k-radio-label {
+.k-radio-label,
+.k-checkbox-wrapper {
     line-height: 18px;
 }
 
@@ -1209,6 +1214,9 @@ div.k-spreadsheet-window {
         .k-task-draghandle {
             border-radius: 50% 0 50% 50%;
         }
+    }
+    .k-popup-edit-form .k-primary {
+        float: left;
     }
 }
 

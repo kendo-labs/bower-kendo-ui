@@ -86,6 +86,7 @@
                     id = id + '_taglist';
                     that.tagList.attr(ID, id);
                 }
+                that._initialOpen = true;
                 that._aria(id);
                 that._dataSource();
                 that._ignoreCase();
@@ -132,7 +133,8 @@
                 tagTemplate: '',
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
-                clearButton: true
+                clearButton: true,
+                autoWidth: false
             },
             events: [
                 OPEN,
@@ -389,6 +391,10 @@
                     that._filterSource();
                     that._focusItem();
                 } else if (that._allowOpening()) {
+                    if (!that.options.autoBind && !that.options.virtual && that.options.value && !$.isPlainObject(that.options.value[0])) {
+                        that.value(that._initialValues);
+                        that._initialOpen = false;
+                    }
                     that.popup._hovered = true;
                     that.popup.open();
                     that._focusItem();
@@ -640,11 +646,15 @@
                         that._selectRange(0, listView.items().length - 1);
                     }
                 } else if (key === keys.ENTER && visible) {
+                    e.preventDefault();
+                    if (listView.focus().hasClass(SELECTEDCLASS)) {
+                        that._close();
+                        return;
+                    }
                     that._select(listView.focus()).done(function () {
                         that._change();
                         that._close();
                     });
-                    e.preventDefault();
                 } else if (key === keys.SPACEBAR && e.ctrlKey && visible) {
                     if (that._activeItem && listView.focus() && listView.focus()[0] === that._activeItem[0]) {
                         that._activeItem = null;
@@ -931,8 +941,10 @@
                 if (that.options.tagMode === 'multiple') {
                     for (idx = removed.length - 1; idx > -1; idx--) {
                         removedItem = removed[idx];
-                        tagList[0].removeChild(tagList[0].children[removedItem.position]);
-                        that._setOption(getter(removedItem.dataItem), false);
+                        if (tagList.children().length) {
+                            tagList[0].removeChild(tagList[0].children[removedItem.position]);
+                            that._setOption(getter(removedItem.dataItem), false);
+                        }
                     }
                     for (idx = 0; idx < added.length; idx++) {
                         addedItem = added[idx];

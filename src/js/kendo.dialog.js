@@ -132,10 +132,7 @@
                     paddingBox = that._paddingBox(element);
                     elementMaxHeight = parseFloat(maxHeight, 10) - that._uiHeight() - paddingBox.vertical;
                     if (elementMaxHeight > 0) {
-                        element.css({
-                            maxHeight: ceil(elementMaxHeight) + 'px',
-                            overflow: 'hidden'
-                        });
+                        element.css({ maxHeight: ceil(elementMaxHeight) + 'px' });
                     }
                 }
             },
@@ -149,10 +146,7 @@
             _setElementHeight: function () {
                 var that = this, element = that.element, height = that.options.height, paddingBox = that._paddingBox(element), elementHeight = parseFloat(height, 10) - that._uiHeight() - paddingBox.vertical;
                 if (elementHeight > 0) {
-                    that.element.css({
-                        height: ceil(elementHeight) + 'px',
-                        overflow: 'hidden'
-                    });
+                    that.element.css({ height: ceil(elementHeight) + 'px' });
                 }
             },
             _uiHeight: function () {

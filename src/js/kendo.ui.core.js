@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.1.117'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.1.131'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2237,7 +2237,7 @@
                 value = true;
             } else if (value === 'false') {
                 value = false;
-            } else if (numberRegExp.test(value)) {
+            } else if (numberRegExp.test(value) && option != 'mask') {
                 value = parseFloat(value);
             } else if (jsonRegExp.test(value) && !jsonFormatRegExp.test(value)) {
                 value = new Function('return (' + value + ')')();
@@ -7548,6 +7548,9 @@
                         return;
                     }
                     that._total = that.reader.total(data);
+                    if (that._pageSize > that._total) {
+                        that._pageSize = that._total;
+                    }
                     if (that._aggregate && options.serverAggregates) {
                         that._aggregateResult = that._readAggregates(data);
                     }
@@ -8099,39 +8102,12 @@
                 this._currentRequestTimeStamp = this._timeStamp();
                 this._skipRequestsInProgress = true;
                 skip = math.min(skip || 0, this.total());
+                callback = isFunction(callback) ? callback : noop;
                 var that = this, pageSkip = math.max(math.floor(skip / take), 0) * take, size = math.min(pageSkip + take, that.total()), data;
                 data = that._findRange(skip, math.min(skip + take, that.total()));
-                if (data.length) {
-                    that._pending = undefined;
-                    that._skip = skip > that.skip() ? math.min(size, (that.totalPages() - 1) * that.take()) : pageSkip;
-                    that._currentRangeStart = skip;
-                    that._take = take;
-                    var paging = that.options.serverPaging;
-                    var sorting = that.options.serverSorting;
-                    var filtering = that.options.serverFiltering;
-                    var aggregates = that.options.serverAggregates;
-                    try {
-                        that.options.serverPaging = true;
-                        if (!that._isServerGrouped() && !(that.group() && that.group().length)) {
-                            that.options.serverSorting = true;
-                        }
-                        that.options.serverFiltering = true;
-                        that.options.serverPaging = true;
-                        that.options.serverAggregates = true;
-                        if (paging) {
-                            that._detachObservableParents();
-                            that._data = data = that._observe(data);
-                        }
-                        that._process(data);
-                    } finally {
-                        that.options.serverPaging = paging;
-                        that.options.serverSorting = sorting;
-                        that.options.serverFiltering = filtering;
-                        that.options.serverAggregates = aggregates;
-                    }
-                    if (isFunction(callback)) {
-                        callback();
-                    }
+                if (data.length || that.total() === 0) {
+                    that._processRangeData(data, skip, take, pageSkip, size);
+                    callback();
                     return;
                 }
                 if (take !== undefined) {
@@ -8209,6 +8185,36 @@
                     return data.concat(temp);
                 }
                 return data.concat(range.slice(skip, take));
+            },
+            _processRangeData: function (data, skip, take, pageSkip, size) {
+                var that = this;
+                that._pending = undefined;
+                that._skip = skip > that.skip() ? math.min(size, (that.totalPages() - 1) * that.take()) : pageSkip;
+                that._currentRangeStart = skip;
+                that._take = take;
+                var paging = that.options.serverPaging;
+                var sorting = that.options.serverSorting;
+                var filtering = that.options.serverFiltering;
+                var aggregates = that.options.serverAggregates;
+                try {
+                    that.options.serverPaging = true;
+                    if (!that._isServerGrouped() && !(that.group() && that.group().length)) {
+                        that.options.serverSorting = true;
+                    }
+                    that.options.serverFiltering = true;
+                    that.options.serverPaging = true;
+                    that.options.serverAggregates = true;
+                    if (paging) {
+                        that._detachObservableParents();
+                        that._data = data = that._observe(data);
+                    }
+                    that._process(data);
+                } finally {
+                    that.options.serverPaging = paging;
+                    that.options.serverSorting = sorting;
+                    that.options.serverFiltering = filtering;
+                    that.options.serverAggregates = aggregates;
+                }
             },
             skip: function () {
                 var that = this;
@@ -14622,7 +14628,11 @@
                 }
             },
             _blur: function () {
-                this.element.removeClass(FOCUSEDSTATE);
+                var that = this;
+                that.element.removeClass(FOCUSEDSTATE);
+                setTimeout(function () {
+                    that.element.removeClass(SELECTEDSTATE);
+                });
             },
             _keydown: function (e) {
                 var that = this;
@@ -14712,7 +14722,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), MAX_SAFE_INTEGER = 9007199254740991, iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
         function button(template, idx, text, numeric, title) {
             return template({
                 idx: idx,
@@ -14923,7 +14933,7 @@
                 }
                 if (options.pageSizes) {
                     var hasAll = that.element.find('.k-pager-sizes option[value=\'all\']').length > 0;
-                    var selectAll = hasAll && pageSize === this.dataSource.total();
+                    var selectAll = hasAll && (pageSize === this.dataSource.total() || pageSize == MAX_SAFE_INTEGER);
                     var text = pageSize;
                     if (selectAll) {
                         pageSize = 'all';
@@ -14953,7 +14963,7 @@
                 if (!isNaN(pageSize)) {
                     dataSource.pageSize(pageSize);
                 } else if ((value + '').toLowerCase() == 'all') {
-                    dataSource.pageSize(dataSource.total());
+                    dataSource.pageSize(dataSource.total() ? dataSource.total() : MAX_SAFE_INTEGER);
                 }
             },
             _toggleActive: function () {
@@ -15528,7 +15538,7 @@
             },
             _focusableElements: function () {
                 var elements = this.element.find(focusableNodesSelector).filter(function (i, item) {
-                    return item.tabIndex >= 0 && $(item).is(':visible') && !$(item).is(':disabled');
+                    return item.tabIndex >= 0 && $(item).is(':visible') && !$(item).is('[disabled]');
                 });
                 if (this.element.is('[tabindex]')) {
                     elements.push(this.element[0]);
@@ -16756,13 +16766,16 @@
                 this.element.remove();
             },
             toggle: function () {
-                this.popup.toggle();
+                if (this.options.enable || this.popup.visible()) {
+                    this.popup.toggle();
+                }
             },
             enable: function (isEnabled) {
                 if (isEnabled === undefined) {
                     isEnabled = true;
                 }
                 this.mainButton.enable(isEnabled);
+                this.element.toggleClass(STATE_DISABLED, !isEnabled);
                 this.options.enable = isEnabled;
             },
             focus: function () {
@@ -16910,7 +16923,9 @@
             return element.hasClass('km-actionsheet') ? element.closest('.km-popup-wrapper') : element.addClass('km-widget km-actionsheet').wrap('<div class="km-actionsheet-wrapper km-actionsheet-tablet km-widget km-popup"></div>').parent().wrap('<div class="km-popup-wrapper k-popup"></div>').parent();
         }
         function preventClick(e) {
-            e.preventDefault();
+            if ($(e.target).closest('a.k-button').length) {
+                e.preventDefault();
+            }
         }
         function findFocusableSibling(element, dir) {
             var getSibling = dir === 'next' ? $.fn.next : $.fn.prev;
@@ -16989,6 +17004,7 @@
                     for (var i = 0; i < options.items.length; i++) {
                         that.add(options.items[i]);
                     }
+                    that._shrink(that.element.innerWidth());
                 }
                 that.userEvents = new kendo.UserEvents(document, {
                     threshold: 5,
@@ -17089,13 +17105,7 @@
                         tool = new component.toolbar(options, that);
                     }
                     if (tool) {
-                        if (that.options.resizable) {
-                            tool.element.appendTo(that.element).css('visibility', 'hidden');
-                            that._shrink(that.element.innerWidth());
-                            tool.element.css('visibility', 'visible');
-                        } else {
-                            tool.element.appendTo(that.element);
-                        }
+                        tool.element.appendTo(that.element);
                         that.angular('compile', function () {
                             return { elements: tool.element.get() };
                         });
@@ -17787,7 +17797,7 @@
                     filters: [],
                     logic: 'and'
                 };
-                if (isValidFilterExpr(filter)) {
+                if (isValidFilterExpr(filter) && $.trim(filter.value).length) {
                     newExpression.filters.push(filter);
                 }
                 if (isValidFilterExpr(expression)) {
@@ -17946,6 +17956,11 @@
                     if (!this._isFilterEnabled()) {
                         this._searchByWord(word);
                     } else {
+                        if ($.trim(word).length && this.listView) {
+                            this.listView._emptySearch = false;
+                        } else {
+                            this.listView._emptySearch = true;
+                        }
                         this._filter({
                             word: word,
                             open: true
@@ -18066,10 +18081,10 @@
                     trigger = true;
                 }
                 if (trigger) {
-                    if (that._old === null) {
-                        that._old = value;
+                    if (that._old === null || value === '') {
+                        that._valueBeforeCascade = that._old = value;
                     } else {
-                        that._old = that.dataItem() ? that.dataItem()[that.options.dataValueField] : null;
+                        that._valueBeforeCascade = that._old = that.dataItem() ? that.dataItem()[that.options.dataValueField] : null;
                     }
                     that._oldIndex = index;
                     if (!that._typing) {
@@ -18155,7 +18170,8 @@
                 list.css({
                     fontFamily: wrapper.css('font-family'),
                     width: this.options.autoWidth ? 'auto' : width,
-                    minWidth: width
+                    minWidth: width,
+                    whiteSpace: this.options.autoWidth ? 'nowrap' : 'normal'
                 }).data(WIDTH, width);
                 return true;
             },
@@ -18251,7 +18267,8 @@
             },
             _triggerCascade: function () {
                 var that = this;
-                if (!that._cascadeTriggered || that.value() !== unifyType(that._old, typeof that.value())) {
+                if (!that._cascadeTriggered || that.value() !== unifyType(that._cascadedValue, typeof that.value())) {
+                    that._cascadedValue = that.value();
                     that._cascadeTriggered = true;
                     that.trigger(CASCADE, { userTriggered: that._userTriggered });
                 }
@@ -18332,7 +18349,7 @@
                     return that.selectedIndex;
                 } else {
                     return that._select(candidate).done(function () {
-                        that._old = that._accessor();
+                        that._cascadeValue = that._old = that._accessor();
                         that._oldIndex = that.selectedIndex;
                     });
                 }
@@ -18501,10 +18518,10 @@
                             if (!that.popup.visible()) {
                                 that._blur();
                             }
-                            if (that._old === null) {
-                                that._old = that.value();
+                            if (that._cascadedValue === null) {
+                                that._cascadedValue = that.value();
                             } else {
-                                that._old = that.dataItem() ? that.dataItem()[that.options.dataValueField] : null;
+                                that._cascadedValue = that.dataItem() ? that.dataItem()[that.options.dataValueField] : null;
                             }
                         });
                     }
@@ -18662,6 +18679,9 @@
                     } else {
                         parent.one('dataBound', function () {
                             that._toggleCascadeOnFocus();
+                            if (parent.popup.visible()) {
+                                parent._focused.focus();
+                            }
                         });
                         if (!parent.value()) {
                             that.enable(false);
@@ -19264,7 +19284,7 @@
                     return;
                 }
                 var visibleItem = this._firstVisibleItem();
-                if (visibleItem) {
+                if (visibleItem && visibleItem.group) {
                     this.header.html(template(visibleItem.group));
                 }
             },
@@ -19364,7 +19384,7 @@
                             that.value(that._getValues(result.unchanged));
                         }
                     }
-                } else if (that.isFiltered() || that._skipUpdate) {
+                } else if (that.isFiltered() || that._skipUpdate || that._emptySearch) {
                     that.focus(0);
                     if (that._skipUpdate) {
                         that._skipUpdate = false;
@@ -19737,7 +19757,7 @@
                         return +that._validateValue(new Date(value.setHours(0, 0, 0, 0))) === +value;
                     }
                 });
-                that._selectDates = validSelectedDates.length > 0 ? validSelectedDates : that._selectDates;
+                that._selectDates = validSelectedDates.length > 0 ? validSelectedDates : datesUnique.length === 0 ? datesUnique : that._selectDates;
                 that._visualizeSelectedDatesInView();
             },
             value: function (value) {
@@ -23462,7 +23482,8 @@
                 animation: {},
                 virtual: false,
                 value: null,
-                clearButton: true
+                clearButton: true,
+                autoWidth: false
             },
             _dataSource: function () {
                 var that = this;
@@ -23996,6 +24017,7 @@
                 that._ignoreCase();
                 that._filterHeader();
                 that._aria();
+                that.wrapper.attr('aria-live', 'polite');
                 that._enable();
                 that._oldIndex = that.selectedIndex = -1;
                 if (index !== undefined) {
@@ -24005,6 +24027,11 @@
                 that.requireValueMapper(that.options);
                 that._initList();
                 that._cascade();
+                that.one('set', function (e) {
+                    if (!e.sender.listView.bound() && that.hasOptionLabel()) {
+                        that._textAccessor(that._optionLabelText());
+                    }
+                });
                 if (options.autoBind) {
                     that.dataSource.fetch();
                 } else if (that.selectedIndex === -1) {
@@ -24052,7 +24079,8 @@
                 valueTemplate: null,
                 optionLabelTemplate: null,
                 groupTemplate: '#:data#',
-                fixedGroupTemplate: '#:data#'
+                fixedGroupTemplate: '#:data#',
+                autoWidth: false
             },
             events: [
                 'open',
@@ -25079,7 +25107,8 @@
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
                 clearButton: true,
-                syncValueAndText: true
+                syncValueAndText: true,
+                autoWidth: false
             },
             events: [
                 'open',
@@ -25373,13 +25402,15 @@
                     idx = -1;
                 }
                 this.selectedIndex = idx;
-                if (this.options.autoBind) {
+                if (this.listView.isFiltered() && idx !== -1) {
                     this._valueBeforeCascade = this._old;
                 }
                 if (idx === -1 && !dataItem) {
-                    text = this._accessor();
                     if (this.options.syncValueAndText) {
+                        text = this._accessor();
                         value = text;
+                    } else {
+                        text = this.text();
                     }
                     this.listView.focus(-1);
                 } else {
@@ -25672,6 +25703,39 @@
                     that._firstItem();
                 } else if (key === keys.END) {
                     that._lastItem();
+                } else if (key === keys.ENTER) {
+                    var current = that.listView.focus();
+                    var dataItem = that.dataItem();
+                    var shouldTrigger = true;
+                    if (!that.popup.visible() && (!dataItem || that.text() !== that._text(dataItem))) {
+                        current = null;
+                    }
+                    if (current) {
+                        if (that.popup.visible()) {
+                            e.preventDefault();
+                        }
+                        dataItem = that.listView.dataItemByIndex(that.listView.getElementIndex(current));
+                        if (dataItem) {
+                            shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
+                        }
+                        if (shouldTrigger && that.trigger('select', {
+                                dataItem: dataItem,
+                                item: current
+                            })) {
+                            return;
+                        }
+                        that._userTriggered = true;
+                        that._select(current).done(function () {
+                            that._blur();
+                            that._valueBeforeCascade = that._old = that.value();
+                        });
+                    } else {
+                        if (that._syncValueAndText() || that._isSelect) {
+                            that._accessor(that.input.val());
+                        }
+                        that.listView.value(that.input.val());
+                        that._blur();
+                    }
                 } else if (key != keys.TAB && !that._move(e)) {
                     that._search();
                 } else if (key === keys.ESC && !that.popup.visible()) {
@@ -25823,6 +25887,7 @@
                     id = id + '_taglist';
                     that.tagList.attr(ID, id);
                 }
+                that._initialOpen = true;
                 that._aria(id);
                 that._dataSource();
                 that._ignoreCase();
@@ -25869,7 +25934,8 @@
                 tagTemplate: '',
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
-                clearButton: true
+                clearButton: true,
+                autoWidth: false
             },
             events: [
                 OPEN,
@@ -26126,6 +26192,10 @@
                     that._filterSource();
                     that._focusItem();
                 } else if (that._allowOpening()) {
+                    if (!that.options.autoBind && !that.options.virtual && that.options.value && !$.isPlainObject(that.options.value[0])) {
+                        that.value(that._initialValues);
+                        that._initialOpen = false;
+                    }
                     that.popup._hovered = true;
                     that.popup.open();
                     that._focusItem();
@@ -26377,11 +26447,15 @@
                         that._selectRange(0, listView.items().length - 1);
                     }
                 } else if (key === keys.ENTER && visible) {
+                    e.preventDefault();
+                    if (listView.focus().hasClass(SELECTEDCLASS)) {
+                        that._close();
+                        return;
+                    }
                     that._select(listView.focus()).done(function () {
                         that._change();
                         that._close();
                     });
-                    e.preventDefault();
                 } else if (key === keys.SPACEBAR && e.ctrlKey && visible) {
                     if (that._activeItem && listView.focus() && listView.focus()[0] === that._activeItem[0]) {
                         that._activeItem = null;
@@ -26668,8 +26742,10 @@
                 if (that.options.tagMode === 'multiple') {
                     for (idx = removed.length - 1; idx > -1; idx--) {
                         removedItem = removed[idx];
-                        tagList[0].removeChild(tagList[0].children[removedItem.position]);
-                        that._setOption(getter(removedItem.dataItem), false);
+                        if (tagList.children().length) {
+                            tagList[0].removeChild(tagList[0].children[removedItem.position]);
+                            that._setOption(getter(removedItem.dataItem), false);
+                        }
                     }
                     for (idx = 0; idx < added.length; idx++) {
                         addedItem = added[idx];
@@ -29815,7 +29891,7 @@
                 if (precision === NULL) {
                     precision = numberFormat.decimals;
                 }
-                if (precision === 0) {
+                if (precision === 0 && that.options.restrictDecimals) {
                     return INTEGER_REGEXP;
                 }
                 if (that.options.restrictDecimals) {
@@ -34570,6 +34646,7 @@
                 autoBind: true,
                 loadOnDemand: true,
                 expandMode: 'multiple',
+                template: '',
                 dataTextField: null
             },
             _angularCompile: function () {
@@ -36889,7 +36966,7 @@
                     return;
                 }
                 item = this.tabGroup.find(item);
-                var that = this, animationSettings = that.options.animation, animation = animationSettings.open, close = extend({}, animationSettings.close), hasCloseAnimation = close && 'effects' in close, neighbours = item.parent().children(), oldTab = neighbours.filter('.' + ACTIVESTATE), itemIndex = neighbours.index(item);
+                var that = this, animationSettings = that.options.animation, animation = animationSettings.open, close = extend({}, animationSettings.close), hasCloseAnimation = close && 'effects' in close, neighbours = item.parent().children(), oldTab = neighbours.filter('.' + ACTIVESTATE), itemIndex = neighbours.index(item), isAnimationEnabled = animation && 'duration' in animation && 'effects' in animation;
                 close = extend(hasCloseAnimation ? close : extend({ reverse: true }, animation), { hide: true });
                 if (kendo.size(animation.effects)) {
                     oldTab.kendoRemoveClass(ACTIVESTATE, { duration: close.duration });
@@ -36944,7 +37021,7 @@
                                 });
                                 kendo.resize(contentHolder);
                                 that.scrollWrap.css('height', '').css('height');
-                                if (kendo.support.browser.msie || kendo.support.browser.edge) {
+                                if (isAnimationEnabled && (kendo.support.browser.msie || kendo.support.browser.edge)) {
                                     contentHolder.finish().animate({ opacity: 0.9 }, 'fast', 'linear', function () {
                                         contentHolder.finish().animate({ opacity: 1 }, 'fast', 'linear');
                                     });
@@ -38941,10 +39018,7 @@
                     paddingBox = that._paddingBox(element);
                     elementMaxHeight = parseFloat(maxHeight, 10) - that._uiHeight() - paddingBox.vertical;
                     if (elementMaxHeight > 0) {
-                        element.css({
-                            maxHeight: ceil(elementMaxHeight) + 'px',
-                            overflow: 'hidden'
-                        });
+                        element.css({ maxHeight: ceil(elementMaxHeight) + 'px' });
                     }
                 }
             },
@@ -38958,10 +39032,7 @@
             _setElementHeight: function () {
                 var that = this, element = that.element, height = that.options.height, paddingBox = that._paddingBox(element), elementHeight = parseFloat(height, 10) - that._uiHeight() - paddingBox.vertical;
                 if (elementHeight > 0) {
-                    that.element.css({
-                        height: ceil(elementHeight) + 'px',
-                        overflow: 'hidden'
-                    });
+                    that.element.css({ height: ceil(elementHeight) + 'px' });
                 }
             },
             _uiHeight: function () {

@@ -3791,16 +3791,18 @@ kendo-sortable {
           box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
 .k-button.k-outline {
-  color: #e4e7eb;
+  color: #a9b3c0;
+  border-color: #a9b3c0;
 }
 .k-button.k-outline.k-state-hover,
 .k-button.k-outline:hover {
   border-color: #e4e7eb;
-  color: #e4e7eb;
+  color: #000;
   background-color: #e4e7eb;
 }
 .k-button.k-outline.k-primary {
   color: #007bff;
+  border-color: #007bff;
 }
 .k-button.k-outline.k-primary.k-state-hover,
 .k-button.k-outline.k-primary:hover {
@@ -4062,7 +4064,7 @@ kendo-sortable {
 }
 .k-popup .k-group-header,
 .k-popup .k-header {
-  color: #868e96;
+  color: #6c757d;
   font-weight: 600;
   font-size: 0.875rem;
 }
@@ -4072,10 +4074,10 @@ kendo-sortable {
 }
 .k-popup > .k-group-header,
 .k-popup > .k-virtual-wrap > .k-group-header {
-  border-bottom-color: #e9ecef;
+  border-bottom-color: #dee2e6;
 }
 .k-popup .k-group-header + div > .k-list > .k-item.k-first:before {
-  border-top-color: #e9ecef;
+  border-top-color: #dee2e6;
 }
 .k-list .k-item {
   -webkit-transition: all 0.2s ease;
@@ -4305,13 +4307,12 @@ kendo-sortable {
   border-color: rgba(33, 37, 41, 0.125);
   z-index: 2;
 }
-.k-pager-wrap .k-pager-nav,
-.k-pager-wrap .k-pager-numbers .k-link {
-  color: #007bff;
-}
-.k-pager-wrap .k-pager-nav:hover,
-.k-pager-wrap .k-pager-numbers .k-link:hover {
-  color: #0056b3;
+.k-pager-wrap .k-link:focus,
+.k-pager-wrap .k-pager-nav:focus {
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: 0;
+  z-index: 2;
 }
 .k-pager-wrap .k-pager-refresh {
   border-radius: 0.25rem;
@@ -4367,8 +4368,8 @@ kendo-sortable {
   display: block;
 }
 .k-grid .k-grid-container {
-  -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
           flex: 1 1 auto;
 }
@@ -4378,6 +4379,7 @@ kendo-sortable {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  -webkit-box-flex: 1;
   overflow: hidden;
 }
 .k-grid .k-grid-aria-root {
@@ -4387,6 +4389,10 @@ kendo-sortable {
   -ms-flex-direction: column;
   -webkit-flex-direction: column;
           flex-direction: column;
+  -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+          flex: 1 1 auto;
 }
 .k-grid table {
   margin: 0;
@@ -4952,6 +4958,13 @@ div.k-grid-header {
 }
 .k-filter-row .k-multiselect {
   height: auto;
+}
+.k-filter-row .k-filtercell .k-sized-input.k-block,
+.k-filter-row .k-filtercell .k-widget.k-sized-input {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+          flex: 0 1 auto;
 }
 .k-filtercell {
   width: auto;
@@ -5619,7 +5632,7 @@ div.k-grid-header {
 .k-tabstrip .k-item.k-state-hover,
 .k-tabstrip .k-item:hover {
   color: #0056b3;
-  border-color: #e9ecef;
+  border-color: #e9ecef #e9ecef rgba(33, 37, 41, 0.125);
 }
 .k-tabstrip .k-item.k-state-active {
   color: #212529;
@@ -6506,7 +6519,7 @@ div.k-grid-header {
 }
 .k-action-buttons .k-button {
   border-radius: 0;
-  padding: 11.25px 15px;
+  padding: .75rem 1rem;
   border-width: 0;
   border-color: inherit;
   background: none;
@@ -6547,16 +6560,16 @@ div.k-grid-header {
   position: relative;
 }
 .k-edit-form-container .k-tabstrip-wrapper {
-  margin: -15px;
+  margin: -1rem;
 }
 .k-edit-form-container .k-tabstrip.k-root-tabs {
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
 .k-edit-form-container .k-tabstrip .k-tabstrip-items {
-  padding: 15px 15px 0;
+  padding: 1rem 1rem 0;
 }
 .k-edit-form-container .k-tabstrip .k-content {
-  padding: 15px;
+  padding: 1rem;
   border-width: 0;
 }
 .k-edit-buttons {
@@ -6571,12 +6584,12 @@ div.k-grid-header {
   margin-left: 0.5rem;
 }
 .k-edit-form-container .k-edit-buttons {
-  margin: 15px -15px -15px;
-  padding: 15px;
+  margin: 1rem -1rem -1rem;
+  padding: 1rem;
 }
 .k-edit-form-container .k-action-buttons,
 .k-popup-edit-form > .k-action-buttons {
-  margin: 1rem -15px -15px;
+  margin: 1rem -1rem -1rem;
 }
 .k-edit-label {
   margin: 0 0 1rem;
@@ -6658,7 +6671,7 @@ div.k-grid-header {
   opacity: 0;
 }
 .k-window-titlebar {
-  padding: 15px;
+  padding: 1rem;
   border-width: 0 0 1px;
   border-style: solid;
   white-space: nowrap;
@@ -6713,7 +6726,7 @@ div.k-grid-header {
 }
 .k-prompt-container,
 .k-window-content {
-  padding: 15px;
+  padding: 1rem;
   outline: 0;
   overflow: auto;
   position: relative;
@@ -6723,7 +6736,7 @@ div.k-grid-header {
           flex: 1 1 auto;
 }
 .k-window-content + .k-prompt-container {
-  margin-top: -7.5px;
+  margin-top: -0.5rem;
 }
 .k-window-iframecontent {
   padding: 0;
@@ -6745,12 +6758,12 @@ div.k-grid-header {
   background-color: #fff;
 }
 .k-window-actions {
-  margin-top: -15px;
-  margin-bottom: -15px;
+  margin-top: -1rem;
+  margin-bottom: -1rem;
 }
 .k-window-action {
   margin: 0 0 0 .5rem;
-  padding: 15px;
+  padding: 1rem;
   width: 1em;
   height: 1em;
   border-width: 0;
@@ -6825,7 +6838,7 @@ div.k-grid-header {
           flex: 0 0 auto;
 }
 .k-dialog-buttongroup .k-button {
-  padding: 11.25px 15px;
+  padding: .75rem 1rem;
   width: auto!important;
   border-width: 0;
   border-color: inherit;
@@ -7190,7 +7203,7 @@ div.k-grid-header {
 .k-pivot-rowheaders > .k-grid td:first-child,
 .k-pivot-table,
 .k-pivot-table .k-grid-header .k-header.k-first {
-  border-color: #e9ecef;
+  border-color: #dee2e6;
 }
 .k-header.k-alt,
 .k-pivot-rowheaders .k-alt .k-alt {
@@ -7508,7 +7521,7 @@ div.k-grid-header {
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, -webkit-box-shadow 0.2s ease;
 }
 .k-tooltip {
-  padding: 3px 8px;
+  padding: .25rem .5rem;
   border-width: 0;
   background-repeat: repeat-x;
   position: absolute;
@@ -7557,6 +7570,7 @@ div.k-grid-header {
   pointer-events: none;
 }
 .k-tooltip {
+  font-size: .875rem;
   color: #fff;
   background-color: #000;
   border-radius: 0.25rem;
@@ -8626,7 +8640,7 @@ div.k-grid-header {
 }
 .k-time-highlight {
   background-color: #fff;
-  border-color: #e9ecef;
+  border-color: #dee2e6;
 }
 .k-datetimepicker .k-select {
   width: auto;
@@ -8815,8 +8829,8 @@ table.k-editor {
   -webkit-flex: 1 1 auto;
           flex: 1 1 auto;
   overflow: auto;
-  margin: -15px;
-  padding: 15px;
+  margin: -1rem;
+  padding: 1rem;
 }
 .k-ct-popup {
   -webkit-box-sizing: border-box;
@@ -9170,7 +9184,7 @@ table.k-editor {
 .editorToolbarWindow.k-header.k-window-content .k-tool-group,
 .k-ct-popup .k-editor-toolbar .k-tool-group,
 .k-editor .k-editor-toolbar-wrap .k-tool-group {
-  border-color: #e9ecef;
+  border-color: #dee2e6;
 }
 .k-editor-toolbar .k-overflow-anchor {
   padding: .375rem;
@@ -9195,6 +9209,7 @@ table.k-editor {
   border-style: solid;
   outline: 0;
   font: inherit;
+  font-size: 1rem;
   line-height: 1.5em;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -9239,6 +9254,7 @@ table.k-editor {
   color: inherit;
   background: none;
   font: inherit;
+  font-size: 1rem;
   -webkit-box-flex: 1;
   -ms-flex: 1;
   -webkit-flex: 1;
@@ -10270,7 +10286,7 @@ html .k-upload {
 }
 .k-upload {
   background-color: #f8f9fa;
-  border-color: #e9ecef;
+  border-color: #dee2e6;
   -webkit-background-clip: padding-box;
           background-clip: padding-box;
 }
@@ -10283,7 +10299,7 @@ html .k-upload {
 .k-upload .k-file,
 .k-upload .k-upload-files,
 .k-upload .k-upload-selected {
-  border-color: #e9ecef;
+  border-color: #dee2e6;
 }
 .k-upload .k-file {
   background-color: #fff;
@@ -10675,6 +10691,9 @@ html .k-upload {
 .k-chart-tooltip-wrapper .k-animation-container-shown {
   -webkit-transition: left 80ms ease-in, top 80ms ease-in;
   transition: left 80ms ease-in, top 80ms ease-in;
+}
+.k-chart-tooltip-wrapper > .k-popup {
+  padding: 0;
 }
 .k-chart-tooltip table {
   border-spacing: 0;
@@ -13397,6 +13416,12 @@ html .k-upload {
   -ms-flex-direction: row;
   -webkit-flex-direction: row;
           flex-direction: row;
+}
+.k-splitter-flex.k-splitter-horizontal[dir=rtl] > .k-splitbar > .k-collapse-next,
+.k-splitter-flex.k-splitter-horizontal[dir=rtl] > .k-splitbar > .k-collapse-prev {
+  -webkit-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
+      transform: scaleX(-1);
 }
 .k-splitter-flex.k-splitter-vertical {
   -webkit-box-orient: vertical;

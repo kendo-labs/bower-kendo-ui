@@ -141,7 +141,8 @@
                 animation: {},
                 virtual: false,
                 value: null,
-                clearButton: true
+                clearButton: true,
+                autoWidth: false
             },
             _dataSource: function () {
                 var that = this;

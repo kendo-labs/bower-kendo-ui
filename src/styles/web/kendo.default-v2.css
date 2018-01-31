@@ -4878,8 +4878,8 @@ kendo-sortable {
   display: block;
 }
 .k-grid .k-grid-container {
-  -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
           flex: 1 1 auto;
 }
@@ -4889,6 +4889,7 @@ kendo-sortable {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  -webkit-box-flex: 1;
   overflow: hidden;
 }
 .k-grid .k-grid-aria-root {
@@ -4898,6 +4899,10 @@ kendo-sortable {
   -ms-flex-direction: column;
   -webkit-flex-direction: column;
           flex-direction: column;
+  -ms-flex: 1 1 auto;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+          flex: 1 1 auto;
 }
 .k-grid table {
   margin: 0;
@@ -5221,6 +5226,8 @@ kendo-sortable {
   -webkit-align-content: center;
           align-content: center;
   vertical-align: top;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
 }
 .k-drag-clue .k-button.k-bare,
 .k-drag-clue .k-link,
@@ -5460,6 +5467,13 @@ div.k-grid-header {
 }
 .k-filter-row .k-multiselect {
   height: auto;
+}
+.k-filter-row .k-filtercell .k-sized-input.k-block,
+.k-filter-row .k-filtercell .k-widget.k-sized-input {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 1 auto;
+  -webkit-flex: 0 1 auto;
+          flex: 0 1 auto;
 }
 .k-filtercell {
   width: auto;
@@ -10431,6 +10445,7 @@ table.k-editor {
   border-style: solid;
   outline: 0;
   font: inherit;
+  font-size: 14px;
   line-height: 1.4285714286em;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
@@ -10475,6 +10490,7 @@ table.k-editor {
   color: inherit;
   background: none;
   font: inherit;
+  font-size: 14px;
   -webkit-box-flex: 1;
   -ms-flex: 1;
   -webkit-flex: 1;
@@ -11613,6 +11629,11 @@ fieldset legend {
   -webkit-transition: left 80ms ease-in, top 80ms ease-in;
   transition: left 80ms ease-in, top 80ms ease-in;
 }
+.k-chart-tooltip-wrapper > .k-popup,
+.k-sparkline-tooltip-wrapper > .k-popup {
+  padding: 0;
+  border-width: 0;
+}
 .k-chart-tooltip table {
   border-spacing: 0;
   border-collapse: collapse;
@@ -12230,18 +12251,13 @@ fieldset legend {
 .k-splitbar .k-icon {
   font-size: 10px;
   display: block;
+  cursor: pointer;
 }
 .k-splitbar-draggable-horizontal {
   cursor: col-resize;
 }
 .k-splitbar-draggable-vertical {
   cursor: row-resize;
-}
-.k-collapse-next,
-.k-collapse-prev,
-.k-expand-next,
-.k-expand-prev {
-  cursor: pointer;
 }
 .k-ghost-splitbar-horizontal,
 .k-splitbar-horizontal {
@@ -12278,7 +12294,7 @@ fieldset legend {
   width: 2px;
   height: 20px;
 }
-.k-splitter .k-resize-handle {
+.k-splitbar .k-resize-handle {
   display: none;
   background-color: currentColor;
 }
@@ -12367,6 +12383,12 @@ fieldset legend {
   -ms-flex-direction: row;
   -webkit-flex-direction: row;
           flex-direction: row;
+}
+.k-splitter-flex.k-splitter-horizontal[dir=rtl] > .k-splitbar > .k-collapse-next,
+.k-splitter-flex.k-splitter-horizontal[dir=rtl] > .k-splitbar > .k-collapse-prev {
+  -webkit-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
+      transform: scaleX(-1);
 }
 .k-splitter-flex.k-splitter-vertical {
   -webkit-box-orient: vertical;

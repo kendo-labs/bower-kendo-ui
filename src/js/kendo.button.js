@@ -79,7 +79,11 @@
                 }
             },
             _blur: function () {
-                this.element.removeClass(FOCUSEDSTATE);
+                var that = this;
+                that.element.removeClass(FOCUSEDSTATE);
+                setTimeout(function () {
+                    that.element.removeClass(SELECTEDSTATE);
+                });
             },
             _keydown: function (e) {
                 var that = this;

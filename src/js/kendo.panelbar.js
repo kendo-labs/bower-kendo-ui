@@ -199,6 +199,7 @@
                 autoBind: true,
                 loadOnDemand: true,
                 expandMode: 'multiple',
+                template: '',
                 dataTextField: null
             },
             _angularCompile: function () {

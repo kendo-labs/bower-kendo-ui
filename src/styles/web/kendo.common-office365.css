@@ -154,6 +154,12 @@ input[type="reset"].k-button-expand {
   cursor: default !important;
   outline: 0;
 }
+.k-state-disabled {
+  opacity: .7;
+}
+.k-state-disabled > .k-button {
+  opacity: 1;
+}
 @media print {
   .k-state-disabled,
   .k-state-disabled .k-input {
@@ -430,7 +436,7 @@ input.k-checkbox,
   display: inline-block;
   position: relative;
   padding-left: 32.4px;
-  vertical-align: text-top;
+  vertical-align: top;
   line-height: 16px;
   cursor: pointer;
   border-style: solid;
@@ -673,6 +679,7 @@ input.k-checkbox + label {
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
+  overflow: hidden;
   -webkit-box-align: center;
   -webkit-align-items: center;
       -ms-flex-align: center;
@@ -981,9 +988,7 @@ div.k-window {
 }
 .k-block > .k-header,
 .k-window-titlebar {
-  position: absolute;
   width: 100%;
-  height: 1.1em;
   border-bottom-style: solid;
   border-bottom-width: 1px;
   margin-top: -2em;
@@ -999,9 +1004,7 @@ div.k-window {
   padding: .3em 2px;
 }
 .k-window-title {
-  position: absolute;
-  left: .44em;
-  right: .44em;
+  padding: 0 .44em;
   overflow: hidden;
   cursor: default;
   text-overflow: ellipsis;
@@ -1030,8 +1033,8 @@ div.k-window-iframecontent {
 .k-window-titlebar .k-window-actions {
   position: absolute;
   top: 0;
-  right: .3em;
-  padding-top: .3em;
+  right: .2em;
+  top: .2em;
   white-space: nowrap;
 }
 .k-window-titlebar .k-window-action {
@@ -1135,9 +1138,8 @@ div.k-window-iframecontent {
   border-width: 1px 0 0;
   border-style: solid;
   position: relative;
-  bottom: -1em;
   padding: .6em;
-  margin: 0 -1em;
+  margin: 0 -1em -1em;
 }
 .k-action-buttons .k-button {
   display: inline-block;
@@ -1177,9 +1179,9 @@ div.k-window-iframecontent {
       -ms-user-select: none;
           user-select: none;
 }
-.k-tabstrip-bottom > .k-button {
+.k-tabstrip-bottom > .k-button.k-bare {
   top: auto;
-  bottom: .4em;
+  bottom: .15em;
 }
 .k-tabstrip-prev {
   left: .4em;
@@ -1213,7 +1215,7 @@ div.k-window-iframecontent {
 .k-tabstrip-top > .k-tabstrip-items .k-state-active,
 .k-panelbar .k-tabstrip-top > .k-tabstrip-items .k-state-active {
   border-bottom-width: 1px;
-  margin-bottom: -2px;
+  margin-bottom: -1px;
   padding-bottom: 0px;
 }
 .k-tabstrip-items .k-tab-on-top {
@@ -3946,7 +3948,7 @@ div.k-treeview {
   cursor: pointer;
 }
 .k-treeview .k-i-collapse {
-  margin-top: -0.4em;
+  margin-top: -4px;
 }
 .k-treeview .k-sprite,
 .k-treeview .k-image {
@@ -4155,7 +4157,7 @@ span.k-dropdown,
 .k-picker-wrap {
   padding-right: 2em;
 }
-.k-numeric-wrap .k-expand-padding {
+.k-numeric-wrap.k-expand-padding {
   padding-right: 0;
 }
 .k-textbox,
@@ -4748,7 +4750,8 @@ span.k-numerictextbox {
 }
 .k-rtl .k-dropdown-wrap,
 .k-rtl .k-picker-wrap,
-.k-rtl .k-numeric-wrap {
+.k-rtl .k-numeric-wrap,
+.k-rtl .k-combobox-clearable .k-input {
   padding-right: 0;
   padding-left: 2em;
 }
@@ -11323,14 +11326,13 @@ div.k-navigator .k-navigator-left {
   border-width: 0 0 1px;
   border-style: solid;
   position: relative;
-  font-size: 12px;
-  font-family: Arial, Verdana, sans-serif;
   display: table;
   width: 100%;
 }
 .k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-name-editor,
 .k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar {
   display: table-cell;
+  vertical-align: middle;
 }
 .k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-name-editor {
   position: relative;
@@ -11401,9 +11403,6 @@ div.k-navigator .k-navigator-left {
 }
 .k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-input {
   overflow: hidden;
-  height: 2.004em;
-  max-height: 2.004em;
-  line-height: 1.65em;
   text-indent: 0.571em;
   border: 0;
   margin: 0;
@@ -12081,14 +12080,15 @@ div.k-spreadsheet-window {
 .k-dialog .k-dialog-titlebar {
   position: static;
   margin: 0;
-  padding: 0.6em 0.8em 1em 0.8em;
+  padding: 0.8em;
   width: auto;
 }
 .k-dialog .k-dialog-titlebar .k-dialog-title {
   margin: 0;
   padding: 0;
   width: auto;
-  max-width: 98%;
+  max-width: -webkit-calc(100% - 16px - 1.8em);
+  max-width: calc(100% - 16px - 1.8em);
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
@@ -12099,6 +12099,7 @@ div.k-spreadsheet-window {
 .k-dialog .k-content {
   margin: 0;
   padding: 1.8em 1em 1.8em 1em;
+  height: auto;
 }
 .k-dialog.k-dialog-titleless .k-content {
   padding: 2.4em;
@@ -12106,6 +12107,46 @@ div.k-spreadsheet-window {
 .k-dialog .k-dialog-buttongroup {
   margin: 0;
   padding: 0;
+}
+.k-dialog {
+  overflow: hidden;
+}
+.k-dialog .k-dialog-buttongroup {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.k-dialog .k-dialog-buttongroup .k-button {
+  display: inline-block;
+  text-overflow: ellipsis;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
+  margin: 0;
+  border-radius: 0;
+  border-bottom: 0;
+  border-width: 1px 0 0 1px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:first-child {
+  border-left-width: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button:last-child {
+  border-right-width: 0;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  padding: 1em;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
+  margin-left: 0.5em;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button:first-child {
+  margin-left: 0;
 }
 .k-dialog .k-dialog-titlebar .k-dialog-actions {
   top: .6em;
@@ -12670,10 +12711,10 @@ div.k-window-content {
   line-height: 2em;
 }
 .k-window-title {
-  left: .857em;
+  padding: 0 0.8em;
 }
 .k-window-titlebar .k-window-actions {
-  padding-top: .7em;
+  top: .7em;
   right: .857em;
 }
 .k-nav-current > .k-link span + span {
@@ -12731,7 +12772,8 @@ div.k-window-content {
           transform: none;
 }
 .k-checkbox-label,
-.k-radio-label {
+.k-radio-label,
+.k-checkbox-wrapper {
   line-height: 20px;
 }
 .k-radio-label:before {
