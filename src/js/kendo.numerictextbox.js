@@ -47,7 +47,6 @@
                 options = that.options;
                 element = that.element.on('focusout' + ns, proxy(that._focusout, that)).attr('role', 'spinbutton');
                 options.placeholder = options.placeholder || element.attr('placeholder');
-                that._initialOptions = extend({}, options);
                 min = that.min(element.attr('min'));
                 max = that.max(element.attr('max'));
                 step = that._parse(element.attr('step'));
@@ -60,6 +59,7 @@
                 if (!isStep && step !== NULL) {
                     options.step = step;
                 }
+                that._initialOptions = extend({}, options);
                 that._reset();
                 that._wrapper();
                 that._arrows();
@@ -150,6 +150,22 @@
                     disable: !(enable = enable === undefined ? true : enable)
                 });
             },
+            setOptions: function (options) {
+                var that = this;
+                Widget.fn.setOptions.call(that, options);
+                that._arrowsWrap.toggle(that.options.spinners);
+                that._inputWrapper.toggleClass('k-expand-padding', !that.options.spinners);
+                that._text.prop('placeholder', that.options.placeholder);
+                that._placeholder(that.options.placeholder);
+                that.element.attr({
+                    'aria-valuemin': that.options.min !== NULL ? that.options.min * that.options.factor : that.options.min,
+                    'aria-valuemax': that.options.max !== NULL ? that.options.max * that.options.factor : that.options.max
+                });
+                that.options.format = extractFormat(that.options.format);
+                if (options.value !== undefined) {
+                    that.value(options.value);
+                }
+            },
             destroy: function () {
                 var that = this;
                 that.element.add(that._text).add(that._upArrow).add(that._downArrow).add(that._inputWrapper).off(ns);
@@ -205,7 +221,7 @@
                 arrows = element.siblings('.' + CLASS_ICON);
                 if (!arrows[0]) {
                     arrows = $(buttonHtml('increase', options.upArrowText) + buttonHtml('decrease', options.downArrowText)).insertAfter(element);
-                    arrows.wrapAll('<span class="k-select"/>');
+                    that._arrowsWrap = arrows.wrapAll('<span class="k-select"/>').parent();
                 }
                 if (!spinners) {
                     arrows.parent().toggle(spinners);

@@ -140,12 +140,6 @@
   border-color: #285e8e;
   background-color: #3276b1;
 }
-.k-button:focus,
-.k-button.k-state-focused {
-  border-color: #76abd9;
-  -webkit-box-shadow: 0 0 7px 0 #76abd9;
-          box-shadow: 0 0 7px 0 #76abd9;
-}
 .k-button:focus:active {
   -webkit-box-shadow: 0 0 7px 0 #76abd9, inset 0 3px 5px rgba(0, 0, 0, 0.125);
           box-shadow: 0 0 7px 0 #76abd9, inset 0 3px 5px rgba(0, 0, 0, 0.125);
@@ -166,8 +160,14 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-split-button {
-  border-radius: 4px;
+.k-button:focus,
+.k-button:focus:hover,
+.k-button.k-state-focused,
+.k-button.k-state-focused.k-state-disabled,
+.k-state-disabled .k-button.k-state-focused {
+  border-color: #76abd9;
+  -webkit-box-shadow: 0 0 7px 0 #76abd9;
+          box-shadow: 0 0 7px 0 #76abd9;
 }
 .k-primary {
   color: #fff;
@@ -187,12 +187,6 @@
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
   background-image: none, -webkit-linear-gradient(top, false);
   background-image: none, linear-gradient(to bottom, false);
-}
-.k-primary:focus,
-.k-primary.k-state-focused {
-  border-color: #eef8fc;
-  -webkit-box-shadow: 0 0 8px 0 #cbebf5;
-          box-shadow: 0 0 8px 0 #cbebf5;
 }
 .k-primary:active,
 .k-primary.k-state-active {
@@ -230,6 +224,15 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-primary:focus,
+.k-primary.k-state-focused {
+  border-color: #eef8fc;
+  -webkit-box-shadow: 0 0 8px 0 #cbebf5;
+          box-shadow: 0 0 8px 0 #cbebf5;
+}
+.k-button-group {
+  border-radius: 4px;
+}
 .k-button-group .k-button {
   border-radius: 0;
 }
@@ -247,33 +250,6 @@
 .k-button-group .k-button:first-child:last-child {
   border-radius: 4px;
 }
-.k-button-group .k-button[disabled],
-.k-state-disabled .k-button-group .k-button,
-.k-button-group .k-button.k-state-disabled {
-  color: #a1a1a1;
-  border-color: #cccccc;
-  background-color: #fff;
-  background-image: none;
-}
-.k-button-group .k-button.k-state-active {
-  color: #333333;
-  background-color: #ebebeb;
-  border-color: #aeaeae;
-  background-image: none;
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
-  background-image: none, -webkit-linear-gradient(top, false);
-  background-image: none, linear-gradient(to bottom, false);
-  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-button-group .k-button:focus,
-.k-button-group .k-button.k-state-focused {
-  border-color: #76abd9;
-  -webkit-box-shadow: 0 0 7px 0 #76abd9;
-          box-shadow: 0 0 7px 0 #76abd9;
-}
 .k-rtl .k-button-group .k-button {
   border-radius: 0;
 }
@@ -290,6 +266,52 @@
 .k-rtl .k-button-group .k-group-start.k-group-end,
 .k-rtl .k-button-group .k-button:first-child:last-child {
   border-radius: 4px;
+}
+.k-split-button {
+  border-radius: 4px;
+}
+.k-split-button.k-state-border-down > .k-button,
+.k-split-button.k-state-border-up > .k-button {
+  color: #333333;
+  background-color: #ebebeb;
+  border-color: #aeaeae;
+  background-image: none;
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
+  background-image: none, -webkit-linear-gradient(top, false);
+  background-image: none, linear-gradient(to bottom, false);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button:focus {
+  border-color: #76abd9;
+  outline: none;
+  -webkit-box-shadow: 0 0 7px 0 #76abd9;
+          box-shadow: 0 0 7px 0 #76abd9;
+}
+.k-split-button:focus > .k-button {
+  background: transparent;
+  border-color: #76abd9;
+}
+.k-split-button:focus:not(.k-state-disabled) > .k-state-active,
+.k-split-button:focus:not(.k-state-disabled) > .k-button:hover {
+  color: #333333;
+  background-color: #ebebeb;
+  border-color: #76abd9;
+  background-image: none;
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
+  background-image: none, -webkit-linear-gradient(top, false);
+  background-image: none, linear-gradient(to bottom, false);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button.k-state-disabled {
+  color: #a1a1a1;
+  background: #fff;
+  background-image: none;
+}
+.k-edit-buttons {
+  border-color: #cccccc;
+  background: #f5f5f5;
 }
 .k-in,
 .k-item,
@@ -1372,6 +1394,12 @@ div.k-filebrowser-dropzone em {
 .k-rtl .k-toolbar .k-split-button .k-split-button-arrow {
   border-radius: 4px 0 0 4px;
 }
+.k-overflow-container .k-button-group .k-button {
+  border-radius: 4px;
+}
+.k-overflow-container .k-separator {
+  border-color: #cccccc;
+}
 .k-group-start.k-group-end.k-tool {
   border-radius: 4px;
 }
@@ -1823,18 +1851,6 @@ html .km-pane-wrapper .km-widget,
 }
 .k-scheduler-table .k-state-hover .k-icon {
   background-color: transparent;
-}
-.k-split-button:focus {
-  outline: none;
-}
-.k-split-button:focus {
-  background-color: #fff;
-  -webkit-box-shadow: 0 0 8px 0 #76abd9;
-          box-shadow: 0 0 8px 0 #76abd9;
-}
-.k-split-button:focus > .k-button {
-  background: transparent;
-  border-color: #76abd9;
 }
 .k-editor .k-tool:focus {
   outline: 0;
@@ -2412,13 +2428,9 @@ thead.k-grid-header th.k-header:last-child {
   -webkit-box-shadow: inset 0 0 7px 0 #76abd9;
           box-shadow: inset 0 0 7px 0 #76abd9;
 }
-.k-split-container .k-button.k-state-active:hover,
-.k-overflow-container .k-button.k-state-active:hover,
 .k-panelbar > li > .k-link.k-state-selected {
   color: #ffffff;
 }
-.k-split-container .k-button.k-state-active,
-.k-overflow-container .k-button.k-state-active,
 .k-panelbar .k-link.k-state-selected.k-state-hover {
   color: #333333;
 }
@@ -3068,6 +3080,7 @@ td.k-state-focused.k-state-selected,
 }
 .k-action-window .k-action-buttons {
   border-color: #cccccc;
+  background: #f5f5f5;
 }
 .k-spreadsheet-sample {
   color: #808080;
@@ -3075,7 +3088,6 @@ td.k-state-focused.k-state-selected,
 .k-state-selected .k-spreadsheet-sample {
   color: inherit;
 }
-.k-spreadsheet-window .k-list-wrapper,
 .k-spreadsheet-window .k-list {
   border-color: #cccccc;
   border-radius: 4px;
@@ -3204,8 +3216,6 @@ td.k-state-focused.k-state-selected,
   font-size: 1.1em;
 }
 .k-dialog a.k-dialog-action.k-dialog-close {
-  width: 2em;
-  height: 2em;
   cursor: pointer;
   z-index: 10000;
 }

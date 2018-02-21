@@ -225,7 +225,9 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "isnull": "Is null",
     "isnotnull": "Is not null",
     "isempty": "Is empty",
-    "isnotempty": "Is not empty"
+    "isnotempty": "Is not empty",
+    "isnullorempty": "Has no value",
+    "isnotnullorempty": "Has value"
   },
   "number": {
     "eq": "Is equal to",
@@ -290,7 +292,9 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "isnull": "Is null",
     "isnotnull": "Is not null",
     "isempty": "Is empty",
-    "isnotempty": "Is not empty"
+    "isnotempty": "Is not empty",
+    "isnullorempty": "Has no value",
+    "isnotnullorempty": "Has value"
   },
   "number": {
     "eq": "Is equal to",

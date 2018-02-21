@@ -933,7 +933,6 @@ td.k-state-focused.k-state-selected
 .k-other-month.k-state-hover .k-link,
 div.k-filebrowser-dropzone em,
 .k-draghandle:hover,
-.k-split-button:focus,
 .k-listbox .k-item:hover:not(.k-state-disabled)
 {
     .composite-background(@hover-gradient);
@@ -2088,9 +2087,13 @@ html .km-pane-wrapper .km-widget,
     box-shadow: inset 0 1px 0 lighten(@secondary-border-color, 30%);
 }
 
-.k-toolbar .k-button.k-state-disabled:focus {
+.k-overflow-container .k-overflow-button:focus,
+.k-overflow-container .k-overflow-button:focus:hover {
     border-color: @button-focused-border-color;
-    .box-shadow(@button-focused-shadow);
+}
+
+.k-overflow-container .k-separator {
+    border-color: @secondary-border-color;
 }
 
 .k-column-menu .k-separator
@@ -2181,14 +2184,11 @@ html .km-pane-wrapper .km-widget,
 }
 
 .k-split-button:focus {
-    outline:none;
-}
-
-.k-split-button:focus {
     .box-shadow(@button-focused-shadow);
 }
 
 .k-split-button:focus > .k-button {
+    color: inherit;
     background: transparent;
     border-color: @button-focused-border-color;
 }
@@ -2445,6 +2445,9 @@ html .km-pane-wrapper .km-widget,
             }
         }
         &.k-dialog-button-layout-normal {
+            border-top: solid 1px @widget-border-color;
+            background: @header-background-color;
+
             .k-button {
                 border-radius: @border-radius;
             }

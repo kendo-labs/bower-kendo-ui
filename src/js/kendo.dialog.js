@@ -114,14 +114,14 @@
                     if (width.toString().indexOf('%') > 0) {
                         wrapper.width(width);
                     } else {
-                        wrapper.width(constrain(width, options.minWidth, options.maxWidth));
+                        wrapper.outerWidth(constrain(width, options.minWidth, options.maxWidth));
                     }
                 }
                 if (height) {
                     if (height.toString().indexOf('%') > 0) {
                         wrapper.height(height);
                     } else {
-                        wrapper.height(constrain(height, options.minHeight, options.maxHeight));
+                        wrapper.outerHeight(constrain(height, options.minHeight, options.maxHeight));
                     }
                     this._setElementHeight();
                 }
@@ -145,9 +145,10 @@
             },
             _setElementHeight: function () {
                 var that = this, element = that.element, height = that.options.height, paddingBox = that._paddingBox(element), elementHeight = parseFloat(height, 10) - that._uiHeight() - paddingBox.vertical;
-                if (elementHeight > 0) {
-                    that.element.css({ height: ceil(elementHeight) + 'px' });
+                if (elementHeight < 0) {
+                    elementHeight = 0;
                 }
+                that.element.css({ height: ceil(elementHeight) + 'px' });
             },
             _uiHeight: function () {
                 var that = this, wrapper = that.wrapper, actionbar = wrapper.children(KBUTTONGROUP), actionbarHeight = actionbar[0] && actionbar[0].offsetHeight || 0, titlebar = wrapper.children(KDIALOGTITLEBAR), titlebarHeight = titlebar[0] && titlebar[0].offsetHeight || 0;

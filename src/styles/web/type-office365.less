@@ -2156,23 +2156,6 @@ html .km-pane-wrapper .km-widget,
     background-color: transparent;
 }
 
-.k-split-button:focus {
-    outline:none;
-}
-
-.k-split-button:focus {
-    box-shadow: 0 0 0px 1px @button-focused-border-color;
-}
-
-.k-split-button:focus > .k-button {
-    background: transparent;
-    border-color: transparent;
-}
-
-.k-split-button:focus > .k-button.k-split-button-arrow {
-    border-left-color: @button-focused-border-color;
-}
-
 .k-editor .k-tool:focus
 {
    outline: 0;
@@ -2657,63 +2640,85 @@ input.k-textbox:focus {
     }
 }
 
+
+// Toolbar
 .k-toolbar {
-    .k-toggle-button {
-        background-color: @widget-background-color;
-        border-color: @widget-background-color;
-    }
 
-    .k-toggle-button:hover {
-        background-color: @hover-background-color;
-        border-color: @hover-background-color;
-    }
-
-    .k-toggle-button.k-state-active,
-    .k-toggle-button:active,
-    .k-toggle-button:active:hover {
-        background-color: @selected-background-color;
-        border-color: @selected-border-color;
-    }
-
-    .k-toggle-button:active,
-    .k-toggle-button.k-state-active,
-    .k-toggle-button:active:hover {
-        color: @widget-text-color;
-    }
-
-    .k-toggle-button.k-state-disabled,
-    .k-toggle-button.k-state-disabled:active,
-    .k-toggle-button.k-state-disabled:active:hover {
-        color: @disabled-text-color;
-        border-color: @disabled-border-color;
-        background-color: @disabled-background-color;
-        .composite-background(@disabled-gradient);
-    }
-
-    .k-toggle-button.k-state-disabled:focus,
-    .k-toggle-button.k-state-disabled:focus:hover {
+    .k-button:focus {
         border-color: @button-focused-border-color;
         .box-shadow(@button-focused-shadow);
     }
 
+    .k-button-group {
+
+        .k-button {
+            border-color: transparent;
+            background: transparent;
+        }
+
+        .k-button:hover {
+            color: @hover-text-color;
+            border-color: @hover-background-color;
+            background-color: @hover-background-color;
+        }
+
+        .k-button.k-state-active,
+        .k-button:active {
+            color: @selected-text-color;
+            border-color: @selected-border-color;
+            background-color: @selected-background-color;
+        }
+
+        .k-button.k-state-disabled {
+            color: @disabled-text-color;
+            border-color: transparent;
+            background: transparent;
+        }
+
+        .k-button:focus {
+            border-color: @focused-border-color;
+        }
+    }
+
+    .k-split-button .k-button {
+        border-color: transparent;
+        background: transparent;
+    }
+
     .k-overflow-anchor {
+        color: @widget-text-color;
         background-color: @widget-background-color;
         border-color: @widget-border-color;
+
+        // Hover
+        &:hover {
+            color: @button-hover-text-color;
+            background-color: @button-hover-background-color;
+            border-color: @button-hover-background-color;
+        }
+
+        // Active
+        &.k-state-active {
+            border-color: @button-hover-background-color;
+        }
+
+        // Expanded
+        &.k-state-border-down,
+        &.k-state-border-up {
+            color: @primary-text-color;
+            background-color: @primary-background-color;
+            border-color: @primary-background-color;
+        }
+    }
+}
+.k-overflow-container {
+    & > .k-state-disabled .k-button:focus,
+    & .k-button.k-state-disabled:focus {
+        border-color: @button-focused-border-color;
     }
 
-    .k-overflow-anchor:hover {
-        background-color: @button-hover-background-color;
-        border-color: @button-hover-background-color;
-    }
-
-    .k-overflow-anchor.k-state-active {
-        border-color: @button-hover-background-color;
-    }
-
-    .k-overflow-anchor.k-state-border-down,
-    .k-overflow-anchor.k-state-border-up {
-        background-color: @primary-background-color;
-        border-color: @primary-background-color;
+    .k-separator {
+        color: @secondary-border-color;
     }
 }
 
@@ -3329,6 +3334,9 @@ input.k-textbox:focus {
             }
         }
         &.k-dialog-button-layout-normal {
+            border-top: solid 1px @widget-border-color;
+            background: @header-background-color;
+
             .k-button {
                 padding-left: 2em;
                 padding-right: 2em;

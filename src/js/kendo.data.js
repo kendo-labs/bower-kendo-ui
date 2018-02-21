@@ -610,6 +610,11 @@
                                 that.dirtyFields[field] = false;
                             }
                         }
+                    } else {
+                        that.trigger('equalSet', {
+                            field: field,
+                            value: value
+                        });
                     }
                 }
             },
@@ -916,6 +921,12 @@
                 },
                 isnotnull: function (a) {
                     return '(' + a + ' != null)';
+                },
+                isnullorempty: function (a) {
+                    return '(' + a + ' === null) || (' + a + ' === \'\')';
+                },
+                isnotnullorempty: function (a) {
+                    return '(' + a + ' !== null) && (' + a + ' !== \'\')';
                 }
             };
         }();

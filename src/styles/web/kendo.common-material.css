@@ -769,9 +769,6 @@ input[type="reset"].k-button-expand {
 .k-overflow-group .k-button-icon {
   width: auto;
 }
-.k-toolbar .k-button-icontext {
-  padding-right: .8em;
-}
 .k-button.k-bare {
   border-color: transparent !important;
   color: inherit !important;
@@ -822,6 +819,9 @@ input[type="reset"].k-button-expand {
           flex-direction: row;
   vertical-align: middle;
   position: relative;
+  -webkit-flex-wrap: nowrap;
+      -ms-flex-wrap: nowrap;
+          flex-wrap: nowrap;
 }
 .k-button-group .k-button {
   position: relative;
@@ -875,8 +875,14 @@ input[type="reset"].k-button-expand {
 .k-ie9 .k-button-group .k-button {
   float: left;
 }
+.k-ie9 .k-button-group.k-dialog-buttongroup .k-button {
+  float: right;
+}
 .k-ie9 .k-rtl .k-button-group .k-button {
   float: right;
+}
+.k-ie9 .k-rtl .k-button-group.k-dialog-buttongroup .k-button {
+  float: left;
 }
 /* responsive panel */
 .k-rpanel-left {
@@ -4407,9 +4413,10 @@ body .k-datetimepicker .k-select {
   padding: 1px;
 }
 .k-overflow-container > .k-state-disabled .k-button,
+.k-overflow-container > .k-state-disabled .k-button:hover,
 .k-overflow-container .k-button.k-state-disabled,
 .k-overflow-container .k-button.k-state-disabled:hover {
-  border: 0 ;
+  border-color: transparent;
   background: none;
 }
 .k-popup .k-list .k-state-hover,
@@ -5012,11 +5019,15 @@ table.k-editor {
   position: relative;
 }
 .k-editor-inline {
-  border-width: 2px;
   padding: .3em .5em;
   word-wrap: break-word;
   overflow: auto;
   position: relative;
+  -webkit-transition: border-color 0.5s;
+  transition: border-color 0.5s;
+}
+.k-editor-inline.k-editor {
+  border: 1px solid transparent;
 }
 .k-editortoolbar-dragHandle {
   cursor: move;
@@ -5097,9 +5108,6 @@ table.k-editor {
 .k-editor-toolbar .k-colorpicker {
   vertical-align: middle;
 }
-.k-button-group {
-  white-space: nowrap;
-}
 .k-button-group .k-tool {
   display: inline-block;
   vertical-align: middle;
@@ -5166,8 +5174,9 @@ table.k-editor {
 .k-rtl .k-button-group .k-tool.k-group-end {
   border-left-width: 1px;
 }
-.k-editor-toolbar .k-button-group .k-state-disabled {
-  display: none;
+.k-editor-toolbar .k-button-group .k-state-disabled,
+.k-editor-toolbar .k-button-group.k-state-disabled {
+  display: none !important;
 }
 .k-editor-toolbar .k-button-group .k-state-hover,
 .k-editor-toolbar .k-button-group .k-state-active {
@@ -5379,6 +5388,20 @@ a.k-tool {
   background-color: #00b0ff;
   display: none;
   opacity: 0.8;
+}
+.k-editor-inline .k-table {
+  width: 100%;
+  border-spacing: 0;
+  margin: 0 0 1em;
+}
+.k-editor-inline .k-table,
+.k-editor-inline .k-table td {
+  outline: 0;
+  border: 1px dotted #ccc;
+}
+.k-editor-inline .k-table td {
+  min-width: 1px;
+  padding: .2em .3em;
 }
 .k-table.k-table-resizing {
   opacity: 0.6;
@@ -6891,6 +6914,7 @@ span.k-tooltip {
   display: block;
   vertical-align: middle;
   padding: 0.28571428em 0;
+  overflow: hidden;
 }
 .k-toolbar .k-button .k-sprite,
 .k-overflow-container .k-button .k-sprite {
@@ -6912,7 +6936,6 @@ span.k-tooltip {
   margin-left: -4px;
 }
 .k-toolbar-resizable {
-  overflow: hidden;
   white-space: nowrap;
 }
 .k-toolbar > .k-align-left {
@@ -6954,14 +6977,20 @@ span.k-tooltip {
 }
 .k-toolbar .k-split-button {
   padding-left: 0;
+  border: 1px solid transparent;
 }
-.k-toolbar .k-split-button .k-button,
+.k-toolbar .k-split-button .k-button {
+  margin: -1px 0 -1px -1px;
+}
+.k-toolbar .k-split-button .k-split-button-arrow {
+  margin: -1px;
+}
 .k-toolbar .k-button-group .k-group-start {
   margin-left: 0;
   margin-right: 0;
 }
-.k-toolbar .k-split-button .k-split-button-arrow {
-  margin-left: -1px;
+.k-toolbar .k-button-icontext {
+  padding-right: .8em;
 }
 .k-toolbar .k-overflow-anchor {
   position: absolute;
@@ -6971,8 +7000,6 @@ span.k-tooltip {
   width: 2.8571428571em;
   margin: 0;
   line-height: inherit;
-  border-width: 0 0 0 1px;
-  border-style: solid;
   border-radius: 0;
 }
 .k-toolbar .k-overflow-anchor > .k-icon {
@@ -6980,6 +7007,9 @@ span.k-tooltip {
   top: 50%;
   left: 50%;
   margin: -8px;
+}
+.k-overflow-container .k-button-group .k-button {
+  margin: 0;
 }
 .k-overflow-container .k-item {
   float: none;
@@ -7004,9 +7034,6 @@ span.k-tooltip {
 .k-split-container {
   margin-top: -1px;
 }
-.k-overflow-container .k-button-group {
-  padding: 0;
-}
 .k-overflow-container .k-button-group > li {
   display: block;
 }
@@ -7015,7 +7042,6 @@ span.k-tooltip {
   border-width: 1px 0;
   border-style: solid;
   border-radius: 0;
-  padding: 2px 0;
   margin: 1px 0;
 }
 .k-overflow-container .k-overflow-hidden {
@@ -11690,8 +11716,6 @@ div.k-spreadsheet-window {
 }
 .k-spreadsheet-window .k-list-wrapper {
   padding: .15em 0;
-  border-width: 1px;
-  border-style: solid;
   height: 190px;
 }
 .k-spreadsheet-window .k-list .k-item {
@@ -11707,7 +11731,10 @@ div.k-spreadsheet-window {
   margin-top: 1em;
 }
 .k-spreadsheet-window .k-action-buttons {
-  padding: 1em;
+  top: 10px;
+  padding: 10px;
+  margin-bottom: -webkit-calc(10px - 1em);
+  margin-bottom: calc(10px - 1em);
 }
 .k-spreadsheet-window .k-edit-label {
   width: 25%;
@@ -12001,6 +12028,7 @@ div.k-spreadsheet-window {
 .k-spreadsheet-sheets-bar .k-spreadsheet-sheets-remove {
   padding: 0;
   margin: 0.5em 0.5em 0.5em -0.5em;
+  vertical-align: middle;
 }
 .k-spreadsheet-sheets-bar .k-spreadsheet-sheets-remove .k-button-icon {
   padding: 2px;
@@ -12072,13 +12100,15 @@ div.k-spreadsheet-window {
   min-height: 3em;
   max-width: 100%;
   max-height: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 .k-window.k-dialog {
   position: fixed;
   padding-top: 0;
 }
 .k-dialog .k-dialog-titlebar {
-  position: static;
+  position: relative;
   margin: 0;
   padding: 0.8em;
   width: auto;
@@ -12087,14 +12117,15 @@ div.k-spreadsheet-window {
   margin: 0;
   padding: 0;
   width: auto;
-  max-width: -webkit-calc(100% - 16px - 1.8em);
-  max-width: calc(100% - 16px - 1.8em);
+  max-width: -webkit-calc(100% - 20px);
+  max-width: calc(100% - 20px);
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 1.2em;
   line-height: 1.2em;
+  vertical-align: top;
 }
 .k-dialog .k-content {
   margin: 0;
@@ -12104,14 +12135,12 @@ div.k-spreadsheet-window {
 .k-dialog.k-dialog-titleless .k-content {
   padding: 2.4em;
 }
-.k-dialog .k-dialog-buttongroup {
-  margin: 0;
-  padding: 0;
-}
 .k-dialog {
   overflow: hidden;
 }
 .k-dialog .k-dialog-buttongroup {
+  margin: 0;
+  padding: 0;
   width: 100%;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -12138,9 +12167,6 @@ div.k-spreadsheet-window {
   -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
           justify-content: flex-end;
-  -webkit-flex-wrap: wrap;
-      -ms-flex-wrap: wrap;
-          flex-wrap: wrap;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
   margin-left: 0.5em;
@@ -12149,7 +12175,8 @@ div.k-spreadsheet-window {
   margin-left: 0;
 }
 .k-dialog .k-dialog-titlebar .k-dialog-actions {
-  top: .6em;
+  top: 50%;
+  margin-top: -11px;
   right: .8em;
   padding: 0;
 }
@@ -12158,8 +12185,9 @@ div.k-spreadsheet-window {
   z-index: 10000;
 }
 .k-dialog.k-dialog-titleless a.k-dialog-action.k-dialog-close {
+  position: absolute;
   right: .5em;
-  top: 1em;
+  top: .5em;
 }
 .k-dialog.k-alert .k-dialog-titlebar,
 .k-dialog.k-confirm .k-dialog-titlebar,
@@ -12650,12 +12678,15 @@ table.k-editor {
   padding: 0.42857143em;
 }
 .k-toolbar .k-button {
-  padding: 14px 14px;
+  padding: 14px 8px;
+  border-radius: 0;
 }
 .k-toolbar .k-button,
 .k-toolbar .k-split-button {
-  margin-top: -0.42857143em;
-  margin-bottom: -0.42857143em;
+  margin-top: -webkit-calc(-0.42857143em - 1px);
+  margin-top: calc(-0.42857143em - 1px);
+  margin-bottom: -webkit-calc(-0.42857143em - 1px);
+  margin-bottom: calc(-0.42857143em - 1px);
 }
 .k-toolbar .k-split-button .k-button {
   margin-top: 0;
@@ -12665,6 +12696,8 @@ table.k-editor {
 .k-toolbar .k-split-button-arrow {
   height: -webkit-calc(1.28571428em + 30px);
   height: calc(1.28571428em + 30px);
+}
+.k-toolbar .k-button-icon {
   width: -webkit-calc(1.28571428em + 30px);
   width: calc(1.28571428em + 30px);
 }
@@ -12681,7 +12714,7 @@ table.k-editor {
   margin: 0;
 }
 .k-toolbar .k-overflow-anchor {
-  border-width: 0;
+  border-width: 1px;
   width: 3.42em;
   padding: 0;
   margin: 0;
@@ -12765,10 +12798,6 @@ div.k-window {
 }
 div.k-window-content {
   padding: 1.333em;
-}
-.k-dialog .k-dialog-titlebar .k-dialog-title {
-  max-width: -webkit-calc(100% - 22px - 1.8em);
-  max-width: calc(100% - 22px - 1.8em);
 }
 div.editorToolbarWindow.k-window-content {
   padding: 0;

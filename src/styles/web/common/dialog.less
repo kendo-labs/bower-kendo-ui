@@ -30,6 +30,7 @@
     min-height: 3em;
     max-width: 100%;
     max-height: 100%;
+    box-sizing: border-box;
 }
 
 .k-window.k-dialog
@@ -40,7 +41,7 @@
 
 .k-dialog .k-dialog-titlebar
 {
-    position: static;
+    position: relative;
     margin: 0;
     padding: 0.8em;
     width: auto;
@@ -51,13 +52,14 @@
     margin: 0;
     padding: 0;
     width: auto;
-    max-width: calc(100% - 16px - 1.8em);
+    max-width: calc(100% - 20px);
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 1.2em;
     line-height: 1.2em;
+    vertical-align: top;
 }
 
 .k-dialog .k-content
@@ -72,16 +74,12 @@
     padding: 2.4em;
 }
 
-.k-dialog .k-dialog-buttongroup
-{
-    margin: 0;
-    padding: 0;
-}
-
 .k-dialog {
     overflow: hidden;
 
     .k-dialog-buttongroup {
+        margin: 0;
+        padding: 0;
         width: 100%;
         box-sizing: border-box;
 
@@ -107,7 +105,7 @@
         &.k-dialog-button-layout-normal {
             padding: 1em;
             justify-content: flex-end;
-            flex-wrap: wrap;
+
             .k-button {
                 margin-left: 0.5em;
                 &:first-child {
@@ -119,7 +117,8 @@
 }
 
 .k-dialog .k-dialog-titlebar .k-dialog-actions {
-    top: .6em;
+    top: 50%;
+    margin-top: -11px;
     right: .8em;
     padding: 0;
 }
@@ -132,8 +131,9 @@
 
 .k-dialog.k-dialog-titleless a.k-dialog-action.k-dialog-close
 {
+    position: absolute;
     right: .5em;
-    top: 1em;
+    top: .5em;
 }
 
 .k-dialog.k-alert .k-dialog-titlebar,

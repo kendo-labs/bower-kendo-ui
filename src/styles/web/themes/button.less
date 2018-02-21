@@ -61,13 +61,6 @@
         }
     }
 
-    // Focused state
-    &:focus,
-    &.k-state-focused {
-        border-color: @button-focused-border-color;
-        .box-shadow(@button-focused-shadow);
-    }
-
     // Focus active
     &:focus:active {
         .box-shadow(@button-focused-active-shadow);
@@ -90,9 +83,16 @@
         box-shadow: none;
     }
 
-}
-.k-split-button {
-    .border-radius();
+    // Focused state
+    &:focus,
+    &:focus:hover,
+    &.k-state-focused,
+    &.k-state-focused.k-state-disabled,
+    .k-state-disabled &.k-state-focused {
+        border-color: @button-focused-border-color;
+        .box-shadow(@button-focused-shadow);
+    }
+
 }
 
 
@@ -113,13 +113,6 @@
         background-color: @primary-hover-background-color;
         .composite-background(@primary-hover-gradient);
         .box-shadow(@primary-hover-shadow);
-    }
-
-    // Focused state
-    &:focus,
-    &.k-state-focused {
-        border-color: @primary-focused-border-color;
-        .box-shadow(@primary-focused-shadow);
     }
 
     // Pressed
@@ -154,6 +147,13 @@
         box-shadow: none;
     }
 
+    // Focused state
+    &:focus,
+    &.k-state-focused {
+        border-color: @primary-focused-border-color;
+        .box-shadow(@primary-focused-shadow);
+    }
+
 }
 
 
@@ -161,6 +161,7 @@
 
 // Button group
 .k-button-group {
+    .border-radius();
 
     // Border-radius
     .k-button {
@@ -178,38 +179,6 @@
     .k-group-start.k-group-end,
     .k-button:first-child:last-child {
         .border-radius();
-    }
-
-    .k-button {
-
-        // Disabled state
-        &[disabled],
-        .k-state-disabled &,
-        &.k-state-disabled {
-            color: @disabled-text-color;
-            border-color: @disabled-border-color;
-            background-color: @disabled-background-color;
-            .composite-background(@disabled-gradient);
-        }
-
-        // Active state
-        &.k-state-active {
-            color: @button-active-text-color;
-            background-color: @button-active-background;
-            border-color: @button-active-border-color;
-            box-shadow: none;
-            .composite-background(@button-active-gradient);
-            .box-shadow(@button-active-shadow);
-            .box-shadow(none);
-        }
-
-
-        // Focused state
-        &:focus,
-        &.k-state-focused {
-            border-color: @button-focused-border-color;
-            .box-shadow(@button-focused-shadow);
-        }
     }
 
 }
@@ -230,4 +199,53 @@
     .k-button:first-child:last-child {
         .border-radius();
     }
+}
+
+// Split button
+.k-split-button {
+    .border-radius();
+
+    // Expanded state
+    &.k-state-border-down > .k-button,
+    &.k-state-border-up > .k-button {
+        color: @button-hover-text-color;
+        background-color: @button-hover-background-color;
+        border-color: @button-hover-border-color;
+        .composite-background(@button-hover-gradient);
+        .box-shadow(none);
+    }
+
+    // Focus state
+    &:focus {
+        border-color: @button-focused-border-color;
+        outline:none;
+        .box-shadow(@button-focused-shadow);
+
+        & > .k-button {
+            background: transparent;
+            border-color: @button-focused-border-color;
+        }
+
+        &:not(.k-state-disabled) > .k-state-active,
+        &:not(.k-state-disabled) > .k-button:hover {
+            color: @button-hover-text-color;
+            background-color: @button-hover-background-color;
+            border-color: @button-focused-border-color;
+            .composite-background(@button-hover-gradient);
+            .box-shadow(none);
+        }
+    }
+
+    // Disabled state - ensure the disabled background when button is focused
+    &.k-state-disabled {
+        color: @disabled-text-color;
+        background: @disabled-background-color;
+        .composite-background(@disabled-gradient);
+    }
+}
+
+// Edit buttons
+.k-edit-buttons {
+    border-color: @widget-border-color;
+    background: @header-background-color;
 }

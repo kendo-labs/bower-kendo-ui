@@ -147,12 +147,6 @@
   border-color: #7b889f;
   background-color: #1b8dd6;
 }
-.k-button:focus,
-.k-button.k-state-focused {
-  border-color: #ceced2;
-  -webkit-box-shadow: inset 0 0 3px 1px #bebec3;
-          box-shadow: inset 0 0 3px 1px #bebec3;
-}
 .k-button:focus:active {
   -webkit-box-shadow: inset 0 0 3px 1px #14699f;
           box-shadow: inset 0 0 3px 1px #14699f;
@@ -176,8 +170,14 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-split-button {
-  border-radius: 4px;
+.k-button:focus,
+.k-button:focus:hover,
+.k-button.k-state-focused,
+.k-button.k-state-focused.k-state-disabled,
+.k-state-disabled .k-button.k-state-focused {
+  border-color: #ceced2;
+  -webkit-box-shadow: inset 0 0 3px 1px #bebec3;
+          box-shadow: inset 0 0 3px 1px #bebec3;
 }
 .k-primary {
   color: #ffffff;
@@ -197,12 +197,6 @@
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.3)), to(rgba(255,255,255,0)));
   background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) 100%);
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) 100%);
-}
-.k-primary:focus,
-.k-primary.k-state-focused {
-  border-color: #177bba;
-  -webkit-box-shadow: 0 0 3px 0 #1984c8;
-          box-shadow: 0 0 3px 0 #1984c8;
 }
 .k-primary:active,
 .k-primary.k-state-active {
@@ -238,6 +232,15 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-primary:focus,
+.k-primary.k-state-focused {
+  border-color: #177bba;
+  -webkit-box-shadow: 0 0 3px 0 #1984c8;
+          box-shadow: 0 0 3px 0 #1984c8;
+}
+.k-button-group {
+  border-radius: 4px;
+}
 .k-button-group .k-button {
   border-radius: 0;
 }
@@ -255,34 +258,6 @@
 .k-button-group .k-button:first-child:last-child {
   border-radius: 4px;
 }
-.k-button-group .k-button[disabled],
-.k-state-disabled .k-button-group .k-button,
-.k-button-group .k-button.k-state-disabled {
-  color: #cbcbcf;
-  border-color: #ceced2;
-  background-color: #f3f3f4;
-  background-image: url('textures/highlight.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,0)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
-}
-.k-button-group .k-button.k-state-active {
-  color: #fff;
-  background-color: #1984c8;
-  border-color: #1a87cd;
-  background-image: url('textures/highlight.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0)), to(rgba(255,255,255,.2)));
-  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 100%);
-  background-image: none, linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,.2) 100%);
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-button-group .k-button:focus,
-.k-button-group .k-button.k-state-focused {
-  border-color: #ceced2;
-  -webkit-box-shadow: inset 0 0 3px 1px #bebec3;
-          box-shadow: inset 0 0 3px 1px #bebec3;
-}
 .k-rtl .k-button-group .k-button {
   border-radius: 0;
 }
@@ -299,6 +274,55 @@
 .k-rtl .k-button-group .k-group-start.k-group-end,
 .k-rtl .k-button-group .k-button:first-child:last-child {
   border-radius: 4px;
+}
+.k-split-button {
+  border-radius: 4px;
+}
+.k-split-button.k-state-border-down > .k-button,
+.k-split-button.k-state-border-up > .k-button {
+  color: #263248;
+  background-color: #b6bdca;
+  border-color: #bebec3;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.3)), to(rgba(255,255,255,0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) 100%);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button:focus {
+  border-color: #ceced2;
+  outline: none;
+  -webkit-box-shadow: inset 0 0 3px 1px #bebec3;
+          box-shadow: inset 0 0 3px 1px #bebec3;
+}
+.k-split-button:focus > .k-button {
+  background: transparent;
+  border-color: #ceced2;
+}
+.k-split-button:focus:not(.k-state-disabled) > .k-state-active,
+.k-split-button:focus:not(.k-state-disabled) > .k-button:hover {
+  color: #263248;
+  background-color: #b6bdca;
+  border-color: #ceced2;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.3)), to(rgba(255,255,255,0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) 100%);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button.k-state-disabled {
+  color: #cbcbcf;
+  background: #f3f3f4;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.45)), to(rgba(255,255,255,0)));
+  background-image: none, -webkit-linear-gradient(top, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 100%);
+}
+.k-edit-buttons {
+  border-color: #dedee0;
+  background: #f3f3f4;
 }
 .k-in,
 .k-item,
@@ -1260,7 +1284,6 @@ div.k-filebrowser-dropzone em {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3);
 }
-/* Selection */
 .k-editor-inline ::-moz-selection {
   background-color: #1a87cd;
   text-shadow: none;
@@ -1275,6 +1298,10 @@ div.k-filebrowser-dropzone em {
   background-color: #1a87cd;
   text-shadow: none;
   color: #fff;
+}
+.k-editor-inline:hover,
+.k-editor-inline.k-state-active {
+  border-color: #dedee0;
 }
 .k-notification {
   background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.25)), to(rgba(255, 255, 255, 0)));
@@ -1810,9 +1837,20 @@ textarea.k-textbox,
 .k-overflow-container .k-overflow-group {
   border-color: #ceced2;
 }
+.k-toolbar .k-button.k-state-disabled:focus {
+  border-color: #ceced2;
+  -webkit-box-shadow: inset 0 0 3px 1px #bebec3;
+          box-shadow: inset 0 0 3px 1px #bebec3;
+}
+.k-overflow-container .k-button-group .k-button {
+  border-radius: 4px;
+}
 .k-overflow-container .k-overflow-group {
   -webkit-box-shadow: inset 0 1px 0 #ffffff, 0 1px 0 #ffffff;
           box-shadow: inset 0 1px 0 #ffffff, 0 1px 0 #ffffff;
+}
+.k-overflow-container .k-separator {
+  border-color: #ceced2;
 }
 .k-toolbar-first-visible.k-overflow-group,
 .k-overflow-container .k-overflow-group + .k-overflow-group {
@@ -1822,11 +1860,6 @@ textarea.k-textbox,
 .k-toolbar-last-visible.k-overflow-group {
   -webkit-box-shadow: inset 0 1px 0 #ffffff;
           box-shadow: inset 0 1px 0 #ffffff;
-}
-.k-toolbar .k-button.k-state-disabled:focus {
-  border-color: #ceced2;
-  -webkit-box-shadow: inset 0 0 3px 1px #bebec3;
-          box-shadow: inset 0 0 3px 1px #bebec3;
 }
 .k-column-menu .k-separator {
   border-color: #ceced2;
@@ -1875,17 +1908,6 @@ textarea.k-textbox,
 }
 .k-scheduler-table .k-state-hover .k-icon {
   background-color: transparent;
-}
-.k-split-button:focus {
-  outline: none;
-}
-.k-split-button:focus {
-  -webkit-box-shadow: inset 0 0 4px 2px #bebec3;
-          box-shadow: inset 0 0 4px 2px #bebec3;
-}
-.k-split-button:focus > .k-button {
-  background: transparent;
-  border-color: #ceced2;
 }
 .k-editor .k-tool:focus {
   outline: 0;
@@ -2413,6 +2435,7 @@ textarea.k-textbox,
 }
 .k-action-window .k-action-buttons {
   border-color: #dedee0;
+  background: #f3f3f4;
 }
 .k-spreadsheet-sample {
   color: #9ea6b3;
@@ -2420,7 +2443,6 @@ textarea.k-textbox,
 .k-state-selected .k-spreadsheet-sample {
   color: inherit;
 }
-.k-spreadsheet-window .k-list-wrapper,
 .k-spreadsheet-window .k-list {
   border-color: #dedee0;
   border-radius: 4px;
@@ -2552,6 +2574,10 @@ textarea.k-textbox,
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
   padding: 12px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  border-top: solid 1px #dedee0;
+  background: #f3f3f4;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
   border-radius: 4px;

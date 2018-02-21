@@ -181,7 +181,9 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "isnull": "Je null",
     "isnotnull": "Nie je null",
     "isempty": "Je prázdne",
-    "isnotempty": "Nie je prázdne"
+    "isnotempty": "Nie je prázdne",
+    "isnullorempty": "Nemá hodnotu",
+    "isnotnullorempty": "Má hodnotu"
   },
   "number": {
     "eq": "Rovná sa",
@@ -246,7 +248,9 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
       "isnull": "Je null",
       "isnotnull": "Nie je null",
       "isempty": "Je prázdne",
-      "isnotempty": "Nie je prázdne"
+      "isnotempty": "Nie je prázdne",
+      "isnullorempty": "Nemá hodnotu",
+      "isnotnullorempty": "Má hodnotu"
   },
   "number": {
       "eq": "Rovná sa",

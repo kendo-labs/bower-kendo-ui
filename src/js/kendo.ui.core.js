@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.1.131'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.1.221'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -5664,6 +5664,11 @@
                                 that.dirtyFields[field] = false;
                             }
                         }
+                    } else {
+                        that.trigger('equalSet', {
+                            field: field,
+                            value: value
+                        });
                     }
                 }
             },
@@ -5970,6 +5975,12 @@
                 },
                 isnotnull: function (a) {
                     return '(' + a + ' != null)';
+                },
+                isnullorempty: function (a) {
+                    return '(' + a + ' === null) || (' + a + ' === \'\')';
+                },
+                isnotnullorempty: function (a) {
+                    return '(' + a + ' !== null) && (' + a + ' !== \'\')';
                 }
             };
         }();
@@ -14722,7 +14733,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), MAX_SAFE_INTEGER = 9007199254740991, iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), MAX_VALUE = Number.MAX_VALUE, iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
         function button(template, idx, text, numeric, title) {
             return template({
                 idx: idx,
@@ -14933,7 +14944,7 @@
                 }
                 if (options.pageSizes) {
                     var hasAll = that.element.find('.k-pager-sizes option[value=\'all\']').length > 0;
-                    var selectAll = hasAll && (pageSize === this.dataSource.total() || pageSize == MAX_SAFE_INTEGER);
+                    var selectAll = hasAll && (pageSize === this.dataSource.total() || pageSize == MAX_VALUE);
                     var text = pageSize;
                     if (selectAll) {
                         pageSize = 'all';
@@ -14963,7 +14974,9 @@
                 if (!isNaN(pageSize)) {
                     dataSource.pageSize(pageSize);
                 } else if ((value + '').toLowerCase() == 'all') {
-                    dataSource.pageSize(dataSource.total() ? dataSource.total() : MAX_SAFE_INTEGER);
+                    dataSource._pageSize = undefined;
+                    dataSource._take = undefined;
+                    dataSource.fetch();
                 }
             },
             _toggleActive: function () {
@@ -17366,9 +17379,10 @@
             },
             _navigatable: function () {
                 var that = this;
-                that.element.attr('tabindex', 0).focus(function () {
+                that.element.attr('tabindex', 0).on('focusin', function (ev) {
+                    var target = $(ev.target);
                     var element = $(this).find(':kendoFocusable:first');
-                    if (element.length === 0) {
+                    if (!target.is('.' + TOOLBAR) || element.length === 0) {
                         return;
                     }
                     if (element.is('.' + OVERFLOW_ANCHOR)) {
@@ -21620,7 +21634,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, parse = kendo.parseDate, keys = kendo.keys, template = kendo.template, activeElement = kendo._activeElement, DIV = '<div />', SPAN = '<span />', ns = '.kendoDatePicker', CLICK = 'click' + ns, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', HOVER = 'k-state-hover', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, ID = 'id', MIN = 'min', MAX = 'max', MONTH = 'month', ARIA_DISABLED = 'aria-disabled', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', calendar = kendo.calendar, isInRange = calendar.isInRange, restrictValue = calendar.restrictValue, isEqualDatePart = calendar.isEqualDatePart, extend = $.extend, proxy = $.proxy, DATE = Date;
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, parse = kendo.parseDate, keys = kendo.keys, support = kendo.support, template = kendo.template, activeElement = kendo._activeElement, DIV = '<div />', SPAN = '<span />', ns = '.kendoDatePicker', CLICK = 'click' + ns, UP = support.mouseAndTouchPresent ? kendo.applyEventMap('up', ns.slice(1)) : CLICK, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', HOVER = 'k-state-hover', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, ID = 'id', MIN = 'min', MAX = 'max', MONTH = 'month', ARIA_DISABLED = 'aria-disabled', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', calendar = kendo.calendar, isInRange = calendar.isInRange, restrictValue = calendar.restrictValue, isEqualDatePart = calendar.isEqualDatePart, extend = $.extend, proxy = $.proxy, DATE = Date;
         function normalize(options) {
             var parseFormats = options.parseFormats, format = options.format;
             calendar.normalize(options);
@@ -21905,7 +21919,7 @@
                     element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     });
-                    icon.on(CLICK, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);
+                    icon.on(UP, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
@@ -21968,10 +21982,14 @@
                 }
                 that._inputWrapper.removeClass(FOCUSED);
             },
-            _click: function () {
-                var that = this, element = that.element;
+            _click: function (e) {
+                var that = this;
                 that.dateView.toggle();
-                if (!kendo.support.touch && element[0] !== activeElement()) {
+                that._focusElement(e.type);
+            },
+            _focusElement: function (eventType) {
+                var element = this.element;
+                if ((!support.touch || support.mouseAndTouchPresent && !(eventType || '').match(/touch/i)) && element[0] !== activeElement()) {
                     element.focus();
                 }
             },
@@ -25225,7 +25243,7 @@
                 if (!that.listView.bound() && state !== STATE_FILTER || state === STATE_ACCEPT) {
                     that._open = true;
                     that._state = STATE_REBIND;
-                    if (that.options.minLength !== 1 && !that.value() || isFiltered && that.selectedIndex === -1) {
+                    if (that.options.minLength !== 1 && !isFiltered || isFiltered && that.value() && that.selectedIndex === -1) {
                         that.refresh();
                         that._openPopup();
                         that.listView.bound(false);
@@ -29552,7 +29570,6 @@
                 options = that.options;
                 element = that.element.on('focusout' + ns, proxy(that._focusout, that)).attr('role', 'spinbutton');
                 options.placeholder = options.placeholder || element.attr('placeholder');
-                that._initialOptions = extend({}, options);
                 min = that.min(element.attr('min'));
                 max = that.max(element.attr('max'));
                 step = that._parse(element.attr('step'));
@@ -29565,6 +29582,7 @@
                 if (!isStep && step !== NULL) {
                     options.step = step;
                 }
+                that._initialOptions = extend({}, options);
                 that._reset();
                 that._wrapper();
                 that._arrows();
@@ -29655,6 +29673,22 @@
                     disable: !(enable = enable === undefined ? true : enable)
                 });
             },
+            setOptions: function (options) {
+                var that = this;
+                Widget.fn.setOptions.call(that, options);
+                that._arrowsWrap.toggle(that.options.spinners);
+                that._inputWrapper.toggleClass('k-expand-padding', !that.options.spinners);
+                that._text.prop('placeholder', that.options.placeholder);
+                that._placeholder(that.options.placeholder);
+                that.element.attr({
+                    'aria-valuemin': that.options.min !== NULL ? that.options.min * that.options.factor : that.options.min,
+                    'aria-valuemax': that.options.max !== NULL ? that.options.max * that.options.factor : that.options.max
+                });
+                that.options.format = extractFormat(that.options.format);
+                if (options.value !== undefined) {
+                    that.value(options.value);
+                }
+            },
             destroy: function () {
                 var that = this;
                 that.element.add(that._text).add(that._upArrow).add(that._downArrow).add(that._inputWrapper).off(ns);
@@ -29710,7 +29744,7 @@
                 arrows = element.siblings('.' + CLASS_ICON);
                 if (!arrows[0]) {
                     arrows = $(buttonHtml('increase', options.upArrowText) + buttonHtml('decrease', options.downArrowText)).insertAfter(element);
-                    arrows.wrapAll('<span class="k-select"/>');
+                    that._arrowsWrap = arrows.wrapAll('<span class="k-select"/>').parent();
                 }
                 if (!spinners) {
                     arrows.parent().toggle(spinners);
@@ -30070,6 +30104,7 @@
     };
     (function ($, undefined) {
         var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, extend = $.extend, oldIE = kendo.support.browser.msie && kendo.support.browser.version < 9, isFunction = kendo.isFunction, isPlainObject = $.isPlainObject, inArray = $.inArray, nameSpecialCharRegExp = /("|\%|'|\[|\]|\$|\.|\,|\:|\;|\+|\*|\&|\!|\#|\(|\)|<|>|\=|\?|\@|\^|\{|\}|\~|\/|\||`)/g, ERRORTEMPLATE = '<div class="k-widget k-tooltip k-tooltip-validation" style="margin:0.5em"><span class="k-icon k-i-warning"> </span>' + '#=message#<div class="k-callout k-callout-n"></div></div>', CHANGE = 'change';
+        var EQUAL_SET = 'equalSet';
         var specialRules = [
             'url',
             'email',
@@ -30228,6 +30263,7 @@
                 });
                 Widget.fn.destroy.call(that);
                 that.options.model.unbind('set', that._validateProxy);
+                that.options.model.unbind(EQUAL_SET, that._validateProxy);
                 kendo.unbind(that.element);
                 if (that.validatable) {
                     that.validatable.destroy();
@@ -30274,6 +30310,8 @@
                 kendo.bind(container, that.options.model);
                 that.options.model.unbind('set', that._validateProxy);
                 that.options.model.bind('set', that._validateProxy);
+                that.options.model.unbind(EQUAL_SET, that._validateProxy);
+                that.options.model.bind(EQUAL_SET, that._validateProxy);
                 that.validatable = new kendo.ui.Validator(container, {
                     validateOnBlur: false,
                     errorTemplate: that.options.errorTemplate || undefined,
@@ -37866,7 +37904,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, TimeView = kendo.TimeView, parse = kendo.parseDate, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, calendar = kendo.calendar, isInRange = calendar.isInRange, restrictValue = calendar.restrictValue, isEqualDatePart = calendar.isEqualDatePart, getMilliseconds = TimeView.getMilliseconds, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoDateTimePicker', CLICK = 'click' + ns, DISABLED = 'disabled', READONLY = 'readonly', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', STATEDISABLED = 'k-state-disabled', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MONTH = 'month', SPAN = '<span/>', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_OWNS = 'aria-owns', ARIA_DISABLED = 'aria-disabled', DATE = Date, MIN = new DATE(1800, 0, 1), MAX = new DATE(2099, 11, 31), dateViewParams = { view: 'date' }, timeViewParams = { view: 'time' }, extend = $.extend;
+        var kendo = window.kendo, TimeView = kendo.TimeView, parse = kendo.parseDate, support = kendo.support, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, calendar = kendo.calendar, isInRange = calendar.isInRange, restrictValue = calendar.restrictValue, isEqualDatePart = calendar.isEqualDatePart, getMilliseconds = TimeView.getMilliseconds, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoDateTimePicker', CLICK = 'click' + ns, UP = support.mouseAndTouchPresent ? kendo.applyEventMap('up', ns.slice(1)) : CLICK, DISABLED = 'disabled', READONLY = 'readonly', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', STATEDISABLED = 'k-state-disabled', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MONTH = 'month', SPAN = '<span/>', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_OWNS = 'aria-owns', ARIA_DISABLED = 'aria-disabled', DATE = Date, MIN = new DATE(1800, 0, 1), MAX = new DATE(2099, 11, 31), dateViewParams = { view: 'date' }, timeViewParams = { view: 'time' }, extend = $.extend;
         var DateTimePicker = Widget.extend({
             init: function (element, options) {
                 var that = this, disabled;
@@ -37981,21 +38019,23 @@
                         that.close('date');
                         that.close('time');
                     });
-                    dateIcon.on(MOUSEDOWN, preventDefault).on(CLICK, function () {
+                    dateIcon.on(MOUSEDOWN, preventDefault).on(UP, function (e) {
                         that.toggle('date');
-                        if (!kendo.support.touch && element[0] !== activeElement()) {
-                            element.focus();
-                        }
+                        that._focusElement(e.type);
                     });
-                    timeIcon.on(MOUSEDOWN, preventDefault).on(CLICK, function () {
+                    timeIcon.on(MOUSEDOWN, preventDefault).on(UP, function (e) {
                         that.toggle('time');
-                        if (!kendo.support.touch && element[0] !== activeElement()) {
-                            element.focus();
-                        }
+                        that._focusElement(e.type);
                     });
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
+                }
+            },
+            _focusElement: function (eventType) {
+                var element = this.element;
+                if ((!support.touch || support.mouseAndTouchPresent && !(eventType || '').match(/touch/i)) && element[0] !== activeElement()) {
+                    element.focus();
                 }
             },
             readonly: function (readonly) {
@@ -39000,14 +39040,14 @@
                     if (width.toString().indexOf('%') > 0) {
                         wrapper.width(width);
                     } else {
-                        wrapper.width(constrain(width, options.minWidth, options.maxWidth));
+                        wrapper.outerWidth(constrain(width, options.minWidth, options.maxWidth));
                     }
                 }
                 if (height) {
                     if (height.toString().indexOf('%') > 0) {
                         wrapper.height(height);
                     } else {
-                        wrapper.height(constrain(height, options.minHeight, options.maxHeight));
+                        wrapper.outerHeight(constrain(height, options.minHeight, options.maxHeight));
                     }
                     this._setElementHeight();
                 }
@@ -39031,9 +39071,10 @@
             },
             _setElementHeight: function () {
                 var that = this, element = that.element, height = that.options.height, paddingBox = that._paddingBox(element), elementHeight = parseFloat(height, 10) - that._uiHeight() - paddingBox.vertical;
-                if (elementHeight > 0) {
-                    that.element.css({ height: ceil(elementHeight) + 'px' });
+                if (elementHeight < 0) {
+                    elementHeight = 0;
                 }
+                that.element.css({ height: ceil(elementHeight) + 'px' });
             },
             _uiHeight: function () {
                 var that = this, wrapper = that.wrapper, actionbar = wrapper.children(KBUTTONGROUP), actionbarHeight = actionbar[0] && actionbar[0].offsetHeight || 0, titlebar = wrapper.children(KDIALOGTITLEBAR), titlebarHeight = titlebar[0] && titlebar[0].offsetHeight || 0;

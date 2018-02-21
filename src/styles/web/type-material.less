@@ -44,8 +44,9 @@
 @button-active-border-color: contrast(@background, lighten(@background, 23%), darken(@background, 14%), 0.5);
 @button-active-gradient: false;
 @button-active-shadow: 0 6px 17px 0 rgba(0, 0, 0, 0.3);
-@button-focused-border-color: contrast(@background, lighten(@background, 17%), darken(@background, 14%), 0.5);
+@button-focused-border-color: @button-hover-border-color;
 @button-focused-shadow: @button-shadow;
+@button-focused-active-color: @button-active-text-color;
 @button-focused-active-background: contrast(@background, lighten(@background, 20%), darken(@background, 18%), 0.5);
 @button-focused-active-shadow: @button-active-shadow;
 // Primary button
@@ -106,7 +107,6 @@
 @error-text-color: #b94a48;
 @error-background-color: #f2dede;
 @error-border-color: #eed3d7;
-@disabled-text-color: #999999;
 @notification-info-background-color: @info;
 @notification-info-text-color: contrast(@info, lighten(@info, 70%), darken(@info, 30%), 0.5);
 @notification-info-border-color: @info;
@@ -181,7 +181,7 @@
 @drop-down-focused-border-color: contrast(@background, lighten(@background, 17%), darken(@background, 4%), 0.5);
 @drop-down-background: contrast(@background, lighten(@background, 17%), darken(@background, 2%), 0.5);
 @drop-down-text-color: @normal-text-color;
-@secondary-border-color: #cccccc;
+@secondary-border-color: contrast(@background, lighten(@background, 10%), darken(@background, 10%), 0.5);;
 @secondary-text-color: #ffffff;
 @numeric-selected-background: #ebebeb;
 @panelbar-items-border: contrast(@background, lighten(@background, 9%), darken(@background, 10%), 0.5);
@@ -190,6 +190,7 @@
 @window-shadow-style: 1px 1px 7px 1px;
 @filter-menu-content-background: @background;
 @icon-background-color: transparent;
+@disabled-text-color: #999999;
 @disabled-background-color: contrast(@background, lighten(@background, 17%), darken(@background, 2%), 0.5);
 @disabled-border-color: contrast(@background, lighten(@background, 17%), darken(@background, 2%), 0.5);
 @disabled-gradient: none;
@@ -2105,6 +2106,7 @@ html .km-pane-wrapper .km-widget,
 //Focused state
 .k-button:focus,
 .k-button.k-state-focused {
+    color: @button-hover-text-color;
     border-color: @button-hover-background-color;
     background-color: @button-hover-background-color;
 }
@@ -2123,6 +2125,7 @@ html .km-pane-wrapper .km-widget,
 
     &:focus,
     &.k-state-focused {
+        color: @button-focused-active-color;
         border-color: @button-focused-active-background;
         background: @button-focused-active-background;
     }
@@ -2132,13 +2135,19 @@ html .km-pane-wrapper .km-widget,
 .k-state-disabled {
 
     & .k-button,
-    & .k-button:hover,
-    &.k-button,
-    &.k-button:hover {
+    &.k-button {
         color: @disabled-text-color;
         border-color: @disabled-border-color;
         background-color: @disabled-background-color;
         .composite-background(@disabled-gradient);
+        .box-shadow(none);
+    }
+
+    & .k-button:focus,
+    &.k-button:focus {
+        color: @disabled-text-color;
+        border-color: @button-hover-background-color;
+        background-color: @button-hover-background-color;
         .box-shadow(none);
     }
 }
@@ -2150,36 +2159,52 @@ html .km-pane-wrapper .km-widget,
     .k-button {
         box-shadow: none;
 
-        // Focused state
-        &:focus,
-        &.k-state-focused {
+        // Active state
+        &.k-state-active {
+            color: @button-active-text-color;
+            background-color: @button-active-background;
+            border-color: @button-active-border-color;
+            .composite-background(@button-active-gradient);
+        }
+
+        // Focus Active
+        &:focus.k-state-active,
+        &.k-state-focused.k-state-active {
+            color: @button-focused-active-color;
+            border-color: @button-focused-active-background;
+            background: @button-focused-active-background;
             box-shadow: none;
         }
 
-        // Disabled Focused state
-        .k-state-disabled&:focus,
-        &.k-state-disabled:focus,
-        .k-state-disabled&.k-state-focused,
-        &.k-state-disabled.k-state-focused {
+        // Disabled state
+        &.k-state-disabled,
+        .k-state-disabled&,
+        &.k-state-disabled.k-state-active,
+        .k-state-disabled&.k-state-active {
+            color: @disabled-text-color;
+            border-color: @disabled-background-color;
+            background-color: @disabled-background-color;
+            box-shadow: none;
+        }
+
+        // Focused state
+        &:focus,
+        &.k-state-focused {
+            color: @button-hover-text-color;
             border-color: @button-hover-background-color;
             background-color: @button-hover-background-color;
             box-shadow: none;
         }
 
-        // Disabled Active state
-        .k-state-disabled&.k-state-active,
-        &.k-state-disabled.k-state-active {
-            color: @button-active-text-color;
-            background-color: @button-active-background;
-            border-color: @button-active-border-color;
-            .composite-background(@button-active-gradient);
-
-
-            &:focus,
-            &.k-state-focused {
-                border-color: @button-focused-active-background;
-                background: @button-focused-active-background;
-            }
+        // Focus disabled state
+        &.k-state-disabled:focus,
+        .k-state-disabled&:focus,
+        &.k-state-disabled.k-state-focused,
+        .k-state-disabled&.k-state-focused {
+            color: @disabled-text-color;
+            border-color: @button-hover-background-color;
+            background-color: @button-hover-background-color;
+            box-shadow: none;
         }
     }
 }
@@ -2202,24 +2227,6 @@ html .km-pane-wrapper .km-widget,
 .k-scheduler-table .k-state-hover .k-icon
 {
     background-color: transparent;
-}
-
-.k-split-button:focus
-{
-    outline:none;
-}
-
-.k-split-button:focus {
-    background-color: @button-active-background;
-}
-
-.k-split-button:focus > .k-button {
-    background: transparent;
-    border-color: @button-active-background;
-}
-
-.k-split-button:focus > .k-button.k-split-button-arrow {
-    border-left-color: @alt-background-color;
 }
 
 
@@ -3180,7 +3187,7 @@ td.k-group-cell,
     background-color: @draghandle-background-color;
 }
 
-.k-edit-form-container .k-edit-buttons {
+.k-edit-buttons {
     background-color: @secondary-background-color;
 }
 
@@ -3226,11 +3233,36 @@ td.k-group-cell,
 }
 
 .k-split-wrapper .k-button:focus,
-.k-overflow-container .k-button:focus,
-.k-split-wrapper .k-button:focus:not(.k-state-disabled):not([disabled]),
-.k-overflow-container .k-button:focus:not(.k-state-disabled):not([disabled]) {
+.k-split-wrapper .k-button:focus:not(.k-state-disabled):not([disabled]) {
     color: @accent;
     .box-shadow(none);
+}
+
+.k-overflow-container {
+
+    .k-button.k-state-disabled,
+    .k-state-disabled > .k-button {
+        color: @disabled-text-color;
+        border-color: transparent;
+        background-color: transparent;
+    }
+
+    .k-button:focus {
+        color: @button-hover-text-color;
+        border-color: @button-hover-background-color;
+        background-color: @button-hover-background-color;
+    }
+
+    .k-button.k-state-disabled:focus,
+    .k-state-disabled > .k-button:focus {
+        color: @disabled-text-color;
+        border-color: @button-hover-background-color;
+        background-color: @button-hover-background-color;
+    }
+}
+
+.k-overflow-container .k-separator {
+    border-color: @secondary-border-color;
 }
 
 .k-filter-menu .k-button {
@@ -3724,7 +3756,7 @@ div.k-scheduler-marquee:after {
     }
 
     .k-spreadsheet-sheets-bar .k-button {
-        left: 0;
+        right: 0;
         bottom: 0;
         padding-top: .5em;
         padding-bottom: .5em;
@@ -3819,6 +3851,9 @@ div.k-scheduler-marquee:after {
             }
         }
         &.k-dialog-button-layout-normal {
+            border-top: solid 1px @widget-border-color;
+            background: @secondary-background-color;
+
             .k-button {
                 background: none;
                 border: none;
@@ -4019,38 +4054,43 @@ div.k-scheduler-marquee:after {
 
 // Toolbar
 .k-toolbar {
+    color: @button-text-color;
     border-color: @widget-border-color;
-    color: @widget-text-color;
-    background-color: @header-background-color;
+    background-color: @button-background-color;
+
+    .k-button {
+        border-radius: 0;
+    }
 
     .k-button-group,
     .k-button {
         .box-shadow(none);
     }
-    .k-button:focus:active:not(.k-state-disabled):not([disabled]),
-    .k-button:focus:not(.k-state-disabled):not([disabled]),
-    .k-button:focus:active:not(.k-state-disabled):not([disabled]),
-    .k-button:active:hover,
-    .k-button.k-state-active:hover {
-        .box-shadow(none);
-    }
 
-    .k-toggle-button {
-        &:focus {
-            border-color: contrast(@background, darken(@base, 30%), lighten(@base, 30%), 0.5);
+    .k-overflow-anchor {
+        border-color: @panelbar-items-border;
+        border-left-color: transparent;
+
+        &:hover {
+            border-color: @panelbar-items-border;
+        }
+
+        &:active,
+        &.k-state-border-down {
+            color: @button-active-text-color;
+            background-color: @button-active-background;
+            border-color: @button-active-border-color;
         }
     }
-}
 
-.k-toolbar .k-overflow-anchor.k-state-active,
-.k-toolbar .k-overflow-anchor.k-state-border-down {
-    background-color: @active-background-color;
-}
+    .k-split-button:focus {
+        box-shadow: none;
+        background: @button-hover-background-color;
 
-/* Toolbar */
-.k-toolbar {
-    background-color: @drop-down-background;
-    border-color: @panelbar-items-border;
+        .k-split-button-arrow {
+            border-left-color: contrast(@button-hover-background-color, lighten(@button-hover-border-color, 6%), darken(@button-hover-border-color, 6%), 0.5);
+        }
+    }
 }
 
 .k-mediaplayer-toolbar {

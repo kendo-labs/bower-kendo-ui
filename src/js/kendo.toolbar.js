@@ -1077,9 +1077,10 @@
             },
             _navigatable: function () {
                 var that = this;
-                that.element.attr('tabindex', 0).focus(function () {
+                that.element.attr('tabindex', 0).on('focusin', function (ev) {
+                    var target = $(ev.target);
                     var element = $(this).find(':kendoFocusable:first');
-                    if (element.length === 0) {
+                    if (!target.is('.' + TOOLBAR) || element.length === 0) {
                         return;
                     }
                     if (element.is('.' + OVERFLOW_ANCHOR)) {

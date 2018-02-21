@@ -141,12 +141,6 @@
   border-color: #8ebc00;
   background-color: #8ebc00;
 }
-.k-button:focus,
-.k-button.k-state-focused {
-  border-color: #486000;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
 .k-button:focus:active {
   -webkit-box-shadow: inset 0 0 3px 1px #445b00;
           box-shadow: inset 0 0 3px 1px #445b00;
@@ -167,8 +161,14 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-split-button {
-  border-radius: 0;
+.k-button:focus,
+.k-button:focus:hover,
+.k-button.k-state-focused,
+.k-button.k-state-focused.k-state-disabled,
+.k-state-disabled .k-button.k-state-focused {
+  border-color: #486000;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-primary {
   color: #ffffff;
@@ -188,12 +188,6 @@
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
   background-image: none, -webkit-linear-gradient(top, false);
   background-image: none, linear-gradient(to bottom, false);
-}
-.k-primary:focus,
-.k-primary.k-state-focused {
-  border-color: #0e1300;
-  -webkit-box-shadow: none;
-          box-shadow: none;
 }
 .k-primary:active,
 .k-primary.k-state-active {
@@ -229,6 +223,15 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-primary:focus,
+.k-primary.k-state-focused {
+  border-color: #0e1300;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-button-group {
+  border-radius: 0;
+}
 .k-button-group .k-button {
   border-radius: 0;
 }
@@ -246,31 +249,6 @@
 .k-button-group .k-button:first-child:last-child {
   border-radius: 0;
 }
-.k-button-group .k-button[disabled],
-.k-state-disabled .k-button-group .k-button,
-.k-button-group .k-button.k-state-disabled {
-  color: #cccccc;
-  border-color: #e6e6e6;
-  background-color: #fff;
-  background-image: none;
-}
-.k-button-group .k-button.k-state-active {
-  color: #fff;
-  background-color: #7ea700;
-  border-color: #7ea700;
-  background-image: url('textures/highlight.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
-  background-image: none, -webkit-linear-gradient(top, false);
-  background-image: none, linear-gradient(to bottom, false);
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-button-group .k-button:focus,
-.k-button-group .k-button.k-state-focused {
-  border-color: #486000;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
 .k-rtl .k-button-group .k-button {
   border-radius: 0;
 }
@@ -287,6 +265,52 @@
 .k-rtl .k-button-group .k-group-start.k-group-end,
 .k-rtl .k-button-group .k-button:first-child:last-child {
   border-radius: 0;
+}
+.k-split-button {
+  border-radius: 0;
+}
+.k-split-button.k-state-border-down > .k-button,
+.k-split-button.k-state-border-up > .k-button {
+  color: #ffffff;
+  background-color: #8ebc00;
+  border-color: #8ebc00;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
+  background-image: none, -webkit-linear-gradient(top, false);
+  background-image: none, linear-gradient(to bottom, false);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button:focus {
+  border-color: #486000;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button:focus > .k-button {
+  background: transparent;
+  border-color: #486000;
+}
+.k-split-button:focus:not(.k-state-disabled) > .k-state-active,
+.k-split-button:focus:not(.k-state-disabled) > .k-button:hover {
+  color: #ffffff;
+  background-color: #8ebc00;
+  border-color: #486000;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
+  background-image: none, -webkit-linear-gradient(top, false);
+  background-image: none, linear-gradient(to bottom, false);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button.k-state-disabled {
+  color: #cccccc;
+  background: #fff;
+  background-image: none;
+}
+.k-edit-buttons {
+  border-color: #dbdbdb;
+  background: #fff;
 }
 .k-in,
 .k-item,
@@ -866,7 +890,6 @@ td.k-state-focused.k-state-selected {
 .k-other-month.k-state-hover .k-link,
 div.k-filebrowser-dropzone em,
 .k-draghandle:hover,
-.k-split-button:focus,
 .k-listbox .k-item:hover:not(.k-state-disabled) {
   background-image: url('textures/highlight.png');
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(#8ebc00), to(#8ebc00));
@@ -1761,10 +1784,12 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: inset 0 1px 0 #ffffff;
           box-shadow: inset 0 1px 0 #ffffff;
 }
-.k-toolbar .k-button.k-state-disabled:focus {
+.k-overflow-container .k-overflow-button:focus,
+.k-overflow-container .k-overflow-button:focus:hover {
   border-color: #486000;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+}
+.k-overflow-container .k-separator {
+  border-color: #dbdbdb;
 }
 .k-column-menu .k-separator {
   border-color: #dbdbdb;
@@ -1833,13 +1858,11 @@ html .km-pane-wrapper .km-widget,
   background-color: transparent;
 }
 .k-split-button:focus {
-  outline: none;
-}
-.k-split-button:focus {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
 .k-split-button:focus > .k-button {
+  color: inherit;
   background: transparent;
   border-color: #486000;
 }
@@ -2366,6 +2389,7 @@ html .km-pane-wrapper .km-widget,
 }
 .k-action-window .k-action-buttons {
   border-color: #dbdbdb;
+  background: #fff;
 }
 .k-spreadsheet-sample {
   color: #c4c4c4;
@@ -2373,7 +2397,6 @@ html .km-pane-wrapper .km-widget,
 .k-state-selected .k-spreadsheet-sample {
   color: inherit;
 }
-.k-spreadsheet-window .k-list-wrapper,
 .k-spreadsheet-window .k-list {
   border-color: #dbdbdb;
   border-radius: 0;
@@ -2489,6 +2512,10 @@ html .km-pane-wrapper .km-widget,
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
   padding: 12px;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  border-top: solid 1px #dbdbdb;
+  background: #fff;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
   border-radius: 0;

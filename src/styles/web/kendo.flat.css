@@ -138,12 +138,6 @@
   border-color: #2eb3a6;
   background-color: #2eb3a6;
 }
-.k-button:focus,
-.k-button.k-state-focused {
-  border-color: #0c9083;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
 .k-button:focus:active {
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -164,8 +158,14 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-.k-split-button {
-  border-radius: 3px;
+.k-button:focus,
+.k-button:focus:hover,
+.k-button.k-state-focused,
+.k-button.k-state-focused.k-state-disabled,
+.k-state-disabled .k-button.k-state-focused {
+  border-color: #0c9083;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 .k-primary {
   color: #ffffff;
@@ -185,12 +185,6 @@
   background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
   background-image: none, -webkit-linear-gradient(top, false);
   background-image: none, linear-gradient(to bottom, false);
-}
-.k-primary:focus,
-.k-primary.k-state-focused {
-  border-color: #363940;
-  -webkit-box-shadow: none;
-          box-shadow: none;
 }
 .k-primary:active,
 .k-primary.k-state-active {
@@ -226,6 +220,15 @@
   -webkit-box-shadow: none;
           box-shadow: none;
 }
+.k-primary:focus,
+.k-primary.k-state-focused {
+  border-color: #363940;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-button-group {
+  border-radius: 3px;
+}
 .k-button-group .k-button {
   border-radius: 0;
 }
@@ -243,31 +246,6 @@
 .k-button-group .k-button:first-child:last-child {
   border-radius: 3px;
 }
-.k-button-group .k-button[disabled],
-.k-state-disabled .k-button-group .k-button,
-.k-button-group .k-button.k-state-disabled {
-  color: #c2c2c2;
-  border-color: #cccccc;
-  background-color: #f5f5f5;
-  background-image: none;
-}
-.k-button-group .k-button.k-state-active {
-  color: #fff;
-  background-color: #10c4b2;
-  border-color: #10c4b2;
-  background-image: url('textures/highlight.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
-  background-image: none, -webkit-linear-gradient(top, false);
-  background-image: none, linear-gradient(to bottom, false);
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
-.k-button-group .k-button:focus,
-.k-button-group .k-button.k-state-focused {
-  border-color: #0c9083;
-  -webkit-box-shadow: none;
-          box-shadow: none;
-}
 .k-rtl .k-button-group .k-button {
   border-radius: 0;
 }
@@ -284,6 +262,52 @@
 .k-rtl .k-button-group .k-group-start.k-group-end,
 .k-rtl .k-button-group .k-button:first-child:last-child {
   border-radius: 3px;
+}
+.k-split-button {
+  border-radius: 3px;
+}
+.k-split-button.k-state-border-down > .k-button,
+.k-split-button.k-state-border-up > .k-button {
+  color: #fff;
+  background-color: #2eb3a6;
+  border-color: #2eb3a6;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
+  background-image: none, -webkit-linear-gradient(top, false);
+  background-image: none, linear-gradient(to bottom, false);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button:focus {
+  border-color: #0c9083;
+  outline: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button:focus > .k-button {
+  background: transparent;
+  border-color: #0c9083;
+}
+.k-split-button:focus:not(.k-state-disabled) > .k-state-active,
+.k-split-button:focus:not(.k-state-disabled) > .k-button:hover {
+  color: #fff;
+  background-color: #2eb3a6;
+  border-color: #0c9083;
+  background-image: url('textures/highlight.png');
+  background-image: none, -webkit-gradient(linear, left top, left bottom, from(false));
+  background-image: none, -webkit-linear-gradient(top, false);
+  background-image: none, linear-gradient(to bottom, false);
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.k-split-button.k-state-disabled {
+  color: #c2c2c2;
+  background: #f5f5f5;
+  background-image: none;
+}
+.k-edit-buttons {
+  border-color: #cccccc;
+  background: #363940;
 }
 .k-in,
 .k-item,
@@ -1703,12 +1727,7 @@ html .km-pane-wrapper .km-widget,
 .k-overflow-container .k-overflow-group {
   border-color: #606572;
 }
-.k-overflow-container .k-overflow-group {
-  -webkit-box-shadow: inset 0 1px 0 #afb3bc, 0 1px 0 #afb3bc;
-          box-shadow: inset 0 1px 0 #afb3bc, 0 1px 0 #afb3bc;
-}
-.k-toolbar-first-visible.k-overflow-group,
-.k-overflow-container .k-overflow-group + .k-overflow-group {
+.k-toolbar-first-visible.k-overflow-group {
   -webkit-box-shadow: 0 1px 0 #afb3bc;
           box-shadow: 0 1px 0 #afb3bc;
 }
@@ -1785,20 +1804,18 @@ html .km-pane-wrapper .km-widget,
 .k-scheduler-table .k-state-hover .k-icon {
   background-color: transparent;
 }
-.k-split-button:focus {
-  outline: none;
-}
-.k-split-button:focus {
-  -webkit-box-shadow: 0 0 0px 1px #0c9083;
-          box-shadow: 0 0 0px 1px #0c9083;
-}
-.k-split-button:focus > .k-button {
-  border-color: transparent;
-}
-.k-toolbar .k-button.k-state-disabled:focus {
+.k-toolbar .k-button.k-state-disabled:focus,
+.k-overflow-container .k-overflow-button:focus,
+.k-overflow-container .k-overflow-button:focus:hover {
   border-color: #0c9083;
   -webkit-box-shadow: none;
           box-shadow: none;
+}
+.k-overflow-container .k-button-group .k-button {
+  border-radius: 3px;
+}
+.k-overflow-container .k-separator {
+  border-color: #606572;
 }
 .k-editor .k-tool:focus {
   outline: 0;
@@ -2414,6 +2431,7 @@ html .km-pane-wrapper .km-widget,
 }
 .k-action-window .k-action-buttons {
   border-color: #cccccc;
+  background: #363940;
 }
 .k-spreadsheet-sample {
   color: #97a0a4;
@@ -2421,7 +2439,6 @@ html .km-pane-wrapper .km-widget,
 .k-state-selected .k-spreadsheet-sample {
   color: inherit;
 }
-.k-spreadsheet-window .k-list-wrapper,
 .k-spreadsheet-window .k-list {
   border-color: #cccccc;
   border-radius: 3px;
@@ -2549,6 +2566,10 @@ html .km-pane-wrapper .km-widget,
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
   padding: 0.9em;
+}
+.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal {
+  border-top: solid 1px #cccccc;
+  background: #363940;
 }
 .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-normal .k-button {
   border-radius: 3px;
