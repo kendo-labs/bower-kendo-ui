@@ -1231,9 +1231,8 @@
             e.preventDefault();
         }
         function createDate(year, month, date) {
-            var leapYear = 1904;
-            var dateObject = new DATE(leapYear, month, date);
-            dateObject.setFullYear(year);
+            var dateObject = new DATE(year, month, date);
+            dateObject.setFullYear(year, month, date);
             return dateObject;
         }
         function getCalendarInfo(culture) {
