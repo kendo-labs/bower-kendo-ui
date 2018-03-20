@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.1.312'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.1.320'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -7561,6 +7561,9 @@
                     that._total = that.reader.total(data);
                     if (that._pageSize > that._total) {
                         that._pageSize = that._total;
+                        if (that.options.pageSize && that.options.pageSize > that._pageSize) {
+                            that._pageSize = that.options.pageSize;
+                        }
                     }
                     if (that._aggregate && options.serverAggregates) {
                         that._aggregateResult = that._readAggregates(data);
@@ -18098,7 +18101,7 @@
                     if (that._old === null || value === '') {
                         that._valueBeforeCascade = that._old = value;
                     } else {
-                        that._valueBeforeCascade = that._old = that.dataItem() ? that.dataItem()[that.options.dataValueField] : null;
+                        that._valueBeforeCascade = that._old = that.dataItem() ? that.dataItem()[that.options.dataValueField] || that.dataItem() : null;
                     }
                     that._oldIndex = index;
                     if (!that._typing) {
@@ -18535,7 +18538,7 @@
                             if (that._cascadedValue === null) {
                                 that._cascadedValue = that.value();
                             } else {
-                                that._cascadedValue = that.dataItem() ? that.dataItem()[that.options.dataValueField] : null;
+                                that._cascadedValue = that.dataItem() ? that.dataItem()[that.options.dataValueField] || that.dataItem() : null;
                             }
                         });
                     }
@@ -26047,7 +26050,9 @@
                         break;
                     }
                 }
-                this.persistTagList = false;
+                if (this._initialOpen && !this.options.autoBind) {
+                    this.persistTagList = false;
+                }
                 this._selectValue(e.added, e.removed);
             },
             _selectedItemChange: function (e) {
@@ -26209,11 +26214,11 @@
                     that._filterSource();
                     that._focusItem();
                 } else if (that._allowOpening()) {
-                    if (!that.options.autoBind && !that.options.virtual && that.options.value && !$.isPlainObject(that.options.value[0])) {
+                    if (that._initialOpen && !that.options.autoBind && !that.options.virtual && that.options.value && !$.isPlainObject(that.options.value[0])) {
                         that.value(that._initialValues);
-                        that._initialOpen = false;
                     }
                     that.popup._hovered = true;
+                    that._initialOpen = false;
                     that.popup.open();
                     that._focusItem();
                 }
@@ -26464,6 +26469,9 @@
                         that._selectRange(0, listView.items().length - 1);
                     }
                 } else if (key === keys.ENTER && visible) {
+                    if (!listView.focus()) {
+                        return;
+                    }
                     e.preventDefault();
                     if (listView.focus().hasClass(SELECTEDCLASS)) {
                         that._close();
