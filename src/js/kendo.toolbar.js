@@ -715,7 +715,9 @@
                     for (var i = 0; i < options.items.length; i++) {
                         that.add(options.items[i]);
                     }
-                    that._shrink(that.element.innerWidth());
+                    if (options.resizable) {
+                        that._shrink(that.element.innerWidth());
+                    }
                 }
                 that.userEvents = new kendo.UserEvents(document, {
                     threshold: 5,

@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.1.320'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.1.322'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -6398,6 +6398,9 @@
         Query.process = function (data, options, inPlace) {
             options = options || {};
             var query = new Query(data), group = options.group, sort = normalizeGroup(group || []).concat(normalizeSort(options.sort || [])), total, filterCallback = options.filterCallback, filter = options.filter, skip = options.skip, take = options.take;
+            if (sort && inPlace) {
+                query = query.sort(sort, undefined, undefined, inPlace);
+            }
             if (filter) {
                 query = query.filter(filter);
                 if (filterCallback) {
@@ -6405,12 +6408,8 @@
                 }
                 total = query.toArray().length;
             }
-            if (sort) {
-                if (inPlace) {
-                    query = query.sort(sort, undefined, undefined, inPlace);
-                } else {
-                    query = query.sort(sort);
-                }
+            if (sort && !inPlace) {
+                query = query.sort(sort);
                 if (group) {
                     data = query.toArray();
                 }
@@ -17020,7 +17019,9 @@
                     for (var i = 0; i < options.items.length; i++) {
                         that.add(options.items[i]);
                     }
-                    that._shrink(that.element.innerWidth());
+                    if (options.resizable) {
+                        that._shrink(that.element.innerWidth());
+                    }
                 }
                 that.userEvents = new kendo.UserEvents(document, {
                     threshold: 5,
@@ -22422,6 +22423,14 @@
                     return getter(dataItem);
                 });
             },
+            _highlightSelectedItems: function () {
+                for (var i = 0; i < this._selectedDataItems.length; i++) {
+                    var item = this._getElementByDataItem(this._selectedDataItems[i]);
+                    if (item.length) {
+                        item.addClass(SELECTED);
+                    }
+                }
+            },
             refresh: function (e) {
                 var that = this;
                 var action = e && e.action;
@@ -22446,6 +22455,7 @@
                         });
                     } else {
                         that.bound(true);
+                        that._highlightSelectedItems();
                         that._triggerListBound();
                     }
                 } else {

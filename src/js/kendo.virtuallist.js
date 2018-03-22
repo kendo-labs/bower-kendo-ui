@@ -319,6 +319,14 @@
                     return getter(dataItem);
                 });
             },
+            _highlightSelectedItems: function () {
+                for (var i = 0; i < this._selectedDataItems.length; i++) {
+                    var item = this._getElementByDataItem(this._selectedDataItems[i]);
+                    if (item.length) {
+                        item.addClass(SELECTED);
+                    }
+                }
+            },
             refresh: function (e) {
                 var that = this;
                 var action = e && e.action;
@@ -343,6 +351,7 @@
                         });
                     } else {
                         that.bound(true);
+                        that._highlightSelectedItems();
                         that._triggerListBound();
                     }
                 } else {

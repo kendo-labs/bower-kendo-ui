@@ -1344,6 +1344,9 @@
         Query.process = function (data, options, inPlace) {
             options = options || {};
             var query = new Query(data), group = options.group, sort = normalizeGroup(group || []).concat(normalizeSort(options.sort || [])), total, filterCallback = options.filterCallback, filter = options.filter, skip = options.skip, take = options.take;
+            if (sort && inPlace) {
+                query = query.sort(sort, undefined, undefined, inPlace);
+            }
             if (filter) {
                 query = query.filter(filter);
                 if (filterCallback) {
@@ -1351,12 +1354,8 @@
                 }
                 total = query.toArray().length;
             }
-            if (sort) {
-                if (inPlace) {
-                    query = query.sort(sort, undefined, undefined, inPlace);
-                } else {
-                    query = query.sort(sort);
-                }
+            if (sort && !inPlace) {
+                query = query.sort(sort);
                 if (group) {
                     data = query.toArray();
                 }
