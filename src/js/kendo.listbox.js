@@ -1302,9 +1302,9 @@
                 var toolElement = that.element.find('[data-command=\'' + toolName + '\']')[0];
                 if (toolElement && command && command.canExecute) {
                     if (command.canExecute()) {
-                        $(toolElement).removeClass(DISABLED_STATE_CLASS);
+                        $(toolElement).removeClass(DISABLED_STATE_CLASS).removeAttr(TABINDEX);
                     } else {
-                        $(toolElement).addClass(DISABLED_STATE_CLASS);
+                        $(toolElement).addClass(DISABLED_STATE_CLASS).attr(TABINDEX, '-1');
                     }
                 }
             }

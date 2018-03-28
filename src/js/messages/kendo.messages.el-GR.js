@@ -969,18 +969,6 @@
       });
   }
 
-  if (kendo.ui.TreeList) {
-    kendo.ui.TreeList.prototype.options.columnMenu =
-      $.extend(true, kendo.ui.TreeList.prototype.options.columnMenu, {
-        "messages": {
-          "columns": "Επιλέξτε στήλες",
-          "filter": "Εφαρμογή φίλτρων",
-          "sortAscending": "Ταξινόμιση (αύξ.)",
-          "sortDescending": "Ταξινόμιση (φθήν.)"
-        }
-      });
-  }
-
   /* TreeView messages */
 
   if (kendo.ui.TreeView) {
