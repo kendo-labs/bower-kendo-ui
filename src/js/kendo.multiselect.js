@@ -229,9 +229,6 @@
                         break;
                     }
                 }
-                if (this._initialOpen && !this.options.autoBind) {
-                    this.persistTagList = false;
-                }
                 this._selectValue(e.added, e.removed);
             },
             _selectedItemChange: function (e) {
@@ -389,7 +386,7 @@
                     that._open = true;
                     that._state = REBIND;
                     that.listView.skipUpdate(true);
-                    that.persistTagList = true;
+                    that.persistTagList = that._initialOpen && !that.listView.bound() ? false : true;
                     that._filterSource();
                     that._focusItem();
                 } else if (that._allowOpening()) {

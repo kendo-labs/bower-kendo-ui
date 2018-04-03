@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.1.328'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.1.403'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -18755,7 +18755,7 @@
             _cascadeSelect: function (parent, valueBeforeCascade) {
                 var that = this;
                 var dataItem = parent.dataItem();
-                var filterValue = dataItem ? dataItem[that.options.cascadeFromField] || parent._value(dataItem) : null;
+                var filterValue = dataItem ? parent._value(dataItem) : null;
                 var valueField = that.options.cascadeFromField || parent.options.dataValueField;
                 var expressions;
                 that._valueBeforeCascade = valueBeforeCascade !== undefined ? valueBeforeCascade : that.value();
@@ -22666,13 +22666,20 @@
                 var that = this;
                 var take = that.itemCount;
                 var skip = that._getSkip(index, take);
+                var view = this._getRange(skip, take);
                 if (!that._getRange(skip, take).length) {
                     return null;
                 }
-                that.mute(function () {
-                    that.dataSource.range(skip, take);
-                });
-                return that._findDataItem(that.dataSource.view(), [index - skip]);
+                if (that.options.type === 'group') {
+                    kendo.ui.progress($(that.wrapper), true);
+                    that.mute(function () {
+                        that.dataSource.range(skip, take, function () {
+                            kendo.ui.progress($(that.wrapper), false);
+                        });
+                        view = that.dataSource.view();
+                    });
+                }
+                return that._findDataItem(view, [index - skip]);
             },
             selectedDataItems: function () {
                 return this._selectedDataItems.slice();
@@ -23322,7 +23329,9 @@
                 for (; idx < indices.length; idx++) {
                     position = -1;
                     index = indices[idx];
-                    value = this._valueGetter(this.dataItemByIndex(index));
+                    if (this.dataItemByIndex(index)) {
+                        value = this._valueGetter(this.dataItemByIndex(index));
+                    }
                     for (j = 0; j < values.length; j++) {
                         if (value == values[j]) {
                             position = j;
@@ -25437,7 +25446,11 @@
                 }
                 if (idx === -1 && !dataItem) {
                     if (this.options.syncValueAndText) {
-                        text = this._accessor();
+                        if (this.options.dataTextField === this.options.dataValueField) {
+                            text = this._accessor();
+                        } else {
+                            text = this.input[0].value;
+                        }
                         value = text;
                     } else {
                         text = this.text();
@@ -26060,9 +26073,6 @@
                         break;
                     }
                 }
-                if (this._initialOpen && !this.options.autoBind) {
-                    this.persistTagList = false;
-                }
                 this._selectValue(e.added, e.removed);
             },
             _selectedItemChange: function (e) {
@@ -26220,7 +26230,7 @@
                     that._open = true;
                     that._state = REBIND;
                     that.listView.skipUpdate(true);
-                    that.persistTagList = true;
+                    that.persistTagList = that._initialOpen && !that.listView.bound() ? false : true;
                     that._filterSource();
                     that._focusItem();
                 } else if (that._allowOpening()) {
