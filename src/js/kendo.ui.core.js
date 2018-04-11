@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.1.403'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.1.411'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -7106,6 +7106,8 @@
                 return model;
             },
             pushInsert: function (index, items) {
+                var that = this;
+                var rangeSpan = that._getCurrentRangeSpan();
                 if (!items) {
                     items = index;
                     index = 0;
@@ -7126,6 +7128,9 @@
                             pristine = this._wrapInEmptyGroup(pristine);
                         }
                         this._pristineData.push(pristine);
+                        if (rangeSpan && rangeSpan.length) {
+                            $(rangeSpan).last()[0].pristineData.push(pristine);
+                        }
                         index++;
                     }
                 } finally {
@@ -7379,7 +7384,15 @@
                 return read.call(this.reader, data);
             },
             _eachPristineItem: function (callback) {
-                this._eachItem(this._pristineData, callback);
+                var that = this;
+                var options = that.options;
+                var rangeSpan = that._getCurrentRangeSpan();
+                that._eachItem(that._pristineData, callback);
+                if (options.serverPaging && options.useRanges) {
+                    each(rangeSpan, function (i, range) {
+                        that._eachItem(range.pristineData, callback);
+                    });
+                }
             },
             _eachItem: function (data, callback) {
                 if (data && data.length) {
@@ -7667,9 +7680,13 @@
                     start: start,
                     end: end,
                     data: data,
-                    timestamp: new Date().getTime()
+                    pristineData: data.toJSON(),
+                    timestamp: that._timeStamp()
                 });
-                that._ranges.sort(function (x, y) {
+                that._sortRanges();
+            },
+            _sortRanges: function () {
+                this._ranges.sort(function (x, y) {
                     return x.start - y.start;
                 });
             },
@@ -8264,18 +8281,17 @@
                             if (that._ranges[idx].start === skip) {
                                 found = true;
                                 range = that._ranges[idx];
+                                range.pristineData = temp;
+                                range.data = that._observe(temp);
+                                range.end = range.start + that._flatData(range.data, true).length;
+                                that._sortRanges();
                                 break;
                             }
                         }
                         if (!found) {
-                            that._ranges.push(range);
+                            that._addRange(that._observe(temp), skip);
                         }
                     }
-                    range.data = that._observe(temp);
-                    range.end = range.start + that._flatData(range.data, true).length;
-                    that._ranges.sort(function (x, y) {
-                        return x.start - y.start;
-                    });
                     that._total = that.reader.total(data);
                     if (force || (timestamp >= that._currentRequestTimeStamp || !that._skipRequestsInProgress)) {
                         if (callback && temp.length) {
@@ -8349,6 +8365,23 @@
                     }
                 }
                 return false;
+            },
+            _getCurrentRangeSpan: function () {
+                var that = this;
+                var ranges = that._ranges;
+                var start = that.currentRangeStart();
+                var end = start + (that.take() || 0);
+                var rangeSpan = [];
+                var range;
+                var idx;
+                var length = ranges.length;
+                for (idx = 0; idx < length; idx++) {
+                    range = ranges[idx];
+                    if (range.start <= start && range.end >= start || range.start >= start && range.start <= end) {
+                        rangeSpan.push(range);
+                    }
+                }
+                return rangeSpan;
             },
             _removeModelFromRanges: function (model) {
                 var that = this;
@@ -10843,7 +10876,7 @@
             run: function (effects) {
                 var that = this, effect, idx, jdx, length = effects.length, element = that.element, options = that.options, deferred = $.Deferred(), start = {}, end = {}, target, children, childrenLength;
                 that.effects = effects;
-                deferred.then($.proxy(that, 'complete'));
+                deferred.done($.proxy(that, 'complete'));
                 element.data('animating', true);
                 for (idx = 0; idx < length; idx++) {
                     effect = effects[idx];
@@ -11090,7 +11123,7 @@
                     return this.compositeRun();
                 }
                 var that = this, element = that.element, idx = 0, restore = that.restore, length = restore.length, value, deferred = $.Deferred(), start = {}, end = {}, target, children = that.children(), childrenLength = children.length;
-                deferred.then($.proxy(that, '_complete'));
+                deferred.done($.proxy(that, '_complete'));
                 element.data('animating', true);
                 for (idx = 0; idx < length; idx++) {
                     value = restore[idx];
@@ -21721,8 +21754,14 @@
             },
             open: function () {
                 var that = this;
+                var popupHovered;
                 that._calendar();
+                popupHovered = that.popup._hovered;
+                that.popup._hovered = true;
                 that.popup.open();
+                setTimeout(function () {
+                    that.popup._hovered = popupHovered;
+                }, 1);
             },
             close: function () {
                 this.popup.close();
@@ -37366,10 +37405,16 @@
             },
             open: function () {
                 var that = this;
+                var popupHovered;
                 if (!that.ul[0].firstChild) {
                     that.bind();
                 }
+                popupHovered = that.popup._hovered;
+                that.popup._hovered = true;
                 that.popup.open();
+                setTimeout(function () {
+                    that.popup._hovered = popupHovered;
+                }, 1);
                 if (that._current) {
                     that.scroll(that._current[0]);
                 }
@@ -40032,6 +40077,7 @@
             _keydown: function (e) {
                 var that = this, options = that.options, keys = kendo.keys, keyCode = e.keyCode, wrapper = that.wrapper, offset, handled, distance = 10, isMaximized = that.options.isMaximized, isMinimized = that.options.isMinimized, newWidth, newHeight, w, h;
                 if (keyCode == keys.ESC && that._closable()) {
+                    e.stopPropagation();
                     that._close(false);
                 }
                 if (e.target != e.currentTarget || that._closing) {

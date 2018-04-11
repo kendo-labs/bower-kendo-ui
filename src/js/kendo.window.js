@@ -382,6 +382,7 @@
             _keydown: function (e) {
                 var that = this, options = that.options, keys = kendo.keys, keyCode = e.keyCode, wrapper = that.wrapper, offset, handled, distance = 10, isMaximized = that.options.isMaximized, isMinimized = that.options.isMinimized, newWidth, newHeight, w, h;
                 if (keyCode == keys.ESC && that._closable()) {
+                    e.stopPropagation();
                     that._close(false);
                 }
                 if (e.target != e.currentTarget || that._closing) {

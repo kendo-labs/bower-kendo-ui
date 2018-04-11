@@ -87,10 +87,16 @@
             },
             open: function () {
                 var that = this;
+                var popupHovered;
                 if (!that.ul[0].firstChild) {
                     that.bind();
                 }
+                popupHovered = that.popup._hovered;
+                that.popup._hovered = true;
                 that.popup.open();
+                setTimeout(function () {
+                    that.popup._hovered = popupHovered;
+                }, 1);
                 if (that._current) {
                     that.scroll(that._current[0]);
                 }

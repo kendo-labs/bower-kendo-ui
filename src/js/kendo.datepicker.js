@@ -124,8 +124,14 @@
             },
             open: function () {
                 var that = this;
+                var popupHovered;
                 that._calendar();
+                popupHovered = that.popup._hovered;
+                that.popup._hovered = true;
                 that.popup.open();
+                setTimeout(function () {
+                    that.popup._hovered = popupHovered;
+                }, 1);
             },
             close: function () {
                 this.popup.close();

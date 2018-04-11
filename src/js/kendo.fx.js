@@ -343,7 +343,7 @@
             run: function (effects) {
                 var that = this, effect, idx, jdx, length = effects.length, element = that.element, options = that.options, deferred = $.Deferred(), start = {}, end = {}, target, children, childrenLength;
                 that.effects = effects;
-                deferred.then($.proxy(that, 'complete'));
+                deferred.done($.proxy(that, 'complete'));
                 element.data('animating', true);
                 for (idx = 0; idx < length; idx++) {
                     effect = effects[idx];
@@ -590,7 +590,7 @@
                     return this.compositeRun();
                 }
                 var that = this, element = that.element, idx = 0, restore = that.restore, length = restore.length, value, deferred = $.Deferred(), start = {}, end = {}, target, children = that.children(), childrenLength = children.length;
-                deferred.then($.proxy(that, '_complete'));
+                deferred.done($.proxy(that, '_complete'));
                 element.data('animating', true);
                 for (idx = 0; idx < length; idx++) {
                     value = restore[idx];
