@@ -86,7 +86,7 @@
                 element[0].type = 'text';
                 wrapper = that.wrapper;
                 that._popup();
-                element.addClass('k-input').on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('paste' + ns, proxy(that._search, that)).on('focus' + ns, function () {
+                element.addClass('k-input').on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._search, that)).on('focus' + ns, function () {
                     that._prev = that._accessor();
                     that._oldText = that._prev;
                     that._placeholder(false);

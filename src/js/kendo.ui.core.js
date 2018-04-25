@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.1.411'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.1.425'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -23505,7 +23505,7 @@
                 element[0].type = 'text';
                 wrapper = that.wrapper;
                 that._popup();
-                element.addClass('k-input').on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('paste' + ns, proxy(that._search, that)).on('focus' + ns, function () {
+                element.addClass('k-input').on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._search, that)).on('focus' + ns, function () {
                     that._prev = that._accessor();
                     that._oldText = that._prev;
                     that._placeholder(false);
@@ -24520,6 +24520,8 @@
                     that.wrapper.on('click' + ns, proxy(that._wrapperClick, that));
                     if (!that.filterInput) {
                         wrapper.on('keypress' + ns, proxy(that._keypress, that));
+                    } else {
+                        wrapper.on('input' + ns, proxy(that._search, that));
                     }
                 } else if (disable) {
                     wrapper.removeAttr(TABINDEX);
@@ -25287,7 +25289,7 @@
                     clear.on(CLICK, proxy(that._clearValue, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
-                    that.input.on('keydown' + ns, proxy(that._keydown, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that)).on('paste' + ns, proxy(that._inputPaste, that));
+                    that.input.on('keydown' + ns, proxy(that._keydown, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
@@ -26224,7 +26226,7 @@
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), tagList = that.tagList.off(ns), input = that.element.add(that.input.off(ns));
                 if (!readonly && !disable) {
                     wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that));
-                    that.input.on(KEYDOWN, proxy(that._keydown, that)).on('paste' + ns, proxy(that._search, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
+                    that.input.on(KEYDOWN, proxy(that._keydown, that)).on('paste' + ns, proxy(that._search, that)).on('input' + ns, proxy(that._search, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
                     that._clear.on('click' + ns, proxy(that._clearClick, that));
                     input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
                     tagList.on(MOUSEENTER, LI, function () {

@@ -504,6 +504,8 @@
                     that.wrapper.on('click' + ns, proxy(that._wrapperClick, that));
                     if (!that.filterInput) {
                         wrapper.on('keypress' + ns, proxy(that._keypress, that));
+                    } else {
+                        wrapper.on('input' + ns, proxy(that._search, that));
                     }
                 } else if (disable) {
                     wrapper.removeAttr(TABINDEX);
