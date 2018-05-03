@@ -105,13 +105,6 @@ var gatherCustom = lazypipe()
 gulp.task("custom", function() {
     var files = argv.c;
 
-    if (files.indexOf(",") == -1) {
-        throw new util.PluginError({
-            task: "custom",
-            plugin: "custom",
-            message: "please specify more than one component"
-        });
-    }
     if (!files) {
         throw new util.PluginError({
             task: "custom",
@@ -120,8 +113,12 @@ gulp.task("custom", function() {
         });
     }
 
+    if (files.indexOf(',') !== -1) {
+        files = `{${files}}`;
+    }
+
     var included = [];
-    return gulp.src(`js/kendo.{${files}}.js`, { base: "js" })
+    return gulp.src(`js/kendo.${files}.js`, { base: "js" })
             .pipe(gatherCustom())
             .pipe(filter(function(file) {
                 if (included.indexOf(file.path) === -1) {

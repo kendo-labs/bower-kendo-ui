@@ -5,8 +5,7 @@
     "url": "https://github.com/telerik/kendo-ui-core.git"
   },
   "version": "1.0.0",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "gulp": "3.9.0",
     "gulp-less": "~3.0.3",
@@ -17,6 +16,7 @@
     "gulp-logger": "~0.0.2",
     "gulp-replace": "~0.5.4",
     "gulp-sourcemaps": "~1.6.0",
+    "gulp-shell": "^0.5.1",
     "gulp-concat": "^2.6.0",
     "gulp-foreach": "^0.1.0",
     "gulp-ignore": "^1.2.1",
