@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-content k-window-content k-dialog-content', KCONTENT = '.k-content', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = KDIALOGTITLE + 'bar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', WIDTH = 'width', HUNDREDPERCENT = 100, messages = {
+        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-content k-window-content k-dialog-content', KCONTENT = '.k-content', KSCROLL = 'k-scroll', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = KDIALOGTITLE + 'bar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', WIDTH = 'width', HUNDREDPERCENT = 100, messages = {
                 okText: 'OK',
                 cancel: 'Cancel',
                 promptInput: 'Input'
@@ -81,19 +81,31 @@
                 if (!that.options.visible) {
                     that.wrapper.hide();
                 } else {
-                    that.toFront();
-                    that._triggerInitOpen();
-                    that.trigger(OPEN);
-                    if (options.modal) {
-                        that._overlay(wrapper.is(VISIBLE)).css({ opacity: 0.5 });
-                        that._focusDialog();
-                    }
+                    that._triggerOpen();
                 }
-                if (options.closable) {
-                    wrapper.autoApplyNS(NS);
-                    element.autoApplyNS(NS);
-                    wrapper.find(KICONCLOSE).on('click', proxy(that._closeClick, that)).on('keydown', proxy(that._closeKeyHandler, that));
-                    element.on('keydown', proxy(that._keydown, that));
+            },
+            setOptions: function (options) {
+                var that = this;
+                options = $.extend(that.options, options);
+                Widget.fn.setOptions.call(that, options);
+                if (options.title !== undefined) {
+                    that.title(options.title);
+                }
+                if (options.content) {
+                    kendo.destroy(that.element.children());
+                    that.element.html(options.content);
+                }
+                if (options.actions) {
+                    that.wrapper.children(KBUTTONGROUP).remove();
+                    that._createActionbar(that.wrapper);
+                }
+                that.wrapper.show();
+                that._closable(that.wrapper);
+                that._dimensions();
+                if (!options.visible) {
+                    that.wrapper.hide();
+                } else {
+                    that._triggerOpen();
                 }
             },
             _dimensions: function () {
@@ -148,7 +160,16 @@
                 if (elementHeight < 0) {
                     elementHeight = 0;
                 }
-                that.element.css({ height: ceil(elementHeight) + 'px' });
+                element.css({ height: ceil(elementHeight) + 'px' });
+                this._applyScrollClassName(element);
+            },
+            _applyScrollClassName: function (element) {
+                var hasScroll = element.get(0).scrollHeight > element.outerHeight();
+                if (hasScroll) {
+                    element.addClass(KSCROLL);
+                } else {
+                    element.removeClass(KSCROLL);
+                }
             },
             _uiHeight: function () {
                 var that = this, wrapper = that.wrapper, actionbar = wrapper.children(KBUTTONGROUP), actionbarHeight = actionbar[0] && actionbar[0].offsetHeight || 0, titlebar = wrapper.children(KDIALOGTITLEBAR), titlebarHeight = titlebar[0] && titlebar[0].offsetHeight || 0;
@@ -202,17 +223,10 @@
                 }
             },
             _createDialog: function () {
-                var that = this, content = that.element, options = that.options, isRtl = kendo.support.isRtl(content), titlebar = $(templates.titlebar(options)), titlebarActions = titlebar.find('.k-window-actions'), titleId = (content.id || kendo.guid()) + '_title', wrapper = $(that.wrapperTemplate(options));
+                var that = this, content = that.element, options = that.options, isRtl = kendo.support.isRtl(content), titlebar = $(templates.titlebar(options)), titleId = (content.id || kendo.guid()) + '_title', wrapper = $(that.wrapperTemplate(options));
                 wrapper.toggleClass('k-rtl', isRtl);
                 content.addClass(KCONTENTCLASS);
                 that.appendTo.append(wrapper);
-                if (options.closable !== false) {
-                    if (options.title !== false) {
-                        titlebarActions.append(templates.close(options));
-                    } else {
-                        wrapper.append(templates.close(options));
-                    }
-                }
                 if (options.title !== false) {
                     wrapper.append(titlebar);
                     titlebar.attr('id', titleId);
@@ -220,6 +234,7 @@
                 } else {
                     wrapper.addClass(KTITLELESS);
                 }
+                that._closable(wrapper);
                 wrapper.append(content);
                 if (options.content) {
                     kendo.destroy(content.children());
@@ -227,6 +242,25 @@
                 }
                 if (options.actions.length) {
                     that._createActionbar(wrapper);
+                }
+            },
+            _closable: function (wrapper) {
+                var that = this;
+                var options = that.options;
+                var titlebar = wrapper.children(KDIALOGTITLEBAR);
+                var titlebarActions = titlebar.find('.k-window-actions');
+                var closeAction = titlebarActions.length ? titlebarActions.find('.k-dialog-close') : wrapper.find('.k-dialog-close');
+                closeAction.remove();
+                if (options.closable !== false) {
+                    if (options.title !== false && titlebarActions.length) {
+                        titlebarActions.append(templates.close(options));
+                    } else {
+                        wrapper.prepend(templates.close(options));
+                    }
+                    wrapper.autoApplyNS(NS);
+                    that.element.autoApplyNS(NS);
+                    wrapper.find(KICONCLOSE).on('click', proxy(that._closeClick, that)).on('keydown', proxy(that._closeKeyHandler, that));
+                    that.element.on('keydown', proxy(that._keydown, that));
                 }
             },
             _createActionbar: function (wrapper) {
@@ -258,7 +292,7 @@
                 return text ? template(text)(this.options) : '';
             },
             _normalizeButtonSize: function (actionbar) {
-                var that = this, options = that.options, lastButton = actionbar.children(KBUTTON + ':last'), currentSize = parseFloat(lastButton[0].style[WIDTH]), difference = HUNDREDPERCENT - options.actions.length * currentSize;
+                var that = this, options = that.options, lastButton = actionbar.children(KBUTTON + ':last'), currentSize = parseFloat(lastButton[0] ? lastButton[0].style[WIDTH] : 0), difference = HUNDREDPERCENT - options.actions.length * currentSize;
                 if (difference > 0) {
                     lastButton.css(WIDTH, currentSize + difference + '%');
                 }
@@ -291,6 +325,18 @@
                 var action = $(target).data('action'), preventClose = isFunction(action) && action({ sender: that }) === false;
                 if (!preventClose) {
                     that.close();
+                }
+            },
+            _triggerOpen: function () {
+                var that = this;
+                var options = that.options;
+                var wrapper = that.wrapper;
+                that.toFront();
+                that._triggerInitOpen();
+                that.trigger(OPEN);
+                if (options.modal) {
+                    that._overlay(wrapper.is(VISIBLE)).css({ opacity: 0.5 });
+                    that._focusDialog();
                 }
             },
             open: function () {

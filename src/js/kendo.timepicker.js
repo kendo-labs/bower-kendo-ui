@@ -112,13 +112,13 @@
                 that._html(html);
             },
             refresh: function () {
-                var that = this, options = that.options, format = options.format, offset = dst(), ignoreDST = offset < 0, min = options.min, max = options.max, msMin = getMilliseconds(min), msMax = getMilliseconds(max), msInterval = options.interval * MS_PER_MINUTE, toString = kendo.toString, template = that.template, start = new DATE(+min), startDay = start.getDate(), msStart, lastIdx, idx = 0, length, html = '';
+                var that = this, options = that.options, format = options.format, offset = dst(), ignoreDST = offset < 0, min = options.min, max = options.max, msMin = getMilliseconds(min), msMax = getMilliseconds(max), msLastTime = getMilliseconds(lastTimeOption(options.interval)), msInterval = options.interval * MS_PER_MINUTE, toString = kendo.toString, template = that.template, start = new DATE(+min), startDate = new DATE(start), msStart, lastIdx, idx = 0, length, html = '';
                 if (ignoreDST) {
                     length = (MS_PER_DAY + offset * MS_PER_MINUTE) / msInterval;
                 } else {
                     length = MS_PER_DAY / msInterval;
                 }
-                if (msMin != msMax) {
+                if (msMin != msMax || msLastTime === msMax) {
                     if (msMin > msMax) {
                         msMax += MS_PER_DAY;
                     }
@@ -131,7 +131,7 @@
                     }
                     if (msMax && lastIdx == idx) {
                         msStart = getMilliseconds(start);
-                        if (startDay < start.getDate()) {
+                        if (startDate < start) {
                             msStart += MS_PER_DAY;
                         }
                         if (msStart > msMax) {
@@ -246,7 +246,7 @@
                 }
             },
             _parse: function (value) {
-                var that = this, options = that.options, current = that._value || TODAY;
+                var that = this, options = that.options, min = getMilliseconds(options.min) != getMilliseconds(TODAY) ? options.min : null, max = getMilliseconds(options.max) != getMilliseconds(TODAY) ? options.max : null, current = that._value || min || max || TODAY;
                 if (value instanceof DATE) {
                     return value;
                 }
@@ -321,6 +321,11 @@
         }
         function getMilliseconds(date) {
             return date.getHours() * 60 * MS_PER_MINUTE + date.getMinutes() * MS_PER_MINUTE + date.getSeconds() * 1000 + date.getMilliseconds();
+        }
+        function lastTimeOption(interval) {
+            var date = new Date(2100, 0, 1);
+            date.setMinutes(-interval);
+            return date;
         }
         function isInRange(value, min, max) {
             var msMin = getMilliseconds(min), msMax = getMilliseconds(max), msValue;
@@ -410,9 +415,6 @@
                     if (getMilliseconds(min) == getMilliseconds(max)) {
                         min = new DATE(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
                         max = new DATE(today.getFullYear(), today.getMonth(), today.getDate(), 24, 0, 0);
-                    } else {
-                        min = new DATE(today.getFullYear(), today.getMonth(), today.getDate(), min.getHours(), min.getMinutes(), min.getSeconds(), min.getMilliseconds());
-                        max = new DATE(today.getFullYear(), today.getMonth(), today.getDate(), max.getHours(), max.getMinutes(), max.getSeconds(), max.getMilliseconds());
                     }
                     that._dateInput = new ui.DateInput(element, {
                         culture: options.culture,

@@ -112,10 +112,6 @@
   color: #fff;
   background-color: #2c232b;
   background-position: 50% 50%;
-  background-image: url(textures/glass-lighter.png);
-  background-image: url(textures/glass-lighter.png), -webkit-gradient(linear, left top, left bottom, from(false));
-  background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, false);
-  background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, false);
 }
 .k-button:hover,
 .k-button.k-state-hover {
@@ -315,6 +311,77 @@
   border-color: #674c63;
   background: #2c232b;
 }
+.k-card {
+  border-color: #674c63;
+  color: #fff;
+  background-color: #1b141a;
+}
+.k-card-header {
+  border-color: #674c63;
+  color: #fff;
+  background-color: #2c232b;
+}
+.k-card-actions {
+  border-color: #674c63;
+}
+.k-chat {
+  border-color: #674c63;
+  color: #fff;
+  background-color: #1b141a;
+}
+.k-chat .k-timestamp {
+  text-transform: uppercase;
+  opacity: .7;
+}
+.k-chat .k-author {
+  font-weight: bold;
+}
+.k-chat .k-bubble {
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  border-color: #2c232b;
+  color: #fff;
+  background-color: #2c232b;
+  -webkit-transition: -webkit-box-shadow 0.2s ease-in-out;
+  transition: -webkit-box-shadow 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out, -webkit-box-shadow 0.2s ease-in-out;
+  -webkit-box-ordinal-group: 0;
+  -webkit-order: -1;
+      -ms-flex-order: -1;
+          order: -1;
+}
+.k-chat .k-bubble:hover {
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+}
+.k-chat .k-state-selected .k-bubble {
+  -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+}
+.k-chat .k-alt .k-bubble {
+  border-color: #870074;
+  color: #ffffff;
+  background-color: #870074;
+}
+.k-chat .k-quick-reply {
+  border-color: #870074;
+  color: #870074;
+  background-color: transparent;
+}
+.k-chat .k-quick-reply:hover {
+  border-color: #870074;
+  color: #ffffff;
+  background-color: #870074;
+}
+.k-chat .k-message-box {
+  border-color: inherit;
+  color: #fff;
+  background-color: #1b141a;
+}
+.k-chat .k-message-box .k-button:hover {
+  color: #870074;
+}
 .k-in,
 .k-item,
 .k-window-action {
@@ -507,10 +574,6 @@ textarea.k-textbox:hover,
 .k-tabstrip-items .k-item,
 .k-panelbar .k-tabstrip-items .k-item,
 .km-pane-wrapper > .km-pane > .km-view > .km-content {
-  background-image: url(textures/glass-lighter.png);
-  background-image: url(textures/glass-lighter.png), -webkit-gradient(linear, left top, left bottom, from(false));
-  background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, false);
-  background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, false);
   background-position: 50% 50%;
   background-color: #2c232b;
 }
@@ -928,10 +991,6 @@ div.k-filebrowser-dropzone em {
   color: #fff;
 }
 .km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right {
-  background-image: url(textures/glass-lighter.png);
-  background-image: url(textures/glass-lighter.png), -webkit-gradient(linear, left top, left bottom, from(false));
-  background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, false);
-  background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, false);
   background-position: 50% 50%;
   background: #2c232b;
   border-color: #2c232b;
@@ -1628,10 +1687,6 @@ html .km-pane-wrapper .km-widget,
 .k-picker-wrap.k-state-default,
 .k-numeric-wrap.k-state-default,
 .k-dropdown-wrap.k-state-default {
-  background-image: url(textures/glass-lighter.png);
-  background-image: url(textures/glass-lighter.png), -webkit-gradient(linear, left top, left bottom, from(false));
-  background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, false);
-  background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, false);
   background-position: 50% 50%;
   background-color: #2c232b;
   border-color: #674c63;
@@ -1648,11 +1703,15 @@ html .km-pane-wrapper .km-widget,
   background-position: 50% 50%;
   border-color: #674c63;
 }
-.k-multiselect.k-header {
+.k-multiselect-wrap {
   border-color: #674c63;
 }
-.k-multiselect.k-header.k-state-hover {
+.k-multiselect-wrap.k-state-hover,
+.k-state-hover > .k-multiselect-wrap,
+.k-multiselect-wrap.k-state-hover {
   border-color: #674c63;
+  background: #1b141a;
+  color: #fff;
 }
 .k-autocomplete.k-state-focused,
 .k-picker-wrap.k-state-focused,
@@ -1665,6 +1724,12 @@ html .km-pane-wrapper .km-widget,
   background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, rgba(255,255,255,.2) 0%, rgba(255,255,255,.0) 100%);
   background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, rgba(255,255,255,.2) 0%, rgba(255,255,255,.0) 100%);
   background-position: 50% 50%;
+  border-color: #674c63;
+  -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.7);
+          box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.7);
+}
+.k-multiselect-wrap.k-state-focused,
+.k-state-focused > .k-multiselect-wrap {
   border-color: #674c63;
   -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.7);
           box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.7);
@@ -1993,10 +2058,6 @@ html .km-pane-wrapper .km-widget,
   .k-ie11 .k-pager-numbers .k-current-page .k-link,
   .k-edge .k-pager-numbers .k-current-page .k-link,
   .k-safari .k-pager-numbers .k-current-page .k-link {
-    background-image: url(textures/glass-lighter.png);
-    background-image: url(textures/glass-lighter.png), -webkit-gradient(linear, left top, left bottom, from(false));
-    background-image: url(textures/glass-lighter.png), -webkit-linear-gradient(top, false);
-    background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, false);
     background-position: 50% 50%;
     background-color: #2c232b;
     border-color: #674c63;

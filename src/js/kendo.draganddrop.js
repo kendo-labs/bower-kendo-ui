@@ -821,7 +821,7 @@
             }
         }
         function scrollableRoot() {
-            return $(kendo.support.browser.chrome ? document.body : document.documentElement);
+            return $(kendo.support.browser.edge || kendo.support.browser.safari ? document.body : document.documentElement);
         }
         function findScrollableParent(element) {
             var root = scrollableRoot();

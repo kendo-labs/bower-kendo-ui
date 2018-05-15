@@ -78,6 +78,9 @@
                     if (group.firstLevel) {
                         result += ' k-header';
                     }
+                    if (item.selected) {
+                        result += ' ' + SELECTEDCLASS;
+                    }
                     return result;
                 },
                 textAttributes: function (url) {

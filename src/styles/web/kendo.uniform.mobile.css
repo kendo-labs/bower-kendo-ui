@@ -5655,7 +5655,7 @@ li.km-state-active .km-listview-label,
 }
 .km-switch-handle,
 .km-switch-background {
-  color: #eee;
+  color: #dedede;
 }
 .km-rowinsert,
 .km-state-active,
@@ -5674,10 +5674,10 @@ li.km-state-active .km-listview-link,
 li.km-state-active .km-listview-label,
 .km-listview-label input[type=radio]:checked,
 .km-listview-label input[type=checkbox]:checked {
-  background: #eee;
+  background: #dedede;
 }
 .km-filter-wrap > input:focus {
-  border-color: #eee;
+  border-color: #dedede;
 }
 .km-badge,
 .km-rowdelete {

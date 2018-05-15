@@ -344,8 +344,8 @@
                     that._createList();
                     if (!action && that._values.length && !filtered && !that.options.skipUpdateOnBind) {
                         that._selectingValue = true;
+                        that.bound(true);
                         that.value(that._values, true).done(function () {
-                            that.bound(true);
                             that._selectingValue = false;
                             that._triggerListBound();
                         });
@@ -722,7 +722,7 @@
                 if (removed.length || !indices.length || isAlreadySelected) {
                     that._triggerChange(removed);
                     if (that._valueDeferred) {
-                        that._valueDeferred.resolve();
+                        that._valueDeferred.resolve().promise();
                     }
                     return that._selectDeferred.resolve().promise();
                 }

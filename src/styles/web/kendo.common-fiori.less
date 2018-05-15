@@ -377,6 +377,10 @@ input.k-textbox,
 
 .k-popup.k-list-container {
     padding: 0.286em 0;
+
+    &.k-popup-dropdowntree {
+        padding-top: 0;
+    }
 }
 
 .k-popup.k-calendar-containe {
@@ -388,6 +392,15 @@ input.k-textbox,
 .k-fieldselector .k-list .k-item {
     min-height: 2.143em;
     line-height: 2.143em;
+}
+
+.k-list-filter > .k-icon {
+    right: 10px;
+
+    .k-rtl & {
+        left: 10px;
+        right: auto;
+    }
 }
 
 .k-calendar .k-header .k-link,

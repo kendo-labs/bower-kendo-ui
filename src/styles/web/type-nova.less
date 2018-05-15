@@ -70,6 +70,19 @@
 @primary-disabled-background-color: lighten(@accent, 18%);
 @primary-disabled-border-color: lighten(@accent, 18%);
 @primary-disabled-gradient: false;
+// Input
+@input-text: @normal-text-color;
+@input-bg: @background;
+@input-border: darken(@normal-background, 12%);
+@input-shadow: false;
+@input-hovered-text: @input-text;
+@input-hovered-bg: @input-bg;
+@input-hovered-border: @input-border;
+@input-hovered-shadow: false;
+@input-focused-text: @input-text;
+@input-focused-bg: @input-bg;
+@input-focused-border: lighten(@hover-text-color, 8%);
+@input-focused-shadow: false;
 @sprite-image: url('@{image-folder}/sprite.png');
 @inversed-text-color: contrast(@accent);
 @accent-hover-background: multiply(@accent, #e4e4e4);
@@ -104,6 +117,35 @@
 @notification-error-border-color: @error;
 @notification-gradient: false;
 
+
+// component
+@component-bg: @widget-background-color;
+@component-text: @widget-text-color;
+@component-border: @widget-border-color;
+
+@card-bg: @component-bg;
+@card-text: @component-text;
+@card-border: @component-border;
+
+@card-header-bg: @header-background-color;
+@card-header-text: contrast(@card-header-bg);
+@card-header-border: @card-border;
+
+
+@chat-bg: @component-bg;
+@chat-text: @component-text;
+@chat-border: @component-border;
+
+@chat-bubble-bg: @button-background-color;
+@chat-bubble-text: @button-text-color;
+@chat-bubble-border: @chat-bubble-bg;
+
+@chat-alt-bubble-bg: @accent;
+@chat-alt-bubble-text: contrast(@accent);
+@chat-alt-bubble-border: @chat-alt-bubble-bg;
+
+@chat-quick-reply-color: @accent;
+
 @theme-name: ~"nova";
 
 @import "common/mixins.less";
@@ -111,6 +153,8 @@
 @import "mixins/border-radius.less";
 @import "themes/type.less";
 @import "themes/button.less";
+@import "Default/card/theme.less";
+@import "Default/chat/theme.less";
 
 /* Main colors */
 .k-splitbar .k-resize-handle {
@@ -492,7 +536,8 @@ textarea.k-textbox:hover,
     border-color: darken(@normal-background, 12%);
 }
 
-.k-multiselect.k-header {
+.k-multiselect-wrap,
+.k-multiselect-wrap.k-state-hover:hover {
     background-color: @widget-background-color;
     border-color: darken(@normal-background, 12%);
 }
@@ -507,8 +552,13 @@ textarea.k-textbox:hover,
 .k-autocomplete.k-state-focused,
 .k-picker-wrap.k-state-focused,
 .k-numeric-wrap.k-state-focused,
-.k-dropdown-wrap.k-state-focused,
-.k-multiselect.k-header.k-state-focused {
+.k-dropdown-wrap.k-state-focused {
+    background-color: @normal-background;
+    border-color: lighten(@hover-text-color, 8%);
+    box-shadow: none;
+}
+.k-multiselect-wrap.k-state-focused,
+.k-state-focused > .k-multiselect-wrap {
     background-color: @normal-background;
     border-color: lighten(@hover-text-color, 8%);
     box-shadow: none;
@@ -517,10 +567,21 @@ textarea.k-textbox:hover,
 .k-autocomplete.k-state-active,
 .k-picker-wrap.k-state-active,
 .k-numeric-wrap.k-state-active,
-.k-dropdown-wrap.k-state-active,
-.k-multiselect.k-header.k-state-active {
+.k-dropdown-wrap.k-state-active {
     color: @selected-text-color;
     background-color: @selected-background;
+    border-color: @selected-background;
+}
+.k-multiselect-wrap.k-state-active,
+.k-state-active.k-multiselect-wrap {
+    color: @selected-text-color;
+    background-color: @selected-background;
+    border-color: @selected-background;
+}
+.k-multiselect-wrap.k-state-border-up,
+.k-multiselect-wrap.k-state-border-down,
+.k-state-border-up > .k-multiselect-wrap,
+.k-state-border-down > .k-multiselect-wrap {
     border-color: @selected-background;
 }
 
@@ -529,8 +590,12 @@ textarea.k-textbox:hover,
 .k-autocomplete.k-state-disabled,
 .k-dropdown-wrap.k-state-disabled,
 .k-picker-wrap.k-state-disabled,
-.k-multiselect.k-state-disabled,
 .k-numeric-wrap.k-state-disabled {
+    background-color: @widget-background-color;
+    border-color: @disabled-border-color;
+}
+.k-multiselect-wrap.k-state-disabled,
+.k-state-disabled > .k-multiselect-wrap {
     background-color: @widget-background-color;
     border-color: @disabled-border-color;
 }
@@ -612,30 +677,11 @@ input.k-textbox:active {
     background-color: multiply(@accent, #cccccc);
 }
 
-.k-multiselect {
+.k-multiselect-wrap {
     .k-button {
         color: @inversed-text-color;
         background-color: @accent;
         border-color: @accent;
-    }
-
-    &.k-state-focused.k-state-border-up,
-    &.k-state-focused.k-state-border-down {
-        border-color: @selected-background;
-    }
-
-    &.k-header.k-state-focused .k-button,
-    &.k-state-focused.k-state-border-up .k-button,
-    &.k-state-focused.k-state-border-down .k-button {
-        background-color: @selected-background;
-        border-color: @selected-background;
-    }
-
-    &.k-header.k-state-hover .k-button,
-    .k-button:hover,
-    .k-button.k-state-hover {
-        background-color: @accent-hover-background;
-        border-color: @accent-hover-background;
     }
 }
 

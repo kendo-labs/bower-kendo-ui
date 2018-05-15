@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.1.503'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.2.515'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1101,8 +1101,9 @@
                                 return null;
                             }
                             if (count > 2) {
+                                minutesOffset = matches[0][0] + minutesOffset;
                                 minutesOffset = parseInt(minutesOffset, 10);
-                                if (isNaN(minutesOffset) || outOfRange(minutesOffset, 0, 59)) {
+                                if (isNaN(minutesOffset) || outOfRange(minutesOffset, -59, 59)) {
                                     return null;
                                 }
                             }
@@ -1733,9 +1734,9 @@
             var documentMode = document.documentMode;
             support.hashChange = 'onhashchange' in window && !(support.browser.msie && (!documentMode || documentMode <= 8));
             support.customElements = 'registerElement' in window.document;
-            var chrome = support.browser.chrome;
+            var chrome = support.browser.chrome, mozilla = support.browser.mozilla;
             support.msPointers = !chrome && window.MSPointerEvent;
-            support.pointers = !chrome && window.PointerEvent;
+            support.pointers = !chrome && !mozilla && window.PointerEvent;
             support.kineticScrollNeeded = mobileOS && (support.touch || support.msPointers || support.pointers);
         }());
         function size(obj) {
@@ -2244,14 +2245,18 @@
             }
             return value;
         }
-        function parseOptions(element, options) {
+        function parseOptions(element, options, source) {
             var result = {}, option, value;
             for (option in options) {
                 value = parseOption(element, option);
                 if (value !== undefined) {
                     if (templateRegExp.test(option)) {
                         if (typeof value === 'string') {
-                            value = kendo.template($('#' + value).html());
+                            if ($('#' + value).length) {
+                                value = kendo.template($('#' + value).html());
+                            } else if (source) {
+                                value = kendo.template(source[value]);
+                            }
                         } else {
                             value = element.getAttribute(option);
                         }

@@ -1402,7 +1402,9 @@
                     add: noop
                 };
                 parameterMap = options.parameterMap;
-                that.submit = options.submit;
+                if (options.submit) {
+                    that.submit = options.submit;
+                }
                 if (isFunction(options.push)) {
                     that.push = options.push;
                 }
@@ -1543,6 +1545,11 @@
         function wrapDataAccess(originalFunction, model, converter, getters, originalFieldNames, fieldNames) {
             return function (data) {
                 data = originalFunction(data);
+                return wrapDataAccessBase(model, converter, getters, originalFieldNames, fieldNames)(data);
+            };
+        }
+        function wrapDataAccessBase(model, converter, getters, originalFieldNames, fieldNames) {
+            return function (data) {
                 if (data && !isEmptyObject(getters)) {
                     if (toString.call(data) !== '[object Array]' && !(data instanceof ObservableArray)) {
                         data = [data];
@@ -1592,6 +1599,7 @@
                         }
                     }
                     that._dataAccessFunction = dataFunction;
+                    that._wrapDataAccessBase = wrapDataAccessBase(model, convertRecords, getters, originalFieldNames, fieldNames);
                     that.data = wrapDataAccess(dataFunction, model, convertRecords, getters, originalFieldNames, fieldNames);
                     that.groups = wrapDataAccess(groupsFunction, model, convertGroup, getters, originalFieldNames, fieldNames);
                 }
@@ -1612,6 +1620,27 @@
                 return data;
             }
         });
+        function fillLastGroup(originalGroup, newGroup) {
+            var currOriginal;
+            var currentNew;
+            if (newGroup.items && newGroup.items.length) {
+                for (var i = 0; i < newGroup.items.length; i++) {
+                    currOriginal = originalGroup.items[i];
+                    currentNew = newGroup.items[i];
+                    if (currOriginal && currentNew) {
+                        if (currOriginal.hasSubgroups) {
+                            fillLastGroup(currOriginal, currentNew);
+                        } else if (currOriginal.field && currOriginal.value == currentNew.value) {
+                            currOriginal.items.push.apply(currOriginal.items, currentNew.items);
+                        } else {
+                            originalGroup.items.push.apply(originalGroup.items, [currentNew]);
+                        }
+                    } else if (currentNew) {
+                        originalGroup.items.push.apply(originalGroup.items, [currentNew]);
+                    }
+                }
+            }
+        }
         function mergeGroups(target, dest, skip, take) {
             var group, idx = 0, items;
             while (dest.length && take) {
@@ -2505,7 +2534,7 @@
                 return this.reader.aggregates(data);
             },
             success: function (data) {
-                var that = this, options = that.options, requestParams;
+                var that = this, options = that.options;
                 that.trigger(REQUESTEND, {
                     response: data,
                     type: 'read'
@@ -2526,8 +2555,7 @@
                     if (that._aggregate && options.serverAggregates) {
                         that._aggregateResult = that._readAggregates(data);
                     }
-                    requestParams = arguments.length > 1 ? arguments[1] : undefined;
-                    data = that._readData(data, requestParams);
+                    data = that._readData(data);
                     that._destroyed = [];
                 } else {
                     data = that._readData(data);
@@ -2559,6 +2587,10 @@
                 that._detachObservableParents();
                 if (that.options.endless) {
                     that._data.unbind(CHANGE, that._changeHandler);
+                    if (that._isServerGrouped() && that._data[that._data.length - 1].value === data[0].value) {
+                        fillLastGroup(that._data[that._data.length - 1], data[0]);
+                        data.shift();
+                    }
                     data = that._observe(data);
                     for (var i = 0; i < data.length; i++) {
                         that._data.push(data[i]);
@@ -2616,7 +2648,7 @@
                     }
                     this.offlineData(state.concat(destroyed));
                     if (updatePristine) {
-                        this._pristineData = this._readData(state);
+                        this._pristineData = this.reader._wrapDataAccessBase(state);
                     }
                 }
             },

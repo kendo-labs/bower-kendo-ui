@@ -70,6 +70,19 @@
 @primary-disabled-background-color: lighten(@accent, 2%);
 @primary-disabled-border-color: lighten(@accent, 2%);
 @primary-disabled-gradient: false;
+// Input
+@input-text: @normal-text-color;
+@input-bg: @base;
+@input-border: @drop-down-border-color;
+@input-shadow: false;
+@input-hovered-text: @input-text;
+@input-hovered-bg: @input-bg;
+@input-hovered-border: @drop-down-hover-border-color;
+@input-hovered-shadow: false;
+@input-focused-text: @input-text;
+@input-focused-bg: @input-bg;
+@input-focused-border: @drop-down-focused-border-color;
+@input-focused-shadow: @focused-shadow;
 @sprite-image: url('@{image-folder}/sprite.png');
 @inverse-text-color: contrast(@normal-text-color);
 @hover-border-color: @hover-background;
@@ -111,7 +124,6 @@
 @event-background-color: @accent;
 @scheduler-nonwork-background-color: contrast(@base, lighten(@base, 17%), darken(@base, 4%), 0.5);
 @resize-background-color: @normal-text-color;
-@input-background-color: @base;
 @shadow-color: fadeout(contrast(@base), 80%);
 @upload-progress-background-color: @info;
 @upload-progress-text-color: contrast(@info, @info, darken(@info, 60%), 0.5);
@@ -154,7 +166,6 @@
 @select-hover-background-color: @hover-background;
 @hover-background-color: @hover-background;
 @shadow-inset-color: transparent;
-@input-text-color: @normal-text-color;
 @link-text-color: @normal-text-color;
 @cell-border-color: contrast(@base, lighten(@base, 14%), darken(@base, 14%), 0.5);
 @scheduler-background-color: @base;
@@ -193,6 +204,35 @@
 @icon-background-color: transparent;
 @input-validation-error: contrast(@base, lighten(@error, 15%), darken(@error, 20%), 0.5);
 
+
+// component
+@component-bg: @widget-background-color;
+@component-text: @widget-text-color;
+@component-border: @widget-border-color;
+
+@card-bg: @component-bg;
+@card-text: @component-text;
+@card-border: @component-border;
+
+@card-header-bg: @header-background-color;
+@card-header-text: @header-text-color;
+@card-header-border: @card-border;
+
+
+@chat-bg: @component-bg;
+@chat-text: @component-text;
+@chat-border: @component-border;
+
+@chat-bubble-bg: @button-background-color;
+@chat-bubble-text: @button-text-color;
+@chat-bubble-border: @chat-bubble-bg;
+
+@chat-alt-bubble-bg: @accent;
+@chat-alt-bubble-text: contrast(@accent);
+@chat-alt-bubble-border: @chat-alt-bubble-bg;
+
+@chat-quick-reply-color: @accent;
+
 /* Kendo skin */
 
 @theme-name: ~"metro";
@@ -202,6 +242,8 @@
 @import "mixins/border-radius.less";
 @import "themes/type.less";
 @import "themes/button.less";
+@import "Default/card/theme.less";
+@import "Default/chat/theme.less";
 
 .k-in,
 .k-item,
@@ -363,15 +405,15 @@ textarea.k-textbox:hover,
 .k-textbox > input,
 .k-multiselect-wrap
 {
-    background-color: @input-background-color;
-    color: @input-text-color;
+    background-color: @input-bg;
+    color: @input-text;
 }
 
 // Bootstrap readonly input styling has more specificity than ours.
 .k-input[readonly]
 {
-    background-color: @input-background-color;
-    color: @input-text-color;
+    background-color: @input-bg;
+    color: @input-text;
 }
 
 .k-block,
@@ -983,6 +1025,7 @@ div.k-filebrowser-dropzone em
 .k-dropdown-wrap.k-state-hover,
 .k-dropdown-wrap.k-state-focused
 {
+    color: @hover-text-color;
     background-color: @select-hover-background-color;
     .composite-background(@hover-gradient);
     background-position: 50% 50%;
@@ -1002,7 +1045,7 @@ div.k-filebrowser-dropzone em
         border-color: @widget-border-color;
 
         > input {
-            background-color: @input-background-color;
+            background-color: @input-bg;
             border-color: @drop-down-border-color;
         }
 
@@ -1718,13 +1761,6 @@ div.k-filebrowser-dropzone em
     border-radius: 0 @border-radius @border-radius 0;
 }
 
-.k-autocomplete > .k-i-close,
-.k-combobox > .k-dropdown-wrap > .k-i-close,
-.k-multiselect > .k-multiselect-wrap > .k-i-close {
-    border-radius: 50%;
-    background-color: @widget-border-color;
-}
-
 .k-rtl .k-dropdown-wrap .k-select,
 .k-rtl .k-picker-wrap .k-select,
 .k-rtl .k-numeric-wrap .k-select,
@@ -1949,25 +1985,34 @@ html .km-pane-wrapper .km-widget,
     border-color: @drop-down-hover-border-color;
 }
 
-.k-multiselect.k-header
+.k-multiselect-wrap
 {
     border-color: @drop-down-border-color;
 }
 
-.k-multiselect.k-header.k-state-hover
+.k-multiselect-wrap.k-state-hover,
+.k-state-hover > .k-multiselect-wrap,
+.k-multiselect-wrap.k-state-hover
 {
     border-color: @drop-down-hover-border-color;
+    background: @input-bg;
+    color: @input-text;
 }
 
 .k-autocomplete.k-state-focused,
 .k-picker-wrap.k-state-focused,
 .k-numeric-wrap.k-state-focused,
-.k-dropdown-wrap.k-state-focused,
-.k-multiselect.k-header.k-state-focused
+.k-dropdown-wrap.k-state-focused
 {
     background-color: @select-hover-background-color;
     .composite-background(@hover-gradient);
     background-position: 50% 50%;
+    border-color: @drop-down-focused-border-color;
+    .box-shadow(@focused-shadow);
+}
+.k-multiselect-wrap.k-state-focused,
+.k-state-focused > .k-multiselect-wrap
+{
     border-color: @drop-down-focused-border-color;
     .box-shadow(@focused-shadow);
 }
@@ -1982,9 +2027,7 @@ html .km-pane-wrapper .km-widget,
 }
 
 .k-dropdown .k-input,
-.k-menu .k-popup,
-.k-multiselect .k-button,
-.k-multiselect .k-button:hover
+.k-menu .k-popup
 {
     color: @drop-down-text-color;
 }
@@ -2583,7 +2626,7 @@ html .km-pane-wrapper .km-widget,
     .k-list-scroller {
         padding: 2px;
         border-color: @widget-border-color;
-        background-color: @input-background-color;
+        background-color: @input-bg;
     }
 
     .k-item:hover:not(.k-state-disabled) {

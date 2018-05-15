@@ -869,10 +869,10 @@
                 }
                 if (owner._isHorizontal) {
                     left -= parseInt((width - owner._outerSize(element)) / 2, 10);
-                    top -= height + callout.height() + margin;
+                    top -= height + margin + (callout.length ? callout.height() : 0);
                 } else {
                     top -= parseInt((height - owner._outerSize(element)) / 2, 10);
-                    left -= width + callout.width() + margin;
+                    left -= width + margin + (callout.length ? callout.width() : 0);
                 }
                 if (owner._isHorizontal) {
                     diff = that._flip(top, height, anchorSize, outerHeight(viewport) + that._scrollOffset.top);

@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', LOADING = 'k-i-loading', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy, newLineRegEx = /(\r\n|\n|\r)/gm;
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', nsFocusEvent = ns + 'FocusEvent', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', LOADING = 'k-i-loading', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy, newLineRegEx = /(\r\n|\n|\r)/gm;
         var ComboBox = Select.extend({
             init: function (element, options) {
                 var that = this, text, disabled;
@@ -70,6 +70,7 @@
                 that._dataSource();
                 that._ignoreCase();
                 that._enable();
+                that._attachFocusEvents();
                 that._oldIndex = that.selectedIndex = -1;
                 that._aria();
                 that._initialIndex = options.index;
@@ -148,6 +149,7 @@
             destroy: function () {
                 var that = this;
                 that.input.off(ns);
+                that.input.off(nsFocusEvent);
                 that.element.off(ns);
                 that._inputWrapper.off(ns);
                 clearTimeout(that._pasteTimeout);
@@ -174,6 +176,10 @@
                 }
                 Select.fn._change.call(that);
                 that._toggleCloseVisibility();
+            },
+            _attachFocusEvents: function () {
+                var that = this;
+                that.input.on('focus' + nsFocusEvent, proxy(that._inputFocus, that)).on('focusout' + nsFocusEvent, proxy(that._inputFocusout, that));
             },
             _focusHandler: function () {
                 this.input.focus();
@@ -225,7 +231,7 @@
                     clear.on(CLICK, proxy(that._clearValue, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
-                    that.input.on('keydown' + ns, proxy(that._keydown, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
+                    that.input.on('keydown' + ns, proxy(that._keydown, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
@@ -244,7 +250,9 @@
                     if (that.options.minLength !== 1 && !isFiltered || isFiltered && that.value() && that.selectedIndex === -1) {
                         that.refresh();
                         that._openPopup();
-                        that.listView.bound(false);
+                        if (!this.options.virtual) {
+                            that.listView.bound(false);
+                        }
                     } else {
                         that._filterSource();
                     }
@@ -823,6 +831,7 @@
                 if (isFiltered || !hasValue || custom) {
                     that.options.value = '';
                     that.value('');
+                    that._selectedValue = null;
                 }
             },
             _preselect: function (value, text) {

@@ -391,7 +391,7 @@
                     }
                     return;
                 }
-                if (eventArgs.event.ctrlKey) {
+                if (eventArgs.event.ctrlKey || eventArgs.event.metaKey) {
                     if ($(eventArgs.event.currentTarget).is(CELLSELECTORVALID)) {
                         that._toggleSelection($(eventArgs.event.currentTarget));
                     } else {
@@ -489,7 +489,7 @@
                     currentValue.setFullYear(temp.getFullYear());
                     prevent = true;
                 }
-                if (e.ctrlKey) {
+                if (e.ctrlKey || e.metaKey) {
                     if (key == keys.RIGHT && !isRtl || key == keys.LEFT && isRtl) {
                         that.navigateToFuture();
                         prevent = true;

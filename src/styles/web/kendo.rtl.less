@@ -125,6 +125,19 @@
     text-align: left;
 }
 
+.k-rtl .k-list-filter {
+
+    & > .k-icon {
+        right: auto;
+        left: 6px;
+    }
+
+    & > .k-textbox {
+        padding-left: 20px;
+        padding-right: 0;
+    }
+}
+
 .k-rtl .k-datetimepicker .k-select
 {
 
@@ -537,16 +550,17 @@
     margin-left: -8px;
 }
 
-.k-rtl .k-menu .k-item > .k-link > .k-i-arrow-60-right
+.k-rtl .k-menu-group .k-item > .k-link > .k-menu-expand-arrow,
+.k-rtl .k-menu-vertical .k-item > .k-link > .k-menu-expand-arrow,
 {
     right: auto;
     left: .2rem;
 }
 
-.k-rtl .k-menu .k-group .k-item > .k-link
+.k-rtl .k-menu .k-menu-group .k-item > .k-link
 {
-    padding-left: 1.8em;
-    padding-right: .9em;
+    padding-left: 4.929em;
+    padding-right: 1.714em;
 }
 
 .k-rtl .k-menu .k-image,
@@ -574,6 +588,12 @@
     right: auto;
     left: 0;
     padding: .03em .2em;
+}
+
+.k-rtl .k-autocomplete > .k-i-close,
+.k-rtl .k-multiselect-wrap > .k-i-close {
+    left: 6px;
+    right: auto;
 }
 
 /* Notification */
@@ -1011,6 +1031,11 @@
     transform: scaleX(-1);
     margin-right: -16px;
     margin-left: auto;
+}
+
+.k-rtl .k-treeview .k-checkbox-label {
+    padding-left: 0;
+    padding-right: calc(14px + 0.7ex);
 }
 
 /*  TreeList */
