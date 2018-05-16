@@ -8145,6 +8145,8 @@ div.k-grid-header {
   line-height: 1.5;
   padding: .25rem .5rem;
   border-width: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   background-repeat: repeat-x;
   position: absolute;
   z-index: 12000;
@@ -16018,28 +16020,31 @@ html .k-upload {
 .k-card-deck-scrollwrap {
   margin-left: -16px;
   margin-right: -16px;
+  padding-left: 16px;
+  padding-right: 16px;
   overflow: hidden;
+  -ms-flex: 0 0 auto;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+          flex: 0 0 auto;
+  width: 100%;
+  -webkit-box-sizing: content-box;
+          box-sizing: content-box;
 }
 .k-card-deck-scrollwrap > .k-card-deck {
-  margin-left: 0;
-  margin-right: 0;
   margin-bottom: -20px;
   padding-bottom: 20px;
 }
 .k-message-group > .k-card-deck-scrollwrap {
   margin: 0;
-  width: -webkit-calc(125% + 26px);
-  width: calc(125% + 26px);
+  width: -webkit-calc(125% - 5px);
+  width: calc(125% - 5px);
 }
 .k-message-group > .k-card-deck-scrollwrap > .k-button:first-child {
   left: 0;
 }
 .k-message-group > .k-card-deck-scrollwrap > .k-button:last-child {
   right: 0;
-}
-.k-message-group > .k-card-deck-scrollwrap > .k-card-deck {
-  padding-left: 0;
-  padding-right: 0;
 }
 .k-chat .k-card-deck .k-card-wrap {
   display: -ms-flexbox;
