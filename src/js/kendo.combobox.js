@@ -731,7 +731,7 @@
                     that._firstItem();
                 } else if (key === keys.END) {
                     that._lastItem();
-                } else if (key === keys.ENTER) {
+                } else if (key === keys.ENTER || key === keys.TAB) {
                     var current = that.listView.focus();
                     var dataItem = that.dataItem();
                     var shouldTrigger = true;

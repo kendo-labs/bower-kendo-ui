@@ -7989,7 +7989,6 @@ span.k-sparkline,
 }
 .k-baseline-marker {
   zoom: 1;
-  *display: inline;
 }
 .k-chart-tooltip {
   border-radius: 4px;
@@ -12347,7 +12346,7 @@ div.k-spreadsheet-window {
   margin: 0 0 8px;
 }
 .k-card-title + .k-card-subtitle {
-  margin-top: -(8px * 0.75);
+  margin-top: -6px;
 }
 .k-card > .k-hr {
   margin: 0;

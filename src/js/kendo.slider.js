@@ -697,6 +697,9 @@
                 dragcancel: proxy(that.dragcancel, that)
             });
             element.click(false);
+            element.on('dragstart', function (e) {
+                e.preventDefault();
+            });
         };
         Slider.Drag.prototype = {
             dragstart: function (e) {

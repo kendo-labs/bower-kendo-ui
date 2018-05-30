@@ -15604,7 +15604,6 @@ span.k-sparkline,
 }
 .k-baseline-marker {
   zoom: 1;
-  *display: inline;
 }
 .k-chart-tooltip {
   border-radius: 4px;

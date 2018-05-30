@@ -409,7 +409,7 @@
             var getter = $parse(kNgModel);
             var setter = getter.assign;
             var updating = false;
-            var valueIsCollection = kendo.ui.MultiSelect && widget instanceof kendo.ui.MultiSelect;
+            var valueIsCollection = kendo.ui.MultiSelect && widget instanceof kendo.ui.MultiSelect || kendo.ui.RangeSlider && widget instanceof kendo.ui.RangeSlider;
             var length = function (value) {
                 return value && valueIsCollection ? value.length : 0;
             };

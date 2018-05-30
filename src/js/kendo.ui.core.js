@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.2.516'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.2.530'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2541,6 +2541,12 @@
             if (role) {
                 if (role === 'content') {
                     role = 'scroller';
+                }
+                if (role === 'editortoolbar') {
+                    var editorToolbar = element.data('kendoEditorToolbar');
+                    if (editorToolbar) {
+                        return editorToolbar;
+                    }
                 }
                 if (suites) {
                     if (suites[0]) {
@@ -9705,13 +9711,13 @@
                         } else {
                             element.checked = source;
                         }
-                    } else if (element.type == 'radio' && value != null) {
+                    } else if (element.type == 'radio') {
                         if (type == 'date') {
                             value = kendo.toString(value, 'yyyy-MM-dd');
                         } else if (type == 'datetime-local') {
                             value = kendo.toString(value, 'yyyy-MM-ddTHH:mm:ss');
                         }
-                        if (element.value === value.toString()) {
+                        if (value !== null && typeof value !== 'undefined' && element.value === value.toString()) {
                             element.checked = true;
                         } else {
                             element.checked = false;
@@ -25943,7 +25949,7 @@
                     that._firstItem();
                 } else if (key === keys.END) {
                     that._lastItem();
-                } else if (key === keys.ENTER) {
+                } else if (key === keys.ENTER || key === keys.TAB) {
                     var current = that.listView.focus();
                     var dataItem = that.dataItem();
                     var shouldTrigger = true;
@@ -26679,7 +26685,7 @@
                         tag = tag.next();
                         that.currentTag(tag[0] ? tag : null);
                     }
-                } else if (e.ctrlKey && key === keys.A && visible) {
+                } else if (e.ctrlKey && !e.altKey && key === keys.A && visible) {
                     if (this._getSelectedIndices().length === listView.items().length) {
                         that._activeItem = null;
                     }
@@ -28465,6 +28471,9 @@
                 dragcancel: proxy(that.dragcancel, that)
             });
             element.click(false);
+            element.on('dragstart', function (e) {
+                e.preventDefault();
+            });
         };
         Slider.Drag.prototype = {
             dragstart: function (e) {
@@ -38083,16 +38092,9 @@
                 $(e.currentTarget).toggleClass(HOVER, e.type === 'mouseenter');
             },
             _update: function (value) {
-                var that = this, options = that.options, timeView = that.timeView, date = timeView._parse(value), current = that._value, isSameType = date === null && current === null || date instanceof Date && current instanceof Date, formattedValue;
+                var that = this, options = that.options, timeView = that.timeView, date = timeView._parse(value);
                 if (!isInRange(date, options.min, options.max)) {
                     date = null;
-                }
-                if (+date === +current && isSameType) {
-                    formattedValue = kendo.toString(date, options.format, options.culture);
-                    if (formattedValue !== value) {
-                        that.element.val(date === null ? value : formattedValue);
-                    }
-                    return date;
                 }
                 that._value = date;
                 if (that._dateInput && date) {
@@ -46256,7 +46258,7 @@
             var getter = $parse(kNgModel);
             var setter = getter.assign;
             var updating = false;
-            var valueIsCollection = kendo.ui.MultiSelect && widget instanceof kendo.ui.MultiSelect;
+            var valueIsCollection = kendo.ui.MultiSelect && widget instanceof kendo.ui.MultiSelect || kendo.ui.RangeSlider && widget instanceof kendo.ui.RangeSlider;
             var length = function (value) {
                 return value && valueIsCollection ? value.length : 0;
             };

@@ -1717,15 +1717,22 @@ kendo-sortable {
 .k-multiselect-wrap .k-i-loading {
   bottom: 1.125rem;
 }
-.k-autocomplete,
 .k-multiselect-wrap {
   padding-right: -webkit-calc(0.75rem + 16px);
   padding-right: calc(0.75rem + 16px);
 }
-.k-rtl .k-autocomplete,
 .k-rtl .k-multiselect-wrap,
-[dir=rtl] .k-autocomplete,
 [dir=rtl] .k-multiselect-wrap {
+  padding-left: -webkit-calc(0.75rem + 16px);
+  padding-left: calc(0.75rem + 16px);
+  padding-right: 0.75rem;
+}
+.k-autocomplete {
+  padding-right: -webkit-calc(0.75rem + 16px);
+  padding-right: calc(0.75rem + 16px);
+}
+.k-autocomplete[dir=rtl],
+.k-rtl .k-autocomplete {
   padding-left: -webkit-calc(0.75rem + 16px);
   padding-left: calc(0.75rem + 16px);
   padding-right: 0.75rem;
@@ -3996,7 +4003,7 @@ kendo-sortable {
 }
 .k-button-group .k-state-disabled,
 .k-button-group [disabled] {
-  pointer-events: auto;
+  pointer-events: none;
 }
 .k-button-group .k-button:first-child,
 .k-button-group .k-group-start {
@@ -4518,6 +4525,9 @@ kendo-sortable {
 }
 .k-list-container .k-button .k-icon {
   margin: 0 0.5rem 0 0;
+}
+.k-list-container .k-button.k-state-disabled {
+  pointer-events: none;
 }
 .k-list-container .k-nodata .k-button {
   display: -ms-inline-flexbox;
@@ -14115,7 +14125,8 @@ html .k-upload {
 }
 .k-notification-wrap {
   font-size: .875rem;
-  padding: .75rem 2.5rem .75rem 1.25rem;
+  padding: 0.75rem -webkit-calc(1.75rem + 16px) 0.75rem 1.25rem;
+  padding: 0.75rem calc(1.75rem + 16px) 0.75rem 1.25rem;
   white-space: nowrap;
   cursor: default;
   position: relative;
@@ -14130,7 +14141,7 @@ html .k-upload {
   margin: 0;
   position: absolute;
   top: .75rem;
-  right: .625rem;
+  right: 1.25rem;
   font-size: inherit;
   line-height: inherit;
 }
@@ -14139,7 +14150,8 @@ html .k-upload {
   font-size: 16px;
 }
 .k-rtl .k-notification-wrap {
-  padding: 0.75rem 1.25rem 0.75rem 2.5rem;
+  padding: 0.75rem 1.25rem 0.75rem -webkit-calc(1.75rem + 16px);
+  padding: 0.75rem 1.25rem 0.75rem calc(1.75rem + 16px);
 }
 .k-rtl .k-notification-wrap > .k-icon {
   margin-right: 0;
@@ -14149,13 +14161,7 @@ html .k-upload {
 .k-rtl .k-notification-wrap > .k-i-group-delete:before {
   margin: 0;
   right: auto;
-  left: 0.5rem;
-}
-.k-notification .k-i-close,
-.k-notification .k-i-group-delete:before {
-  padding: .75rem 1.25rem;
-  top: 0;
-  right: 0;
+  left: 1.25rem;
 }
 .k-notification-info {
   border-color: #bee5eb;
@@ -15670,9 +15676,18 @@ html .k-upload {
 .k-card-actions {
   border-color: rgba(33, 37, 41, 0.125);
 }
+.k-card-wrap.k-state-focused > .k-card,
+.k-card-wrap.k-state-selected > .k-card {
+  -webkit-box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.3);
+}
 .k-chat {
   height: 600px;
   max-height: 100%;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
   -ms-flex-direction: column;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
@@ -15682,19 +15697,35 @@ html .k-upload {
   max-width: 500px;
   margin: auto;
 }
-.k-chat,
 .k-chat .k-message-list {
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-}
-.k-chat .k-message-list {
-  padding: 16px;
   -ms-flex: 1 1 auto;
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
           flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.k-chat .k-message-list-content {
+  margin: -16px;
+  position: relative;
+  -ms-flex: 0 0 auto;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+          flex: 0 0 auto;
+  width: -webkit-calc(100% + 32px);
+  width: calc(100% + 32px);
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  overflow: hidden;
+}
+.k-chat .k-message-list,
+.k-chat .k-message-list-content {
+  padding: 16px;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
   -ms-flex-direction: column;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
@@ -15704,10 +15735,8 @@ html .k-upload {
   -webkit-box-align: start;
   -webkit-align-items: flex-start;
           align-items: flex-start;
-  overflow-x: hidden;
-  overflow-y: auto;
-  scroll-behavior: smooth;
 }
+.k-chat .k-message-list-content > * + *,
 .k-chat .k-message-list > * + * {
   margin-top: 16px;
 }
@@ -15997,18 +16026,16 @@ html .k-upload {
   margin: 2px 0 0;
 }
 .k-chat .k-card-deck {
-  max-width: -webkit-calc(125% + 42px);
-  max-width: calc(125% + 42px);
+  max-width: -webkit-calc(100% + 32px);
+  max-width: calc(100% + 32px);
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  margin-top: 16px;
   margin-left: -16px;
   margin-right: -16px;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-bottom: 16px;
+  padding: 16px;
   overflow: hidden;
   overflow-x: auto;
+  scroll-behavior: smooth;
 }
 .k-chat .k-card-deck .k-card-wrap + .k-card-wrap {
   margin-left: 15px;
@@ -16076,6 +16103,9 @@ html .k-upload {
 }
 .k-chat .k-card-deck .k-card-wrap .k-card + .k-card {
   margin-left: 15px;
+}
+.k-chat .k-card-deck .k-card-wrap.k-state-selected {
+  background: none;
 }
 .k-typing-indicator {
   padding: 0;

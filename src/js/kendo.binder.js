@@ -534,13 +534,13 @@
                         } else {
                             element.checked = source;
                         }
-                    } else if (element.type == 'radio' && value != null) {
+                    } else if (element.type == 'radio') {
                         if (type == 'date') {
                             value = kendo.toString(value, 'yyyy-MM-dd');
                         } else if (type == 'datetime-local') {
                             value = kendo.toString(value, 'yyyy-MM-ddTHH:mm:ss');
                         }
-                        if (element.value === value.toString()) {
+                        if (value !== null && typeof value !== 'undefined' && element.value === value.toString()) {
                             element.checked = true;
                         } else {
                             element.checked = false;

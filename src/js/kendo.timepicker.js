@@ -591,16 +591,9 @@
                 $(e.currentTarget).toggleClass(HOVER, e.type === 'mouseenter');
             },
             _update: function (value) {
-                var that = this, options = that.options, timeView = that.timeView, date = timeView._parse(value), current = that._value, isSameType = date === null && current === null || date instanceof Date && current instanceof Date, formattedValue;
+                var that = this, options = that.options, timeView = that.timeView, date = timeView._parse(value);
                 if (!isInRange(date, options.min, options.max)) {
                     date = null;
-                }
-                if (+date === +current && isSameType) {
-                    formattedValue = kendo.toString(date, options.format, options.culture);
-                    if (formattedValue !== value) {
-                        that.element.val(date === null ? value : formattedValue);
-                    }
-                    return date;
                 }
                 that._value = date;
                 if (that._dateInput && date) {
