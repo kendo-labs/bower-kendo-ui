@@ -415,6 +415,7 @@
                     if (!keepState && that._state === STATE_FILTER) {
                         that._state = STATE_ACCEPT;
                     }
+                    that._toggleCloseVisibility();
                 });
             },
             _selectValue: function (dataItem) {
@@ -576,7 +577,6 @@
                     value = that._accessor() || that.listView.value()[0];
                     return value === undefined || value === null ? '' : value;
                 }
-                that._toggleCloseVisibility();
                 that.requireValueMapper(that.options, value);
                 that.trigger('set', { value: value });
                 if (value === options.value && that.input.val() === options.text) {
@@ -600,6 +600,7 @@
                     if (that._state === STATE_FILTER) {
                         that._state = STATE_ACCEPT;
                     }
+                    that._toggleCloseVisibility();
                 });
             },
             _hideBusy: function () {

@@ -282,6 +282,7 @@
                 } else {
                     return this._accessor();
                 }
+                this._toggleCloseVisibility();
             },
             _click: function (e) {
                 var item = e.item;

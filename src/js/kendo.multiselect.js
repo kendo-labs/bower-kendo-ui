@@ -85,6 +85,7 @@
                     that._tagID = id + '_tag_active';
                     id = id + '_taglist';
                     that.tagList.attr(ID, id);
+                    that.input.attr('aria-describedby', id);
                 }
                 that._initialOpen = true;
                 that._aria(id);
@@ -196,7 +197,9 @@
                 List.fn.destroy.call(that);
             },
             _activateItem: function () {
-                List.fn._activateItem.call(this);
+                if (this.popup.visible()) {
+                    List.fn._activateItem.call(this);
+                }
                 this.currentTag(null);
             },
             _listOptions: function (options) {
@@ -336,6 +339,10 @@
                 that._search();
                 that.trigger(CHANGE);
                 that.focus();
+                that._hideClear();
+                if (that._state === FILTER) {
+                    that._state = ACCEPT;
+                }
             },
             _editable: function (options) {
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), tagList = that.tagList.off(ns), input = that.element.add(that.input.off(ns));
@@ -375,6 +382,7 @@
             },
             close: function () {
                 this._activeItem = null;
+                this.input.removeAttr('aria-activedescendant');
                 this.popup.close();
             },
             open: function () {
@@ -447,7 +455,6 @@
                 if (value === undefined) {
                     return oldValue;
                 }
-                that._toggleCloseVisibility();
                 that.persistTagList = false;
                 that.requireValueMapper(that.options, value);
                 value = that._normalizeValues(value);
@@ -462,6 +469,7 @@
                 if (!clearFilters) {
                     that._fetchData();
                 }
+                that._toggleCloseVisibility();
             },
             _preselect: function (data, value) {
                 var that = this;

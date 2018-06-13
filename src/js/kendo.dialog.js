@@ -308,7 +308,9 @@
                 actionButtons.attr('tabIndex', tabIndex);
             },
             _actionClick: function (e) {
-                this._runActionBtn(e.currentTarget);
+                if (this.wrapper.is(VISIBLE)) {
+                    this._runActionBtn(e.currentTarget);
+                }
             },
             _actionKeyHandler: function (e) {
                 if (buttonKeyTrigger(e)) {

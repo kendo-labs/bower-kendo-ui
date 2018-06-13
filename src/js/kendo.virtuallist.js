@@ -709,7 +709,7 @@
                 }
             },
             select: function (candidate) {
-                var that = this, indices, singleSelection = that.options.selectable !== 'multiple', prefetchStarted = isActivePromise(that._activeDeferred), filtered = this.isFiltered(), isAlreadySelected, deferred, result, removed = [];
+                var that = this, indices, initialIndices, singleSelection = that.options.selectable !== 'multiple', prefetchStarted = isActivePromise(that._activeDeferred), filtered = this.isFiltered(), isAlreadySelected, deferred, result, removed = [];
                 if (candidate === undefined) {
                     return that._selectedIndexes.slice();
                 }
@@ -729,6 +729,7 @@
                 if (indices.length === 1 && indices[0] === -1) {
                     indices = [];
                 }
+                initialIndices = indices;
                 result = that._deselect(indices);
                 removed = result.removed;
                 indices = result.indices;
@@ -740,7 +741,9 @@
                 }
                 var done = function () {
                     var added = that._select(indices);
-                    that.focus(indices);
+                    if (initialIndices.length === indices.length || singleSelection) {
+                        that.focus(indices);
+                    }
                     that._triggerChange(removed, added);
                     if (that._valueDeferred) {
                         that._valueDeferred.resolve();

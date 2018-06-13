@@ -23,13 +23,19 @@
 
 */
 (function (f, define) {
-    define('kendo.list', ['kendo.data'], f);
+    define('kendo.list', [
+        'kendo.data',
+        'kendo.popup'
+    ], f);
 }(function () {
     var __meta__ = {
         id: 'list',
         name: 'List',
         category: 'framework',
-        depends: ['data'],
+        depends: [
+            'data',
+            'popup'
+        ],
         hidden: true
     };
     (function ($, undefined) {
@@ -221,6 +227,9 @@
                 this._accessor('');
                 this.listView.value([]);
                 if (this._isFilterEnabled() && !this.options.enforceMinLength) {
+                    if (this._isSelect) {
+                        this._customOption = undefined;
+                    }
                     this._filter({
                         word: '',
                         open: false
@@ -360,6 +369,7 @@
                 if (!list.options.clearButton) {
                     list._clear.remove();
                 }
+                this._hideClear();
             },
             search: function (word) {
                 var options = this.options;

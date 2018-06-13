@@ -390,8 +390,8 @@
                 return that._addPane(config, idx + 1, paneElement);
             },
             remove: function (pane) {
-                pane = $(pane);
                 var that = this;
+                pane = that.wrapper.find(pane);
                 if (pane.length) {
                     kendo.destroy(pane);
                     pane.each(function (idx, element) {

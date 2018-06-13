@@ -264,15 +264,7 @@
                 } else {
                     that.readonly(element.is('[readonly]'));
                 }
-                if (options.dateInput) {
-                    that._dateInput = new ui.DateInput(element, {
-                        culture: options.culture,
-                        format: options.format,
-                        min: options.min,
-                        max: options.max,
-                        value: options.value
-                    });
-                }
+                that._createDateInput(options);
                 that._old = that._update(options.value || that.element.val());
                 that._oldText = element.val();
                 kendo.notify(that);
@@ -310,17 +302,11 @@
                 options.max = parse(options.max);
                 normalize(options);
                 that.dateView.setOptions(options);
-                if (that._dateInput) {
-                    that._dateInput.setOptions({
-                        culture: options.culture,
-                        format: options.format,
-                        min: options.min,
-                        max: options.max,
-                        value: options.value
-                    });
+                that._createDateInput(options);
+                if (!that._dateInput) {
+                    that.element.val(kendo.toString(value, options.format, options.culture));
                 }
                 if (value) {
-                    that.element.val(kendo.toString(value, options.format, options.culture));
                     that._updateARIA(value);
                 }
             },
@@ -516,6 +502,20 @@
             },
             _template: function () {
                 this._ariaTemplate = template(this.options.ARIATemplate);
+            },
+            _createDateInput: function (options) {
+                if (this._dateInput) {
+                    this._dateInput.destroy();
+                    this._dateInput = null;
+                }
+                if (options.dateInput) {
+                    this._dateInput = new ui.DateInput(this.element, {
+                        culture: options.culture,
+                        format: options.format,
+                        min: options.min,
+                        max: options.max
+                    });
+                }
             },
             _updateARIA: function (date) {
                 var cell;

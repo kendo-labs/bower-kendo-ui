@@ -837,6 +837,7 @@
                     if (options.optionLabel && (!options.virtual || options.virtual.mapValueTo !== 'dataItem')) {
                         this._focus(this.optionLabel);
                         this._select(this.optionLabel);
+                        this.listView.content.scrollTop(0);
                     } else {
                         listView.scrollToIndex(0);
                     }

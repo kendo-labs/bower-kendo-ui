@@ -1147,11 +1147,15 @@
                     return;
                 }
                 if ((keyCode === keys.SPACEBAR || keyCode === keys.ENTER) && !target.is('input, checkbox')) {
-                    e.preventDefault();
+                    if (keyCode === keys.SPACEBAR) {
+                        e.preventDefault();
+                    }
                     if (target.is('.' + SPLIT_BUTTON)) {
                         target = target.children().first();
+                        this.userEvents.trigger('tap', { target: target });
+                    } else if (keyCode === keys.SPACEBAR) {
+                        this.userEvents.trigger('tap', { target: target });
                     }
-                    this.userEvents.trigger('tap', { target: target });
                     return;
                 }
                 if (keyCode === keys.HOME) {
