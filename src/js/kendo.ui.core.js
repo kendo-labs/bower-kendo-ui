@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik EAD                                                                                                                                                                           
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.2.613'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.2.620'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -604,9 +604,6 @@
                     }
                     return number;
                 }
-                if (negative) {
-                    number = -number;
-                }
                 if (format.indexOf('\'') > -1 || format.indexOf('"') > -1 || format.indexOf('\\') > -1) {
                     format = format.replace(literalRegExp, function (match) {
                         var quoteChar = match.charAt(0).replace('\\', ''), literal = match.slice(1).replace(quoteChar, '');
@@ -677,12 +674,8 @@
                             idx = zeroIndex;
                         }
                     }
-                    if (idx > -1) {
-                        number = round(number, idx);
-                    }
-                } else {
-                    number = round(number);
                 }
+                number = round(number, idx, negative);
                 sharpIndex = format.indexOf(SHARP);
                 startZeroIndex = zeroIndex = format.indexOf(ZERO);
                 if (sharpIndex == -1 && zeroIndex != -1) {
@@ -801,10 +794,13 @@
                 }
                 return number;
             };
-            var round = function (value, precision) {
+            var round = function (value, precision, negative) {
                 precision = precision || 0;
                 value = value.toString().split('e');
                 value = Math.round(+(value[0] + 'e' + (value[1] ? +value[1] + precision : precision)));
+                if (negative) {
+                    value = -value;
+                }
                 value = value.toString().split('e');
                 value = +(value[0] + 'e' + (value[1] ? +value[1] - precision : -precision));
                 return value.toFixed(Math.min(precision, 20));
@@ -1597,7 +1593,7 @@
             support.detectBrowser = function (ua) {
                 var browser = false, match = [], browserRxs = {
                         edge: /(edge)[ \/]([\w.]+)/i,
-                        webkit: /(chrome)[ \/]([\w.]+)/i,
+                        webkit: /(chrome|crios)[ \/]([\w.]+)/i,
                         safari: /(webkit)[ \/]([\w.]+)/i,
                         opera: /(opera)(?:.*version|)[ \/]([\w.]+)/i,
                         msie: /(msie\s|trident.*? rv:)([\w.]+)/i,
@@ -6639,7 +6635,7 @@
                 var dataFunction = proxy(that.data, that);
                 that._dataAccessFunction = dataFunction;
                 if (that.model) {
-                    var groupsFunction = proxy(that.groups, that), serializeFunction = proxy(that.serialize, that), originalFieldNames = {}, getters = {}, serializeGetters = {}, fieldNames = {}, shouldSerialize = false, fieldName;
+                    var groupsFunction = proxy(that.groups, that), serializeFunction = proxy(that.serialize, that), originalFieldNames = {}, getters = {}, serializeGetters = {}, fieldNames = {}, shouldSerialize = false, fieldName, name;
                     model = that.model;
                     if (model.fields) {
                         each(model.fields, function (field, value) {
@@ -6654,7 +6650,8 @@
                                 fromName = value.from;
                             }
                             shouldSerialize = shouldSerialize || fromName && fromName !== field || fieldName !== field;
-                            getters[field] = getter(fromName || fieldName);
+                            name = fromName || fieldName;
+                            getters[field] = name.indexOf('.') !== -1 ? getter(name, true) : getter(name);
                             serializeGetters[field] = getter(field);
                             originalFieldNames[fromName || fieldName] = field;
                             fieldNames[field] = fromName || fieldName;
@@ -10531,7 +10528,7 @@
             return result;
         }
         function bindElement(element, source, roles, parents) {
-            if (!element) {
+            if (!element || element.getAttribute('data-' + kendo.ns + 'stop')) {
                 return;
             }
             var role = element.getAttribute('data-' + kendo.ns + 'role'), idx, bind = element.getAttribute('data-' + kendo.ns + 'bind'), childrenCopy = [], deep = true, bindings, options = {}, target;
@@ -25476,6 +25473,7 @@
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
+                that._toggleCloseVisibility();
             },
             open: function () {
                 var that = this;
@@ -25719,7 +25717,8 @@
                 this.listView.refresh();
             },
             _toggleCloseVisibility: function () {
-                if (this.text()) {
+                var preventShow = this.element.is(':disabled') || this.element.is('[readonly]');
+                if (this.text() && !preventShow) {
                     this._showClear();
                 } else {
                     this._hideClear();
@@ -30242,8 +30241,7 @@
                 that._step(step);
             },
             _step: function (step) {
-                var that = this, element = that.element, value = that._parse(element.val()) || 0;
-                var precision = that.options.decimals || 2;
+                var that = this, element = that.element, originalValue = that._value, value = that._parse(element.val()) || 0, precision = that.options.decimals || 2;
                 if (activeElement() != element[0]) {
                     that._focusin();
                 }
@@ -30251,9 +30249,12 @@
                     value = value / that.options.factor;
                 }
                 value = +(value + that.options.step * step).toFixed(precision);
-                that._update(that._adjust(value));
+                value = that._adjust(value);
+                that._update(value);
                 that._typing = false;
-                that.trigger(SPIN);
+                if (originalValue !== value) {
+                    that.trigger(SPIN);
+                }
             },
             _toggleHover: function (e) {
                 $(e.currentTarget).toggleClass(HOVER, e.type === 'mouseenter');
@@ -46295,7 +46296,7 @@
                 $log.warn('k-ng-model specified on a widget that does not have the value() method: ' + widget.options.name);
                 return;
             }
-            var form = $(widget.element).parents('form');
+            var form = $(widget.element).parents('ng-form, form').first();
             var ngForm = kendo.getter(form.attr('name'), true)(scope);
             var getter = $parse(kNgModel);
             var setter = getter.assign;

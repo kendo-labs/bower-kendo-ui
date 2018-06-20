@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik EAD                                                                                                                                                                           
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -112,6 +112,7 @@
   color: #fff;
   background-color: #2c232b;
   background-position: 50% 50%;
+  background-image: url(textures/glass-lighter.png);
 }
 .k-button:hover,
 .k-button.k-state-hover {
@@ -574,6 +575,7 @@ textarea.k-textbox:hover,
 .k-tabstrip-items .k-item,
 .k-panelbar .k-tabstrip-items .k-item,
 .km-pane-wrapper > .km-pane > .km-view > .km-content {
+  background-image: url(textures/glass-lighter.png);
   background-position: 50% 50%;
   background-color: #2c232b;
 }
@@ -991,6 +993,7 @@ div.k-filebrowser-dropzone em {
   color: #fff;
 }
 .km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right {
+  background-image: url(textures/glass-lighter.png);
   background-position: 50% 50%;
   background: #2c232b;
   border-color: #2c232b;
@@ -1687,6 +1690,7 @@ html .km-pane-wrapper .km-widget,
 .k-picker-wrap.k-state-default,
 .k-numeric-wrap.k-state-default,
 .k-dropdown-wrap.k-state-default {
+  background-image: url(textures/glass-lighter.png);
   background-position: 50% 50%;
   background-color: #2c232b;
   border-color: #674c63;
@@ -2058,6 +2062,7 @@ html .km-pane-wrapper .km-widget,
   .k-ie11 .k-pager-numbers .k-current-page .k-link,
   .k-edge .k-pager-numbers .k-current-page .k-link,
   .k-safari .k-pager-numbers .k-current-page .k-link {
+    background-image: url(textures/glass-lighter.png);
     background-position: 50% 50%;
     background-color: #2c232b;
     border-color: #674c63;

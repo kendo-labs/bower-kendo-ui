@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik EAD                                                                                                                                                                           
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -32,7 +32,7 @@
 }(function(){
 /**
  * Kendo UI v2017.3.1026 (http://www.telerik.com/kendo-ui)
- * Copyright 2017 Telerik AD. All rights reserved.
+ * Copyright 2017 Telerik EAD. All rights reserved.
  *
  * Kendo UI commercial licenses may be obtained at
  * http://www.telerik.com/purchase/license-agreement/kendo-ui-complete

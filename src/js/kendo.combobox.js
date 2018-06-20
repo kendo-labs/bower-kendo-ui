@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik EAD                                                                                                                                                                           
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -236,6 +236,7 @@
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
+                that._toggleCloseVisibility();
             },
             open: function () {
                 var that = this;
@@ -479,7 +480,8 @@
                 this.listView.refresh();
             },
             _toggleCloseVisibility: function () {
-                if (this.text()) {
+                var preventShow = this.element.is(':disabled') || this.element.is('[readonly]');
+                if (this.text() && !preventShow) {
                     this._showClear();
                 } else {
                     this._hideClear();

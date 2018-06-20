@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik EAD                                                                                                                                                                           
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.2.613'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.2.620'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -604,9 +604,6 @@
                     }
                     return number;
                 }
-                if (negative) {
-                    number = -number;
-                }
                 if (format.indexOf('\'') > -1 || format.indexOf('"') > -1 || format.indexOf('\\') > -1) {
                     format = format.replace(literalRegExp, function (match) {
                         var quoteChar = match.charAt(0).replace('\\', ''), literal = match.slice(1).replace(quoteChar, '');
@@ -677,12 +674,8 @@
                             idx = zeroIndex;
                         }
                     }
-                    if (idx > -1) {
-                        number = round(number, idx);
-                    }
-                } else {
-                    number = round(number);
                 }
+                number = round(number, idx, negative);
                 sharpIndex = format.indexOf(SHARP);
                 startZeroIndex = zeroIndex = format.indexOf(ZERO);
                 if (sharpIndex == -1 && zeroIndex != -1) {
@@ -801,10 +794,13 @@
                 }
                 return number;
             };
-            var round = function (value, precision) {
+            var round = function (value, precision, negative) {
                 precision = precision || 0;
                 value = value.toString().split('e');
                 value = Math.round(+(value[0] + 'e' + (value[1] ? +value[1] + precision : precision)));
+                if (negative) {
+                    value = -value;
+                }
                 value = value.toString().split('e');
                 value = +(value[0] + 'e' + (value[1] ? +value[1] - precision : -precision));
                 return value.toFixed(Math.min(precision, 20));
@@ -1597,7 +1593,7 @@
             support.detectBrowser = function (ua) {
                 var browser = false, match = [], browserRxs = {
                         edge: /(edge)[ \/]([\w.]+)/i,
-                        webkit: /(chrome)[ \/]([\w.]+)/i,
+                        webkit: /(chrome|crios)[ \/]([\w.]+)/i,
                         safari: /(webkit)[ \/]([\w.]+)/i,
                         opera: /(opera)(?:.*version|)[ \/]([\w.]+)/i,
                         msie: /(msie\s|trident.*? rv:)([\w.]+)/i,

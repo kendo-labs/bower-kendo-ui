@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik EAD                                                                                                                                                                           
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -4022,6 +4022,10 @@ kendo-sortable {
   left: 0;
   right: 0;
 }
+.k-popup.k-popup-transparent {
+  border-width: 0;
+  background-color: transparent;
+}
 .k-list-scroller {
   position: relative;
   overflow: auto;
@@ -4171,10 +4175,6 @@ kendo-sortable {
 }
 .k-group-header + div > .k-list > .k-item.k-first:before {
   border-color: rgba(0, 0, 0, 0.08);
-}
-.k-popup-transparent {
-  border-width: 0;
-  background-color: transparent;
 }
 .k-list .k-item {
   -webkit-transition: all 0.2s ease;
@@ -4511,6 +4511,9 @@ kendo-sortable {
   height: -webkit-calc(10px + 1.42857143em);
   height: calc(10px + 1.42857143em);
   padding: 4px;
+}
+.k-button-icon .k-text {
+  display: none;
 }
 .k-dropdown-button.k-state-focused,
 .k-dropdown-button:focus {
@@ -8056,6 +8059,13 @@ th.k-sorted {
 .k-fieldselector .k-list .k-item + .k-item {
   margin-top: 0.5em;
 }
+.k-ie11 .k-pivot-layout {
+  width: 100%;
+  table-layout: fixed;
+}
+.k-ie11 .k-pivot-layout > tbody > tr > td:first-child {
+  width: 280px;
+}
 .k-alt,
 .k-pivot-layout > tbody > tr:first-child > td:first-child,
 .k-pivot-toolbar {
@@ -8403,6 +8413,14 @@ th.k-sorted {
 .k-tooltip:not(.k-tooltip-closable) {
   font-size: 14px;
 }
+.k-tooltip-title {
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  padding: 4px 0;
+  font-size: 19px;
+}
 .k-tooltip-content {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -8410,6 +8428,14 @@ th.k-sorted {
 .k-tooltip-closable {
   padding: 12px 16px;
   line-height: normal;
+}
+.k-tooltip-closable .k-tooltip-title {
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  padding: 0 20px 12px 0;
+  line-height: 1;
 }
 .k-tooltip-closable .k-tooltip-content {
   padding-right: 20px;
@@ -8426,6 +8452,7 @@ th.k-sorted {
 }
 .k-tooltip-button .k-icon {
   color: inherit;
+  vertical-align: top;
 }
 .k-rtl .k-tooltip-button,
 [dir-rtl] .k-tooltip-button {
@@ -8442,42 +8469,37 @@ th.k-sorted {
 .k-callout-n {
   left: 50%;
   margin-left: -6px;
+  border-bottom-color: currentColor;
   top: -12px;
-  pointer-events: none;
-}
-.k-callout-w {
-  top: 50%;
-  margin-top: -6px;
-  left: -12px;
-  pointer-events: none;
-}
-.k-callout-s {
-  left: 50%;
-  margin-left: -6px;
-  bottom: -12px;
   pointer-events: none;
 }
 .k-callout-e {
   top: 50%;
   margin-top: -6px;
+  border-left-color: currentColor;
   right: -12px;
+  pointer-events: none;
+}
+.k-callout-s {
+  left: 50%;
+  margin-left: -6px;
+  border-top-color: currentColor;
+  bottom: -12px;
+  pointer-events: none;
+}
+.k-callout-w {
+  top: 50%;
+  margin-top: -6px;
+  border-right-color: currentColor;
+  left: -12px;
   pointer-events: none;
 }
 .k-tooltip {
   color: #fff;
   background-color: #ff6358;
 }
-.k-callout-n {
-  border-bottom-color: #ff6358;
-}
-.k-callout-e {
-  border-left-color: #ff6358;
-}
-.k-callout-s {
-  border-top-color: #ff6358;
-}
-.k-callout-w {
-  border-right-color: #ff6358;
+.k-callout {
+  color: #ff6358;
 }
 .k-slider {
   background-color: transparent;
@@ -14875,6 +14897,9 @@ li.k-item.k-drag-clue {
   -webkit-box-direction: normal;
   -webkit-flex-direction: row;
           flex-direction: row;
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap;
   cursor: default;
 }
 .k-menu,
@@ -15054,6 +15079,9 @@ li.k-item.k-drag-clue {
 }
 .k-menu-scroll-wrapper .k-menu {
   overflow: hidden;
+  -ms-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+          flex-wrap: nowrap;
 }
 .k-menu-scroll-button {
   border-radius: 0;
@@ -16221,30 +16249,37 @@ li.k-item.k-drag-clue {
   margin: auto;
 }
 .k-chat .k-message-list {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
   -ms-flex: 1 1 auto;
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
           flex: 1 1 auto;
+  -ms-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-align: start;
+  -webkit-box-align: start;
+  -webkit-align-items: flex-start;
+          align-items: flex-start;
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
 }
 .k-chat .k-message-list-content {
-  margin: -16px;
+  padding: 16px;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   position: relative;
   -ms-flex: 0 0 auto;
   -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
           flex: 0 0 auto;
-  width: -webkit-calc(100% + 32px);
-  width: calc(100% + 32px);
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  overflow: hidden;
-}
-.k-chat .k-message-list,
-.k-chat .k-message-list-content {
-  padding: 16px;
   display: -ms-flexbox;
   display: -webkit-box;
   display: -webkit-flex;
@@ -16258,9 +16293,9 @@ li.k-item.k-drag-clue {
   -webkit-box-align: start;
   -webkit-align-items: flex-start;
           align-items: flex-start;
+  overflow: hidden;
 }
-.k-chat .k-message-list-content > * + *,
-.k-chat .k-message-list > * + * {
+.k-chat .k-message-list-content > * + * {
   margin-top: 16px;
 }
 .k-chat .k-message-group {
@@ -16584,17 +16619,6 @@ li.k-item.k-drag-clue {
 .k-card-deck-scrollwrap > .k-card-deck {
   margin-bottom: -20px;
   padding-bottom: 20px;
-}
-.k-message-group > .k-card-deck-scrollwrap {
-  margin: 0;
-  width: -webkit-calc(125% - 5px);
-  width: calc(125% - 5px);
-}
-.k-message-group > .k-card-deck-scrollwrap > .k-button:first-child {
-  left: 0;
-}
-.k-message-group > .k-card-deck-scrollwrap > .k-button:last-child {
-  right: 0;
 }
 .k-chat .k-card-deck .k-card-wrap {
   display: -ms-flexbox;

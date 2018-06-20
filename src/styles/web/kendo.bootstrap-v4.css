@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik AD                                                                                                                                                                            
+ * Copyright 2018 Telerik EAD                                                                                                                                                                           
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -3963,6 +3963,9 @@ kendo-sortable {
   height: calc(2px + 0.75rem + 1.5em);
   padding: 0.375rem;
 }
+.k-button-icon .k-text {
+  display: none;
+}
 .k-dropdown-button.k-state-focused,
 .k-dropdown-button:focus {
   outline: 0;
@@ -4416,6 +4419,10 @@ kendo-sortable {
   top: -1px;
   left: 0;
   right: 0;
+}
+.k-popup.k-popup-transparent {
+  border-width: 0;
+  background-color: transparent;
 }
 .k-list-scroller {
   position: relative;
@@ -7851,6 +7858,13 @@ div.k-grid-header {
 .k-fieldselector .k-list .k-item + .k-item {
   margin-top: 0.5rem;
 }
+.k-ie11 .k-pivot-layout {
+  width: 100%;
+  table-layout: fixed;
+}
+.k-ie11 .k-pivot-layout > tbody > tr > td:first-child {
+  width: 280px;
+}
 .k-pivot-layout > tbody > tr:first-child > td:first-child,
 .k-pivot-toolbar {
   background-color: #f8f9fa;
@@ -8152,6 +8166,7 @@ div.k-grid-header {
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, -webkit-box-shadow 0.2s ease;
 }
 .k-tooltip {
+  border-radius: .25rem;
   line-height: 1.5;
   padding: .25rem .5rem;
   border-width: 0;
@@ -8164,6 +8179,14 @@ div.k-grid-header {
 .k-tooltip:not(.k-tooltip-closable) {
   font-size: 0.875rem;
 }
+.k-tooltip-title {
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  padding: .25rem 0;
+  font-size: 1.25rem;
+}
 .k-tooltip-content {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -8171,6 +8194,15 @@ div.k-grid-header {
 .k-tooltip-closable {
   padding: .5rem 1rem;
   line-height: normal;
+}
+.k-tooltip-closable .k-tooltip-title {
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  padding: 0 -webkit-calc(16px + 0.5rem) 0.5rem 0;
+  padding: 0 calc(16px + 0.5rem) 0.5rem 0;
+  line-height: 1;
 }
 .k-tooltip-closable .k-tooltip-content {
   padding-right: -webkit-calc(16px + 0.5rem);
@@ -8189,6 +8221,7 @@ div.k-grid-header {
 }
 .k-tooltip-button .k-icon {
   color: inherit;
+  vertical-align: top;
 }
 .k-rtl .k-tooltip-button,
 [dir-rtl] .k-tooltip-button {
@@ -8205,44 +8238,40 @@ div.k-grid-header {
 .k-callout-n {
   left: 50%;
   margin-left: -6px;
+  border-bottom-color: currentColor;
   top: -12px;
   pointer-events: none;
 }
-.k-callout-w {
+.k-callout-e {
   top: 50%;
   margin-top: -6px;
-  left: -12px;
+  border-left-color: currentColor;
+  right: -12px;
   pointer-events: none;
 }
 .k-callout-s {
   left: 50%;
   margin-left: -6px;
+  border-top-color: currentColor;
   bottom: -12px;
   pointer-events: none;
 }
-.k-callout-e {
+.k-callout-w {
   top: 50%;
   margin-top: -6px;
-  right: -12px;
+  border-right-color: currentColor;
+  left: -12px;
   pointer-events: none;
 }
 .k-tooltip {
-  font-size: .875rem;
   color: #fff;
   background-color: #000;
-  border-radius: 0.25rem;
 }
-.k-callout-n {
-  border-bottom-color: #000;
+.k-callout {
+  color: #000;
 }
-.k-callout-e {
-  border-left-color: #000;
-}
-.k-callout-s {
-  border-top-color: #000;
-}
-.k-callout-w {
-  border-right-color: #000;
+.k-tooltip {
+  font-size: 0.875rem;
 }
 .k-slider {
   background-color: transparent;
@@ -14446,6 +14475,9 @@ html .k-upload {
   -webkit-box-direction: normal;
   -webkit-flex-direction: row;
           flex-direction: row;
+  -ms-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap;
   cursor: default;
 }
 .k-menu,
@@ -14623,6 +14655,9 @@ html .k-upload {
 }
 .k-menu-scroll-wrapper .k-menu {
   overflow: hidden;
+  -ms-flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+          flex-wrap: nowrap;
 }
 .k-menu-scroll-button {
   border-radius: 0;
@@ -15698,30 +15733,37 @@ html .k-upload {
   margin: auto;
 }
 .k-chat .k-message-list {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
   -ms-flex: 1 1 auto;
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
           flex: 1 1 auto;
+  -ms-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-align: start;
+  -webkit-box-align: start;
+  -webkit-align-items: flex-start;
+          align-items: flex-start;
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
 }
 .k-chat .k-message-list-content {
-  margin: -16px;
+  padding: 16px;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   position: relative;
   -ms-flex: 0 0 auto;
   -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
           flex: 0 0 auto;
-  width: -webkit-calc(100% + 32px);
-  width: calc(100% + 32px);
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  overflow: hidden;
-}
-.k-chat .k-message-list,
-.k-chat .k-message-list-content {
-  padding: 16px;
   display: -ms-flexbox;
   display: -webkit-box;
   display: -webkit-flex;
@@ -15735,9 +15777,9 @@ html .k-upload {
   -webkit-box-align: start;
   -webkit-align-items: flex-start;
           align-items: flex-start;
+  overflow: hidden;
 }
-.k-chat .k-message-list-content > * + *,
-.k-chat .k-message-list > * + * {
+.k-chat .k-message-list-content > * + * {
   margin-top: 16px;
 }
 .k-chat .k-message-group {
@@ -16061,17 +16103,6 @@ html .k-upload {
 .k-card-deck-scrollwrap > .k-card-deck {
   margin-bottom: -20px;
   padding-bottom: 20px;
-}
-.k-message-group > .k-card-deck-scrollwrap {
-  margin: 0;
-  width: -webkit-calc(125% - 5px);
-  width: calc(125% - 5px);
-}
-.k-message-group > .k-card-deck-scrollwrap > .k-button:first-child {
-  left: 0;
-}
-.k-message-group > .k-card-deck-scrollwrap > .k-button:last-child {
-  right: 0;
 }
 .k-chat .k-card-deck .k-card-wrap {
   display: -ms-flexbox;
