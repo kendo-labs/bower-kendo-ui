@@ -228,7 +228,7 @@
                     arrow.on(CLICK, proxy(that._arrowClick, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
-                    clear.on(CLICK, proxy(that._clearValue, that)).on(MOUSEDOWN, function (e) {
+                    clear.on(CLICK + ' touchend' + ns, proxy(that._clearValue, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
                     that.input.on('keydown' + ns, proxy(that._keydown, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
@@ -333,6 +333,8 @@
                 }
                 if (that._value(dataItem) !== that.value()) {
                     that._custom(that._value(dataItem));
+                } else if (that._value(dataItem) !== that.element[0].value) {
+                    that._accessor(that._value(dataItem));
                 }
                 if (that.text() && that.text() !== that._text(dataItem)) {
                     that._selectValue(dataItem);
@@ -567,6 +569,7 @@
                     }
                     that._prev = input.value;
                 });
+                that._toggleCloseVisibility();
             },
             toggle: function (toggle) {
                 this._toggle(toggle, true);

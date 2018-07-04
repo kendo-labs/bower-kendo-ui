@@ -507,7 +507,7 @@
                 if (!readonly && !disable) {
                     element.removeAttr(DISABLED).removeAttr(READONLY);
                     dropDownWrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    wrapper.attr(TABINDEX, wrapper.data(TABINDEX)).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('mousedown' + ns, proxy(that._wrapperMousedown, that)).on('paste' + ns, proxy(that._filterPaste, that));
+                    wrapper.attr(TABINDEX, wrapper.data(TABINDEX)).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on(kendo.support.mousedown + ns, proxy(that._wrapperMousedown, that)).on('paste' + ns, proxy(that._filterPaste, that));
                     that.wrapper.on('click' + ns, proxy(that._wrapperClick, that));
                     if (!that.filterInput) {
                         wrapper.on('keypress' + ns, proxy(that._keypress, that));

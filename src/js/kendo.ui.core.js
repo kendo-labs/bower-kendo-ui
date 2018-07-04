@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.2.620'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.2.704'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -18297,7 +18297,11 @@
                     if (that._old === null || value === '') {
                         that._valueBeforeCascade = that._old = value;
                     } else {
-                        that._valueBeforeCascade = that._old = that.dataItem() ? that.dataItem()[that.options.dataValueField] || that.dataItem() : null;
+                        if (that.dataItem()) {
+                            that._valueBeforeCascade = that._old = that.options.dataValueField ? that.dataItem()[that.options.dataValueField] : that.dataItem();
+                        } else {
+                            that._valueBeforeCascade = that._old = null;
+                        }
                     }
                     that._oldIndex = index;
                     if (!that._typing) {
@@ -23307,11 +23311,19 @@
                     group = item ? item.group : null;
                     item = item ? item.item : null;
                 }
-                if (!this.isFiltered() && value.length && item) {
-                    for (var i = 0; i < value.length; i++) {
-                        match = isPrimitive(item) ? value[i] === item : value[i] === valueGetter(item);
+                if (this.options.mapValueTo === 'dataItem' && this._selectedDataItems.length && item) {
+                    for (var i = 0; i < this._selectedDataItems.length; i++) {
+                        match = valueGetter(this._selectedDataItems[i]) === valueGetter(item);
                         if (match) {
-                            value.splice(i, 1);
+                            selected = true;
+                            break;
+                        }
+                    }
+                } else if (!this.isFiltered() && value.length && item) {
+                    for (var j = 0; j < value.length; j++) {
+                        match = isPrimitive(item) ? value[j] === item : value[j] === valueGetter(item);
+                        if (match) {
+                            value.splice(j, 1);
                             selected = true;
                             break;
                         }
@@ -24689,7 +24701,7 @@
                 if (!readonly && !disable) {
                     element.removeAttr(DISABLED).removeAttr(READONLY);
                     dropDownWrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    wrapper.attr(TABINDEX, wrapper.data(TABINDEX)).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('mousedown' + ns, proxy(that._wrapperMousedown, that)).on('paste' + ns, proxy(that._filterPaste, that));
+                    wrapper.attr(TABINDEX, wrapper.data(TABINDEX)).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on(kendo.support.mousedown + ns, proxy(that._wrapperMousedown, that)).on('paste' + ns, proxy(that._filterPaste, that));
                     that.wrapper.on('click' + ns, proxy(that._wrapperClick, that));
                     if (!that.filterInput) {
                         wrapper.on('keypress' + ns, proxy(that._keypress, that));
@@ -25465,7 +25477,7 @@
                     arrow.on(CLICK, proxy(that._arrowClick, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
-                    clear.on(CLICK, proxy(that._clearValue, that)).on(MOUSEDOWN, function (e) {
+                    clear.on(CLICK + ' touchend' + ns, proxy(that._clearValue, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
                     that.input.on('keydown' + ns, proxy(that._keydown, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
@@ -25570,6 +25582,8 @@
                 }
                 if (that._value(dataItem) !== that.value()) {
                     that._custom(that._value(dataItem));
+                } else if (that._value(dataItem) !== that.element[0].value) {
+                    that._accessor(that._value(dataItem));
                 }
                 if (that.text() && that.text() !== that._text(dataItem)) {
                     that._selectValue(dataItem);
@@ -25804,6 +25818,7 @@
                     }
                     that._prev = input.value;
                 });
+                that._toggleCloseVisibility();
             },
             toggle: function (toggle) {
                 this._toggle(toggle, true);
@@ -26419,7 +26434,7 @@
                 if (!readonly && !disable) {
                     wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that));
                     that.input.on(KEYDOWN, proxy(that._keydown, that)).on('paste' + ns, proxy(that._search, that)).on('input' + ns, proxy(that._search, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
-                    that._clear.on('click' + ns, proxy(that._clearClick, that));
+                    that._clear.on(CLICK + ns + ' touchend' + ns, proxy(that._clearClick, that));
                     input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
                     tagList.on(MOUSEENTER, LI, function () {
                         $(this).addClass(HOVERCLASS);

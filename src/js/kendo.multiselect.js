@@ -349,7 +349,7 @@
                 if (!readonly && !disable) {
                     wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that));
                     that.input.on(KEYDOWN, proxy(that._keydown, that)).on('paste' + ns, proxy(that._search, that)).on('input' + ns, proxy(that._search, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
-                    that._clear.on('click' + ns, proxy(that._clearClick, that));
+                    that._clear.on(CLICK + ns + ' touchend' + ns, proxy(that._clearClick, that));
                     input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
                     tagList.on(MOUSEENTER, LI, function () {
                         $(this).addClass(HOVERCLASS);

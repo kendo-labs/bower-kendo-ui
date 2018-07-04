@@ -508,7 +508,11 @@
                     if (that._old === null || value === '') {
                         that._valueBeforeCascade = that._old = value;
                     } else {
-                        that._valueBeforeCascade = that._old = that.dataItem() ? that.dataItem()[that.options.dataValueField] || that.dataItem() : null;
+                        if (that.dataItem()) {
+                            that._valueBeforeCascade = that._old = that.options.dataValueField ? that.dataItem()[that.options.dataValueField] : that.dataItem();
+                        } else {
+                            that._valueBeforeCascade = that._old = null;
+                        }
                     }
                     that._oldIndex = index;
                     if (!that._typing) {
