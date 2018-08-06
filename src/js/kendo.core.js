@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.2.704'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.2.806'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -571,7 +571,8 @@
                         precision = +customPrecision;
                     }
                     if (format === 'e') {
-                        return customPrecision ? number.toExponential(precision) : number.toExponential();
+                        var exp = customPrecision ? number.toExponential(precision) : number.toExponential();
+                        return exp.replace(POINT, numberFormat[POINT]);
                     }
                     if (isPercent) {
                         number *= 100;
@@ -615,8 +616,8 @@
                 if (negative && format[1]) {
                     format = format[1];
                     hasNegativeFormat = true;
-                } else if (number === 0) {
-                    format = format[2] || format[0];
+                } else if (number === 0 && format[2]) {
+                    format = format[2];
                     if (format.indexOf(SHARP) == -1 && format.indexOf(ZERO) == -1) {
                         return format;
                     }
@@ -669,6 +670,11 @@
                         idx = zeroIndex;
                     } else if (sharpIndex > zeroIndex) {
                         if (hasSharp && idx > sharpIndex) {
+                            var rounded = round(number, sharpIndex, negative);
+                            while (rounded.charAt(rounded.length - 1) === ZERO && sharpIndex > 0 && sharpIndex > zeroIndex) {
+                                sharpIndex--;
+                                rounded = round(number, sharpIndex, negative);
+                            }
                             idx = sharpIndex;
                         } else if (hasZero && idx < zeroIndex) {
                             idx = zeroIndex;

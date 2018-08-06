@@ -127,8 +127,6 @@
 .editorToolbarWindow.k-header.k-window-content a.k-tool:hover,
 .k-action-buttons .k-button.k-state-hover,
 .k-action-buttons .k-button:hover,
-.k-button-group > input[type=checkbox]:hover + .k-button,
-.k-button-group > input[type=radio]:hover + .k-button,
 .k-button.k-state-hover,
 .k-button:hover,
 .k-colorpicker .k-state-hover,
@@ -5178,9 +5176,9 @@ kendo-sortable {
           align-items: center;
 }
 .k-window-title {
-  margin: 0;
+  margin: -0.15em 0;
   font-size: 19px;
-  line-height: 1;
+  line-height: 1.3em;
   text-overflow: ellipsis;
   overflow: hidden;
   cursor: default;
@@ -7412,6 +7410,7 @@ th.k-sorted {
 .k-spreadsheet-column-header,
 .k-spreadsheet-row-header {
   text-align: center;
+  z-index: 100;
 }
 .k-spreadsheet-row-header {
   position: relative;
@@ -7457,7 +7456,8 @@ th.k-sorted {
   padding: 0;
 }
 .k-spreadsheet-active-cell {
-  outline-color: transparent !important;
+  outline-color: transparent!important;
+  z-index: 10;
 }
 .k-spreadsheet .k-auto-fill-wrapper {
   position: relative;
@@ -7504,6 +7504,7 @@ th.k-sorted {
 }
 .k-spreadsheet .k-filter-wrapper {
   position: relative;
+  z-index: 50;
 }
 .k-spreadsheet .k-filter-range {
   border-width: 1px;
@@ -10832,11 +10833,11 @@ th.k-sorted {
   -webkit-box-shadow: 0 0 0 2px rgba(255, 99, 88, 0.3);
           box-shadow: 0 0 0 2px rgba(255, 99, 88, 0.3);
 }
-.k-radio:hover + .k-radio-label:before {
+.k-radio-label:hover:before {
   border-color: rgba(0, 0, 0, 0.15);
   background-color: #fff;
 }
-.k-radio:hover + .k-radio-label:after {
+.k-radio-label:hover:after {
   background-color: #ff6358;
 }
 .k-checkbox-label:before {
@@ -10861,11 +10862,11 @@ th.k-sorted {
   -webkit-box-shadow: 0 0 0 2px rgba(255, 99, 88, 0.3);
           box-shadow: 0 0 0 2px rgba(255, 99, 88, 0.3);
 }
-.k-checkbox:hover + .k-checkbox-label:before {
+.k-checkbox-label:hover:before {
   border-color: rgba(0, 0, 0, 0.15);
   background-color: #fff;
 }
-.k-checkbox:hover + .k-checkbox-label:after {
+.k-checkbox-label:hover:after {
   color: #ff6358;
 }
 fieldset {
@@ -16615,6 +16616,7 @@ li.k-item.k-drag-clue {
   width: 100%;
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
+  padding-bottom: 3px;
 }
 .k-card-deck-scrollwrap > .k-card-deck {
   margin-bottom: -20px;
@@ -16641,6 +16643,7 @@ li.k-item.k-drag-clue {
   -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
           flex: 0 0 auto;
+  padding-bottom: 5px;
 }
 .k-chat .k-card-deck .k-card-wrap .k-card {
   -ms-flex: 0 0 auto;

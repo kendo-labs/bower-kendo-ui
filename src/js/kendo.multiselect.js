@@ -928,6 +928,7 @@
                 if (this.persistTagList.added && this.persistTagList.added.length === removed.length && this.persistTagList.removed && this.persistTagList.removed.length === added.length) {
                     this.persistTagList = false;
                 } else {
+                    this.listView._removedAddedIndexes = this._old.slice();
                     this.persistTagList = {
                         added: added,
                         removed: removed

@@ -342,7 +342,7 @@
                         that.focus(0);
                     }
                     that._createList();
-                    if (!action && that._values.length && !filtered && !that.options.skipUpdateOnBind) {
+                    if (!action && that._values.length && !filtered && !that.options.skipUpdateOnBind && !that._emptySearch) {
                         that._selectingValue = true;
                         that.bound(true);
                         that.value(that._values, true).done(function () {
@@ -404,6 +404,14 @@
                     that._prefetchByValue(value);
                 }
                 return that._valueDeferred;
+            },
+            _checkValuesOrder: function (value) {
+                if (this._removedAddedIndexes && this._removedAddedIndexes.length === value.length) {
+                    var newValue = this._removedAddedIndexes.slice();
+                    this._removedAddedIndexes = null;
+                    return newValue;
+                }
+                return value;
             },
             _prefetchByValue: function (value) {
                 var that = this, dataView = that._dataView, valueGetter = that._valueGetter, mapValueTo = that.options.mapValueTo, item, match = false, forSelection = [];
@@ -1280,6 +1288,7 @@
                         dataSource.range(oldSkip, take);
                     });
                 });
+                that._values = that._checkValuesOrder(that._values);
                 return added;
             },
             _clickHandler: function (e) {

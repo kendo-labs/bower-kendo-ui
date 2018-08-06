@@ -302,7 +302,7 @@
                 }
                 that._customOption = undefined;
                 that._options(data, '', that.value());
-                if (custom && custom[0].selected) {
+                if (custom && custom[0].selected && !that.listView._emptySearch) {
                     that._custom(custom.val());
                 }
             },
@@ -594,7 +594,7 @@
                     that._fetchData();
                 }
                 listView.value(value).done(function () {
-                    if (that.selectedIndex === -1) {
+                    if (that.selectedIndex === -1 && (!listView._selectedDataItems || !listView._selectedDataItems.length)) {
                         that._accessor(value);
                         that.input.val(value);
                         that._placeholder(true);
@@ -806,7 +806,7 @@
                     var value = that.text();
                     if (that._prev !== value) {
                         that._prev = value;
-                        if (that.options.filter === 'none' && that.options.virtual) {
+                        if (that.options.filter === 'none') {
                             that.listView.select(-1);
                         }
                         that.search(value);

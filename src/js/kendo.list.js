@@ -226,10 +226,10 @@
                 this._clearText();
                 this._accessor('');
                 this.listView.value([]);
+                if (this._isSelect) {
+                    this._customOption = undefined;
+                }
                 if (this._isFilterEnabled() && !this.options.enforceMinLength) {
-                    if (this._isSelect) {
-                        this._customOption = undefined;
-                    }
                     this._filter({
                         word: '',
                         open: false
@@ -377,14 +377,12 @@
                 clearTimeout(this._typingTimeout);
                 if (!options.enforceMinLength && !word.length || word.length >= options.minLength) {
                     this._state = 'filter';
+                    if (this.listView) {
+                        this.listView._emptySearch = !$.trim(word).length;
+                    }
                     if (!this._isFilterEnabled()) {
                         this._searchByWord(word);
                     } else {
-                        if ($.trim(word).length && this.listView) {
-                            this.listView._emptySearch = false;
-                        } else {
-                            this.listView._emptySearch = true;
-                        }
                         this._filter({
                             word: word,
                             open: true

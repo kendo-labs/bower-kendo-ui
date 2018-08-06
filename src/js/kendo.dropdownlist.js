@@ -180,6 +180,9 @@
                 that._arrow = null;
                 that._arrowIcon = null;
                 that.optionLabel.off();
+                if (that.filterInput) {
+                    that.filterInput.off(nsFocusEvent);
+                }
             },
             open: function () {
                 var that = this;
@@ -463,6 +466,9 @@
                 var that = this;
                 var wrapper = that.wrapper;
                 wrapper.on('focusin' + nsFocusEvent, proxy(that._focusinHandler, that)).on('focusout' + nsFocusEvent, proxy(that._focusoutHandler, that));
+                if (that.filterInput) {
+                    that.filterInput.on('focusin' + nsFocusEvent, proxy(that._focusinHandler, that)).on('focusout' + nsFocusEvent, proxy(that._focusoutHandler, that));
+                }
             },
             _focusHandler: function () {
                 this.wrapper.focus();

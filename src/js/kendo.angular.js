@@ -742,6 +742,14 @@
                 $(el).removeData('$scope').removeData('$$kendoScope').removeData('$isolateScope').removeData('$isolateScopeNoTemplate').removeClass('ng-scope');
             }
         }
+        var encode = kendo.htmlEncode;
+        var open = /{{/g;
+        var close = /}}/g;
+        var encOpen = '{&#8203;{';
+        var encClose = '}&#8203;}';
+        kendo.htmlEncode = function (str) {
+            return encode(str).replace(open, encOpen).replace(close, encClose);
+        };
         var pendingPatches = [];
         function defadvice(klass, methodName, func) {
             if ($.isArray(klass)) {

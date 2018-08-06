@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.2.704'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.2.806'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -571,7 +571,8 @@
                         precision = +customPrecision;
                     }
                     if (format === 'e') {
-                        return customPrecision ? number.toExponential(precision) : number.toExponential();
+                        var exp = customPrecision ? number.toExponential(precision) : number.toExponential();
+                        return exp.replace(POINT, numberFormat[POINT]);
                     }
                     if (isPercent) {
                         number *= 100;
@@ -615,8 +616,8 @@
                 if (negative && format[1]) {
                     format = format[1];
                     hasNegativeFormat = true;
-                } else if (number === 0) {
-                    format = format[2] || format[0];
+                } else if (number === 0 && format[2]) {
+                    format = format[2];
                     if (format.indexOf(SHARP) == -1 && format.indexOf(ZERO) == -1) {
                         return format;
                     }
@@ -669,6 +670,11 @@
                         idx = zeroIndex;
                     } else if (sharpIndex > zeroIndex) {
                         if (hasSharp && idx > sharpIndex) {
+                            var rounded = round(number, sharpIndex, negative);
+                            while (rounded.charAt(rounded.length - 1) === ZERO && sharpIndex > 0 && sharpIndex > zeroIndex) {
+                                sharpIndex--;
+                                rounded = round(number, sharpIndex, negative);
+                            }
                             idx = sharpIndex;
                         } else if (hasZero && idx < zeroIndex) {
                             idx = zeroIndex;
@@ -18015,10 +18021,10 @@
                 this._clearText();
                 this._accessor('');
                 this.listView.value([]);
+                if (this._isSelect) {
+                    this._customOption = undefined;
+                }
                 if (this._isFilterEnabled() && !this.options.enforceMinLength) {
-                    if (this._isSelect) {
-                        this._customOption = undefined;
-                    }
                     this._filter({
                         word: '',
                         open: false
@@ -18166,14 +18172,12 @@
                 clearTimeout(this._typingTimeout);
                 if (!options.enforceMinLength && !word.length || word.length >= options.minLength) {
                     this._state = 'filter';
+                    if (this.listView) {
+                        this.listView._emptySearch = !$.trim(word).length;
+                    }
                     if (!this._isFilterEnabled()) {
                         this._searchByWord(word);
                     } else {
-                        if ($.trim(word).length && this.listView) {
-                            this.listView._emptySearch = false;
-                        } else {
-                            this.listView._emptySearch = true;
-                        }
                         this._filter({
                             word: word,
                             open: true
@@ -22651,7 +22655,7 @@
                         that.focus(0);
                     }
                     that._createList();
-                    if (!action && that._values.length && !filtered && !that.options.skipUpdateOnBind) {
+                    if (!action && that._values.length && !filtered && !that.options.skipUpdateOnBind && !that._emptySearch) {
                         that._selectingValue = true;
                         that.bound(true);
                         that.value(that._values, true).done(function () {
@@ -22713,6 +22717,14 @@
                     that._prefetchByValue(value);
                 }
                 return that._valueDeferred;
+            },
+            _checkValuesOrder: function (value) {
+                if (this._removedAddedIndexes && this._removedAddedIndexes.length === value.length) {
+                    var newValue = this._removedAddedIndexes.slice();
+                    this._removedAddedIndexes = null;
+                    return newValue;
+                }
+                return value;
             },
             _prefetchByValue: function (value) {
                 var that = this, dataView = that._dataView, valueGetter = that._valueGetter, mapValueTo = that.options.mapValueTo, item, match = false, forSelection = [];
@@ -23589,6 +23601,7 @@
                         dataSource.range(oldSkip, take);
                     });
                 });
+                that._values = that._checkValuesOrder(that._values);
                 return added;
             },
             _clickHandler: function (e) {
@@ -24374,6 +24387,9 @@
                 that._arrow = null;
                 that._arrowIcon = null;
                 that.optionLabel.off();
+                if (that.filterInput) {
+                    that.filterInput.off(nsFocusEvent);
+                }
             },
             open: function () {
                 var that = this;
@@ -24657,6 +24673,9 @@
                 var that = this;
                 var wrapper = that.wrapper;
                 wrapper.on('focusin' + nsFocusEvent, proxy(that._focusinHandler, that)).on('focusout' + nsFocusEvent, proxy(that._focusoutHandler, that));
+                if (that.filterInput) {
+                    that.filterInput.on('focusin' + nsFocusEvent, proxy(that._focusinHandler, that)).on('focusout' + nsFocusEvent, proxy(that._focusoutHandler, that));
+                }
             },
             _focusHandler: function () {
                 this.wrapper.focus();
@@ -25551,7 +25570,7 @@
                 }
                 that._customOption = undefined;
                 that._options(data, '', that.value());
-                if (custom && custom[0].selected) {
+                if (custom && custom[0].selected && !that.listView._emptySearch) {
                     that._custom(custom.val());
                 }
             },
@@ -25843,7 +25862,7 @@
                     that._fetchData();
                 }
                 listView.value(value).done(function () {
-                    if (that.selectedIndex === -1) {
+                    if (that.selectedIndex === -1 && (!listView._selectedDataItems || !listView._selectedDataItems.length)) {
                         that._accessor(value);
                         that.input.val(value);
                         that._placeholder(true);
@@ -26055,7 +26074,7 @@
                     var value = that.text();
                     if (that._prev !== value) {
                         that._prev = value;
-                        if (that.options.filter === 'none' && that.options.virtual) {
+                        if (that.options.filter === 'none') {
                             that.listView.select(-1);
                         }
                         that.search(value);
@@ -27013,6 +27032,7 @@
                 if (this.persistTagList.added && this.persistTagList.added.length === removed.length && this.persistTagList.removed && this.persistTagList.removed.length === added.length) {
                     this.persistTagList = false;
                 } else {
+                    this.listView._removedAddedIndexes = this._old.slice();
                     this.persistTagList = {
                         added: added,
                         removed: removed
@@ -40022,7 +40042,7 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KDIALOGCONTENT = '.k-dialog-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', WINDOWEVENTSHANDLED = 'WindowEventsHandled', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', MODAL_NS = '.kendoWindowModal', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KDIALOGCONTENT = '.k-dialog-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', WINDOWEVENTSHANDLED = 'WindowEventsHandled', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl;
         function defined(x) {
             return typeof x != 'undefined';
         }
@@ -40583,7 +40603,7 @@
                             overlay.css('opacity', 0.5);
                         }
                         overlay.show();
-                        $(window).on('focus', function () {
+                        $(window).on('focus' + MODAL_NS, function () {
                             if (contentElement.data('isFront') && !$(document.activeElement).closest(contentElement).length) {
                                 that.element.focus();
                             }
@@ -40658,6 +40678,7 @@
                         duration: hideOptions.duration,
                         complete: proxy(this._deactivate, this)
                     });
+                    $(window).off(MODAL_NS);
                 }
                 if (that.options.isMaximized) {
                     that._enableDocumentScrolling();
@@ -40987,6 +41008,7 @@
                 }
                 this.wrapper.off(NS).children(KWINDOWCONTENT).off(NS).end().find('.k-resize-handle,.k-window-titlebar').off(NS);
                 $(window).off('resize' + NS + this._marker);
+                $(window).off(MODAL_NS);
                 $(window).off(NS);
                 clearTimeout(this._loadingIconTimeout);
                 Widget.fn.destroy.call(this);
@@ -46649,6 +46671,14 @@
                 $(el).removeData('$scope').removeData('$$kendoScope').removeData('$isolateScope').removeData('$isolateScopeNoTemplate').removeClass('ng-scope');
             }
         }
+        var encode = kendo.htmlEncode;
+        var open = /{{/g;
+        var close = /}}/g;
+        var encOpen = '{&#8203;{';
+        var encClose = '}&#8203;}';
+        kendo.htmlEncode = function (str) {
+            return encode(str).replace(open, encOpen).replace(close, encClose);
+        };
         var pendingPatches = [];
         function defadvice(klass, methodName, func) {
             if ($.isArray(klass)) {
