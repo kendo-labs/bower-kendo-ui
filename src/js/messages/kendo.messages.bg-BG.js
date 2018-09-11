@@ -30,7 +30,7 @@
         f();
     }
 }(function(){
-(function ($, undefined) { 
+(function ($, undefined) {
 /* Validator */
 if (kendo.ui.Validator) {
 kendo.ui.Validator.prototype.options.messages =
@@ -246,7 +246,7 @@ $.extend(true, kendo.spreadsheet.messages.filterMenu,{
   "filterByCondition": "Филтрирай по критерий",
   "apply": "Приложи",
   "search": "Търси",
-  "clear": "Премахни филтър",
+  "clear": "Премахни",
   "blanks": "(Празни места)",
   "operatorNone": "Без критерии",
   "and": "И",
@@ -729,6 +729,26 @@ $.extend(true, kendo.ui.Pager.prototype.options.messages,{
 });
 }
 
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+    kendo.ui.TreeListPager.prototype.options.messages =
+    $.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
+      "allPages": "Всички",
+      "page": "Страница",
+      "display": "{0} - {1} от {2} записи",
+      "of": "от {0}",
+      "empty": "Няма записи за показване!",
+      "refresh": "Опресни",
+      "first": "Към първата страница",
+      "itemsPerPage": "записи на страница",
+      "last": "Към последната страница",
+      "next": "Към следващата страница",
+      "previous": "Към предишната страница",
+      "morePages": "Още страници"
+    });
+    }
+
 /* FilterMenu messages */
 
 if (kendo.ui.FilterMenu) {
@@ -736,15 +756,19 @@ kendo.ui.FilterMenu.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "filter": "Филтрирай",
   "and": "и",
-  "clear": "Премахни филтър",
+  "clear": "Премахни",
   "info": "Покажи записи със стойност, която",
+  "title": "Покажи записи със стойност, която",
   "selectValue": "-Избери стойност-",
   "isFalse": "не е вярно",
   "isTrue": "е вярно",
   "or": "или",
   "cancel": "Откажи",
   "operator": "Оператор",
-  "value": "Стойност"
+  "additionalOperator": "Допълнителен оператор",
+  "value": "Стойност",
+  "additionalValue": "Допълнителна стойност",
+  "logic": "Логика"
 });
 }
 
@@ -754,7 +778,7 @@ if (kendo.ui.FilterCell) {
 kendo.ui.FilterCell.prototype.options.messages =
 $.extend(true, kendo.ui.FilterCell.prototype.options.messages,{
   "filter": "Филтрирай",
-  "clear": "Премахни филтър",
+  "clear": "Премахни",
   "isFalse": "не е вярно",
   "isTrue": "е вярно",
   "operator": "Оператор"
@@ -767,7 +791,7 @@ if (kendo.ui.FilterMultiCheck) {
 kendo.ui.FilterMultiCheck.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages,{
   "checkAll": "Избери всички",
-  "clear": "Премахни филтър",
+  "clear": "Премахни",
   "filter": "Филтрирай",
   "search": "Търси"
 });

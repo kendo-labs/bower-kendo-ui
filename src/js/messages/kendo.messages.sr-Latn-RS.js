@@ -287,6 +287,7 @@ if (kendo.ui.FilterMenu) {
 kendo.ui.FilterMenu.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "info": "Pokažite stavke s vrijednosnim koi imaju:",
+  "title": "Pokažite stavke s vrijednosnim koi imaju",
   "isTrue": "je tačno",
   "isFalse": "nije tačno",
   "filter": "filter",
@@ -485,6 +486,26 @@ $.extend(true, kendo.ui.MediaPlayer.prototype.options.messages,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "Sve",
+  "display": "{0} - {1} od {2} stavke",
+  "empty": "Nema stavki za prikaz",
+  "page": "Strana",
+  "of": "od {0}",
+  "itemsPerPage": "Predmeti po stranici",
+  "first": "Idite na prvu stranicu",
+  "previous": "Idite na prethodnu stranicu",
+  "next": "Idite na sledeću stranicu",
+  "last": "Idite na poslednju stranicu",
+  "refresh": "Osvježi",
+  "morePages": "Više stranica"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "Sve",
   "display": "{0} - {1} od {2} stavke",
   "empty": "Nema stavki za prikaz",

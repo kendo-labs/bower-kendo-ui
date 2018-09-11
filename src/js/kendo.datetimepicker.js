@@ -63,7 +63,8 @@
                 }
                 element.addClass('k-input').attr({
                     'role': 'combobox',
-                    'aria-expanded': false
+                    'aria-expanded': false,
+                    'autocomplete': 'off'
                 });
                 that._midnight = that._calculateMidnight(options.min, options.max);
                 disabled = element.is('[disabled]') || $(that.element).parents('fieldset').is(':disabled');

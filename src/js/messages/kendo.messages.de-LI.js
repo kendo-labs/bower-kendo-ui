@@ -335,6 +335,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "clear": "Löschen",
   "filter": "Filtern",
   "info": "Zeilen mit Werten anzeigen, die",
+  "title": "Zeilen mit Werten anzeigen, die",
   "isFalse": "falsch",
   "isTrue": "richtig",
   "or": "Oder",
@@ -409,6 +410,26 @@ $.extend(true, kendo.ui.Pager.prototype.options.messages,{
   "morePages": "Weitere Seiten"
 });
 }
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+    kendo.ui.TreeListPager.prototype.options.messages =
+    $.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
+      "allPages": "All",
+      "display": "Einträge {0} - {1} von {2}",
+      "empty": "keine Daten",
+      "first": "Zur ersten Seite",
+      "itemsPerPage": "Elemente pro Seite",
+      "last": "Zur letzten Seite",
+      "next": "Zur nächsten Seite",
+      "of": "von {0}",
+      "page": "Seite",
+      "previous": "Zur vorherigen Seite",
+      "refresh": "Aktualisieren",
+      "morePages": "Weitere Seiten"
+    });
+    }
 
 /* TreeList messages */
 

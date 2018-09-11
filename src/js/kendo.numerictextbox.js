@@ -332,7 +332,8 @@
                 that._text = text.addClass(element.className).attr({
                     'role': 'spinbutton',
                     'aria-valuemin': options.min !== NULL ? options.min * options.factor : options.min,
-                    'aria-valuemax': options.max !== NULL ? options.max * options.factor : options.max
+                    'aria-valuemax': options.max !== NULL ? options.max * options.factor : options.max,
+                    'autocomplete': 'off'
                 });
             },
             _keydown: function (e) {

@@ -134,46 +134,27 @@ input[type="reset"].k-button-expand {
 
 
 
-// Bare button
+// Flat button and bare
+.k-button.k-flat,
 .k-button.k-bare {
-    border-color: transparent !important;
-    color: inherit !important;
-    background: none !important;
-    box-shadow: none !important;
-    opacity: .7;
+    border-color: transparent !important; // sass-lint:disable-line no-important
+    color: inherit;
+    background: none !important; // sass-lint:disable-line no-important
+    box-shadow: none !important; // sass-lint:disable-line no-important
+    transition: color .2s ease-in-out;
 
     &:hover,
     &.k-state-hover,
     &:active,
     &.k-state-active,
-    &.k-state-active:hover {
+    &:hover:active,
+    &:hover.k-state-active {
         color: inherit;
     }
 
-    &:focus,
-    .k-state-focused {
-        opacity: .8;
+    &::before {
+        display: block;
     }
-
-    &:hover,
-    &.k-state-hover,
-    &:active,
-    &.k-state-active {
-        opacity: 1;
-    }
-
-    // Icon
-    .k-icon {
-        overflow: visible;
-    }
-
-    &:focus,
-    .k-state-focused {
-        .k-icon {
-            text-shadow: 0 0 3px currentColor;
-        }
-    }
-
 }
 
 
@@ -186,7 +167,6 @@ input[type="reset"].k-button-expand {
     border-width: 0;
     list-style: none;
     white-space: nowrap;
-    display: inline-block;
     display: inline-flex;
     flex-direction: row;
     vertical-align: middle;
@@ -261,7 +241,8 @@ input[type="reset"].k-button-expand {
     }
 
 }
-.k-ie9 .k-button-group {
+.k-no-flexbox .k-button-group {
+    display: inline-block;
 
     &:after {
         content: "";
@@ -270,19 +251,30 @@ input[type="reset"].k-button-expand {
     }
 
     .k-button {
-        float: left;
-    }
-
-    &.k-dialog-buttongroup .k-button {
-        float: right;
+        display: inline-block;
+        vertical-align: top;
     }
 }
-.k-ie9 .k-rtl .k-button-group {
-    .k-button {
-        float: right;
-    }
 
-    &.k-dialog-buttongroup .k-button {
+
+
+
+// Action buttons
+.k-action-buttons {
+    margin: 1em 0 0;
+    padding: 6px 8px;
+    text-align: right;
+    position: relative;
+    clear: both;
+
+    .k-button {
+        min-width: 75px;
+    }
+    .k-button + .k-button {
+        margin-left: 6px;
+    }
+    .k-button.k-left {
         float: left;
+        margin: 0 0 0 1em;
     }
 }

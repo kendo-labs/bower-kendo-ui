@@ -101,7 +101,7 @@
                     role: 'textbox',
                     'aria-haspopup': true
                 });
-                that._clear.on('click' + ns, proxy(that._clearValue, that));
+                that._clear.on('click' + ns + ' touchend' + ns, proxy(that._clearValue, that));
                 that._enable();
                 that._old = that._accessor();
                 if (element[0].id) {

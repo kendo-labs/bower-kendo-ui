@@ -220,6 +220,7 @@ if (kendo.ui.FilterMenu) {
 kendo.ui.FilterMenu.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "info": "Zobraziť záznamy s hodnotou, ktorá:",
+  "title": "Zobraziť záznamy s hodnotou, ktorá",
   "isTrue": "je pravda",
   "isFalse": "nie je pravda",
   "filter": "Filtrovať",
@@ -383,6 +384,26 @@ $.extend(true, kendo.ui.NumericTextBox.prototype.options,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "Všetko",
+  "display": "{0} - {1} z {2} záznamov",
+  "empty": "Žiadny záznam na zobrazenie",
+  "page": "Strana",
+  "of": "z {0}",
+  "itemsPerPage": "záznamov na stranu",
+  "first": "Prejsť na prvú stranu",
+  "previous": "Prejsť na predošlú stranu",
+  "next": "Prejsť na ďalšiu stranu",
+  "last": "Prejsť na poslednú stranu",
+  "refresh": "Obnoviť",
+  "morePages": "Ďalšie strany"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "Všetko",
   "display": "{0} - {1} z {2} záznamov",
   "empty": "Žiadny záznam na zobrazenie",

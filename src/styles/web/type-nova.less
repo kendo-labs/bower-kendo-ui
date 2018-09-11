@@ -123,6 +123,13 @@
 @component-text: @widget-text-color;
 @component-border: @widget-border-color;
 
+
+// Toolbar
+@toolbar-bg: @header-background-color;
+@toolbar-text: @normal-text-color;
+@toolbar-border: @widget-border-color;
+@toolbar-gradient: @widget-gradient;
+
 @card-bg: @component-bg;
 @card-text: @component-text;
 @card-border: @component-border;
@@ -146,6 +153,31 @@
 
 @chat-quick-reply-color: @accent;
 
+
+// Grid
+@grid-bg: @component-bg;
+@grid-text: @component-text;
+@grid-border: @component-border;
+
+@grid-header-bg: @secondary-widget-background-color;
+@grid-header-text: lighten(@hover-text-color, 8%);
+@grid-header-border: @grid-border;
+@grid-header-gradient: false;
+
+@grid-alt-bg: @grid-bg;
+@grid-alt-text: @grid-text;
+@grid-alt-border: @grid-border;
+
+@grid-hover-bg: @hover-background;
+@grid-hover-text: @grid-text;
+@grid-hover-border: @grid-border;
+@grid-hover-gradient: false;
+
+@grid-selected-bg: lighten(@info, 22%);
+@grid-selected-text: @grid-text;
+@grid-selected-border: @grid-border;
+@grid-selected-gradient: false;
+
 @theme-name: ~"nova";
 
 @import "common/mixins.less";
@@ -156,14 +188,13 @@
 @import "Default/card/theme.less";
 @import "Default/chat/theme.less";
 
-/* Main colors */
+// Main colors
 .k-splitbar .k-resize-handle {
     background-color: @normal-text-color;
 }
 
 .k-in,
-.k-item,
-.k-window-action {
+.k-item {
     border-color: transparent;
 }
 
@@ -214,7 +245,6 @@
 .k-splitbar,
 .k-dropzone-active,
 .k-tiles,
-.k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
 .k-upload-files,
@@ -328,13 +358,12 @@ textarea.k-textbox:hover,
     color: @disabled-border-color;
 }
 
-/* Border radius */
+// Border radius
 .k-block,
 .k-drag-clue,
 .k-touch-scrollbar,
 .k-window,
 .k-window-titleless .k-window-content,
-.k-window-action,
 .k-inline-block,
 .k-grid .k-filter-options,
 .k-grouping-header .k-group-indicator,
@@ -388,7 +417,7 @@ textarea.k-textbox:hover,
     border-radius: 0 @inputs-border-radius @inputs-border-radius 0;
 }
 
-/* Default icons opacity */
+// Default icons opacity
 .k-button .k-image,
 .k-panelbar > .k-state-active > .k-header > .k-icon,
 .k-panelbar > .k-state-active > .k-header .k-state-default .k-icon
@@ -425,7 +454,7 @@ textarea.k-textbox:hover,
     opacity: 1;
 }
 
-/* Loading indicator */
+// Loading indicator
 .k-i-loading {
     background-image: url('@{image-folder}/loading.gif');
 }
@@ -438,7 +467,7 @@ textarea.k-textbox:hover,
     border-radius: @inputs-border-radius;
 }
 
-/* Bare Button */
+// Bare Button
 .k-button.k-bare {
     position: relative;
 
@@ -484,7 +513,7 @@ textarea.k-textbox:hover,
     margin-left: -25px !important;
 }
 
-/* Menu */
+// Menu
 .k-menu {
     background-color: @base;
     border-color: @base;
@@ -514,7 +543,7 @@ textarea.k-textbox:hover,
     }
 }
 
-/* Inputs */
+// Inputs
 .k-list-container {
     border-color: darken(@normal-background, 12%);
     background-color: @normal-background;
@@ -693,7 +722,7 @@ input.k-textbox:active {
     color: @disabled-text-color;
 }
 
-/* Calendar */
+// Calendar
 .k-calendar {
     th,
     .k-alt {
@@ -791,7 +820,7 @@ input.k-textbox:active {
 // Notification
 @import "themes/notification.less";
 
-/* Tooltip */
+// Tooltip
 .k-widget.k-tooltip,
 .k-chart-crosshair-tooltip,
 .k-chart-shared-tooltip {
@@ -809,13 +838,13 @@ input.k-textbox:active {
     border-radius: 0;
 }
 
-/* Badge */
+// Badge
 .k-badge {
     background-color: @accent;
     color: contrast(@accent, @normal-background, @normal-text-color, 0.5);
 }
 
-/* TreeView */
+// TreeView
 .k-treeview {
     .k-state-hover {
         color: @normal-text-color;
@@ -826,7 +855,7 @@ input.k-textbox:active {
     }
 }
 
-/* Splitter */
+// Splitter
 .k-splitbar {
     background: @widget-background-color;
     border-color: @widget-background-color;
@@ -837,7 +866,7 @@ input.k-textbox:active {
     border-color: @selected-background;
 }
 
-/* Window */
+// Window
 .k-window {
     .box-shadow(@widget-shadow);
 }
@@ -852,7 +881,7 @@ input.k-textbox:active {
     }
 }
 
-/* PanelBar */
+// PanelBar
 .k-panelbar {
     color: @normal-text-color;
     background-color: @widget-background-color;
@@ -877,7 +906,7 @@ input.k-textbox:active {
     }
 }
 
-/* TabStrip */
+// TabStrip
 .k-tabstrip.k-header {
     background-color: @widget-background-color;
 }
@@ -918,7 +947,7 @@ input.k-textbox:active {
     border-top-color: @selected-background;
 }
 
-/* ProgressbBar */
+// ProgressbBar
 .k-progressbar {
     background: darken(@widget-background-color, 20%);
     border-color: darken(@widget-background-color, 20%);
@@ -969,7 +998,7 @@ input.k-textbox:active {
     }
 }
 
-/* Grid */
+// Grid
 .k-grid-header,
 .k-grid-header .k-header,
 .k-pager-wrap,
@@ -1015,6 +1044,10 @@ input.k-textbox:active {
 .k-grid-content .k-button-icontext .k-icon,
 .k-edit-form-container .k-edit-buttons .k-button-icontext .k-icon  {
     display: none;
+}
+
+.k-edit-form-container .k-edit-buttons {
+    background-color: @background;
 }
 
 .k-grid-toolbar .k-button:hover {
@@ -1122,7 +1155,7 @@ input.k-textbox:active {
     background-color: desaturate(@info, 8%);
 }
 
-/* PivotGrid */
+// PivotGrid
 .k-alt,
 .k-grid.k-alt,
 .k-fieldselector .k-item.k-header {
@@ -1154,7 +1187,7 @@ input.k-textbox:active {
     background: none;
 }
 
-/* Pager */
+// Pager
 .k-pager-wrap,
 .k-pager-numbers .k-link,
 .k-pager-numbers .k-link:link {
@@ -1176,7 +1209,7 @@ input.k-textbox:active {
     border-radius: 0;
 }
 
-/* Scheduler */
+// Scheduler
 .k-scheduler th,
 .k-scheduler tr,
 .k-scheduler td {
@@ -1277,7 +1310,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
     color: @selected-background;
 }
 
-/* Gantt */
+// Gantt
 .k-gantt .k-treelist,
 .k-gantt .k-treelist .k-alt,
 .k-gantt .k-header.k-nonwork-hour,
@@ -1387,7 +1420,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
     background-color: @widget-background-color;
 }
 
-/* Editor */
+// Editor
 .k-editor.k-header,
 .editorToolbarWindow.k-header,
 .k-filebrowser .k-header {
@@ -1406,7 +1439,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
     background-color: @hover-background;
 }
 
-/* Toolbar */
+// Toolbar
 .k-toolbar {
     .k-button,
     .k-button-group {
@@ -1496,7 +1529,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
         }
     }
 
-/* Upload */
+// Upload
 .k-file,
 .k-upload {
     background-color: @widget-background-color;
@@ -1601,7 +1634,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
     }
 }
 
-/* Slider */
+// Slider
 .k-slider-track {
     background-color: darken(@widget-background-color, 12%) ;
 }
@@ -1629,7 +1662,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
     background-color: @hover-background;
 }
 
-/* ColorPicker */
+// ColorPicker
 .k-flatcolorpicker .k-hue-slider .k-draghandle {
     background-color: @widget-background-color;
     border-color: @widget-background-color;
@@ -1674,13 +1707,13 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
     border-color: @radio-border-color;
 }
 
-/* Drag & Drop */
+// Drag & Drop
 .k-drag-clue {
     color: @inversed-text-color;
     .box-shadow(@widget-shadow);
 }
 
-/* Adaptive Grid */
+// Adaptive Grid
 .k-grid-mobile .k-column-active + th.k-header {
     border-left-color: @widget-border-color;
 }
@@ -1766,7 +1799,7 @@ html .km-pane-wrapper .km-widget,
     opacity: .4;
 }
 
-/* IE will ignore the above selectors if these are added too */
+// IE will ignore the above selectors if these are added too
 .k-mobile-list .k-check:checked,
 .k-mobile-list .k-edit-field [type=checkbox]:checked,
 .k-mobile-list .k-edit-field [type=radio]:checked {
@@ -1821,14 +1854,14 @@ html .km-pane-wrapper .km-widget,
     }
 }
 
-/* Responsive styles */
+// Responsive styles
 @media only screen and (max-width: 1450px) {
     .k-webkit,
     .k-ff,
     .k-ie11,
     .k-edge,
     .k-safari {
-        /* Responsive Scheduler */
+        // Responsive Scheduler
         .k-scheduler-toolbar .k-nav-current {
             margin: 0;
         }
@@ -1841,7 +1874,7 @@ html .km-pane-wrapper .km-widget,
     .k-ie11,
     .k-edge,
     .k-safari {
-        /* Responsive Scheduler */
+        // Responsive Scheduler
         .k-nav-current > .k-link .k-lg-date-format {
             max-width: 100px;
             display: inline-block;
@@ -1968,7 +2001,7 @@ html .km-pane-wrapper .km-widget,
             background-image: none;
         }
 
-        /* Responsive Pager */
+        // Responsive Pager
 
         .k-pager-wrap
         {
@@ -2195,7 +2228,7 @@ html .km-pane-wrapper .km-widget,
     }
 }
 
-/* Stock Chart */
+// Stock Chart
 .k-chart .k-mask {
     background-color: @widget-background-color;
     filter: alpha(opacity=68);
@@ -2245,7 +2278,7 @@ html .km-pane-wrapper .km-widget,
     background-image: none;
 }
 
-/* Map */
+// Map
 .k-map .k-header {
     background-color: @widget-background-color;
     border-color: @widget-border-color;
@@ -2340,9 +2373,13 @@ html .km-pane-wrapper .km-widget,
     }
 }
 
-/* Dialog */
+// Dialog
 
 .k-dialog {
+
+    .k-dialog-title {
+        font-size: 1.2em;
+    }
 
     &.k-alert .k-window-titlebar,
     &.k-confirm .k-window-titlebar,
@@ -2593,4 +2630,55 @@ html .km-pane-wrapper .km-widget,
 .k-menu-scroll-wrapper.vertical {
     .k-scroll-up { border-bottom-width: 1px; }
     .k-scroll-down { border-top-width: 1px; }
+}
+
+
+// Dropdowngrid
+.k-dropdowngrid-popup {
+    border-color: @grid-border;
+    color: @grid-text;
+    background-color: @grid-bg;
+}
+.k-dropdowngrid-popup .k-header {
+    .linear-gradient(~"@{grid-header-gradient}");
+    border-color: @grid-header-border;
+    color: @grid-header-text;
+    background-color: @grid-header-bg;
+}
+.k-dropdowngrid-popup .k-group-header {
+    border-color: @grid-header-border;
+    color: @grid-header-text;
+    background-color: @grid-header-bg;
+}
+.k-dropdowngrid-popup .k-cell {
+    border-color: @grid-border;
+}
+.k-dropdowngrid-popup .k-item:nth-child(2n) {
+    background-color: @grid-alt-bg;
+}
+.k-dropdowngrid-popup .k-footer {
+    border-color: @grid-header-border;
+    color: @grid-header-text;
+    background-color: @grid-header-bg;
+}
+.k-dropdowngrid-popup .k-item.k-state-hover {
+    .linear-gradient(~"@{grid-hover-gradient}");
+    border-color: @grid-hover-border;
+    color: @grid-hover-text;
+    background-color: @grid-hover-bg;
+}
+.k-dropdowngrid-popup .k-item.k-state-selected {
+    .linear-gradient(~"@{grid-selected-gradient}");
+    border-color: @grid-selected-border;
+    color: @grid-selected-text;
+    background-color: @grid-selected-bg;
+}
+.k-dropdowngrid-popup .k-group-cell span {
+    background-color: @grid-text;
+    color: @grid-bg;
+}
+.k-grid-list > .k-item.k-last > .k-cell,
+.k-grid-list > .k-item.k-last > .k-group-cell,
+.k-grid-list > .k-item.k-last > .k-spacer-cell {
+    border-bottom-color: @grid-text;
 }

@@ -70,7 +70,7 @@
                 var that = this, page, totalPages;
                 Widget.fn.init.call(that, element, options);
                 options = that.options;
-                that.dataSource = kendo.data.DataSource.create(options.dataSource);
+                that._createDataSource(options);
                 that.linkTemplate = kendo.template(that.options.linkTemplate);
                 that.selectTemplate = kendo.template(that.options.selectTemplate);
                 that.currentPageTemplate = kendo.template(that.options.currentPageTemplate);
@@ -198,8 +198,11 @@
                     dataSource.fetch();
                 }
             },
+            _createDataSource: function (options) {
+                this.dataSource = kendo.data.DataSource.create(options.dataSource);
+            },
             refresh: function (e) {
-                var that = this, idx, end, start = 1, reminder, page = that.page(), html = '', options = that.options, pageSize = that.pageSize(), total = that.dataSource.total(), totalPages = that.totalPages(), linkTemplate = that.linkTemplate, buttonCount = options.buttonCount;
+                var that = this, idx, end, start = 1, reminder, page = that.page(), html = '', options = that.options, pageSize = that.pageSize(), collapsedTotal = that._collapsedTotal(), total = that.dataSource.total(), totalPages = that.totalPages(), linkTemplate = that.linkTemplate, buttonCount = options.buttonCount;
                 DOCUMENT_ELEMENT.unbind(that.downEvent, $.proxy(that._hideList, that));
                 if (e && e.action == 'itemchange') {
                     return;
@@ -227,7 +230,7 @@
                 }
                 if (options.info) {
                     if (total > 0) {
-                        html = kendo.format(options.messages.display, that.dataSource.options.endless ? 1 : Math.min((page - 1) * pageSize + 1, total), Math.min(page * pageSize, total), total);
+                        html = kendo.format(options.messages.display, that.dataSource.options.endless ? 1 : Math.min((page - 1) * pageSize + 1, collapsedTotal), Math.min(page * pageSize, collapsedTotal), total);
                     } else {
                         html = options.messages.empty;
                     }
@@ -252,6 +255,9 @@
                     }
                     that.element.find('.k-pager-sizes select').val(pageSize).attr('aria-label', pageSize).filter('[' + kendo.attr('role') + '=dropdownlist]').kendoDropDownList('value', pageSize).kendoDropDownList('text', text);
                 }
+            },
+            _collapsedTotal: function () {
+                return this.dataSource.total();
             },
             _keydown: function (e) {
                 if (e.keyCode === kendo.keys.ENTER) {

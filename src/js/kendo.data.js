@@ -810,7 +810,7 @@
                 return function (a, b, ignore) {
                     b += '';
                     if (ignore) {
-                        a = '(' + a + ' || \'\').toLowerCase()';
+                        a = '(' + a + ' || \'\').toString().toLowerCase()';
                         b = b.toLowerCase();
                     }
                     return impl(a, quote(b), ignore);
@@ -1341,6 +1341,8 @@
             }
             return result;
         }
+        Query.normalizeGroup = normalizeGroup;
+        Query.normalizeSort = normalizeSort;
         Query.process = function (data, options, inPlace) {
             options = options || {};
             var query = new Query(data), group = options.group, sort = normalizeGroup(group || []).concat(normalizeSort(options.sort || [])), total, filterCallback = options.filterCallback, filter = options.filter, skip = options.skip, take = options.take;
@@ -2156,10 +2158,11 @@
                     });
                 }
             },
-            _removeItems: function (items) {
+            _removeItems: function (items, removePristine) {
                 if (!isArray(items)) {
                     items = [items];
                 }
+                var shouldRemovePristine = typeof removePristine !== 'undefined' ? removePristine : true;
                 var destroyed = [];
                 var autoSync = this.options.autoSync;
                 this.options.autoSync = false;
@@ -2179,7 +2182,7 @@
                                 }
                             }
                         });
-                        if (found) {
+                        if (found && shouldRemovePristine) {
                             this._removePristineForModel(model);
                             this._destroyed.pop();
                         }
@@ -2249,15 +2252,18 @@
                             }
                         }
                         that._storeData(true);
+                        that._syncEnd();
                         that._change({ action: 'sync' });
                         that.trigger(SYNC);
                     });
                 } else {
                     that._storeData(true);
+                    that._syncEnd();
                     that._change({ action: 'sync' });
                 }
                 return promise;
             },
+            _syncEnd: noop,
             cancelChanges: function (model) {
                 var that = this;
                 if (model instanceof kendo.data.Model) {
@@ -2271,10 +2277,12 @@
                     }
                     that._ranges = [];
                     that._addRange(that._data, 0);
+                    that._changesCanceled();
                     that._change();
                     that._markOfflineUpdatesAsDirty();
                 }
             },
+            _changesCanceled: noop,
             _markOfflineUpdatesAsDirty: function () {
                 var that = this;
                 if (that.options.offlineStorage != null) {
@@ -2402,12 +2410,14 @@
                                 items[idx].dirty = true;
                             }
                         } else {
+                            that._modelCanceled(model);
                             items.splice(idx, 1);
                             that._removeModelFromRanges(model);
                         }
                     }
                 });
             },
+            _modelCanceled: noop,
             _submit: function (promises, data) {
                 var that = this;
                 that.trigger(REQUESTSTART, { type: 'submit' });
@@ -2649,7 +2659,7 @@
                     }
                     this.offlineData(state.concat(destroyed));
                     if (updatePristine) {
-                        this._pristineData = this.reader._wrapDataAccessBase(state);
+                        this._pristineData = this.reader.reader ? this.reader.reader._wrapDataAccessBase(state) : this.reader._wrapDataAccessBase(state);
                     }
                 }
             },
@@ -2856,13 +2866,13 @@
                 }
                 if (that.options.serverAggregates !== true) {
                     options.aggregate = that._aggregate;
-                    that._aggregateResult = that._calculateAggregates(data, options);
                 }
                 result = that._queryProcess(data, options);
-                that.view(result.data);
-                if (result.total !== undefined && !that.options.serverFiltering) {
-                    that._total = result.total;
+                if (that.options.serverAggregates !== true) {
+                    that._aggregateResult = that._calculateAggregates(result.dataToAggregate || data, options);
                 }
+                that.view(result.data);
+                that._setFilterTotal(result.total, false);
                 e = e || {};
                 e.items = e.items || that._view;
                 that.trigger(CHANGE, e);
@@ -2929,19 +2939,23 @@
                 if (!isPrevented) {
                     this.trigger(PROGRESS);
                     result = this._queryProcess(this._data, this._mergeState(options));
-                    if (!this.options.serverFiltering) {
-                        if (result.total !== undefined) {
-                            this._total = result.total;
-                        } else {
-                            this._total = this._data.length;
-                        }
-                    }
-                    this._aggregateResult = this._calculateAggregates(this._data, options);
+                    this._setFilterTotal(result.total, true);
+                    this._aggregateResult = this._calculateAggregates(result.dataToAggregate || this._data, options);
                     this.view(result.data);
                     this.trigger(REQUESTEND, { type: 'read' });
                     this.trigger(CHANGE, { items: result.data });
                 }
                 return $.Deferred().resolve(isPrevented).promise();
+            },
+            _setFilterTotal: function (filterTotal, setDefaultValue) {
+                var that = this;
+                if (!that.options.serverFiltering) {
+                    if (filterTotal !== undefined) {
+                        that._total = filterTotal;
+                    } else if (setDefaultValue) {
+                        that._total = that._data.length;
+                    }
+                }
             },
             fetch: function (callback) {
                 var that = this;
@@ -2991,7 +3005,7 @@
                 var that = this, skip;
                 if (val !== undefined) {
                     val = math.max(math.min(math.max(val, 1), that.totalPages()), 1);
-                    that._query({ page: val });
+                    that._query(that._pageableQueryOptions({ page: val }));
                     return;
                 }
                 skip = that.skip();
@@ -3066,6 +3080,9 @@
                     }
                 }
                 return result;
+            },
+            _pageableQueryOptions: function (options) {
+                return options;
             },
             _wrapInEmptyGroup: function (model) {
                 var groups = this.group(), parent, group, idx, length;

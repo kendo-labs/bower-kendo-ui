@@ -217,6 +217,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "clear": "Rimuovi",
   "filter": "Filtro",
   "info": "Mostra elementi il cui valore:",
+  "title": "Mostra elementi il cui valore",
   "isFalse": "è falso",
   "isTrue": "è vero",
   "or": "O",
@@ -275,6 +276,25 @@ $.extend(true, kendo.ui.Groupable.prototype.options.messages,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "All",
+  "display": "{0} - {1} di {2} elementi",
+  "empty": "Nessun elemento da visualizzare",
+  "first": "Vai alla prima pagina",
+  "itemsPerPage": "elementi per pagina",
+  "last": "Vai all'ultima pagina",
+  "next": "Vai alla prossima pagina",
+  "of": "di {0}",
+  "page": "Pagina",
+  "previous": "Vai alla pagina precedente",
+  "refresh": "Aggiorna"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "All",
   "display": "{0} - {1} di {2} elementi",
   "empty": "Nessun elemento da visualizzare",
@@ -427,6 +447,24 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   "showWorkDay": "Mostra solo le ore lavorative"
 });
 }
+
+  /* Validator messages */
+
+  if (kendo.ui.Validator) {
+    kendo.ui.Validator.prototype.options.messages =
+      $.extend(true, kendo.ui.Validator.prototype.options.messages, {
+        "required": "{0} è richiesto",
+        "pattern": "{0} non è valido",
+        "min": "{0} dovrebbe essere maggiore di o uguale a {1}",
+        "max": "{0} dovrebbe essere minore di o uguale a {1}",
+        "step": "{0} non è valido",
+        "email": "{0} non è un formato email corretto",
+        "url": "{0} non è un URL valido",
+        "date": "{0} non è un formato data valido",
+        "dateCompare": "La data di fine dovrebbe essere maggiore o uguale di quella di inizio"
+      });
+  }
+
 
 /* Spreadsheet messages */
 

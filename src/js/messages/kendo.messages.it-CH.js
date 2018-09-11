@@ -197,6 +197,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "clear": "Rimuovi",
   "filter": "Filtro",
   "info": "Mostra elementi il cui valore:",
+  "title": "Mostra elementi il cui valore:",
   "isFalse": "è falso",
   "isTrue": "è vero",
   "or": "O",
@@ -255,6 +256,25 @@ $.extend(true, kendo.ui.Groupable.prototype.options.messages,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "All",
+  "display": "{0} - {1} di {2} elementi",
+  "empty": "Nessun elemento da visualizzare",
+  "first": "Vai alla prima pagina",
+  "itemsPerPage": "elementi per pagina",
+  "last": "Vai all'ultima pagina",
+  "next": "Vai alla prossima pagina",
+  "of": "di {0}",
+  "page": "Pagina",
+  "previous": "Vai alla pagina precedente",
+  "refresh": "Aggiorna"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "All",
   "display": "{0} - {1} di {2} elementi",
   "empty": "Nessun elemento da visualizzare",

@@ -22,7 +22,6 @@
                                                                                                                                                                                                        
 
 */
-/* Kendo skin */
 .k-theme-test-class,
 .ktb-theme-id-flat {
   opacity: 0;
@@ -299,8 +298,6 @@
   font-weight: bold;
 }
 .k-chat .k-bubble {
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
   border-color: #363940;
   color: #fff;
   background-color: #363940;
@@ -312,14 +309,6 @@
   -webkit-order: -1;
       -ms-flex-order: -1;
           order: -1;
-}
-.k-chat .k-bubble:hover {
-  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
-}
-.k-chat .k-state-selected .k-bubble {
-  -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
-          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
 }
 .k-chat .k-alt .k-bubble {
   border-color: #10c4b2;
@@ -344,12 +333,28 @@
 .k-chat .k-message-box .k-button:hover {
   color: #10c4b2;
 }
+.k-chat .k-toolbar-box {
+  border-color: inherit;
+  color: #4c5356;
+  background-color: #363940;
+}
+.k-chat .k-toolbar-box .k-button:hover {
+  color: #10c4b2;
+  background: none;
+}
+.k-chat .k-toolbar-box .k-scroll-button {
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 20px 5px #fff;
+          box-shadow: 0 0 20px 5px #fff;
+}
+.k-chat .k-toolbar-box .k-scroll-button:hover {
+  background-color: #fff;
+}
 .k-in,
 .k-item,
 .k-window-action {
   border-color: transparent;
 }
-/* main colors */
 .k-splitbar .k-resize-handle {
   background-color: #4c5356;
 }
@@ -411,7 +416,6 @@
   border-color: #363940;
 }
 .k-group,
-.k-toolbar,
 .k-grouping-header,
 .k-pager-wrap,
 .k-group-footer td,
@@ -542,12 +546,6 @@ textarea.k-textbox:hover,
   background-image: none;
 }
 .k-block,
-.k-header,
-.k-grid-header,
-.k-toolbar,
-.k-grouping-header,
-.k-pager-wrap,
-.k-draghandle,
 .k-treemap-tile,
 html .km-pane-wrapper .k-header {
   background-color: #363940;
@@ -562,7 +560,6 @@ html .km-pane-wrapper .k-header {
 .k-hr {
   border-color: #cccccc;
 }
-/* Badge */
 .k-badge {
   background-color: #10c4b2;
   color: #fff;
@@ -571,7 +568,6 @@ html .km-pane-wrapper .k-header {
 .k-tool {
   border-color: transparent;
 }
-/* IE will ignore the above selectors if these are added too */
 .k-mobile-list .k-check:checked,
 .k-mobile-list .k-edit-field [type=checkbox]:checked,
 .k-mobile-list .k-edit-field [type=radio]:checked {
@@ -608,7 +604,6 @@ html .km-pane-wrapper .k-header {
   -webkit-box-shadow: 0 0 0;
           box-shadow: 0 0 0;
 }
-/* Scheduler */
 .k-scheduler {
   color: #fff;
   background-color: #fff;
@@ -691,7 +686,6 @@ html .km-pane-wrapper .k-header {
 .k-panel > li.k-item {
   background-color: #363940;
 }
-/* states */
 .k-state-active,
 .k-state-active:hover,
 .k-active-filter {
@@ -862,7 +856,6 @@ td.k-state-focused.k-state-selected {
   color: #fff;
   border-color: #606572;
 }
-/* this selector should be used separately, otherwise old IEs ignore the whole rule */
 .k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active {
   color: #fff;
   background-color: #2eb3a6;
@@ -964,7 +957,6 @@ div.k-filebrowser-dropzone em {
 .k-dropzone {
   color: #4c5356;
 }
-/* Progressbar */
 .k-progressbar-indeterminate {
   background: url('Flat/indeterminate.gif');
 }
@@ -972,7 +964,6 @@ div.k-filebrowser-dropzone em {
 .k-progressbar-indeterminate .k-state-selected {
   display: none;
 }
-/* Slider */
 .k-slider-track {
   background-color: #cccccc;
 }
@@ -985,7 +976,6 @@ div.k-filebrowser-dropzone em {
 .k-slider-vertical .k-tick {
   background-image: url('Flat/slider-v.gif');
 }
-/* Tooltip */
 .k-widget.k-tooltip,
 .k-chart-crosshair-tooltip,
 .k-chart-shared-tooltip {
@@ -998,7 +988,6 @@ div.k-filebrowser-dropzone em {
   background-color: #feca3f;
   color: #0b0800;
 }
-/* Bootstrap theme fix */
 .input-prepend .k-tooltip-validation,
 .input-append .k-tooltip-validation {
   font-size: 12px;
@@ -1029,7 +1018,6 @@ div.k-filebrowser-dropzone em {
 .k-tooltip-validation .k-callout-e {
   border-left-color: #feca3f;
 }
-/* Splitter */
 .k-splitbar {
   background-color: #cccccc;
 }
@@ -1037,7 +1025,6 @@ div.k-filebrowser-dropzone em {
 .k-restricted-size-horizontal {
   background-color: #3f434b;
 }
-/* Upload */
 .k-upload.k-header {
   background: #fff;
   border-color: #cccccc;
@@ -1123,7 +1110,6 @@ div.k-filebrowser-dropzone em {
 .k-upload .k-upload-selected {
   border-color: #cccccc;
 }
-/* ImageBrowser */
 .k-tile {
   border-color: #fff;
 }
@@ -1134,7 +1120,6 @@ div.k-filebrowser-dropzone em {
 .k-tiles li.k-state-selected {
   border-color: #10c4b2;
 }
-/* TreeMap */
 .k-leaf,
 .k-leaf.k-state-hover:hover {
   color: #fff;
@@ -1143,7 +1128,6 @@ div.k-filebrowser-dropzone em {
 .k-leaf.k-inverse.k-state-hover:hover {
   color: #000;
 }
-/* Shadows */
 .k-slider,
 .k-treeview,
 .k-upload {
@@ -1193,7 +1177,6 @@ div.k-filebrowser-dropzone em {
   -webkit-box-shadow: inset 0 0 0 3px #cccccc;
           box-shadow: inset 0 0 0 3px #cccccc;
 }
-/* Window */
 .k-window {
   border-color: rgba(0, 0, 0, 0.25);
   -webkit-box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.25);
@@ -1218,7 +1201,6 @@ div.k-filebrowser-dropzone em {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.25);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.25);
 }
-/* Selection */
 .k-editor-inline ::-moz-selection {
   background-color: #10c4b2;
   text-shadow: none;
@@ -1254,7 +1236,6 @@ div.k-filebrowser-dropzone em {
   color: #fe633f;
   border-color: #fe633f;
 }
-/* Gantt */
 .k-gantt .k-treelist {
   background: #f5f5f5;
 }
@@ -1314,7 +1295,6 @@ div.k-filebrowser-dropzone em {
 .k-resource {
   background-color: #fff;
 }
-/* Border radius */
 .k-block,
 .k-textbox,
 .k-drag-clue,
@@ -1558,7 +1538,6 @@ div.k-filebrowser-dropzone em {
 .k-scheduler-mobile .k-event {
   border-radius: 0.8px;
 }
-/* Adaptive Grid */
 .k-grid-mobile .k-column-active + th.k-header {
   border-left-color: #4c5356;
 }
@@ -1634,7 +1613,6 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-filter-menu .k-button[type=reset]:active {
   background-color: #990000;
 }
-/* /Column Menu */
 .k-autocomplete.k-state-default,
 .k-picker-wrap.k-state-default,
 .k-numeric-wrap.k-state-default,
@@ -1964,7 +1942,6 @@ html .km-pane-wrapper .km-widget,
     border-color: #fff;
   }
 }
-/* Responsive styles */
 @media only screen and (max-width: 1024px) {
   .k-webkit .k-pager-numbers,
   .k-ff .k-pager-numbers,
@@ -2260,10 +2237,6 @@ html .km-pane-wrapper .km-widget,
   background-image: none;
   background-position: 50% 50%;
   border-color: #2eb3a6;
-}
-.k-popup.k-group {
-  color: #fff;
-  border-color: #363940;
 }
 .k-popup.k-group .k-state-default > .k-select {
   border-color: #606572;
@@ -2595,7 +2568,6 @@ html .km-pane-wrapper .km-widget,
 .k-spreadsheet-toolbar .k-combobox .k-state-active .k-input {
   color: #4c5356;
 }
-/* Dialog */
 .k-dialog {
   border-color: #cccccc;
 }
@@ -2722,4 +2694,49 @@ html .km-pane-wrapper .km-widget,
 }
 .k-combobox .k-input {
   color: #4c5356;
+}
+.k-dropdowngrid-popup {
+  border-color: #cccccc;
+  color: #4c5356;
+  background-color: #fff;
+}
+.k-dropdowngrid-popup .k-header {
+  border-color: #cccccc;
+  color: #fff;
+  background-color: #363940;
+}
+.k-dropdowngrid-popup .k-group-header {
+  border-color: #cccccc;
+  color: #fff;
+  background-color: #363940;
+}
+.k-dropdowngrid-popup .k-cell {
+  border-color: #cccccc;
+}
+.k-dropdowngrid-popup .k-item:nth-child(2n) {
+  background-color: #f5f5f5;
+}
+.k-dropdowngrid-popup .k-footer {
+  border-color: #cccccc;
+  color: #fff;
+  background-color: #363940;
+}
+.k-dropdowngrid-popup .k-item.k-state-hover {
+  border-color: #cccccc;
+  color: #4c5356;
+  background-color: #2eb3a6;
+}
+.k-dropdowngrid-popup .k-item.k-state-selected {
+  border-color: #cccccc;
+  color: #fff;
+  background-color: #10c4b2;
+}
+.k-dropdowngrid-popup .k-group-cell span {
+  background-color: #4c5356;
+  color: #fff;
+}
+.k-grid-list > .k-item.k-last > .k-cell,
+.k-grid-list > .k-item.k-last > .k-group-cell,
+.k-grid-list > .k-item.k-last > .k-spacer-cell {
+  border-bottom-color: #4c5356;
 }

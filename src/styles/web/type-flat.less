@@ -208,6 +208,13 @@
 @component-text: @widget-text-color;
 @component-border: @widget-border-color;
 
+
+// Toolbar
+@toolbar-bg: @header-background-color;
+@toolbar-text: @widget-text-color;
+@toolbar-border: @widget-border-color;
+@toolbar-gradient: @widget-gradient;
+
 @card-bg: @component-bg;
 @card-text: @component-text;
 @card-border: @component-border;
@@ -231,7 +238,32 @@
 
 @chat-quick-reply-color: @accent;
 
-/* Kendo skin */
+
+// Grid
+@grid-bg: @component-bg;
+@grid-text: @component-text;
+@grid-border: @component-border;
+
+@grid-header-bg: @header-background-color;
+@grid-header-text: @header-text-color;
+@grid-header-border: @grid-border;
+@grid-header-gradient: false;
+
+@grid-alt-bg: @alt-background-color;
+@grid-alt-text: @grid-text;
+@grid-alt-border: @grid-border;
+
+@grid-hover-bg: @hover-background-color;
+@grid-hover-text: @grid-text;
+@grid-hover-border: @grid-border;
+@grid-hover-gradient: false;
+
+@grid-selected-bg: @selected-background-color;
+@grid-selected-text: @selected-text-color;
+@grid-selected-border: @grid-border;
+@grid-selected-gradient: false;
+
+// Kendo skin
 
 @theme-name: ~"flat";
 
@@ -250,7 +282,7 @@
     border-color: transparent;
 }
 
-/* main colors */
+// main colors
 .k-splitbar .k-resize-handle {
     background-color: @normal-text-color;
 }
@@ -318,7 +350,6 @@
 }
 
 .k-group,
-.k-toolbar,
 .k-grouping-header,
 .k-pager-wrap,
 .k-group-footer td,
@@ -489,12 +520,6 @@ textarea.k-textbox:hover,
 }
 
 .k-block,
-.k-header,
-.k-grid-header,
-.k-toolbar,
-.k-grouping-header,
-.k-pager-wrap,
-.k-draghandle,
 .k-treemap-tile,
 html .km-pane-wrapper .k-header
 {
@@ -515,7 +540,7 @@ html .km-pane-wrapper .k-header
     border-color: @widget-border-color;
 }
 
-/* Badge */
+// Badge
 .k-badge {
     background-color: @accent;
     color: contrast(@accent, @normal-background, @normal-text-color, 0.5);
@@ -527,7 +552,7 @@ html .km-pane-wrapper .k-header
     border-color: transparent;
 }
 
-/* IE will ignore the above selectors if these are added too */
+// IE will ignore the above selectors if these are added too
 .k-mobile-list .k-check:checked,
 .k-mobile-list .k-edit-field [type=checkbox]:checked,
 .k-mobile-list .k-edit-field [type=radio]:checked
@@ -568,7 +593,7 @@ html .km-pane-wrapper .k-header
     .box-shadow(@draghandle-hover-shadow);
 }
 
-/* Scheduler */
+// Scheduler
 
 .k-scheduler
 {
@@ -689,7 +714,7 @@ html .km-pane-wrapper .k-header
     background-color: @panelbar-content-background;
 }
 
-/* states */
+// states
 .k-state-active,
 .k-state-active:hover,
 .k-active-filter {
@@ -911,7 +936,7 @@ td.k-state-focused.k-state-selected
     border-color: @secondary-border-color;
 }
 
-/* this selector should be used separately, otherwise old IEs ignore the whole rule */
+// this selector should be used separately, otherwise old IEs ignore the whole rule
 .k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active
 {
     color: @hover-text-color;
@@ -1046,7 +1071,7 @@ div.k-filebrowser-dropzone em
     color: @normal-text-color;
 }
 
-/* Progressbar */
+// Progressbar
 
 .k-progressbar-indeterminate
 {
@@ -1059,7 +1084,7 @@ div.k-filebrowser-dropzone em
     display: none;
 }
 
-/* Slider */
+// Slider
 .k-slider-track
 {
     background-color: @widget-border-color;
@@ -1080,7 +1105,7 @@ div.k-filebrowser-dropzone em
     background-image:url('@{image-folder}/slider-v.gif');
 }
 
-/* Tooltip */
+// Tooltip
 .k-widget.k-tooltip,
 .k-chart-crosshair-tooltip,
 .k-chart-shared-tooltip
@@ -1097,7 +1122,7 @@ div.k-filebrowser-dropzone em
     color: @validation-text-color;
 }
 
-/* Bootstrap theme fix */
+// Bootstrap theme fix
 .input-prepend .k-tooltip-validation,
 .input-append .k-tooltip-validation
 {
@@ -1146,7 +1171,7 @@ div.k-filebrowser-dropzone em
     border-left-color: @validation-border-color;
 }
 
-/* Splitter */
+// Splitter
 .k-splitbar
 {
     background-color: @splitbar-background-color;
@@ -1158,7 +1183,7 @@ div.k-filebrowser-dropzone em
     background-color: @error-text-color;
 }
 
-/* Upload */
+// Upload
 
 .k-upload.k-header {
     background: @widget-background-color;
@@ -1273,7 +1298,7 @@ div.k-filebrowser-dropzone em
     border-color: @widget-border-color;
 }
 
-/* ImageBrowser */
+// ImageBrowser
 
 .k-tile
 {
@@ -1291,7 +1316,7 @@ div.k-filebrowser-dropzone em
     border-color: @selected-border-color;
 }
 
-/* TreeMap */
+// TreeMap
 
 .k-leaf,
 .k-leaf.k-state-hover:hover
@@ -1305,7 +1330,7 @@ div.k-filebrowser-dropzone em
     color: #000;
 }
 
-/* Shadows */
+// Shadows
 .k-widget
 {
     .box-shadow(@widget-shadow);
@@ -1369,7 +1394,7 @@ div.k-filebrowser-dropzone em
     .box-shadow(inset 0 0 0 3px @widget-border-color);
 }
 
-/* Window */
+// Window
 
 .k-window
 {
@@ -1394,7 +1419,7 @@ div.k-filebrowser-dropzone em
     .box-shadow(inset 0 1px 1px @shadow-color);
 }
 
-/* Selection */
+// Selection
 .k-editor-inline {
     .selection(@selected-border-color);
 }
@@ -1402,7 +1427,7 @@ div.k-filebrowser-dropzone em
 // Notification
 @import "themes/notification.less";
 
-/* Gantt */
+// Gantt
 
 .k-gantt .k-treelist
 {
@@ -1492,7 +1517,7 @@ div.k-filebrowser-dropzone em
     background-color: @widget-background-color;
 }
 
-/* Border radius */
+// Border radius
 .k-block,
 .k-textbox,
 .k-drag-clue,
@@ -1817,7 +1842,7 @@ div.k-filebrowser-dropzone em
     border-radius: (@inner-border-radius - 1);
 }
 
-/* Adaptive Grid */
+// Adaptive Grid
 
 .k-grid-mobile .k-column-active + th.k-header
 {
@@ -1919,7 +1944,7 @@ html .km-pane-wrapper .km-widget,
     background-color: darken(red, 20);
 }
 
-/* /Column Menu */
+// /Column Menu
 
 .k-autocomplete.k-state-default,
 .k-picker-wrap.k-state-default,
@@ -2239,7 +2264,7 @@ html .km-pane-wrapper .km-widget,
     }
 }
 
-/* Responsive styles */
+// Responsive styles
 
 @media only screen and (max-width: 1024px) {
     .k-webkit,
@@ -2436,13 +2461,6 @@ html .km-pane-wrapper .km-widget,
 
 .k-popup.k-group
 {
-
-    color: @secondary-text-color;
-    border-color: @group-border-color;
-}
-
-.k-popup.k-group
-{
     .k-state-default > .k-select
     {
         border-color: @secondary-border-color;
@@ -2555,7 +2573,7 @@ html .km-pane-wrapper .km-widget,
         color: @widget-text-color;
     }
 }
-/* Dialog */
+// Dialog
 
 .k-dialog {
     border-color: @widget-border-color;
@@ -2732,4 +2750,56 @@ html .km-pane-wrapper .km-widget,
 // Combobox
 .k-combobox .k-input {
     color: @input-text;
+}
+
+
+
+// Dropdowngrid
+.k-dropdowngrid-popup {
+    border-color: @grid-border;
+    color: @grid-text;
+    background-color: @grid-bg;
+}
+.k-dropdowngrid-popup .k-header {
+    .linear-gradient(~"@{grid-header-gradient}");
+    border-color: @grid-header-border;
+    color: @grid-header-text;
+    background-color: @grid-header-bg;
+}
+.k-dropdowngrid-popup .k-group-header {
+    border-color: @grid-header-border;
+    color: @grid-header-text;
+    background-color: @grid-header-bg;
+}
+.k-dropdowngrid-popup .k-cell {
+    border-color: @grid-border;
+}
+.k-dropdowngrid-popup .k-item:nth-child(2n) {
+    background-color: @grid-alt-bg;
+}
+.k-dropdowngrid-popup .k-footer {
+    border-color: @grid-header-border;
+    color: @grid-header-text;
+    background-color: @grid-header-bg;
+}
+.k-dropdowngrid-popup .k-item.k-state-hover {
+    .linear-gradient(~"@{grid-hover-gradient}");
+    border-color: @grid-hover-border;
+    color: @grid-hover-text;
+    background-color: @grid-hover-bg;
+}
+.k-dropdowngrid-popup .k-item.k-state-selected {
+    .linear-gradient(~"@{grid-selected-gradient}");
+    border-color: @grid-selected-border;
+    color: @grid-selected-text;
+    background-color: @grid-selected-bg;
+}
+.k-dropdowngrid-popup .k-group-cell span {
+    background-color: @grid-text;
+    color: @grid-bg;
+}
+.k-grid-list > .k-item.k-last > .k-cell,
+.k-grid-list > .k-item.k-last > .k-group-cell,
+.k-grid-list > .k-item.k-last > .k-spacer-cell {
+    border-bottom-color: @grid-text;
 }

@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.2.822'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.911'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1733,6 +1733,7 @@
                 }
                 return false;
             };
+            support.matchMedia = 'matchMedia' in window;
             support.pushState = window.history && window.history.pushState;
             var documentMode = document.documentMode;
             support.hashChange = 'onhashchange' in window && !(support.browser.msie && (!documentMode || documentMode <= 8));
@@ -3358,6 +3359,19 @@
             scrollableParents.each(function (index, parent) {
                 $(parent).scrollTop(scrollTopPositions[index]);
             });
+        };
+        kendo.matchesMedia = function (mediaQuery) {
+            var media = kendo._bootstrapToMedia(mediaQuery) || mediaQuery;
+            return support.matchMedia && window.matchMedia(media).matches;
+        };
+        kendo._bootstrapToMedia = function (bootstrapMedia) {
+            return {
+                'xs': '(max-width: 576px)',
+                'sm': '(min-width: 576px)',
+                'md': '(min-width: 768px)',
+                'lg': '(min-width: 992px)',
+                'xl': '(min-width: 1200px)'
+            }[bootstrapMedia];
         };
         (function () {
             function postToProxy(dataURI, fileName, proxyURL, proxyTarget) {

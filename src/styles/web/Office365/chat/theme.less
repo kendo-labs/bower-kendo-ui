@@ -82,7 +82,28 @@
         background-color: @input-bg;
     }
     .k-message-box .k-button:hover {
-        color: @accent;
+        color: @base;
+    }
+
+
+    // Toolbar
+    .k-toolbar-box {
+        border-color: inherit;
+        color: @toolbar-text;
+        background-color: @toolbar-bg;
+
+        .k-button:hover {
+            color: @base;
+            background: none;
+        }
+
+        .k-scroll-button {
+            background-color: @chat-bg;
+            box-shadow: 0 0 20px 5px @chat-bg;
+        }
+        .k-scroll-button:hover {
+            background-color: @chat-bg;
+        }
     }
 
 }

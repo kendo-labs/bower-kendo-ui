@@ -252,6 +252,7 @@ if (kendo.ui.FilterMenu) {
 kendo.ui.FilterMenu.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "info": "Show items with value that:",
+  "title": "Show items with value that",
   "isTrue": "is true",
   "isFalse": "is false",
   "filter": "Filter",
@@ -413,6 +414,26 @@ $.extend(true, kendo.ui.NumericTextBox.prototype.options,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "All",
+  "display": "{0} - {1} of {2} items",
+  "empty": "No items to display",
+  "page": "Page",
+  "of": "of {0}",
+  "itemsPerPage": "items per page",
+  "first": "Go to the first page",
+  "previous": "Go to the previous page",
+  "next": "Go to the next page",
+  "last": "Go to the last page",
+  "refresh": "Refresh",
+  "morePages": "More pages"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "All",
   "display": "{0} - {1} of {2} items",
   "empty": "No items to display",

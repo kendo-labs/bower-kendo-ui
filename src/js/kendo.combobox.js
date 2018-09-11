@@ -242,6 +242,7 @@
                 var that = this;
                 var state = that._state;
                 var isFiltered = that.dataSource.filter() ? that.dataSource.filter().filters.length > 0 : false;
+                var reinitialized = !that.ul.find(that.listView.focus()).length;
                 if (that.popup.visible()) {
                     return;
                 }
@@ -262,6 +263,8 @@
                     that._openPopup();
                     if (that.options.virtual) {
                         that._focusItem();
+                    } else if (reinitialized && that.options.highlightFirst) {
+                        that.listView.focus(0);
                     }
                 }
             },
@@ -772,7 +775,7 @@
                     }
                 } else if (key != keys.TAB && !that._move(e)) {
                     that._search();
-                } else if (key === keys.ESC && !that.popup.visible()) {
+                } else if (key === keys.ESC && !that.popup.visible() && that.text()) {
                     that._clearValue();
                 }
             },

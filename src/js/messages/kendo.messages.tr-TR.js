@@ -287,7 +287,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "clear": "Temizle",
   "filter": "Filtrele",
   "info": "Tanıma uyan kayıtları göster:",
-  "title": "",
+  "title": "Tanıma uyan kayıtları göster",
   "isFalse": "Yanlış",
   "isTrue": "Doğru",
   "operator": "Operatör",
@@ -352,6 +352,26 @@ $.extend(true, kendo.ui.Groupable.prototype.options.messages,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "Tümü",
+  "display": "{0} - {1} aralığı gösteriliyor. Toplam {2} öğe var",
+  "empty": "Görüntülenecek öğe yok",
+  "first": "İlk sayfaya git",
+  "itemsPerPage": "Sayfa başına ürün",
+  "last": "Son sayfaya git",
+  "morePages": "Daha fazla sayfa",
+  "next": "Bir sonraki sayfaya git",
+  "of": "{0}",
+  "page": "Sayfa",
+  "previous": "Bir önceki sayfaya git",
+  "refresh": "Güncelle"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "Tümü",
   "display": "{0} - {1} aralığı gösteriliyor. Toplam {2} öğe var",
   "empty": "Görüntülenecek öğe yok",

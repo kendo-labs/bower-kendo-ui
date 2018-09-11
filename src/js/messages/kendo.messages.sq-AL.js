@@ -287,6 +287,7 @@ if (kendo.ui.FilterMenu) {
 kendo.ui.FilterMenu.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "info": "Trego artikujt me vlerë që:",
+  "title": "Trego artikujt me vlerë që",
   "isTrue": "është e vërtetë",
   "isFalse": "është e pavërtetë",
   "filter": "Filtro",
@@ -485,6 +486,26 @@ $.extend(true, kendo.ui.MediaPlayer.prototype.options.messages,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "Të gjitha",
+  "display": "{0} - {1} prej {2} artikujve",
+  "empty": "Nuk ka artikuj për të shfaqur",
+  "page": "Faqe",
+  "of": "of {0}",
+  "itemsPerPage": "artikuj për faqe",
+  "first": "Shkoni në faqen e parë",
+  "previous": "Shkoni në faqen e mëparshme",
+  "next": "Shkoni në faqen e ardhshme",
+  "last": "Shkoni në faqen e fundit",
+  "refresh": "Rifresko",
+  "morePages": "Më shumë faqe"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "Të gjitha",
   "display": "{0} - {1} prej {2} artikujve",
   "empty": "Nuk ka artikuj për të shfaqur",

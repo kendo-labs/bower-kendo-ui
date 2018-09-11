@@ -260,6 +260,7 @@
     kendo.ui.FilterMenu.prototype.options.messages =
       $.extend(true, kendo.ui.FilterMenu.prototype.options.messages, {
         "info": "Δείξε αντικείμενα με τιμή που:",
+        "title": "Δείξε αντικείμενα με τιμή που",
         "isTrue": "είναι αληθές",
         "isFalse": "είναι ψευδές",
         "filter": "Φίλτρο",
@@ -457,6 +458,26 @@
   if (kendo.ui.Pager) {
     kendo.ui.Pager.prototype.options.messages =
       $.extend(true, kendo.ui.Pager.prototype.options.messages, {
+        "allPages": "Όλα",
+        "display": "{0} - {1} από {2} αντικείμενα",
+        "empty": "Δεν υπάρχουν αντικείμενα",
+        "page": "Σελίδα",
+        "of": "από {0}",
+        "itemsPerPage": "αντικείμενα ανα σελίδα",
+        "first": "Πηγαίντε στην πρώτη σελίδα",
+        "previous": "Πηγαίντε στην προηγούμενη σελίδα",
+        "next": "Πηγαίντε στην επόμενη σελίδα",
+        "last": "Πηγαίντε στην τελευταία σελίδα",
+        "refresh": "Ανανέωση",
+        "morePages": "Περισσότερες Σελίδες"
+      });
+  }
+
+  /* TreeListPager messages */
+
+  if (kendo.ui.TreeListPager) {
+    kendo.ui.TreeListPager.prototype.options.messages =
+      $.extend(true, kendo.ui.TreeListPager.prototype.options.messages, {
         "allPages": "Όλα",
         "display": "{0} - {1} από {2} αντικείμενα",
         "empty": "Δεν υπάρχουν αντικείμενα",

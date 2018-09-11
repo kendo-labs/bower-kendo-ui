@@ -36,6 +36,32 @@
 @grid-header-padding: .429em .2em .429em 1em;
 @icon-positioning: "material";
 
+@window-border-width: 0;
+@window-border-style: solid;
+
+@window-titlebar-padding-x: 16px;
+@window-titlebar-padding-y: 10px;
+@window-titlebar-border-width: 0;
+@window-titlebar-border-style: none;
+
+@window-title-font-size: 1.2em;
+@window-title-line-height: 1.25;
+
+@window-inner-padding-x: @window-titlebar-padding-x;
+@window-inner-padding-y: @window-inner-padding-x;
+
+@grid-padding-x: 12px;
+@grid-padding-y: 8px;
+
+@grid-header-padding-x: @grid-padding-x;
+@grid-header-padding-y: @grid-padding-y;
+
+@grid-footer-padding-x: @grid-header-padding-x;
+@grid-footer-padding-y: @grid-header-padding-y;
+
+@grid-cell-padding-x: @grid-padding-x;
+@grid-cell-padding-y: @grid-padding-y;
+
 @import "common/core.less";
 
 @calendar-cell-width: ((38px / 14px) * 1em);
@@ -522,13 +548,6 @@ span.k-tooltip
     padding: 9px 17px;
 }
 
-.k-block > .k-header,
-.k-window-titlebar {
-    padding: 0.49em 0;
-    height: 2.362em;
-    border-width: 0;
-}
-
 .k-widget.k-tooltip-validation {
     padding: 11px 20px 9px;
 }
@@ -536,23 +555,6 @@ span.k-tooltip
 .k-tooltip-validation .k-i-warning,
 .k-tooltip-validation .k-i-warning {
     margin-right: 10px;
-}
-
-.k-window-titlebar .k-window-actions {
-    right: 0.929em;
-}
-
-div.k-window {
-    border-width: 0;
-}
-
-.k-window-title {
-    right: 1.143em;
-    left: 1.143em;
-}
-
-div.k-window-content {
-    padding: 1.333em;
 }
 
 .k-file {
@@ -633,7 +635,7 @@ div.k-window-content {
     left: -4px;
 }
 
-/* PanelBar */
+// PanelBar
 .k-panelbar-expand,
 .k-panelbar-collapse {
     right: 16px;
@@ -736,4 +738,9 @@ div.k-window-content {
 
 .km-pane-wrapper .k-pager-numbers .k-state-selected {
     padding: .971em .86em .571em;
+}
+
+
+.k-window-titlebar .k-window-actions {
+    top: (@window-titlebar-padding-y * .75);
 }

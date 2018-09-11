@@ -218,6 +218,7 @@ if (kendo.ui.FilterMenu) {
 kendo.ui.FilterMenu.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "info": "Mostrar itens com valor que:",
+  "title": "Mostrar itens com valor que",
   "isTrue": "é verdadeiro",
   "isFalse": "é falso",
   "filter": "Filtrar",
@@ -379,6 +380,26 @@ $.extend(true, kendo.ui.NumericTextBox.prototype.options,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "Tudo",
+  "display": "Registos {0} - {1} de {2}",
+  "empty": "Sem registos para apresentar.",
+  "page": "Página",
+  "of": "de {0}",
+  "itemsPerPage": "itens por página",
+  "first": "Ir para a primeira página",
+  "previous": "Ir para a página anterior",
+  "next": "Ir para a próxima página",
+  "last": "Ir para a última página",
+  "refresh": "Atualizar",
+  "morePages": "Mais páginas"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "Tudo",
   "display": "Registos {0} - {1} de {2}",
   "empty": "Sem registos para apresentar.",

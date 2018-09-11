@@ -22,7 +22,6 @@
                                                                                                                                                                                                        
 
 */
-/* Common Platform CSS */
 @-ms-viewport {
   width: device-width;
   user-zoom: fixed;
@@ -202,10 +201,6 @@
 [data-role="layout"] {
   display: none;
 }
-/**
- * The angular tags will be converted to div kendo-mobile-view
- *
- */
 [data-role="view"],
 [data-role="drawer"],
 kendo-mobile-view,
@@ -301,7 +296,6 @@ kendo-mobile-drawer {
   border: 0;
   width: auto;
 }
-/* Loader */
 .km-loader {
   top: 50%;
   left: 50%;
@@ -385,7 +379,6 @@ kendo-mobile-drawer {
             transform: rotate(225deg);
   }
 }
-/* Stretched View */
 .km-stretched-view {
   display: -webkit-box;
   display: -webkit-flex;
@@ -433,7 +426,6 @@ kendo-mobile-drawer {
 .km-native-scrolling .km-blackberry .km-content {
   min-height: auto;
 }
-/* Restore position:absolute during animation */
 .km-native-scrolling .km-splitview {
   position: absolute;
 }
@@ -490,7 +482,6 @@ kendo-mobile-drawer {
 .km-native-scrolling .km-footer {
   z-index: 2;
 }
-/* Disabled states */
 .km-state-disabled {
   opacity: 0.5;
 }
@@ -522,7 +513,6 @@ kendo-mobile-drawer {
   right: auto;
   margin-left: -1em;
 }
-/* DetailButtons */
 .km-detail {
   position: absolute;
   float: right;
@@ -566,7 +556,6 @@ kendo-mobile-drawer {
   text-align: center;
   font-weight: bold;
 }
-/* Buttons */
 .km-button {
   cursor: pointer;
   outline: 0;
@@ -815,7 +804,6 @@ button.km-button {
   visibility: visible;
   line-height: 0;
 }
-/* Navbar */
 .km-on-ios.km-black-translucent-status-bar.km-app .km-header .km-navbar {
   padding-top: 1.4em;
   -webkit-background-clip: border-box;
@@ -841,7 +829,6 @@ button.km-button {
 .km-popup .km-leftitem {
   left: 0;
 }
-/* Center left/right item contents */
 .km-leftitem,
 .km-rightitem {
   height: 100%;
@@ -863,7 +850,6 @@ button.km-button {
   width: 0;
   vertical-align: middle;
 }
-/* Toolbar */
 .km-root .k-toolbar {
   position: relative;
   display: block;
@@ -1248,7 +1234,6 @@ button.km-button {
   top: 50%;
   margin-top: -0.32rem;
 }
-/* Filtering */
 .km-filter-form {
   width: 100%;
   padding: .5em 0;
@@ -1312,7 +1297,6 @@ button.km-button {
   top: -3333px;
   left: -3333px;
 }
-/* Load more */
 .km-load-more {
   display: block;
   padding: .3em 0 1.2em;
@@ -1327,7 +1311,6 @@ button.km-button {
   -webkit-transform: translateY(-50%);
   right: 4em;
 }
-/* Pull to refresh */
 .km-scroller-pull {
   width: 100%;
   display: block;
@@ -1368,7 +1351,6 @@ button.km-button {
   -webkit-transition: none;
   transition: none;
 }
-/* Scroller */
 .km-touch-scrollbar {
   position: absolute;
   visibility: hidden;
@@ -1451,7 +1433,6 @@ button.km-button {
   height: .55em;
   margin: 0 .3em;
 }
-/* PopUp + ActionSheet */
 .km-root .km-popup .k-item,
 .km-widget.km-actionsheet > li {
   list-style-type: none;
@@ -1495,7 +1476,6 @@ button.km-button {
 .km-tablet div.km-actionsheet-phone li.km-actionsheet-cancel {
   display: block;
 }
-/* PopOver */
 .km-popover-root .km-popup-wrapper {
   position: relative !important;
 }
@@ -1563,7 +1543,6 @@ button.km-button {
 .km-popover-root .km-content {
   -ms-flex: auto;
 }
-/* SplitView */
 div.km-splitview > .km-content,
 kendo-mobile-split-view.km-splitview > .km-content {
   -webkit-box-orient: horizontal;
@@ -1601,7 +1580,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-split-vertical > .km-content > .km-pane > .km-view {
   display: -webkit-box;
 }
-/* ModalView */
 .km-modalview-root {
   text-align: center;
 }
@@ -1647,7 +1625,6 @@ div.km-split-horizontal > .km-content > .km-pane {
   width: 0px;
   display: inline-block;
 }
-/* Drawer */
 .km-drawer,
 [data-role=drawer] {
   top: 0;
@@ -1664,7 +1641,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-right-drawer {
   right: 0;
 }
-/* Forms and icons */
 .km-item label:before,
 .km-item label.km-item-checked:after {
   position: absolute;
@@ -1676,7 +1652,6 @@ div.km-split-horizontal > .km-content > .km-pane {
   height: 36px;
   margin-top: -18px;
 }
-/* Slider */
 .km-widget .k-slider {
   line-height: .6em;
   position: relative;
@@ -1739,7 +1714,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-widget .k-slider-tooltip {
   display: none;
 }
-/* Dialog */
 .km-dialog {
   position: absolute;
   min-width: 19em;
@@ -1778,7 +1752,6 @@ div.km-split-horizontal > .km-content > .km-pane {
       -ms-user-select: none;
           user-select: none;
 }
-/* Form elements */
 .km-list input[type=text]:not(.k-input),
 .km-list input[type=password],
 .km-list input[type=search],
@@ -1881,7 +1854,6 @@ div.km-split-horizontal > .km-content > .km-pane {
   margin-top: 0;
   font-family: inherit;
 }
-/* Checkboxes and Radios */
 .km-listview-label input[type=radio],
 .km-listview-label input[type=checkbox] {
   border: 0;
@@ -1889,7 +1861,6 @@ div.km-split-horizontal > .km-content > .km-pane {
   width: 1em;
   height: .9em;
 }
-/* Nova theme features */
 .km-list label.km-required:after {
   content: "*";
   display: inline-block;
@@ -2003,7 +1974,6 @@ div.km-split-horizontal > .km-content > .km-pane {
   width: auto;
   display: block;
 }
-/* Standalone Checkboxes and RadioButtons */
 .km-root input.km-checkbox,
 .km-root input.km-radio {
   display: inline;
@@ -2049,7 +2019,6 @@ div.km-split-horizontal > .km-content > .km-pane {
   left: 0.25rem;
   border-radius: 50%;
 }
-/* Validation */
 .km-root .km-invalid-msg {
   font-size: 1.2rem;
   position: static;
@@ -2916,7 +2885,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-root .km-icon-label.k-i-drophere:before {
   content: "\E119";
 }
-/* animation classes */
 .k-fx-end .k-fx-next,
 .k-fx-end .k-fx-current {
   -webkit-transition: all 350ms ease-out;
@@ -2941,7 +2909,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-reverse .k-fx-next {
   z-index: 0;
 }
-/* Zoom */
 .k-fx-zoom.k-fx-start .k-fx-next {
   -webkit-transform: scale(0) !important;
       -ms-transform: scale(0) !important;
@@ -2968,7 +2935,6 @@ div.km-split-horizontal > .km-content > .km-pane {
       -ms-transform: scale(0) !important;
           transform: scale(0) !important;
 }
-/* Fade */
 .k-fx-fade.k-fx-start .k-fx-next {
   will-change: opacity;
   opacity: 0;
@@ -2982,12 +2948,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .k-fx-fade.k-fx-reverse.k-fx-end .k-fx-current {
   opacity: 0;
-}
-/* Slide */
-.k-fx-slide {
-  /* left */
-  /* left reverse */
-  /* right */
 }
 .k-fx-slide.k-fx-end .k-fx-next .km-content,
 .k-fx-slide.k-fx-end .k-fx-next .km-header,
@@ -3056,9 +3016,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-slide.k-fx-reverse.k-fx-end .k-fx-next .km-footer {
   opacity: 1;
 }
-.k-fx-slide.k-fx-right {
-  /* right reverse */
-}
 .k-fx-slide.k-fx-right.k-fx-start .k-fx-next .km-content {
   -webkit-transform: translatex(-100%);
       -ms-transform: translatex(-100%);
@@ -3089,11 +3046,67 @@ div.km-split-horizontal > .km-content > .km-pane {
       -ms-transform: translatex(0%);
           transform: translatex(0%);
 }
-/* Tile */
-.k-fx-tile {
-  /* left */
-  /* left reverse */
-  /* right */
+.k-fx-tile.k-fx-start .k-fx-next {
+  will-change: transform;
+  -webkit-transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
+}
+.k-fx-tile.k-fx-end .k-fx-current {
+  -webkit-transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
+}
+.k-fx-tile.k-fx-reverse.k-fx-start .k-fx-current {
+  will-change: transform;
+  -webkit-transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
+}
+.k-fx-tile.k-fx-reverse.k-fx-end .k-fx-current {
+  -webkit-transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
+}
+.k-fx-tile.k-fx-reverse.k-fx-start .k-fx-next {
+  -webkit-transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
+}
+.k-fx-tile.k-fx-reverse.k-fx-end .k-fx-next {
+  -webkit-transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
+}
+.k-fx-tile.k-fx-right.k-fx-start .k-fx-next {
+  -webkit-transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
+}
+.k-fx-tile.k-fx-right.k-fx-end .k-fx-current {
+  -webkit-transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
+}
+.k-fx-tile.k-fx-right.k-fx-reverse.k-fx-start .k-fx-current {
+  -webkit-transform: translatex(0);
+      -ms-transform: translatex(0);
+          transform: translatex(0);
+}
+.k-fx-tile.k-fx-right.k-fx-reverse.k-fx-end .k-fx-current {
+  -webkit-transform: translatex(-100%);
+      -ms-transform: translatex(-100%);
+          transform: translatex(-100%);
+}
+.k-fx-tile.k-fx-right.k-fx-reverse.k-fx-start .k-fx-next {
+  -webkit-transform: translatex(100%);
+      -ms-transform: translatex(100%);
+          transform: translatex(100%);
+}
+.k-fx-tile.k-fx-right.k-fx-reverse.k-fx-end .k-fx-next {
+  -webkit-transform: translatex(0%);
+      -ms-transform: translatex(0%);
+          transform: translatex(0%);
 }
 .k-fx-tile.k-fx-start .k-fx-next {
   will-change: transform;
@@ -3127,9 +3140,6 @@ div.km-split-horizontal > .km-content > .km-pane {
       -ms-transform: translatex(0);
           transform: translatex(0);
 }
-.k-fx-tile.k-fx-right {
-  /* right reverse */
-}
 .k-fx-tile.k-fx-right.k-fx-start .k-fx-next {
   -webkit-transform: translatex(-100%);
       -ms-transform: translatex(-100%);
@@ -3160,78 +3170,6 @@ div.km-split-horizontal > .km-content > .km-pane {
       -ms-transform: translatex(0%);
           transform: translatex(0%);
 }
-/* Tile */
-.k-fx-tile {
-  /* left */
-  /* left reverse */
-  /* right */
-}
-.k-fx-tile.k-fx-start .k-fx-next {
-  will-change: transform;
-  -webkit-transform: translatex(100%);
-      -ms-transform: translatex(100%);
-          transform: translatex(100%);
-}
-.k-fx-tile.k-fx-end .k-fx-current {
-  -webkit-transform: translatex(-100%);
-      -ms-transform: translatex(-100%);
-          transform: translatex(-100%);
-}
-.k-fx-tile.k-fx-reverse.k-fx-start .k-fx-current {
-  will-change: transform;
-  -webkit-transform: translatex(0);
-      -ms-transform: translatex(0);
-          transform: translatex(0);
-}
-.k-fx-tile.k-fx-reverse.k-fx-end .k-fx-current {
-  -webkit-transform: translatex(100%);
-      -ms-transform: translatex(100%);
-          transform: translatex(100%);
-}
-.k-fx-tile.k-fx-reverse.k-fx-start .k-fx-next {
-  -webkit-transform: translatex(-100%);
-      -ms-transform: translatex(-100%);
-          transform: translatex(-100%);
-}
-.k-fx-tile.k-fx-reverse.k-fx-end .k-fx-next {
-  -webkit-transform: translatex(0);
-      -ms-transform: translatex(0);
-          transform: translatex(0);
-}
-.k-fx-tile.k-fx-right {
-  /* right reverse */
-}
-.k-fx-tile.k-fx-right.k-fx-start .k-fx-next {
-  -webkit-transform: translatex(-100%);
-      -ms-transform: translatex(-100%);
-          transform: translatex(-100%);
-}
-.k-fx-tile.k-fx-right.k-fx-end .k-fx-current {
-  -webkit-transform: translatex(100%);
-      -ms-transform: translatex(100%);
-          transform: translatex(100%);
-}
-.k-fx-tile.k-fx-right.k-fx-reverse.k-fx-start .k-fx-current {
-  -webkit-transform: translatex(0);
-      -ms-transform: translatex(0);
-          transform: translatex(0);
-}
-.k-fx-tile.k-fx-right.k-fx-reverse.k-fx-end .k-fx-current {
-  -webkit-transform: translatex(-100%);
-      -ms-transform: translatex(-100%);
-          transform: translatex(-100%);
-}
-.k-fx-tile.k-fx-right.k-fx-reverse.k-fx-start .k-fx-next {
-  -webkit-transform: translatex(100%);
-      -ms-transform: translatex(100%);
-          transform: translatex(100%);
-}
-.k-fx-tile.k-fx-right.k-fx-reverse.k-fx-end .k-fx-next {
-  -webkit-transform: translatex(0%);
-      -ms-transform: translatex(0%);
-          transform: translatex(0%);
-}
-/* Overlay */
 .k-fx.k-fx-overlay.k-fx-start .k-fx-next,
 .k-fx.k-fx-overlay.k-fx-left.k-fx-start .k-fx-next {
   will-change: transform;
@@ -3286,7 +3224,6 @@ div.km-split-horizontal > .km-content > .km-pane {
       -ms-transform: translatey(-100%);
           transform: translatey(-100%);
 }
-/* Platform specific workarounds */
 .km-on-wp .km-view,
 .km-on-wp .km-header,
 .km-on-wp .km-footer,
@@ -3356,7 +3293,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-meego .km-view .km-absolute {
   position: absolute;
 }
-/* Icon per-widget styles */
 .km-detail .km-icon,
 .km-button .km-icon,
 .km-list .km-icon,
@@ -3404,7 +3340,6 @@ html .km-widget .km-view .km-notext {
   width: 2rem;
   font-size: 2rem;
 }
-/* Icons */
 @font-face {
   font-family: "Kendo UI";
   src: url("images/kendoui.woff?v=1.1") format("woff"), url("images/kendoui.ttf?v=1.1") format("truetype"), url("images/kendoui.svg#kendoui") format("svg");
@@ -4961,7 +4896,6 @@ body:before {
 .km-fiori {
   font: normal 1em "HelveticaNeue Light", "Roboto Light", "Slate Light", "Segoe WP", NokiaPureTextLight, sans-serif;
 }
-/* override transform options for performance */
 .km-root .km-fiori.km-pane,
 .km-root .km-fiori .km-view,
 .km-root .km-fiori .km-slider,
@@ -4978,7 +4912,6 @@ body:before {
   -webkit-background-clip: border-box;
           background-clip: border-box;
 }
-/* Revert box/clip for Web widgets */
 .km-fiori [class^=k-] {
   -webkit-box-sizing: content-box;
           box-sizing: content-box;
@@ -4986,7 +4919,6 @@ body:before {
 .km-fiori .km-tabstrip .km-button {
   background: none;
 }
-/* PopUp */
 .km-fiori .km-popup .k-popup {
   font-size: 1em !important;
 }
@@ -5037,7 +4969,6 @@ body:before {
 .km-fiori .km-actionsheet-wrapper.km-popup {
   border-radius: 2px;
 }
-/* Loader & Pull-to-refresh */
 .km-fiori .km-load-more {
   height: 3.4em;
 }
@@ -5223,42 +5154,6 @@ body:before {
     margin-top: -0.3em;
   }
 }
-/* Color Template */
-/*
-
-    --- main text #333
-    ---- main background #f3f8fc
-    --- navbar text #666
-    --- popover and modalview background #fff
-    --- item borders #333
-    --- actionsheet and modalview button and footer tabstrip background #40464b
-    --- actionsheet borders #7b7b7c
-    --- actionsheet and button #fff
-    --- primary button and counter background #009de0
-    --- selected state background #007cc0
-    --- list background #fafafa
-    --- list hover background and modal view title #f0f0f0
-    --- list selected background #e6f2f9
-    --- list selected #fff
-    --- list group title background #f7f7f7
-    --- list group title #004990
-    --- switch #979797
-
-    --- button group background #fff
-    --- button (group) hover background #eaeaea
-    --- button (group) selected background #007cc0
-    --- button (group) selected #fff
-    --- button selected border #005483
-
-    --- footer tabstrip hover background #4c5358
-*/
-/*switch, popover, modalview*/
-/*navbar*/
-/*buttons*/
-/*actionsheet, popover and modalview buttons*/
-/*also listview and button selected text*/
-/*listview*/
-/*also modalview title*/
 .km-fiori {
   background-color: #f3f8fc;
 }
@@ -5268,7 +5163,6 @@ body:before {
 .km-fiori .km-navbar {
   color: #666;
 }
-/* ActionSheet, Footer */
 .km-fiori .km-footer,
 .km-fiori .km-actionsheet > li > a {
   background: #40464b;
@@ -5287,7 +5181,6 @@ body:before {
 .km-fiori .km-actionsheet > .km-actionsheet-cancel > a {
   background: #009de0;
 }
-/* Button */
 .km-fiori .km-button {
   background: #f2f2f2;
   border-color: #bfbfbf;
@@ -5298,12 +5191,10 @@ body:before {
 .km-fiori .km-button.km-state-active {
   background: #007cc0;
 }
-/* Badges and Details */
 .km-fiori .km-detail,
 .km-fiori .k-toolbar {
   border-color: #bfbfbf;
 }
-/* Switch */
 .km-fiori .km-switch-wrapper {
   background-color: #fff;
 }
@@ -5320,8 +5211,6 @@ body:before {
 .km-fiori .km-switch-wrapper {
   border-color: #fff;
 }
-/* Slider */
-/* ListView */
 .km-fiori .km-list > li {
   background: #fafafa;
   border-color: #bfbfbf;
@@ -5361,11 +5250,9 @@ body:before {
 .km-fiori .km-filter-wrap > input:focus {
   border-color: #000;
 }
-/* ScrollView */
 .km-fiori .km-pages li {
   background: #bfbfbf;
 }
-/* Forms */
 .km-fiori .km-list input[type=password],
 .km-fiori .km-list input[type=search],
 .km-fiori .km-list input[type=number],
@@ -5389,7 +5276,6 @@ body:before {
 .km-fiori .km-list select:not([multiple]) option {
   color: #333;
 }
-/* Checkboxes and Radios */
 .km-fiori .km-listview-label input[type=radio],
 .km-fiori .km-listview-label input[type=checkbox] {
   border-color: #979797;
@@ -5398,12 +5284,10 @@ body:before {
 .km-fiori .km-listview-label input[type=checkbox]:checked:after {
   color: #007cc0;
 }
-/* Shim */
 .km-fiori .km-shim,
 .km-phone .km-fiori .km-actionsheet-wrapper {
   background: rgba(0, 0, 0, 0.4);
 }
-/* PopUp */
 .km-fiori .km-popup {
   background: rgba(64, 70, 75, 0.6);
 }
@@ -5423,21 +5307,18 @@ body:before {
 .km-fiori .km-right .km-popup-arrow:after {
   border-color: transparent #40464b;
 }
-/* Loader & Pull-to-refresh */
 .km-fiori .km-loader {
   background: rgba(0, 0, 0, 0.05);
 }
 .km-fiori .km-loader h1 {
   color: #333;
 }
-/* Active States */
 .km-fiori .km-detail:active,
 .km-fiori .km-state-active .km-detail,
 .km-fiori .km-state-active[style*=background] {
   -webkit-box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
           box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
 }
-/* Active States */
 .km-fiori .km-badge,
 .km-fiori .km-rowinsert,
 .km-fiori .km-rowdelete,
@@ -5497,7 +5378,6 @@ body:before {
 .km-fiori .km-rowdelete {
   background: #009de0;
 }
-/* Nova theme features */
 .km-fiori label.km-required:after {
   color: #f44336;
 }
@@ -5515,7 +5395,6 @@ body:before {
 .km-fiori .km-list fieldset .km-inline-field {
   border-color: #bfbfbf;
 }
-/* Standalone Checkboxes and RadioButtons */
 .km-fiori .km-checkbox-label,
 .km-fiori .km-radio-label {
   color: #333;
@@ -5530,20 +5409,17 @@ body:before {
 .km-fiori .km-radio:checked + .km-radio-label:after {
   background: #007cc0;
 }
-/* Tablet Styles */
 .km-tablet .km-fiori.km-horizontal .km-navbar .km-button,
 .km-tablet .km-fiori.km-horizontal .km-toolbar .km-button {
   margin-top: .2rem;
   margin-bottom: .2rem;
 }
-/* Button */
 .km-fiori .km-button {
   padding: .5em .8em;
   border-style: solid;
   border-width: 1px;
   border-radius: 2px;
 }
-/* Badges and Details */
 .km-fiori .km-badge,
 .km-fiori .km-detail {
   border: 0;
@@ -5573,7 +5449,6 @@ body:before {
 .km-fiori .km-detail .km-icon:before {
   display: none;
 }
-/* ButtonGroup */
 .km-fiori .km-buttongroup > *:not(:first-child):not(:last-child) {
   border-radius: 0;
 }
@@ -5589,7 +5464,6 @@ body:before {
 .km-fiori .km-buttongroup > *.km-state-active + * {
   border-left-width: 0;
 }
-/* NavBar */
 .km-fiori .km-navbar {
   border: 1px solid #bfbfbf;
 }
@@ -5605,7 +5479,6 @@ body:before {
 .km-fiori .km-tabstrip .km-button {
   border-radius: 0;
 }
-/* ToolBar */
 .km-fiori .k-toolbar {
   line-height: 2.1em;
 }
@@ -5661,7 +5534,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .k-overflow-container.km-actionsheet {
   border-top: 0;
 }
-/* TabStrip */
 .km-fiori .km-tabstrip {
   padding: 0;
   display: table;
@@ -5675,7 +5547,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .km-tabstrip .km-icon:before {
   display: none;
 }
-/* Switch */
 .km-fiori .km-switch {
   width: 5rem;
   height: 2.4rem;
@@ -5733,7 +5604,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
   -webkit-background-clip: content-box;
           background-clip: content-box;
 }
-/* ListView */
 .km-fiori .km-list > li {
   border-style: solid;
   border-width: 0 0 1px 0;
@@ -5803,7 +5673,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .km-listview .km-switch {
   margin-top: -1.2rem;
 }
-/* Filter box */
 .km-fiori .km-listview-wrapper form .km-filter-wrap > input {
   font-size: 1.2em;
   padding: .3em 1.8em;
@@ -5826,14 +5695,12 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
   border-width: 1px;
   border-style: solid;
 }
-/* ScrollView */
 .km-fiori .km-pages {
   padding-top: .4em;
 }
 .km-fiori .km-pages li {
   border-radius: 1em;
 }
-/* Slider */
 .km-fiori .k-slider .k-draghandle,
 .km-fiori .k-slider .k-draghandle:hover {
   border: 0;
@@ -5849,7 +5716,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .k-slider-selection {
   margin-left: 0;
 }
-/* Forms */
 .km-fiori .km-list input[type=password],
 .km-fiori .km-list input[type=search],
 .km-fiori .km-list input[type=number],
@@ -5905,7 +5771,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-/* Checkboxes and Radios */
 .km-fiori .km-listview-label input[type=checkbox] {
   margin-top: -0.7em;
 }
@@ -5940,11 +5805,9 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .km-listview-label input[type=radio]:after {
   color: transparent;
 }
-/* Nova theme features */
 .km-fiori .km-thumbnail {
   border-radius: 50%;
 }
-/* Label above */
 .km-fiori .km-label-above {
   width: 100%;
   font-size: 0.87em;
@@ -6168,7 +6031,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .k-slider-selection {
   margin-left: 0;
 }
-/* Standalone Checkboxes and RadioButtons */
 .km-fiori input.km-checkbox,
 .km-fiori input.km-radio {
   display: inline;
@@ -6235,7 +6097,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
   left: auto;
   border-radius: 50%;
 }
-/* ActionSheet */
 .km-fiori .km-actionsheet > li > a {
   font-size: 1.4em;
   font-weight: normal;
@@ -6254,7 +6115,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .km-actionsheet-wrapper.km-popup {
   padding: 2px 0;
 }
-/* PopOver */
 .km-fiori .km-popup.km-pane {
   border: 5px solid transparent;
 }
@@ -6286,7 +6146,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
 .km-fiori .km-right .km-popup-arrow:after {
   border-width: 15px 15px 15px 0;
 }
-/* Scroller */
 .km-fiori .km-touch-scrollbar {
   border: 0;
   -webkit-box-sizing: border-box;
@@ -6297,7 +6156,6 @@ html .km-fiori .k-overflow-container.km-actionsheet > li {
   margin-left: -6px;
   margin-top: -3px;
 }
-/* SplitView */
 .km-on-blackberry.km-blackberry6 .km-view .km-icon,
 .km-on-blackberry.km-blackberry7 .km-view .km-icon,
 .km-on-blackberry.km-ios .km-view .km-icon,

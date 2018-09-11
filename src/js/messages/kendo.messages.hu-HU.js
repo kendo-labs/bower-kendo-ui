@@ -262,6 +262,7 @@ if (kendo.ui.FilterMenu) {
 kendo.ui.FilterMenu.prototype.options.messages =
 $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "info": "Megjelenítendő elemek értéke:",
+  "title": "Megjelenítendő elemek értéke",
   "isTrue": "igaz",
   "isFalse": "hamis",
   "filter": "Szűrés",
@@ -460,6 +461,26 @@ $.extend(true, kendo.ui.MediaPlayer.prototype.options.messages,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "Összes",
+  "display": "{0}-{1} a(z) {2} elemből",
+  "empty": "Nincsenek megjeleníthető elemek",
+  "page": "Oldal",
+  "of": "a(z) {0}",
+  "itemsPerPage": "elem / oldal",
+  "first": "Ugrás az első oldalra",
+  "previous": "Ugrás az előző oldalra",
+  "next": "Ugrás a következő oldalra",
+  "last": "Ugrás az utolsó oldalra",
+  "refresh": "Frissítés",
+  "morePages": "További oldalak"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "Összes",
   "display": "{0}-{1} a(z) {2} elemből",
   "empty": "Nincsenek megjeleníthető elemek",

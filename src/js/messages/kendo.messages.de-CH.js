@@ -145,6 +145,7 @@
         "clear": "Löschen",
         "filter": "Filtern",
         "info": "Zeilen mit Wert anzeigen, der",
+        "title": "Zeilen mit Wert anzeigen, der",
         "isFalse": "falsch",
         "isTrue": "richtig",
         "or": "oder",
@@ -450,7 +451,7 @@
           "update": "Aktualisieren",
           "canceledit": "Abbrechen",
           "create": "Neuen Datensatz hinzufügen",
-          "createchild": "Neuen untergeordneten Datensatz hinzufügen",
+          "createchild": "Kind-Datensatz hinzufügen",
           "destroy": "Löschen",
           "excel": "Exportieren als Excel",
           "pdf": "Exportieren als PDF"
@@ -482,6 +483,26 @@
   if (kendo.ui.Pager) {
     kendo.ui.Pager.prototype.options.messages =
       $.extend(true, kendo.ui.Pager.prototype.options.messages, {
+        "allPages": "Alle",
+        "display": "Einträge {0} - {1} von {2}",
+        "empty": "keine Daten",
+        "first": "Zur ersten Seite",
+        "itemsPerPage": "Elemente pro Seite",
+        "last": "Zur letzten Seite",
+        "next": "Zur nächsten Seite",
+        "of": "von {0}",
+        "page": "Seite",
+        "previous": "Zur vorherigen Seite",
+        "refresh": "Aktualisieren",
+        "morePages": "Weitere Seiten"
+      });
+  }
+
+  /* TreeListPager messages */
+
+  if (kendo.ui.TreeListPager) {
+    kendo.ui.TreeListPager.prototype.options.messages =
+      $.extend(true, kendo.ui.TreeListPager.prototype.options.messages, {
         "allPages": "Alle",
         "display": "Einträge {0} - {1} von {2}",
         "empty": "keine Daten",

@@ -221,6 +221,26 @@ $.extend(true, kendo.ui.Pager.prototype.options.messages,{
 });
 }
 
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
+  "allPages": "Все",
+  "page": "Страница",
+  "display": "Отображены записи {0} - {1} из {2}",
+  "of": "из {0}",
+  "empty": "Нет записей для отображения",
+  "refresh": "Обновить",
+  "first": "Вернуться на первую страницу",
+  "itemsPerPage": "элементов на странице",
+  "last": "К последней странице",
+  "next": "Перейдите на следующую страницу",
+  "previous": "Перейти на предыдущую страницу",
+  "morePages": "Больше страниц"
+});
+}
+
 /* FilterCell messages */
 
 if (kendo.ui.FilterCell) {
@@ -243,6 +263,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "and": "И",
   "clear": "очистить",
   "info": "Строки со значениями",
+  "title": "Строки со значениями",
   "selectValue": "-выберите-",
   "isFalse": "ложь",
   "isTrue": "истина",
@@ -489,9 +510,9 @@ $.extend(true, kendo.ui.PivotGrid.prototype.options.messages, {
   "rowFields": "Перетащите строки сюда"
 });
 }
-  
+
 /* PivotFieldMenu messages */
-  
+
 if (kendo.ui.PivotFieldMenu) {
 kendo.ui.PivotFieldMenu.prototype.options.messages =
 $.extend(true, kendo.ui.PivotFieldMenu.prototype.options.messages, {
@@ -512,7 +533,7 @@ $.extend(true, kendo.ui.PivotFieldMenu.prototype.options.messages, {
     "neq": "Не равно"
   }
 });
-}  
+}
 
 })(window.kendo.jQuery);
 }));

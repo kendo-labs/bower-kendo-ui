@@ -22,7 +22,7 @@
                                                                                                                                                                                                        
 
 */
-/* ComboBox & DropDownList */
+// ComboBox & DropDownList
 
 span.k-datepicker,
 span.k-timepicker,
@@ -232,6 +232,10 @@ span.k-dropdowntree,
     padding-right: 0;
 }
 
+.k-numeric-wrap.k-expand-padding .k-i-warning{
+    right: 0;
+}
+
 .k-textbox,
 .k-autocomplete {
     padding: 0;
@@ -263,7 +267,7 @@ span.k-dropdowntree,
     right: 3px;
 }
 
-/*prevent missing bottom border at some zoom levels*/
+// prevent missing bottom border at some zoom levels
 span.k-textbox:after {
   content: "\a0";
   display: block;
@@ -305,7 +309,7 @@ span.k-textbox:after {
 .k-picker-wrap .k-select,
 .k-numeric-wrap .k-select,
 .k-dropdown-wrap .k-select {
-    position: absolute; /* icon positioning */
+    position: absolute; // icon positioning
     top: 0;
     right: 0;
     display: inline-block;
@@ -318,7 +322,7 @@ span.k-textbox:after {
 .k-numeric-wrap .k-select {
     border-style: solid;
     border-width: 0 0 0 1px;
-    border-color: inherit; /* skin-related, inherit does not work in ie7- */
+    border-color: inherit; // skin-related, inherit does not work in ie7-
 }
 
 span.k-datetimepicker .k-select,
@@ -367,6 +371,7 @@ span.k-datetimepicker .k-select + .k-select {
 .k-dropdown-wrap .k-input:before {
     content: "";
     display: inline-block;
+    width: 0;
 }
 
 .k-ie {
@@ -386,14 +391,14 @@ span.k-datetimepicker .k-select + .k-select {
     }
 }
 
-/* fix missing bottom border on browser zoom in Chrome */
+// fix missing bottom border on browser zoom in Chrome
 .k-webkit .k-combobox .k-dropdown-wrap:before,
 .k-webkit .k-picker-wrap:before,
 .k-webkit .k-numeric-wrap:before {
     padding-bottom: 0.38em;
 }
 
-/* above style breaks NumericTextBox layout due display:block style applied to the input */
+// above style breaks NumericTextBox layout due display:block style applied to the input
 .km.root .k-combobox .k-dropdown-wrap:before,
 .km.root .k-picker-wrap:before,
 .km.root .k-numeric-wrap:before {
@@ -557,7 +562,7 @@ body .k-datetimepicker .k-select {
     border-right-width: 0;
 }
 
-/* MultiSelect */
+// MultiSelect
 .k-multiselect {
     display: block;
     width: auto;
@@ -607,7 +612,7 @@ body .k-datetimepicker .k-select {
     padding: .03em .2em;
 }
 
-/* Inputs */
+// Inputs
 .k-autocomplete-clearable,
 .k-multiselect-clearable,
 .k-dropdowntree-clearable,
@@ -625,7 +630,7 @@ body .k-datetimepicker .k-select {
     padding-right: calc(@input-height + .35em);
 }
 
-/* Date/Time Pickers */
+// Date/Time Pickers
 
 .k-datetimepicker .k-picker-wrap {
     padding-right: 4em;
@@ -664,7 +669,7 @@ body .k-datetimepicker .k-select {
     padding: 1px 3px;
 }
 
-/* inputs */
+// inputs
 
 .k-input {
     font-size: inherit;
@@ -700,13 +705,13 @@ textarea.k-textbox {
     height: auto;
 }
 
-/* NumericTextBox */
+// NumericTextBox
 
 span.k-numerictextbox {
     background-color: transparent;
 }
 
-.k-numerictextbox .k-input /* alignment of arrows in WebKit */
+.k-numerictextbox .k-input // alignment of arrows in WebKit
 {
     margin: 0;
 }
@@ -945,6 +950,10 @@ span.k-numerictextbox {
         left: 2.4em;
         right: auto;
     }
+
+    .k-numeric-wrap.k-state-invalid.k-expand-padding .k-i-warning{
+        left: 0;
+    }
 }
 
 
@@ -952,4 +961,134 @@ span.k-numerictextbox {
     border-color: transparent;
     color: inherit;
     background: none;
+}
+
+
+.k-popup-flush,
+.k-popup-flush.k-list-container {
+    padding: 0;
+}
+.k-dropdowngrid-popup {
+    overflow: hidden;
+}
+.k-dropdowngrid-popup .k-grid-header,
+.k-dropdowngrid-popup .k-group-header,
+.k-dropdowngrid-popup .k-list-scroller,
+.k-dropdowngrid-popup .k-virtual-content,
+.k-dropdowngrid-popup .k-footer {
+    line-height: (20/14);
+}
+.k-dropdowngrid-popup .k-virtual-wrap {
+    margin: 0;
+}
+.k-dropdowngrid-popup .k-grid-header table {
+    margin: 0 0 -1px 0;
+    width: 100%;
+    max-width: none;
+    border-width: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    empty-cells: show;
+    outline: none;
+}
+.k-grid-list {
+    width: 100%;
+    max-width: none;
+    border-width: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+    empty-cells: show;
+    outline: none;
+    display: table;
+}
+.k-grid-list > .k-item {
+    box-sizing: border-box;
+    display: table-row;
+    position: relative;
+}
+.k-grid-list > .k-item > .k-cell,
+.k-grid-list > .k-item > .k-group,
+.k-grid-list > .k-item > .k-spacer-group {
+    box-sizing: border-box;
+    display: table-cell;
+    vertical-align: middle;
+}
+.k-dropdowngrid-popup .k-grid-header .k-header,
+.k-grid-list > .k-item > .k-cell {
+    border-width: 0 0 1px 1px;
+    border-style: solid;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.k-dropdowngrid-popup .k-grid-header .k-header {
+    padding: @grid-header-padding-y @grid-header-padding-x;
+}
+.k-grid-list > .k-item > .k-cell {
+    padding: @grid-cell-padding-y @grid-cell-padding-x;
+}
+.k-dropdowngrid-popup .k-grid-header .k-header:first-child,
+.k-grid-list > .k-item > .k-cell:first-child {
+    border-left-width: 0;
+}
+div.k-dropdowngrid-popup .k-group-header {
+    margin: 0;
+    padding: @grid-header-padding-y @grid-header-padding-x;
+    min-height: auto;
+    text-align: left;
+}
+.k-grid-list > .k-item > .k-group-cell,
+.k-grid-list > .k-item > .k-spacer-cell {
+    padding-left: 0;
+    padding-right: 0;
+    width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    overflow: visible;
+    position: relative;
+}
+.k-grid-list > .k-item > .k-group-cell > span {
+    padding: 0 (@grid-cell-padding-x / 2);
+    font-size: .875em;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.k-grid-list > .k-item:last-child > .k-cell,
+.k-grid-list > .k-item:last-child > .k-group-cell,
+.k-grid-list > .k-item:last-child > .k-spacer-cell {
+    border-bottom-width: 0;
+}
+.k-dropdowngrid-popup .k-footer {
+    // margin-top: -1px;
+    padding: @grid-footer-padding-y @grid-footer-padding-x;
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+}
+
+
+.k-rtl {
+    .k-grid-list > .k-item > .k-cell {
+        border-left-width: 1px;
+        border-right-width: 1px;
+        text-align: right;
+    }
+    .k-grid-list > .k-item > .k-cell:first-child {
+        border-right-width: 0;
+    }
+    div.k-dropdowngrid-popup .k-group-header {
+        text-align: right;
+    }
+    .k-grid-list > .k-item > .k-group-cell > span {
+        right: auto;
+        left: 0;
+    }
 }

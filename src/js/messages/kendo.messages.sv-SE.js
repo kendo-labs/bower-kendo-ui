@@ -209,6 +209,7 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "clear": "Rensa",
   "filter": "Filtrera",
   "info": "Visa poster med värde:",
+  "title": "Visa poster med värde",
   "isFalse": "är falskt",
   "isTrue": "är sant",
   "or": "Eller",
@@ -258,6 +259,26 @@ $.extend(true, kendo.ui.Groupable.prototype.options.messages,{
 if (kendo.ui.Pager) {
 kendo.ui.Pager.prototype.options.messages =
 $.extend(true, kendo.ui.Pager.prototype.options.messages,{
+  "allPages": "Alla",
+  "display": "{0} - {1} av {2} poster",
+  "empty": "Det finns inga poster",
+  "first": "Gå till första sidan",
+  "itemsPerPage": "poster per sida",
+  "last": "Gå till sista sidan",
+  "next": "Gå till nästa sida",
+  "of": "av {0}",
+  "page": "Sida",
+  "previous": "Gå till föregående sida",
+  "refresh": "Uppdatera",
+  "morePages": "Fler sidor"
+});
+}
+
+/* TreeListPager messages */
+
+if (kendo.ui.TreeListPager) {
+kendo.ui.TreeListPager.prototype.options.messages =
+$.extend(true, kendo.ui.TreeListPager.prototype.options.messages,{
   "allPages": "Alla",
   "display": "{0} - {1} av {2} poster",
   "empty": "Det finns inga poster",

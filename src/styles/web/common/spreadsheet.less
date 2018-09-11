@@ -97,6 +97,7 @@
         position: absolute;
         outline-color: transparent !important;
         box-sizing: border-box;
+        z-index: 10;
     }
 
     @formula-bar-height: 26px;
@@ -251,6 +252,7 @@
 
     .k-filter-wrapper {
         pointer-events: none;
+        z-index: 50;
     }
 
     .k-spreadsheet-sheets-bar {
@@ -275,6 +277,7 @@
         position: absolute;
         top: 0;
         right: 0;
+        left: unset;
         margin: -2px 0 0 -7px;
         border-width: 4px;
         border-color: #f00 #f00 transparent transparent;
@@ -308,7 +311,9 @@
 
     .k-auto-fill,
     .k-auto-fill-punch,
-    .k-auto-fill-br-hint {
+    .k-auto-fill-br-hint,
+    .k-auto-fill-tr-hint,
+    .k-auto-fill-bl-hint {
         position: absolute;
         box-sizing: border-box;
     }
@@ -474,6 +479,7 @@ textarea.k-spreadsheet-clipboard {
 .k-spreadsheet-column-header,
 .k-spreadsheet-row-header {
     text-align: center;
+    z-index: 100;
 
     .k-spreadsheet-cell {
         border-style: solid;
@@ -725,6 +731,7 @@ div.k-spreadsheet-window {
 .k-resize-handle,
 .k-resize-hint {
     position: absolute;
+    z-index: 200;
 }
 
 .k-resize-hint-handle {
@@ -756,7 +763,7 @@ div.k-spreadsheet-window {
     background-image: none;
 }
 
-/* top TabStrip */
+// top TabStrip
 
 .k-spreadsheet-tabstrip {
     border-left-width: 0;
@@ -869,7 +876,7 @@ div.k-spreadsheet-window {
     }
 }
 
-/* bottom TabStrip */
+// bottom TabStrip
 
 .k-spreadsheet-sheets-bar {
     position: relative;

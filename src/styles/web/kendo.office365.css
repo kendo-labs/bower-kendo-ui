@@ -22,7 +22,6 @@
                                                                                                                                                                                                        
 
 */
-/* Kendo skin */
 .k-theme-test-class,
 .ktb-theme-id-office365 {
   opacity: 0;
@@ -328,14 +327,29 @@
   background-color: #fff;
 }
 .k-chat .k-message-box .k-button:hover {
-  color: #cde6f7;
+  color: #0072c6;
+}
+.k-chat .k-toolbar-box {
+  border-color: inherit;
+  color: #333333;
+  background-color: #fff;
+}
+.k-chat .k-toolbar-box .k-button:hover {
+  color: #0072c6;
+  background: none;
+}
+.k-chat .k-toolbar-box .k-scroll-button {
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 20px 5px #fff;
+          box-shadow: 0 0 20px 5px #fff;
+}
+.k-chat .k-toolbar-box .k-scroll-button:hover {
+  background-color: #fff;
 }
 .k-in,
-.k-item,
-.k-window-action {
+.k-item {
   border-color: transparent;
 }
-/* main colors */
 .k-splitbar .k-resize-handle {
   background-color: #333333;
 }
@@ -386,7 +400,6 @@
 .k-splitbar,
 .k-dropzone-active,
 .k-tiles,
-.k-toolbar,
 .k-tooltip,
 .k-button-group .k-tool,
 .k-upload-files,
@@ -397,7 +410,6 @@
   border-color: #c9c9c9;
 }
 .k-group,
-.k-toolbar,
 .k-grouping-header,
 .k-pager-wrap,
 .k-group-footer td,
@@ -525,12 +537,6 @@ textarea.k-textbox:hover,
   background-image: none;
 }
 .k-block,
-.k-header,
-.k-grid-header,
-.k-toolbar,
-.k-grouping-header,
-.k-pager-wrap,
-.k-draghandle,
 .k-treemap-tile,
 html .km-pane-wrapper .k-header {
   background-color: #fff;
@@ -541,7 +547,6 @@ html .km-pane-wrapper .k-header {
 .k-hr {
   border-color: #c9c9c9;
 }
-/* Badge */
 .k-badge {
   background-color: #cde6f7;
   color: #333333;
@@ -550,7 +555,6 @@ html .km-pane-wrapper .k-header {
 .k-tool {
   border-color: transparent;
 }
-/* IE will ignore the above selectors if these are added too */
 .k-mobile-list .k-check:checked,
 .k-mobile-list .k-edit-field [type=checkbox]:checked,
 .k-mobile-list .k-edit-field [type=radio]:checked {
@@ -587,7 +591,6 @@ html .km-pane-wrapper .k-header {
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-/* Scheduler */
 .k-scheduler {
   color: #333333;
   background-color: #fff;
@@ -694,7 +697,6 @@ html .km-pane-wrapper .k-header {
 .k-panel > li.k-item {
   background-color: #fff;
 }
-/* states */
 .k-state-active,
 .k-state-active:hover,
 .k-active-filter,
@@ -776,8 +778,7 @@ html .km-pane-wrapper .k-header {
   background-color: #f4f4f4;
   color: #000;
 }
-.k-calendar .k-link.k-state-hover,
-.k-window-titlebar .k-link {
+.k-calendar .k-link.k-state-hover {
   border-radius: 0;
 }
 .k-calendar .k-footer .k-link {
@@ -873,7 +874,6 @@ td.k-state-focused.k-state-selected {
 .k-pager-wrap .k-link.k-state-disabled {
   color: #0072c6;
 }
-/* this selector should be used separately, otherwise old IEs ignore the whole rule */
 .k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active {
   color: #000;
   background-color: #f4f4f4;
@@ -978,7 +978,6 @@ div.k-filebrowser-dropzone em {
 .k-file .k-upload-status {
   color: #333333;
 }
-/* Progressbar */
 .k-progressbar-indeterminate {
   background: url('Office365/indeterminate.gif');
 }
@@ -986,7 +985,6 @@ div.k-filebrowser-dropzone em {
 .k-progressbar-indeterminate .k-state-selected {
   display: none;
 }
-/* Slider */
 .k-slider-track {
   background-color: #c9c9c9;
 }
@@ -999,7 +997,6 @@ div.k-filebrowser-dropzone em {
 .k-slider-vertical .k-tick {
   background-image: url('Office365/slider-v.gif');
 }
-/* Tooltip */
 .k-widget.k-tooltip,
 .k-chart-crosshair-tooltip,
 .k-chart-shared-tooltip {
@@ -1012,7 +1009,6 @@ div.k-filebrowser-dropzone em {
   background-color: #fff19d;
   color: #6a5b00;
 }
-/* Bootstrap theme fix */
 .input-prepend .k-tooltip-validation,
 .input-append .k-tooltip-validation {
   font-size: 12px;
@@ -1043,7 +1039,6 @@ div.k-filebrowser-dropzone em {
 .k-tooltip-validation .k-callout-e {
   border-left-color: #fff19d;
 }
-/* Splitter */
 .k-splitbar {
   background-color: #f4f4f4;
 }
@@ -1051,7 +1046,6 @@ div.k-filebrowser-dropzone em {
 .k-restricted-size-horizontal {
   background-color: #6b6b6b;
 }
-/* Upload */
 .k-file {
   background-color: #fff;
   border-color: #c9c9c9;
@@ -1124,7 +1118,6 @@ div.k-filebrowser-dropzone em {
   color: #0072c6;
   border-color: #c9c9c9;
 }
-/* ImageBrowser */
 .k-tile {
   border-color: #fff;
 }
@@ -1135,7 +1128,6 @@ div.k-filebrowser-dropzone em {
 .k-tiles li.k-state-selected {
   border-color: #cde6f7;
 }
-/* TreeMap */
 .k-leaf,
 .k-leaf.k-state-hover:hover {
   color: #fff;
@@ -1144,7 +1136,6 @@ div.k-filebrowser-dropzone em {
 .k-leaf.k-inverse.k-state-hover:hover {
   color: #000;
 }
-/* Shadows */
 .k-slider,
 .k-treeview,
 .k-upload {
@@ -1194,12 +1185,10 @@ div.k-filebrowser-dropzone em {
   -webkit-box-shadow: inset 0 0 0 3px #c9c9c9;
           box-shadow: inset 0 0 0 3px #c9c9c9;
 }
-/* Window */
 .k-window {
   border-color: rgba(0, 0, 0, 0.18);
   -webkit-box-shadow: 1px 1px 7px 1px rgba(128, 128, 128, 0.18);
           box-shadow: 1px 1px 7px 1px rgba(128, 128, 128, 0.18);
-  background-color: #fff;
 }
 .k-window.k-state-focused {
   border-color: rgba(0, 0, 0, 0.18);
@@ -1219,7 +1208,6 @@ div.k-filebrowser-dropzone em {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.18);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.18);
 }
-/* Selection */
 .k-editor-inline ::-moz-selection {
   background-color: #cde6f7;
   text-shadow: none;
@@ -1255,7 +1243,6 @@ div.k-filebrowser-dropzone em {
   color: #4d4d4d;
   border-color: #fccbc7;
 }
-/* Gantt */
 .k-gantt .k-treelist {
   background: #fff;
 }
@@ -1316,15 +1303,12 @@ div.k-filebrowser-dropzone em {
 .k-resource {
   background-color: #fff;
 }
-/* PivotGrid */
-/* Border radius */
 .k-block,
 .k-textbox,
 .k-drag-clue,
 .k-touch-scrollbar,
 .k-window,
 .k-window-titleless .k-window-content,
-.k-window-action,
 .k-inline-block,
 .k-grid .k-filter-options,
 .k-grouping-header .k-group-indicator,
@@ -1550,7 +1534,6 @@ div.k-filebrowser-dropzone em {
 .k-scheduler-mobile .k-event {
   border-radius: -1;
 }
-/* Adaptive Grid */
 .k-grid-mobile .k-column-active + th.k-header {
   border-left-color: #333333;
 }
@@ -1619,7 +1602,6 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-filter-menu .k-button[type=reset]:active {
   background-color: #990000;
 }
-/* /Column Menu */
 .k-autocomplete.k-state-default,
 .k-picker-wrap.k-state-default,
 .k-numeric-wrap.k-state-default,
@@ -1911,7 +1893,6 @@ html .km-pane-wrapper .km-widget,
   -webkit-box-shadow: none;
           box-shadow: none;
 }
-/* Responsive styles */
 @media only screen and (max-width: 1024px) {
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
@@ -2579,13 +2560,6 @@ input.k-textbox:focus {
   max-width: 400px;
 }
 @media only screen and (max-width: 1420px) {
-  .k-webkit,
-  .k-ff,
-  .k-ie11,
-  .k-edge,
-  .k-safari {
-    /* Responsive Scheduler */
-  }
   .k-webkit .k-nav-current > .k-link span + span,
   .k-ff .k-nav-current > .k-link span + span,
   .k-ie11 .k-nav-current > .k-link span + span,
@@ -2594,16 +2568,7 @@ input.k-textbox:focus {
     max-width: 200px;
   }
 }
-/* Responsive styles */
 @media only screen and (max-width: 1024px) {
-  .k-webkit,
-  .k-ff,
-  .k-ie11,
-  .k-edge,
-  .k-safari {
-    /* Responsive Scheduler */
-    /* Responsive Pager */
-  }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
@@ -3006,7 +2971,6 @@ input.k-textbox:focus {
   border-radius: 0;
   margin-top: -0.35em;
 }
-/* Default Theme */
 .k-chart .k-mask {
   background-color: #fff;
   filter: alpha(opacity=68);
@@ -3045,7 +3009,6 @@ input.k-textbox:focus {
 .k-chart-tooltip {
   background-image: none;
 }
-/* Map */
 .k-map .k-marker {
   font-size: 28px;
   color: #cde6f7;
@@ -3308,10 +3271,8 @@ input.k-textbox:focus {
 .k-window .k-popup-edit-form .k-edit-field label.k-checkbox-label {
   margin-top: 0.3em;
 }
-/* Dialog */
-.k-dialog .k-window-titlebar {
-  font-size: 1em;
-  padding: 1em;
+.k-dialog .k-window-title {
+  font-size: 1.2em;
 }
 .k-dialog a.k-dialog-action.k-dialog-close.k-button.k-bare:before {
   content: normal;
@@ -3329,7 +3290,6 @@ input.k-textbox:focus {
 .k-dialog.k-alert .k-content,
 .k-dialog.k-confirm .k-content,
 .k-dialog .k-content {
-  padding: 1em 1em 1.8em 1em;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -3521,4 +3481,49 @@ input.k-textbox:focus {
 }
 .k-menu-scroll-wrapper.vertical .k-scroll-down {
   border-top-width: 1px;
+}
+.k-dropdowngrid-popup {
+  border-color: #c9c9c9;
+  color: #333333;
+  background-color: #fff;
+}
+.k-dropdowngrid-popup .k-header {
+  border-color: #c9c9c9;
+  color: #333333;
+  background-color: #fff;
+}
+.k-dropdowngrid-popup .k-group-header {
+  border-color: #c9c9c9;
+  color: #333333;
+  background-color: #fff;
+}
+.k-dropdowngrid-popup .k-cell {
+  border-color: #c9c9c9;
+}
+.k-dropdowngrid-popup .k-item:nth-child(2n) {
+  background-color: #fff;
+}
+.k-dropdowngrid-popup .k-footer {
+  border-color: #c9c9c9;
+  color: #333333;
+  background-color: #fff;
+}
+.k-dropdowngrid-popup .k-item.k-state-hover {
+  border-color: #c9c9c9;
+  color: #333333;
+  background-color: #f4f4f4;
+}
+.k-dropdowngrid-popup .k-item.k-state-selected {
+  border-color: #c9c9c9;
+  color: #333333;
+  background-color: #cde6f7;
+}
+.k-dropdowngrid-popup .k-group-cell span {
+  background-color: #333333;
+  color: #fff;
+}
+.k-grid-list > .k-item.k-last > .k-cell,
+.k-grid-list > .k-item.k-last > .k-group-cell,
+.k-grid-list > .k-item.k-last > .k-spacer-cell {
+  border-bottom-color: #333333;
 }

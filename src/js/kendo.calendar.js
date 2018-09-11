@@ -853,13 +853,16 @@
                 return value;
             },
             _templates: function () {
-                var that = this, options = that.options, footer = options.footer, month = options.month, content = month.content, weekNumber = month.weekNumber, empty = month.empty;
+                var that = this, options = that.options, footer = options.footer, month = options.month, content = month.content, weekNumber = month.weekNumber, empty = month.empty, footerTemplate = '#= kendo.toString(data,"D","' + options.culture + '") #';
                 that.month = {
                     content: template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link#=data.linkClass#" href="#=data.url#" ' + kendo.attr(VALUE) + '="#=data.dateString#" title="#=data.title#">' + (content || '#=data.value#') + '</a></td>', { useWithBlock: !!content }),
                     empty: template('<td role="gridcell">' + (empty || '&nbsp;') + '</td>', { useWithBlock: !!empty }),
                     weekNumber: template('<td class="k-alt">' + (weekNumber || '#= data.weekNumber #') + '</td>', { useWithBlock: !!weekNumber })
                 };
-                that.footer = footer !== false ? template(footer || '#= kendo.toString(data,"D","' + options.culture + '") #', { useWithBlock: false }) : null;
+                if (footer && footer !== true) {
+                    footerTemplate = footer;
+                }
+                that.footer = footer !== false ? template(footerTemplate, { useWithBlock: false }) : null;
             }
         });
         ui.plugin(Calendar);

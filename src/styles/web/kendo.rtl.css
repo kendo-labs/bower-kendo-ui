@@ -22,7 +22,6 @@
                                                                                                                                                                                                        
 
 */
-/* Kendo RTL CSS */
 .k-rtl {
   direction: rtl;
 }
@@ -30,13 +29,11 @@
   margin-left: 0;
   margin-right: 6px;
 }
-/* AutoComplete */
 .k-rtl .k-autocomplete .k-i-loading,
 .k-rtl .k-multiselect .k-i-loading {
   right: auto;
   left: 3px;
 }
-/* Buttons */
 .k-rtl .k-button-icontext .k-icon,
 .k-rtl .k-button-icontext .k-image {
   margin-left: 3px;
@@ -44,7 +41,6 @@
   margin-right: -2px;
   margin-right: -0.125rem;
 }
-/* TextBoxes, Pickers, Combos */
 .k-rtl .k-numeric-wrap.k-expand-padding {
   padding-left: 0;
 }
@@ -113,7 +109,6 @@
   margin-right: .428em;
   margin-left: -0.285em;
 }
-/* Calendar */
 .k-rtl .k-widget.k-calendar .k-nav-prev {
   left: auto;
   right: 1%;
@@ -128,14 +123,12 @@
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
 }
-/* Scheduler */
 .k-rtl .k-scheduler .k-scheduler-navigation .k-i-arrow-60-right,
 .k-rtl .k-scheduler .k-scheduler-navigation .k-i-arrow-60-left {
   -webkit-transform: scaleX(-1);
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
 }
-/* Editor */
 .k-rtl .k-form-text-row input {
   margin-right: 0;
   margin-left: 1em;
@@ -189,7 +182,6 @@
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
 }
-/* Grid */
 .k-rtl div.k-grid-header,
 .k-rtl div.k-grid-footer {
   padding-right: 0;
@@ -258,7 +250,6 @@
   right: auto;
   left: 2.5em;
 }
-/* Editing */
 .k-rtl .k-edit-label,
 .k-rtl .k-edit-form-container .editor-label {
   float: right;
@@ -292,7 +283,6 @@
 .k-webkit .k-rtl .k-dirty {
   margin: -0.4em 0.7em 0 0;
 }
-/* Pager */
 .k-rtl .k-pager-info,
 .k-rtl .k-pager-wrap .k-pager-refresh {
   float: left;
@@ -303,7 +293,6 @@
 .k-rtl .k-pager-input {
   float: right;
 }
-/* Gantt*/
 .k-rtl .k-gantt .k-grid-header .k-header {
   text-align: center;
 }
@@ -380,7 +369,6 @@
   margin-left: 0;
   margin-right: 20px;
 }
-/* Grid */
 .k-rtl .k-grid tbody td:last-child,
 .k-rtl .k-grid thead th:last-child {
   border-left-width: 0;
@@ -388,7 +376,6 @@
 .k-rtl .k-timeline .k-grid-header-wrap {
   border-left-width: 1px;
 }
-/* Menu */
 .k-rtl .k-menu .k-item,
 .k-rtl .k-widget.k-menu-horizontal > .k-item {
   border-width: 0 0 0 1px;
@@ -414,7 +401,6 @@
   margin-left: 4px;
   margin-right: -4px;
 }
-/* Multiselect */
 .k-rtl .k-multiselect-wrap .k-input {
   float: right;
 }
@@ -433,7 +419,6 @@
   left: 6px;
   right: auto;
 }
-/* Notification */
 .k-rtl .k-notification-button .k-notification-wrap,
 .k-rtl.k-notification-button .k-notification-wrap {
   padding-right: .5em;
@@ -451,7 +436,6 @@
   right: auto;
   left: 4px;
 }
-/* PanelBar */
 .k-rtl .k-panelbar-expand,
 .k-rtl .k-panelbar-collapse {
   right: auto;
@@ -463,7 +447,6 @@
   margin-right: 0;
   margin-left: 5px;
 }
-/* Progressbar */
 .k-rtl .k-progressbar > .k-reset {
   left: auto;
   right: -1px;
@@ -471,7 +454,6 @@
 .k-rtl .k-progressbar-horizontal li.k-last {
   border-left-width: 0;
 }
-/* Scheduler */
 .k-rtl .k-scheduler-toolbar > ul {
   float: left;
 }
@@ -635,7 +617,6 @@
   left: auto;
   right: .6em;
 }
-/* Slider */
 .k-rtl .k-slider .k-button-decrease {
   left: auto;
   right: 0;
@@ -653,7 +634,6 @@
   left: auto;
   right: 34px;
 }
-/* TabStrip */
 .k-rtl .k-tabstrip-items .k-item,
 .k-rtl .k-panelbar .k-tabstrip-items .k-item {
   margin-left: -1px;
@@ -673,7 +653,6 @@
   right: auto;
   left: .4em;
 }
-/* ToolBar */
 .k-rtl .k-toolbar .k-overflow-anchor {
   right: auto;
   left: -1px;
@@ -694,7 +673,6 @@
 .k-rtl.k-split-container .k-button {
   text-align: right;
 }
-/* ToolTip */
 .k-rtl .k-tooltip-button {
   text-align: left;
 }
@@ -702,7 +680,6 @@
   padding-right: 0;
   padding-left: 20px;
 }
-/* TreeView */
 .k-rtl .k-treeview .k-item {
   padding: 0 16px 0 0;
 }
@@ -737,7 +714,6 @@
   padding-right: -webkit-calc(14px + 0.7ex);
   padding-right: calc(14px + 0.7ex);
 }
-/*  TreeList */
 .k-rtl .k-treelist .k-i-arrow-60-right,
 .k-rtl .k-treelist .k-i-arrow-45-down-right {
   -webkit-transform: scaleX(-1);
@@ -752,7 +728,6 @@
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
 }
-/* Upload */
 .k-rtl .k-dropzone em {
   margin-left: 0;
   margin-right: .6em;
@@ -782,12 +757,10 @@
   margin-right: .8em;
   margin-left: .2em;
 }
-/* Window */
 .k-rtl .k-window-titlebar .k-window-actions {
   right: auto;
   left: .5em;
 }
-/* Dialog */
 .k-rtl .k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button,
 .k-rtl.k-dialog .k-dialog-buttongroup.k-dialog-button-layout-stretched .k-button {
   border-radius: 0;

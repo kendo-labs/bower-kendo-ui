@@ -39,7 +39,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, outerHeight = kendo._outerHeight, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', GROUPHEADER = '.k-group-header', LABELIDPART = '_label', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, HIDDENCLASS = 'k-hidden', WIDTH = 'width', isIE = browser.msie, isIE8 = isIE && browser.version < 9, quotRegExp = /"/g, alternativeNames = {
+        var kendo = window.kendo, ui = kendo.ui, outerHeight = kendo._outerHeight, percentageUnitsRegex = /^\d+(\.\d+)?%$/i, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', GROUPHEADER = '.k-group-header', LABELIDPART = '_label', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, HIDDENCLASS = 'k-hidden', WIDTH = 'width', isIE = browser.msie, isIE8 = isIE && browser.version < 9, quotRegExp = /"/g, alternativeNames = {
                 'ComboBox': 'DropDownList',
                 'DropDownList': 'ComboBox'
             };
@@ -66,6 +66,10 @@
                     that.list.attr(ID, id + '-list');
                     that.ul.attr(ID, id + '_listbox');
                 }
+                if (options.columns && options.columns.length) {
+                    that.ul.removeClass('k-list').addClass('k-grid-list');
+                    that._columnsHeader();
+                }
                 that._header();
                 that._noData();
                 that._footer();
@@ -82,6 +86,9 @@
                 Widget.fn.setOptions.call(this, options);
                 if (options && options.enable !== undefined) {
                     options.enabled = options.enable;
+                }
+                if (options.columns && options.columns.length) {
+                    this._columnsHeader();
                 }
                 this._header();
                 this._noData();
@@ -120,6 +127,43 @@
                 list.header = header[0] ? header : null;
                 list.list.prepend(header);
                 this._angularElement(list.header, 'compile');
+            },
+            _columnsHeader: function () {
+                var list = this;
+                var columnsHeader = $(list.columnsHeader);
+                this._angularElement(columnsHeader, 'cleanup');
+                kendo.destroy(columnsHeader);
+                columnsHeader.remove();
+                var header = '<div class=\'k-grid-header\'><div class=\'k-grid-header-wrap\'><table>';
+                var colGroup = '<colgroup>';
+                var row = '<tr>';
+                for (var idx = 0; idx < this.options.columns.length; idx++) {
+                    var currentColumn = this.options.columns[idx];
+                    var title = currentColumn.title || currentColumn.field || '';
+                    var template = currentColumn.headerTemplate || title;
+                    var columnsHeaderTemplate = typeof template !== 'function' ? kendo.template(template) : template;
+                    var currentWidth = currentColumn.width;
+                    var currentWidthInt = parseInt(currentWidth, 10);
+                    var widthStyle = '';
+                    if (currentWidth && !isNaN(currentWidthInt)) {
+                        widthStyle += 'style=\'width:';
+                        widthStyle += currentWidthInt;
+                        widthStyle += percentageUnitsRegex.test(currentWidth) ? '%' : 'px';
+                        widthStyle += ';\'';
+                    }
+                    colGroup += '<col ' + widthStyle + '/>';
+                    row += '<th class=\'k-header\'>';
+                    row += columnsHeaderTemplate(currentColumn);
+                    row += '</th>';
+                }
+                colGroup += '</colgroup>';
+                row += '</tr>';
+                header += colGroup;
+                header += row;
+                header += '</table></div></div>';
+                list.columnsHeader = columnsHeader = $(header);
+                list.list.prepend(columnsHeader);
+                this._angularElement(list.columnsHeader, 'compile');
             },
             _noData: function () {
                 var list = this;
@@ -164,6 +208,7 @@
                     dataSource: that.dataSource,
                     click: proxy(that._click, that),
                     activate: proxy(that._activateItem, that),
+                    columns: currentOptions.columns,
                     deactivate: proxy(that._deactivateItem, that),
                     dataBinding: function () {
                         that.trigger('dataBinding');
@@ -234,6 +279,9 @@
                         word: '',
                         open: false
                     });
+                    if (this.options.highlightFirst) {
+                        this.listView.focus(0);
+                    }
                 }
                 this._change();
             },
@@ -249,10 +297,12 @@
             _filterSource: function (filter, force) {
                 var that = this;
                 var options = that.options;
+                var isMultiColumnFiltering = options.filterFields && filter && filter.logic && filter.filters && filter.filters.length;
                 var dataSource = that.dataSource;
                 var expression = extend({}, dataSource.filter() || {});
                 var resetPageSettings = filter || expression.filters && expression.filters.length && !filter;
                 var removed = removeFiltersForField(expression, options.dataTextField);
+                this._clearFilterExpressions(expression);
                 if ((filter || removed) && that.trigger('filtering', { filter: filter })) {
                     return;
                 }
@@ -260,8 +310,10 @@
                     filters: [],
                     logic: 'and'
                 };
-                if (isValidFilterExpr(filter) && $.trim(filter.value).length) {
+                if (isMultiColumnFiltering) {
                     newExpression.filters.push(filter);
+                } else {
+                    this._pushFilterExpression(newExpression, filter);
                 }
                 if (isValidFilterExpr(expression)) {
                     if (newExpression.logic === expression.logic) {
@@ -282,6 +334,25 @@
                     aggregate: dataSource.aggregate()
                 }, { filter: newExpression });
                 return dataSource[force ? 'read' : 'query'](dataSource._mergeState(dataSourceState));
+            },
+            _pushFilterExpression: function (newExpression, filter) {
+                if (isValidFilterExpr(filter) && $.trim(filter.value).length) {
+                    newExpression.filters.push(filter);
+                }
+            },
+            _clearFilterExpressions: function (expression) {
+                if (!expression.filters) {
+                    return;
+                }
+                var filtersToRemove;
+                for (var i = 0; i < expression.filters.length; i++) {
+                    if ('fromFilter' in expression.filters[i]) {
+                        filtersToRemove = i;
+                    }
+                }
+                if (!isNaN(filtersToRemove)) {
+                    expression.filters.splice(filtersToRemove, 1);
+                }
             },
             _angularElement: function (element, action) {
                 if (!element) {
@@ -346,16 +417,35 @@
             _filter: function (options) {
                 var that = this;
                 var widgetOptions = that.options;
-                var ignoreCase = widgetOptions.ignoreCase;
+                var word = options.word;
+                var filterFields = widgetOptions.filterFields;
                 var field = widgetOptions.dataTextField;
-                var expression = {
-                    value: ignoreCase ? options.word.toLowerCase() : options.word,
+                var expression;
+                if (filterFields && filterFields.length) {
+                    expression = {
+                        logic: 'or',
+                        filters: [],
+                        fromFilter: true
+                    };
+                    for (var i = 0; i < filterFields.length; i++) {
+                        this._pushFilterExpression(expression, that._buildExpression(word, filterFields[i]));
+                    }
+                } else {
+                    expression = that._buildExpression(word, field);
+                }
+                that._open = options.open;
+                that._filterSource(expression);
+            },
+            _buildExpression: function (value, field) {
+                var that = this;
+                var widgetOptions = that.options;
+                var ignoreCase = widgetOptions.ignoreCase;
+                return {
+                    value: ignoreCase ? value.toLowerCase() : value,
                     field: field,
                     operator: widgetOptions.filter,
                     ignoreCase: ignoreCase
                 };
-                that._open = options.open;
-                that._filterSource(expression);
             },
             _clearButton: function () {
                 var list = this;
@@ -646,6 +736,15 @@
             _calculatePopupHeight: function (force) {
                 var height = this._height(this.dataSource.flatView().length || force);
                 this._calculateGroupPadding(height);
+                this._calculateColumnsHeaderPadding(height);
+            },
+            _calculateColumnsHeaderPadding: function (height) {
+                if (this.options.columns && this.options.columns.length) {
+                    var list = this;
+                    var isRtl = support.isRtl(list.wrapper);
+                    var scrollbar = kendo.support.scrollbar();
+                    list.columnsHeader.css(isRtl ? 'padding-left' : 'padding-right', height !== 'auto' ? scrollbar : 0);
+                }
             },
             _resizePopup: function (force) {
                 if (this.options.virtual) {
@@ -1210,6 +1309,9 @@
                 }).on('mouseleave' + STATIC_LIST_NS, 'li', function () {
                     $(this).removeClass(HOVER);
                 });
+                if (support.touch) {
+                    this._touchHandlers();
+                }
                 if (this.options.selectable === 'multiple') {
                     this.element.attr('aria-multiselectable', true);
                 }
@@ -1272,6 +1374,27 @@
                 that.setDSFilter(dataSource.filter());
                 that.dataSource = dataSource.bind(CHANGE, that._refreshHandler);
                 that._fixedHeader();
+            },
+            _touchHandlers: function () {
+                var that = this;
+                var startY;
+                var endY;
+                var tapPosition = function (event) {
+                    return (event.originalEvent || event).changedTouches[0].pageY;
+                };
+                that.element.on('touchstart' + STATIC_LIST_NS, function (e) {
+                    startY = tapPosition(e);
+                });
+                that.element.on('touchend' + STATIC_LIST_NS, function (e) {
+                    if (e.isDefaultPrevented()) {
+                        return;
+                    }
+                    endY = tapPosition(e);
+                    if (Math.abs(endY - startY) < 10) {
+                        e.preventDefault();
+                        that.trigger('click', { item: $(e.target) });
+                    }
+                });
             },
             skip: function () {
                 return this.dataSource.skip();
@@ -1638,6 +1761,13 @@
                     groupTemplate: options.groupTemplate,
                     fixedGroupTemplate: options.fixedGroupTemplate
                 };
+                if (options.columns) {
+                    for (var i = 0; i < options.columns.length; i++) {
+                        var currentColumn = options.columns[i];
+                        var templateText = currentColumn.field ? currentColumn.field.toString() : 'text';
+                        templates['column' + i] = currentColumn.template || '#: ' + templateText + '#';
+                    }
+                }
                 for (var key in templates) {
                     template = templates[key];
                     if (template && typeof template !== 'function') {
@@ -1719,18 +1849,51 @@
                 var dataItem = context.item;
                 var notFirstItem = context.index !== 0;
                 var selected = context.selected;
+                var isGrouped = this.isGrouped();
+                var hasColumns = this.options.columns && this.options.columns.length;
                 if (notFirstItem && context.newGroup) {
                     item += ' k-first';
+                }
+                if (context.isLastGroupedItem && hasColumns) {
+                    item += ' k-last';
                 }
                 if (selected) {
                     item += ' k-state-selected';
                 }
                 item += '" aria-selected="' + (selected ? 'true' : 'false') + '" data-offset-index="' + context.index + '">';
-                item += this.templates.template(dataItem);
+                if (hasColumns) {
+                    item += this._renderColumns(dataItem);
+                } else {
+                    item += this.templates.template(dataItem);
+                }
                 if (notFirstItem && context.newGroup) {
-                    item += '<div class="k-group">' + this.templates.groupTemplate(context.group) + '</div>';
+                    if (hasColumns) {
+                        item += '<div class="k-cell k-group-cell"><span>' + this.templates.groupTemplate(context.group) + '</span></div>';
+                    } else {
+                        item += '<div class="k-group">' + this.templates.groupTemplate(context.group) + '</div>';
+                    }
+                } else if (isGrouped && hasColumns) {
+                    item += '<div class=\'k-cell k-spacer-cell\'></div>';
                 }
                 return item + '</li>';
+            },
+            _renderColumns: function (dataItem) {
+                var item = '';
+                for (var i = 0; i < this.options.columns.length; i++) {
+                    var currentWidth = this.options.columns[i].width;
+                    var currentWidthInt = parseInt(currentWidth, 10);
+                    var widthStyle = '';
+                    if (currentWidth && !isNaN(currentWidthInt)) {
+                        widthStyle += 'style=\'width:';
+                        widthStyle += currentWidthInt;
+                        widthStyle += percentageUnitsRegex.test(currentWidth) ? '%' : 'px';
+                        widthStyle += ';\'';
+                    }
+                    item += '<span class=\'k-cell\' ' + widthStyle + '>';
+                    item += this.templates['column' + i](dataItem);
+                    item += '</span>';
+                }
+                return item;
             },
             _render: function () {
                 var html = '';
@@ -1752,6 +1915,7 @@
                                 item: group.items[j],
                                 group: group.value,
                                 newGroup: newGroup,
+                                isLastGroupedItem: j === group.items.length - 1,
                                 index: idx
                             };
                             dataContext[idx] = context;

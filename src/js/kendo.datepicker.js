@@ -254,7 +254,8 @@
                 element.addClass('k-input').attr({
                     role: 'combobox',
                     'aria-expanded': false,
-                    'aria-owns': that.dateView._dateViewID
+                    'aria-owns': that.dateView._dateViewID,
+                    'autocomplete': 'off'
                 });
                 that._reset();
                 that._template();

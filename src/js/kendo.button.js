@@ -46,7 +46,7 @@
                 if (options.enable) {
                     that._tabindex();
                 }
-                that._graphics();
+                that.iconElement();
                 element.on(CLICK + NS, proxy(that._click, that)).on('focus' + NS, proxy(that._focus, that)).on('blur' + NS, proxy(that._blur, that)).on('keydown' + NS, proxy(that._keydown, that)).on('keyup' + NS, proxy(that._keyup, that));
                 kendo.notify(that);
             },
@@ -59,6 +59,7 @@
             options: {
                 name: 'Button',
                 icon: '',
+                iconClass: '',
                 spriteCssClass: '',
                 imageUrl: '',
                 enable: true
@@ -102,9 +103,9 @@
             _keyup: function () {
                 this.element.removeClass(SELECTEDSTATE);
             },
-            _graphics: function () {
-                var that = this, element = that.element, options = that.options, icon = options.icon, spriteCssClass = options.spriteCssClass, imageUrl = options.imageUrl, span, img, isEmpty;
-                if (spriteCssClass || imageUrl || icon) {
+            iconElement: function () {
+                var that = this, element = that.element, options = that.options, icon = options.icon, iconClass = options.iconClass, spriteCssClass = options.spriteCssClass, imageUrl = options.imageUrl, span, img, isEmpty;
+                if (spriteCssClass || imageUrl || icon || iconClass) {
                     isEmpty = true;
                     element.contents().filter(function () {
                         return !$(this).hasClass('k-sprite') && !$(this).hasClass('k-icon') && !$(this).hasClass('k-image');
@@ -119,24 +120,24 @@
                         element.addClass(KBUTTONICONTEXT);
                     }
                 }
-                if (icon) {
+                if (imageUrl) {
+                    img = element.children('img.k-image').first();
+                    if (!img[0]) {
+                        img = $('<img alt="icon" class="k-image" />').prependTo(element);
+                    }
+                    img.attr('src', imageUrl);
+                } else if (icon || iconClass) {
                     span = element.children('span.k-icon').first();
                     if (!span[0]) {
-                        span = $('<span class="k-icon"></span>').prependTo(element);
+                        span = $('<span></span>').prependTo(element);
                     }
-                    span.addClass('k-i-' + icon);
+                    span.attr('class', icon ? 'k-icon k-i-' + icon : iconClass);
                 } else if (spriteCssClass) {
                     span = element.children('span.k-sprite').first();
                     if (!span[0]) {
                         span = $('<span class="k-sprite"></span>').prependTo(element);
                     }
                     span.addClass(spriteCssClass);
-                } else if (imageUrl) {
-                    img = element.children('img.k-image').first();
-                    if (!img[0]) {
-                        img = $('<img alt="icon" class="k-image" />').prependTo(element);
-                    }
-                    img.attr('src', imageUrl);
                 }
             },
             enable: function (enable) {

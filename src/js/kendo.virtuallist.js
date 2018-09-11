@@ -33,7 +33,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, DataBoundWidget = ui.DataBoundWidget, proxy = $.proxy, WRAPPER = 'k-virtual-wrap', VIRTUALLIST = 'k-virtual-list', CONTENT = 'k-virtual-content', LIST = 'k-list', HEADER = 'k-group-header', VIRTUALITEM = 'k-virtual-item', ITEM = 'k-item', HEIGHTCONTAINER = 'k-height-container', GROUPITEM = 'k-group', SELECTED = 'k-state-selected', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', CHANGE = 'change', CLICK = 'click', LISTBOUND = 'listBound', ITEMCHANGE = 'itemChange', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', VIRTUAL_LIST_NS = '.VirtualList';
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, DataBoundWidget = ui.DataBoundWidget, proxy = $.proxy, percentageUnitsRegex = /^\d+(\.\d+)?%$/i, WRAPPER = 'k-virtual-wrap', VIRTUALLIST = 'k-virtual-list', CONTENT = 'k-virtual-content', LIST = 'k-list', HEADER = 'k-group-header', VIRTUALITEM = 'k-virtual-item', ITEM = 'k-item', HEIGHTCONTAINER = 'k-height-container', GROUPITEM = 'k-group', SELECTED = 'k-state-selected', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', CHANGE = 'change', CLICK = 'click', LISTBOUND = 'listBound', ITEMCHANGE = 'itemChange', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', VIRTUAL_LIST_NS = '.VirtualList';
         function lastFrom(array) {
             return array[array.length - 1];
         }
@@ -139,10 +139,16 @@
             this.angular('cleanup', function () {
                 return { elements: [element] };
             });
-            element.attr('data-uid', data.item ? data.item.uid : '').attr('data-offset-index', data.index).html(itemTemplate(data.item || {}));
+            element.attr('data-uid', data.item ? data.item.uid : '').attr('data-offset-index', data.index);
+            if (this.options.columns && this.options.columns.length && data.item) {
+                element.html(renderColumns(this.options, data.item, templates));
+            } else {
+                element.html(itemTemplate(data.item || {}));
+            }
             element.toggleClass(FOCUSED, data.current);
             element.toggleClass(SELECTED, data.selected);
             element.toggleClass('k-first', data.newGroup);
+            element.toggleClass('k-last', data.isLastGroupedItem);
             element.toggleClass('k-loading-item', !data.item);
             if (data.index !== 0 && data.newGroup) {
                 $('<div class=' + GROUPITEM + '></div>').appendTo(element).html(templates.groupTemplate(data.group));
@@ -160,6 +166,24 @@
                         }]
                 };
             });
+        }
+        function renderColumns(options, dataItem, templates) {
+            var item = '';
+            for (var i = 0; i < options.columns.length; i++) {
+                var currentWidth = options.columns[i].width;
+                var currentWidthInt = parseInt(currentWidth, 10);
+                var widthStyle = '';
+                if (currentWidth) {
+                    widthStyle += 'style=\'width:';
+                    widthStyle += currentWidthInt;
+                    widthStyle += percentageUnitsRegex.test(currentWidth) ? '%' : 'px';
+                    widthStyle += ';\'';
+                }
+                item += '<span class=\'k-cell\' ' + widthStyle + '>';
+                item += templates['column' + i](dataItem);
+                item += '</span>';
+            }
+            return item;
         }
         function mapChangedItems(selected, itemsToMatch) {
             var itemsLength = itemsToMatch.length;
@@ -210,6 +234,9 @@
                 that.content = that.element.wrap('<div unselectable=\'on\' class=\'' + CONTENT + '\'></div>').parent();
                 that.wrapper = that.content.wrap('<div class=\'' + WRAPPER + '\'></div>').parent();
                 that.header = that.content.before('<div class=\'' + HEADER + '\'></div>').prev();
+                if (options.columns && options.columns.length) {
+                    that.element.removeClass(LIST);
+                }
                 that.element.on('mouseenter' + VIRTUAL_LIST_NS, 'li:not(.k-loading-item)', function () {
                     $(this).addClass(HOVER);
                 }).on('mouseleave' + VIRTUAL_LIST_NS, 'li', function () {
@@ -851,6 +878,13 @@
                     groupTemplate: options.groupTemplate,
                     fixedGroupTemplate: options.fixedGroupTemplate
                 };
+                if (options.columns) {
+                    for (var i = 0; i < options.columns.length; i++) {
+                        var currentColumn = options.columns[i];
+                        var templateText = currentColumn.field ? currentColumn.field.toString() : 'text';
+                        templates['column' + i] = currentColumn.template || '#: ' + templateText + '#';
+                    }
+                }
                 for (var key in templates) {
                     if (typeof templates[key] !== 'function') {
                         templates[key] = kendo.template(templates[key] || '');
@@ -914,6 +948,7 @@
                 that._renderItems = that._whenChanged(scrollCallback(content, that._onScroll), syncList(that._reorderList(that._items, $.proxy(render, that))));
                 that._renderItems();
                 that._calculateGroupPadding(that._screenHeight);
+                that._calculateColumnsHeaderPadding();
             },
             _setHeight: function (height) {
                 var currentHeight, heightContainer = this.heightContainer;
@@ -1047,6 +1082,9 @@
                 this._currentGroup = null;
                 for (var i = index, length = index + itemCount; i < length; i++) {
                     item = this._itemMapper(this.getter(i, index), i, value);
+                    if (items[items.length - 1]) {
+                        items[items.length - 1].isLastGroupedItem = item.newGroup;
+                    }
                     items.push(item);
                     this._view[item.index] = item;
                 }
@@ -1308,6 +1346,15 @@
                     }
                     padding += parseFloat(firstItem.css('border-right-width'), 10) + parseFloat(firstItem.children('.k-group').css('right'), 10);
                     groupHeader.css('padding-right', padding);
+                }
+            },
+            _calculateColumnsHeaderPadding: function () {
+                if (this.options.columns && this.options.columns.length) {
+                    var isRtl = kendo.support.isRtl(this.wrapper);
+                    var scrollbar = kendo.support.scrollbar();
+                    var columnsHeader = this.content.parent().parent().find('.k-grid-header');
+                    var total = this.dataSource.total();
+                    columnsHeader.css(isRtl ? 'padding-left' : 'padding-right', total ? scrollbar : 0);
                 }
             }
         });

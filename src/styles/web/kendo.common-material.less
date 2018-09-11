@@ -37,6 +37,32 @@
 @icon-positioning: "material";
 @spreadsheet-action-bar-font-size: 14px;
 
+@window-border-width: 0;
+@window-border-style: solid;
+
+@window-titlebar-padding-x: 16px;
+@window-titlebar-padding-y: 8px;
+@window-titlebar-border-width: 0;
+@window-titlebar-border-style: none;
+
+@window-title-font-size: 1.2em;
+@window-title-line-height: 1.25;
+
+@window-inner-padding-x: @window-titlebar-padding-x;
+@window-inner-padding-y: @window-inner-padding-x;
+
+@grid-padding-x: 16px;
+@grid-padding-y: 8px;
+
+@grid-header-padding-x: @grid-padding-x;
+@grid-header-padding-y: @grid-padding-y;
+
+@grid-footer-padding-x: @grid-header-padding-x;
+@grid-footer-padding-y: @grid-header-padding-y;
+
+@grid-cell-padding-x: @grid-padding-x;
+@grid-cell-padding-y: @grid-padding-y;
+
 @import "common/all.less";
 
 @spreadsheet-first-tool-offset: 0;
@@ -391,9 +417,12 @@
     &.k-popup-dropdowntree {
         padding: 0.286em;
     }
+    &.k-popup-flush {
+        padding: 0;
+    }
 }
 
-.k-popup.k-calendar-containe {
+.k-popup.k-calendar-container {
     padding: 0;
 }
 
@@ -691,28 +720,6 @@ span.k-tooltip
     padding: 9px 17px;
 }
 
-.k-block > .k-header,
-.k-window-titlebar {
-    padding: 0.5em 0 0.571em;
-}
-
-.k-window-titlebar .k-window-actions {
-    top: 0.3em;
-    right: 0.8em;
-}
-
-div.k-window {
-    border-width: 0;
-}
-
-.k-window-title {
-    padding: 0 16px;
-}
-
-div.k-window-content {
-    padding: 1.333em;
-}
-
 div.editorToolbarWindow.k-window-content {
     padding: 0;
 }
@@ -870,13 +877,13 @@ div.editorToolbarWindow.k-window-content {
     left: -4px;
 }
 
-/* PanelBar */
+// PanelBar
 .k-panelbar-expand,
 .k-panelbar-collapse {
     right: 16px;
 }
 
-/* Grid */
+// Grid
 .k-header.k-grid-toolbar {
     border-color: #3343a4;
 }
@@ -909,7 +916,7 @@ form.k-filter-menu .k-textbox {
     margin-bottom: 7px;
 }
 
-/* Scheduler */
+// Scheduler
 .k-gantt-toolbar,
 .k-scheduler-toolbar .k-nav-today,
 .k-scheduler-toolbar .k-scheduler-views,
