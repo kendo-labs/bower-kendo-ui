@@ -336,6 +336,7 @@
                         this._dateTime.modifyPart(symbol, key == 38 ? 1 : -1);
                         this._updateElementValue();
                         this._selectSegment(symbol);
+                        this.element.trigger(CHANGE);
                     }
                 }
                 if (kendo.support.browser.msie && kendo.support.browser.version < 10) {

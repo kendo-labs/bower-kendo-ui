@@ -512,16 +512,17 @@
                         if (!method) {
                             view.setDate(currentValue, value);
                         }
+                        if (!isInRange(currentValue, min, max)) {
+                            currentValue = restrictValue(currentValue, options.min, options.max);
+                        }
                         if (isDisabled(currentValue)) {
                             currentValue = that._nextNavigatable(currentValue, value);
                         }
                         min = createDate(min.getFullYear(), min.getMonth(), min.getDate());
-                        if (isInRange(currentValue, min, max)) {
-                            if (that._isMultipleSelection()) {
-                                that._keyboardRangeSelection(e, currentValue);
-                            } else {
-                                that._focus(restrictValue(currentValue, options.min, options.max));
-                            }
+                        if (that._isMultipleSelection()) {
+                            that._keyboardRangeSelection(e, currentValue);
+                        } else {
+                            that._focus(currentValue);
                         }
                     }
                 } else {
@@ -545,21 +546,22 @@
                         if (!method) {
                             view.setDate(currentValue, value);
                         }
+                        min = createDate(min.getFullYear(), min.getMonth(), min.getDate());
+                        if (!isInRange(currentValue, min, max)) {
+                            currentValue = restrictValue(currentValue, options.min, options.max);
+                        }
                         if (isDisabled(currentValue)) {
                             currentValue = that._nextNavigatable(currentValue, value);
                         }
-                        min = createDate(min.getFullYear(), min.getMonth(), min.getDate());
-                        if (isInRange(currentValue, min, max)) {
-                            if (that._isMultipleSelection()) {
-                                if (!that._dateInView(currentValue)) {
-                                    that.navigate(currentValue);
-                                } else {
-                                    that._current = currentValue;
-                                    that._class(FOCUSED, currentValue);
-                                }
+                        if (that._isMultipleSelection()) {
+                            if (!that._dateInView(currentValue)) {
+                                that.navigate(currentValue);
                             } else {
-                                that._focus(restrictValue(currentValue, options.min, options.max));
+                                that._current = currentValue;
+                                that._class(FOCUSED, currentValue);
                             }
+                        } else {
+                            that._focus(currentValue);
                         }
                     }
                 }

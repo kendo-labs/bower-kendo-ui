@@ -623,8 +623,15 @@
                 var that = this;
                 var item = e.item;
                 var dataItem = that.listView.dataItemByIndex(that.listView.getElementIndex(item));
+                var shouldTrigger = true;
                 e.preventDefault();
-                if (that.trigger('select', {
+                if (dataItem) {
+                    shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
+                    if (!shouldTrigger) {
+                        that.input.val(that._accessor());
+                    }
+                }
+                if (shouldTrigger && that.trigger('select', {
                         dataItem: dataItem,
                         item: item
                     })) {
@@ -754,6 +761,9 @@
                         dataItem = that.listView.dataItemByIndex(that.listView.getElementIndex(current));
                         if (dataItem) {
                             shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
+                            if (!shouldTrigger) {
+                                that.input.val(that._accessor());
+                            }
                         }
                         if (shouldTrigger && that.trigger('select', {
                                 dataItem: dataItem,
@@ -809,7 +819,7 @@
                     var value = that.text();
                     if (that._prev !== value) {
                         that._prev = value;
-                        if (that.options.filter === 'none') {
+                        if (that.options.filter === 'none' && that.options.virtual) {
                             that.listView.select(-1);
                         }
                         that.search(value);

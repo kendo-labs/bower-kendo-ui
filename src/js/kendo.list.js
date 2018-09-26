@@ -593,7 +593,7 @@
                     trigger = true;
                 }
                 if (trigger) {
-                    if (that._old === null || value === '') {
+                    if (that._old === null || that._old === '' || value === '') {
                         that._valueBeforeCascade = that._old = value;
                     } else {
                         if (that.dataItem()) {
@@ -1262,7 +1262,7 @@
             _cascadeSelect: function (parent, valueBeforeCascade) {
                 var that = this;
                 var dataItem = parent.dataItem();
-                var filterValue = dataItem ? parent._value(dataItem) : null;
+                var filterValue = dataItem ? dataItem[that.options.cascadeFromParentField] || parent._value(dataItem) : null;
                 var valueField = that.options.cascadeFromField || parent.options.dataValueField;
                 var expressions;
                 that._valueBeforeCascade = valueBeforeCascade !== undefined ? valueBeforeCascade : that.value();

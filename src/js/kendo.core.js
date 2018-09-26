@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.911'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.926'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1517,7 +1517,7 @@
                 var os = false, minorVersion, match = [], notAndroidPhone = !/mobile safari/i.test(ua), agentRxs = {
                         wp: /(Windows Phone(?: OS)?)\s(\d+)\.(\d+(\.\d+)?)/,
                         fire: /(Silk)\/(\d+)\.(\d+(\.\d+)?)/,
-                        android: /(Android|Android.*(?:Opera|Firefox).*?\/)\s*(\d+)\.(\d+(\.\d+)?)/,
+                        android: /(Android|Android.*(?:Opera|Firefox).*?\/)\s*(\d+)\.?(\d+(\.\d+)?)?/,
                         iphone: /(iPhone|iPod).*OS\s+(\d+)[\._]([\d\._]+)/,
                         ipad: /(iPad).*OS\s+(\d+)[\._]([\d_]+)/,
                         meego: /(MeeGo).+NokiaBrowser\/(\d+)\.([\d\._]+)/,
@@ -1559,7 +1559,7 @@
                             os.name = testRx(agent, osRxs);
                             os[os.name] = true;
                             os.majorVersion = match[2];
-                            os.minorVersion = match[3].replace('_', '.');
+                            os.minorVersion = (match[3] || '0').replace('_', '.');
                             minorVersion = os.minorVersion.replace('.', '').substr(0, 2);
                             os.flatVersion = os.majorVersion + minorVersion + new Array(3 - (minorVersion.length < 3 ? minorVersion.length : 2)).join('0');
                             os.cordova = typeof window.PhoneGap !== UNDEFINED || typeof window.cordova !== UNDEFINED;

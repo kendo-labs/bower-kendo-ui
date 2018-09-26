@@ -35,7 +35,7 @@
   }
 }
 .km-root {
-  font-size: .92em;
+  font-size: 0.92em;
 }
 .km-root.km-retina input,
 .km-root.km-retina select,
@@ -79,7 +79,6 @@
 .km-vertical .km-collapsible-pane {
   position: absolute;
   z-index: 2 !important;
-  -webkit-transition: -webkit-transform 350ms ease-out;
   transition: -webkit-transform 350ms ease-out;
   transition: transform 350ms ease-out;
   transition: transform 350ms ease-out, -webkit-transform 350ms ease-out;
@@ -120,24 +119,16 @@
   top: 0;
   left: 0;
   position: absolute;
-  display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   height: 100%;
   width: 100%;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: stretch;
-  -webkit-align-items: stretch;
-      -ms-flex-align: stretch;
-          align-items: stretch;
-  -webkit-align-content: stretch;
-      -ms-flex-line-pack: stretch;
-          align-content: stretch;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-align: stretch;
+      align-items: stretch;
+  -ms-flex-line-pack: stretch;
+      align-content: stretch;
   vertical-align: top;
 }
 .k-ff .km-view,
@@ -155,17 +146,13 @@
   position: relative;
 }
 .k-ff .km-view {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
 }
 .km-content {
   min-height: 1px;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -ms-flex: 1;
+      flex: 1;
   flex-align: stretch;
   width: auto;
   overflow: hidden;
@@ -185,11 +172,8 @@
 .km-footer {
   display: block;
   display: -moz-box;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+      flex-direction: column;
   width: 100%;
 }
 .km-header {
@@ -239,12 +223,11 @@ kendo-mobile-drawer {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  -webkit-background-origin: border-box;
-          background-origin: border-box;
+  background-origin: border-box;
   position: relative;
   display: inline-block;
-  padding: .4em .7em;
-  margin: .1rem;
+  padding: 0.4em 0.7em;
+  margin: 0.1rem;
   overflow: visible;
   text-decoration: none;
 }
@@ -252,12 +235,11 @@ kendo-mobile-drawer {
 .km-root .k-toolbar,
 .km-navbar {
   display: block;
-  padding: .8em;
+  padding: 0.8em;
   margin: 0;
   width: 100%;
   border-width: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 .km-native-scroller {
   overflow: auto;
@@ -277,8 +259,7 @@ kendo-mobile-drawer {
   height: 100% !important;
   background: rgba(0, 0, 0, 0.6);
   z-index: 10001;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 .km-root .km-shim {
   position: absolute;
@@ -291,8 +272,7 @@ kendo-mobile-drawer {
   vertical-align: middle;
 }
 .km-shim .k-animation-container {
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
   border: 0;
   width: auto;
 }
@@ -306,8 +286,7 @@ kendo-mobile-drawer {
   position: absolute;
   margin-top: -70px;
   margin-left: -90px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.5);
 }
 .km-loader h1 {
@@ -380,8 +359,6 @@ kendo-mobile-drawer {
   }
 }
 .km-stretched-view {
-  display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
@@ -495,16 +472,16 @@ kendo-mobile-drawer {
   position: absolute;
   z-index: 1;
   height: 2em;
-  font-size: .6rem;
+  font-size: 0.6rem;
   text-shadow: none;
 }
 .km-badge {
   top: -1em;
   right: -1em;
   line-height: 2em;
-  margin-left: .5em;
-  min-width: .9em;
-  padding: 0 .55em;
+  margin-left: 0.5em;
+  min-width: 0.9em;
+  padding: 0 0.55em;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
@@ -516,17 +493,16 @@ kendo-mobile-drawer {
 .km-detail {
   position: absolute;
   float: right;
-  right: .8rem;
+  right: 0.8rem;
   top: 50%;
   margin-top: -0.7rem;
   width: 1.3rem;
   height: 1.3rem;
   font-size: 1rem;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 .km-widget .km-detaildisclose {
-  font-size: .8em;
+  font-size: 0.8em;
 }
 .k-ff .km-detail {
   width: 1rem;
@@ -544,15 +520,15 @@ kendo-mobile-drawer {
 .km-widget .km-contactadd:before,
 .km-widget .km-detaildisclose:before,
 .km-detail .km-icon {
-  left: .15em;
-  top: .15em;
+  left: 0.15em;
+  top: 0.15em;
   line-height: 1em;
   font-size: 1em;
   position: absolute;
 }
 .km-widget .km-detaildisclose:after {
-  left: .1em;
-  top: .25em;
+  left: 0.1em;
+  top: 0.25em;
   text-align: center;
   font-weight: bold;
 }
@@ -582,14 +558,13 @@ button.km-button {
 .km-root .km-pane .k-button:focus,
 .km-root .km-pane .k-button:active,
 .km-root .km-pane .k-button:focus:active {
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
 }
 .km-buttongroup {
-  padding: .4rem .7rem;
+  padding: 0.4rem 0.7rem;
   -webkit-margin-collapse: separate;
   margin-collapse: separate;
-  margin: .5em auto;
+  margin: 0.5em auto;
 }
 .km-widget.km-buttongroup {
   padding: 0;
@@ -607,15 +582,15 @@ button.km-button {
 .km-widget.km-buttongroup .km-button {
   margin: 0;
   border-width: 1px 0 1px 1px;
-  padding: .48em .9em .44em;
+  padding: 0.48em 0.9em 0.44em;
 }
 .km-tablet .km-buttongroup .km-button {
-  padding: .4em .8em .34em;
+  padding: 0.4em 0.8em 0.34em;
 }
 .km-widget.km-navbar .km-buttongroup {
-  font-size: .95rem;
+  font-size: 0.95rem;
   line-height: 1em;
-  margin: 0 0 .2em;
+  margin: 0 0 0.2em;
   display: inline-block;
   height: 1.5em;
   top: -2px;
@@ -678,10 +653,8 @@ button.km-button {
 .km-root .k-toolbar,
 .km-navbar {
   padding: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -ms-flex: 1;
+      flex: 1;
   position: relative;
   overflow: hidden;
   display: block;
@@ -693,28 +666,28 @@ button.km-button {
   overflow: visible;
 }
 .km-navbar .km-button {
-  margin-top: .5rem;
-  margin-bottom: .5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 .km-navbar .km-no-title {
-  padding-top: .7rem;
-  padding-bottom: .7rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
 }
 .km-horizontal .km-navbar .km-button {
-  margin-top: .3rem;
-  margin-bottom: .3rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
 }
 .km-horizontal .km-navbar .km-no-title {
-  padding-top: .5rem;
-  padding-bottom: .5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 .km-tablet.km-root .km-no-title {
-  padding-top: .55rem;
-  padding-bottom: .55rem;
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
 }
 .km-tablet .km-navbar .km-button {
-  margin-top: .45rem;
-  margin-bottom: .45rem;
+  margin-top: 0.45rem;
+  margin-bottom: 0.45rem;
 }
 .km-root .km-pane .km-navbar .km-no-title {
   visibility: visible;
@@ -722,8 +695,7 @@ button.km-button {
 }
 .km-on-ios.km-black-translucent-status-bar.km-app .km-header .km-navbar {
   padding-top: 1.4em;
-  -webkit-background-clip: border-box;
-          background-clip: border-box;
+  background-clip: border-box;
 }
 .km-on-ios.km-ios5.km-cordova .km-header .km-navbar,
 .km-on-ios.km-ios6.km-cordova .km-header .km-navbar {
@@ -733,13 +705,13 @@ button.km-button {
 .km-rightitem {
   z-index: 1;
   position: absolute;
-  right: .5em;
+  right: 0.5em;
 }
 .km-popup .km-rightitem {
   right: 0;
 }
 .km-leftitem {
-  left: .5em;
+  left: 0.5em;
   right: auto;
 }
 .km-popup .km-leftitem {
@@ -767,18 +739,15 @@ button.km-button {
   vertical-align: middle;
 }
 .km-tabstrip {
-  padding: .4rem .7rem;
+  padding: 0.4rem 0.7rem;
 }
 .km-horizontal .km-tabstrip {
-  padding: .2rem .7rem;
+  padding: 0.2rem 0.7rem;
 }
 .km-tabstrip {
   flex-align: start;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -ms-flex-direction: row;
+      flex-direction: row;
   -moz-box-pack: start;
   padding: 0;
   text-align: center;
@@ -786,8 +755,7 @@ button.km-button {
 }
 .km-tabstrip .km-button {
   word-spacing: normal;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
   vertical-align: bottom;
 }
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
@@ -799,7 +767,7 @@ button.km-button {
 .km-tabstrip .km-button {
   font-family: Arial, Helvetica, sans-serif;
   color: #a8a8a8;
-  padding: .4em .8em;
+  padding: 0.4em 0.8em;
   border-width: 0;
   border-color: transparent;
   background: none;
@@ -849,8 +817,7 @@ button.km-button {
   width: 100%;
   overflow: hidden;
   background: transparent;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 .km-checkbox {
   width: 1.8rem;
@@ -891,18 +858,18 @@ button.km-button {
 .km-list .km-switch {
   position: absolute;
   top: 50%;
-  right: .8rem;
+  right: 0.8rem;
   margin-top: -1rem;
 }
 .km-listview-link:after {
-  width: .5rem;
-  height: .5rem;
+  width: 0.5rem;
+  height: 0.5rem;
   content: "\a0";
   display: inline-block;
   vertical-align: middle;
   margin-left: -0.2rem;
   border-style: solid;
-  border-width: .24rem .24rem 0 0;
+  border-width: 0.24rem 0.24rem 0 0;
   -webkit-transform: rotate(45deg);
       -ms-transform: rotate(45deg);
           transform: rotate(45deg);
@@ -933,7 +900,7 @@ button.km-button {
 .km-listview .km-switch {
   margin-top: -0.95rem;
   position: absolute;
-  right: .8rem;
+  right: 0.8rem;
   top: 50%;
 }
 .km-listview .km-list {
@@ -947,9 +914,8 @@ button.km-button {
   position: relative;
   list-style-type: none;
   vertical-align: middle;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: .5em .7em;
+  box-sizing: border-box;
+  padding: 0.5em 0.7em;
 }
 .km-list > li {
   line-height: 1.6em;
@@ -976,11 +942,11 @@ button.km-button {
 .km-group-title {
   display: block;
   font-weight: bold;
-  padding: .2em 0;
-  text-indent: .8em;
+  padding: 0.2em 0;
+  text-indent: 0.8em;
 }
 .km-listgroupinset .km-group-title {
-  margin-top: .65em;
+  margin-top: 0.65em;
   line-height: 2em;
 }
 .km-list:not(.km-virtual-list) > li:first-child {
@@ -1007,7 +973,7 @@ button.km-button {
 }
 .km-filter-form {
   width: 100%;
-  padding: .5em 0;
+  padding: 0.5em 0;
   border: 1px solid transparent;
   border-width: 1px 0;
   -webkit-transform: translatez(0);
@@ -1016,8 +982,8 @@ button.km-button {
 }
 .km-filter-wrap {
   position: relative;
-  margin: 0 .7em;
-  padding: .2em .4em;
+  margin: 0 0.7em;
+  padding: 0.2em 0.4em;
   border: 1px solid transparent;
 }
 .km-widget .km-filter-wrap:before {
@@ -1039,8 +1005,7 @@ button.km-button {
 }
 .km-filter-wrap input {
   width: 100%;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   border: 0;
   background: transparent;
   -moz-appearance: none;
@@ -1070,7 +1035,7 @@ button.km-button {
 }
 .km-load-more {
   display: block;
-  padding: .3em 0 1.2em;
+  padding: 0.3em 0 1.2em;
   height: 3.2em;
   text-align: center;
 }
@@ -1112,14 +1077,14 @@ button.km-button {
 .km-pages {
   text-align: center;
   margin: 0;
-  padding: .6em 0 0;
+  padding: 0.6em 0 0;
   height: 1.5em;
 }
 .km-pages li {
   display: inline-block;
-  width: .5em;
-  height: .55em;
-  margin: 0 .3em;
+  width: 0.5em;
+  height: 0.55em;
+  margin: 0 0.3em;
 }
 .km-item label:before,
 .km-item label.km-item-checked:after {
@@ -1127,13 +1092,13 @@ button.km-button {
   content: " ";
   display: block;
   top: 50%;
-  left: .6em;
+  left: 0.6em;
   width: 36px;
   height: 36px;
   margin-top: -18px;
 }
 .km-widget .k-slider {
-  line-height: .6em;
+  line-height: 0.6em;
   position: relative;
   display: inline-block;
   vertical-align: middle;
@@ -1141,8 +1106,8 @@ button.km-button {
 }
 .km-widget .k-slider-horizontal {
   width: 50%;
-  height: .6em;
-  line-height: .6em;
+  height: 0.6em;
+  line-height: 0.6em;
 }
 .km-list .k-slider {
   position: absolute;
@@ -1156,22 +1121,20 @@ button.km-button {
   height: 100%;
   display: block;
   position: absolute;
-  border: .5em solid transparent;
-  border-width: .5em 0;
+  border: 0.5em solid transparent;
+  border-width: 0.5em 0;
 }
 .km-widget .k-slider-horizontal .k-slider-track {
   width: auto !important;
 }
 .km-widget .k-slider .k-slider-track {
-  -webkit-background-clip: padding-box;
-          background-clip: padding-box;
+  background-clip: padding-box;
 }
 .km-widget .k-slider-track,
 .km-widget .k-slider-selection {
   margin-top: 0;
   border-radius: 5px;
-  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
-          box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
 }
 .km-widget .k-slider-horizontal .k-slider-selection {
   top: 0;
@@ -1214,7 +1177,7 @@ button.km-button {
   overflow: visible;
   width: 100%;
   height: 3em;
-  opacity: .2;
+  opacity: 0.2;
 }
 .km-dialog-content {
   font-weight: normal;
@@ -1223,10 +1186,10 @@ button.km-button {
 }
 .km-dialog .km-button {
   display: block;
-  margin: .4em;
+  margin: 0.4em;
   font-size: 1.3em;
   text-align: center;
-  padding: .44em;
+  padding: 0.44em;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -1251,8 +1214,7 @@ button.km-button {
 .km-list .k-dropdown,
 .km-list textarea {
   width: 50%;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   font-size: 1.2em;
   position: absolute;
   top: 50%;
@@ -1268,7 +1230,6 @@ button.km-button {
 }
 .km-list textarea {
   position: relative;
-  width: -webkit-calc(50% + 0.7em);
   width: calc(50% + 0.7em);
   margin-right: -0.7em;
 }
@@ -1285,7 +1246,7 @@ button.km-button {
 .km-list input[type=radio] {
   position: absolute;
   top: 50%;
-  right: .7em;
+  right: 0.7em;
   margin-top: -0.5em;
   background: none;
 }
@@ -1339,7 +1300,7 @@ button.km-button {
   border: 0;
   font-size: inherit;
   width: 1em;
-  height: .9em;
+  height: 0.9em;
 }
 .km-list label.km-required:after {
   content: "*";
@@ -1356,7 +1317,7 @@ button.km-button {
   width: 1em;
   height: 1em;
   font: 1em/1em "Kendo UI";
-  margin-right: .89em;
+  margin-right: 0.89em;
 }
 .km-list .km-label-above input[type=text]:not(.k-input),
 .km-list .km-label-above input[type=password],
@@ -1422,7 +1383,6 @@ button.km-button {
 .km-list .km-inline-field {
   display: inline-block;
   position: relative;
-  width: -webkit-calc(50% - 1.61em);
   width: calc(50% - 1.61em);
   overflow: hidden;
   white-space: nowrap;
@@ -2370,8 +2330,7 @@ button.km-button {
   list-style-type: none;
   padding: inherit 1em;
   border-bottom: 1px solid #555;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 .km-widget.km-actionsheet > li {
   line-height: 2em;
@@ -2393,8 +2352,7 @@ button.km-button {
 }
 .km-widget.km-actionsheet-wrapper {
   width: 100%;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
   border: 0;
 }
 .km-actionsheet-root.km-shim .k-animation-container {
@@ -2417,8 +2375,7 @@ button.km-button {
   position: relative;
   background: none;
   border: 0;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
 }
 .km-popup-overlay {
   position: absolute;
@@ -2462,8 +2419,7 @@ button.km-button {
   right: 0;
 }
 .km-popup.km-pane {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   min-height: 100px;
@@ -2506,8 +2462,6 @@ button.km-button {
 .km-modalview-wrapper:before {
   overflow: hidden;
   position: relative;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
   width: 100%;
@@ -2522,8 +2476,6 @@ button.km-button {
   -ms-flex: auto;
 }
 .km-native-scrolling .km-view.km-modalview {
-  display: -webkit-inline-flex;
-  display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
 }
@@ -2562,7 +2514,6 @@ button.km-button {
   -webkit-transform: rotate(0deg);
       -ms-transform: rotate(0deg);
           transform: rotate(0deg);
-  -webkit-transition: -webkit-transform 300ms linear;
   transition: -webkit-transform 300ms linear;
   transition: transform 300ms linear;
   transition: transform 300ms linear, -webkit-transform 300ms linear;
@@ -2573,21 +2524,19 @@ button.km-button {
           transform: rotate(180deg);
 }
 .km-widget .km-scroller-refresh .km-icon {
-  -webkit-transition: none;
   transition: none;
 }
 .km-touch-scrollbar {
   position: absolute;
   visibility: hidden;
   z-index: 200000;
-  height: .4em;
-  width: .4em;
+  height: 0.4em;
+  width: 0.4em;
   background-color: #333;
   opacity: 0;
   -webkit-transform-origin: 0 0;
       -ms-transform-origin: 0 0;
           transform-origin: 0 0;
-  -webkit-transition: opacity 0.3s linear;
   transition: opacity 0.3s linear;
 }
 .km-vertical-scrollbar {
@@ -2621,33 +2570,23 @@ button.km-button {
 }
 div.km-splitview > .km-content,
 kendo-mobile-split-view.km-splitview > .km-content {
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -ms-flex-direction: row;
+      flex-direction: row;
 }
 div.km-split-vertical > .km-content,
 kendo-mobile-split-view.km-split-vertical > .km-content {
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+      flex-direction: column;
 }
 div.km-split-content > .km-pane {
-  -webkit-box-flex: 2;
-  -webkit-flex: 2;
-      -ms-flex: 2;
-          flex: 2;
+  -ms-flex: 2;
+      flex: 2;
   width: auto;
   height: auto;
 }
 div.km-split-content > .km-pane:first-child {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -ms-flex: 1;
+      flex: 1;
 }
 div.km-split-horizontal > .km-content > .km-pane {
   top: 0;
@@ -2658,7 +2597,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .k-fx-end .k-fx-next,
 .k-fx-end .k-fx-current {
-  -webkit-transition: all 350ms ease-out;
   transition: all 350ms ease-out;
 }
 .k-fx {
@@ -2726,7 +2664,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .k-fx-slide.k-fx-end .k-fx-current .km-content,
 .k-fx-slide.k-fx-end .k-fx-current .km-header,
 .k-fx-slide.k-fx-end .k-fx-current .km-footer {
-  -webkit-transition: all 350ms ease-out;
   transition: all 350ms ease-out;
 }
 .k-fx-slide.k-fx-start .k-fx-next .km-content {
@@ -3080,10 +3017,8 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-widget,
 .km-widget * {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  -webkit-background-clip: border-box;
-          background-clip: border-box;
+  box-sizing: border-box;
+  background-clip: border-box;
 }
 .km-toolbar,
 .km-navbar,
@@ -3093,28 +3028,25 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 .km-touch-scrollbar {
   border: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   border-radius: 1em;
 }
 .km-popup .k-popup {
   font-size: 1em !important;
 }
 .km-popup-wrapper.k-popup {
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
   background: none;
 }
 .km-popup .k-item,
 .km-actionsheet > li > a {
   text-decoration: none;
-  padding: .5em 0 .5em .6em;
+  padding: 0.5em 0 0.5em 0.6em;
   border: 0;
   border-radius: 0;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 .km-actionsheet-wrapper,
 .km-popup .k-list-container {
@@ -3123,16 +3055,14 @@ div.km-split-horizontal > .km-content > .km-pane {
   border-bottom-width: 1px;
   border-bottom-style: solid;
   border-radius: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 .km-popup {
   left: 0 !important;
   top: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 .km-popup .k-list-container {
   width: 100% !important;
@@ -3186,7 +3116,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-scroller-refresh .km-loading-right {
   font-size: 1em;
   display: block;
-  width: .36em;
+  width: 0.36em;
   height: 1em;
   position: absolute;
   top: 50%;
@@ -3196,17 +3126,16 @@ div.km-split-horizontal > .km-content > .km-pane {
   border-radius: 1em;
   -webkit-animation: km-webload 0.6s infinite linear;
           animation: km-webload 0.6s infinite linear;
-  -webkit-background-clip: padding-box;
-          background-clip: padding-box;
+  background-clip: padding-box;
 }
 .km-load-more.km-scroller-refresh .km-icon,
 .km-scroller-pull.km-scroller-refresh .km-icon,
 .km-scroller-refresh .km-loading-left,
 .km-scroller-refresh .km-loading-right {
-  height: .6em;
+  height: 0.6em;
   margin-top: -0.3em;
   margin-left: -0.6em;
-  width: .25em;
+  width: 0.25em;
   -webkit-animation: km-webrefresh 0.6s infinite linear;
           animation: km-webrefresh 0.6s infinite linear;
 }
@@ -3216,7 +3145,7 @@ div.km-split-horizontal > .km-content > .km-pane {
           animation-delay: 0.2s;
 }
 .km-root .km-loading-right {
-  margin-left: .42em;
+  margin-left: 0.42em;
   -webkit-animation-delay: 0.4s;
           animation-delay: 0.4s;
 }
@@ -3250,7 +3179,7 @@ div.km-split-horizontal > .km-content > .km-pane {
 }
 @keyframes km-webrefresh {
   0% {
-    height: .6em;
+    height: 0.6em;
     margin-top: -0.3em;
   }
   33% {
@@ -3258,13 +3187,13 @@ div.km-split-horizontal > .km-content > .km-pane {
     margin-top: -0.6em;
   }
   66% {
-    height: .6em;
+    height: 0.6em;
     margin-top: -0.3em;
   }
 }
 @-webkit-keyframes km-webrefresh {
   0% {
-    height: .6em;
+    height: 0.6em;
     margin-top: -0.3em;
   }
   33% {
@@ -3272,7 +3201,7 @@ div.km-split-horizontal > .km-content > .km-pane {
     margin-top: -0.6em;
   }
   66% {
-    height: .6em;
+    height: 0.6em;
     margin-top: -0.3em;
   }
 }
@@ -3287,8 +3216,7 @@ div.km-split-horizontal > .km-content > .km-pane {
   margin-right: 0.3em;
   vertical-align: baseline;
   display: inline-block;
-  -webkit-background-size: auto 100%;
-          background-size: auto 100%;
+  background-size: auto 100%;
 }
 html .km-widget .km-view .km-notext {
   margin-left: 0;
@@ -3298,7 +3226,7 @@ html .km-widget .km-view .km-notext {
   width: 1em;
   height: 1em;
   font-size: 1em;
-  margin: .05em .16em 0 0;
+  margin: 0.05em 0.16em 0 0;
 }
 .km-tabstrip .km-button .km-icon {
   width: 2.5rem;
@@ -3307,7 +3235,7 @@ html .km-widget .km-view .km-notext {
 }
 .km-tabstrip .km-image,
 .km-tabstrip .km-button .km-icon {
-  margin: 0 auto .1em;
+  margin: 0 auto 0.1em;
   display: inline-block;
 }
 .km-tabstrip .km-text {
@@ -3338,8 +3266,7 @@ body:before {
 }
 .km-root .km-pane .km-view .km-icon {
   -webkit-background-clip: text;
-  -webkit-background-size: 0 0;
-          background-size: 0 0;
+  background-size: 0 0;
 }
 .km-icon {
   position: relative;
@@ -3363,8 +3290,7 @@ body:before {
   height: 100%;
   text-align: left;
   vertical-align: middle;
-  -webkit-background-size: auto auto;
-          background-size: auto;
+  background-size: auto;
   font: 1em/1em "Kendo UI";
 }
 .km-icon:before,
@@ -3871,8 +3797,7 @@ body:before {
 .km-on-wp.km-app .km-state-active .km-icon:after {
   color: transparent;
   background-image: url("images/wp8_icons.png");
-  -webkit-background-size: auto 100%;
-          background-size: auto 100%;
+  background-size: auto 100%;
   height: 1em;
   margin-top: 0;
   vertical-align: middle;
@@ -4878,7 +4803,7 @@ body:before {
 }
 .km-button {
   margin: 0;
-  padding: .3em .8em;
+  padding: 0.3em 0.8em;
   border-width: 1px;
   border-style: solid;
 }
@@ -4907,7 +4832,7 @@ body:before {
 }
 .km-detaildisclose:after,
 .km-detaildisclose:before {
-  left: .1em;
+  left: 0.1em;
   top: 0.35em;
 }
 .km-detail .km-icon:before {
@@ -4920,7 +4845,7 @@ body:before {
   margin: 0;
 }
 .km-buttongroup > * {
-  padding: .36em .8em;
+  padding: 0.36em 0.8em;
 }
 .km-buttongroup > *:not(:first-child):not(:last-child) {
   border-radius: 0;
@@ -4948,7 +4873,7 @@ body:before {
   table-layout: fixed;
 }
 .km-tabstrip .km-button {
-  font-size: .7em;
+  font-size: 0.7em;
   display: table-cell;
   border: 0;
 }
@@ -4984,9 +4909,7 @@ body:before {
   width: 1.6em;
   margin: 0 4px 0 0;
   border: 1px solid transparent;
-  -webkit-background-clip: padding-box;
-          background-clip: padding-box;
-  -webkit-box-shadow: 0 1px 0 1px currentcolor, 0 -1px 0 1px currentcolor;
+  background-clip: padding-box;
   box-shadow: 0 1px 0 1px currentcolor, 0 -1px 0 1px currentcolor;
 }
 .km-switch-label-off {
@@ -5006,12 +4929,10 @@ body:before {
 }
 .km-switch-container,
 .km-switch-wrapper {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   border-width: 1px;
   border-style: solid;
-  -webkit-background-clip: content-box;
-          background-clip: content-box;
+  background-clip: content-box;
 }
 .km-list > li {
   border-style: solid;
@@ -5037,14 +4958,13 @@ body:before {
 }
 .km-listview-link:after {
   border-color: currentcolor;
-  border-width: .2rem .2rem 0 0;
+  border-width: 0.2rem 0.2rem 0 0;
 }
 .km-pane:not(.km-on-android) .km-listview-link:after {
-  width: .66rem;
-  height: .64rem;
+  width: 0.66rem;
+  height: 0.64rem;
   border-width: 0;
-  -webkit-box-shadow: inset -0.2rem 0.2rem 0;
-          box-shadow: inset -0.2rem 0.2rem 0;
+  box-shadow: inset -0.2rem 0.2rem 0;
 }
 .km-listinset li:first-child > .km-listview-link,
 .km-listgroupinset li:first-child > .km-listview-link,
@@ -5080,7 +5000,7 @@ body:before {
 }
 .km-listview-wrapper form .km-filter-wrap > input {
   font-size: 1.2em;
-  padding: .3em 1.8em;
+  padding: 0.3em 1.8em;
 }
 .km-widget .km-filter-wrap:before {
   margin: 0.05em -1.2em 0 0.2em;
@@ -5099,7 +5019,7 @@ body:before {
   height: 3.4em;
 }
 .km-load-more .km-button {
-  margin: 0 .8em;
+  margin: 0 0.8em;
   display: block;
 }
 .km-scroller-refresh.km-load-more {
@@ -5112,7 +5032,7 @@ body:before {
   font-size: 1em;
   width: 2.5em;
   height: 2.5em;
-  top: .25em;
+  top: 0.25em;
   white-space: nowrap;
 }
 .km-scroller-pull {
@@ -5147,10 +5067,10 @@ body:before {
   margin-left: -0.18em;
 }
 .km-scroller-refresh .km-loading-right {
-  margin-left: .28em;
+  margin-left: 0.28em;
 }
 .km-pages {
-  padding-top: .5em;
+  padding-top: 0.5em;
 }
 .km-pages li {
   border-radius: 1em;
@@ -5178,12 +5098,12 @@ body:before {
   font-size: 1.1rem;
   min-width: 6em;
   border: 0;
-  padding: .4em;
+  padding: 0.4em;
   outline: none;
   background: transparent;
 }
 .km-list .k-dropdown-wrap {
-  padding: .2em;
+  padding: 0.2em;
 }
 .km-list .k-dropdown {
   margin-top: -1.05em;
@@ -5203,8 +5123,7 @@ body:before {
   display: block;
   border-radius: 0;
   background: transparent;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
 }
 .km-listview-label input[type=checkbox] {
   margin-top: -0.7em;
@@ -5327,8 +5246,7 @@ body:before {
 }
 .km-actionsheet-wrapper.km-popup {
   padding: 3px 0;
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 .km-widget,
 .km-content,
@@ -5351,8 +5269,7 @@ body:before {
   border-color: rgba(255, 255, 255, 0.2);
 }
 .km-state-active[style*=background] {
-  -webkit-box-shadow: inset 0 0 0 1000px rgba(128, 128, 128, 0.4);
-          box-shadow: inset 0 0 0 1000px rgba(128, 128, 128, 0.4);
+  box-shadow: inset 0 0 0 1000px rgba(128, 128, 128, 0.4);
 }
 .km-detail {
   color: #fff;
@@ -5361,16 +5278,13 @@ body:before {
 }
 .km-detail:active,
 .km-state-active .km-detail {
-  -webkit-box-shadow: inset 0 0 0 1000px rgba(77, 77, 77, 0.2);
-          box-shadow: inset 0 0 0 1000px rgba(77, 77, 77, 0.2);
+  box-shadow: inset 0 0 0 1000px rgba(77, 77, 77, 0.2);
 }
 .km-switch-wrapper {
   background-color: #bababa;
 }
 .km-switch-background {
   background-image: url('textures/glass.png');
-  background-image: none, -webkit-gradient(linear, left top, left bottom, from(#bababa), to(#bababa));
-  background-image: none, -webkit-linear-gradient(top, #bababa, #bababa);
   background-image: none, linear-gradient(to bottom, #bababa, #bababa);
   background-position: 4.3em 0;
   background-repeat: no-repeat;
@@ -5380,7 +5294,6 @@ body:before {
   background: #4d4d4d;
 }
 .km-switch-off .km-switch-handle {
-  -webkit-box-shadow: 0 1px 0 1px #bababa, 0 -1px 0 1px #bababa;
   box-shadow: 0 1px 0 1px #bababa, 0 -1px 0 1px #bababa;
 }
 .km-switch-wrapper,
@@ -5398,8 +5311,7 @@ body:before {
 .km-list > li {
   background: #404040;
   border-color: rgba(255, 255, 255, 0.2);
-  -webkit-box-shadow: inset 0 1px 0 rgba(77, 77, 77, 0.2);
-          box-shadow: inset 0 1px 0 rgba(77, 77, 77, 0.2);
+  box-shadow: inset 0 1px 0 rgba(77, 77, 77, 0.2);
 }
 .km-listinset > li:first-child,
 .km-listgroupinset .km-list > li:first-child {
@@ -5492,8 +5404,7 @@ body:before {
 }
 .km-actionsheet-cancel > a {
   color: #bababa;
-  -webkit-box-shadow: inset 0 0 300px rgba(128, 128, 128, 0.3);
-          box-shadow: inset 0 0 300px rgba(128, 128, 128, 0.3);
+  box-shadow: inset 0 0 300px rgba(128, 128, 128, 0.3);
 }
 .km-popup {
   background: rgba(0, 0, 0, 0.4);

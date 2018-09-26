@@ -1044,7 +1044,8 @@
                         target: target,
                         group: item.options.group,
                         checked: item.options.selected,
-                        id: item.options.id
+                        id: item.options.id,
+                        item: item
                     };
                     if (handler) {
                         handler.call(that, eventData);
@@ -1055,7 +1056,8 @@
                     eventData = {
                         sender: that,
                         target: target,
-                        id: item.options.id
+                        id: item.options.id,
+                        item: item
                     };
                     if (handler) {
                         handler.call(that, eventData);

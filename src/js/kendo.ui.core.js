@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.911'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.926'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1517,7 +1517,7 @@
                 var os = false, minorVersion, match = [], notAndroidPhone = !/mobile safari/i.test(ua), agentRxs = {
                         wp: /(Windows Phone(?: OS)?)\s(\d+)\.(\d+(\.\d+)?)/,
                         fire: /(Silk)\/(\d+)\.(\d+(\.\d+)?)/,
-                        android: /(Android|Android.*(?:Opera|Firefox).*?\/)\s*(\d+)\.(\d+(\.\d+)?)/,
+                        android: /(Android|Android.*(?:Opera|Firefox).*?\/)\s*(\d+)\.?(\d+(\.\d+)?)?/,
                         iphone: /(iPhone|iPod).*OS\s+(\d+)[\._]([\d\._]+)/,
                         ipad: /(iPad).*OS\s+(\d+)[\._]([\d_]+)/,
                         meego: /(MeeGo).+NokiaBrowser\/(\d+)\.([\d\._]+)/,
@@ -1559,7 +1559,7 @@
                             os.name = testRx(agent, osRxs);
                             os[os.name] = true;
                             os.majorVersion = match[2];
-                            os.minorVersion = match[3].replace('_', '.');
+                            os.minorVersion = (match[3] || '0').replace('_', '.');
                             minorVersion = os.minorVersion.replace('.', '').substr(0, 2);
                             os.flatVersion = os.majorVersion + minorVersion + new Array(3 - (minorVersion.length < 3 ? minorVersion.length : 2)).join('0');
                             os.cordova = typeof window.PhoneGap !== UNDEFINED || typeof window.cordova !== UNDEFINED;
@@ -4527,6 +4527,8 @@
                 startswith: 'startswith',
                 isnull: 'eq',
                 isnotnull: 'ne',
+                isnullorempty: 'eq',
+                isnotnullorempty: 'ne',
                 isempty: 'eq',
                 isnotempty: 'ne'
             }, odataFiltersVersionFour = extend({}, odataFilters, { contains: 'contains' }), mappers = {
@@ -4579,7 +4581,11 @@
                     if (useOdataFour) {
                         filter = odataFiltersVersionFour[operator];
                     }
-                    if (operator === 'isnull' || operator === 'isnotnull') {
+                    if (operator === 'isnullorempty') {
+                        filter = kendo.format('{0} {1} null or {0} {1} \'\'', field, filter);
+                    } else if (operator === 'isnotnullorempty') {
+                        filter = kendo.format('{0} {1} null and {0} {1} \'\'', field, filter);
+                    } else if (operator === 'isnull' || operator === 'isnotnull') {
                         filter = kendo.format('{0} {1} null', field, filter);
                     } else if (operator === 'isempty' || operator === 'isnotempty') {
                         filter = kendo.format('{0} {1} \'\'', field, filter);
@@ -7650,7 +7656,7 @@
                 return this.reader.aggregates(data);
             },
             success: function (data) {
-                var that = this, options = that.options;
+                var that = this, options = that.options, items, replaceSubset;
                 that.trigger(REQUESTEND, {
                     response: data,
                     type: 'read'
@@ -7675,7 +7681,7 @@
                     that._destroyed = [];
                 } else {
                     data = that._readData(data);
-                    var items = [];
+                    items = [];
                     var itemIds = {};
                     var model = that.reader.model;
                     var idField = model ? model.idField : 'id';
@@ -7699,7 +7705,18 @@
                     that._total = data.length;
                 }
                 that._pristineTotal = that._total;
-                that._pristineData = data.slice(0);
+                replaceSubset = that._skip && that._data.length && that._skip < that._data.length;
+                if (that.options.endless) {
+                    if (replaceSubset) {
+                        that._pristineData.splice(that._skip, that._pristineData.length);
+                    }
+                    items = data.slice(0);
+                    for (var j = 0; j < items.length; j++) {
+                        that._pristineData.push(items[j]);
+                    }
+                } else {
+                    that._pristineData = data.slice(0);
+                }
                 that._detachObservableParents();
                 if (that.options.endless) {
                     that._data.unbind(CHANGE, that._changeHandler);
@@ -7708,6 +7725,9 @@
                         data.shift();
                     }
                     data = that._observe(data);
+                    if (replaceSubset) {
+                        that._data.splice(that._skip, that._data.length);
+                    }
                     for (var i = 0; i < data.length; i++) {
                         that._data.push(data[i]);
                     }
@@ -8119,10 +8139,10 @@
             pageSize: function (val) {
                 var that = this;
                 if (val !== undefined) {
-                    that._query({
+                    that._query(that._pageableQueryOptions({
                         pageSize: val,
                         page: 1
-                    });
+                    }));
                     return;
                 }
                 return that.take();
@@ -17611,7 +17631,8 @@
                         target: target,
                         group: item.options.group,
                         checked: item.options.selected,
-                        id: item.options.id
+                        id: item.options.id,
+                        item: item
                     };
                     if (handler) {
                         handler.call(that, eventData);
@@ -17622,7 +17643,8 @@
                     eventData = {
                         sender: that,
                         target: target,
-                        id: item.options.id
+                        id: item.options.id,
+                        item: item
                     };
                     if (handler) {
                         handler.call(that, eventData);
@@ -18464,7 +18486,7 @@
                     trigger = true;
                 }
                 if (trigger) {
-                    if (that._old === null || value === '') {
+                    if (that._old === null || that._old === '' || value === '') {
                         that._valueBeforeCascade = that._old = value;
                     } else {
                         if (that.dataItem()) {
@@ -19133,7 +19155,7 @@
             _cascadeSelect: function (parent, valueBeforeCascade) {
                 var that = this;
                 var dataItem = parent.dataItem();
-                var filterValue = dataItem ? parent._value(dataItem) : null;
+                var filterValue = dataItem ? dataItem[that.options.cascadeFromParentField] || parent._value(dataItem) : null;
                 var valueField = that.options.cascadeFromField || parent.options.dataValueField;
                 var expressions;
                 that._valueBeforeCascade = valueBeforeCascade !== undefined ? valueBeforeCascade : that.value();
@@ -20433,16 +20455,17 @@
                         if (!method) {
                             view.setDate(currentValue, value);
                         }
+                        if (!isInRange(currentValue, min, max)) {
+                            currentValue = restrictValue(currentValue, options.min, options.max);
+                        }
                         if (isDisabled(currentValue)) {
                             currentValue = that._nextNavigatable(currentValue, value);
                         }
                         min = createDate(min.getFullYear(), min.getMonth(), min.getDate());
-                        if (isInRange(currentValue, min, max)) {
-                            if (that._isMultipleSelection()) {
-                                that._keyboardRangeSelection(e, currentValue);
-                            } else {
-                                that._focus(restrictValue(currentValue, options.min, options.max));
-                            }
+                        if (that._isMultipleSelection()) {
+                            that._keyboardRangeSelection(e, currentValue);
+                        } else {
+                            that._focus(currentValue);
                         }
                     }
                 } else {
@@ -20466,21 +20489,22 @@
                         if (!method) {
                             view.setDate(currentValue, value);
                         }
+                        min = createDate(min.getFullYear(), min.getMonth(), min.getDate());
+                        if (!isInRange(currentValue, min, max)) {
+                            currentValue = restrictValue(currentValue, options.min, options.max);
+                        }
                         if (isDisabled(currentValue)) {
                             currentValue = that._nextNavigatable(currentValue, value);
                         }
-                        min = createDate(min.getFullYear(), min.getMonth(), min.getDate());
-                        if (isInRange(currentValue, min, max)) {
-                            if (that._isMultipleSelection()) {
-                                if (!that._dateInView(currentValue)) {
-                                    that.navigate(currentValue);
-                                } else {
-                                    that._current = currentValue;
-                                    that._class(FOCUSED, currentValue);
-                                }
+                        if (that._isMultipleSelection()) {
+                            if (!that._dateInView(currentValue)) {
+                                that.navigate(currentValue);
                             } else {
-                                that._focus(restrictValue(currentValue, options.min, options.max));
+                                that._current = currentValue;
+                                that._class(FOCUSED, currentValue);
                             }
+                        } else {
+                            that._focus(currentValue);
                         }
                     }
                 }
@@ -21582,6 +21606,7 @@
                         this._dateTime.modifyPart(symbol, key == 38 ? 1 : -1);
                         this._updateElementValue();
                         this._selectSegment(symbol);
+                        this.element.trigger(CHANGE);
                     }
                 }
                 if (kendo.support.browser.msie && kendo.support.browser.version < 10) {
@@ -26182,8 +26207,15 @@
                 var that = this;
                 var item = e.item;
                 var dataItem = that.listView.dataItemByIndex(that.listView.getElementIndex(item));
+                var shouldTrigger = true;
                 e.preventDefault();
-                if (that.trigger('select', {
+                if (dataItem) {
+                    shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
+                    if (!shouldTrigger) {
+                        that.input.val(that._accessor());
+                    }
+                }
+                if (shouldTrigger && that.trigger('select', {
                         dataItem: dataItem,
                         item: item
                     })) {
@@ -26313,6 +26345,9 @@
                         dataItem = that.listView.dataItemByIndex(that.listView.getElementIndex(current));
                         if (dataItem) {
                             shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
+                            if (!shouldTrigger) {
+                                that.input.val(that._accessor());
+                            }
                         }
                         if (shouldTrigger && that.trigger('select', {
                                 dataItem: dataItem,
@@ -26368,7 +26403,7 @@
                     var value = that.text();
                     if (that._prev !== value) {
                         that._prev = value;
-                        if (that.options.filter === 'none') {
+                        if (that.options.filter === 'none' && that.options.virtual) {
                             that.listView.select(-1);
                         }
                         that.search(value);
@@ -32911,7 +32946,7 @@
             },
             raw: function () {
                 var unmasked = this._unmask(this.element.val(), 0);
-                return unmasked.replace(new RegExp(this.options.promptChar, 'g'), '');
+                return unmasked.replace(new RegExp(escapeRegExp(this.options.promptChar), 'g'), '');
             },
             value: function (value) {
                 var element = this.element;
@@ -32946,7 +32981,7 @@
                 var value = DOMElement.value;
                 if (this.options.clearPromptChar) {
                     if (!show) {
-                        value = value.replace(new RegExp(this.options.promptChar, 'g'), ' ');
+                        value = value.replace(new RegExp(escapeRegExp(this.options.promptChar), 'g'), ' ');
                     } else {
                         value = this._oldValue;
                     }
@@ -33281,6 +33316,9 @@
                 this._maskLength = emptyMask.length;
             }
         });
+        function escapeRegExp(text) {
+            return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+        }
         ui.plugin(MaskedTextBox);
     }(window.kendo.jQuery));
     return window.kendo;
@@ -33298,7 +33336,7 @@
         depends: ['popup']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS || kendo.support.mouseAndTouchPresent, MOUSEDOWN = 'mousedown', CLICK = 'click', DELAY = 30, SCROLLSPEED = 50, extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link k-menu-link', LINK_SELECTOR = '.k-link', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, TOUCHSTART = kendo.support.touch ? 'touchstart' : '', MOUSEENTER = pointers ? 'pointerenter' : msPointers ? 'MSPointerEnter' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerleave' : msPointers ? 'MSPointerLeave' : 'mouseleave', MOUSEWHEEL = 'DOMMouseScroll' + NS + ' mousewheel' + NS, RESIZE = kendo.support.resize + NS, SCROLLWIDTH = 'scrollWidth', SCROLLHEIGHT = 'scrollHeight', OFFSETWIDTH = 'offsetWidth', OFFSETHEIGHT = 'offsetHeight', POPUP_ID_ATTR = 'group', POPUP_OPENER_ATTR = 'groupparent', DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', animationContainerSelector = '.k-animation-container', popupSelector = groupSelector + ',' + animationContainerSelector, allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item', availableItemsSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = itemSelector + exclusionSelector + ':eq(0)', lastSelector = itemSelector + exclusionSelector + ':last', templateSelector = 'div:not(.k-animation-container,.k-list-container)', scrollButtonSelector = '.k-menu-scroll-button', touchPointerTypes = {
+        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS || kendo.support.mouseAndTouchPresent, MOUSEDOWN = 'mousedown', CLICK = 'click', DELAY = 30, SCROLLSPEED = 50, extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link k-menu-link', LINK_SELECTOR = '.k-link', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, TOUCHSTART = kendo.support.touch ? 'touchstart' : '', MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', MOUSEWHEEL = 'DOMMouseScroll' + NS + ' mousewheel' + NS, RESIZE = kendo.support.resize + NS, SCROLLWIDTH = 'scrollWidth', SCROLLHEIGHT = 'scrollHeight', OFFSETWIDTH = 'offsetWidth', OFFSETHEIGHT = 'offsetHeight', POPUP_ID_ATTR = 'group', POPUP_OPENER_ATTR = 'groupparent', DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', animationContainerSelector = '.k-animation-container', popupSelector = groupSelector + ',' + animationContainerSelector, allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item', availableItemsSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = itemSelector + exclusionSelector + ':eq(0)', lastSelector = itemSelector + exclusionSelector + ':last', templateSelector = 'div:not(.k-animation-container,.k-list-container)', scrollButtonSelector = '.k-menu-scroll-button', touchPointerTypes = {
                 '2': 1,
                 'touch': 1
             }, templates = {
@@ -34263,7 +34301,7 @@
                 var target = $(kendo.eventTarget(e) || e.target).closest(allItemsSelector), isEnter = e.type == MOUSEENTER || MOUSEDOWN.indexOf(e.type) !== -1;
                 target.siblings().removeClass(HOVERSTATE);
                 if (!target.parents('li.' + DISABLEDSTATE).length) {
-                    target.toggleClass(HOVERSTATE, isEnter || e.type == 'mousedown' || e.type == 'pointerenter' || e.type == TOUCHSTART);
+                    target.toggleClass(HOVERSTATE, isEnter || e.type == 'mousedown' || e.type == 'pointerover' || e.type == TOUCHSTART);
                 }
                 this._removeHoverItem();
             },

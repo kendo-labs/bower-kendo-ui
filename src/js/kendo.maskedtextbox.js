@@ -151,7 +151,7 @@
             },
             raw: function () {
                 var unmasked = this._unmask(this.element.val(), 0);
-                return unmasked.replace(new RegExp(this.options.promptChar, 'g'), '');
+                return unmasked.replace(new RegExp(escapeRegExp(this.options.promptChar), 'g'), '');
             },
             value: function (value) {
                 var element = this.element;
@@ -186,7 +186,7 @@
                 var value = DOMElement.value;
                 if (this.options.clearPromptChar) {
                     if (!show) {
-                        value = value.replace(new RegExp(this.options.promptChar, 'g'), ' ');
+                        value = value.replace(new RegExp(escapeRegExp(this.options.promptChar), 'g'), ' ');
                     } else {
                         value = this._oldValue;
                     }
@@ -521,6 +521,9 @@
                 this._maskLength = emptyMask.length;
             }
         });
+        function escapeRegExp(text) {
+            return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+        }
         ui.plugin(MaskedTextBox);
     }(window.kendo.jQuery));
     return window.kendo;
