@@ -590,6 +590,9 @@
                 var visible = that.popup.visible();
                 var dir = 0;
                 var activeItemIdx;
+                if (key !== keys.ENTER) {
+                    this._multipleSelection = false;
+                }
                 if (key === keys.DOWN) {
                     e.preventDefault();
                     if (!visible) {
@@ -610,6 +613,7 @@
                             listView.focusLast();
                         } else {
                             if (e.shiftKey) {
+                                this._multipleSelection = true;
                                 that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
                             }
                         }
@@ -628,6 +632,7 @@
                             that.close();
                         } else {
                             if (e.shiftKey) {
+                                this._multipleSelection = true;
                                 that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
                             }
                         }
@@ -646,6 +651,7 @@
                         that.currentTag(tag[0] ? tag : null);
                     }
                 } else if (e.ctrlKey && !e.altKey && key === keys.A && visible) {
+                    this._multipleSelection = true;
                     if (this._getSelectedIndices().length === listView.items().length) {
                         that._activeItem = null;
                     }
@@ -657,9 +663,12 @@
                         return;
                     }
                     e.preventDefault();
-                    if (listView.focus().hasClass(SELECTEDCLASS)) {
-                        that._close();
-                        return;
+                    if (this._multipleSelection) {
+                        this._multipleSelection = false;
+                        if (listView.focus().hasClass(SELECTEDCLASS)) {
+                            that._close();
+                            return;
+                        }
                     }
                     that._select(listView.focus()).done(function () {
                         that._change();

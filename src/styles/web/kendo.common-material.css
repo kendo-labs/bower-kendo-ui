@@ -1526,6 +1526,7 @@ input[type="reset"].k-button-expand {
 @media only screen and (max-width: 1024px) {
   .k-webkit .k-pager-wrap,
   .k-ff .k-pager-wrap,
+  .k-ie10 .k-pager-wrap,
   .k-ie11 .k-pager-wrap,
   .k-edge .k-pager-wrap,
   .k-safari .k-pager-wrap {
@@ -1534,11 +1535,13 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-wrap .k-pager-nav,
   .k-ff .k-pager-wrap .k-pager-nav,
+  .k-ie10 .k-pager-wrap .k-pager-nav,
   .k-ie11 .k-pager-wrap .k-pager-nav,
   .k-edge .k-pager-wrap .k-pager-nav,
   .k-safari .k-pager-wrap .k-pager-nav,
   .k-webkit .k-pager-input,
   .k-ff .k-pager-input,
+  .k-ie10 .k-pager-input,
   .k-ie11 .k-pager-input,
   .k-edge .k-pager-input,
   .k-safari .k-pager-input {
@@ -1547,6 +1550,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers,
   .k-ff .k-pager-numbers,
+  .k-ie10 .k-pager-numbers,
   .k-ie11 .k-pager-numbers,
   .k-edge .k-pager-numbers,
   .k-safari .k-pager-numbers {
@@ -1561,6 +1565,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers:first-child,
   .k-ff .k-pager-numbers:first-child,
+  .k-ie10 .k-pager-numbers:first-child,
   .k-ie11 .k-pager-numbers:first-child,
   .k-edge .k-pager-numbers:first-child,
   .k-safari .k-pager-numbers:first-child {
@@ -1568,6 +1573,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers.k-state-expanded,
   .k-ff .k-pager-numbers.k-state-expanded,
+  .k-ie10 .k-pager-numbers.k-state-expanded,
   .k-ie11 .k-pager-numbers.k-state-expanded,
   .k-edge .k-pager-numbers.k-state-expanded,
   .k-safari .k-pager-numbers.k-state-expanded {
@@ -1577,6 +1583,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .km-pane-wrapper .k-pager-numbers,
   .k-ff .km-pane-wrapper .k-pager-numbers,
+  .k-ie10 .km-pane-wrapper .k-pager-numbers,
   .k-ie11 .km-pane-wrapper .k-pager-numbers,
   .k-edge .km-pane-wrapper .k-pager-numbers,
   .k-safari .km-pane-wrapper .k-pager-numbers {
@@ -1588,21 +1595,25 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .km-pane-wrapper .k-pager-numbers .k-link,
   .k-ff .km-pane-wrapper .k-pager-numbers .k-link,
+  .k-ie10 .km-pane-wrapper .k-pager-numbers .k-link,
   .k-ie11 .km-pane-wrapper .k-pager-numbers .k-link,
   .k-edge .km-pane-wrapper .k-pager-numbers .k-link,
   .k-safari .km-pane-wrapper .k-pager-numbers .k-link,
   .k-webkit .km-pane-wrapper .k-pager-numbers .k-state-selected,
   .k-ff .km-pane-wrapper .k-pager-numbers .k-state-selected,
+  .k-ie10 .km-pane-wrapper .k-pager-numbers .k-state-selected,
   .k-ie11 .km-pane-wrapper .k-pager-numbers .k-state-selected,
   .k-edge .km-pane-wrapper .k-pager-numbers .k-state-selected,
   .k-safari .km-pane-wrapper .k-pager-numbers .k-state-selected,
   .k-webkit .km-pane-wrapper .k-pager-wrap > .k-link,
   .k-ff .km-pane-wrapper .k-pager-wrap > .k-link,
+  .k-ie10 .km-pane-wrapper .k-pager-wrap > .k-link,
   .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-link,
   .k-edge .km-pane-wrapper .k-pager-wrap > .k-link,
   .k-safari .km-pane-wrapper .k-pager-wrap > .k-link,
   .k-webkit .km-pane-wrapper .k-pager-wrap > .k-pager-info,
   .k-ff .km-pane-wrapper .k-pager-wrap > .k-pager-info,
+  .k-ie10 .km-pane-wrapper .k-pager-wrap > .k-pager-info,
   .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-pager-info,
   .k-edge .km-pane-wrapper .k-pager-wrap > .k-pager-info,
   .k-safari .km-pane-wrapper .k-pager-wrap > .k-pager-info {
@@ -1611,6 +1622,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-rtl .k-pager-numbers,
   .k-ff .k-rtl .k-pager-numbers,
+  .k-ie10 .k-rtl .k-pager-numbers,
   .k-ie11 .k-rtl .k-pager-numbers,
   .k-edge .k-rtl .k-pager-numbers,
   .k-safari .k-rtl .k-pager-numbers {
@@ -1620,6 +1632,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-rtl .k-pager-numbers:first-child,
   .k-ff .k-rtl .k-pager-numbers:first-child,
+  .k-ie10 .k-rtl .k-pager-numbers:first-child,
   .k-ie11 .k-rtl .k-pager-numbers:first-child,
   .k-edge .k-rtl .k-pager-numbers:first-child,
   .k-safari .k-rtl .k-pager-numbers:first-child {
@@ -1628,6 +1641,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-ff .k-rtl .km-pane-wrapper .k-pager-numbers,
+  .k-ie10 .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-ie11 .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-edge .k-rtl .km-pane-wrapper .k-pager-numbers,
   .k-safari .k-rtl .km-pane-wrapper .k-pager-numbers {
@@ -1635,6 +1649,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers .k-current-page,
   .k-ff .k-pager-numbers .k-current-page,
+  .k-ie10 .k-pager-numbers .k-current-page,
   .k-ie11 .k-pager-numbers .k-current-page,
   .k-edge .k-pager-numbers .k-current-page,
   .k-safari .k-pager-numbers .k-current-page {
@@ -1643,6 +1658,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers.k-state-expanded .k-current-page,
   .k-ff .k-pager-numbers.k-state-expanded .k-current-page,
+  .k-ie10 .k-pager-numbers.k-state-expanded .k-current-page,
   .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page,
   .k-edge .k-pager-numbers.k-state-expanded .k-current-page,
   .k-safari .k-pager-numbers.k-state-expanded .k-current-page {
@@ -1652,6 +1668,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers li:not(.k-current-page),
   .k-ff .k-pager-numbers li:not(.k-current-page),
+  .k-ie10 .k-pager-numbers li:not(.k-current-page),
   .k-ie11 .k-pager-numbers li:not(.k-current-page),
   .k-edge .k-pager-numbers li:not(.k-current-page),
   .k-safari .k-pager-numbers li:not(.k-current-page) {
@@ -1659,6 +1676,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers .k-current-page .k-link,
   .k-ff .k-pager-numbers .k-current-page .k-link,
+  .k-ie10 .k-pager-numbers .k-current-page .k-link,
   .k-ie11 .k-pager-numbers .k-current-page .k-link,
   .k-edge .k-pager-numbers .k-current-page .k-link,
   .k-safari .k-pager-numbers .k-current-page .k-link {
@@ -1668,6 +1686,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers + .k-link,
   .k-ff .k-pager-numbers + .k-link,
+  .k-ie10 .k-pager-numbers + .k-link,
   .k-ie11 .k-pager-numbers + .k-link,
   .k-edge .k-pager-numbers + .k-link,
   .k-safari .k-pager-numbers + .k-link {
@@ -1675,6 +1694,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-rtl .k-pager-numbers + .k-link,
   .k-ff .k-rtl .k-pager-numbers + .k-link,
+  .k-ie10 .k-rtl .k-pager-numbers + .k-link,
   .k-ie11 .k-rtl .k-pager-numbers + .k-link,
   .k-edge .k-rtl .k-pager-numbers + .k-link,
   .k-safari .k-rtl .k-pager-numbers + .k-link {
@@ -1683,11 +1703,13 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers .k-state-selected,
   .k-ff .k-pager-numbers .k-state-selected,
+  .k-ie10 .k-pager-numbers .k-state-selected,
   .k-ie11 .k-pager-numbers .k-state-selected,
   .k-edge .k-pager-numbers .k-state-selected,
   .k-safari .k-pager-numbers .k-state-selected,
   .k-webkit .k-pager-numbers .k-link,
   .k-ff .k-pager-numbers .k-link,
+  .k-ie10 .k-pager-numbers .k-link,
   .k-ie11 .k-pager-numbers .k-link,
   .k-edge .k-pager-numbers .k-link,
   .k-safari .k-pager-numbers .k-link {
@@ -1698,6 +1720,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers.k-state-expanded,
   .k-ff .k-pager-numbers.k-state-expanded,
+  .k-ie10 .k-pager-numbers.k-state-expanded,
   .k-ie11 .k-pager-numbers.k-state-expanded,
   .k-edge .k-pager-numbers.k-state-expanded,
   .k-safari .k-pager-numbers.k-state-expanded {
@@ -1706,6 +1729,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers.k-state-expanded .k-current-page,
   .k-ff .k-pager-numbers.k-state-expanded .k-current-page,
+  .k-ie10 .k-pager-numbers.k-state-expanded .k-current-page,
   .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page,
   .k-edge .k-pager-numbers.k-state-expanded .k-current-page,
   .k-safari .k-pager-numbers.k-state-expanded .k-current-page {
@@ -1714,6 +1738,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers.k-state-expanded .k-current-page .k-link,
   .k-ff .k-pager-numbers.k-state-expanded .k-current-page .k-link,
+  .k-ie10 .k-pager-numbers.k-state-expanded .k-current-page .k-link,
   .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page .k-link,
   .k-edge .k-pager-numbers.k-state-expanded .k-current-page .k-link,
   .k-safari .k-pager-numbers.k-state-expanded .k-current-page .k-link {
@@ -1721,6 +1746,7 @@ input[type="reset"].k-button-expand {
   }
   .k-webkit .k-pager-numbers.k-state-expanded li,
   .k-ff .k-pager-numbers.k-state-expanded li,
+  .k-ie10 .k-pager-numbers.k-state-expanded li,
   .k-ie11 .k-pager-numbers.k-state-expanded li,
   .k-edge .k-pager-numbers.k-state-expanded li,
   .k-safari .k-pager-numbers.k-state-expanded li {
@@ -1730,6 +1756,7 @@ input[type="reset"].k-button-expand {
 @media only screen and (max-width: 640px) {
   .k-webkit .k-pager-info,
   .k-ff .k-pager-info,
+  .k-ie10 .k-pager-info,
   .k-ie11 .k-pager-info,
   .k-edge .k-pager-info,
   .k-safari .k-pager-info {
@@ -1739,6 +1766,7 @@ input[type="reset"].k-button-expand {
 @media only screen and (max-width: 480px) {
   .k-webkit .k-pager-sizes,
   .k-ff .k-pager-sizes,
+  .k-ie10 .k-pager-sizes,
   .k-ie11 .k-pager-sizes,
   .k-edge .k-pager-sizes,
   .k-safari .k-pager-sizes {

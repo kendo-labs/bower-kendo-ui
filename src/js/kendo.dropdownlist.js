@@ -132,6 +132,7 @@
                 optionLabel: '',
                 cascadeFrom: '',
                 cascadeFromField: '',
+                cascadeFromParentField: '',
                 ignoreCase: true,
                 animation: {},
                 filter: 'none',

@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.926'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.1003'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -6824,7 +6824,7 @@
             }
         }
         function eachGroupItems(data, func) {
-            for (var idx = 0, length = data.length; idx < length; idx++) {
+            for (var idx = 0; idx < data.length; idx++) {
                 if (data[idx].hasSubgroups) {
                     if (eachGroupItems(data[idx].items, func)) {
                         return true;
@@ -7992,6 +7992,9 @@
                 if (that.options.serverAggregates !== true) {
                     options.aggregate = that._aggregate;
                 }
+                if (that.options.serverGrouping) {
+                    that._clearEmptyGroups(data);
+                }
                 result = that._queryProcess(data, options);
                 if (that.options.serverAggregates !== true) {
                     that._aggregateResult = that._calculateAggregates(result.dataToAggregate || data, options);
@@ -8001,6 +8004,21 @@
                 e = e || {};
                 e.items = e.items || that._view;
                 that.trigger(CHANGE, e);
+            },
+            _clearEmptyGroups: function (data) {
+                for (var idx = data.length - 1; idx >= 0; idx--) {
+                    var group = data[idx];
+                    if (group.hasSubgroups) {
+                        this._clearEmptyGroups(group.items);
+                    } else {
+                        if (group.items && !group.items.length) {
+                            splice.apply(group.parent(), [
+                                idx,
+                                1
+                            ]);
+                        }
+                    }
+                }
             },
             _queryProcess: function (data, options) {
                 if (this.options.inPlaceSort) {
@@ -19138,7 +19156,7 @@
                 if (that._userTriggered) {
                     that._clearSelection(parent, true);
                 } else if (value) {
-                    if (value !== that.listView.value()[0]) {
+                    if (value !== unifyType(that.listView.value()[0], typeof value)) {
                         that.value(value);
                     }
                     if (!that.dataSource.view()[0] || that.selectedIndex === -1) {
@@ -19285,7 +19303,8 @@
                     endY = tapPosition(e);
                     if (Math.abs(endY - startY) < 10) {
                         e.preventDefault();
-                        that.trigger('click', { item: $(e.target) });
+                        var target = e.target.tagName.toLowerCase() === 'li' ? e.target : e.target.parentElement;
+                        that.trigger('click', { item: $(target) });
                     }
                 });
             },
@@ -23052,7 +23071,12 @@
                         }
                     });
                 } else {
-                    that.select([-1]);
+                    if (!that.value()[0]) {
+                        that.select([-1]);
+                    } else {
+                        that._selectingValue = false;
+                        that._triggerListBound();
+                    }
                 }
             },
             mapValueToIndex: function (indexes) {
@@ -24655,6 +24679,7 @@
                 optionLabel: '',
                 cascadeFrom: '',
                 cascadeFromField: '',
+                cascadeFromParentField: '',
                 ignoreCase: true,
                 animation: {},
                 filter: 'none',
@@ -25701,6 +25726,7 @@
                 suggest: false,
                 cascadeFrom: '',
                 cascadeFromField: '',
+                cascadeFromParentField: '',
                 ignoreCase: true,
                 animation: {},
                 virtual: false,
@@ -27023,6 +27049,9 @@
                 var visible = that.popup.visible();
                 var dir = 0;
                 var activeItemIdx;
+                if (key !== keys.ENTER) {
+                    this._multipleSelection = false;
+                }
                 if (key === keys.DOWN) {
                     e.preventDefault();
                     if (!visible) {
@@ -27043,6 +27072,7 @@
                             listView.focusLast();
                         } else {
                             if (e.shiftKey) {
+                                this._multipleSelection = true;
                                 that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
                             }
                         }
@@ -27061,6 +27091,7 @@
                             that.close();
                         } else {
                             if (e.shiftKey) {
+                                this._multipleSelection = true;
                                 that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
                             }
                         }
@@ -27079,6 +27110,7 @@
                         that.currentTag(tag[0] ? tag : null);
                     }
                 } else if (e.ctrlKey && !e.altKey && key === keys.A && visible) {
+                    this._multipleSelection = true;
                     if (this._getSelectedIndices().length === listView.items().length) {
                         that._activeItem = null;
                     }
@@ -27090,9 +27122,12 @@
                         return;
                     }
                     e.preventDefault();
-                    if (listView.focus().hasClass(SELECTEDCLASS)) {
-                        that._close();
-                        return;
+                    if (this._multipleSelection) {
+                        this._multipleSelection = false;
+                        if (listView.focus().hasClass(SELECTEDCLASS)) {
+                            that._close();
+                            return;
+                        }
                     }
                     that._select(listView.focus()).done(function () {
                         that._change();
@@ -33336,7 +33371,7 @@
         depends: ['popup']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS || kendo.support.mouseAndTouchPresent, MOUSEDOWN = 'mousedown', CLICK = 'click', DELAY = 30, SCROLLSPEED = 50, extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link k-menu-link', LINK_SELECTOR = '.k-link', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, TOUCHSTART = kendo.support.touch ? 'touchstart' : '', MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', MOUSEWHEEL = 'DOMMouseScroll' + NS + ' mousewheel' + NS, RESIZE = kendo.support.resize + NS, SCROLLWIDTH = 'scrollWidth', SCROLLHEIGHT = 'scrollHeight', OFFSETWIDTH = 'offsetWidth', OFFSETHEIGHT = 'offsetHeight', POPUP_ID_ATTR = 'group', POPUP_OPENER_ATTR = 'groupparent', DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', animationContainerSelector = '.k-animation-container', popupSelector = groupSelector + ',' + animationContainerSelector, allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item', availableItemsSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = itemSelector + exclusionSelector + ':eq(0)', lastSelector = itemSelector + exclusionSelector + ':last', templateSelector = 'div:not(.k-animation-container,.k-list-container)', scrollButtonSelector = '.k-menu-scroll-button', touchPointerTypes = {
+        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, MOUSEDOWN = 'mousedown', CLICK = 'click', DELAY = 30, SCROLLSPEED = 50, extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link k-menu-link', LINK_SELECTOR = '.k-link', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, TOUCHSTART = kendo.support.touch ? 'touchstart' : '', MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', MOUSEWHEEL = 'DOMMouseScroll' + NS + ' mousewheel' + NS, RESIZE = kendo.support.resize + NS, SCROLLWIDTH = 'scrollWidth', SCROLLHEIGHT = 'scrollHeight', OFFSETWIDTH = 'offsetWidth', OFFSETHEIGHT = 'offsetHeight', POPUP_ID_ATTR = 'group', POPUP_OPENER_ATTR = 'groupparent', DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', animationContainerSelector = '.k-animation-container', popupSelector = groupSelector + ',' + animationContainerSelector, allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item', availableItemsSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = itemSelector + exclusionSelector + ':eq(0)', lastSelector = itemSelector + exclusionSelector + ':last', templateSelector = 'div:not(.k-animation-container,.k-list-container)', scrollButtonSelector = '.k-menu-scroll-button', touchPointerTypes = {
                 '2': 1,
                 'touch': 1
             }, templates = {
@@ -34123,7 +34158,7 @@
                                             if (that.options.scrollable) {
                                                 li.parent().siblings(scrollButtonSelector).css({ zIndex: '' });
                                             }
-                                            if (touch || allPointers) {
+                                            if (touch || allPointers || kendo.support.mouseAndTouchPresent) {
                                                 li.removeClass(HOVERSTATE);
                                                 that._removeHoverItem();
                                             }

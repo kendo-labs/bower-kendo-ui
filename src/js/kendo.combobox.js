@@ -117,6 +117,7 @@
                 suggest: false,
                 cascadeFrom: '',
                 cascadeFromField: '',
+                cascadeFromParentField: '',
                 ignoreCase: true,
                 animation: {},
                 virtual: false,

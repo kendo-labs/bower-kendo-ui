@@ -1713,7 +1713,7 @@
             }
         }
         function eachGroupItems(data, func) {
-            for (var idx = 0, length = data.length; idx < length; idx++) {
+            for (var idx = 0; idx < data.length; idx++) {
                 if (data[idx].hasSubgroups) {
                     if (eachGroupItems(data[idx].items, func)) {
                         return true;
@@ -2881,6 +2881,9 @@
                 if (that.options.serverAggregates !== true) {
                     options.aggregate = that._aggregate;
                 }
+                if (that.options.serverGrouping) {
+                    that._clearEmptyGroups(data);
+                }
                 result = that._queryProcess(data, options);
                 if (that.options.serverAggregates !== true) {
                     that._aggregateResult = that._calculateAggregates(result.dataToAggregate || data, options);
@@ -2890,6 +2893,21 @@
                 e = e || {};
                 e.items = e.items || that._view;
                 that.trigger(CHANGE, e);
+            },
+            _clearEmptyGroups: function (data) {
+                for (var idx = data.length - 1; idx >= 0; idx--) {
+                    var group = data[idx];
+                    if (group.hasSubgroups) {
+                        this._clearEmptyGroups(group.items);
+                    } else {
+                        if (group.items && !group.items.length) {
+                            splice.apply(group.parent(), [
+                                idx,
+                                1
+                            ]);
+                        }
+                    }
+                }
             },
             _queryProcess: function (data, options) {
                 if (this.options.inPlaceSort) {

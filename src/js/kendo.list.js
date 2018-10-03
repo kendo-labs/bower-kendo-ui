@@ -1245,7 +1245,7 @@
                 if (that._userTriggered) {
                     that._clearSelection(parent, true);
                 } else if (value) {
-                    if (value !== that.listView.value()[0]) {
+                    if (value !== unifyType(that.listView.value()[0], typeof value)) {
                         that.value(value);
                     }
                     if (!that.dataSource.view()[0] || that.selectedIndex === -1) {
@@ -1392,7 +1392,8 @@
                     endY = tapPosition(e);
                     if (Math.abs(endY - startY) < 10) {
                         e.preventDefault();
-                        that.trigger('click', { item: $(e.target) });
+                        var target = e.target.tagName.toLowerCase() === 'li' ? e.target : e.target.parentElement;
+                        that.trigger('click', { item: $(target) });
                     }
                 });
             },

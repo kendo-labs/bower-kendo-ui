@@ -66,7 +66,9 @@ $.extend(true, kendo.ui.FilterCell.prototype.options.operators,{
     "isnull": "Est nulle",
     "isnotnull": "N’est pas nulle",
     "isempty": "Est vide",
-    "isnotempty": "N’est pas vide"
+    "isnotempty": "N’est pas vide",
+    "isnullorempty": "A une valeur",
+    "isnotnullorempty": "N'a pas de valeur"
   },
   "enums": {
     "eq": "Est égal à",
@@ -112,7 +114,9 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.operators,{
     "isnull": "Est nulle",
     "isnotnull": "N’est pas nulle",
     "isempty": "Est vide",
-    "isnotempty": "N’est pas vide"
+    "isnotempty": "N’est pas vide",
+    "isnullorempty": "A une valeur",
+    "isnotnullorempty": "N'a pas de valeur"
   },
   "enums": {
     "eq": "Est égal à",
