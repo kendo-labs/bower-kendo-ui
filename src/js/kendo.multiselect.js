@@ -337,7 +337,7 @@
                 }
                 that.input.val('');
                 that._search();
-                that.trigger(CHANGE);
+                that._change();
                 that.focus();
                 that._hideClear();
                 if (that._state === FILTER) {
@@ -562,6 +562,7 @@
                     that.trigger(CHANGE);
                     that.element.trigger(CHANGE);
                 }
+                that.popup.position();
                 that._toggleCloseVisibility();
             },
             _click: function (e) {
@@ -607,14 +608,14 @@
                             that._activeItem = listView.focus();
                             dir = -1;
                         }
-                        activeItemIdx = listView.getElementIndex(that._getActiveItem()[0]);
+                        activeItemIdx = listView.getElementIndex(that._getActiveItem().first());
                         listView.focusNext();
                         if (!listView.focus()) {
                             listView.focusLast();
                         } else {
                             if (e.shiftKey) {
                                 this._multipleSelection = true;
-                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
+                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus().first()) + dir);
                             }
                         }
                     } else {
@@ -626,14 +627,14 @@
                             that._activeItem = listView.focus();
                             dir = 1;
                         }
-                        activeItemIdx = listView.getElementIndex(that._getActiveItem()[0]);
+                        activeItemIdx = listView.getElementIndex(that._getActiveItem().first());
                         listView.focusPrev();
                         if (!listView.focus()) {
                             that.close();
                         } else {
                             if (e.shiftKey) {
                                 this._multipleSelection = true;
-                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
+                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus().first()) + dir);
                             }
                         }
                     }
@@ -650,7 +651,7 @@
                         tag = tag.next();
                         that.currentTag(tag[0] ? tag : null);
                     }
-                } else if (e.ctrlKey && !e.altKey && key === keys.A && visible) {
+                } else if (e.ctrlKey && !e.altKey && key === keys.A && visible && !that.options.virtual) {
                     this._multipleSelection = true;
                     if (this._getSelectedIndices().length === listView.items().length) {
                         that._activeItem = null;
@@ -699,7 +700,7 @@
                         that.tagList.children().each(function (index, tag) {
                             that._removeTag($(tag), false);
                         });
-                        that.trigger(CHANGE);
+                        that._change();
                     }
                     that.close();
                 } else if (key === keys.HOME) {
@@ -707,7 +708,7 @@
                         if (!listView.focus()) {
                             that.close();
                         } else {
-                            if (e.ctrlKey && e.shiftKey) {
+                            if (e.ctrlKey && e.shiftKey && !that.options.virtual) {
                                 that._selectRange(listView.getElementIndex(listView.focus()[0]), 0);
                             }
                             listView.focusFirst();
@@ -723,7 +724,7 @@
                         if (!listView.focus()) {
                             that.close();
                         } else {
-                            if (e.ctrlKey && e.shiftKey) {
+                            if (e.ctrlKey && e.shiftKey && !that.options.virtual) {
                                 that._selectRange(listView.getElementIndex(listView.focus()[0]), listView.element.children().length - 1);
                             }
                             listView.focusLast();

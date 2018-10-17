@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.1003'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.1017'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -5419,9 +5419,12 @@
             ObservableArray.prototype[Symbol.iterator] = [][Symbol.iterator];
         }
         var LazyObservableArray = ObservableArray.extend({
-            init: function (data, type) {
+            init: function (data, type, events) {
                 Observable.fn.init.call(this);
                 this.type = type || ObservableObject;
+                if (events) {
+                    this._events = events;
+                }
                 for (var idx = 0; idx < data.length; idx++) {
                     this[idx] = data[idx];
                 }
@@ -6818,7 +6821,7 @@
                     if (group.hasSubgroups) {
                         wrapGroupItems(group.items, model);
                     } else {
-                        group.items = new LazyObservableArray(group.items, model);
+                        group.items = new LazyObservableArray(group.items, model, group.items._events);
                     }
                 }
             }
@@ -14487,9 +14490,12 @@
                 return delta < 0 ? true : false;
             },
             _movementByAxis: function (axis, cursorOffset, delta, eventData) {
-                var cursorPosition = axis === 'x' ? cursorOffset.left : cursorOffset.top, target = delta < 0 ? this.placeholder.prev() : this.placeholder.next(), targetCenter;
+                var cursorPosition = axis === 'x' ? cursorOffset.left : cursorOffset.top, target = delta < 0 ? this.placeholder.prev() : this.placeholder.next(), items = this.items(), targetCenter;
                 if (target.length && !target.is(':visible')) {
                     target = delta < 0 ? target.prev() : target.next();
+                }
+                if (!items.filter(target).length) {
+                    return;
                 }
                 $.extend(eventData, { target: target });
                 targetCenter = this._getElementCenter(target);
@@ -16149,14 +16155,17 @@
                 }
             },
             _showStatic: function (wrapper, options) {
-                var that = this, autoHideAfter = options.autoHideAfter, animation = options.animation, insertionMethod = options.stacking == UP || options.stacking == LEFT ? 'prependTo' : 'appendTo';
+                var that = this, autoHideAfter = options.autoHideAfter, animation = options.animation, insertionMethod = options.stacking == UP || options.stacking == LEFT ? 'prependTo' : 'appendTo', initializedNotifications;
                 wrapper.removeClass('k-popup').addClass(that._guid)[insertionMethod](options.appendTo).hide().kendoAnimate(animation.open || false);
-                that._attachStaticEvents(options, wrapper);
-                if (autoHideAfter > 0) {
-                    setTimeout(function () {
-                        that._hideStatic(wrapper);
-                    }, autoHideAfter);
-                }
+                initializedNotifications = that.getNotifications();
+                initializedNotifications.each(function (idx, element) {
+                    that._attachStaticEvents(options, $(element));
+                    if (autoHideAfter > 0) {
+                        setTimeout(function () {
+                            that._hideStatic($(element));
+                        }, autoHideAfter);
+                    }
+                });
             },
             _hideStatic: function (wrapper) {
                 wrapper.kendoAnimate(extend(this.options.animation.close || false, {
@@ -17950,7 +17959,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, outerHeight = kendo._outerHeight, percentageUnitsRegex = /^\d+(\.\d+)?%$/i, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', GROUPHEADER = '.k-group-header', LABELIDPART = '_label', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, HIDDENCLASS = 'k-hidden', WIDTH = 'width', isIE = browser.msie, isIE8 = isIE && browser.version < 9, quotRegExp = /"/g, alternativeNames = {
+        var kendo = window.kendo, ui = kendo.ui, outerHeight = kendo._outerHeight, percentageUnitsRegex = /^\d+(\.\d+)?%$/i, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', GROUPHEADER = '.k-group-header', ITEMSELECTOR = '.k-item', LABELIDPART = '_label', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, HIDDENCLASS = 'k-hidden', WIDTH = 'width', isIE = browser.msie, isIE8 = isIE && browser.version < 9, quotRegExp = /"/g, alternativeNames = {
                 'ComboBox': 'DropDownList',
                 'DropDownList': 'ComboBox'
             };
@@ -19303,8 +19312,7 @@
                     endY = tapPosition(e);
                     if (Math.abs(endY - startY) < 10) {
                         e.preventDefault();
-                        var target = e.target.tagName.toLowerCase() === 'li' ? e.target : e.target.parentElement;
-                        that.trigger('click', { item: $(target) });
+                        that.trigger('click', { item: $(e.target.closest(ITEMSELECTOR)) });
                     }
                 });
             },
@@ -19501,7 +19509,7 @@
                 return deferred;
             },
             items: function () {
-                return this.element.children('.k-item');
+                return this.element.children(ITEMSELECTOR);
             },
             _click: function (e) {
                 if (!e.isDefaultPrevented()) {
@@ -23300,7 +23308,7 @@
             focusLast: function () {
                 var lastIndex = this.dataSource.total();
                 this.scrollTo(this.heightContainer.offsetHeight);
-                this.focus(lastIndex);
+                this.focus(lastIndex - 1);
             },
             focusPrev: function () {
                 var index = this._focusedIndex;
@@ -26238,7 +26246,7 @@
                 if (dataItem) {
                     shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
                     if (!shouldTrigger) {
-                        that.input.val(that._accessor());
+                        that.input.val(that._text(dataItem));
                     }
                 }
                 if (shouldTrigger && that.trigger('select', {
@@ -26371,9 +26379,6 @@
                         dataItem = that.listView.dataItemByIndex(that.listView.getElementIndex(current));
                         if (dataItem) {
                             shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
-                            if (!shouldTrigger) {
-                                that.input.val(that._accessor());
-                            }
                         }
                         if (shouldTrigger && that.trigger('select', {
                                 dataItem: dataItem,
@@ -26796,7 +26801,7 @@
                 }
                 that.input.val('');
                 that._search();
-                that.trigger(CHANGE);
+                that._change();
                 that.focus();
                 that._hideClear();
                 if (that._state === FILTER) {
@@ -27021,6 +27026,7 @@
                     that.trigger(CHANGE);
                     that.element.trigger(CHANGE);
                 }
+                that.popup.position();
                 that._toggleCloseVisibility();
             },
             _click: function (e) {
@@ -27066,14 +27072,14 @@
                             that._activeItem = listView.focus();
                             dir = -1;
                         }
-                        activeItemIdx = listView.getElementIndex(that._getActiveItem()[0]);
+                        activeItemIdx = listView.getElementIndex(that._getActiveItem().first());
                         listView.focusNext();
                         if (!listView.focus()) {
                             listView.focusLast();
                         } else {
                             if (e.shiftKey) {
                                 this._multipleSelection = true;
-                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
+                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus().first()) + dir);
                             }
                         }
                     } else {
@@ -27085,14 +27091,14 @@
                             that._activeItem = listView.focus();
                             dir = 1;
                         }
-                        activeItemIdx = listView.getElementIndex(that._getActiveItem()[0]);
+                        activeItemIdx = listView.getElementIndex(that._getActiveItem().first());
                         listView.focusPrev();
                         if (!listView.focus()) {
                             that.close();
                         } else {
                             if (e.shiftKey) {
                                 this._multipleSelection = true;
-                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus()[0]) + dir);
+                                that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus().first()) + dir);
                             }
                         }
                     }
@@ -27109,7 +27115,7 @@
                         tag = tag.next();
                         that.currentTag(tag[0] ? tag : null);
                     }
-                } else if (e.ctrlKey && !e.altKey && key === keys.A && visible) {
+                } else if (e.ctrlKey && !e.altKey && key === keys.A && visible && !that.options.virtual) {
                     this._multipleSelection = true;
                     if (this._getSelectedIndices().length === listView.items().length) {
                         that._activeItem = null;
@@ -27158,7 +27164,7 @@
                         that.tagList.children().each(function (index, tag) {
                             that._removeTag($(tag), false);
                         });
-                        that.trigger(CHANGE);
+                        that._change();
                     }
                     that.close();
                 } else if (key === keys.HOME) {
@@ -27166,7 +27172,7 @@
                         if (!listView.focus()) {
                             that.close();
                         } else {
-                            if (e.ctrlKey && e.shiftKey) {
+                            if (e.ctrlKey && e.shiftKey && !that.options.virtual) {
                                 that._selectRange(listView.getElementIndex(listView.focus()[0]), 0);
                             }
                             listView.focusFirst();
@@ -27182,7 +27188,7 @@
                         if (!listView.focus()) {
                             that.close();
                         } else {
-                            if (e.ctrlKey && e.shiftKey) {
+                            if (e.ctrlKey && e.shiftKey && !that.options.virtual) {
                                 that._selectRange(listView.getElementIndex(listView.focus()[0]), listView.element.children().length - 1);
                             }
                             listView.focusLast();
@@ -30229,6 +30235,7 @@
         var NumericTextBox = Widget.extend({
             init: function (element, options) {
                 var that = this, isStep = options && options.step !== undefined, min, max, step, value, disabled;
+                var inputType;
                 Widget.fn.init.call(that, element, options);
                 options = that.options;
                 element = that.element.on('focusout' + ns, proxy(that._focusout, that)).attr('role', 'spinbutton');
@@ -30246,6 +30253,7 @@
                     options.step = step;
                 }
                 that._initialOptions = extend({}, options);
+                inputType = element.attr('type');
                 that._reset();
                 that._wrapper();
                 that._arrows();
@@ -30269,7 +30277,14 @@
                 element.attr('aria-valuemin', options.min !== NULL ? options.min * options.factor : options.min).attr('aria-valuemax', options.max !== NULL ? options.max * options.factor : options.max);
                 options.format = extractFormat(options.format);
                 value = options.value;
-                that.value(value !== NULL ? value : element.val());
+                if (value == NULL) {
+                    if (inputType == 'number') {
+                        value = parseFloat(element.val());
+                    } else {
+                        value = element.val();
+                    }
+                }
+                that.value(value);
                 disabled = element.is('[disabled]') || $(that.element).parents('fieldset').is(':disabled');
                 if (disabled) {
                     that.enable(false);
@@ -32323,7 +32338,7 @@
             _wrapper: function () {
                 var that = this, element = that.element, wrapper = element.parent('div.k-listbox');
                 if (!wrapper[0]) {
-                    wrapper = element.wrap('<div class="k-widget k-listbox" deselectable="on" />').parent();
+                    wrapper = element.wrap('<div class="k-widget k-listbox" unselectable="on" />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                     wrapper[0].title = element[0].title;
                     $('<div class="k-list-scroller" />').insertBefore(element);
@@ -40594,10 +40609,14 @@
                     'maxWidth',
                     'maxHeight'
                 ];
+                var contentBoxSizing = wrapper.css('box-sizing') == 'content-box';
+                var lrBorderWidth = contentBoxSizing ? toInt(wrapper, 'border-left-width') + toInt(wrapper, 'border-right-width') : 0;
+                var tbBorderWidth = contentBoxSizing ? toInt(wrapper, 'border-top-width') + toInt(wrapper, 'border-bottom-width') : 0;
+                var paddingTop = contentBoxSizing ? toInt(wrapper, 'padding-top') : 0;
                 if (this.containment && !this._isPinned) {
                     this._updateBoundaries();
-                    options.maxHeight = Math.min(this.containment.height - toInt(wrapper, 'padding-top'), maxHeight);
-                    options.maxWidth = Math.min(this.containment.width, options.maxWidth);
+                    options.maxHeight = Math.min(this.containment.height - (tbBorderWidth + paddingTop), maxHeight);
+                    options.maxWidth = Math.min(this.containment.width - lrBorderWidth, options.maxWidth);
                 }
                 for (var i = 0; i < dimensions.length; i++) {
                     var value = options[dimensions[i]] || '';
@@ -41443,18 +41462,19 @@
                 }
             },
             _onDocumentResize: function () {
-                var that = this, wrapper = that.wrapper, wnd = $(window), zoomLevel = kendo.support.zoomLevel(), w, h;
+                var that = this, wrapper = that.wrapper, wnd = $(window), zoomLevel = kendo.support.zoomLevel(), contentBoxSizing = wrapper.css('box-sizing') == 'content-box', w, h;
                 if (!that.options.isMaximized) {
                     return;
                 }
-                var lrBorderWidth = toInt(wrapper, 'border-left-width') + toInt(wrapper, 'border-right-width');
-                var tbBorderWidth = toInt(wrapper, 'border-top-width') + toInt(wrapper, 'border-bottom-width');
-                if (this.containment && !this._isPinned) {
-                    w = this.containment.innerWidth();
-                    h = this.containment.innerHeight() - toInt(wrapper, 'padding-top');
+                var lrBorderWidth = contentBoxSizing ? toInt(wrapper, 'border-left-width') + toInt(wrapper, 'border-right-width') : 0;
+                var tbBorderWidth = contentBoxSizing ? toInt(wrapper, 'border-top-width') + toInt(wrapper, 'border-bottom-width') : 0;
+                var paddingTop = contentBoxSizing ? toInt(wrapper, 'padding-top') : 0;
+                if (that.containment && !that._isPinned) {
+                    w = that.containment.innerWidth() - lrBorderWidth;
+                    h = that.containment.innerHeight() - (tbBorderWidth + paddingTop);
                 } else {
                     w = wnd.width() / zoomLevel - lrBorderWidth;
-                    h = wnd.height() / zoomLevel - toInt(wrapper, 'padding-top') - tbBorderWidth;
+                    h = wnd.height() / zoomLevel - (tbBorderWidth + paddingTop);
                 }
                 wrapper.css({
                     width: w,
@@ -46567,7 +46587,7 @@
                 scope.$watch(source, function (mew) {
                     var widget = kendoWidgetInstance(element);
                     if (widget && typeof widget.setDataSource == 'function') {
-                        if (mew !== current) {
+                        if (mew !== current && mew !== widget.dataSource) {
                             var ds = toDataSource(mew, type);
                             widget.setDataSource(ds);
                             current = mew;

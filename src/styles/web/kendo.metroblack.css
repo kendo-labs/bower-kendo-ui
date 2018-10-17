@@ -555,6 +555,9 @@ html .km-pane-wrapper .k-header {
 .k-mobile-list .k-edit-field [type=radio]:checked {
   opacity: 1;
 }
+.k-clear-value {
+  color: #fff;
+}
 .k-badge {
   background-color: #008886;
   color: #fff;

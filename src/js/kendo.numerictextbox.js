@@ -43,6 +43,7 @@
         var NumericTextBox = Widget.extend({
             init: function (element, options) {
                 var that = this, isStep = options && options.step !== undefined, min, max, step, value, disabled;
+                var inputType;
                 Widget.fn.init.call(that, element, options);
                 options = that.options;
                 element = that.element.on('focusout' + ns, proxy(that._focusout, that)).attr('role', 'spinbutton');
@@ -60,6 +61,7 @@
                     options.step = step;
                 }
                 that._initialOptions = extend({}, options);
+                inputType = element.attr('type');
                 that._reset();
                 that._wrapper();
                 that._arrows();
@@ -83,7 +85,14 @@
                 element.attr('aria-valuemin', options.min !== NULL ? options.min * options.factor : options.min).attr('aria-valuemax', options.max !== NULL ? options.max * options.factor : options.max);
                 options.format = extractFormat(options.format);
                 value = options.value;
-                that.value(value !== NULL ? value : element.val());
+                if (value == NULL) {
+                    if (inputType == 'number') {
+                        value = parseFloat(element.val());
+                    } else {
+                        value = element.val();
+                    }
+                }
+                that.value(value);
                 disabled = element.is('[disabled]') || $(that.element).parents('fieldset').is(':disabled');
                 if (disabled) {
                     that.enable(false);

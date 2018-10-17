@@ -75,7 +75,7 @@
                 scope.$watch(source, function (mew) {
                     var widget = kendoWidgetInstance(element);
                     if (widget && typeof widget.setDataSource == 'function') {
-                        if (mew !== current) {
+                        if (mew !== current && mew !== widget.dataSource) {
                             var ds = toDataSource(mew, type);
                             widget.setDataSource(ds);
                             current = mew;

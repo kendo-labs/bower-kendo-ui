@@ -266,14 +266,17 @@
                 }
             },
             _showStatic: function (wrapper, options) {
-                var that = this, autoHideAfter = options.autoHideAfter, animation = options.animation, insertionMethod = options.stacking == UP || options.stacking == LEFT ? 'prependTo' : 'appendTo';
+                var that = this, autoHideAfter = options.autoHideAfter, animation = options.animation, insertionMethod = options.stacking == UP || options.stacking == LEFT ? 'prependTo' : 'appendTo', initializedNotifications;
                 wrapper.removeClass('k-popup').addClass(that._guid)[insertionMethod](options.appendTo).hide().kendoAnimate(animation.open || false);
-                that._attachStaticEvents(options, wrapper);
-                if (autoHideAfter > 0) {
-                    setTimeout(function () {
-                        that._hideStatic(wrapper);
-                    }, autoHideAfter);
-                }
+                initializedNotifications = that.getNotifications();
+                initializedNotifications.each(function (idx, element) {
+                    that._attachStaticEvents(options, $(element));
+                    if (autoHideAfter > 0) {
+                        setTimeout(function () {
+                            that._hideStatic($(element));
+                        }, autoHideAfter);
+                    }
+                });
             },
             _hideStatic: function (wrapper) {
                 wrapper.kendoAnimate(extend(this.options.animation.close || false, {

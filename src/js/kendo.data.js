@@ -308,9 +308,12 @@
             ObservableArray.prototype[Symbol.iterator] = [][Symbol.iterator];
         }
         var LazyObservableArray = ObservableArray.extend({
-            init: function (data, type) {
+            init: function (data, type, events) {
                 Observable.fn.init.call(this);
                 this.type = type || ObservableObject;
+                if (events) {
+                    this._events = events;
+                }
                 for (var idx = 0; idx < data.length; idx++) {
                     this[idx] = data[idx];
                 }
@@ -1707,7 +1710,7 @@
                     if (group.hasSubgroups) {
                         wrapGroupItems(group.items, model);
                     } else {
-                        group.items = new LazyObservableArray(group.items, model);
+                        group.items = new LazyObservableArray(group.items, model, group.items._events);
                     }
                 }
             }

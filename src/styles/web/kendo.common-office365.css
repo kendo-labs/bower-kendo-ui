@@ -13413,3 +13413,10 @@ div.k-spreadsheet-window {
 .k-grid .k-edit-cell input.k-checkbox + label.k-checkbox-label {
   margin-left: 1em;
 }
+.k-spreadsheet-filter-menu > .k-menu .k-link {
+  padding-left: 26px;
+}
+.k-spreadsheet-filter-menu > .k-menu .k-link .k-icon {
+  margin-left: -26px;
+  margin-right: 0;
+}

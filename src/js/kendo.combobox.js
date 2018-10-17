@@ -629,7 +629,7 @@
                 if (dataItem) {
                     shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
                     if (!shouldTrigger) {
-                        that.input.val(that._accessor());
+                        that.input.val(that._text(dataItem));
                     }
                 }
                 if (shouldTrigger && that.trigger('select', {
@@ -762,9 +762,6 @@
                         dataItem = that.listView.dataItemByIndex(that.listView.getElementIndex(current));
                         if (dataItem) {
                             shouldTrigger = that._value(dataItem) !== List.unifyType(that.value(), typeof that._value(dataItem));
-                            if (!shouldTrigger) {
-                                that.input.val(that._accessor());
-                            }
                         }
                         if (shouldTrigger && that.trigger('select', {
                                 dataItem: dataItem,

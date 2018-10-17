@@ -28,7 +28,7 @@
   cursor: default;
   opacity: 0.6;
   -webkit-filter: grayscale(0.1);
-  filter: grayscale(0.1);
+          filter: grayscale(0.1);
   pointer-events: none;
   box-shadow: none;
 }
@@ -156,24 +156,11 @@
   border-color: #3f51b5;
   box-shadow: none;
 }
-.k-panelbar > .k-item.k-state-active > .k-link,
-.k-panelbar > .k-item.k-state-expanded > .k-link {
-  color: #000;
-  background-color: #fff;
-  border-color: rgba(0, 0, 0, 0.08);
-}
 .k-calendar .k-state-focused .k-link,
 .k-calendar .k-state-hover .k-link,
 .k-list-filter > .k-textbox,
-.k-panelbar .k-group > .k-item > .k-link.k-state-hover,
-.k-panelbar .k-group > .k-item > .k-link:hover,
-.k-panelbar > .k-item.k-state-active > .k-link.k-state-hover,
-.k-panelbar > .k-item.k-state-active > .k-link:hover,
-.k-panelbar > .k-item.k-state-expanded > .k-link.k-state-hover,
-.k-panelbar > .k-item.k-state-expanded > .k-link:hover,
 .k-scheduler-agendaview tr.k-state-hover,
-.k-timeselector .k-time-list-wrapper .k-time-list .k-item:hover,
-.k-treeview .k-in.k-state-hover {
+.k-timeselector .k-time-list-wrapper .k-time-list .k-item:hover {
   color: #000;
   background-color: rgba(0, 0, 0, 0.07);
   border-color: rgba(0, 0, 0, 0.15);
@@ -183,11 +170,7 @@
 .k-calendar:not(.k-calendar-infinite) .k-content .k-state-selected .k-link,
 .k-calendar:not(.k-calendar-infinite) .k-content .k-weekend .k-state-selected .k-link,
 .k-drag-clue,
-.k-event.k-state-selected,
-.k-panelbar .k-group > .k-item > .k-link.k-state-selected,
-.k-panelbar > .k-item > .k-link.k-state-selected:not(.k-state-active),
-.k-panelbar > .k-item > .k-link.k-state-selected:not(.k-state-expanded),
-.k-treeview .k-in.k-state-selected {
+.k-event.k-state-selected {
   color: #fff;
   background-color: #3f51b5;
   border-color: rgba(0, 0, 0, 0.1);
@@ -270,18 +253,13 @@ kendo-sortable {
 .kendo-pdf-hide-pseudo-elements:before {
   display: none !important;
 }
-.k-state-selected {
-  color: #fff;
-  background-color: #3f51b5;
-  border-color: rgba(0, 0, 0, 0.1);
-}
 .k-state-disabled,
 .k-widget[disabled] {
   outline: none;
   cursor: default;
   opacity: 0.6;
   -webkit-filter: grayscale(0.1);
-  filter: grayscale(0.1);
+          filter: grayscale(0.1);
   pointer-events: none;
   box-shadow: none;
 }
@@ -298,7 +276,7 @@ kendo-sortable {
 .k-widget[disabled] [disabled] {
   opacity: 1;
   -webkit-filter: grayscale(0);
-  filter: grayscale(0);
+          filter: grayscale(0);
 }
 .k-hr,
 .k-menu-group .k-item.k-separator,
@@ -1517,8 +1495,8 @@ kendo-sortable {
 }
 .k-dateinput .k-link,
 .k-numerictextbox .k-link {
-  -ms-flex: 1 1 0px;
-  flex: 1 1 0;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
   display: block;
   overflow: hidden;
   position: relative;
@@ -3901,6 +3879,7 @@ kendo-sortable {
   margin: 0;
   padding: 0;
   list-style: none;
+  outline: 0;
   white-space: nowrap;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -3955,8 +3934,8 @@ kendo-sortable {
 }
 .k-button-group-stretched .k-button {
   display: inline-block;
-  -ms-flex: 1 1 0px;
-  flex: 1 1 0;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -4620,7 +4599,7 @@ kendo-sortable {
   right: 0;
   padding: 0 0.5em;
   font-size: 9.996px;
-  line-height: 1.5;
+  line-height: 14px;
   text-transform: uppercase;
 }
 .k-popup .k-list .k-item > .k-group:before {
@@ -4898,10 +4877,9 @@ kendo-sortable {
 .k-pager-wrap .k-link,
 .k-pager-wrap .k-state-selected {
   padding: 0;
-  width: 36px;
-  height: 36px;
-  line-height: 36px;
-  box-sizing: content-box;
+  width: calc(16px + 1.42857143em);
+  height: calc(16px + 1.42857143em);
+  box-sizing: border-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
   -ms-flex-align: center;
@@ -4957,8 +4935,8 @@ kendo-sortable {
 .k-pager-wrap .k-pager-sizes .k-dropdown,
 .k-pager-wrap .k-pager-sizes .k-dropdowntree,
 .k-pager-wrap .k-pager-sizes > select {
+  margin: 0 16px 0 0;
   width: 5.2em;
-  margin: 0 16px;
 }
 .k-pager-wrap .k-pager-refresh {
   -ms-flex-order: 10;
@@ -4973,17 +4951,63 @@ kendo-sortable {
   -ms-flex-pack: end;
   justify-content: flex-end;
 }
-.k-rtl .k-pager-wrap .k-i-arrow-e,
-.k-rtl .k-pager-wrap .k-i-arrow-w,
-.k-rtl .k-pager-wrap .k-i-seek-e,
-.k-rtl .k-pager-wrap .k-i-seek-w,
-[dir=rtl] .k-pager-wrap .k-i-arrow-e,
-[dir=rtl] .k-pager-wrap .k-i-arrow-w,
-[dir=rtl] .k-pager-wrap .k-i-seek-e,
-[dir=rtl] .k-pager-wrap .k-i-seek-w {
+.k-pager-wrap .k-widget {
+  font-size: inherit;
+}
+.k-pager-wrap[dir=rtl] .k-i-arrow-60-left,
+.k-pager-wrap[dir=rtl] .k-i-arrow-60-right,
+.k-pager-wrap[dir=rtl] .k-i-arrow-e:before,
+.k-pager-wrap[dir=rtl] .k-i-arrow-end-left,
+.k-pager-wrap[dir=rtl] .k-i-arrow-end-right,
+.k-pager-wrap[dir=rtl] .k-i-arrow-w:before,
+.k-pager-wrap[dir=rtl] .k-i-expand-e:before,
+.k-pager-wrap[dir=rtl] .k-i-expand-w:before,
+.k-pager-wrap[dir=rtl] .k-i-expand:before,
+.k-pager-wrap[dir=rtl] .k-i-sarrow-e:before,
+.k-pager-wrap[dir=rtl] .k-i-sarrow-w:before,
+.k-pager-wrap[dir=rtl] .k-i-seek-e:before,
+.k-pager-wrap[dir=rtl] .k-i-seek-w:before,
+.k-rtl .k-pager-wrap .k-i-arrow-60-left,
+.k-rtl .k-pager-wrap .k-i-arrow-60-right,
+.k-rtl .k-pager-wrap .k-i-arrow-e:before,
+.k-rtl .k-pager-wrap .k-i-arrow-end-left,
+.k-rtl .k-pager-wrap .k-i-arrow-end-right,
+.k-rtl .k-pager-wrap .k-i-arrow-w:before,
+.k-rtl .k-pager-wrap .k-i-expand-e:before,
+.k-rtl .k-pager-wrap .k-i-expand-w:before,
+.k-rtl .k-pager-wrap .k-i-expand:before,
+.k-rtl .k-pager-wrap .k-i-sarrow-e:before,
+.k-rtl .k-pager-wrap .k-i-sarrow-w:before,
+.k-rtl .k-pager-wrap .k-i-seek-e:before,
+.k-rtl .k-pager-wrap .k-i-seek-w:before,
+[dir=rtl] .k-pager-wrap .k-i-arrow-60-left,
+[dir=rtl] .k-pager-wrap .k-i-arrow-60-right,
+[dir=rtl] .k-pager-wrap .k-i-arrow-e:before,
+[dir=rtl] .k-pager-wrap .k-i-arrow-end-left,
+[dir=rtl] .k-pager-wrap .k-i-arrow-end-right,
+[dir=rtl] .k-pager-wrap .k-i-arrow-w:before,
+[dir=rtl] .k-pager-wrap .k-i-expand-e:before,
+[dir=rtl] .k-pager-wrap .k-i-expand-w:before,
+[dir=rtl] .k-pager-wrap .k-i-expand:before,
+[dir=rtl] .k-pager-wrap .k-i-sarrow-e:before,
+[dir=rtl] .k-pager-wrap .k-i-sarrow-w:before,
+[dir=rtl] .k-pager-wrap .k-i-seek-e:before,
+[dir=rtl] .k-pager-wrap .k-i-seek-w:before {
   -webkit-transform: scaleX(-1);
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
+}
+.k-pager-wrap[dir=rtl] .k-pager-sizes .k-dropdown,
+.k-pager-wrap[dir=rtl] .k-pager-sizes .k-dropdowntree,
+.k-pager-wrap[dir=rtl] .k-pager-sizes > select,
+.k-rtl .k-pager-wrap .k-pager-sizes .k-dropdown,
+.k-rtl .k-pager-wrap .k-pager-sizes .k-dropdowntree,
+.k-rtl .k-pager-wrap .k-pager-sizes > select,
+[dir=rtl] .k-pager-wrap .k-pager-sizes .k-dropdown,
+[dir=rtl] .k-pager-wrap .k-pager-sizes .k-dropdowntree,
+[dir=rtl] .k-pager-wrap .k-pager-sizes > select {
+  margin-right: 0;
+  margin-left: 16px;
 }
 .k-pager-wrap .k-pager-numbers {
   margin: 0 8px;
@@ -5003,6 +5027,12 @@ kendo-sortable {
 .k-pager-wrap .k-pager-info {
   margin: 0 32px;
 }
+.k-pager-wrap .k-pager-nav,
+.k-pager-wrap .k-pager-numbers .k-link,
+.k-pager-wrap .k-pager-numbers .k-state-selected,
+.k-pager-wrap > .k-link {
+  border-radius: 50%;
+}
 .k-pager-wrap {
   color: rgba(0, 0, 0, 0.54);
   background-color: #fff;
@@ -5014,6 +5044,10 @@ kendo-sortable {
 .k-pager-wrap .k-link:hover,
 .k-pager-wrap .k-pager-nav:hover {
   background-color: rgba(0, 0, 0, 0.07);
+}
+.k-pager-wrap .k-state-selected {
+  color: #fff;
+  background-color: #3f51b5;
 }
 .k-pager-wrap .k-state-selected:focus {
   box-shadow: none;
@@ -5030,12 +5064,6 @@ kendo-sortable {
 .k-pager-numbers .k-link.k-state-selected,
 .k-pager-numbers .k-link:link.k-state-selected {
   color: #fff;
-}
-.k-pager-wrap .k-pager-nav,
-.k-pager-wrap .k-pager-numbers .k-link,
-.k-pager-wrap .k-pager-numbers .k-state-selected,
-.k-pager-wrap > .k-link {
-  border-radius: 50%;
 }
 .k-grid {
   display: -ms-flexbox;
@@ -5132,6 +5160,7 @@ kendo-sortable {
   width: 32px;
 }
 .k-grid .k-grouping-row p {
+  margin: 0;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: center;
@@ -5342,6 +5371,11 @@ kendo-sortable {
 .k-grid .k-grid-content-locked + .k-grid-content {
   box-sizing: content-box;
 }
+.k-grid .k-grid-content-expander {
+  position: absolute;
+  visibility: hidden;
+  height: 1px;
+}
 .k-grid-toolbar {
   padding: 14px;
   border-width: 0 0 1px;
@@ -5400,7 +5434,8 @@ kendo-sortable {
   -ms-flex-line-pack: center;
   align-content: center;
   vertical-align: top;
-  box-sizing: content-box;
+  opacity: 0.9;
+  box-sizing: border-box;
 }
 .k-drag-clue .k-button.k-bare,
 .k-drag-clue .k-link,
@@ -5477,7 +5512,6 @@ kendo-sortable {
 }
 .k-grouping-dropclue {
   width: 12px;
-  height: calc(16px + 1.42857143em);
   position: absolute;
   box-sizing: content-box;
 }
@@ -5650,8 +5684,8 @@ div.k-grid-header {
 .k-filtercell > span {
   display: -ms-flexbox;
   display: flex;
-  -ms-flex: 1 1 0px;
-  flex: 1 1 0;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .k-filtercell .k-filtercell-wrapper > label,
 .k-filtercell > span > label {
@@ -5775,6 +5809,7 @@ div.k-grid-header {
   padding: 10px;
   border-width: 1px 0 0;
   border-color: inherit;
+  font-size: inherit;
 }
 .k-grid-virtual .k-grid-content .k-grid-table-wrap {
   float: left;
@@ -6059,6 +6094,7 @@ div.k-grid-header {
 .k-grouping-dropclue {
   width: 0;
   height: 36px;
+  top: calc(4px + 0.71428571em);
   border-style: solid;
   border-width: 0 2px 0 0;
 }
@@ -6163,6 +6199,318 @@ div.k-grid-header {
 .k-grid-edit-row .k-textbox.k-input .k-input {
   height: calc(1.42857143em + 14px);
 }
+.k-edit-cell .k-multiselect-wrap .k-button,
+.k-grid-edit-row .k-multiselect-wrap .k-button {
+  margin-top: 8px;
+}
+.k-edit-cell .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-multiselect-wrap > .k-clear-value {
+  right: 8px;
+}
+.k-edit-cell .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-dropdown-wrap > .k-clear-value {
+  right: 24px;
+  padding: 0 4px;
+}
+.k-edit-cell .k-dateinput-wrap,
+.k-edit-cell .k-dropdown-wrap,
+.k-edit-cell .k-numeric-wrap,
+.k-edit-cell .k-picker-wrap,
+.k-grid-edit-row .k-dateinput-wrap,
+.k-grid-edit-row .k-dropdown-wrap,
+.k-grid-edit-row .k-numeric-wrap,
+.k-grid-edit-row .k-picker-wrap {
+  padding-right: 4px;
+}
+.k-edit-cell .k-autocomplete[dir=rtl] .k-dateinput-wrap,
+.k-edit-cell .k-autocomplete[dir=rtl] .k-dropdown-wrap,
+.k-edit-cell .k-autocomplete[dir=rtl] .k-multiselect-wrap,
+.k-edit-cell .k-autocomplete[dir=rtl] .k-numeric-wrap,
+.k-edit-cell .k-autocomplete[dir=rtl] .k-picker-wrap,
+.k-edit-cell .k-combobox[dir=rtl] .k-dateinput-wrap,
+.k-edit-cell .k-combobox[dir=rtl] .k-dropdown-wrap,
+.k-edit-cell .k-combobox[dir=rtl] .k-multiselect-wrap,
+.k-edit-cell .k-combobox[dir=rtl] .k-numeric-wrap,
+.k-edit-cell .k-combobox[dir=rtl] .k-picker-wrap,
+.k-edit-cell .k-dateinput[dir=rtl] .k-dateinput-wrap,
+.k-edit-cell .k-dateinput[dir=rtl] .k-dropdown-wrap,
+.k-edit-cell .k-dateinput[dir=rtl] .k-multiselect-wrap,
+.k-edit-cell .k-dateinput[dir=rtl] .k-numeric-wrap,
+.k-edit-cell .k-dateinput[dir=rtl] .k-picker-wrap,
+.k-edit-cell .k-datepicker[dir=rtl] .k-dateinput-wrap,
+.k-edit-cell .k-datepicker[dir=rtl] .k-dropdown-wrap,
+.k-edit-cell .k-datepicker[dir=rtl] .k-multiselect-wrap,
+.k-edit-cell .k-datepicker[dir=rtl] .k-numeric-wrap,
+.k-edit-cell .k-datepicker[dir=rtl] .k-picker-wrap,
+.k-edit-cell .k-datetimepicker[dir=rtl] .k-dateinput-wrap,
+.k-edit-cell .k-datetimepicker[dir=rtl] .k-dropdown-wrap,
+.k-edit-cell .k-datetimepicker[dir=rtl] .k-multiselect-wrap,
+.k-edit-cell .k-datetimepicker[dir=rtl] .k-numeric-wrap,
+.k-edit-cell .k-datetimepicker[dir=rtl] .k-picker-wrap,
+.k-edit-cell .k-dropdown[dir=rtl] .k-dateinput-wrap,
+.k-edit-cell .k-dropdown[dir=rtl] .k-dropdown-wrap,
+.k-edit-cell .k-dropdown[dir=rtl] .k-multiselect-wrap,
+.k-edit-cell .k-dropdown[dir=rtl] .k-numeric-wrap,
+.k-edit-cell .k-dropdown[dir=rtl] .k-picker-wrap,
+.k-edit-cell .k-multiselect[dir=rtl] .k-dateinput-wrap,
+.k-edit-cell .k-multiselect[dir=rtl] .k-dropdown-wrap,
+.k-edit-cell .k-multiselect[dir=rtl] .k-multiselect-wrap,
+.k-edit-cell .k-multiselect[dir=rtl] .k-numeric-wrap,
+.k-edit-cell .k-multiselect[dir=rtl] .k-picker-wrap,
+.k-edit-cell .k-numerictextbox[dir=rtl] .k-dateinput-wrap,
+.k-edit-cell .k-numerictextbox[dir=rtl] .k-dropdown-wrap,
+.k-edit-cell .k-numerictextbox[dir=rtl] .k-multiselect-wrap,
+.k-edit-cell .k-numerictextbox[dir=rtl] .k-numeric-wrap,
+.k-edit-cell .k-numerictextbox[dir=rtl] .k-picker-wrap,
+.k-edit-cell .k-timepicker[dir=rtl] .k-dateinput-wrap,
+.k-edit-cell .k-timepicker[dir=rtl] .k-dropdown-wrap,
+.k-edit-cell .k-timepicker[dir=rtl] .k-multiselect-wrap,
+.k-edit-cell .k-timepicker[dir=rtl] .k-numeric-wrap,
+.k-edit-cell .k-timepicker[dir=rtl] .k-picker-wrap,
+.k-edit-cell [dir=rtl].k-dropdowntree .k-dateinput-wrap,
+.k-edit-cell [dir=rtl].k-dropdowntree .k-dropdown-wrap,
+.k-edit-cell [dir=rtl].k-dropdowntree .k-multiselect-wrap,
+.k-edit-cell [dir=rtl].k-dropdowntree .k-numeric-wrap,
+.k-edit-cell [dir=rtl].k-dropdowntree .k-picker-wrap,
+.k-grid-edit-row .k-autocomplete[dir=rtl] .k-dateinput-wrap,
+.k-grid-edit-row .k-autocomplete[dir=rtl] .k-dropdown-wrap,
+.k-grid-edit-row .k-autocomplete[dir=rtl] .k-multiselect-wrap,
+.k-grid-edit-row .k-autocomplete[dir=rtl] .k-numeric-wrap,
+.k-grid-edit-row .k-autocomplete[dir=rtl] .k-picker-wrap,
+.k-grid-edit-row .k-combobox[dir=rtl] .k-dateinput-wrap,
+.k-grid-edit-row .k-combobox[dir=rtl] .k-dropdown-wrap,
+.k-grid-edit-row .k-combobox[dir=rtl] .k-multiselect-wrap,
+.k-grid-edit-row .k-combobox[dir=rtl] .k-numeric-wrap,
+.k-grid-edit-row .k-combobox[dir=rtl] .k-picker-wrap,
+.k-grid-edit-row .k-dateinput[dir=rtl] .k-dateinput-wrap,
+.k-grid-edit-row .k-dateinput[dir=rtl] .k-dropdown-wrap,
+.k-grid-edit-row .k-dateinput[dir=rtl] .k-multiselect-wrap,
+.k-grid-edit-row .k-dateinput[dir=rtl] .k-numeric-wrap,
+.k-grid-edit-row .k-dateinput[dir=rtl] .k-picker-wrap,
+.k-grid-edit-row .k-datepicker[dir=rtl] .k-dateinput-wrap,
+.k-grid-edit-row .k-datepicker[dir=rtl] .k-dropdown-wrap,
+.k-grid-edit-row .k-datepicker[dir=rtl] .k-multiselect-wrap,
+.k-grid-edit-row .k-datepicker[dir=rtl] .k-numeric-wrap,
+.k-grid-edit-row .k-datepicker[dir=rtl] .k-picker-wrap,
+.k-grid-edit-row .k-datetimepicker[dir=rtl] .k-dateinput-wrap,
+.k-grid-edit-row .k-datetimepicker[dir=rtl] .k-dropdown-wrap,
+.k-grid-edit-row .k-datetimepicker[dir=rtl] .k-multiselect-wrap,
+.k-grid-edit-row .k-datetimepicker[dir=rtl] .k-numeric-wrap,
+.k-grid-edit-row .k-datetimepicker[dir=rtl] .k-picker-wrap,
+.k-grid-edit-row .k-dropdown[dir=rtl] .k-dateinput-wrap,
+.k-grid-edit-row .k-dropdown[dir=rtl] .k-dropdown-wrap,
+.k-grid-edit-row .k-dropdown[dir=rtl] .k-multiselect-wrap,
+.k-grid-edit-row .k-dropdown[dir=rtl] .k-numeric-wrap,
+.k-grid-edit-row .k-dropdown[dir=rtl] .k-picker-wrap,
+.k-grid-edit-row .k-multiselect[dir=rtl] .k-dateinput-wrap,
+.k-grid-edit-row .k-multiselect[dir=rtl] .k-dropdown-wrap,
+.k-grid-edit-row .k-multiselect[dir=rtl] .k-multiselect-wrap,
+.k-grid-edit-row .k-multiselect[dir=rtl] .k-numeric-wrap,
+.k-grid-edit-row .k-multiselect[dir=rtl] .k-picker-wrap,
+.k-grid-edit-row .k-numerictextbox[dir=rtl] .k-dateinput-wrap,
+.k-grid-edit-row .k-numerictextbox[dir=rtl] .k-dropdown-wrap,
+.k-grid-edit-row .k-numerictextbox[dir=rtl] .k-multiselect-wrap,
+.k-grid-edit-row .k-numerictextbox[dir=rtl] .k-numeric-wrap,
+.k-grid-edit-row .k-numerictextbox[dir=rtl] .k-picker-wrap,
+.k-grid-edit-row .k-timepicker[dir=rtl] .k-dateinput-wrap,
+.k-grid-edit-row .k-timepicker[dir=rtl] .k-dropdown-wrap,
+.k-grid-edit-row .k-timepicker[dir=rtl] .k-multiselect-wrap,
+.k-grid-edit-row .k-timepicker[dir=rtl] .k-numeric-wrap,
+.k-grid-edit-row .k-timepicker[dir=rtl] .k-picker-wrap,
+.k-grid-edit-row [dir=rtl].k-dropdowntree .k-dateinput-wrap,
+.k-grid-edit-row [dir=rtl].k-dropdowntree .k-dropdown-wrap,
+.k-grid-edit-row [dir=rtl].k-dropdowntree .k-multiselect-wrap,
+.k-grid-edit-row [dir=rtl].k-dropdowntree .k-numeric-wrap,
+.k-grid-edit-row [dir=rtl].k-dropdowntree .k-picker-wrap,
+.k-rtl .k-edit-cell .k-autocomplete .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-autocomplete .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-autocomplete .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-autocomplete .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-autocomplete .k-picker-wrap,
+.k-rtl .k-edit-cell .k-combobox .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-combobox .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-combobox .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-combobox .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-combobox .k-picker-wrap,
+.k-rtl .k-edit-cell .k-dateinput .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-dateinput .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-dateinput .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-dateinput .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-dateinput .k-picker-wrap,
+.k-rtl .k-edit-cell .k-datepicker .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-datepicker .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-datepicker .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-datepicker .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-datepicker .k-picker-wrap,
+.k-rtl .k-edit-cell .k-datetimepicker .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-datetimepicker .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-datetimepicker .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-datetimepicker .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-datetimepicker .k-picker-wrap,
+.k-rtl .k-edit-cell .k-dropdown .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-dropdown .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-dropdown .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-dropdown .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-dropdown .k-picker-wrap,
+.k-rtl .k-edit-cell .k-dropdowntree .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-dropdowntree .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-dropdowntree .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-dropdowntree .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-dropdowntree .k-picker-wrap,
+.k-rtl .k-edit-cell .k-multiselect .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-multiselect .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-multiselect .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-multiselect .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-multiselect .k-picker-wrap,
+.k-rtl .k-edit-cell .k-numerictextbox .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-numerictextbox .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-numerictextbox .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-numerictextbox .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-numerictextbox .k-picker-wrap,
+.k-rtl .k-edit-cell .k-timepicker .k-dateinput-wrap,
+.k-rtl .k-edit-cell .k-timepicker .k-dropdown-wrap,
+.k-rtl .k-edit-cell .k-timepicker .k-multiselect-wrap,
+.k-rtl .k-edit-cell .k-timepicker .k-numeric-wrap,
+.k-rtl .k-edit-cell .k-timepicker .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-autocomplete .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-autocomplete .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-autocomplete .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-autocomplete .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-autocomplete .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-combobox .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-combobox .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-combobox .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-combobox .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-combobox .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-dateinput .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-dateinput .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-dateinput .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-dateinput .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-dateinput .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-datepicker .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-datepicker .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-datepicker .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-datepicker .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-datepicker .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-datetimepicker .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-datetimepicker .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-datetimepicker .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-datetimepicker .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-datetimepicker .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-dropdown .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-dropdown .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-dropdown .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-dropdown .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-dropdown .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-dropdowntree .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-dropdowntree .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-dropdowntree .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-dropdowntree .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-dropdowntree .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-multiselect .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-multiselect .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-multiselect .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-multiselect .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-multiselect .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-numerictextbox .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-numerictextbox .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-numerictextbox .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-numerictextbox .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-numerictextbox .k-picker-wrap,
+.k-rtl .k-grid-edit-row .k-timepicker .k-dateinput-wrap,
+.k-rtl .k-grid-edit-row .k-timepicker .k-dropdown-wrap,
+.k-rtl .k-grid-edit-row .k-timepicker .k-multiselect-wrap,
+.k-rtl .k-grid-edit-row .k-timepicker .k-numeric-wrap,
+.k-rtl .k-grid-edit-row .k-timepicker .k-picker-wrap {
+  padding-left: 4px;
+  padding-right: 16px;
+}
+.k-edit-cell .k-autocomplete[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-edit-cell .k-combobox[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-edit-cell .k-dateinput[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-edit-cell .k-datepicker[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-edit-cell .k-datetimepicker[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-edit-cell .k-dropdown[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-edit-cell .k-multiselect[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-edit-cell .k-numerictextbox[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-edit-cell .k-timepicker[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-edit-cell [dir=rtl].k-dropdowntree .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-autocomplete[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-combobox[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-dateinput[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-datepicker[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-datetimepicker[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-dropdown[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-multiselect[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-numerictextbox[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row .k-timepicker[dir=rtl] .k-dropdown-wrap > .k-clear-value,
+.k-grid-edit-row [dir=rtl].k-dropdowntree .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-autocomplete .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-combobox .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-dateinput .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-datepicker .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-datetimepicker .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-dropdown .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-dropdowntree .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-multiselect .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-numerictextbox .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-timepicker .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-autocomplete .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-combobox .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-dateinput .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-datepicker .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-datetimepicker .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-dropdown .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-dropdowntree .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-multiselect .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-numerictextbox .k-dropdown-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-timepicker .k-dropdown-wrap > .k-clear-value {
+  right: auto;
+  left: 24px;
+}
+.k-edit-cell .k-autocomplete[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-edit-cell .k-combobox[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-edit-cell .k-dateinput[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-edit-cell .k-datepicker[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-edit-cell .k-datetimepicker[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-edit-cell .k-dropdown[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-edit-cell .k-multiselect[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-edit-cell .k-numerictextbox[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-edit-cell .k-timepicker[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-edit-cell [dir=rtl].k-dropdowntree .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-autocomplete[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-combobox[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-dateinput[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-datepicker[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-datetimepicker[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-dropdown[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-multiselect[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-numerictextbox[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row .k-timepicker[dir=rtl] .k-multiselect-wrap > .k-clear-value,
+.k-grid-edit-row [dir=rtl].k-dropdowntree .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-autocomplete .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-combobox .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-dateinput .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-datepicker .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-datetimepicker .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-dropdown .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-dropdowntree .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-multiselect .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-numerictextbox .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-edit-cell .k-timepicker .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-autocomplete .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-combobox .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-dateinput .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-datepicker .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-datetimepicker .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-dropdown .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-dropdowntree .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-multiselect .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-numerictextbox .k-multiselect-wrap > .k-clear-value,
+.k-rtl .k-grid-edit-row .k-timepicker .k-multiselect-wrap > .k-clear-value {
+  right: auto;
+  left: 8px;
+}
 .k-edit-cell .k-textbox,
 .k-edit-cell .k-textbox.k-input,
 .k-grid-edit-row .k-textbox,
@@ -6184,7 +6532,6 @@ div.k-grid-header {
 .k-header {
   border-color: rgba(0, 0, 0, 0.12);
 }
-.k-drag-clue,
 .k-grid-add-row,
 .k-grid-footer,
 .k-grid-header,
@@ -6192,6 +6539,10 @@ div.k-grid-header {
 .k-grouping-header {
   color: rgba(0, 0, 0, 0.54);
   background-color: #fff;
+}
+.k-drag-clue {
+  color: #000;
+  background-color: #ededed;
 }
 .k-grid-content {
   background-color: #fff;
@@ -6225,6 +6576,11 @@ tbody .k-group-cell {
 }
 .k-grid tr.k-alt {
   background-color: transparent;
+}
+.k-grid tbody tr.k-state-hover,
+.k-grid tbody tr:hover {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: rgba(0, 0, 0, 0.07);
 }
 .k-grid td.k-state-selected,
 .k-grid tr.k-state-selected {
@@ -6292,6 +6648,7 @@ th.k-sorted {
   background-color: #f5f5f5;
   box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.12);
 }
+.k-grid tbody tr.k-state-hover,
 .k-grid tbody tr:hover,
 .k-grid td.k-state-focused,
 .k-grid th.k-state-focused {
@@ -6347,9 +6704,10 @@ th.k-sorted {
 .k-grouping-header .k-group-indicator .k-link .k-icon {
   color: rgba(0, 0, 0, 0.54);
 }
+.k-drag-clue,
 .k-grid-drag-clue {
-  background-color: rgba(0, 0, 0, 0.04);
-  color: rgba(0, 0, 0, 0.87);
+  background-color: #ededed;
+  color: #000;
   box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.02), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12);
 }
 .k-grouping-dropclue,
@@ -6390,42 +6748,68 @@ th.k-sorted {
 .k-columnmenu-actions .k-button {
   box-shadow: none;
 }
-.k-tabstrip {
+.k-tabstrip-wrapper {
+  padding: 0;
+  border-style: solid;
+}
+.k-tabstrip,
+.k-tabstrip-wrapper {
   border-width: 0;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.k-tabstrip > .k-tabstrip-items {
-  border: 0 solid transparent;
+.k-tabstrip {
+  border-color: transparent;
+  color: inherit;
+  background-color: transparent;
+}
+.k-tabstrip-wrapper > .k-tabstrip {
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+.k-tabstrip-items {
+  border-width: 0;
+  border-style: solid;
   border-color: inherit;
-  display: -ms-flexbox;
-  display: flex;
+  outline: 0;
   -ms-flex-direction: row;
   flex-direction: row;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
+}
+.k-tabstrip-items,
+.k-tabstrip-items .k-item {
+  display: -ms-flexbox;
+  display: flex;
   position: relative;
 }
-.k-tabstrip > .k-tabstrip-items .k-item {
+.k-tabstrip-items .k-item {
   margin: 0;
   padding: 0;
-  border: 1px solid transparent;
-  position: relative;
+  border: 0 solid transparent;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  -ms-grid-column-align: stretch;
+  justify-items: stretch;
 }
-.k-tabstrip > .k-tabstrip-items .k-item.k-tab-on-top {
+.k-tabstrip-items .k-tab-on-top {
   z-index: 1;
 }
-.k-tabstrip > .k-tabstrip-items .k-item .k-link {
-  padding: 10px 24px;
+.k-tabstrip-items .k-link {
+  padding: 14px 24px;
   color: inherit;
   cursor: pointer;
   display: -ms-inline-flexbox;
   display: inline-flex;
   vertical-align: middle;
-  -ms-flex: 1 1 0px;
-  flex: 1 1 0;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
   -ms-flex-direction: row;
   flex-direction: row;
   -ms-flex-line-pack: center;
@@ -6433,14 +6817,17 @@ th.k-sorted {
   -ms-flex-align: center;
   align-items: center;
 }
-.k-tabstrip > .k-tabstrip-items .k-item .k-link[data-type=remove] {
-  padding: 4px;
+.k-tabstrip-items .k-link[data-type=remove] {
+  padding: 14px;
   -ms-flex: none;
   flex: none;
 }
+.k-ie11 .k-tabstrip-items {
+  white-space: nowrap;
+}
 .k-tabstrip > .k-content {
-  padding: 4px 16px;
-  border-width: 1px;
+  padding: 14px 24px;
+  border-width: 0;
   border-style: solid;
   border-color: inherit;
   display: none;
@@ -6451,7 +6838,7 @@ th.k-sorted {
 .k-tabstrip > .k-content.k-state-active {
   display: block;
 }
-.k-tabstrip .k-tabstrip-items .k-loading {
+.k-tabstrip-items .k-loading {
   width: 20%;
   height: 0;
   border: 0;
@@ -6463,7 +6850,7 @@ th.k-sorted {
   left: 0;
   transition: width 0.2s linear;
 }
-.k-tabstrip .k-tabstrip-items .k-loading.k-complete {
+.k-tabstrip-items .k-loading.k-complete {
   width: 100%;
   border-top-width: 0;
 }
@@ -6471,7 +6858,7 @@ th.k-sorted {
   position: relative;
 }
 .k-tabstrip.k-tabstrip-scrollable > .k-content {
-  border-width: 1px;
+  border-width: 0;
 }
 .k-tabstrip.k-tabstrip-scrollable > .k-tabstrip-items {
   border-width: 0;
@@ -6494,8 +6881,8 @@ th.k-sorted {
   border-bottom-width: 1px;
 }
 .k-tabstrip-top > .k-tabstrip-items .k-item {
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   margin-bottom: -1px;
 }
 .k-tabstrip-top > .k-tabstrip-items .k-item + .k-item {
@@ -6505,16 +6892,16 @@ th.k-sorted {
   border-bottom-color: transparent;
 }
 .k-tabstrip-top > .k-content {
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
   border-top-width: 0;
 }
 .k-tabstrip-bottom > .k-tabstrip-items {
   border-top-width: 1px;
 }
 .k-tabstrip-bottom > .k-tabstrip-items .k-item {
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
   margin-top: -1px;
 }
 .k-tabstrip-bottom > .k-tabstrip-items .k-item + .k-item {
@@ -6524,8 +6911,8 @@ th.k-sorted {
   border-top-color: transparent;
 }
 .k-tabstrip-bottom > .k-content {
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   border-bottom-width: 0;
 }
 .k-tabstrip-left {
@@ -6540,8 +6927,8 @@ th.k-sorted {
   flex-direction: column;
 }
 .k-tabstrip-left > .k-tabstrip-items .k-item {
-  border-top-left-radius: 2px;
-  border-bottom-left-radius: 2px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   margin-right: -1px;
 }
 .k-tabstrip-left > .k-tabstrip-items .k-item + .k-item {
@@ -6551,8 +6938,8 @@ th.k-sorted {
   border-right-color: transparent;
 }
 .k-tabstrip-left > .k-content {
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
   margin: 0!important;
   border-left-width: 0;
 }
@@ -6568,8 +6955,8 @@ th.k-sorted {
   flex-direction: column;
 }
 .k-tabstrip-right > .k-tabstrip-items .k-item {
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
   margin-left: -1px;
 }
 .k-tabstrip-right > .k-tabstrip-items .k-item + .k-item {
@@ -6579,32 +6966,64 @@ th.k-sorted {
   border-left-color: transparent;
 }
 .k-tabstrip-right > .k-content {
-  border-top-left-radius: 2px;
-  border-bottom-left-radius: 2px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   margin: 0!important;
   border-right-width: 0;
 }
+.k-tabstrip-items .k-item:after {
+  content: "";
+  border-width: 0;
+  border-style: solid;
+  display: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.k-tabstrip-top .k-tabstrip-items .k-item:after {
+  border-bottom-width: 2px;
+}
+.k-tabstrip-bottom .k-tabstrip-items .k-item:after {
+  border-top-width: 2px;
+}
+.k-tabstrip-left .k-tabstrip-items .k-item:after {
+  border-right-width: 2px;
+}
+.k-tabstrip-right .k-tabstrip-items .k-item:after {
+  border-left-width: 2px;
+}
+.k-tabstrip-items .k-item.k-state-active:after {
+  display: block;
+}
+.k-tabstrip-items .k-item > .k-link {
+  z-index: 1;
+}
+.k-rtl .k-tabstrip-left > .k-tabstrip-items,
+.k-rtl .k-tabstrip-right > .k-tabstrip-items,
+.k-tabstrip-left[dir=rtl] > .k-tabstrip-items,
+.k-tabstrip-right[dir=rtl] > .k-tabstrip-items {
+  -ms-flex-order: 1;
+  order: 1;
+}
+.k-rtl .k-tabstrip-left > .k-content,
+.k-rtl .k-tabstrip-right > .k-content,
+.k-tabstrip-left[dir=rtl] > .k-content,
+.k-tabstrip-right[dir=rtl] > .k-content {
+  -ms-flex-order: 0;
+  order: 0;
+}
 .k-tabstrip {
-  color: inherit;
-  background-color: transparent;
+  line-height: 1.42857143;
 }
 .k-tabstrip-items {
   text-transform: uppercase;
 }
-.k-tabstrip-left .k-tabstrip-items {
-  text-align: right;
-}
-.k-tabstrip-top .k-tabstrip-items > .k-item {
-  border-width: 0 0 2px;
-}
-.k-tabstrip-bottom .k-tabstrip-items > .k-item {
-  border-width: 2px 0 0;
-}
-.k-tabstrip-left .k-tabstrip-items > .k-item {
-  border-width: 0 2px 0 0;
-}
-.k-tabstrip-right .k-tabstrip-items > .k-item {
-  border-width: 0 0 0 2px;
+.k-tabstrip-left .k-tabstrip-items .k-link {
+  -ms-flex-pack: end;
+  justify-content: flex-end;
 }
 .k-tabstrip-items > .k-item:not(.k-state-active) {
   opacity: 0.7;
@@ -6613,14 +7032,27 @@ th.k-sorted {
 .k-tabstrip-items > .k-item:not(.k-state-disabled):hover {
   opacity: 1;
 }
-.k-tabstrip .k-tabstrip-items > .k-item.k-state-active {
-  border-color: #3f51b5;
+.k-tabstrip-items {
+  border-color: rgba(0, 0, 0, 0.08);
+  color: inherit;
+}
+.k-tabstrip-items .k-item,
+.k-tabstrip-items .k-item.k-state-active,
+.k-tabstrip-items .k-item.k-state-hover,
+.k-tabstrip-items .k-item.k-state-selected,
+.k-tabstrip-items .k-item:hover {
+  color: inherit;
+}
+.k-tabstrip-items .k-item.k-state-focused {
+  box-shadow: none;
 }
 .k-tabstrip > .k-content {
-  background-color: transparent;
+  border-color: transparent;
   color: inherit;
-  border-width: 0;
-  padding: 10px 24px;
+  background-color: transparent;
+}
+.k-tabstrip-items .k-item.k-state-active:after {
+  border-color: #3f51b5;
 }
 .k-toolbar {
   padding: 0;
@@ -6664,7 +7096,14 @@ th.k-sorted {
 .k-toolbar .k-textbox,
 .k-toolbar .k-widget,
 .k-toolbar label {
-  vertical-align: middle;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  align-self: center;
+}
+.k-toolbar .k-split-button > .k-button {
+  -ms-flex-item-align: stretch;
+  -ms-grid-row-align: stretch;
+  align-self: stretch;
 }
 .k-toolbar .k-button {
   padding: 14px 16px;
@@ -7941,7 +8380,6 @@ th.k-sorted {
 }
 .k-edit-field {
   width: auto;
-  display: block;
   float: none;
   display: -ms-flexbox;
   display: flex;
@@ -7962,6 +8400,9 @@ th.k-sorted {
   display: flex;
   -ms-flex-direction: row;
   flex-direction: row;
+}
+.k-no-flexbox .k-edit-field {
+  display: block;
 }
 .k-window {
   padding: 0;
@@ -8168,13 +8609,13 @@ th.k-sorted {
   border-color: rgba(0, 0, 0, 0.08);
 }
 .k-treeview {
+  padding: 0;
   border-width: 0;
   background: none;
-  line-height: 2;
+  line-height: 1.42857143;
   cursor: default;
   overflow: auto;
   white-space: nowrap;
-  padding: 0;
 }
 .k-treeview .k-content,
 .k-treeview .k-item > .k-group,
@@ -8210,10 +8651,10 @@ th.k-sorted {
   display: block;
 }
 .k-treeview .k-in {
-  border-radius: 2px;
+  border-radius: 0;
   margin: 0;
   padding: 6px 8px;
-  border: 1px solid transparent;
+  border: 0 solid transparent;
   text-decoration: none;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -8223,6 +8664,9 @@ th.k-sorted {
   align-content: center;
   vertical-align: middle;
   position: relative;
+}
+.k-treeview .k-in.k-state-focused {
+  z-index: 1;
 }
 .k-treeview .k-i-collapse,
 .k-treeview .k-i-expand {
@@ -8249,23 +8693,17 @@ th.k-sorted {
   margin-left: 4px;
   margin-right: 0;
 }
-.k-treeview .k-in {
-  border-radius: 0;
-  border-width: 0;
-}
-.k-treeview .k-in.k-state-focused {
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.13);
+.k-treeview {
+  color: rgba(0, 0, 0, 0.87);
 }
 .k-treeview .k-in.k-state-hover,
 .k-treeview .k-in:hover {
-  background: rgba(0, 0, 0, 0.07);
+  background-color: rgba(0, 0, 0, 0.07);
 }
 .k-treeview .k-in.k-state-selected {
-  color: #3f51b5;
-  background-color: transparent;
+  color: #ff4081;
 }
-.k-treeview .k-in.k-state-selected.k-state-hover,
-.k-treeview .k-in.k-state-selected:hover {
+.k-treeview .k-in.k-state-focused {
   background-color: rgba(0, 0, 0, 0.07);
 }
 .k-pivot {
@@ -9428,6 +9866,9 @@ th.k-sorted {
   width: 14px;
   height: 3px;
 }
+.k-colorpicker .k-picker-wrap {
+  overflow: hidden;
+}
 .k-flatcolorpicker {
   border-radius: 2px;
   padding: 0 0 1em;
@@ -9707,8 +10148,8 @@ th.k-sorted {
 .k-datetimepicker .k-dateinput,
 .k-timepicker .k-dateinput {
   width: 100%;
-  -ms-flex: 1 1 0%;
-  flex: 1 1 0%;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
   margin: 0;
 }
 .k-datepicker .k-dateinput-wrap,
@@ -10261,7 +10702,7 @@ th.k-sorted {
   cursor: default;
   opacity: 0.6;
   -webkit-filter: grayscale(0.1);
-  filter: grayscale(0.1);
+          filter: grayscale(0.1);
   pointer-events: none;
   box-shadow: none;
 }
@@ -10341,7 +10782,7 @@ th.k-sorted {
   cursor: default;
   opacity: 0.6;
   -webkit-filter: grayscale(0.1);
-  filter: grayscale(0.1);
+          filter: grayscale(0.1);
   pointer-events: none;
   box-shadow: none;
 }
@@ -10647,31 +11088,40 @@ th.k-sorted {
   box-shadow: none;
   font-size: 16px;
 }
+.k-input.k-textbox.k-state-hover,
 .k-input.k-textbox:hover,
+.k-textarea.k-state-hover,
 .k-textarea:hover,
+.k-textbox.k-state-hover,
 .k-textbox:hover {
   border-color: rgba(0, 0, 0, 0.87);
 }
+.k-input.k-textbox.k-state-focus,
 .k-input.k-textbox:focus,
+.k-textarea.k-state-focus,
 .k-textarea:focus,
+.k-textbox.k-state-focus,
 .k-textbox:focus {
   border-color: #3f51b5;
+}
+.k-input.k-textbox.k-invalid,
+.k-input.k-textbox.k-state-invalid,
+.k-input.k-textbox.ng-invalid.ng-dirty,
+.k-input.k-textbox.ng-invalid.ng-touched,
+.k-textarea.k-invalid,
+.k-textarea.k-state-invalid,
+.k-textarea.ng-invalid.ng-dirty,
+.k-textarea.ng-invalid.ng-touched,
+.k-textbox.k-invalid,
+.k-textbox.k-state-invalid,
+.k-textbox.ng-invalid.ng-dirty,
+.k-textbox.ng-invalid.ng-touched {
+  border-color: #f31700;
 }
 .k-input.k-textbox:disabled,
 .k-textarea:disabled,
 .k-textbox:disabled {
   border-style: dashed;
-}
-.k-input.k-textbox.k-state-invalid:focus,
-.k-input.k-textbox.ng-invalid.ng-dirty,
-.k-input.k-textbox.ng-invalid.ng-touched,
-.k-textarea.k-state-invalid:focus,
-.k-textarea.ng-invalid.ng-dirty,
-.k-textarea.ng-invalid.ng-touched,
-.k-textbox.k-state-invalid:focus,
-.k-textbox.ng-invalid.ng-dirty,
-.k-textbox.ng-invalid.ng-touched {
-  border-color: #f31700;
 }
 .k-input.k-textbox.k-state-disabled,
 .k-textarea.k-state-disabled,
@@ -10884,8 +11334,8 @@ table.k-editor {
   -ms-flex-wrap: nowrap;
   flex-wrap: nowrap;
   overflow: hidden;
-  -ms-flex: 1 1 0%;
-  flex: 1 1 0%;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .k-editor-toolbar li {
   display: -ms-inline-flexbox;
@@ -11399,7 +11849,6 @@ table.k-editor {
 }
 .k-editor-dialog .k-edit-field {
   width: auto;
-  display: block;
   float: none;
   display: -ms-flexbox;
   display: flex;
@@ -11413,6 +11862,9 @@ table.k-editor {
   width: auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
+}
+.k-no-flexbox .k-editor-dialog .k-edit-field {
+  display: block;
 }
 .k-editor-inline.k-state-active,
 .k-editor-inline:hover,
@@ -11477,6 +11929,8 @@ table.k-editor {
   display: flex;
   cursor: pointer;
   margin-left: 16px;
+  -ms-flex-item-align: stretch;
+  align-self: stretch;
 }
 .k-multiselect-wrap .k-button:last-child {
   margin-bottom: 2px;
@@ -11522,6 +11976,11 @@ table.k-editor {
 .k-multiselect-wrap .k-button {
   text-transform: none;
   margin: 4px 4px 0 0;
+}
+.k-multiselect-wrap .k-button .k-select {
+  -ms-flex-item-align: unset;
+  -ms-grid-row-align: unset;
+  align-self: unset;
 }
 .k-multiselect-wrap[dir=rtl] .k-button,
 .k-rtl .k-multiselect-wrap .k-button {
@@ -11613,6 +12072,16 @@ table.k-editor {
   color: rgba(0, 0, 0, 0.54);
   background: hsla(0, 0%, 100%, 0.93);
 }
+.k-multiselect-wrap .k-button.k-state-hover,
+.k-multiselect-wrap .k-button:hover {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.54);
+}
+.k-multiselect-wrap .k-button.k-state-hover .k-select,
+.k-multiselect-wrap .k-button:hover .k-select {
+  color: rgba(0, 0, 0, 0.54);
+  background: #fff;
+}
 .k-multiselect-wrap .k-button.k-state-disabled {
   color: rgba(0, 0, 0, 0.42);
 }
@@ -11666,8 +12135,8 @@ table.k-editor {
   margin-right: 0.5em;
 }
 .k-numeric-wrap > .k-input {
-  -ms-flex: 1 1 0px;
-  flex: 1 1 0;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .k-numeric-wrap > .k-input:invalid {
   box-shadow: none;
@@ -12497,7 +12966,7 @@ html .k-upload {
   border-top-color: #3f51b5;
 }
 li.k-item.k-drag-clue {
-  background-color: rgba(0, 0, 0, 0.07);
+  background-color: #ededed;
   color: #000;
 }
 .k-item.k-drag-clue {
@@ -13150,8 +13619,8 @@ li.k-item.k-drag-clue {
 }
 .k-calendar .k-nav-fast,
 .k-calendar .k-nav-today {
-  -ms-flex: 1 1 0%;
-  flex: 1 1 0%;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .k-calendar .k-content {
   margin: 0;
@@ -13373,7 +13842,7 @@ li.k-item.k-drag-clue {
   cursor: default;
   opacity: 0.6;
   -webkit-filter: grayscale(0.1);
-  filter: grayscale(0.1);
+          filter: grayscale(0.1);
   pointer-events: none;
   box-shadow: none;
   font-weight: 700;
@@ -13674,6 +14143,9 @@ li.k-item.k-drag-clue {
 }
 .k-gantt .k-grid-header tr {
   height: calc(2em + 33px);
+}
+.k-gantt .k-grid-header .k-header {
+  position: static;
 }
 .k-gantt .k-grid-content tr {
   height: calc(2em + 21px);
@@ -15761,6 +16233,9 @@ li.k-item.k-drag-clue {
 .k-panelbar {
   margin: 0;
   padding: 0;
+  border-width: 1px;
+  border-style: solid;
+  line-height: 1.42857143;
   list-style: none;
 }
 .k-panelbar > .k-item {
@@ -15796,13 +16271,17 @@ li.k-item.k-drag-clue {
 .k-panelbar .k-group {
   margin: 0;
   padding: 0;
+  border-width: 0;
+  border-color: inherit;
+  color: inherit;
+  background-color: transparent;
   list-style: none;
 }
 .k-panelbar .k-group > .k-item {
   display: block;
 }
 .k-panelbar .k-group > .k-item > .k-link {
-  padding: 2px 24px;
+  padding: 6px 24px;
   color: inherit;
   text-decoration: none;
   display: -ms-flexbox;
@@ -15830,9 +16309,7 @@ li.k-item.k-drag-clue {
 }
 .k-panelbar .k-link > .k-image,
 .k-panelbar .k-link > .k-sprite {
-  vertical-align: middle;
-  float: left;
-  margin-right: 5px;
+  margin-right: 4px;
 }
 .k-panelbar[dir=rtl] .k-panelbar-collapse,
 .k-panelbar[dir=rtl] .k-panelbar-expand,
@@ -15841,100 +16318,38 @@ li.k-item.k-drag-clue {
   right: auto;
   left: 24px;
 }
+.k-panelbar[dir=rtl] .k-link > .k-image,
+.k-panelbar[dir=rtl] .k-link > .k-sprite,
+.k-rtl .k-panelbar .k-link > .k-image,
+.k-rtl .k-panelbar .k-link > .k-sprite {
+  margin-left: 4px;
+  margin-right: 0;
+}
 .k-panelbar {
-  border-color: rgba(0, 0, 0, 0.08);
   color: rgba(0, 0, 0, 0.87);
   background-color: #fff;
-  background-clip: padding-box;
 }
-.k-edge12 .k-panelbar,
-.k-edge13 .k-panelbar,
-.k-ie11 .k-panelbar {
-  background-clip: border-box;
-}
-.k-panelbar .k-content {
-  color: #000;
-  background-color: #fff;
-}
+.k-panelbar,
 .k-panelbar > .k-item {
-  background-clip: padding-box;
-}
-.k-edge12 .k-panelbar > .k-item,
-.k-edge13 .k-panelbar > .k-item,
-.k-ie11 .k-panelbar > .k-item {
-  background-clip: border-box;
-}
-.k-panelbar > .k-item > .k-link {
-  color: #ff4081;
-}
-.k-panelbar > .k-item > .k-link .k-icon {
-  color: #000;
+  border-color: rgba(0, 0, 0, 0.08);
 }
 .k-panelbar > .k-item > .k-link.k-state-hover,
 .k-panelbar > .k-item > .k-link:hover {
-  color: #e44279;
-  background-color: #f2f2f2;
+  background-color: #ebebeb;
 }
-.k-panelbar > .k-item > .k-link.k-state-selected:not(.k-state-active) .k-icon,
-.k-panelbar > .k-item > .k-link.k-state-selected:not(.k-state-expanded) .k-icon {
-  color: #fff;
+.k-panelbar > .k-item > .k-link.k-state-selected {
+  color: #ff4081;
 }
-.k-panelbar > .k-item > .k-link.k-state-selected:not(.k-state-active).k-state-hover,
-.k-panelbar > .k-item > .k-link.k-state-selected:not(.k-state-active):hover,
-.k-panelbar > .k-item > .k-link.k-state-selected:not(.k-state-expanded).k-state-hover,
-.k-panelbar > .k-item > .k-link.k-state-selected:not(.k-state-expanded):hover {
-  color: #fff;
-  background-color: #3a4ba7;
-}
-.k-panelbar > .k-item.k-state-active > .k-link,
-.k-panelbar > .k-item.k-state-expanded > .k-link {
-  font-weight: 500;
-}
-.k-panelbar > .k-item.k-state-active > .k-link .k-icon,
-.k-panelbar > .k-item.k-state-expanded > .k-link .k-icon {
-  color: #000;
-}
+.k-panelbar .k-group > .k-item > .k-link.k-state-hover,
+.k-panelbar .k-group > .k-item > .k-link:hover,
 .k-panelbar > .k-item > .k-link.k-state-focused {
-  box-shadow: none;
+  background-color: #ebebeb;
 }
-.k-panelbar .k-group {
-  color: #000;
-  background-color: #fff;
-}
-.k-panelbar .k-group > .k-item > .k-link.k-state-hover.k-state-selected,
-.k-panelbar .k-group > .k-item > .k-link:hover.k-state-selected {
-  color: #fff;
-  background-color: #3a4ba7;
+.k-panelbar .k-group > .k-item > .k-link.k-state-selected {
+  color: #ff4081;
 }
 .k-panelbar .k-group > .k-item > .k-link.k-state-focused {
-  box-shadow: none;
-}
-.k-panelbar .k-group {
-  border-width: 1px 0;
-}
-.k-panelbar .k-group:last-of-type {
-  border-width: 1px 0 0;
-}
-.k-panelbar .k-item > .k-link,
-.k-panelbar .k-item > .k-link.k-state-hover,
-.k-panelbar .k-item > .k-link:hover {
-  color: #000;
-}
-.k-panelbar .k-item > .k-link.k-state-selected:not(.k-state-active),
-.k-panelbar .k-item > .k-link.k-state-selected:not(.k-state-expanded) {
-  color: #3f51b5;
-  background-color: transparent;
-}
-.k-panelbar .k-item > .k-link.k-state-selected:not(.k-state-active).k-state-hover,
-.k-panelbar .k-item > .k-link.k-state-selected:not(.k-state-active):hover,
-.k-panelbar .k-item > .k-link.k-state-selected:not(.k-state-expanded).k-state-hover,
-.k-panelbar .k-item > .k-link.k-state-selected:not(.k-state-expanded):hover {
-  color: #3f51b5;
-  background-color: rgba(0, 0, 0, 0.07);
-}
-.k-panelbar .k-item > .k-link.k-state-selected:not(.k-state-active) .k-icon,
-.k-panelbar .k-item > .k-link.k-state-selected:not(.k-state-expanded) .k-icon {
-  color: #000;
+  background-color: #ebebeb;
 }
 .k-progressbar {
   border-radius: 2px;
@@ -16040,6 +16455,7 @@ li.k-item.k-drag-clue {
   justify-content: flex-start;
   left: 0;
   bottom: 0;
+  top: auto;
 }
 .k-progressbar-vertical .k-progress-status {
   -webkit-transform: rotate(-90deg) translateX(-100%);
@@ -16048,6 +16464,7 @@ li.k-item.k-drag-clue {
   -webkit-transform-origin: 0 0;
       -ms-transform-origin: 0 0;
           transform-origin: 0 0;
+  position: absolute;
 }
 .k-progressbar-vertical > .k-state-selected {
   bottom: 0;
@@ -16090,6 +16507,23 @@ li.k-item.k-drag-clue {
 .k-progressbar-indeterminate .k-progress-status-wrap,
 .k-progressbar-indeterminate .k-state-selected {
   display: none;
+}
+.k-progressbar[dir=rtl],
+.k-rtl .k-progressbar {
+  direction: ltr;
+}
+.k-progressbar-horizontal[dir=rtl],
+.k-rtl .k-progressbar-horizontal {
+  -webkit-transform: scaleX(-1);
+      -ms-transform: scaleX(-1);
+          transform: scaleX(-1);
+}
+.k-progressbar-horizontal[dir=rtl] .k-progress-status,
+.k-rtl .k-progressbar-horizontal .k-progress-status {
+  -webkit-transform: scaleX(-1);
+      -ms-transform: scaleX(-1);
+          transform: scaleX(-1);
+  direction: rtl;
 }
 @-webkit-keyframes progressbar-primary-indeterminate-horizontal {
   0% {
@@ -16573,8 +17007,8 @@ li.k-item.k-drag-clue {
 }
 .k-card-body {
   padding: 16px;
-  -ms-flex: 1 1 0px;
-  flex: 1 1 0;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .k-card-body p {
   margin: 0 0 12px;
@@ -16796,9 +17230,15 @@ li.k-item.k-drag-clue {
 }
 .k-card {
   color: rgba(0, 0, 0, 0.87);
-  background-color: #fff;
 }
 .k-card,
+.k-card-header {
+  border-color: rgba(0, 0, 0, 0.08);
+  background-color: #fff;
+}
+.k-card-header {
+  color: #000;
+}
 .k-card-actions {
   border-color: rgba(0, 0, 0, 0.08);
 }
