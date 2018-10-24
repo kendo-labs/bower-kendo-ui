@@ -2338,7 +2338,7 @@
                     if (type !== 'destroy') {
                         models[idx].accept(response[idx]);
                         if (type === 'create') {
-                            pristine.push(serverGroup ? that._wrapInEmptyGroup(models[idx]) : response[idx]);
+                            pristine.push(serverGroup ? that._wrapInEmptyGroup(models[idx].toJSON()) : response[idx]);
                         } else if (type === 'update') {
                             that._updatePristineForModel(models[idx], response[idx]);
                         }
@@ -3124,7 +3124,7 @@
                 for (idx = groups.length - 1, length = 0; idx >= length; idx--) {
                     group = groups[idx];
                     parent = {
-                        value: model.get(group.field),
+                        value: model.get ? model.get(group.field) : model[group.field],
                         field: group.field,
                         items: parent ? [parent] : [model],
                         hasSubgroups: !!parent,

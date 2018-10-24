@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.1017'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.1024'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -7449,7 +7449,7 @@
                     if (type !== 'destroy') {
                         models[idx].accept(response[idx]);
                         if (type === 'create') {
-                            pristine.push(serverGroup ? that._wrapInEmptyGroup(models[idx]) : response[idx]);
+                            pristine.push(serverGroup ? that._wrapInEmptyGroup(models[idx].toJSON()) : response[idx]);
                         } else if (type === 'update') {
                             that._updatePristineForModel(models[idx], response[idx]);
                         }
@@ -8235,7 +8235,7 @@
                 for (idx = groups.length - 1, length = 0; idx >= length; idx--) {
                     group = groups[idx];
                     parent = {
-                        value: model.get(group.field),
+                        value: model.get ? model.get(group.field) : model[group.field],
                         field: group.field,
                         items: parent ? [parent] : [model],
                         hasSubgroups: !!parent,
