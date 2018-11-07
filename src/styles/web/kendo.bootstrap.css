@@ -1173,11 +1173,6 @@ div.k-filebrowser-dropzone em {
 .k-inset {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
 }
-.k-editor-inline ::-moz-selection {
-  background-color: #428bca;
-  text-shadow: none;
-  color: #fff;
-}
 .k-editor-inline ::selection {
   background-color: #428bca;
   text-shadow: none;

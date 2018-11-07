@@ -515,7 +515,6 @@
                     icons = $('<span unselectable="on" class="k-select">' + '<span class="k-link k-link-date" aria-label="' + options.dateButtonText + '"><span unselectable="on" class="k-icon k-i-calendar"></span></span>' + '<span class="k-link k-link-time" aria-label="' + options.timeButtonText + '"><span unselectable="on" class="k-icon k-i-clock"></span></span>' + '</span>').insertAfter(element);
                 }
                 icons = icons.children();
-                icons = icons.children();
                 that._dateIcon = icons.eq(0).attr('aria-controls', that.dateView._dateViewID);
                 that._timeIcon = icons.eq(1).attr('aria-controls', that.timeView._timeViewID);
             },

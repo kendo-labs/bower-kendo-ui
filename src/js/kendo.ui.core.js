@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.1024'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.1107'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -15233,7 +15233,7 @@
                 }
                 if (options.info) {
                     if (total > 0) {
-                        html = kendo.format(options.messages.display, that.dataSource.options.endless ? 1 : Math.min((page - 1) * pageSize + 1, collapsedTotal), Math.min(page * pageSize, collapsedTotal), total);
+                        html = kendo.format(options.messages.display, that.dataSource.options.endless ? 1 : Math.min((page - 1) * (that.dataSource.pageSize() || 0) + 1, collapsedTotal), Math.min(page * pageSize, collapsedTotal), total);
                     } else {
                         html = options.messages.empty;
                     }
@@ -16390,10 +16390,10 @@
                 that.dimensions = DIMENSIONS[axis];
                 that._documentKeyDownHandler = proxy(that._documentKeyDown, that);
                 that.element.on(that.options.showOn + NS, that.options.filter, proxy(that._showOn, that));
-                if (!this._isShownOnFocus()) {
+                if (this._isShownOnMouseEnter() || this._isShownOnClick()) {
                     that.element.on('mouseenter' + NS, that.options.filter, proxy(that._mouseenter, that));
                 }
-                if (this.options.autoHide && !this._isShownOnFocus()) {
+                if (this.options.autoHide && this._isShownOnMouseEnter()) {
                     that.element.on('mouseleave' + NS, that.options.filter, proxy(that._mouseleave, that));
                 }
                 if (this.options.autoHide && this._isShownOnFocus()) {
@@ -16432,13 +16432,19 @@
             _isShownOnFocus: function () {
                 return this.options.showOn && this.options.showOn.match(/focus/);
             },
+            _isShownOnMouseEnter: function () {
+                return this.options.showOn && this.options.showOn.match(/mouseenter/);
+            },
+            _isShownOnClick: function () {
+                return this.options.showOn && this.options.showOn.match(/click/);
+            },
             _mouseenter: function (e) {
                 saveTitleAttributes($(e.currentTarget));
             },
             _showOn: function (e) {
                 var that = this;
                 var currentTarget = $(e.currentTarget);
-                if (that.options.showOn && that.options.showOn.match(/click/)) {
+                if (that._isShownOnClick() && !that._isShownOnMouseEnter()) {
                     that._show(currentTarget);
                 } else if (that._isShownOnFocus()) {
                     saveTitleAttributes(currentTarget);
@@ -16584,7 +16590,7 @@
                 });
                 that.content = wrapper.find('.k-tooltip-content');
                 that.arrow = wrapper.find('.k-callout');
-                if (options.autoHide && !this._isShownOnFocus()) {
+                if (options.autoHide && this._isShownOnMouseEnter()) {
                     wrapper.on('mouseleave' + NS, proxy(that._mouseleave, that));
                 } else {
                     wrapper.on('click' + NS, '.k-tooltip-button', proxy(that._closeButtonClick, that));
@@ -26365,7 +26371,7 @@
                     that._firstItem();
                 } else if (key === keys.END) {
                     that._lastItem();
-                } else if (key === keys.ENTER || key === keys.TAB) {
+                } else if (key === keys.ENTER || key === keys.TAB && that.popup.visible()) {
                     var current = that.listView.focus();
                     var dataItem = that.dataItem();
                     var shouldTrigger = true;
@@ -26430,6 +26436,7 @@
             },
             _search: function () {
                 var that = this;
+                clearTimeout(that._typingTimeout);
                 that._typingTimeout = setTimeout(function () {
                     var value = that.text();
                     if (that._prev !== value) {
@@ -27364,6 +27371,7 @@
             },
             _search: function () {
                 var that = this;
+                clearTimeout(that._typingTimeout);
                 that._typingTimeout = setTimeout(function () {
                     var value = that._inputValue();
                     if (that._prev !== value) {
@@ -39099,7 +39107,6 @@
                 if (!icons[0]) {
                     icons = $('<span unselectable="on" class="k-select">' + '<span class="k-link k-link-date" aria-label="' + options.dateButtonText + '"><span unselectable="on" class="k-icon k-i-calendar"></span></span>' + '<span class="k-link k-link-time" aria-label="' + options.timeButtonText + '"><span unselectable="on" class="k-icon k-i-clock"></span></span>' + '</span>').insertAfter(element);
                 }
-                icons = icons.children();
                 icons = icons.children();
                 that._dateIcon = icons.eq(0).attr('aria-controls', that.dateView._dateViewID);
                 that._timeIcon = icons.eq(1).attr('aria-controls', that.timeView._timeViewID);

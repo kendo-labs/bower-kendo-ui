@@ -132,10 +132,10 @@
                 that.dimensions = DIMENSIONS[axis];
                 that._documentKeyDownHandler = proxy(that._documentKeyDown, that);
                 that.element.on(that.options.showOn + NS, that.options.filter, proxy(that._showOn, that));
-                if (!this._isShownOnFocus()) {
+                if (this._isShownOnMouseEnter() || this._isShownOnClick()) {
                     that.element.on('mouseenter' + NS, that.options.filter, proxy(that._mouseenter, that));
                 }
-                if (this.options.autoHide && !this._isShownOnFocus()) {
+                if (this.options.autoHide && this._isShownOnMouseEnter()) {
                     that.element.on('mouseleave' + NS, that.options.filter, proxy(that._mouseleave, that));
                 }
                 if (this.options.autoHide && this._isShownOnFocus()) {
@@ -174,13 +174,19 @@
             _isShownOnFocus: function () {
                 return this.options.showOn && this.options.showOn.match(/focus/);
             },
+            _isShownOnMouseEnter: function () {
+                return this.options.showOn && this.options.showOn.match(/mouseenter/);
+            },
+            _isShownOnClick: function () {
+                return this.options.showOn && this.options.showOn.match(/click/);
+            },
             _mouseenter: function (e) {
                 saveTitleAttributes($(e.currentTarget));
             },
             _showOn: function (e) {
                 var that = this;
                 var currentTarget = $(e.currentTarget);
-                if (that.options.showOn && that.options.showOn.match(/click/)) {
+                if (that._isShownOnClick() && !that._isShownOnMouseEnter()) {
                     that._show(currentTarget);
                 } else if (that._isShownOnFocus()) {
                     saveTitleAttributes(currentTarget);
@@ -326,7 +332,7 @@
                 });
                 that.content = wrapper.find('.k-tooltip-content');
                 that.arrow = wrapper.find('.k-callout');
-                if (options.autoHide && !this._isShownOnFocus()) {
+                if (options.autoHide && this._isShownOnMouseEnter()) {
                     wrapper.on('mouseleave' + NS, proxy(that._mouseleave, that));
                 } else {
                     wrapper.on('click' + NS, '.k-tooltip-button', proxy(that._closeButtonClick, that));

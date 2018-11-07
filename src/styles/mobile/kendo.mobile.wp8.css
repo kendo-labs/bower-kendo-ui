@@ -5361,11 +5361,6 @@ body:before {
   background: Background;
   color: #fff;
 }
-.km-wp input::-moz-selection,
-.km-wp textarea::-moz-selection {
-  color: HighlightText;
-  background: Highlight;
-}
 .km-wp input::selection,
 .km-wp textarea::selection {
   color: HighlightText;
