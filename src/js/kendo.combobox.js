@@ -837,7 +837,7 @@
                     wrapper = element.hide().wrap('<span />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                 }
-                that.wrapper = wrapper.addClass('k-widget k-combobox k-header').addClass(element[0].className).css('display', '');
+                that.wrapper = wrapper.addClass('k-widget k-combobox').addClass(element[0].className).css('display', '');
             },
             _clearSelection: function (parent, isFiltered) {
                 var that = this;

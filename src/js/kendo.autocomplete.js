@@ -611,7 +611,7 @@
                     height: DOMelement.style.height
                 });
                 that._focused = that.element;
-                that.wrapper = wrapper.addClass('k-widget k-autocomplete k-header').addClass(DOMelement.className);
+                that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className);
             }
         });
         ui.plugin(AutoComplete);

@@ -1603,7 +1603,7 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-filter-menu .k-button[type=reset]:active {
   background-color: #990000;
 }
-.k-autocomplete.k-state-default,
+.k-autocomplete,
 .k-picker-wrap.k-state-default,
 .k-numeric-wrap.k-state-default,
 .k-dropdown-wrap.k-state-default {

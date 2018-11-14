@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.1107'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.1114'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -22588,7 +22588,7 @@
                     width: '100%',
                     height: element[0].style.height
                 });
-                that.wrapper = wrapper.addClass('k-widget k-datepicker k-header').addClass(element[0].className);
+                that.wrapper = wrapper.addClass('k-widget k-datepicker').addClass(element[0].className);
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {
@@ -24574,7 +24574,7 @@
                     height: DOMelement.style.height
                 });
                 that._focused = that.element;
-                that.wrapper = wrapper.addClass('k-widget k-autocomplete k-header').addClass(DOMelement.className);
+                that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className);
             }
         });
         ui.plugin(AutoComplete);
@@ -25523,7 +25523,7 @@
                     wrapper[0].style.cssText = DOMelement.style.cssText;
                     wrapper[0].title = DOMelement.title;
                 }
-                that._focused = that.wrapper = wrapper.addClass('k-widget k-dropdown k-header').addClass(DOMelement.className).css('display', '').attr({
+                that._focused = that.wrapper = wrapper.addClass('k-widget k-dropdown').addClass(DOMelement.className).css('display', '').attr({
                     accesskey: element.attr('accesskey'),
                     unselectable: 'on',
                     role: 'listbox',
@@ -26460,7 +26460,7 @@
                     wrapper = element.hide().wrap('<span />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                 }
-                that.wrapper = wrapper.addClass('k-widget k-combobox k-header').addClass(element[0].className).css('display', '');
+                that.wrapper = wrapper.addClass('k-widget k-combobox').addClass(element[0].className).css('display', '');
             },
             _clearSelection: function (parent, isFiltered) {
                 var that = this;
@@ -26800,7 +26800,7 @@
             _clearClick: function () {
                 var that = this;
                 if (that.options.tagMode === 'single') {
-                    that.value([]);
+                    that.listView.value([]);
                 } else {
                     that.tagList.children().each(function (index, tag) {
                         that._removeTag($(tag), false);
@@ -30024,7 +30024,7 @@
                     that.close();
                 }
             },
-            _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker k-header">' + '<span class="k-picker-wrap k-state-default">' + '# if (toolIcon) { #' + '<span class="k-icon k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"><span class="k-icon k-i-line" style="display: none;"></span></span>' + '# } #' + '<span class="k-select" unselectable="on" aria-label="select">' + '<span class="k-icon k-i-arrow-60-down"></span>' + '</span>' + '</span>' + '</span>'),
+            _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker">' + '<span class="k-picker-wrap k-state-default">' + '# if (toolIcon) { #' + '<span class="k-icon k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"><span class="k-icon k-i-line" style="display: none;"></span></span>' + '# } #' + '<span class="k-select" unselectable="on" aria-label="select">' + '<span class="k-icon k-i-arrow-60-down"></span>' + '</span>' + '</span>' + '</span>'),
             options: {
                 name: 'ColorPicker',
                 palette: null,
@@ -38580,7 +38580,7 @@
                     wrapper = wrapper.wrap(SPAN).parent();
                 }
                 wrapper[0].style.cssText = element[0].style.cssText;
-                that.wrapper = wrapper.addClass('k-widget k-timepicker k-header').addClass(element[0].className);
+                that.wrapper = wrapper.addClass('k-widget k-timepicker').addClass(element[0].className);
                 element.css({
                     width: '100%',
                     height: element[0].style.height
@@ -39123,7 +39123,7 @@
                     width: '100%',
                     height: element[0].style.height
                 });
-                that.wrapper = wrapper.addClass('k-widget k-datetimepicker k-header').addClass(element[0].className);
+                that.wrapper = wrapper.addClass('k-widget k-datetimepicker').addClass(element[0].className);
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {

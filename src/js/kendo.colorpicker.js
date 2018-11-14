@@ -609,7 +609,7 @@
                     that.close();
                 }
             },
-            _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker k-header">' + '<span class="k-picker-wrap k-state-default">' + '# if (toolIcon) { #' + '<span class="k-icon k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"><span class="k-icon k-i-line" style="display: none;"></span></span>' + '# } #' + '<span class="k-select" unselectable="on" aria-label="select">' + '<span class="k-icon k-i-arrow-60-down"></span>' + '</span>' + '</span>' + '</span>'),
+            _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-widget k-colorpicker">' + '<span class="k-picker-wrap k-state-default">' + '# if (toolIcon) { #' + '<span class="k-icon k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"><span class="k-icon k-i-line" style="display: none;"></span></span>' + '# } #' + '<span class="k-select" unselectable="on" aria-label="select">' + '<span class="k-icon k-i-arrow-60-down"></span>' + '</span>' + '</span>' + '</span>'),
             options: {
                 name: 'ColorPicker',
                 palette: null,

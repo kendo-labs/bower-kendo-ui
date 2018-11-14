@@ -1585,7 +1585,7 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-pager-nav.k-pager-first {
   border-radius: 4px 0 0 4px;
 }
-.k-autocomplete.k-state-default,
+.k-autocomplete,
 .k-picker-wrap.k-state-default,
 .k-numeric-wrap.k-state-default,
 .k-dropdown-wrap.k-state-default {
@@ -2241,7 +2241,7 @@ thead.k-grid-header th.k-header:last-child {
   border-color: #76abd9;
   background-color: #fff;
 }
-.k-autocomplete.k-state-default,
+.k-autocomplete,
 .k-picker-wrap.k-state-default,
 .k-numeric-wrap.k-state-default,
 .k-dropdown-wrap.k-state-default,
@@ -2261,7 +2261,7 @@ thead.k-grid-header th.k-header:last-child {
 .k-progressbar > .k-state-selected {
   box-shadow: none;
 }
-.k-autocomplete.k-state-default .k-input,
+.k-autocomplete .k-input,
 .k-combobox .k-state-default .k-input,
 .k-picker-wrap.k-state-default .k-input,
 .k-numeric-wrap.k-state-default .k-input,

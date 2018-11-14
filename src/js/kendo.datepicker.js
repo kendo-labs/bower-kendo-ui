@@ -487,7 +487,7 @@
                     width: '100%',
                     height: element[0].style.height
                 });
-                that.wrapper = wrapper.addClass('k-widget k-datepicker k-header').addClass(element[0].className);
+                that.wrapper = wrapper.addClass('k-widget k-datepicker').addClass(element[0].className);
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {
