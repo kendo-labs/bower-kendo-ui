@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.1114'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.1122'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -24406,8 +24406,10 @@
                             field: that.options.dataTextField,
                             ignoreCase: that.ignoreCase
                         }).done(function () {
-                            that._resetFocusItem();
-                            that.popup.open();
+                            if (that._allowOpening()) {
+                                that._resetFocusItem();
+                                that.popup.open();
+                            }
                         });
                     }
                     e.preventDefault();
@@ -41021,7 +41023,7 @@
                 return that;
             },
             title: function (title) {
-                var that = this, value, encoded = true, wrapper = that.wrapper, titleBar = wrapper.children(KWINDOWTITLEBAR), titleElement = titleBar.children(KWINDOWTITLE), titleBarHeight;
+                var that = this, value, encoded = true, wrapper = that.wrapper, titleBar = wrapper.children(KWINDOWTITLEBAR), titleElement = titleBar.children(KWINDOWTITLE), titleBarHeight, display, visibility;
                 if (!arguments.length) {
                     return titleElement.html();
                 }
@@ -41042,7 +41044,23 @@
                     } else {
                         titleElement.html(encoded ? kendo.htmlEncode(value) : value);
                     }
-                    titleBarHeight = parseInt(outerHeight(titleBar), 10);
+                    visibility = wrapper.css('visibility');
+                    display = wrapper.css('display');
+                    if (visibility === HIDDEN) {
+                        wrapper.css({ display: '' });
+                        titleBarHeight = parseInt(outerHeight(titleBar), 10);
+                        wrapper.css({ display: display });
+                    } else {
+                        wrapper.css({
+                            visibility: HIDDEN,
+                            display: ''
+                        });
+                        titleBarHeight = parseInt(outerHeight(titleBar), 10);
+                        wrapper.css({
+                            visibility: visibility,
+                            display: display
+                        });
+                    }
                     wrapper.css('padding-top', titleBarHeight);
                     titleBar.css('margin-top', -titleBarHeight);
                 }
