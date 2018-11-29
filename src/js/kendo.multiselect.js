@@ -591,6 +591,7 @@
                 var visible = that.popup.visible();
                 var dir = 0;
                 var activeItemIdx;
+                var persistTagList;
                 if (key !== keys.ENTER) {
                     this._multipleSelection = false;
                 }
@@ -738,9 +739,14 @@
                 } else if ((key === keys.DELETE || key === keys.BACKSPACE) && !hasValue) {
                     that._state = ACCEPT;
                     if (that.options.tagMode === 'single') {
+                        persistTagList = that.persistTagList;
+                        if (persistTagList) {
+                            that.persistTagList = false;
+                        }
                         listView.value([]);
                         that._change();
                         that._close();
+                        that.persistTagList = persistTagList;
                         return;
                     }
                     if (key === keys.BACKSPACE && !tag) {

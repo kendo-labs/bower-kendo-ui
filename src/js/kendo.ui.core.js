@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.1122'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.1129'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1298,7 +1298,7 @@
             if (!element.parent().hasClass('k-animation-container')) {
                 var width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height);
                 percentage = percentWidth || percentHeight;
-                if (!percentWidth && (!autosize || autosize && width)) {
+                if (!percentWidth && (!autosize || autosize && width || element.hasClass('k-tooltip'))) {
                     width = autosize ? outerWidth(element) + 1 : outerWidth(element);
                 }
                 if (!percentHeight && (!autosize || autosize && height)) {
@@ -16565,6 +16565,7 @@
                         autoHide: options.autoHide
                     }));
                 that.popup = new Popup(wrapper, extend({
+                    autosize: true,
                     activate: function () {
                         var anchor = this.options.anchor, ariaId = anchor[0].id || that.element[0].id;
                         if (ariaId) {
@@ -17262,6 +17263,9 @@
             var getSibling = dir === 'next' ? $.fn.next : $.fn.prev;
             var getter = dir === 'next' ? $.fn.first : $.fn.last;
             var candidate = getSibling.call(element);
+            if (!candidate.length && element.is('.' + OVERFLOW_ANCHOR)) {
+                return element;
+            }
             if (candidate.is(':kendoFocusable') || !candidate.length) {
                 return candidate;
             }
@@ -17710,21 +17714,27 @@
                     if (element.is('.' + OVERFLOW_ANCHOR)) {
                         element = findFocusableSibling(element, 'next');
                     }
-                    element[0].focus();
+                    if (element.length) {
+                        element[0].focus();
+                    }
                 }).on('keydown', proxy(that._keydown, that));
             },
             _keydown: function (e) {
                 var target = $(e.target), keyCode = e.keyCode, items = this.element.children(':not(.k-separator):visible'), direction = this._isRtl ? -1 : 1;
                 if (keyCode === keys.TAB) {
-                    var element = target.parentsUntil(this.element).last(), lastHasFocus = false, firstHasFocus = false;
+                    var element = target.parentsUntil(this.element).last(), lastHasFocus = false, firstHasFocus = false, isOnlyOverflowAnchor = false;
+                    if (!items.not('.' + OVERFLOW_ANCHOR).length) {
+                        isOnlyOverflowAnchor = true;
+                    }
                     if (!element.length) {
                         element = target;
                     }
-                    if (element.is('.' + OVERFLOW_ANCHOR)) {
+                    if (element.is('.' + OVERFLOW_ANCHOR) && !isOnlyOverflowAnchor) {
+                        var lastItemNotOverflowAnchor = items.last();
                         if (e.shiftKey) {
                             e.preventDefault();
                         }
-                        if (items.last().is(':kendoFocusable')) {
+                        if (lastItemNotOverflowAnchor.is(':kendoFocusable')) {
                             items.last().focus();
                         } else {
                             items.last().find(':kendoFocusable').last().focus();
@@ -17745,11 +17755,11 @@
                             firstHasFocus = true;
                         }
                     }
-                    if (lastHasFocus && this.overflowAnchor && this.overflowAnchor.css('visibility') !== 'hidden') {
+                    if (lastHasFocus && this.overflowAnchor && this.overflowAnchor.css('visibility') !== 'hidden' && !isOnlyOverflowAnchor) {
                         e.preventDefault();
                         this.overflowAnchor.focus();
                     }
-                    if (firstHasFocus) {
+                    if (firstHasFocus || isOnlyOverflowAnchor && e.shiftKey) {
                         e.preventDefault();
                         var prevFocusable = this._getPrevFocusable(this.wrapper);
                         if (prevFocusable) {
@@ -27064,6 +27074,7 @@
                 var visible = that.popup.visible();
                 var dir = 0;
                 var activeItemIdx;
+                var persistTagList;
                 if (key !== keys.ENTER) {
                     this._multipleSelection = false;
                 }
@@ -27211,9 +27222,14 @@
                 } else if ((key === keys.DELETE || key === keys.BACKSPACE) && !hasValue) {
                     that._state = ACCEPT;
                     if (that.options.tagMode === 'single') {
+                        persistTagList = that.persistTagList;
+                        if (persistTagList) {
+                            that.persistTagList = false;
+                        }
                         listView.value([]);
                         that._change();
                         that._close();
+                        that.persistTagList = persistTagList;
                         return;
                     }
                     if (key === keys.BACKSPACE && !tag) {
@@ -28049,7 +28065,7 @@
             var l = ref.l;
             var r, g, b;
             if (s === 0) {
-                r = g = b = l / 100;
+                r = g = b = l;
             } else {
                 h /= 360;
                 s /= 100;
@@ -39874,17 +39890,17 @@
             },
             _closeClick: function (e) {
                 e.preventDefault();
-                this.close();
+                this.close(false);
             },
             _closeKeyHandler: function (e) {
                 if (buttonKeyTrigger(e) || e.keyCode == keys.ESC) {
-                    this.close();
+                    this.close(false);
                 }
             },
             _keydown: function (e) {
                 var that = this, options = that.options, keyCode = e.keyCode;
                 if (keyCode == keys.ESC && !that._closing && options.closable) {
-                    that.close();
+                    that.close(false);
                 }
             },
             _createDialog: function () {
@@ -39981,7 +39997,7 @@
                 if (buttonKeyTrigger(e)) {
                     this._runActionBtn(e.currentTarget);
                 } else if (e.keyCode == keys.ESC) {
-                    this.close();
+                    this.close(false);
                 }
             },
             _runActionBtn: function (target) {
@@ -39991,7 +40007,7 @@
                 }
                 var action = $(target).data('action'), preventClose = isFunction(action) && action({ sender: that }) === false;
                 if (!preventClose) {
-                    that.close();
+                    that.close(false);
                 }
             },
             _triggerOpen: function () {
@@ -40078,8 +40094,11 @@
                 wrapper = null;
                 return that;
             },
-            close: function () {
-                this._close(true);
+            close: function (systemTriggered) {
+                if (!arguments.length) {
+                    systemTriggered = true;
+                }
+                this._close(systemTriggered);
                 this._stopCenterOnResize();
                 return this;
             },

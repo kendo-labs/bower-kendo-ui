@@ -1606,11 +1606,14 @@ html .km-pane-wrapper .km-widget,
   border-color: #cccccc;
 }
 .k-multiselect-wrap.k-state-hover,
-.k-state-hover > .k-multiselect-wrap,
-.k-multiselect-wrap.k-state-hover {
+.k-state-hover > .k-multiselect-wrap {
   border-color: #aeaeae;
   background-color: #fff;
   color: #fff;
+}
+.k-multiselect-wrap.k-state-hover .k-clear-value,
+.k-state-hover > .k-multiselect-wrap .k-clear-value {
+  color: #333333;
 }
 .k-autocomplete.k-state-focused,
 .k-picker-wrap.k-state-focused,

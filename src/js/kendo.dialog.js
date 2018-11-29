@@ -209,17 +209,17 @@
             },
             _closeClick: function (e) {
                 e.preventDefault();
-                this.close();
+                this.close(false);
             },
             _closeKeyHandler: function (e) {
                 if (buttonKeyTrigger(e) || e.keyCode == keys.ESC) {
-                    this.close();
+                    this.close(false);
                 }
             },
             _keydown: function (e) {
                 var that = this, options = that.options, keyCode = e.keyCode;
                 if (keyCode == keys.ESC && !that._closing && options.closable) {
-                    that.close();
+                    that.close(false);
                 }
             },
             _createDialog: function () {
@@ -316,7 +316,7 @@
                 if (buttonKeyTrigger(e)) {
                     this._runActionBtn(e.currentTarget);
                 } else if (e.keyCode == keys.ESC) {
-                    this.close();
+                    this.close(false);
                 }
             },
             _runActionBtn: function (target) {
@@ -326,7 +326,7 @@
                 }
                 var action = $(target).data('action'), preventClose = isFunction(action) && action({ sender: that }) === false;
                 if (!preventClose) {
-                    that.close();
+                    that.close(false);
                 }
             },
             _triggerOpen: function () {
@@ -413,8 +413,11 @@
                 wrapper = null;
                 return that;
             },
-            close: function () {
-                this._close(true);
+            close: function (systemTriggered) {
+                if (!arguments.length) {
+                    systemTriggered = true;
+                }
+                this._close(systemTriggered);
                 this._stopCenterOnResize();
                 return this;
             },

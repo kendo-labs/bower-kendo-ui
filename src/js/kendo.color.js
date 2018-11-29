@@ -428,7 +428,7 @@
             var l = ref.l;
             var r, g, b;
             if (s === 0) {
-                r = g = b = l / 100;
+                r = g = b = l;
             } else {
                 h /= 360;
                 s /= 100;
