@@ -770,6 +770,11 @@ input.k-textbox:active {
   background-color: #ff4350;
   border-color: #ff4350;
 }
+.k-multiselect.k-state-disabled .k-button {
+  color: #fff;
+  background-color: #ff9fa5;
+  border-color: #ff9fa5;
+}
 .k-list-optionlabel {
   border-color: transparent;
 }

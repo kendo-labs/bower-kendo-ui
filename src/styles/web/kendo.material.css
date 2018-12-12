@@ -2562,7 +2562,7 @@ td.k-group-cell,
 .k-gantt-toolbar .k-button:focus:active:not(.k-state-disabled):not([disabled]) {
   box-shadow: none;
 }
-.k-multiselect .k-button:active:hover {
+.k-multiselect:not(.k-state-disabled) .k-button:active:hover {
   color: #444444;
   background-color: #dbdbdb;
   border-color: #dbdbdb;

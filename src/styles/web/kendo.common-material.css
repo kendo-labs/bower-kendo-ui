@@ -6914,6 +6914,7 @@ span.k-tooltip {
   vertical-align: middle;
   padding: 0.28571428em 0;
   overflow: hidden;
+  min-height: 2.4375em;
 }
 .k-toolbar .k-button .k-sprite,
 .k-overflow-container .k-button .k-sprite {
@@ -13048,8 +13049,9 @@ div.k-spreadsheet-window {
 .k-multiselect .k-i-loading {
   bottom: 10px;
 }
-.k-multiselect > .k-multiselect-wrap > .k-i-close {
-  top: 10px;
+.k-multiselect > .k-multiselect-wrap > .k-i-close,
+.k-dropdowntree > .k-multiselect-wrap > .k-i-close {
+  top: calc(1.214285715em - 7px);
 }
 .k-autocomplete > .k-i-close,
 .k-multiselect > .k-multiselect-wrap > .k-i-close {

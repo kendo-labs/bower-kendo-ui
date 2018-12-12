@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.1205'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2018.3.1212'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -27945,11 +27945,8 @@
                 default:
                     break;
                 }
-                h *= 60;
-                s *= 100;
-                l *= 100;
             }
-            return new HSL(h, s, l, this.a);
+            return new HSL(h * 60, s * 100, l * 100, this.a);
         },
         toBytes: function () {
             return new Bytes(this.r * 255, this.g * 255, this.b * 255, this.a);
@@ -28060,16 +28057,13 @@
         },
         toRGB: function () {
             var ref = this;
-            var h = ref.h;
-            var s = ref.s;
-            var l = ref.l;
+            var h = ref.h / 360;
+            var s = ref.s / 100;
+            var l = ref.l / 100;
             var r, g, b;
             if (s === 0) {
                 r = g = b = l;
             } else {
-                h /= 360;
-                s /= 100;
-                l /= 100;
                 var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
                 var p = 2 * l - q;
                 r = hue2rgb(p, q, h + 1 / 3);
