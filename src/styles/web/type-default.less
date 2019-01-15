@@ -31,40 +31,42 @@
 //Button
 @button-text-color: @normal-text-color;
 @button-background-color: saturate(@base, 1%);
-@button-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
+@button-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 18%), 0.5);
 @button-gradient: @widget-gradient;
 @button-shadow: false;
 @button-hover-text-color: @hover-text-color;
-@button-hover-background-color: @hover-background;
+@button-hover-background-color: contrast(@background, lighten(@hover-background, 5%), darken(@hover-background, 8%), 0.5);
 @button-hover-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 20%), 0.5);
 @button-hover-gradient: @hover-gradient;
 @button-hover-shadow: false;
-@button-active-background: @accent;
-@button-active-text-color: @selected-text-color;
-@button-active-border-color: contrast(@selected-background, lighten(@accent, 1%), darken(@accent, 13%), 0.5);
+@button-active-background: contrast(@background, darken(@accent, 2%), darken(@selected-background, 2%), 0.5);
+@button-active-text-color: contrast(@button-active-background, @normal-text-color, @background, 0.4);
+@button-active-border-color: @button-active-background;
 @button-active-gradient: @selected-gradient;
 @button-active-shadow: false;
-@button-focused-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
-@button-focused-shadow: inset 0 0 3px 1px contrast(@base, @hover-border-color, lighten(@hover-border-color, 20%), 0.5);
-@button-focused-active-shadow: inset 0 0 3px 1px darken(@selected-border-color, 10%);
+@button-focused-border-color: contrast(@accent, lighten(@accent, 1%), darken(@accent, 4%), 0.5);
+@button-focused-shadow: 0 0 2px 1px contrast(@base, @accent, lighten(@accent, 20%), 0.5);
+@button-focused-active-shadow:  @button-focused-shadow;
+
 // Primary button
-@primary-text-color: lighten(@selected-text-color, 12%);
-@primary-background-color: lighten(@accent, 7%);
-@primary-border-color: contrast(@base, lighten(@accent, 3%), darken(@accent, 3%), 0.5);
-@primary-gradient: @selected-gradient;
+@primary-color-desatured: desaturate(@accent, 13%);
+@primary-text-color: contrast(@accent, @normal-text-color, @background, 0.4);
+@primary-background-color: @accent;
+@primary-border-color: contrast(@base, lighten(@primary-color-desatured, 3%), darken(@primary-color-desatured, 3%), 0.5);
+@primary-gradient: @widget-gradient;
 @primary-shadow: false;
-@primary-hover-text-color: lighten(@selected-text-color, 12%);
-@primary-hover-background-color: lighten(@accent, 3%);
-@primary-hover-border-color: contrast(@base, lighten(@hover-background, 1%), darken(@hover-background, 20%), 0.5);
+@primary-hover-text-color: @primary-text-color;
+@primary-hover-background-color: contrast(@background, lighten(@accent, 5%), darken(@accent, 5%), 0.5);
+@primary-hover-border-color: @primary-border-color;
 @primary-hover-gradient: @hover-gradient;
 @primary-hover-shadow: false;
-@primary-active-text-color: desaturate(@selected-text-color, 9%);
-@primary-active-background-color: desaturate(@accent, 1%);
-@primary-active-border-color: contrast(@selected-background, lighten(@accent, 1%), darken(@accent, 13%), 0.5);
+@primary-active-text-color: contrast(@primary-active-background-color, @normal-text-color, @background, 0.4);
+@primary-active-background-color: contrast(@background, darken(@accent, 2%), darken(@selected-background, 2%), 0.5);
+@primary-active-border-color: @primary-active-background-color;
 @primary-active-gradient: @selected-gradient;
 @primary-active-shadow: false;
-@primary-focused-border-color: darken(@primary-background-color, 10%);
-@primary-focused-shadow: 0 0 3px 0 @accent;
+@primary-focused-border-color: darken(@primary-hover-background-color, 2%);
+@primary-focused-shadow: 0 0 2px 1px contrast(@background, @accent, @selected-background, 0.5);
 @primary-focused-active-shadow: @primary-focused-shadow;
 @primary-disabled-text-color: darken(@selected-text-color, 10%);
 @primary-disabled-background-color: lighten(@accent, 8%);
@@ -171,15 +173,6 @@
 @inner-border-radius: (@border-radius - 1);
 @slider-border-radius: 13px;
 @default-icon-opacity: 0.9;
-@calendar-border-radius: 4px;
-@calendar-content-text-color: saturate(@normal-text-color, 1%);
-@calendar-footer-background: @background;
-@calendar-footer-text-decoration: none;
-@calendar-footer-hover-text-decoration: underline;
-@calendar-footer-hover-background: @background;
-@calendar-header-hover-text-decoration: none;
-@calendar-header-hover-background: @hover-background;
-@calendar-footer-active-background: @background;
 @menu-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
 @tabstrip-items-border: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
 @tabstrip-active-background: desaturate(@background, 1%);
@@ -188,7 +181,6 @@
 @drop-down-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
 @drop-down-hover-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 20%), 0.5);
 @drop-down-focused-border-color: contrast(@base, lighten(@background, 1%), darken(@background, 26%), 0.5);
-@calendar-group-background-color: contrast(@base, lighten(@background, 4%), darken(@background, 4%), 0.5);
 @drop-down-background: contrast(@selected-background, lighten(@base, 1%), darken(@base, 9%), 0.5);
 @drop-down-text-color: @normal-text-color;
 @secondary-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
@@ -204,6 +196,11 @@
 @disabled-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
 @disabled-gradient: @normal-gradient;
 @input-validation-error: @error;
+
+
+// Link
+@link-text: @accent;
+@link-hovered-text: contrast(@base, darken(@link-text, 4), lighten(@link-text, 4), .5);
 
 
 // component
@@ -265,6 +262,134 @@
 @grid-selected-text: @selected-text-color;
 @grid-selected-border: @grid-border;
 @grid-selected-gradient: @selected-gradient;
+
+
+// Calendar
+@calendar-bg: @component-bg;
+@calendar-text: @component-text;
+@calendar-border: @component-border;
+
+@calendar-header-bg: @header-background-color;
+@calendar-header-text: @header-text-color;
+@calendar-header-border: @calendar-border;
+@calendar-header-gradient: @header-gradient;
+
+@calendar-header-cell-bg: contrast(@calendar-bg, lighten(@calendar-bg, 4), darken(@calendar-bg, 4), .5);
+@calendar-header-cell-text: @calendar-text;
+@calendar-header-cell-border: @calendar-border;
+
+@calendar-week-cell-bg: @calendar-header-cell-bg;
+@calendar-week-cell-text: @calendar-header-cell-text;
+@calendar-week-cell-border: @calendar-header-cell-border;
+
+@calendar-weekend-cell-bg: transparent;
+@calendar-weekend-cell-text: null;
+@calendar-weekend-cell-border: null;
+
+@calendar-othermonth-cell-bg: null;
+@calendar-othermonth-cell-text: @disabled-text-color;
+@calendar-othermonth-cell-border: null;
+
+@calendar-cell-hovered-bg: @button-hover-background-color;
+@calendar-cell-hovered-text: @button-hover-text-color;
+@calendar-cell-hovered-border: @button-hover-border-color;
+
+@calendar-cell-selected-bg: @selected-background-color;
+@calendar-cell-selected-text: @selected-text-color;
+@calendar-cell-selected-border: @selected-border-color;
+
+@calendar-cell-focused-shadow: inset @button-focused-shadow;
+
+
+// Dialog
+@dialog-button-stretched-padding-x: 12px;
+@dialog-button-stretched-padding-y: @dialog-button-stretched-padding-x;
+
+// ScrollView
+@scrollview-pagebutton-bg: @button-background-color;
+@scrollview-pagebutton-border: @button-border-color;
+@scrollview-pagebutton-primary-bg: @primary-background-color;
+@scrollview-pagebutton-primary-border: @primary-border-color;
+@scrollview-pagebutton-shadow: @button-shadow;
+
+@scrollview-navigation-color: @selected-text-color;
+@scrollview-navigation-icon-shadow: rgba(0, 0, 0, .3) 0 0 15px;
+@scrollview-navigation-background: rgba(0, 0, 0, 0);
+@scrollview-navigation-default-opacity: .7;
+@scrollview-navigation-hover-opacity: 1;
+@scrollview-navigation-hover-span-bg: transparent;
+
+
+// Switch
+@switch-container-shadow: false;
+@switch-container-hovered-shadow: false;
+@switch-container-focused-shadow: false;
+
+@switch-on-bg: contrast(contrast(@background), @normal-background, @base, .5);
+@switch-on-text: contrast(@background, @accent, white, .5);
+@switch-on-border: contrast(@background, @button-border-color, @switch-on-bg, .5);
+@switch-on-gradient: false;
+@switch-on-shadow: false;
+@switch-on-focused-shadow: 0 0 3px 1px contrast(@background, rgba( black, .3 ), rgba( white, 1), .5);
+
+@switch-on-focused-bg: @switch-on-bg;
+@switch-on-focused-text: @switch-on-text;
+@switch-on-focused-border: contrast(@background, darken(@switch-on-border, 15%), @switch-on-border, .5);
+@switch-on-focused-gradient: @switch-on-gradient;
+
+@switch-on-hovered-bg: @switch-on-bg;
+@switch-on-hovered-text: @switch-on-text;
+@switch-on-hovered-border: @switch-on-focused-border;
+@switch-on-hovered-gradient: false;
+
+@switch-on-handle-bg: @primary-background-color;
+@switch-on-handle-text: @switch-on-text;
+@switch-on-handle-border: @primary-border-color;
+@switch-on-handle-gradient: rgba(255,255,255,.25) 0%, rgba(255,255,255,.0) 100%;
+@switch-on-handle-shadow: false;
+
+@switch-on-handle-focused-bg: @switch-on-handle-bg;
+@switch-on-handle-focused-text: @switch-on-handle-text;
+@switch-on-handle-focused-border: @switch-on-handle-border;
+@switch-on-handle-focused-gradient: @switch-on-handle-gradient;
+
+@switch-on-handle-hovered-bg: @switch-on-handle-bg;
+@switch-on-handle-hovered-text: @switch-on-text;
+@switch-on-handle-hovered-border: @primary-hover-border-color;
+@switch-on-handle-hovered-gradient: rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%;
+
+@switch-off-bg: @switch-on-bg;
+@switch-off-text: @normal-text-color;
+@switch-off-border: @switch-on-border;
+@switch-off-gradient: false;
+@switch-off-shadow: false;
+@switch-off-focused-shadow: @switch-on-focused-shadow;
+
+@switch-off-focused-bg: @switch-off-bg;
+@switch-off-focused-text: @switch-off-text;
+@switch-off-focused-border: @switch-on-focused-border;
+@switch-off-focused-gradient: @switch-off-gradient;
+
+@switch-off-hovered-bg: @switch-off-bg;
+@switch-off-hovered-text: @switch-off-text;
+@switch-off-hovered-border: @switch-on-hovered-border;
+@switch-off-hovered-gradient: false;
+
+@switch-off-handle-bg: @button-background-color;
+@switch-off-handle-text: @switch-off-text;
+@switch-off-handle-border: @button-border-color;
+@switch-off-handle-gradient: @button-gradient;
+@switch-off-handle-shadow: false;
+
+@switch-off-handle-focused-bg: @switch-off-handle-bg;
+@switch-off-handle-focused-text: @switch-off-handle-text;
+@switch-off-handle-focused-border: @switch-off-focused-border;
+@switch-off-handle-focused-gradient: @switch-off-handle-gradient;
+
+@switch-off-handle-hovered-bg: @button-hover-background-color;
+@switch-off-handle-hovered-text: @switch-off-text;
+@switch-off-handle-hovered-border: @switch-off-hovered-border;
+@switch-off-handle-hovered-gradient: @switch-on-handle-hovered-gradient;
 
 // Kendo skin
 
@@ -346,7 +471,6 @@
 .k-panelbar .k-panel,
 .k-panelbar .k-content,
 .k-treemap-tile,
-.k-calendar th,
 .k-slider-track,
 .k-splitbar,
 .k-dropzone-active,
@@ -367,8 +491,6 @@
 .k-grid-footer,
 .k-footer-template td,
 .k-widget .k-status,
-.k-calendar th,
-.k-calendar .k-alt,
 .k-dropzone-hovered,
 .k-popup {
     background-color: @group-background-color;
@@ -482,8 +604,7 @@ textarea.k-textbox:hover,
     color: @header-text-color;
 }
 
-.k-link:link,
-.k-link:visited,
+.k-link,
 .k-nav-current.k-state-hover .k-link
 {
     color: @link-text-color;
@@ -803,96 +924,8 @@ html .km-pane-wrapper .k-header
     border-color: @focused-border-color;
 }
 
-.k-calendar {
-    .k-link {
-        color: @calendar-content-text-color;
-    }
-
-    .k-footer {
-        padding: 0;
-    }
-
-    .k-footer .k-nav-today {
-        color: @form-widget-color;
-        text-decoration: @calendar-footer-text-decoration;
-        background-color: @calendar-footer-background;
-    }
-
-    .k-footer .k-nav-today:hover,
-    .k-footer .k-nav-today.k-state-hover {
-        background-color: @calendar-footer-hover-background;
-        text-decoration: @calendar-footer-hover-text-decoration;
-    }
-
-    .k-footer .k-nav-today:active {
-        background-color: @calendar-footer-active-background;
-    }
-
-    .k-link.k-nav-fast {
-        color: @form-widget-color;
-    }
-
-    .k-nav-fast.k-state-hover {
-        text-decoration: @calendar-header-hover-text-decoration;
-        background-color: @calendar-header-hover-background;
-        color: @hover-text-color;
-    }
-
-    .k-link.k-state-hover {
-        border-radius: @calendar-border-radius;
-    }
-
-    .k-today {
-        box-shadow: inset 0 0 0 1px @accent;
-    }
-
-    .k-today .k-link {
-        color: contrast(@widget-background-color, @accent, @selected-text-color, 0.5);
-        font-weight: bold;
-    }
-
-    td.k-today.k-state-focused,
-    td.k-today.k-state-focused.k-state-hover {
-        box-shadow: @focused-item-shadow;
-    }
-
-    td.k-today.k-state-hover,
-    td.k-today.k-state-selected {
-        box-shadow: none;
-    }
-
-    td.k-today.k-state-hover .k-link {
-        color: @calendar-content-text-color;
-    }
-
-    .k-footer .k-link {
-        border-radius: 0;
-    }
-
-    th {
-        background-color: @calendar-group-background-color;
-    }
-
-    td.k-state-selected.k-state-hover {
-        background-color: saturate(@selected-background-color, 7%);
-        .composite-background(none);
-    }
-
-    td.k-state-selected .k-link,
-    td.k-today.k-state-selected.k-state-hover .k-link {
-        color: @selected-text-color;
-    }
-
-    td.k-state-focused.k-state-selected,
-    td.k-state-selected.k-state-active,
-    td.k-state-selected:active,
-    td.k-state-selected.k-state-hover:active {
-        .box-shadow(@focused-item-shadow);
-    }
-}
-
 .k-window-titlebar .k-link {
-    border-radius: @calendar-border-radius;
+    border-radius: @border-radius;
 }
 
 .k-calendar-container.k-group {
@@ -984,9 +1017,8 @@ td.k-state-focused.k-state-selected
 }
 
 .k-state-hover,
-.k-state-hover:hover,
-.k-splitbar-horizontal-hover:hover,
-.k-splitbar-vertical-hover:hover,
+.k-splitbar-horizontal-hover,
+.k-splitbar-vertical-hover,
 .k-list>.k-state-hover,
 .k-scheduler .k-scheduler-toolbar ul li.k-state-hover,
 .k-pager-wrap .k-link:hover,
@@ -1021,11 +1053,8 @@ td.k-state-focused.k-state-selected
     border-color: @hover-border-color;
 }
 
-.k-textbox:hover,
 .k-state-hover,
-.k-state-hover:hover,
 .k-pager-wrap .k-link:hover,
-.k-other-month.k-state-hover .k-link,
 div.k-filebrowser-dropzone em,
 .k-draghandle:hover,
 .k-listbox .k-item:hover:not(.k-state-disabled)
@@ -1062,7 +1091,6 @@ div.k-filebrowser-dropzone em,
 }
 
 .k-state-hover>.k-link,
-.k-other-month.k-state-hover .k-link,
 div.k-filebrowser-dropzone em
 {
     color: @hover-text-color;
@@ -1106,9 +1134,8 @@ div.k-filebrowser-dropzone em
     color: @error-text-color;
 }
 
-.k-state-disabled
-{
-    opacity:.7;
+.k-state-disabled {
+    opacity: .6;
 }
 
 .k-tile-empty.k-state-selected,
@@ -1120,8 +1147,6 @@ div.k-filebrowser-dropzone em
 
 .k-state-disabled,
 .k-state-disabled .k-link,
-.k-other-month,
-.k-other-month .k-link,
 .k-dropzone em,
 .k-tile-empty strong,
 .k-slider .k-draghandle
@@ -1135,13 +1160,6 @@ div.k-filebrowser-dropzone em
 }
 .k-file .k-upload-status {
     color: @normal-text-color;
-}
-
-.k-decade,
-.k-century {
-    .k-other-month.k-state-hover .k-link {
-        background: none;
-    }
 }
 
 // Progressbar
@@ -1383,14 +1401,12 @@ div.k-filebrowser-dropzone em
 // TreeMap
 
 .k-leaf,
-.k-leaf.k-state-hover:hover
-{
+.k-leaf.k-state-hover {
     color: #fff;
 }
 
 .k-leaf.k-inverse,
-.k-leaf.k-inverse.k-state-hover:hover
-{
+.k-leaf.k-inverse.k-state-hover {
     color: #000;
 }
 
@@ -1634,8 +1650,6 @@ div.k-filebrowser-dropzone em
 .k-numeric-wrap,
 .k-list-container,
 .k-calendar-container,
-.k-calendar td,
-.k-calendar .k-link,
 .k-treeview .k-in,
 .k-editor-inline,
 .k-tooltip,
@@ -2278,7 +2292,7 @@ textarea.k-textbox,
 .k-grid .k-hierarchy-cell .k-icon
 {
     background-color: @icon-background-color;
-    border-radius: @calendar-border-radius;
+    border-radius: @border-radius;
 }
 
 .k-scheduler-table .k-state-hover .k-icon
@@ -2549,7 +2563,7 @@ textarea.k-textbox,
     .k-dialog-buttongroup {
         &.k-dialog-button-layout-stretched {
             .k-button {
-                padding: 12px;
+                padding: @dialog-button-stretched-padding-y @dialog-button-stretched-padding-x;
             }
         }
         &.k-dialog-button-layout-normal {
@@ -2558,6 +2572,28 @@ textarea.k-textbox,
 
             .k-button {
                 border-radius: @border-radius;
+            }
+        }
+    }
+    &.k-window-sm {
+        .k-dialog-buttongroup {
+            &.k-dialog-button-layout-stretched {
+                flex-direction: column;
+
+                .k-button {
+                    flex: 0 0 auto;
+                    padding: (@dialog-button-stretched-padding-y / 2) (@dialog-button-stretched-padding-x / 2);
+                }
+            }
+        }
+    }
+    &.k-window-md {
+        .k-dialog-buttongroup {
+            &.k-dialog-button-layout-stretched {
+
+                .k-button {
+                    padding: (@dialog-button-stretched-padding-y * .7) (@dialog-button-stretched-padding-x * .7);
+                }
             }
         }
     }
@@ -2764,3 +2800,9 @@ textarea.k-textbox,
 .k-grid-list > .k-item.k-last > .k-spacer-cell {
     border-bottom-color: @grid-text;
 }
+
+
+@import "Default/calendar/_theme.less";
+@import "Default/multiviewcalendar/_theme.less";
+@import "Default/scrollview/_theme.less";
+@import "Default/switch/_theme.less";

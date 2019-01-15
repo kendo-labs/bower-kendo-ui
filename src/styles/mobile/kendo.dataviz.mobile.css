@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -15002,27 +15002,12 @@ span.k-sparkline,
   display: none;
 }
 .k-map .k-marker {
-  position: absolute;
   width: 28px;
   height: 40px;
   margin: -40px 0 0 -14px;
+  position: absolute;
   cursor: pointer;
-}
-.k-map .k-marker-pin {
-  background-position: 0px 40px;
-}
-.k-map .k-marker-pin-target {
-  background-position: 0px 0px;
-}
-@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
-  .k-map .k-marker {
-    width: 56px;
-    height: 80px;
-    margin: -80px 0 0 -28px;
-  }
-  .k-map .k-marker-pin {
-    background-position: 0px 80px;
-  }
+  overflow: visible;
 }
 .k-map .k-pos-top {
   top: 0;
@@ -15199,8 +15184,7 @@ div.k-navigator .k-navigator-left {
 .k-treemap-wrap.k-last > .k-treemap-tile {
   padding: 0.3em;
 }
-.k-treemap-tile.k-state-hover,
-.k-treemap-tile.k-state-hover:hover {
+.k-treemap-tile.k-state-hover {
   z-index: 2;
   background-image: none;
 }

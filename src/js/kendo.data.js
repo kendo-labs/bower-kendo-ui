@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -57,7 +57,7 @@
         ]
     };
     (function ($, undefined) {
-        var extend = $.extend, proxy = $.proxy, isPlainObject = $.isPlainObject, isEmptyObject = $.isEmptyObject, isArray = $.isArray, grep = $.grep, ajax = $.ajax, map, each = $.each, noop = $.noop, kendo = window.kendo, isFunction = kendo.isFunction, Observable = kendo.Observable, Class = kendo.Class, STRING = 'string', FUNCTION = 'function', CREATE = 'create', READ = 'read', UPDATE = 'update', DESTROY = 'destroy', CHANGE = 'change', SYNC = 'sync', GET = 'get', ERROR = 'error', REQUESTSTART = 'requestStart', PROGRESS = 'progress', REQUESTEND = 'requestEnd', crud = [
+        var extend = $.extend, proxy = $.proxy, isPlainObject = $.isPlainObject, isEmptyObject = $.isEmptyObject, isArray = $.isArray, grep = $.grep, ajax = $.ajax, map, each = $.each, noop = $.noop, kendo = window.kendo, isFunction = kendo.isFunction, Observable = kendo.Observable, Class = kendo.Class, STRING = 'string', FUNCTION = 'function', ASCENDING = 'asc', CREATE = 'create', READ = 'read', UPDATE = 'update', DESTROY = 'destroy', CHANGE = 'change', SYNC = 'sync', GET = 'get', ERROR = 'error', REQUESTSTART = 'requestStart', PROGRESS = 'progress', REQUESTEND = 'requestEnd', crud = [
                 CREATE,
                 READ,
                 UPDATE,
@@ -1104,18 +1104,38 @@
         function normalizeAggregate(expressions) {
             return isArray(expressions) ? expressions : [expressions];
         }
-        function normalizeGroup(field, dir) {
+        function normalizeGroup(field, dir, compare, skipItemSorting) {
             var descriptor = typeof field === STRING ? {
                     field: field,
-                    dir: dir
+                    dir: dir,
+                    compare: compare,
+                    skipItemSorting: skipItemSorting
                 } : field, descriptors = isArray(descriptor) ? descriptor : descriptor !== undefined ? [descriptor] : [];
             return map(descriptors, function (d) {
                 return {
                     field: d.field,
                     dir: d.dir || 'asc',
-                    aggregates: d.aggregates
+                    aggregates: d.aggregates,
+                    compare: d.compare,
+                    skipItemSorting: d.skipItemSorting
                 };
             });
+        }
+        function normalizeGroupWithoutCompare(field, dir, compare) {
+            var descriptors = normalizeGroup(field, dir, compare);
+            for (var i = 0; i < descriptors.length; i++) {
+                delete descriptors[i].compare;
+            }
+            return descriptors;
+        }
+        function anyGroupDescriptorHasCompare(groupDescriptors) {
+            var descriptors = isArray(groupDescriptors) ? groupDescriptors : [groupDescriptors];
+            for (var i = 0; i < descriptors.length; i++) {
+                if (descriptors[i] && isFunction(descriptors[i].compare)) {
+                    return true;
+                }
+            }
+            return false;
         }
         Query.prototype = {
             toArray: function () {
@@ -1212,10 +1232,11 @@
                 return result;
             },
             groupBy: function (descriptor) {
+                var that = this;
                 if (isEmptyObject(descriptor) || !this.data.length) {
                     return new Query([]);
                 }
-                var field = descriptor.field, sorted = this._sortForGrouping(field, descriptor.dir || 'asc'), accessor = kendo.accessor(field), item, groupValue = accessor.get(sorted[0], field), group = {
+                var field = descriptor.field, sorted = descriptor.skipItemSorting ? this.data : this._sortForGrouping(field, descriptor.dir || 'asc'), accessor = kendo.accessor(field), item, groupValue = accessor.get(sorted[0], field), group = {
                         field: field,
                         value: groupValue,
                         items: []
@@ -1234,6 +1255,7 @@
                     }
                     group.items.push(item);
                 }
+                result = that._sortGroups(result, descriptor);
                 return new Query(result);
             },
             _sortForGrouping: function (field, dir) {
@@ -1249,6 +1271,13 @@
                     return data;
                 }
                 return this.sort(field, dir).toArray();
+            },
+            _sortGroups: function (groups, descriptor) {
+                var result = groups;
+                if (descriptor && isFunction(descriptor.compare)) {
+                    result = new Query(result).order({ compare: descriptor.compare }, descriptor.dir || ASCENDING).toArray();
+                }
+                return result;
             },
             aggregate: function (aggregates) {
                 var idx, len, result = {}, state = {};
@@ -1348,7 +1377,9 @@
         Query.normalizeSort = normalizeSort;
         Query.process = function (data, options, inPlace) {
             options = options || {};
-            var query = new Query(data), group = options.group, sort = normalizeGroup(group || []).concat(normalizeSort(options.sort || [])), total, filterCallback = options.filterCallback, filter = options.filter, skip = options.skip, take = options.take;
+            var group = options.group;
+            var customGroupSort = anyGroupDescriptorHasCompare(normalizeGroup(group || []));
+            var query = new Query(data), groupDescriptorsWithoutCompare = normalizeGroupWithoutCompare(group || []), normalizedSort = normalizeSort(options.sort || []), sort = customGroupSort ? normalizedSort : groupDescriptorsWithoutCompare.concat(normalizedSort), groupDescriptorsWithoutSort, total, filterCallback = options.filterCallback, filter = options.filter, skip = options.skip, take = options.take;
             if (sort && inPlace) {
                 query = query.sort(sort, undefined, undefined, inPlace);
             }
@@ -1365,11 +1396,22 @@
                     data = query.toArray();
                 }
             }
-            if (skip !== undefined && take !== undefined) {
-                query = query.range(skip, take);
-            }
-            if (group) {
+            if (customGroupSort) {
                 query = query.group(group, data);
+                if (skip !== undefined && take !== undefined) {
+                    query = new Query(flatGroups(query.toArray())).range(skip, take);
+                    groupDescriptorsWithoutSort = map(groupDescriptorsWithoutCompare, function (groupDescriptor) {
+                        return extend({}, groupDescriptor, { skipItemSorting: true });
+                    });
+                    query = query.group(groupDescriptorsWithoutSort, data);
+                }
+            } else {
+                if (skip !== undefined && take !== undefined) {
+                    query = query.range(skip, take);
+                }
+                if (group) {
+                    query = query.group(group, data);
+                }
             }
             return {
                 total: total,
@@ -1686,6 +1728,27 @@
             if (idx < dest.length) {
                 dest.splice(idx, dest.length - idx);
             }
+        }
+        function flatGroups(groups, indexFunction) {
+            var result = [];
+            var groupsLength = (groups || []).length;
+            var group;
+            var items;
+            var indexFn = isFunction(indexFunction) ? indexFunction : function (array, index) {
+                return array[index];
+            };
+            for (var groupIndex = 0; groupIndex < groupsLength; groupIndex++) {
+                group = indexFn(groups, groupIndex);
+                if (group.hasSubgroups) {
+                    result = result.concat(flatGroups(group.items));
+                } else {
+                    items = group.items;
+                    for (var itemIndex = 0; itemIndex < items.length; itemIndex++) {
+                        result.push(indexFn(items, itemIndex));
+                    }
+                }
+            }
+            return result;
         }
         function flattenGroups(data) {
             var idx, result = [], length, items, itemIndex;
@@ -2999,7 +3062,7 @@
                         callback.call(that);
                     }
                 };
-                return this._query().then(fn);
+                return this._query().done(fn);
             },
             _query: function (options) {
                 var that = this;
@@ -3208,7 +3271,7 @@
                                     if (options.inPlaceSort) {
                                         processed = that._queryProcess(range.data, { filter: that.filter() });
                                     } else {
-                                        var sort = normalizeGroup(that.group() || []).concat(normalizeSort(that.sort() || []));
+                                        var sort = normalizeGroupWithoutCompare(that.group() || []).concat(normalizeSort(that.sort() || []));
                                         processed = that._queryProcess(range.data, {
                                             sort: sort,
                                             filter: that.filter()

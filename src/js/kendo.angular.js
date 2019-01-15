@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -631,6 +631,7 @@
             MobileDetailButton: 'a',
             ListView: 'ul',
             MobileListView: 'ul',
+            ScrollView: 'div',
             PanelBar: 'ul',
             TreeView: 'ul',
             Menu: 'ul',
@@ -1201,6 +1202,7 @@
                 'MajorTimeHeaderTemplate',
                 'MinorTimeHeaderTemplate'
             ],
+            'ScrollView': ['Template'],
             'PanelBar': ['Template'],
             'TreeView': ['Template'],
             'Validator': ['ErrorTemplate']

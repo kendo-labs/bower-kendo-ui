@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -45,7 +45,11 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', MODAL_NS = '.kendoWindowModal', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KDIALOGCONTENT = '.k-dialog-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', WINDOWEVENTSHANDLED = 'WindowEventsHandled', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', MODAL_NS = '.kendoWindowModal', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KDIALOGCONTENT = '.k-dialog-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', WINDOWEVENTSHANDLED = 'WindowEventsHandled', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl, SIZE = {
+                small: 'k-window-sm',
+                medium: 'k-window-md',
+                large: 'k-window-lg'
+            };
         function defined(x) {
             return typeof x != 'undefined';
         }
@@ -213,6 +217,7 @@
                 var width = options.width;
                 var height = options.height;
                 var maxHeight = options.maxHeight;
+                var sizeClass = options.size;
                 var dimensions = [
                     'minWidth',
                     'minHeight',
@@ -257,6 +262,9 @@
                 }
                 if (!options.visible) {
                     wrapper.hide();
+                }
+                if (sizeClass && SIZE[sizeClass]) {
+                    wrapper.addClass(SIZE[sizeClass]);
                 }
             },
             _position: function () {
@@ -363,25 +371,29 @@
                 container.html(kendo.render(templates.action, actions));
             },
             setOptions: function (options) {
+                var that = this;
+                var sizeClass = that.options.size;
                 var cachedOptions = JSON.parse(JSON.stringify(options));
-                extend(options.position, this.options.position);
+                extend(options.position, that.options.position);
                 extend(options.position, cachedOptions.position);
-                Widget.fn.setOptions.call(this, options);
-                var scrollable = this.options.scrollable !== false;
-                this.restore();
+                Widget.fn.setOptions.call(that, options);
+                var scrollable = that.options.scrollable !== false;
+                that.restore();
                 if (typeof options.title !== 'undefined') {
-                    this.title(options.title);
+                    that.title(options.title);
                 }
-                this._dimensions();
-                this._position();
-                this._resizable();
-                this._draggable();
-                this._actions();
+                that.wrapper.removeClass(SIZE[sizeClass]);
+                that._dimensions();
+                that._position();
+                that._resizable();
+                that._draggable();
+                that._actions();
                 if (typeof options.modal !== 'undefined') {
-                    var visible = this.options.visible !== false;
-                    this._overlay(options.modal && visible);
+                    var visible = that.options.visible !== false;
+                    that._enableDocumentScrolling();
+                    that._overlay(options.modal && visible);
                 }
-                this.element.css(OVERFLOW, scrollable ? '' : 'hidden');
+                that.element.css(OVERFLOW, scrollable ? '' : 'hidden');
             },
             events: [
                 OPEN,
@@ -424,6 +436,7 @@
                 actions: ['Close'],
                 autoFocus: true,
                 modal: false,
+                size: 'auto',
                 resizable: true,
                 draggable: true,
                 minWidth: 90,
@@ -549,6 +562,9 @@
                     overlay = $('<div class=\'k-overlay\' />');
                 }
                 overlay.insertBefore(wrapper[0]).toggle(visible).css(ZINDEX, parseInt(wrapper.css(ZINDEX), 10) - 1);
+                if (this.options.modal.preventScroll && !this.containment) {
+                    this._stopDocumentScrolling();
+                }
                 return overlay;
             },
             _actionForIcon: function (icon) {
@@ -765,8 +781,14 @@
                     } else {
                         this._overlay(false).remove();
                     }
+                    if (options.modal.preventScroll) {
+                        this._enableDocumentScrolling();
+                    }
                 } else if (modals.length) {
                     this._object(modals.last())._overlay(true);
+                    if (options.modal.preventScroll) {
+                        this._stopDocumentScrolling();
+                    }
                 }
             },
             _close: function (systemTriggered) {
@@ -907,16 +929,18 @@
                 }
                 that.options.width = restoreOptions.width;
                 that.options.height = restoreOptions.height;
-                that._enableDocumentScrolling();
-                if (this._containerScrollTop && this._containerScrollTop > 0) {
-                    container.scrollTop(this._containerScrollTop);
+                if (!that.options.modal.preventScroll) {
+                    that._enableDocumentScrolling();
                 }
-                if (this._containerScrollLeft && this._containerScrollLeft > 0) {
-                    container.scrollLeft(this._containerScrollLeft);
+                if (that._containerScrollTop && that._containerScrollTop > 0) {
+                    container.scrollTop(that._containerScrollTop);
+                }
+                if (that._containerScrollLeft && that._containerScrollLeft > 0) {
+                    container.scrollLeft(that._containerScrollLeft);
                 }
                 options.isMaximized = options.isMinimized = false;
-                this.wrapper.removeAttr('tabindex');
-                this.wrapper.removeAttr('aria-labelled-by');
+                that.wrapper.removeAttr('tabindex');
+                that.wrapper.removeAttr('aria-labelled-by');
                 that.resize();
                 return that;
             },

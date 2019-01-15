@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -23,22 +23,41 @@
 
 */
 @input-height: 2.07142857em;
+@input-default-width: 12.4em;
+@input-border-width: 1px;
+@input-padding-x: 0;
 @input-padding-y: 0.17857143em;
 @input-indent: .8em;
+@input-offset: (@input-height + .35em);
+
+@combobox-padding-x: 2.5em;
+
+@input-clear-icon-offset: ~"( (@{input-offset} - @{grid-size})/2 )";
+@combobox-clear-icon-offset: ~"( @{input-offset} + ((@{combobox-padding-x} - @{grid-size})/2) )";
+@multiselect-clear-icon-top-offset: ~"( (@{input-height} - @{grid-size}) / 2 + @{input-padding-y} + 1px )";
+
 @editor-icon-size: 36px;
 @menu-link-padding: 1.071em;
 @button-padding-x: 14px;
 @button-padding-y: 8px;
 @button-padding: @button-padding-y @button-padding-x;
+@button-line-height: (20 / 14);
 @treeview-inner-padding: 0.429em 0.6667em 0.429em 0.5833em;
 @treeview-inner-margin: 1px 0 1px 0.3333em;
 @scheduler-link-padding: 0 1.1em;
 @grid-header-padding: .429em .2em .429em 1em;
+@grid-th-padding: .786em .6em;
 @icon-positioning: "material";
 @spreadsheet-action-bar-font-size: 14px;
 
 @window-border-width: 0;
 @window-border-style: solid;
+
+@window-sizes: {
+    sm: 300px;
+    md: 800px;
+    lg: 1200px;
+};
 
 @window-titlebar-padding-x: 16px;
 @window-titlebar-padding-y: 8px;
@@ -63,14 +82,101 @@
 @grid-cell-padding-x: @grid-padding-x;
 @grid-cell-padding-y: @grid-padding-y;
 
+
+// Calendar
+@calendar-padding-x: 0;
+@calendar-padding-y: 0;
+@calendar-border-width: 1px;
+@calendar-border-radius: 100px;
+@calendar-font-size: 14px;
+@calendar-line-height: (20 / 14);
+
+@calendar-header-padding-x: 4px;
+@calendar-header-padding-y: 4px;
+@calendar-header-border-width: 0;
+@calendar-header-button-padding-x: 8px;
+@calendar-header-button-padding-y: 8px;
+@calendar-header-button-border-width: 0;
+@calendar-header-button-border-radius: @calendar-border-radius;
+
+@calendar-content-padding-x: 0;
+@calendar-content-padding-y: 0;
+
+@calendar-cell-padding-x: .65em;
+@calendar-cell-padding-y: .65em;
+@calendar-cell-border-radius: @calendar-border-radius;
+@calendar-cell-line-height: (20 / 14);
+@calendar-cell-size: ( (38px / 14px ) * 1em );
+
+@calendar-header-cell-padding-x: 2px;
+@calendar-header-cell-padding-y: (@calendar-cell-padding-y / 2);
+@calendar-header-cell-border-width: 0;
+@calendar-header-cell-font-size: 12px;
+@calendar-header-cell-line-height: (20 / 14);
+@calendar-header-cell-size: @calendar-cell-size;
+
+@calendar-meta-cell-size: ( (60px / @calendar-font-size) * 1em );
+
+// Multiviewcalendar
+@multiviewcalendar-font-size: @calendar-font-size;
+@multiviewcalendar-line-height: @calendar-line-height;
+
+@multiviewcalendar-header-padding-x: 16px;
+@multiviewcalendar-header-padding-y: 8px;
+
+@multiviewcalendar-content-padding-x: 16px;
+@multiviewcalendar-content-padding-y: 8px;
+
+@multiviewcalendar-cell-padding-x: @calendar-cell-padding-x;
+@multiviewcalendar-cell-padding-y: @calendar-cell-padding-y;
+@multiviewcalendar-cell-border-radius: @calendar-border-radius;
+@multiviewcalendar-cell-line-height: @calendar-cell-line-height;
+@multiviewcalendar-cell-size: @calendar-cell-size;
+
+@multiviewcalendar-centuryview-cell-padding-x: @multiviewcalendar-cell-padding-x;
+@multiviewcalendar-centuryview-cell-padding-y: @multiviewcalendar-cell-padding-y;
+
+@multiviewcalendar-header-cell-font-size: 12px;
+
+// ScrollView
+@scrollview-pagebutton-size: 8px;
+@scrollview-navigation-size: 4.5em;
+
+@scrollview-pager-offset: 20px;
+@scrollview-pager-item-spacing: 20px;
+@scrollview-pager-item-border-width: 0;
+@scrollview-pager-height: calc(@scrollview-pagebutton-size + (2 * @scrollview-pager-item-border-width) + (@scrollview-pager-item-spacing / 2 ));
+
+// Switch
+@switch-size: 5.4em;
+@switch-border-radius: @switch-size;
+@switch-font-size: 10px;
+
+@switch-track-size: 1.6em;
+@switch-container-border-width: 0;
+@switch-container-padding-x: 0;
+@switch-container-padding-y: @switch-container-padding-x;
+
+@switch-handle-size: 3em;
+@switch-handle-border-radius: @switch-size;
+@switch-handle-border-width: 0;
+
+@switch-label-display: none;
+@switch-label-outer-spacing: 8px;
+@switch-label-inner-spacing: 2px;
+@switch-label-spacing: calc(@switch-label-outer-spacing + @switch-label-inner-spacing);
+
+@switch-label-position: calc(@switch-label-outer-spacing - @switch-container-border-width);
+@switch-label-width: calc(100% - @switch-handle-size - @switch-label-spacing - @switch-container-padding-x);
+@switch-on-left-x: calc(100% - @switch-handle-size);
+
 @import "common/all.less";
 
 @spreadsheet-first-tool-offset: 0;
 @spreadsheet-popup-button-padding: .6em 1.2em .6em 1em;
-@calendar-cell-width: ((38px / 14px) * 1em);
 
 .k-button {
-    line-height: 1.28571428em;
+    line-height: @button-line-height;
     padding: @button-padding;
 }
 
@@ -163,7 +269,7 @@
 
 .k-grid-header th.k-header,
 .k-filter-row th {
-    padding: .786em .6em;
+    padding: @grid-th-padding;
 }
 
 .k-grid-header th.k-header {
@@ -194,7 +300,7 @@
     padding: .5em .5em 0;
 }
 
-.k-filter-menu .k-button {
+.k-filter-menu .k-action-buttons .k-button {
     margin: 0;
     width: 50%;
     border-radius: 0;
@@ -322,33 +428,19 @@
 }
 
 .k-combobox > .k-dropdown-wrap > .k-i-close {
-    right: 3.3em;
+    right: calc(@combobox-clear-icon-offset);
 }
 
 .k-combobox-clearable {
     .k-input {
-        padding-right: 2.5em;
+        padding-right: @combobox-padding-x;
     }
-}
-
-.k-multiselect > .k-multiselect-wrap > .k-i-close {
-    top: (@grid-size/2 - 1px);
 }
 
 .k-autocomplete .k-i-loading,
 .k-multiselect .k-i-loading
 {
     bottom: 10px;
-}
-
-.k-multiselect > .k-multiselect-wrap > .k-i-close,
-.k-dropdowntree > .k-multiselect-wrap > .k-i-close {
-    top: calc((@input-height - @grid-size) / 2 + @input-padding-y + 1px);
-}
-
-.k-autocomplete > .k-i-close,
-.k-multiselect > .k-multiselect-wrap > .k-i-close {
-    right: 10px;
 }
 
 .k-dropdown-wrap,
@@ -378,38 +470,6 @@
 
 .k-datetimepicker .k-picker-wrap .k-icon {
     margin: 0 6px;
-}
-
-.k-calendar .k-header {
-    margin: 0 -5px;
-}
-
-.k-calendar td {
-    padding: 0;
-}
-
-.k-calendar .k-content .k-link {
-    min-height: 2.571em;
-    line-height: 2.571em;
-    padding: 0;
-    text-align: center;
-}
-
-.k-calendar .k-century .k-link {
-    text-align: left;
-    padding: 0 .7em;
-    line-height: 1.3em;
-}
-
-.k-calendar th {
-    border-bottom-width: 0;
-    padding: .714em .45em .714em 0;
-}
-
-.k-calendar .k-footer {
-    border-top-width: 1px;
-    border-top-style: solid;
-    margin: 0 -5px;
 }
 
 .k-popup.k-list-container {
@@ -451,53 +511,8 @@
     padding-right: 3.8em;
 }
 
-.k-button,
-.k-calendar .k-header .k-link,
-.k-calendar .k-footer {
+.k-button {
     text-transform: uppercase;
-}
-
-.k-widget.k-calendar .k-nav-fast
-{
-    width: 65%;
-    height: 2.571em;
-    line-height: 2.571em;
-    margin: 0.429em -0.08333em 0.429em 0;
-}
-
-.k-calendar .k-header .k-icon
-{
-    vertical-align: middle;
-}
-
-.k-widget.k-calendar .k-nav-prev,
-.k-widget.k-calendar .k-nav-next
-{
-    position: absolute;
-    top: 0.429em;
-    line-height: 2.571em;
-    height: 2.571em;
-}
-
-.k-calendar .k-header .k-link.k-nav-prev,
-.k-calendar .k-header .k-link.k-nav-next
-{
-    height: 2.571em;
-    width: 2.571em;
-}
-
-.k-widget.k-calendar .k-nav-prev {
-    left: 0.429em;
-}
-
-.k-widget.k-calendar .k-nav-next {
-    right: 0.429em;
-}
-
-.k-calendar .k-footer .k-nav-today,
-.k-calendar .k-footer > .k-state-disabled
-{
-    padding: 1.143em 0 1.071em;
 }
 
 .k-popup.k-calendar-container {
@@ -1067,14 +1082,12 @@ form.k-filter-menu .k-textbox {
 
 .k-rtl .k-widget.k-autocomplete > .k-i-close,
 .k-rtl .k-widget.k-multiselect > .k-multiselect-wrap > .k-i-close {
-    left: 0;
     right: initial;
-    margin-left: 10px;
     margin-right: 0;
 }
 
 .k-rtl .k-widget.k-combobox > .k-dropdown-wrap > .k-i-close {
-    left: 3.3em;
+    left: calc(@combobox-clear-icon-offset);
     right: initial;
 }
 
@@ -1220,7 +1233,7 @@ div.k-spreadsheet-window {
     .k-combobox-clearable {
 
         .k-input {
-            padding-left: 2.5em;
+            padding-left: @combobox-padding-x;
         }
     }
 

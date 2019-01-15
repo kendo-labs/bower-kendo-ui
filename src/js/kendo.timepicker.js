@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -538,14 +538,17 @@
                 }
             },
             _change: function (value) {
-                var that = this;
+                var that = this, oldValue = that.element.val(), dateChanged;
                 value = that._update(value);
-                if (+that._old != +value) {
+                dateChanged = !kendo.calendar.isEqualDate(that._old, value);
+                var valueUpdated = dateChanged && !that._typing;
+                var textFormatted = oldValue !== that.element.val();
+                if (valueUpdated || textFormatted) {
+                    that.element.trigger(CHANGE);
+                }
+                if (dateChanged) {
                     that._old = value;
                     that._oldText = that.element.val();
-                    if (!that._typing) {
-                        that.element.trigger(CHANGE);
-                    }
                     that.trigger(CHANGE);
                 }
                 that._typing = false;

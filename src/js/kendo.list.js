@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -62,10 +62,11 @@
                 });
                 that.list = $('<div class=\'k-list-container\'/>').append(that.ul).on('mousedown' + ns, proxy(that._listMousedown, that));
                 id = element.attr(ID);
-                if (id) {
-                    that.list.attr(ID, id + '-list');
-                    that.ul.attr(ID, id + '_listbox');
+                if (!id) {
+                    id = kendo.guid();
                 }
+                that.list.attr(ID, id + '-list');
+                that.ul.attr(ID, id + '_listbox');
                 if (options.columns && options.columns.length) {
                     that.ul.removeClass('k-list').addClass('k-grid-list');
                     that._columnsHeader();
@@ -562,7 +563,7 @@
                 } else if (ariaLabelledBy) {
                     focusedElm.attr('aria-labelledby', ariaLabelledBy);
                 } else if (labelElm.length) {
-                    var labelId = labelElm.attr('id') || that._generateLabelId(labelElm, inputId);
+                    var labelId = labelElm.attr('id') || that._generateLabelId(labelElm, inputId || kendo.guid());
                     focusedElm.attr('aria-labelledby', labelId);
                 }
             },

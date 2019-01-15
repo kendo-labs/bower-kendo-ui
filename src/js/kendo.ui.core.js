@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2018.3.1219'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.115'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2021,7 +2021,6 @@
             wrap: wrap,
             deepExtend: deepExtend,
             getComputedStyles: getComputedStyles,
-            webComponents: kendo.webComponents || [],
             isScrollable: isScrollable,
             scrollLeft: scrollLeft,
             size: size,
@@ -3792,7 +3791,8 @@
                     INIT,
                     ROUTE_MISSING,
                     CHANGE,
-                    SAME
+                    SAME,
+                    BACK
                 ], options);
             },
             destroy: function () {
@@ -5168,7 +5168,7 @@
         ]
     };
     (function ($, undefined) {
-        var extend = $.extend, proxy = $.proxy, isPlainObject = $.isPlainObject, isEmptyObject = $.isEmptyObject, isArray = $.isArray, grep = $.grep, ajax = $.ajax, map, each = $.each, noop = $.noop, kendo = window.kendo, isFunction = kendo.isFunction, Observable = kendo.Observable, Class = kendo.Class, STRING = 'string', FUNCTION = 'function', CREATE = 'create', READ = 'read', UPDATE = 'update', DESTROY = 'destroy', CHANGE = 'change', SYNC = 'sync', GET = 'get', ERROR = 'error', REQUESTSTART = 'requestStart', PROGRESS = 'progress', REQUESTEND = 'requestEnd', crud = [
+        var extend = $.extend, proxy = $.proxy, isPlainObject = $.isPlainObject, isEmptyObject = $.isEmptyObject, isArray = $.isArray, grep = $.grep, ajax = $.ajax, map, each = $.each, noop = $.noop, kendo = window.kendo, isFunction = kendo.isFunction, Observable = kendo.Observable, Class = kendo.Class, STRING = 'string', FUNCTION = 'function', ASCENDING = 'asc', CREATE = 'create', READ = 'read', UPDATE = 'update', DESTROY = 'destroy', CHANGE = 'change', SYNC = 'sync', GET = 'get', ERROR = 'error', REQUESTSTART = 'requestStart', PROGRESS = 'progress', REQUESTEND = 'requestEnd', crud = [
                 CREATE,
                 READ,
                 UPDATE,
@@ -6215,18 +6215,38 @@
         function normalizeAggregate(expressions) {
             return isArray(expressions) ? expressions : [expressions];
         }
-        function normalizeGroup(field, dir) {
+        function normalizeGroup(field, dir, compare, skipItemSorting) {
             var descriptor = typeof field === STRING ? {
                     field: field,
-                    dir: dir
+                    dir: dir,
+                    compare: compare,
+                    skipItemSorting: skipItemSorting
                 } : field, descriptors = isArray(descriptor) ? descriptor : descriptor !== undefined ? [descriptor] : [];
             return map(descriptors, function (d) {
                 return {
                     field: d.field,
                     dir: d.dir || 'asc',
-                    aggregates: d.aggregates
+                    aggregates: d.aggregates,
+                    compare: d.compare,
+                    skipItemSorting: d.skipItemSorting
                 };
             });
+        }
+        function normalizeGroupWithoutCompare(field, dir, compare) {
+            var descriptors = normalizeGroup(field, dir, compare);
+            for (var i = 0; i < descriptors.length; i++) {
+                delete descriptors[i].compare;
+            }
+            return descriptors;
+        }
+        function anyGroupDescriptorHasCompare(groupDescriptors) {
+            var descriptors = isArray(groupDescriptors) ? groupDescriptors : [groupDescriptors];
+            for (var i = 0; i < descriptors.length; i++) {
+                if (descriptors[i] && isFunction(descriptors[i].compare)) {
+                    return true;
+                }
+            }
+            return false;
         }
         Query.prototype = {
             toArray: function () {
@@ -6323,10 +6343,11 @@
                 return result;
             },
             groupBy: function (descriptor) {
+                var that = this;
                 if (isEmptyObject(descriptor) || !this.data.length) {
                     return new Query([]);
                 }
-                var field = descriptor.field, sorted = this._sortForGrouping(field, descriptor.dir || 'asc'), accessor = kendo.accessor(field), item, groupValue = accessor.get(sorted[0], field), group = {
+                var field = descriptor.field, sorted = descriptor.skipItemSorting ? this.data : this._sortForGrouping(field, descriptor.dir || 'asc'), accessor = kendo.accessor(field), item, groupValue = accessor.get(sorted[0], field), group = {
                         field: field,
                         value: groupValue,
                         items: []
@@ -6345,6 +6366,7 @@
                     }
                     group.items.push(item);
                 }
+                result = that._sortGroups(result, descriptor);
                 return new Query(result);
             },
             _sortForGrouping: function (field, dir) {
@@ -6360,6 +6382,13 @@
                     return data;
                 }
                 return this.sort(field, dir).toArray();
+            },
+            _sortGroups: function (groups, descriptor) {
+                var result = groups;
+                if (descriptor && isFunction(descriptor.compare)) {
+                    result = new Query(result).order({ compare: descriptor.compare }, descriptor.dir || ASCENDING).toArray();
+                }
+                return result;
             },
             aggregate: function (aggregates) {
                 var idx, len, result = {}, state = {};
@@ -6459,7 +6488,9 @@
         Query.normalizeSort = normalizeSort;
         Query.process = function (data, options, inPlace) {
             options = options || {};
-            var query = new Query(data), group = options.group, sort = normalizeGroup(group || []).concat(normalizeSort(options.sort || [])), total, filterCallback = options.filterCallback, filter = options.filter, skip = options.skip, take = options.take;
+            var group = options.group;
+            var customGroupSort = anyGroupDescriptorHasCompare(normalizeGroup(group || []));
+            var query = new Query(data), groupDescriptorsWithoutCompare = normalizeGroupWithoutCompare(group || []), normalizedSort = normalizeSort(options.sort || []), sort = customGroupSort ? normalizedSort : groupDescriptorsWithoutCompare.concat(normalizedSort), groupDescriptorsWithoutSort, total, filterCallback = options.filterCallback, filter = options.filter, skip = options.skip, take = options.take;
             if (sort && inPlace) {
                 query = query.sort(sort, undefined, undefined, inPlace);
             }
@@ -6476,11 +6507,22 @@
                     data = query.toArray();
                 }
             }
-            if (skip !== undefined && take !== undefined) {
-                query = query.range(skip, take);
-            }
-            if (group) {
+            if (customGroupSort) {
                 query = query.group(group, data);
+                if (skip !== undefined && take !== undefined) {
+                    query = new Query(flatGroups(query.toArray())).range(skip, take);
+                    groupDescriptorsWithoutSort = map(groupDescriptorsWithoutCompare, function (groupDescriptor) {
+                        return extend({}, groupDescriptor, { skipItemSorting: true });
+                    });
+                    query = query.group(groupDescriptorsWithoutSort, data);
+                }
+            } else {
+                if (skip !== undefined && take !== undefined) {
+                    query = query.range(skip, take);
+                }
+                if (group) {
+                    query = query.group(group, data);
+                }
             }
             return {
                 total: total,
@@ -6797,6 +6839,27 @@
             if (idx < dest.length) {
                 dest.splice(idx, dest.length - idx);
             }
+        }
+        function flatGroups(groups, indexFunction) {
+            var result = [];
+            var groupsLength = (groups || []).length;
+            var group;
+            var items;
+            var indexFn = isFunction(indexFunction) ? indexFunction : function (array, index) {
+                return array[index];
+            };
+            for (var groupIndex = 0; groupIndex < groupsLength; groupIndex++) {
+                group = indexFn(groups, groupIndex);
+                if (group.hasSubgroups) {
+                    result = result.concat(flatGroups(group.items));
+                } else {
+                    items = group.items;
+                    for (var itemIndex = 0; itemIndex < items.length; itemIndex++) {
+                        result.push(indexFn(items, itemIndex));
+                    }
+                }
+            }
+            return result;
         }
         function flattenGroups(data) {
             var idx, result = [], length, items, itemIndex;
@@ -8110,7 +8173,7 @@
                         callback.call(that);
                     }
                 };
-                return this._query().then(fn);
+                return this._query().done(fn);
             },
             _query: function (options) {
                 var that = this;
@@ -8319,7 +8382,7 @@
                                     if (options.inPlaceSort) {
                                         processed = that._queryProcess(range.data, { filter: that.filter() });
                                     } else {
-                                        var sort = normalizeGroup(that.group() || []).concat(normalizeSort(that.sort() || []));
+                                        var sort = normalizeGroupWithoutCompare(that.group() || []).concat(normalizeSort(that.sort() || []));
                                         processed = that._queryProcess(range.data, {
                                             sort: sort,
                                             filter: that.filter()
@@ -14615,7 +14678,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up', msie = kendo.support.browser.msie, supportEventDelegation = false;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECT = 'unselect', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up,label.k-checkbox-label.k-no-text', msie = kendo.support.browser.msie, supportEventDelegation = false;
         (function ($) {
             (function () {
                 $('<div class="parent"><span /></div>').on('click', '>*', function () {
@@ -14646,7 +14709,10 @@
                     that.userEvents.bind('start', proxy(that._start, that)).bind('move', proxy(that._move, that)).bind('end', proxy(that._end, that)).bind('select', proxy(that._select, that));
                 }
             },
-            events: [CHANGE],
+            events: [
+                CHANGE,
+                UNSELECT
+            ],
             options: {
                 name: 'Selectable',
                 filter: '>*',
@@ -14802,6 +14868,9 @@
                 return this.trigger(name, args);
             },
             _unselect: function (element) {
+                if (this.trigger(UNSELECT, { element: element })) {
+                    return;
+                }
                 element.removeClass(SELECTED);
                 if (this.options.aria) {
                     element.attr(ARIASELECTED, false);
@@ -14895,7 +14964,7 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, keys = kendo.keys, CLICK = 'click', KBUTTON = 'k-button', KBUTTONICON = 'k-button-icon', KBUTTONICONTEXT = 'k-button-icontext', NS = '.kendoButton', DISABLED = 'disabled', DISABLEDSTATE = 'k-state-disabled', FOCUSEDSTATE = 'k-state-focused', SELECTEDSTATE = 'k-state-active';
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, keys = kendo.keys, CLICK = 'click', MOUSEDOWN = kendo.support.mousedown, MOUSEUP = kendo.support.mouseup, KBUTTON = 'k-button', KBUTTONICON = 'k-button-icon', KBUTTONICONTEXT = 'k-button-icontext', NS = '.kendoButton', DISABLED = 'disabled', DISABLEDSTATE = 'k-state-disabled', FOCUSEDSTATE = 'k-state-focused', SELECTEDSTATE = 'k-state-active';
         var Button = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -14909,7 +14978,7 @@
                     that._tabindex();
                 }
                 that.iconElement();
-                element.on(CLICK + NS, proxy(that._click, that)).on('focus' + NS, proxy(that._focus, that)).on('blur' + NS, proxy(that._blur, that)).on('keydown' + NS, proxy(that._keydown, that)).on('keyup' + NS, proxy(that._keyup, that));
+                element.on(CLICK + NS, proxy(that._click, that)).on('focus' + NS, proxy(that._focus, that)).on('blur' + NS, proxy(that._blur, that)).on('keydown' + NS, proxy(that._keydown, that)).on('keyup' + NS, proxy(that._removeActive, that)).on(MOUSEDOWN + NS, proxy(that._addActive, that)).on(MOUSEUP + NS, proxy(that._removeActive, that));
                 kendo.notify(that);
             },
             destroy: function () {
@@ -14951,9 +15020,7 @@
             _keydown: function (e) {
                 var that = this;
                 if (e.keyCode == keys.ENTER || e.keyCode == keys.SPACEBAR) {
-                    if (that.options.enable) {
-                        that.element.addClass(SELECTEDSTATE);
-                    }
+                    that._addActive();
                     if (!that._isNativeButton()) {
                         if (e.keyCode == keys.SPACEBAR) {
                             e.preventDefault();
@@ -14962,8 +15029,13 @@
                     }
                 }
             },
-            _keyup: function () {
+            _removeActive: function () {
                 this.element.removeClass(SELECTEDSTATE);
+            },
+            _addActive: function () {
+                if (this.options.enable) {
+                    this.element.addClass(SELECTEDSTATE);
+                }
             },
             iconElement: function () {
                 var that = this, element = that.element, options = that.options, icon = options.icon, iconClass = options.iconClass, spriteCssClass = options.spriteCssClass, imageUrl = options.imageUrl, span, img, isEmpty;
@@ -15036,7 +15108,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), MAX_VALUE = Number.MAX_VALUE, iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', SIZE = 'k-pager-lg k-pager-md k-pager-sm', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), MAX_VALUE = Number.MAX_VALUE, iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
         function button(template, idx, text, numeric, title) {
             return template({
                 idx: idx,
@@ -15071,6 +15143,7 @@
         var Pager = Widget.extend({
             init: function (element, options) {
                 var that = this, page, totalPages;
+                var sizeClassName = null;
                 Widget.fn.init.call(that, element, options);
                 options = that.options;
                 that._createDataSource(options);
@@ -15152,6 +15225,12 @@
                 if (options.autoBind) {
                     that.refresh();
                 }
+                that._resizeHandler = proxy(that.resize, that, true);
+                $(window).on('resize' + NS, that._resizeHandler);
+                sizeClassName = that._getWidthSizeClass(that.element.width());
+                if (sizeClassName) {
+                    that.element.addClass(sizeClassName);
+                }
                 kendo.notify(that);
             },
             destroy: function () {
@@ -15160,6 +15239,7 @@
                 that.element.off(NS);
                 that.dataSource.unbind(CHANGE, that._refreshHandler);
                 that._refreshHandler = null;
+                $(window).off('resize' + NS, this._resizeHandler);
                 kendo.destroy(that.element);
                 that.element = that.list = null;
             },
@@ -15199,6 +15279,18 @@
                 dataSource.bind(CHANGE, that._refreshHandler);
                 if (that.options.autoBind) {
                     dataSource.fetch();
+                }
+            },
+            _resize: function (size) {
+                if (size.width) {
+                    var sizeClassName = this._getWidthSizeClass(size.width);
+                    var el = this.element;
+                    if (!sizeClassName) {
+                        el.removeClass(SIZE);
+                    } else if (!el.hasClass(sizeClassName)) {
+                        el.removeClass(SIZE);
+                        el.addClass(sizeClassName);
+                    }
                 }
             },
             _createDataSource: function (options) {
@@ -15331,6 +15423,17 @@
                         return 0;
                     }
                 }
+            },
+            _getWidthSizeClass: function (width) {
+                var sizes = SIZE.split(' ');
+                if (width <= 480) {
+                    return sizes[2];
+                } else if (width <= 640) {
+                    return sizes[1];
+                } else if (width <= 1024) {
+                    return sizes[0];
+                }
+                return null;
             }
         });
         ui.plugin(Pager);
@@ -17316,7 +17419,7 @@
                     ICON = 'km-icon';
                     ICON_PREFIX = 'km-';
                     BUTTON = 'km-button';
-                    BUTTON_GROUP = 'km-buttongroup km-widget';
+                    BUTTON_GROUP = 'km-buttongroup';
                     STATE_ACTIVE = 'km-state-active';
                     STATE_DISABLED = 'km-state-disabled';
                 }
@@ -17494,18 +17597,25 @@
             },
             hide: function (candidate) {
                 var item = this._getItem(candidate);
+                var buttonGroupInstance;
                 if (item.toolbar) {
                     if (item.toolbar.options.type === 'button' && item.toolbar.options.isChild) {
+                        buttonGroupInstance = item.toolbar.getParentGroup();
                         item.toolbar.hide();
-                        item.toolbar.getParentGroup().refresh();
+                        if (buttonGroupInstance) {
+                            buttonGroupInstance.refresh();
+                        }
                     } else if (!item.toolbar.options.hidden) {
                         item.toolbar.hide();
                     }
                 }
                 if (item.overflow) {
                     if (item.overflow.options.type === 'button' && item.overflow.options.isChild) {
+                        buttonGroupInstance = item.overflow.getParentGroup();
                         item.overflow.hide();
-                        item.overflow.getParentGroup().refresh();
+                        if (buttonGroupInstance) {
+                            buttonGroupInstance.refresh();
+                        }
                     } else if (!item.overflow.options.hidden) {
                         item.overflow.hide();
                     }
@@ -17998,10 +18108,11 @@
                 });
                 that.list = $('<div class=\'k-list-container\'/>').append(that.ul).on('mousedown' + ns, proxy(that._listMousedown, that));
                 id = element.attr(ID);
-                if (id) {
-                    that.list.attr(ID, id + '-list');
-                    that.ul.attr(ID, id + '_listbox');
+                if (!id) {
+                    id = kendo.guid();
                 }
+                that.list.attr(ID, id + '-list');
+                that.ul.attr(ID, id + '_listbox');
                 if (options.columns && options.columns.length) {
                     that.ul.removeClass('k-list').addClass('k-grid-list');
                     that._columnsHeader();
@@ -18498,7 +18609,7 @@
                 } else if (ariaLabelledBy) {
                     focusedElm.attr('aria-labelledby', ariaLabelledBy);
                 } else if (labelElm.length) {
-                    var labelId = labelElm.attr('id') || that._generateLabelId(labelElm, inputId);
+                    var labelId = labelElm.attr('id') || that._generateLabelId(labelElm, inputId || kendo.guid());
                     focusedElm.attr('aria-labelledby', labelId);
                 }
             },
@@ -20025,7 +20136,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, support = kendo.support, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, parse = kendo.parseDate, adjustDST = kendo.date.adjustDST, weekInYear = kendo.date.weekInYear, Selectable = kendo.ui.Selectable, extractFormat = kendo._extractFormat, template = kendo.template, getCulture = kendo.getCulture, transitions = kendo.support.transitions, transitionOrigin = transitions ? transitions.css + 'transform-origin' : '', cellTemplate = template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#">#=data.value#</a></td>', { useWithBlock: false }), emptyCellTemplate = template('<td role="gridcell">&nbsp;</td>', { useWithBlock: false }), weekNumberTemplate = template('<td class="k-alt">#= data.weekNumber #</td>', { useWithBlock: false }), browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9, outerHeight = kendo._outerHeight, outerWidth = kendo._outerWidth, ns = '.kendoCalendar', CLICK = 'click' + ns, KEYDOWN_NS = 'keydown' + ns, ID = 'id', MIN = 'min', LEFT = 'left', SLIDE = 'slideIn', MONTH = 'month', CENTURY = 'century', CHANGE = 'change', NAVIGATE = 'navigate', VALUE = 'value', HOVER = 'k-state-hover', DISABLED = 'k-state-disabled', FOCUSED = 'k-state-focused', OTHERMONTH = 'k-other-month', OTHERMONTHCLASS = ' class="' + OTHERMONTH + '"', TODAY = 'k-nav-today', CELLSELECTOR = 'td:has(.k-link)', CELLSELECTORVALID = 'td:has(.k-link):not(.' + DISABLED + ')', WEEKCOLUMNSELECTOR = 'td:not(:has(.k-link))', SELECTED = 'k-state-selected', BLUR = 'blur' + ns, FOCUS = 'focus', FOCUS_WITH_NS = FOCUS + ns, MOUSEENTER = support.touch ? 'touchstart' : 'mouseenter', MOUSEENTER_WITH_NS = support.touch ? 'touchstart' + ns : 'mouseenter' + ns, MOUSELEAVE = support.touch ? 'touchend' + ns + ' touchmove' + ns : 'mouseleave' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, PREVARROW = '_prevArrow', NEXTARROW = '_nextArrow', ARIA_DISABLED = 'aria-disabled', ARIA_SELECTED = 'aria-selected', ARIA_LABEL = 'aria-label', proxy = $.proxy, extend = $.extend, DATE = Date, views = {
+        var kendo = window.kendo, support = kendo.support, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, parse = kendo.parseDate, adjustDST = kendo.date.adjustDST, weekInYear = kendo.date.weekInYear, Selectable = kendo.ui.Selectable, extractFormat = kendo._extractFormat, template = kendo.template, getCulture = kendo.getCulture, transitions = kendo.support.transitions, transitionOrigin = transitions ? transitions.css + 'transform-origin' : '', cellTemplate = template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#">#=data.value#</a></td>', { useWithBlock: false }), emptyCellTemplate = template('<td role="gridcell" class="k-out-of-range"><a class="k-link"></a></td>', { useWithBlock: false }), otherMonthCellTemplate = template('<td role="gridcell" class="k-out-of-range">&nbsp;</td>', { useWithBlock: false }), weekNumberTemplate = template('<td class="k-alt">#= data.weekNumber #</td>', { useWithBlock: false }), browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9, outerWidth = kendo._outerWidth, ns = '.kendoCalendar', CLICK = 'click' + ns, KEYDOWN_NS = 'keydown' + ns, ID = 'id', MIN = 'min', LEFT = 'left', SLIDE = 'slideIn', MONTH = 'month', CENTURY = 'century', CHANGE = 'change', NAVIGATE = 'navigate', VALUE = 'value', HOVER = 'k-state-hover', DISABLED = 'k-state-disabled', FOCUSED = 'k-state-focused', OTHERMONTH = 'k-other-month', OTHERMONTHCLASS = ' class="' + OTHERMONTH + '"', OUTOFRANGE = 'k-out-of-range', TODAY = 'k-nav-today', CELLSELECTOR = 'td:has(.k-link)', CELLSELECTORVALID = 'td:has(.k-link):not(.' + DISABLED + '):not(.' + OUTOFRANGE + ')', WEEKCOLUMNSELECTOR = 'td:not(:has(.k-link))', SELECTED = 'k-state-selected', BLUR = 'blur' + ns, FOCUS = 'focus', FOCUS_WITH_NS = FOCUS + ns, MOUSEENTER = support.touch ? 'touchstart' : 'mouseenter', MOUSEENTER_WITH_NS = support.touch ? 'touchstart' + ns : 'mouseenter' + ns, MOUSELEAVE = support.touch ? 'touchend' + ns + ' touchmove' + ns : 'mouseleave' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, PREVARROW = '_prevArrow', NEXTARROW = '_nextArrow', ARIA_DISABLED = 'aria-disabled', ARIA_SELECTED = 'aria-selected', ARIA_LABEL = 'aria-label', proxy = $.proxy, extend = $.extend, DATE = Date, views = {
                 month: 0,
                 year: 1,
                 decade: 2,
@@ -20042,9 +20153,10 @@
                 that._templates();
                 that._selectable();
                 that._header();
+                that._viewWrapper();
                 that._footer(that.footer);
                 id = element.addClass('k-widget k-calendar ' + (options.weekNumber ? ' k-week-number' : '')).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK, CELLSELECTOR, function (e) {
-                    var link = e.currentTarget.firstChild, value = that._toDateObject(link);
+                    var link = e.currentTarget.firstChild, value = toDateObject(link);
                     if (link.href.indexOf('#') != -1) {
                         e.preventDefault();
                     }
@@ -20064,7 +20176,7 @@
                     element.on(CLICK, WEEKCOLUMNSELECTOR, function (e) {
                         var first = $(e.currentTarget).closest('tr').find(CELLSELECTORVALID).first(), last = that.selectable._lastActive = $(e.currentTarget).closest('tr').find(CELLSELECTORVALID).last();
                         that.selectable.selectRange(first, last, { event: e });
-                        that._current = that._value = that._toDateObject(last.find('a'));
+                        that._current = that._value = toDateObject(last.find('a'));
                         that._class(FOCUSED, that._current);
                     });
                 }
@@ -20133,6 +20245,7 @@
                 Widget.fn.setOptions.call(that, options);
                 that._templates();
                 that._selectable();
+                that._viewWrapper();
                 that._footer(that.footer);
                 that._index = views[that.options.start];
                 that.navigate();
@@ -20234,6 +20347,7 @@
                         url: options.url,
                         dates: options.dates,
                         format: options.format,
+                        otherMonth: true,
                         culture: culture,
                         disableDates: options.disableDates,
                         isWeekColumnVisible: options.weekNumber,
@@ -20363,8 +20477,8 @@
             _onRelatedTarget: function (target) {
                 var that = this;
                 if (that.selectable.options.multiple && target.is(CELLSELECTORVALID)) {
-                    that._current = that._toDateObject(target.find('a'));
-                    that._class(FOCUSED, that._toDateObject(target.find('a')));
+                    that._current = toDateObject(target.find('a'));
+                    that._class(FOCUSED, toDateObject(target.find('a')));
                 }
             },
             _onSelect: function (e) {
@@ -20382,7 +20496,7 @@
                         that._toggleSelection($(eventArgs.event.currentTarget));
                     } else {
                         that._cellsBySelector(CELLSELECTORVALID).each(function (index, element) {
-                            var value = that._toDateObject($(element).find('a'));
+                            var value = toDateObject($(element).find('a'));
                             that._deselect(value);
                         });
                         that._addSelectedCellsToArray();
@@ -20390,7 +20504,7 @@
                 } else if (eventArgs.event.shiftKey) {
                     that._rangeSelection(that._cell);
                 } else if ($(eventArgs.event.currentTarget).is(CELLSELECTOR)) {
-                    that.value(that._toDateObject($(eventArgs.event.currentTarget).find('a')));
+                    that.value(toDateObject($(eventArgs.event.currentTarget).find('a')));
                 } else {
                     that._selectDates = [];
                     that._addSelectedCellsToArray();
@@ -20405,7 +20519,7 @@
                 }
             },
             _toggleSelection: function (currentCell) {
-                var that = this, date = that._toDateObject(currentCell.find('a'));
+                var that = this, date = toDateObject(currentCell.find('a'));
                 if (currentCell.hasClass('k-state-selected')) {
                     that._selectDates.push(date);
                 } else {
@@ -20413,9 +20527,9 @@
                 }
             },
             _rangeSelection: function (toDateCell, startDate) {
-                var that = this, fromDate = startDate || that._toDateObject(that.selectable.value().first().find('a')), toDate = that._toDateObject(toDateCell.find('a')), daysDifference;
+                var that = this, fromDate = startDate || toDateObject(that.selectable.value().first().find('a')), toDate = toDateObject(toDateCell.find('a')), daysDifference;
                 if (that.selectable._lastActive || that._value) {
-                    fromDate = that.selectable._lastActive ? that._toDateObject(that.selectable._lastActive.find('a')) : new Date(+that._value);
+                    fromDate = that.selectable._lastActive ? toDateObject(that.selectable._lastActive.find('a')) : new Date(+that._value);
                 } else {
                     that.selectable._lastActive = startDate ? that._cellByDate(that._view.toDateString(startDate), CELLSELECTORVALID) : that.selectable.value().first();
                 }
@@ -20431,7 +20545,7 @@
             _addSelectedCellsToArray: function () {
                 var that = this;
                 that.selectable.value().each(function (index, item) {
-                    var date = that._toDateObject($(item.firstChild));
+                    var date = toDateObject($(item.firstChild));
                     if (!that.options.disableDates(date)) {
                         that._selectDates.push(date);
                     }
@@ -20445,7 +20559,7 @@
                 }
             },
             _dateInView: function (date) {
-                var that = this, firstDateInView = that._toDateObject(that._cellsBySelector(CELLSELECTOR + ':first').find('a')), lastDateInView = that._toDateObject(that._cellsBySelector(CELLSELECTOR + ':last').find('a'));
+                var that = this, firstDateInView = toDateObject(that._cellsBySelector(CELLSELECTOR + ':first').find('a')), lastDateInView = toDateObject(that._cellsBySelector(CELLSELECTOR + ':last').find('a'));
                 return +date <= +lastDateInView && +date >= +firstDateInView;
             },
             _move: function (e) {
@@ -20490,7 +20604,7 @@
                         prevent = true;
                     } else if ((key == keys.ENTER || key == keys.SPACEBAR) && that._isMultipleSelection()) {
                         that._keyboardToggleSelection(e);
-                        var focusedDate = that._toDateObject($(that._cell[0]).find('a'));
+                        var focusedDate = toDateObject($(that._cell[0]).find('a'));
                         that._class(FOCUSED, focusedDate);
                     }
                 } else if (e.shiftKey) {
@@ -20514,7 +20628,7 @@
                 } else {
                     if (key == keys.ENTER || key == keys.SPACEBAR) {
                         if (view.name == 'month' && that._isMultipleSelection()) {
-                            that.value(that._toDateObject($(that._cell.find('a'))));
+                            that.value(toDateObject($(that._cell.find('a'))));
                             that.selectable._lastActive = $(that._cell[0]);
                             that.trigger(CHANGE);
                         } else {
@@ -20560,7 +20674,7 @@
                 var that = this, fromDate, daysDifference;
                 if (!that._dateInView(currentValue)) {
                     that._selectDates = [];
-                    fromDate = that.selectable._lastActive ? that._toDateObject(that.selectable._lastActive.find('a')) : currentValue;
+                    fromDate = that.selectable._lastActive ? toDateObject(that.selectable._lastActive.find('a')) : currentValue;
                     daysDifference = daysBetweenTwoDates(fromDate, new Date(+currentValue));
                     addDaysToArray(that._selectDates, daysDifference, fromDate, that.options.disableDates);
                     that.navigate(currentValue);
@@ -20601,15 +20715,19 @@
                 return currentValue;
             },
             _animate: function (options) {
-                var that = this, from = options.from, to = options.to, active = that._active;
+                var that = this;
+                var from = options.from;
+                var to = options.to;
+                var active = that._active;
+                var viewWrapper = that.element.children('.k-calendar-view');
                 if (!from) {
-                    to.insertAfter(that.element[0].firstChild);
+                    viewWrapper.append(to);
                     that._bindTable(to);
                 } else if (from.parent().data('animating')) {
                     from.off(ns);
                     from.parent().kendoStop(true, true).remove();
                     from.remove();
-                    to.insertAfter(that.element[0].firstChild);
+                    viewWrapper.append(to);
                     that._focusView(active);
                 } else if (!from.is(':visible') || that.options.animation === false || options.replace) {
                     to.insertAfter(from);
@@ -20647,11 +20765,11 @@
             _vertical: function (from, to) {
                 var that = this, vertical = that.options.animation.vertical, effects = vertical.effects, active = that._active, cell, position;
                 if (effects && effects.indexOf('zoom') != -1) {
-                    to.css({
+                    to.insertBefore(from);
+                    from.css({
                         position: 'absolute',
-                        top: outerHeight(from.prev()),
-                        left: 0
-                    }).insertBefore(from);
+                        width: to.width()
+                    });
                     if (transitionOrigin) {
                         cell = that._cellByDate(that._view.toDateString(that._current));
                         position = cell.position();
@@ -20664,11 +20782,6 @@
                         complete: function () {
                             from.off(ns).remove();
                             that._oldTable = null;
-                            to.css({
-                                position: 'static',
-                                top: 0,
-                                left: 0
-                            });
                             that._focusView(active);
                         }
                     });
@@ -20706,7 +20819,7 @@
                 table.on(FOCUS_WITH_NS, this._addClassProxy).on(BLUR, this._removeClassProxy);
             },
             _click: function (link) {
-                var that = this, options = that.options, currentValue = new Date(+that._current), value = that._toDateObject(link);
+                var that = this, options = that.options, currentValue = new Date(+that._current), value = toDateObject(link);
                 adjustDST(value, 0);
                 if (that._view.name == 'month' && that.options.disableDates(value)) {
                     value = that._value;
@@ -20726,6 +20839,14 @@
             _focusView: function (active, table) {
                 if (active) {
                     this.focus(table);
+                }
+            },
+            _viewWrapper: function () {
+                var that = this;
+                var element = that.element;
+                var viewWrapper = element.children('.k-calendar-view');
+                if (!viewWrapper[0]) {
+                    viewWrapper = $('<div class=\'k-calendar-view\' />').insertAfter(element.find('.k-header'));
                 }
             },
             _footer: function (template) {
@@ -20764,7 +20885,7 @@
                 var that = this, index = that._index + 1, currentValue = new DATE(+that._current);
                 if (that._isMultipleSelection()) {
                     var firstDayCurrentMonth = that._table.find('td:not(.k-other-month)').has('.k-link').first();
-                    currentValue = that._toDateObject(firstDayCurrentMonth.find('a'));
+                    currentValue = toDateObject(firstDayCurrentMonth.find('a'));
                     that._current = new Date(+currentValue);
                 }
                 arrow = that[arrow];
@@ -20835,11 +20956,6 @@
                 that.navigate(today, depth);
                 that.trigger(CHANGE);
             },
-            _toDateObject: function (link) {
-                var value = $(link).attr(kendo.attr(VALUE)).split('/');
-                value = createDate(value[0], value[1], value[2]);
-                return value;
-            },
             _templates: function () {
                 var that = this, options = that.options, footer = options.footer, month = options.month, content = month.content, weekNumber = month.weekNumber, empty = month.empty, footerTemplate = '#= kendo.toString(data,"D","' + options.culture + '") #';
                 that.month = {
@@ -20878,7 +20994,12 @@
                         return getCalendarInfo(culture).months.names[date.getMonth()] + ' ' + date.getFullYear();
                     },
                     content: function (options) {
-                        var that = this, idx = 0, min = options.min, max = options.max, date = options.date, dates = options.dates, format = options.format, culture = options.culture, navigateUrl = options.url, isWeekColumnVisible = options.isWeekColumnVisible, hasUrl = navigateUrl && dates[0], currentCalendar = getCalendarInfo(culture), firstDayIdx = currentCalendar.firstDay, days = currentCalendar.days, names = shiftArray(days.names, firstDayIdx), shortNames = shiftArray(days.namesShort, firstDayIdx), start = calendar.firstVisibleDay(date, currentCalendar), firstDayOfMonth = that.first(date), lastDayOfMonth = that.last(date), toDateString = that.toDateString, today = getToday(), html = '<table tabindex="0" role="grid" class="k-content" cellspacing="0" data-start="' + toDateString(start) + '"><thead><tr role="row">';
+                        var that = this, idx = 0, min = options.min, max = options.max, date = options.date, dates = options.dates, format = options.format, culture = options.culture, navigateUrl = options.url, showHeader = options.showHeader, otherMonth = options.otherMonth, isWeekColumnVisible = options.isWeekColumnVisible, hasUrl = navigateUrl && dates[0], currentCalendar = getCalendarInfo(culture), firstDayIdx = currentCalendar.firstDay, days = currentCalendar.days, names = shiftArray(days.names, firstDayIdx), shortNames = shiftArray(days.namesShort, firstDayIdx), start = calendar.firstVisibleDay(date, currentCalendar), firstDayOfMonth = that.first(date), lastDayOfMonth = that.last(date), toDateString = that.toDateString, today = getToday(), html = '<table tabindex="0" role="grid" class="k-content" cellspacing="0" data-start="' + toDateString(start) + '">';
+                        if (showHeader) {
+                            html += '<caption class="k-month-header">' + this.title(date, min, max, culture) + '</caption><thead><tr role="row">';
+                        } else {
+                            html += '<thead><tr role="row">';
+                        }
                         if (isWeekColumnVisible) {
                             html += '<th scope="col" class="k-alt">' + options.messages.weekColumnHeader + '</th>';
                         }
@@ -20896,7 +21017,9 @@
                             weekNumber: options.weekNumber,
                             min: createDate(min.getFullYear(), min.getMonth(), min.getDate()),
                             max: createDate(max.getFullYear(), max.getMonth(), max.getDate()),
+                            otherMonth: otherMonth,
                             content: options.content,
+                            lastDayOfMonth: lastDayOfMonth,
                             empty: options.empty,
                             setter: that.setDate,
                             disableDates: options.disableDates,
@@ -20978,11 +21101,17 @@
                         return date.getFullYear();
                     },
                     content: function (options) {
-                        var namesAbbr = getCalendarInfo(options.culture).months.namesAbbr, toDateString = this.toDateString, min = options.min, max = options.max;
+                        var namesAbbr = getCalendarInfo(options.culture).months.namesAbbr, toDateString = this.toDateString, min = options.min, max = options.max, html = '';
+                        if (options.showHeader) {
+                            html += '<table tabindex="0" role="grid" class="k-content k-meta-view" cellspacing="0"><caption class="k-meta-header">';
+                            html += this.title(options.date);
+                            html += '</caption><tbody><tr role="row">';
+                        }
                         return view({
                             min: createDate(min.getFullYear(), min.getMonth(), 1),
                             max: createDate(max.getFullYear(), max.getMonth(), 1),
                             start: createDate(options.date.getFullYear(), 0, 1),
+                            html: html,
                             setter: this.setDate,
                             build: function (date) {
                                 return {
@@ -21033,11 +21162,18 @@
                         return title(date, min, max, 10);
                     },
                     content: function (options) {
-                        var year = options.date.getFullYear(), toDateString = this.toDateString;
+                        var year = options.date.getFullYear(), toDateString = this.toDateString, html = '';
+                        if (options.showHeader) {
+                            html += '<table tabindex="0" role="grid" class="k-content k-meta-view" cellspacing="0"><caption class="k-meta-header">';
+                            html += this.title(options.date, options.min, options.max);
+                            html += '</caption><tbody><tr role="row">';
+                        }
                         return view({
                             start: createDate(year - year % 10 - 1, 0, 1),
                             min: createDate(options.min.getFullYear(), 0, 1),
                             max: createDate(options.max.getFullYear(), 0, 1),
+                            otherMonth: options.otherMonth,
+                            html: html,
                             setter: this.setDate,
                             build: function (date, idx) {
                                 return {
@@ -21073,16 +21209,23 @@
                         return title(date, min, max, 100);
                     },
                     content: function (options) {
-                        var year = options.date.getFullYear(), min = options.min.getFullYear(), max = options.max.getFullYear(), toDateString = this.toDateString, minYear = min, maxYear = max;
+                        var year = options.date.getFullYear(), min = options.min.getFullYear(), max = options.max.getFullYear(), toDateString = this.toDateString, minYear = min, maxYear = max, html = '';
                         minYear = minYear - minYear % 10;
                         maxYear = maxYear - maxYear % 10;
                         if (maxYear - minYear < 10) {
                             maxYear = minYear + 9;
                         }
+                        if (options.showHeader) {
+                            html += '<table tabindex="0" role="grid" class="k-content k-meta-view" cellspacing="0"><caption class="k-meta-header">';
+                            html += this.title(options.date, options.min, options.max);
+                            html += '</caption><tbody><tr role="row">';
+                        }
                         return view({
                             start: createDate(year - year % 100 - 10, 0, 1),
                             min: createDate(minYear, 0, 1),
                             max: createDate(maxYear, 0, 1),
+                            otherMonth: options.otherMonth,
+                            html: html,
                             setter: this.setDate,
                             build: function (date, idx) {
                                 var start = date.getFullYear(), end = start + 9;
@@ -21135,7 +21278,7 @@
             return start + '-' + end;
         }
         function view(options) {
-            var idx = 0, data, min = options.min, max = options.max, start = options.start, setter = options.setter, build = options.build, weekNumberBuild = options.weekNumberBuild, length = options.cells || 12, isWeekColumnVisible = options.isWeekColumnVisible, cellsPerRow = options.perRow || 4, weekNumber = options.weekNumber || weekNumberTemplate, content = options.content || cellTemplate, empty = options.empty || emptyCellTemplate, html = options.html || '<table tabindex="0" role="grid" class="k-content k-meta-view" cellspacing="0"><tbody><tr role="row">';
+            var idx = 0, data, min = options.min, max = options.max, start = options.start, setter = options.setter, build = options.build, weekNumberBuild = options.weekNumberBuild, length = options.cells || 12, isWeekColumnVisible = options.isWeekColumnVisible, cellsPerRow = options.perRow || 4, otherMonth = options.otherMonth, lastDayOfMonth = options.lastDayOfMonth, weekNumber = options.weekNumber || weekNumberTemplate, content = options.content || cellTemplate, empty = options.empty || emptyCellTemplate, otherMonthTemplate = options.otherMonthCellTemplate || otherMonthCellTemplate, html = options.html || '<table tabindex="0" role="grid" class="k-content k-meta-view" cellspacing="0"><tbody><tr role="row">';
             if (isWeekColumnVisible) {
                 html += weekNumber(weekNumberBuild(start));
             }
@@ -21143,13 +21286,13 @@
                 if (idx > 0 && idx % cellsPerRow === 0) {
                     html += '</tr><tr role="row">';
                     if (isWeekColumnVisible) {
-                        html += weekNumber(weekNumberBuild(start));
+                        html += otherMonth || +start <= +lastDayOfMonth ? weekNumber(weekNumberBuild(start)) : weekNumber({ weekNumber: '&nbsp;' });
                     }
                 }
                 start = createDate(start.getFullYear(), start.getMonth(), start.getDate());
                 adjustDST(start, 0);
                 data = build(start, idx, options.disableDates);
-                html += isInRange(start, min, max) ? content(data) : empty(data);
+                html += data.cssClass.indexOf(OTHERMONTH) !== -1 && !otherMonth ? otherMonthTemplate(data) : isInRange(start, min, max) ? content(data) : empty(data);
                 setter(start, 1);
             }
             return html + '</tr></tbody></table>';
@@ -21320,6 +21463,11 @@
             }
             return oldValue === newValue;
         }
+        function toDateObject(link) {
+            var value = $(link).attr(kendo.attr(VALUE)).split('/');
+            value = createDate(value[0], value[1], value[2]);
+            return value;
+        }
         calendar.isEqualDatePart = isEqualDatePart;
         calendar.isEqualDate = isEqualDate;
         calendar.makeUnselectable = makeUnselectable;
@@ -21329,6 +21477,9 @@
         calendar.normalize = normalize;
         calendar.viewsEnum = views;
         calendar.disabled = getDisabledExpr;
+        calendar.toDateObject = toDateObject;
+        calendar.getToday = getToday;
+        calendar.createDate = createDate;
         kendo.calendar = calendar;
     }(window.kendo.jQuery));
     return window.kendo;
@@ -28056,10 +28207,9 @@
             this.a = a;
         },
         toRGB: function () {
-            var ref = this;
-            var h = ref.h / 360;
-            var s = ref.s / 100;
-            var l = ref.l / 100;
+            var h = this.h / 360;
+            var s = this.s / 100;
+            var l = this.l / 100;
             var r, g, b;
             if (s === 0) {
                 r = g = b = l;
@@ -31819,13 +31969,14 @@
                 var that = this;
                 var target = $(e.currentTarget);
                 var oldTarget = that._target;
+                var isInput = isInputElement(e.target);
                 if (oldTarget) {
                     oldTarget.removeClass(FOCUSED_CLASS);
                 }
                 that._target = target;
                 target.addClass(FOCUSED_CLASS);
                 that._getList().attr('aria-activedescendant', target.attr('id'));
-                if (that._getList()[0] !== kendo._activeElement()) {
+                if (that._getList()[0] !== kendo._activeElement() && !isInput) {
                     that.focus();
                 }
             },
@@ -32882,6 +33033,9 @@
             }
         };
         extend(ListBox, { ToolBar: ToolBar });
+        function isInputElement(element) {
+            return $(element).is(':button,a,:input,a>.k-icon,textarea,span.k-select,span.k-icon,span.k-link,label.k-checkbox-label,.k-input,.k-multiselect-wrap,.k-picker-wrap,.k-picker-wrap>.k-selected-color,.k-tool-icon,.k-dropdown');
+        }
     }(window.kendo.jQuery));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
@@ -35133,7 +35287,7 @@
                 }
             },
             _showHandler: function (e) {
-                var ev = e, offset, that = this, options = that.options;
+                var ev = e, offset, that = this, options = that.options, target = $(ev.currentTarget);
                 if (e.event) {
                     ev = e.event;
                     ev.pageX = e.x.location;
@@ -35146,7 +35300,7 @@
                 ev.preventDefault();
                 ev.stopImmediatePropagation();
                 that.element.find('.' + FOCUSEDSTATE).removeClass(FOCUSEDSTATE);
-                if (options.filter && kendo.support.matchesSelector.call(ev.currentTarget, options.filter) || !options.filter) {
+                if (options.filter && target.is(options.filter) || !options.filter) {
                     if (options.alignToAnchor) {
                         that.popup.options.anchor = ev.currentTarget;
                         that.open(ev.currentTarget);
@@ -38517,14 +38671,17 @@
                 }
             },
             _change: function (value) {
-                var that = this;
+                var that = this, oldValue = that.element.val(), dateChanged;
                 value = that._update(value);
-                if (+that._old != +value) {
+                dateChanged = !kendo.calendar.isEqualDate(that._old, value);
+                var valueUpdated = dateChanged && !that._typing;
+                var textFormatted = oldValue !== that.element.val();
+                if (valueUpdated || textFormatted) {
+                    that.element.trigger(CHANGE);
+                }
+                if (dateChanged) {
                     that._old = value;
                     that._oldText = that.element.val();
-                    if (!that._typing) {
-                        that.element.trigger(CHANGE);
-                    }
                     that.trigger(CHANGE);
                 }
                 that._typing = false;
@@ -39714,7 +39871,11 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-content k-window-content k-dialog-content', KCONTENT = '.k-content', KSCROLL = 'k-scroll', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = KDIALOGTITLE + 'bar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', WIDTH = 'width', HUNDREDPERCENT = 100, messages = {
+        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-content k-window-content k-dialog-content', KCONTENTSELECTOR = '.k-window-content', KCONTENT = '.k-content', KSCROLL = 'k-scroll', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = KDIALOGTITLE + 'bar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', TOUCHSTART = 'touchstart', TOUCHMOVE = 'touchmove', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', WIDTH = 'width', SIZE = {
+                small: 'k-window-sm',
+                medium: 'k-window-md',
+                large: 'k-window-lg'
+            }, HIDDEN = 'hidden', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', DATAHTMLTAPYRULE = 'tap-y', HUNDREDPERCENT = 100, CSSFLEXBOX = kendo.support.cssFlexbox, messages = {
                 okText: 'OK',
                 cancel: 'Cancel',
                 promptInput: 'Input'
@@ -39761,6 +39922,7 @@
             },
             setOptions: function (options) {
                 var that = this;
+                var sizeClass = that.options.size;
                 options = $.extend(that.options, options);
                 Widget.fn.setOptions.call(that, options);
                 if (options.title !== undefined) {
@@ -39776,15 +39938,21 @@
                 }
                 that.wrapper.show();
                 that._closable(that.wrapper);
+                that.wrapper.removeClass(SIZE[sizeClass]);
                 that._dimensions();
                 if (!options.visible) {
                     that.wrapper.hide();
                 } else {
                     that._triggerOpen();
                 }
+                if (typeof options.modal !== 'undefined') {
+                    var visible = that.options.visible !== false;
+                    that._enableDocumentScrolling();
+                    that._overlay(options.modal && visible);
+                }
             },
             _dimensions: function () {
-                var that = this, wrapper = that.wrapper, options = that.options, width = options.width, height = options.height, dimensions = [
+                var that = this, wrapper = that.wrapper, options = that.options, width = options.width, height = options.height, sizeClass = options.size, dimensions = [
                         'minWidth',
                         'minHeight',
                         'maxWidth',
@@ -39811,6 +39979,9 @@
                         wrapper.outerHeight(constrain(height, options.minHeight, options.maxHeight));
                     }
                     this._setElementHeight();
+                }
+                if (sizeClass && SIZE[sizeClass]) {
+                    wrapper.addClass(SIZE[sizeClass]);
                 }
             },
             _setElementMaxHeight: function () {
@@ -39860,6 +40031,9 @@
                     this._waiAriaOverlay();
                 } else {
                     this._removeWaiAriaOverlay();
+                }
+                if (this.options.modal.preventScroll) {
+                    this._stopDocumentScrolling();
                 }
                 return overlay;
             },
@@ -39943,7 +40117,7 @@
                 var buttonLayout = isStretchedLayout ? 'stretched' : 'normal';
                 var actionbar = $(templates.actionbar({ buttonLayout: buttonLayout }));
                 this._addButtons(actionbar);
-                if (isStretchedLayout) {
+                if (isStretchedLayout && !CSSFLEXBOX) {
                     this._normalizeButtonSize(actionbar);
                 }
                 wrapper.append(actionbar);
@@ -39954,7 +40128,7 @@
                     action = actions[i];
                     text = that._mergeTextWithOptions(action);
                     var btn = $(templates.action(action)).autoApplyNS(NS).html(text).appendTo(actionbar).data('action', action.action).on('click', actionClick).on('keydown', actionKeyHandler);
-                    if (o.buttonLayout === 'stretched') {
+                    if (o.buttonLayout === 'stretched' && !CSSFLEXBOX) {
                         if (i == length - 1) {
                             buttonSize = HUNDREDPERCENT - i * buttonSize;
                         }
@@ -40143,8 +40317,74 @@
                 var hideOverlay = options.modal && !modals.length;
                 if (hideOverlay) {
                     this._overlay(false).remove();
+                    if (options.modal.preventScroll) {
+                        this._enableDocumentScrolling();
+                    }
                 } else if (modals.length) {
                     this._object(modals.last())._overlay(true);
+                    if (options.modal.preventScroll) {
+                        this._stopDocumentScrolling();
+                    }
+                }
+            },
+            _stopDocumentScrolling: function () {
+                var that = this;
+                var $body = $('body');
+                that._storeOverflowRule($body);
+                $body.css(OVERFLOW, HIDDEN);
+                var $html = $('html');
+                var html = $html[0];
+                that._storeOverflowRule($html);
+                $html.css(OVERFLOW, HIDDEN);
+                if (kendo.support.mobileOS.ios) {
+                    html.addEventListener(TOUCHSTART, that._touchStart, { passive: false });
+                    html.addEventListener(TOUCHMOVE, that._touchMove, { passive: false });
+                }
+            },
+            _touchStart: function (e) {
+                $(this).data(DATAHTMLTAPYRULE, e.changedTouches[0].pageY);
+            },
+            _touchMove: function (e) {
+                var target = e.target;
+                var $target = $(e.target);
+                var upScroll = e.changedTouches[0].pageY - $(this).data(DATAHTMLTAPYRULE) > 0;
+                var preventYScroll = $target.is(KCONTENTSELECTOR) && (upScroll && $target.scrollTop() === 0) || !upScroll && $target.scrollTop() === target.scrollHeight - target.clientHeight;
+                if (!$target.is(KCONTENTSELECTOR) || preventYScroll) {
+                    e.preventDefault();
+                }
+            },
+            _enableDocumentScrolling: function () {
+                var that = this;
+                var $body = $(document.body);
+                var $html = $('html');
+                var html = $html[0];
+                that._restoreOverflowRule($body);
+                that._restoreOverflowRule($html);
+                if (kendo.support.mobileOS.ios) {
+                    $html.removeData(DATAHTMLTAPYRULE);
+                    html.removeEventListener(TOUCHSTART, that._touchStart, { passive: false });
+                    html.removeEventListener(TOUCHMOVE, that._touchMove, { passive: false });
+                }
+            },
+            _storeOverflowRule: function ($element) {
+                if (this._isOverflowStored($element)) {
+                    return;
+                }
+                var overflowRule = $element.get(0).style.overflow;
+                if (typeof overflowRule === 'string') {
+                    $element.data(DATADOCOVERFLOWRULE, overflowRule);
+                }
+            },
+            _isOverflowStored: function ($element) {
+                return typeof $element.data(DATADOCOVERFLOWRULE) === 'string';
+            },
+            _restoreOverflowRule: function ($element) {
+                var overflowRule = $element.data(DATADOCOVERFLOWRULE);
+                if (overflowRule !== null && overflowRule !== undefined) {
+                    $element.css(OVERFLOW, overflowRule);
+                    $element.removeData(DATADOCOVERFLOWRULE);
+                } else {
+                    $element.css(OVERFLOW, '');
                 }
             },
             _closeAnimationEnd: function () {
@@ -40260,6 +40500,7 @@
                 buttonLayout: 'stretched',
                 actions: [],
                 modal: true,
+                size: 'auto',
                 width: null,
                 height: null,
                 minWidth: 0,
@@ -40418,7 +40659,7 @@
             action: template('<button type=\'button\' class=\'k-button# if (data.primary) { # k-primary# } role=\'button\' #\'></button>'),
             titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-header\'>' + '<span class=\'k-window-title k-dialog-title\'>#: title #</span>' + '<div class=\'k-window-actions k-dialog-actions\' />' + '</div>'),
             close: template('<a role=\'button\' href=\'\\#\' class=\'k-button k-bare k-button-icon k-window-action k-dialog-action k-dialog-close\' title=\'#: messages.close #\' aria-label=\'#: messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
-            actionbar: template('<div class=\'k-button-group k-dialog-buttongroup k-dialog-button-layout-#: buttonLayout #\' role=\'toolbar\' />'),
+            actionbar: template('<div class=\'k-dialog-buttongroup k-dialog-button-layout-#: buttonLayout #\' role=\'toolbar\' />'),
             overlay: '<div class=\'k-overlay\' />',
             alertWrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'alertdialog\' />'),
             alert: '<div />',
@@ -40457,7 +40698,11 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', MODAL_NS = '.kendoWindowModal', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KDIALOGCONTENT = '.k-dialog-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', WINDOWEVENTSHANDLED = 'WindowEventsHandled', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, Draggable = kendo.ui.Draggable, isPlainObject = $.isPlainObject, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, proxy = $.proxy, extend = $.extend, each = $.each, template = kendo.template, BODY = 'body', templates, NS = '.kendoWindow', MODAL_NS = '.kendoWindowModal', KWINDOW = '.k-window', KWINDOWTITLE = '.k-window-title', KWINDOWTITLEBAR = KWINDOWTITLE + 'bar', KWINDOWCONTENT = '.k-window-content', KDIALOGCONTENT = '.k-dialog-content', KWINDOWRESIZEHANDLES = '.k-resize-handle', KOVERLAY = '.k-overlay', KCONTENTFRAME = 'k-content-frame', LOADING = 'k-i-loading', KHOVERSTATE = 'k-state-hover', KFOCUSEDSTATE = 'k-state-focused', MAXIMIZEDSTATE = 'k-window-maximized', VISIBLE = ':visible', HIDDEN = 'hidden', CURSOR = 'cursor', OPEN = 'open', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', CLOSE = 'close', REFRESH = 'refresh', MINIMIZE = 'minimize', MAXIMIZE = 'maximize', RESIZESTART = 'resizeStart', RESIZE = 'resize', RESIZEEND = 'resizeEnd', DRAGSTART = 'dragstart', DRAGEND = 'dragend', ERROR = 'error', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', ZINDEX = 'zIndex', MINIMIZE_MAXIMIZE = '.k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize', KPIN = '.k-i-pin', KUNPIN = '.k-i-unpin', PIN_UNPIN = KPIN + ',' + KUNPIN, TITLEBAR_BUTTONS = '.k-window-titlebar .k-window-action', REFRESHICON = '.k-window-titlebar .k-i-refresh', WINDOWEVENTSHANDLED = 'WindowEventsHandled', zero = /^0[a-z]*$/i, isLocalUrl = kendo.isLocalUrl, SIZE = {
+                small: 'k-window-sm',
+                medium: 'k-window-md',
+                large: 'k-window-lg'
+            };
         function defined(x) {
             return typeof x != 'undefined';
         }
@@ -40625,6 +40870,7 @@
                 var width = options.width;
                 var height = options.height;
                 var maxHeight = options.maxHeight;
+                var sizeClass = options.size;
                 var dimensions = [
                     'minWidth',
                     'minHeight',
@@ -40669,6 +40915,9 @@
                 }
                 if (!options.visible) {
                     wrapper.hide();
+                }
+                if (sizeClass && SIZE[sizeClass]) {
+                    wrapper.addClass(SIZE[sizeClass]);
                 }
             },
             _position: function () {
@@ -40775,25 +41024,29 @@
                 container.html(kendo.render(templates.action, actions));
             },
             setOptions: function (options) {
+                var that = this;
+                var sizeClass = that.options.size;
                 var cachedOptions = JSON.parse(JSON.stringify(options));
-                extend(options.position, this.options.position);
+                extend(options.position, that.options.position);
                 extend(options.position, cachedOptions.position);
-                Widget.fn.setOptions.call(this, options);
-                var scrollable = this.options.scrollable !== false;
-                this.restore();
+                Widget.fn.setOptions.call(that, options);
+                var scrollable = that.options.scrollable !== false;
+                that.restore();
                 if (typeof options.title !== 'undefined') {
-                    this.title(options.title);
+                    that.title(options.title);
                 }
-                this._dimensions();
-                this._position();
-                this._resizable();
-                this._draggable();
-                this._actions();
+                that.wrapper.removeClass(SIZE[sizeClass]);
+                that._dimensions();
+                that._position();
+                that._resizable();
+                that._draggable();
+                that._actions();
                 if (typeof options.modal !== 'undefined') {
-                    var visible = this.options.visible !== false;
-                    this._overlay(options.modal && visible);
+                    var visible = that.options.visible !== false;
+                    that._enableDocumentScrolling();
+                    that._overlay(options.modal && visible);
                 }
-                this.element.css(OVERFLOW, scrollable ? '' : 'hidden');
+                that.element.css(OVERFLOW, scrollable ? '' : 'hidden');
             },
             events: [
                 OPEN,
@@ -40836,6 +41089,7 @@
                 actions: ['Close'],
                 autoFocus: true,
                 modal: false,
+                size: 'auto',
                 resizable: true,
                 draggable: true,
                 minWidth: 90,
@@ -40961,6 +41215,9 @@
                     overlay = $('<div class=\'k-overlay\' />');
                 }
                 overlay.insertBefore(wrapper[0]).toggle(visible).css(ZINDEX, parseInt(wrapper.css(ZINDEX), 10) - 1);
+                if (this.options.modal.preventScroll && !this.containment) {
+                    this._stopDocumentScrolling();
+                }
                 return overlay;
             },
             _actionForIcon: function (icon) {
@@ -41177,8 +41434,14 @@
                     } else {
                         this._overlay(false).remove();
                     }
+                    if (options.modal.preventScroll) {
+                        this._enableDocumentScrolling();
+                    }
                 } else if (modals.length) {
                     this._object(modals.last())._overlay(true);
+                    if (options.modal.preventScroll) {
+                        this._stopDocumentScrolling();
+                    }
                 }
             },
             _close: function (systemTriggered) {
@@ -41319,16 +41582,18 @@
                 }
                 that.options.width = restoreOptions.width;
                 that.options.height = restoreOptions.height;
-                that._enableDocumentScrolling();
-                if (this._containerScrollTop && this._containerScrollTop > 0) {
-                    container.scrollTop(this._containerScrollTop);
+                if (!that.options.modal.preventScroll) {
+                    that._enableDocumentScrolling();
                 }
-                if (this._containerScrollLeft && this._containerScrollLeft > 0) {
-                    container.scrollLeft(this._containerScrollLeft);
+                if (that._containerScrollTop && that._containerScrollTop > 0) {
+                    container.scrollTop(that._containerScrollTop);
+                }
+                if (that._containerScrollLeft && that._containerScrollLeft > 0) {
+                    container.scrollLeft(that._containerScrollLeft);
                 }
                 options.isMaximized = options.isMinimized = false;
-                this.wrapper.removeAttr('tabindex');
-                this.wrapper.removeAttr('aria-labelled-by');
+                that.wrapper.removeAttr('tabindex');
+                that.wrapper.removeAttr('aria-labelled-by');
                 that.resize();
                 return that;
             },
@@ -47181,6 +47446,7 @@
             MobileDetailButton: 'a',
             ListView: 'ul',
             MobileListView: 'ul',
+            ScrollView: 'div',
             PanelBar: 'ul',
             TreeView: 'ul',
             Menu: 'ul',
@@ -47751,6 +48017,7 @@
                 'MajorTimeHeaderTemplate',
                 'MinorTimeHeaderTemplate'
             ],
+            'ScrollView': ['Template'],
             'PanelBar': ['Template'],
             'TreeView': ['Template'],
             'Validator': ['ErrorTemplate']

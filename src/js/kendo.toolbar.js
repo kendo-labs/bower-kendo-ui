@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -695,7 +695,7 @@
                     ICON = 'km-icon';
                     ICON_PREFIX = 'km-';
                     BUTTON = 'km-button';
-                    BUTTON_GROUP = 'km-buttongroup km-widget';
+                    BUTTON_GROUP = 'km-buttongroup';
                     STATE_ACTIVE = 'km-state-active';
                     STATE_DISABLED = 'km-state-disabled';
                 }
@@ -873,18 +873,25 @@
             },
             hide: function (candidate) {
                 var item = this._getItem(candidate);
+                var buttonGroupInstance;
                 if (item.toolbar) {
                     if (item.toolbar.options.type === 'button' && item.toolbar.options.isChild) {
+                        buttonGroupInstance = item.toolbar.getParentGroup();
                         item.toolbar.hide();
-                        item.toolbar.getParentGroup().refresh();
+                        if (buttonGroupInstance) {
+                            buttonGroupInstance.refresh();
+                        }
                     } else if (!item.toolbar.options.hidden) {
                         item.toolbar.hide();
                     }
                 }
                 if (item.overflow) {
                     if (item.overflow.options.type === 'button' && item.overflow.options.isChild) {
+                        buttonGroupInstance = item.overflow.getParentGroup();
                         item.overflow.hide();
-                        item.overflow.getParentGroup().refresh();
+                        if (buttonGroupInstance) {
+                            buttonGroupInstance.refresh();
+                        }
                     } else if (!item.overflow.options.hidden) {
                         item.overflow.hide();
                     }

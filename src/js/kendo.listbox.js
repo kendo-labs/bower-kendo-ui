@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -282,13 +282,14 @@
                 var that = this;
                 var target = $(e.currentTarget);
                 var oldTarget = that._target;
+                var isInput = isInputElement(e.target);
                 if (oldTarget) {
                     oldTarget.removeClass(FOCUSED_CLASS);
                 }
                 that._target = target;
                 target.addClass(FOCUSED_CLASS);
                 that._getList().attr('aria-activedescendant', target.attr('id'));
-                if (that._getList()[0] !== kendo._activeElement()) {
+                if (that._getList()[0] !== kendo._activeElement() && !isInput) {
                     that.focus();
                 }
             },
@@ -1345,6 +1346,9 @@
             }
         };
         extend(ListBox, { ToolBar: ToolBar });
+        function isInputElement(element) {
+            return $(element).is(':button,a,:input,a>.k-icon,textarea,span.k-select,span.k-icon,span.k-link,label.k-checkbox-label,.k-input,.k-multiselect-wrap,.k-picker-wrap,.k-picker-wrap>.k-selected-color,.k-tool-icon,.k-dropdown');
+        }
     }(window.kendo.jQuery));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {

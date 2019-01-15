@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -497,6 +497,16 @@ $.extend(true, kendo.ui.ColorPicker.prototype.options.messages,{
   "cancel": "Откажи",
   "noColor": "без цвят",
   "clearColor": "Махни цвета"
+});
+}
+
+/* DateRangePicker messages */
+
+if (kendo.ui.DateRangePicker) {
+kendo.ui.DateRangePicker.prototype.options.messages =
+$.extend(true, kendo.ui.DateRangePicker.prototype.options.messages,{
+  "startLabel": "Начало",
+  "endLabel": "Край"
 });
 }
 

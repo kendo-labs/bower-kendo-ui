@@ -35,16 +35,16 @@
 @button-gradient: false;
 @button-shadow: false;
 @button-hover-text-color: @background;
-@button-hover-background-color: @hover-background;
-@button-hover-border-color: @hover-background;
+@button-hover-background-color: lighten(@accent, 4%);
+@button-hover-border-color: @button-hover-background-color;
 @button-hover-gradient: false;
 @button-hover-shadow: false;
-@button-active-background: @accent;
+@button-active-background: darken(@accent, 4%);
 @button-active-text-color: @selected-text-color;
-@button-active-border-color: @accent;
+@button-active-border-color: @button-active-background;
 @button-active-gradient: false;
 @button-active-shadow: false;
-@button-focused-border-color: darken(@accent, 11%);
+@button-focused-border-color: @accent;
 @button-focused-shadow: none;
 @button-focused-active-shadow: none;
 // Primary button
@@ -53,17 +53,17 @@
 @primary-border-color: @primary-background-color;
 @primary-gradient: false;
 @primary-shadow: false;
-@primary-hover-text-color: contrast(@primary-hover-background-color);
-@primary-hover-background-color: @hover-background;
+@primary-hover-text-color: @background;
+@primary-hover-background-color: lighten(@accent, 4%);
 @primary-hover-border-color: @primary-hover-background-color;
 @primary-hover-gradient: false;
 @primary-hover-shadow: false;
 @primary-active-text-color: contrast(@primary-active-background-color);
-@primary-active-background-color: @base;
+@primary-active-background-color: darken(@accent, 4%);
 @primary-active-border-color: @primary-active-background-color;
 @primary-active-gradient: false;
 @primary-active-shadow: false;
-@primary-focused-border-color: @base;
+@primary-focused-border-color: darken(@accent, 10%);
 @primary-focused-shadow: none;
 @primary-focused-active-shadow: none;
 @primary-disabled-text-color: darken(@background, 24%);
@@ -168,16 +168,6 @@
 @focused-shadow: none;
 @focused-item-shadow: inset 0 0 0 1px darken(@accent, 11%);
 @focused-active-item-shadow: inset 0 0 0 1px darken(@accent, 11%);
-@calendar-border-radius: 13px;
-@calendar-content-text-color: @normal-text-color;
-@calendar-footer-background: @base;
-@calendar-footer-text-decoration: none;
-@calendar-footer-hover-text-decoration: none;
-@calendar-footer-hover-background: @hover-background;
-@calendar-header-hover-text-decoration: underline;
-@calendar-header-hover-background: @base;
-@calendar-footer-active-background: @accent;
-@calendar-group-background-color: @background;
 @menu-border-color: @base;
 @tabstrip-items-border: @base;
 @tabstrip-active-background: @background;
@@ -201,6 +191,11 @@
 @disabled-border-color: darken(@background, 20%);
 @disabled-gradient: none;
 @input-validation-error: @error;
+
+
+// Link
+@link-text: @accent;
+@link-hovered-text: contrast(@base, darken(@link-text, 4), lighten(@link-text, 4), .5);
 
 
 // component
@@ -262,6 +257,136 @@
 @grid-selected-text: @selected-text-color;
 @grid-selected-border: @grid-border;
 @grid-selected-gradient: false;
+
+
+// Calendar
+@calendar-bg: @component-bg;
+@calendar-text: @component-text;
+@calendar-border: @component-border;
+
+@calendar-header-bg: @header-background-color;
+@calendar-header-text: @header-text-color;
+@calendar-header-border: @calendar-border;
+@calendar-header-gradient: none;
+
+@calendar-header-cell-bg: @calendar-bg;
+@calendar-header-cell-text: @calendar-text;
+@calendar-header-cell-border: @calendar-border;
+
+@calendar-week-cell-bg: contrast(@calendar-bg, lighten(@calendar-bg, 4), darken(@calendar-bg, 4), .5);
+@calendar-week-cell-text: @calendar-header-cell-text;
+@calendar-week-cell-border: @calendar-header-cell-border;
+
+@calendar-weekend-cell-bg: transparent;
+@calendar-weekend-cell-text: null;
+@calendar-weekend-cell-border: null;
+
+@calendar-othermonth-cell-bg: null;
+@calendar-othermonth-cell-text: @disabled-text-color;
+@calendar-othermonth-cell-border: null;
+
+@calendar-cell-hovered-bg: @button-hover-background-color;
+@calendar-cell-hovered-text: @button-hover-text-color;
+@calendar-cell-hovered-border: @button-hover-border-color;
+
+@calendar-cell-selected-bg: @selected-background-color;
+@calendar-cell-selected-text: @selected-text-color;
+@calendar-cell-selected-border: @selected-border-color;
+
+@calendar-cell-focused-shadow: @focused-item-shadow;
+
+
+// Dialog
+@dialog-button-stretched-padding-x: 0.9em;
+@dialog-button-stretched-padding-y: @dialog-button-stretched-padding-x;
+
+
+// ScrollView
+@scrollview-pagebutton-bg: @button-background-color;
+@scrollview-pagebutton-border: @button-border-color;
+@scrollview-pagebutton-primary-bg: @primary-background-color;
+@scrollview-pagebutton-primary-border: @primary-border-color;
+@scrollview-pagebutton-shadow: @button-shadow;
+
+@scrollview-navigation-color: @selected-text-color;
+@scrollview-navigation-icon-shadow: rgba(0, 0, 0, .3) 0 0 15px;
+@scrollview-navigation-background: rgba(0, 0, 0, 0);
+@scrollview-navigation-default-opacity: .7;
+@scrollview-navigation-hover-opacity: 1;
+@scrollview-navigation-hover-span-bg: transparent;
+
+
+// Switch
+@switch-container-shadow: false;
+@switch-container-hovered-shadow: false;
+@switch-container-focused-shadow: false;
+
+@switch-on-bg: @background;
+@switch-on-text: darken(@background, 83%);
+@switch-on-border: darken(@background, 14%);
+@switch-on-gradient: false;
+@switch-on-shadow: false;
+@switch-on-focused-shadow: 0 0 3px 0 rgba(black, 0.3);
+
+@switch-on-focused-bg: @switch-on-bg;
+@switch-on-focused-text: @switch-on-text;
+@switch-on-focused-border: @switch-on-border;
+@switch-on-focused-gradient: @switch-on-gradient;
+
+@switch-on-hovered-bg: @switch-on-bg;
+@switch-on-hovered-text: @switch-on-text;
+@switch-on-hovered-border: @switch-on-border;
+@switch-on-hovered-gradient: false;
+
+@switch-on-handle-bg: @primary-background-color;
+@switch-on-handle-text: @switch-on-text;
+@switch-on-handle-border: @primary-border-color;
+@switch-on-handle-gradient: @primary-gradient;
+@switch-on-handle-shadow: false;
+
+@switch-on-handle-focused-bg: @switch-on-handle-bg;
+@switch-on-handle-focused-text: @switch-on-handle-text;
+@switch-on-handle-focused-border: @switch-on-handle-border;
+@switch-on-handle-focused-gradient: @switch-on-handle-gradient;
+
+@switch-on-handle-hovered-bg: @primary-hover-background-color;
+@switch-on-handle-hovered-text: @switch-on-text;
+@switch-on-handle-hovered-border: @primary-hover-border-color;
+@switch-on-handle-hovered-gradient: @primary-hover-gradient;
+
+@switch-off-bg: @switch-on-bg;
+@switch-off-text: @switch-on-text;
+@switch-off-border: @switch-on-border;
+@switch-off-gradient: false;
+@switch-off-shadow: false;
+@switch-off-focused-shadow: @switch-on-focused-shadow;
+
+@switch-off-focused-bg: @switch-off-bg;
+@switch-off-focused-text: @switch-off-text;
+@switch-off-focused-border: @switch-off-border;
+@switch-off-focused-gradient: @switch-off-gradient;
+
+@switch-off-hovered-bg: @switch-off-bg;
+@switch-off-hovered-text: @switch-off-text;
+@switch-off-hovered-border: @switch-on-hovered-border;
+@switch-off-hovered-gradient: false;
+
+@switch-off-handle-bg: @button-background-color;
+@switch-off-handle-text: @switch-off-text;
+@switch-off-handle-border: @button-border-color;
+@switch-off-handle-gradient: @button-gradient;
+@switch-off-handle-shadow: false;
+
+@switch-off-handle-focused-bg: @switch-off-handle-bg;
+@switch-off-handle-focused-text: @switch-off-handle-text;
+@switch-off-handle-focused-border: @switch-off-handle-border;
+@switch-off-handle-focused-gradient: @switch-off-handle-gradient;
+
+@switch-off-handle-hovered-bg: @button-hover-background-color;
+@switch-off-handle-hovered-text: @switch-off-text;
+@switch-off-handle-hovered-border: @button-hover-border-color;
+@switch-off-handle-hovered-gradient: @button-hover-gradient;
+
 
 // Kendo skin
 
@@ -330,7 +455,6 @@
 .k-panelbar .k-panel,
 .k-panelbar .k-content,
 .k-treemap-tile,
-.k-calendar th,
 .k-slider-track,
 .k-splitbar,
 .k-dropzone-active,
@@ -356,7 +480,6 @@
 .k-grid-footer,
 .k-footer-template td,
 .k-widget .k-status,
-.k-calendar th,
 .k-dropzone-hovered,
 .k-popup {
     background-color: @group-background-color;
@@ -386,9 +509,7 @@ td.k-group-cell,
 
 .k-alt,
 .k-resource.k-alt,
-.k-pivot-layout > tbody > tr:first-child > td:first-child,
-.k-calendar .k-alt
-{
+.k-pivot-layout > tbody > tr:first-child > td:first-child {
     background-color: @alt-background-color;
 }
 
@@ -472,8 +593,7 @@ textarea.k-textbox:hover,
     color: @header-text-color;
 }
 
-.k-link:link,
-.k-link:visited,
+.k-link,
 .k-nav-current.k-state-hover .k-link
 {
     color: @link-text-color;
@@ -753,84 +873,12 @@ html .km-pane-wrapper .k-header
     }
 }
 
-
-.k-calendar {
-    .k-link {
-        color: @calendar-content-text-color;
-    }
-
-    .k-footer {
-        padding: 0;
-    }
-
-    .k-footer .k-nav-today {
-        color: @form-widget-color;
-        text-decoration: @calendar-footer-text-decoration;
-        background-color: @calendar-footer-background;
-    }
-
-    .k-footer .k-nav-today:hover,
-    .k-footer .k-nav-today.k-state-hover {
-        background-color: @calendar-footer-hover-background;
-        text-decoration: @calendar-footer-hover-text-decoration;
-    }
-
-    .k-footer .k-nav-today:active {
-        background-color: @calendar-footer-active-background;
-    }
-
-    .k-link.k-nav-fast {
-        color: @form-widget-color;
-    }
-
-    .k-nav-fast.k-state-hover {
-        text-decoration: @calendar-header-hover-text-decoration;
-        background-color: @calendar-header-hover-background;
-        color: @hover-text-color;
-    }
-
-    .k-link.k-state-hover {
-        border-radius: @calendar-border-radius;
-    }
-
-    .k-today {
-        background-color: @base;
-    }
-
-    .k-today.k-state-selected {
-        background-color: @selected-background-color;
-    }
-
-    .k-today .k-link {
-        color: @normal-background;
-    }
-
-    .k-today.k-state-hover {
-        background-color: @hover-background;
-    }
-
-    .k-today.k-state-focused,
-    .k-today:active,
-    .k-today.k-state-selected:active {
-        box-shadow: @focused-item-shadow;
-    }
-
-    .k-footer .k-link {
-        border-radius: 0;
-    }
-
-    th {
-        background-color: @calendar-group-background-color;
-    }
-
-}
-
 .k-calendar-container.k-group {
     border-color: @group-border-color;
 }
 
 .k-window-titlebar .k-link {
-    border-radius: @calendar-border-radius;
+    border-radius: @border-radius;
 }
 
 .k-state-selected,
@@ -912,9 +960,8 @@ td.k-state-focused.k-state-selected
 }
 
 .k-state-hover,
-.k-state-hover:hover,
-.k-splitbar-horizontal-hover:hover,
-.k-splitbar-vertical-hover:hover,
+.k-splitbar-horizontal-hover,
+.k-splitbar-vertical-hover,
 .k-list>.k-state-hover,
 .k-scheduler .k-scheduler-toolbar ul li.k-state-hover,
 .k-pager-wrap .k-link:hover,
@@ -952,7 +999,6 @@ td.k-state-focused.k-state-selected
 
 .k-textbox:hover,
 .k-state-hover,
-.k-state-hover:hover,
 .k-pager-wrap .k-link:hover,
 .k-other-month.k-state-hover .k-link,
 div.k-filebrowser-dropzone em,
@@ -1319,14 +1365,12 @@ div.k-filebrowser-dropzone em
 // TreeMap
 
 .k-leaf,
-.k-leaf.k-state-hover:hover
-{
+.k-leaf.k-state-hover {
     color: #fff;
 }
 
 .k-leaf.k-inverse,
-.k-leaf.k-inverse.k-state-hover:hover
-{
+.k-leaf.k-inverse.k-state-hover {
     color: #000;
 }
 
@@ -1544,8 +1588,6 @@ div.k-filebrowser-dropzone em
 .k-numeric-wrap,
 .k-list-container,
 .k-calendar-container,
-.k-calendar td,
-.k-calendar .k-link,
 .k-treeview .k-in,
 .k-editor-inline,
 .k-tooltip,
@@ -2191,7 +2233,7 @@ html .km-pane-wrapper .km-widget,
 .km-pane-wrapper .k-column-menu .k-check
 {
     background-color: @icon-background-color;
-    border-radius: @calendar-border-radius;
+    border-radius: @border-radius;
 }
 
 .k-popup-dropdowntree {
@@ -2585,7 +2627,7 @@ html .km-pane-wrapper .km-widget,
     .k-dialog-buttongroup {
         &.k-dialog-button-layout-stretched {
             .k-button {
-                padding: 0.9em;
+                padding: @dialog-button-stretched-padding-y @dialog-button-stretched-padding-x;
             }
         }
         &.k-dialog-button-layout-normal {
@@ -2594,6 +2636,28 @@ html .km-pane-wrapper .km-widget,
 
             .k-button {
                 border-radius: @border-radius;
+            }
+        }
+    }
+    &.k-window-sm {
+        .k-dialog-buttongroup {
+            &.k-dialog-button-layout-stretched {
+                flex-direction: column;
+
+                .k-button {
+                    flex: 0 0 auto;
+                    padding: (@dialog-button-stretched-padding-y / 2) (@dialog-button-stretched-padding-x / 2);
+                }
+            }
+        }
+    }
+    &.k-window-md {
+        .k-dialog-buttongroup {
+            &.k-dialog-button-layout-stretched {
+
+                .k-button {
+                    padding: (@dialog-button-stretched-padding-y * .7) (@dialog-button-stretched-padding-x * .7);
+                }
             }
         }
     }
@@ -2803,3 +2867,19 @@ html .km-pane-wrapper .km-widget,
 .k-grid-list > .k-item.k-last > .k-spacer-cell {
     border-bottom-color: @grid-text;
 }
+
+
+.k-calendar {
+    .k-header {
+        .k-nav-prev,
+        .k-nav-next {
+            border-radius: 20px;
+        }
+    }
+}
+
+
+@import "Default/calendar/_theme.less";
+@import "Default/multiviewcalendar/_theme.less";
+@import "Default/scrollview/_theme.less";
+@import "Default/switch/_theme.less";

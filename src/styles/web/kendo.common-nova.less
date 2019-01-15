@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -25,22 +25,41 @@
 @line-height: (20/14);
 @line-height-em: ((20/14)*1em);
 @input-height: 2.214285714em;
+@input-default-width: 12.4em;
+@input-border-width: 1px;
+@input-padding-x: 0;
 @input-padding-y: 0.17857143em;
 @input-indent: .8em;
+@input-offset: (@input-height + .35em);
+
+@combobox-padding-x: @input-offset;
+
+@input-clear-icon-offset: ~"( (@{input-offset} - @{grid-size})/2 )";
+@combobox-clear-icon-offset: ~"( 2.57142857em + ((2.56428571em - @{grid-size})/2) )";
+@multiselect-clear-icon-top-offset: ~"( (@{input-height} - @{grid-size}) / 2 + @{input-padding-y} + 1px )";
+
 @editor-icon-size: 36px;
 @menu-link-padding: 1.071em;
 @button-padding-x: 14px;
-@button-padding-y: 9px;
+@button-padding-y: 8px;
 @button-padding: @button-padding-y @button-padding-x;
+@button-line-height: (20 / 14);
 @treeview-inner-padding: 0.429em 0.6667em 0.429em 0.5833em;
 @treeview-inner-margin: 1px 0 1px 0.3333em;
 @scheduler-link-padding: 0 1.1em;
 @grid-header-padding: .429em .2em .429em 1em;
+@grid-th-padding: .786em .6em .786em 1.286em;
 @icon-positioning: "material";
 @spreadsheet-action-bar-font-size: 14px;
 
 @window-border-width: 0;
 @window-border-style: solid;
+
+@window-sizes: {
+    sm: 300px;
+    md: 800px;
+    lg: 1200px;
+};
 
 @window-titlebar-padding-x: 16px;
 @window-titlebar-padding-y: 10px;
@@ -65,10 +84,101 @@
 @grid-cell-padding-x: @grid-padding-x;
 @grid-cell-padding-y: @grid-padding-y;
 
-@import "common/all.less";
+// Calendar
+@calendar-padding-x: 0;
+@calendar-padding-y: 0;
+@calendar-border-width: 1px;
+@calendar-border-radius: 20px;
+@calendar-font-size: 14px;
+@calendar-line-height: (20 / 14);
+
+@calendar-header-padding-x: 0;
+@calendar-header-padding-y: 0;
+@calendar-header-border-width: 0;
+@calendar-header-button-padding-x: 1em;
+@calendar-header-button-padding-y: 1em;
+@calendar-header-button-border-width: 0;
+@calendar-header-button-border-radius: 0;
+
+@calendar-content-padding-x: 0;
+@calendar-content-padding-y: 0;
+
+@calendar-cell-padding-x: .5em;
+@calendar-cell-padding-y: .5em;
+@calendar-cell-border-radius: @calendar-border-radius;
+@calendar-cell-line-height: (22 / 14);
+@calendar-cell-size: ( (38px / 14px ) * 1em );
+
+@calendar-header-cell-padding-x: 2px;
+@calendar-header-cell-padding-y: (@calendar-cell-padding-y / 2);
+@calendar-header-cell-border-width: 0;
+@calendar-header-cell-font-size: 12px;
+@calendar-header-cell-line-height: (20 / 14);
+@calendar-header-cell-size: @calendar-cell-size;
+
+@calendar-meta-cell-size: ( (60px / @calendar-font-size) * 1em );
+
+
+// Multiviewcalendar
+@multiviewcalendar-font-size: @calendar-font-size;
+@multiviewcalendar-line-height: @calendar-line-height;
+
+@multiviewcalendar-header-padding-x: 16px;
+@multiviewcalendar-header-padding-y: 8px;
+
+@multiviewcalendar-content-padding-x: 16px;
+@multiviewcalendar-content-padding-y: 8px;
+
+@multiviewcalendar-cell-padding-x: @calendar-cell-padding-x;
+@multiviewcalendar-cell-padding-y: @calendar-cell-padding-y;
+@multiviewcalendar-cell-border-radius: @calendar-border-radius;
+@multiviewcalendar-cell-line-height: @calendar-cell-line-height;
+@multiviewcalendar-cell-size: @calendar-cell-size;
+
+@multiviewcalendar-centuryview-cell-padding-x: @multiviewcalendar-cell-padding-x;
+@multiviewcalendar-centuryview-cell-padding-y: @multiviewcalendar-cell-padding-y;
+
+@multiviewcalendar-header-cell-font-size: 12px;
 
 @spreadsheet-popup-button-padding: .6em 1.2em .6em 1em;
-@calendar-cell-width: ((38px / 14px) * 1em);
+
+// ScrollView
+@scrollview-pagebutton-size: 8px;
+@scrollview-navigation-size: 4.5em;
+
+@scrollview-pager-offset: 20px;
+@scrollview-pager-item-spacing: 20px;
+@scrollview-pager-item-border-width: 1px;
+@scrollview-pager-height: calc(@scrollview-pagebutton-size + (2 * @scrollview-pager-item-border-width) + (@scrollview-pager-item-spacing / 2 ));
+
+
+@import "common/all.less";
+
+// Switch
+
+@switch-size: 5em;
+@switch-border-radius: 0;
+@switch-font-size: 14px;
+
+@switch-track-size: null;
+@switch-container-border-width: 1px;
+@switch-container-padding-x: 2px;
+@switch-container-padding-y: @switch-container-padding-x;
+
+@switch-handle-size: (.4 * @switch-size);
+@switch-handle-border-radius: 0;
+@switch-handle-border-width: 1px;
+
+@switch-label-display: inline;
+@switch-label-outer-spacing: 12px;
+@switch-label-inner-spacing: 2px;
+@switch-label-spacing: calc(@switch-label-outer-spacing + @switch-label-inner-spacing);
+
+@switch-label-position: calc(@switch-label-outer-spacing - @switch-container-border-width);
+@switch-label-width: calc(100% - @switch-handle-size - @switch-label-spacing - @switch-container-padding-x);
+@switch-on-left-x: calc(100% - @switch-handle-size);
+
+@import "common/all.less";
 
 .k-button {
     line-height: @line-height;
@@ -168,7 +278,7 @@
 .k-grid-header th.k-header,
 .k-filter-row th
 {
-    padding: .786em .6em .786em 1.286em;
+    padding: @grid-th-padding;
 }
 
 .k-rtl .k-grid-header th.k-header,
@@ -203,7 +313,7 @@
     border-top-style: solid;
 }
 
-.k-filter-menu .k-button {
+.k-filter-menu .k-action-buttons .k-button {
     margin: 0;
     width: 50%;
     padding-top: 15px;
@@ -342,17 +452,7 @@
 }
 
 .k-combobox > .k-dropdown-wrap > .k-i-close {
-    right: 3.2em;
-}
-
-.k-multiselect > .k-multiselect-wrap > .k-i-close,
-.k-dropdowntree > .k-multiselect-wrap > .k-i-close {
-    top: calc((@input-height - @grid-size) / 2 + @input-padding-y + 1px);
-}
-
-.k-autocomplete > .k-i-close,
-.k-multiselect > .k-multiselect-wrap > .k-i-close {
-    margin-right: 10px;
+    right: calc(@combobox-clear-icon-offset);
 }
 
 .k-picker-wrap .k-select,
@@ -387,40 +487,6 @@
 
 .k-datetimepicker .k-picker-wrap .k-icon {
     margin: 0 6px;
-}
-
-.k-calendar .k-header {
-    margin: 0 -5px;
-}
-
-.k-calendar td {
-    padding: 0;
-    border-width: 1px;
-    border-style: solid;
-}
-
-.k-calendar .k-content .k-link {
-    min-height: 2.429em;
-    line-height: 2.429em;
-    padding: 0;
-    text-align: center;
-}
-
-.k-calendar .k-century .k-link {
-    text-align: left;
-    padding: 0 .7em;
-    line-height: 1.3em;
-}
-
-.k-calendar th {
-    border-bottom-width: 0;
-    padding: .714em .45em .714em 0;
-}
-
-.k-calendar .k-footer {
-    border-top-width: 1px;
-    border-top-style: solid;
-    margin: 0 -5px;
 }
 
 .k-popup.k-list-container {
@@ -476,52 +542,8 @@
     margin: 0 0 11px;
 }
 
-.k-button,
-.k-calendar .k-header .k-link,
-.k-calendar .k-footer {
+.k-button {
     text-transform: uppercase;
-}
-
-.k-widget.k-calendar .k-nav-fast
-{
-    width: 64%;
-    height: 3.43em;
-    line-height: 3.43em;
-    margin: 0;
-}
-
-.k-calendar .k-header .k-icon
-{
-    vertical-align: middle;
-}
-
-.k-widget.k-calendar .k-nav-prev,
-.k-widget.k-calendar .k-nav-next
-{
-    position: absolute;
-    top: 0;
-}
-
-.k-calendar .k-header .k-link.k-nav-prev,
-.k-calendar .k-header .k-link.k-nav-next
-{
-    height: 3.43em;
-    width: 3.43em;
-    line-height: 3.43em;
-}
-
-.k-widget.k-calendar .k-nav-prev {
-    left: 0;
-}
-
-.k-widget.k-calendar .k-nav-next {
-    right: 0;
-}
-
-.k-calendar .k-footer .k-nav-today,
-.k-calendar .k-footer > .k-state-disabled
-{
-    padding: 1.143em 0 1.071em;
 }
 
 .k-popup.k-calendar-container {
@@ -1036,14 +1058,12 @@ form.k-filter-menu .k-textbox {
 
 .k-rtl .k-widget.k-autocomplete > .k-i-close,
 .k-rtl .k-widget.k-multiselect > .k-multiselect-wrap > .k-i-close {
-    left: 0;
     right: initial;
-    margin-left: 10px;
     margin-right: 0;
 }
 
 .k-rtl .k-widget.k-combobox > .k-dropdown-wrap > .k-i-close {
-    left: 3.2em;
+    left: calc(@combobox-clear-icon-offset);
     right: initial;
 }
 

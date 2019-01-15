@@ -37,6 +37,12 @@
     }
 }
 
+each(@window-sizes, {
+    .k-window-@{key} {
+        width: @value;
+    }
+});
+
 
 // Title bar
 .k-window-titlebar {

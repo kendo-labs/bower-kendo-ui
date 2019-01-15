@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -419,10 +419,9 @@
             this.a = a;
         },
         toRGB: function () {
-            var ref = this;
-            var h = ref.h / 360;
-            var s = ref.s / 100;
-            var l = ref.l / 100;
+            var h = this.h / 360;
+            var s = this.s / 100;
+            var l = this.l / 100;
             var r, g, b;
             if (s === 0) {
                 r = g = b = l;

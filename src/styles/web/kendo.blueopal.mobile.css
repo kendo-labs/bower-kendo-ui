@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -5473,7 +5473,7 @@ li.km-state-active .km-listview-label,
 }
 .km-switch-handle,
 .km-switch-background {
-  color: #13688c;
+  color: #7bd2f6;
 }
 .km-rowinsert,
 .km-state-active,
@@ -5492,10 +5492,10 @@ li.km-state-active .km-listview-link,
 li.km-state-active .km-listview-label,
 .km-listview-label input[type=radio]:checked,
 .km-listview-label input[type=checkbox]:checked {
-  background: #13688c;
+  background: #7bd2f6;
 }
 .km-filter-wrap > input:focus {
-  border-color: #13688c;
+  border-color: #7bd2f6;
 }
 .km-badge,
 .km-rowdelete {

@@ -1,5 +1,5 @@
 /** 
- * Copyright 2018 Telerik EAD                                                                                                                                                                           
+ * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -1760,7 +1760,7 @@
                 }
             },
             _showHandler: function (e) {
-                var ev = e, offset, that = this, options = that.options;
+                var ev = e, offset, that = this, options = that.options, target = $(ev.currentTarget);
                 if (e.event) {
                     ev = e.event;
                     ev.pageX = e.x.location;
@@ -1773,7 +1773,7 @@
                 ev.preventDefault();
                 ev.stopImmediatePropagation();
                 that.element.find('.' + FOCUSEDSTATE).removeClass(FOCUSEDSTATE);
-                if (options.filter && kendo.support.matchesSelector.call(ev.currentTarget, options.filter) || !options.filter) {
+                if (options.filter && target.is(options.filter) || !options.filter) {
                     if (options.alignToAnchor) {
                         that.popup.options.anchor = ev.currentTarget;
                         that.open(ev.currentTarget);
