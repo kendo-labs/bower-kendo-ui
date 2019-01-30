@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2019.1.115'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.130'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -19438,8 +19438,8 @@
                     }
                     endY = tapPosition(e);
                     if (Math.abs(endY - startY) < 10) {
-                        e.preventDefault();
-                        that.trigger('click', { item: $(e.target.closest(ITEMSELECTOR)) });
+                        that._touchTriggered = true;
+                        that._triggerClick($(e.target).closest(ITEMSELECTOR).get(0));
                     }
                 });
             },
@@ -19639,10 +19639,17 @@
                 return this.element.children(ITEMSELECTOR);
             },
             _click: function (e) {
+                if (this._touchTriggered) {
+                    this._touchTriggered = false;
+                    return;
+                }
                 if (!e.isDefaultPrevented()) {
-                    if (!this.trigger('click', { item: $(e.currentTarget) })) {
-                        this.select(e.currentTarget);
-                    }
+                    this._triggerClick(e.currentTarget);
+                }
+            },
+            _triggerClick: function (item) {
+                if (!this.trigger('click', { item: $(item) })) {
+                    this.select(item);
                 }
             },
             _valueExpr: function (type, values) {
@@ -25063,7 +25070,7 @@
                     that._fetchData();
                 }
                 listView.value(value).done(function () {
-                    that._old = that._accessor();
+                    that._old = that._valueBeforeCascade = that._accessor();
                     that._oldIndex = that.selectedIndex;
                 });
             },
@@ -26389,7 +26396,7 @@
                         that.input.val(value);
                         that._placeholder(true);
                     }
-                    that._old = that._accessor();
+                    that._old = that._valueBeforeCascade = that._accessor();
                     that._oldIndex = that.selectedIndex;
                     that._prev = that.input.val();
                     if (that._state === STATE_FILTER) {
@@ -27099,7 +27106,7 @@
                     that._clearFilter();
                 }
                 listView.value(value);
-                that._old = listView.value();
+                that._old = that._valueBeforeCascade = listView.value();
                 if (!clearFilters) {
                     that._fetchData();
                 }
@@ -30461,6 +30468,9 @@
                 } else {
                     that.readonly(element.is('[readonly]'));
                 }
+                that.angular('compile', function () {
+                    return { elements: that._text.get() };
+                });
                 kendo.notify(that);
             },
             options: {
@@ -30691,7 +30701,6 @@
                 } catch (e) {
                     element.type = 'text';
                 }
-                that._initialTitle = element.title;
                 text[0].title = element.title;
                 text[0].tabIndex = element.tabIndex;
                 text[0].style.cssText = element.style.cssText;
@@ -30889,7 +30898,7 @@
                 if (!placeholderSupported && !value) {
                     input.val(this.options.placeholder);
                 }
-                input.attr('title', this._initialTitle || input.val());
+                input.attr('title', this.element.attr('title') || input.val());
             },
             _wrapper: function () {
                 var that = this, element = that.element, DOMElement = element[0], wrapper;
@@ -46553,7 +46562,7 @@
     (function ($, undefined) {
         var kendo = window.kendo, ui = kendo.mobile.ui, outerWidth = kendo._outerWidth, Widget = ui.Widget, support = kendo.support, CHANGE = 'change', SWITCHON = 'switch-on', SWITCHOFF = 'switch-off', MARGINLEFT = 'margin-left', ACTIVE_STATE = 'state-active', DISABLED_STATE = 'state-disabled', DISABLED = 'disabled', RESOLVEDPREFIX = support.transitions.css === undefined ? '' : support.transitions.css, TRANSFORMSTYLE = RESOLVEDPREFIX + 'transform', proxy = $.proxy;
         function className(name) {
-            return 'k-' + name + ' km-' + name;
+            return 'km-' + name;
         }
         function limitValue(value, minLimit, maxLimit) {
             return Math.max(minLimit, Math.min(maxLimit, value));
@@ -47451,7 +47460,8 @@
             TreeView: 'ul',
             Menu: 'ul',
             ContextMenu: 'ul',
-            ActionSheet: 'ul'
+            ActionSheet: 'ul',
+            Switch: 'input'
         };
         var SKIP_SHORTCUTS = [
             'MobileView',

@@ -380,6 +380,254 @@
 .k-chat .k-toolbar-box .k-scroll-button:hover {
   background-color: #fff;
 }
+.k-calendar {
+  border-color: #ebebeb;
+  color: #676767;
+  background-color: #fff;
+}
+.k-calendar > .k-header {
+  border-color: #ebebeb;
+  color: #464646;
+  background-color: #ffffff;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+}
+.k-calendar th {
+  border-color: #ebebeb;
+  color: #676767;
+  background-color: #f5f5f5;
+}
+.k-calendar .k-alt {
+  border-color: #ebebeb;
+  color: #676767;
+  background-color: #f5f5f5;
+}
+.k-calendar .k-weekend {
+  background-color: transparent;
+}
+.k-calendar .k-other-month {
+  color: #d9d9d9;
+  background-color: transparent;
+}
+.k-calendar .k-out-of-range {
+  pointer-events: none;
+  visibility: hidden;
+}
+.k-calendar .k-today .k-link {
+  color: #818181;
+  box-shadow: inset 0 0 0 1px #818181;
+}
+.k-calendar td.k-state-hover .k-link {
+  border-color: #cccccc;
+  color: #676767;
+  background-color: #ebebeb;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.06) 100%);
+}
+.k-calendar td.k-state-selected .k-link {
+  border-color: #606060;
+  color: #454545;
+  background-color: #818181;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
+}
+.k-calendar td.k-state-focused .k-link {
+  box-shadow: inset 0 0 2px 1px #818181;
+}
+.k-calendar .k-footer .k-nav-today {
+  color: #818181;
+}
+.k-calendar .k-footer .k-nav-today:hover {
+  color: #777777;
+}
+.k-calendar-range {
+  border-color: #ebebeb;
+  color: #676767;
+  background-color: #fff;
+}
+.k-calendar-range th {
+  color: inherit;
+  background-color: transparent;
+  text-transform: uppercase;
+}
+.k-calendar-range td.k-state-hover .k-link {
+  border-color: #cccccc;
+  color: #676767;
+  background-color: #ebebeb;
+}
+.k-calendar-range td.k-state-selected .k-link {
+  border-color: #606060;
+  color: #454545;
+  background-color: #818181;
+}
+.k-calendar-range td.k-state-focused .k-link {
+  box-shadow: inset 0 0 2px 1px #818181;
+}
+.k-calendar-range td.k-range-start,
+.k-calendar-range td.k-range-mid,
+.k-calendar-range td.k-range-end {
+  background-image: linear-gradient(transparent 1px, rgba(129, 129, 129, 0.3) 1px, rgba(129, 129, 129, 0.3) calc(100% - 1px), transparent calc(100% - 1px));
+}
+.k-ie .k-calendar-range td.k-range-start,
+.k-ie .k-calendar-range td.k-range-mid,
+.k-ie .k-calendar-range td.k-range-end,
+.k-edge .k-calendar-range td.k-range-start,
+.k-edge .k-calendar-range td.k-range-mid,
+.k-edge .k-calendar-range td.k-range-end {
+  background-image: none;
+  background-color: rgba(129, 129, 129, 0.3);
+}
+.k-calendar-range td.k-range-split-start::after {
+  background-image: linear-gradient(to left, rgba(129, 129, 129, 0.3), transparent);
+}
+.k-calendar-range td.k-range-split-end::after {
+  background-image: linear-gradient(to right, rgba(129, 129, 129, 0.3), transparent);
+}
+.k-calendar-range .k-footer .k-nav-today {
+  color: #818181;
+  background: none;
+}
+.k-scrollview-nav > li.k-link {
+  border-color: #d1d1d1;
+  background-color: #ffffff;
+  background-clip: padding-box;
+}
+.k-scrollview-nav > li.k-link.k-primary {
+  border-color: #797979;
+  background-color: #818181;
+}
+.k-scrollview-elements {
+  color: #454545;
+}
+.k-scrollview-next,
+.k-scrollview-prev {
+  color: inherit;
+  background: rgba(0, 0, 0, 0);
+  text-shadow: rgba(0, 0, 0, 0.3) 0 0 15px;
+  opacity: 0.7;
+  outline-width: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.k-scrollview-next:hover,
+.k-scrollview-prev:hover {
+  color: #454545;
+  opacity: 1;
+}
+.k-scrollview-next:hover span::before,
+.k-scrollview-prev:hover span::before {
+  background-color: transparent;
+}
+.k-switch-handle {
+  background-clip: border-box;
+}
+.k-switch-on .k-switch-container {
+  border-color: #d1d1d1;
+  color: #818181;
+  background-color: #fff;
+}
+.k-switch-on .k-switch-handle {
+  border-color: #797979;
+  color: #818181;
+  background-color: #818181;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%);
+}
+.k-switch-on:focus,
+.k-switch-on.k-state-focused {
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
+}
+.k-switch-on:focus .k-switch-container,
+.k-switch-on.k-state-focused .k-switch-container {
+  border-color: #ababab;
+  color: #818181;
+  background-color: #fff;
+}
+.k-switch-on:focus .k-switch-handle,
+.k-switch-on.k-state-focused .k-switch-handle {
+  border-color: #797979;
+  color: #818181;
+  background-color: #818181;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%);
+}
+.k-switch-on:hover .k-switch-container,
+.k-switch-on.k-state-hover .k-switch-container {
+  border-color: #ababab;
+  color: #818181;
+  background-color: #fff;
+}
+.k-switch-on:hover .k-switch-handle,
+.k-switch-on.k-state-hover .k-switch-handle {
+  border-color: #797979;
+  color: #818181;
+  background-color: #818181;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+}
+.k-switch-on .k-switch-label-off {
+  color: transparent;
+}
+.k-switch-off .k-switch-container {
+  border-color: #d1d1d1;
+  color: #676767;
+  background-color: #fff;
+}
+.k-switch-off .k-switch-handle {
+  border-color: #d1d1d1;
+  color: #676767;
+  background-color: #ffffff;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
+}
+.k-switch-off:focus,
+.k-switch-off.k-state-focused {
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
+}
+.k-switch-off:focus .k-switch-container,
+.k-switch-off.k-state-focused .k-switch-container {
+  border-color: #ababab;
+  color: #676767;
+  background-color: #fff;
+}
+.k-switch-off:focus .k-switch-handle,
+.k-switch-off.k-state-focused .k-switch-handle {
+  border-color: #ababab;
+  color: #676767;
+  background-color: #ffffff;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+}
+.k-switch-off:hover .k-switch-container,
+.k-switch-off.k-state-hover .k-switch-container {
+  border-color: #ababab;
+  color: #676767;
+  background-color: #fff;
+}
+.k-switch-off:hover .k-switch-handle,
+.k-switch-off.k-state-hover .k-switch-handle {
+  border-color: #ababab;
+  color: #676767;
+  background-color: #ebebeb;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+}
+.k-switch-off .k-switch-label-on {
+  color: transparent;
+}
+.k-switch {
+  background-color: transparent;
+  box-shadow: none;
+}
+.k-switch:focus .k-switch-container,
+.k-switch.k-state-focused .k-switch-container {
+  outline: none;
+}
+.k-switch.k-state-disabled {
+  cursor: default;
+}
+.k-switch[aria-readonly="true"] {
+  pointer-events: none;
+}
 .k-in,
 .k-item,
 .k-window-action {
@@ -2592,252 +2840,4 @@ textarea.k-textbox,
 .k-grid-list > .k-item.k-last > .k-group-cell,
 .k-grid-list > .k-item.k-last > .k-spacer-cell {
   border-bottom-color: #676767;
-}
-.k-calendar {
-  border-color: #ebebeb;
-  color: #676767;
-  background-color: #fff;
-}
-.k-calendar > .k-header {
-  border-color: #ebebeb;
-  color: #464646;
-  background-color: #ffffff;
-  background-image: url('textures/highlight.png');
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-}
-.k-calendar th {
-  border-color: #ebebeb;
-  color: #676767;
-  background-color: #f5f5f5;
-}
-.k-calendar .k-alt {
-  border-color: #ebebeb;
-  color: #676767;
-  background-color: #f5f5f5;
-}
-.k-calendar .k-weekend {
-  background-color: transparent;
-}
-.k-calendar .k-other-month {
-  color: #d9d9d9;
-  background-color: transparent;
-}
-.k-calendar .k-out-of-range {
-  pointer-events: none;
-  visibility: hidden;
-}
-.k-calendar .k-today .k-link {
-  color: #818181;
-  box-shadow: inset 0 0 0 1px #818181;
-}
-.k-calendar td.k-state-hover .k-link {
-  border-color: #cccccc;
-  color: #676767;
-  background-color: #ebebeb;
-  background-image: url('textures/highlight.png');
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.06) 100%);
-}
-.k-calendar td.k-state-selected .k-link {
-  border-color: #606060;
-  color: #454545;
-  background-color: #818181;
-  background-image: url('textures/highlight.png');
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
-}
-.k-calendar td.k-state-focused .k-link {
-  box-shadow: inset 0 0 2px 1px #818181;
-}
-.k-calendar .k-footer .k-nav-today {
-  color: #818181;
-}
-.k-calendar .k-footer .k-nav-today:hover {
-  color: #777777;
-}
-.k-calendar-range {
-  border-color: #ebebeb;
-  color: #676767;
-  background-color: #fff;
-}
-.k-calendar-range th {
-  color: inherit;
-  background-color: transparent;
-  text-transform: uppercase;
-}
-.k-calendar-range td.k-state-hover .k-link {
-  border-color: #cccccc;
-  color: #676767;
-  background-color: #ebebeb;
-}
-.k-calendar-range td.k-state-selected .k-link {
-  border-color: #606060;
-  color: #454545;
-  background-color: #818181;
-}
-.k-calendar-range td.k-state-focused .k-link {
-  box-shadow: inset 0 0 2px 1px #818181;
-}
-.k-calendar-range td.k-range-start,
-.k-calendar-range td.k-range-mid,
-.k-calendar-range td.k-range-end {
-  background-image: linear-gradient(transparent 1px, rgba(129, 129, 129, 0.3) 1px, rgba(129, 129, 129, 0.3) calc(100% - 1px), transparent calc(100% - 1px));
-}
-.k-ie .k-calendar-range td.k-range-start,
-.k-ie .k-calendar-range td.k-range-mid,
-.k-ie .k-calendar-range td.k-range-end,
-.k-edge .k-calendar-range td.k-range-start,
-.k-edge .k-calendar-range td.k-range-mid,
-.k-edge .k-calendar-range td.k-range-end {
-  background-image: none;
-  background-color: rgba(129, 129, 129, 0.3);
-}
-.k-calendar-range td.k-range-split-start::after {
-  background-image: linear-gradient(to left, rgba(129, 129, 129, 0.3), transparent);
-}
-.k-calendar-range td.k-range-split-end::after {
-  background-image: linear-gradient(to right, rgba(129, 129, 129, 0.3), transparent);
-}
-.k-calendar-range .k-footer .k-nav-today {
-  color: #818181;
-  background: none;
-}
-.k-scrollview-nav > li.k-link {
-  border-color: #d1d1d1;
-  background-color: #ffffff;
-  background-clip: padding-box;
-}
-.k-scrollview-nav > li.k-link.k-primary {
-  border-color: #797979;
-  background-color: #818181;
-}
-.k-scrollview-elements {
-  color: #454545;
-}
-.k-scrollview-next,
-.k-scrollview-prev {
-  color: inherit;
-  background: rgba(0, 0, 0, 0);
-  text-shadow: rgba(0, 0, 0, 0.3) 0 0 15px;
-  opacity: 0.7;
-  outline-width: 0;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-.k-scrollview-next:hover,
-.k-scrollview-prev:hover {
-  color: #454545;
-  opacity: 1;
-}
-.k-scrollview-next:hover span::before,
-.k-scrollview-prev:hover span::before {
-  background-color: transparent;
-}
-.k-switch-handle {
-  background-clip: border-box;
-}
-.k-switch-on .k-switch-container {
-  border-color: #d1d1d1;
-  color: #818181;
-  background-color: #fff;
-}
-.k-switch-on .k-switch-handle {
-  border-color: #797979;
-  color: #818181;
-  background-color: #818181;
-  background-image: url('textures/highlight.png');
-  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%);
-}
-.k-switch-on:focus,
-.k-switch-on.k-state-focused {
-  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
-}
-.k-switch-on:focus .k-switch-container,
-.k-switch-on.k-state-focused .k-switch-container {
-  border-color: #ababab;
-  color: #818181;
-  background-color: #fff;
-}
-.k-switch-on:focus .k-switch-handle,
-.k-switch-on.k-state-focused .k-switch-handle {
-  border-color: #797979;
-  color: #818181;
-  background-color: #818181;
-  background-image: url('textures/highlight.png');
-  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%);
-}
-.k-switch-on:hover .k-switch-container,
-.k-switch-on.k-state-hover .k-switch-container {
-  border-color: #ababab;
-  color: #818181;
-  background-color: #fff;
-}
-.k-switch-on:hover .k-switch-handle,
-.k-switch-on.k-state-hover .k-switch-handle {
-  border-color: #797979;
-  color: #818181;
-  background-color: #818181;
-  background-image: url('textures/highlight.png');
-  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
-}
-.k-switch-on .k-switch-label-off {
-  color: transparent;
-}
-.k-switch-off .k-switch-container {
-  border-color: #d1d1d1;
-  color: #676767;
-  background-color: #fff;
-}
-.k-switch-off .k-switch-handle {
-  border-color: #d1d1d1;
-  color: #676767;
-  background-color: #ffffff;
-  background-image: url('textures/highlight.png');
-  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.08) 100%);
-}
-.k-switch-off:focus,
-.k-switch-off.k-state-focused {
-  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3);
-}
-.k-switch-off:focus .k-switch-container,
-.k-switch-off.k-state-focused .k-switch-container {
-  border-color: #ababab;
-  color: #676767;
-  background-color: #fff;
-}
-.k-switch-off:focus .k-switch-handle,
-.k-switch-off.k-state-focused .k-switch-handle {
-  border-color: #ababab;
-  color: #676767;
-  background-color: #ffffff;
-  background-image: url('textures/highlight.png');
-  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
-}
-.k-switch-off:hover .k-switch-container,
-.k-switch-off.k-state-hover .k-switch-container {
-  border-color: #ababab;
-  color: #676767;
-  background-color: #fff;
-}
-.k-switch-off:hover .k-switch-handle,
-.k-switch-off.k-state-hover .k-switch-handle {
-  border-color: #ababab;
-  color: #676767;
-  background-color: #ebebeb;
-  background-image: url('textures/highlight.png');
-  background-image: none, linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
-}
-.k-switch-off .k-switch-label-on {
-  color: transparent;
-}
-.k-switch {
-  background-color: transparent;
-  box-shadow: none;
-}
-.k-switch:focus .k-switch-container,
-.k-switch.k-state-focused .k-switch-container {
-  outline: none;
-}
-.k-switch.k-state-disabled {
-  cursor: default;
-}
-.k-switch[aria-readonly="true"] {
-  pointer-events: none;
 }

@@ -13314,6 +13314,7 @@ div.k-scrollview-wrap > [data-role=page] {
   vertical-align: middle;
   font-size: 4.5em;
   font-weight: normal;
+  position: static;
 }
 .k-scrollview-elements {
   width: 100%;

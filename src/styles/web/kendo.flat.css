@@ -357,6 +357,239 @@
 .k-chat .k-toolbar-box .k-scroll-button:hover {
   background-color: #fff;
 }
+.k-calendar {
+  border-color: #cccccc;
+  color: #4c5356;
+  background-color: #fff;
+}
+.k-calendar > .k-header {
+  border-color: #cccccc;
+  color: #fff;
+  background-color: #363940;
+  background-image: none;
+}
+.k-calendar th {
+  border-color: #cccccc;
+  color: #4c5356;
+  background-color: #fff;
+}
+.k-calendar .k-alt {
+  border-color: #cccccc;
+  color: #4c5356;
+  background-color: #f5f5f5;
+}
+.k-calendar .k-weekend {
+  background-color: transparent;
+}
+.k-calendar .k-other-month {
+  color: #c2c2c2;
+  background-color: transparent;
+}
+.k-calendar .k-out-of-range {
+  pointer-events: none;
+  visibility: hidden;
+}
+.k-calendar .k-today .k-link {
+  color: #10c4b2;
+  box-shadow: inset 0 0 0 1px #10c4b2;
+}
+.k-calendar td.k-state-hover .k-link {
+  border-color: #12d7c3;
+  color: #fff;
+  background-color: #12d7c3;
+  background-image: none;
+}
+.k-calendar td.k-state-selected .k-link {
+  border-color: #10c4b2;
+  color: #fff;
+  background-color: #10c4b2;
+  background-image: none;
+}
+.k-calendar td.k-state-focused .k-link {
+  box-shadow: inset 0 0 0 1px #0c9083;
+}
+.k-calendar .k-footer .k-nav-today {
+  color: #10c4b2;
+}
+.k-calendar .k-footer .k-nav-today:hover {
+  color: #12d7c3;
+}
+.k-calendar-range {
+  border-color: #cccccc;
+  color: #4c5356;
+  background-color: #fff;
+}
+.k-calendar-range th {
+  color: inherit;
+  background-color: transparent;
+  text-transform: uppercase;
+}
+.k-calendar-range td.k-state-hover .k-link {
+  border-color: #12d7c3;
+  color: #fff;
+  background-color: #12d7c3;
+}
+.k-calendar-range td.k-state-selected .k-link {
+  border-color: #10c4b2;
+  color: #fff;
+  background-color: #10c4b2;
+}
+.k-calendar-range td.k-state-focused .k-link {
+  box-shadow: inset 0 0 0 1px #0c9083;
+}
+.k-calendar-range td.k-range-start,
+.k-calendar-range td.k-range-mid,
+.k-calendar-range td.k-range-end {
+  background-image: linear-gradient(transparent 1px, rgba(16, 196, 178, 0.3) 1px, rgba(16, 196, 178, 0.3) calc(100% - 1px), transparent calc(100% - 1px));
+}
+.k-ie .k-calendar-range td.k-range-start,
+.k-ie .k-calendar-range td.k-range-mid,
+.k-ie .k-calendar-range td.k-range-end,
+.k-edge .k-calendar-range td.k-range-start,
+.k-edge .k-calendar-range td.k-range-mid,
+.k-edge .k-calendar-range td.k-range-end {
+  background-image: none;
+  background-color: rgba(16, 196, 178, 0.3);
+}
+.k-calendar-range td.k-range-split-start::after {
+  background-image: linear-gradient(to left, rgba(16, 196, 178, 0.3), transparent);
+}
+.k-calendar-range td.k-range-split-end::after {
+  background-image: linear-gradient(to right, rgba(16, 196, 178, 0.3), transparent);
+}
+.k-calendar-range .k-footer .k-nav-today {
+  color: #10c4b2;
+  background: none;
+}
+.k-scrollview-nav > li.k-link {
+  border-color: #363940;
+  background-color: #363940;
+  background-clip: padding-box;
+}
+.k-scrollview-nav > li.k-link.k-primary {
+  border-color: #10c4b2;
+  background-color: #10c4b2;
+}
+.k-scrollview-elements {
+  color: #fff;
+}
+.k-scrollview-next,
+.k-scrollview-prev {
+  color: inherit;
+  background: rgba(0, 0, 0, 0);
+  text-shadow: rgba(0, 0, 0, 0.3) 0 0 15px;
+  opacity: 0.7;
+  outline-width: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.k-scrollview-next:hover,
+.k-scrollview-prev:hover {
+  color: #fff;
+  opacity: 1;
+}
+.k-scrollview-next:hover span::before,
+.k-scrollview-prev:hover span::before {
+  background-color: transparent;
+}
+.k-switch-handle {
+  background-clip: border-box;
+}
+.k-switch-on .k-switch-container {
+  border-color: #dbdbdb;
+  color: #2b2b2b;
+  background-color: #fff;
+}
+.k-switch-on .k-switch-handle {
+  border-color: #10c4b2;
+  color: #2b2b2b;
+  background-color: #10c4b2;
+}
+.k-switch-on:focus,
+.k-switch-on.k-state-focused {
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+}
+.k-switch-on:focus .k-switch-container,
+.k-switch-on.k-state-focused .k-switch-container {
+  border-color: #dbdbdb;
+  color: #2b2b2b;
+  background-color: #fff;
+}
+.k-switch-on:focus .k-switch-handle,
+.k-switch-on.k-state-focused .k-switch-handle {
+  border-color: #10c4b2;
+  color: #2b2b2b;
+  background-color: #10c4b2;
+}
+.k-switch-on:hover .k-switch-container,
+.k-switch-on.k-state-hover .k-switch-container {
+  border-color: #dbdbdb;
+  color: #2b2b2b;
+  background-color: #fff;
+}
+.k-switch-on:hover .k-switch-handle,
+.k-switch-on.k-state-hover .k-switch-handle {
+  border-color: #12d7c3;
+  color: #2b2b2b;
+  background-color: #12d7c3;
+}
+.k-switch-on .k-switch-label-off {
+  color: transparent;
+}
+.k-switch-off .k-switch-container {
+  border-color: #dbdbdb;
+  color: #2b2b2b;
+  background-color: #fff;
+}
+.k-switch-off .k-switch-handle {
+  border-color: #363940;
+  color: #2b2b2b;
+  background-color: #363940;
+}
+.k-switch-off:focus,
+.k-switch-off.k-state-focused {
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
+}
+.k-switch-off:focus .k-switch-container,
+.k-switch-off.k-state-focused .k-switch-container {
+  border-color: #dbdbdb;
+  color: #2b2b2b;
+  background-color: #fff;
+}
+.k-switch-off:focus .k-switch-handle,
+.k-switch-off.k-state-focused .k-switch-handle {
+  border-color: #363940;
+  color: #2b2b2b;
+  background-color: #363940;
+}
+.k-switch-off:hover .k-switch-container,
+.k-switch-off.k-state-hover .k-switch-container {
+  border-color: #dbdbdb;
+  color: #2b2b2b;
+  background-color: #fff;
+}
+.k-switch-off:hover .k-switch-handle,
+.k-switch-off.k-state-hover .k-switch-handle {
+  border-color: #12d7c3;
+  color: #2b2b2b;
+  background-color: #12d7c3;
+}
+.k-switch-off .k-switch-label-on {
+  color: transparent;
+}
+.k-switch {
+  background-color: transparent;
+  box-shadow: none;
+}
+.k-switch:focus .k-switch-container,
+.k-switch.k-state-focused .k-switch-container {
+  outline: none;
+}
+.k-switch.k-state-disabled {
+  cursor: default;
+}
+.k-switch[aria-readonly="true"] {
+  pointer-events: none;
+}
 .k-in,
 .k-item,
 .k-window-action {
@@ -2641,237 +2874,4 @@ html .km-pane-wrapper .km-widget,
 .k-calendar .k-header .k-nav-prev,
 .k-calendar .k-header .k-nav-next {
   border-radius: 20px;
-}
-.k-calendar {
-  border-color: #cccccc;
-  color: #4c5356;
-  background-color: #fff;
-}
-.k-calendar > .k-header {
-  border-color: #cccccc;
-  color: #fff;
-  background-color: #363940;
-  background-image: none;
-}
-.k-calendar th {
-  border-color: #cccccc;
-  color: #4c5356;
-  background-color: #fff;
-}
-.k-calendar .k-alt {
-  border-color: #cccccc;
-  color: #4c5356;
-  background-color: #f5f5f5;
-}
-.k-calendar .k-weekend {
-  background-color: transparent;
-}
-.k-calendar .k-other-month {
-  color: #c2c2c2;
-  background-color: transparent;
-}
-.k-calendar .k-out-of-range {
-  pointer-events: none;
-  visibility: hidden;
-}
-.k-calendar .k-today .k-link {
-  color: #10c4b2;
-  box-shadow: inset 0 0 0 1px #10c4b2;
-}
-.k-calendar td.k-state-hover .k-link {
-  border-color: #12d7c3;
-  color: #fff;
-  background-color: #12d7c3;
-  background-image: none;
-}
-.k-calendar td.k-state-selected .k-link {
-  border-color: #10c4b2;
-  color: #fff;
-  background-color: #10c4b2;
-  background-image: none;
-}
-.k-calendar td.k-state-focused .k-link {
-  box-shadow: inset 0 0 0 1px #0c9083;
-}
-.k-calendar .k-footer .k-nav-today {
-  color: #10c4b2;
-}
-.k-calendar .k-footer .k-nav-today:hover {
-  color: #12d7c3;
-}
-.k-calendar-range {
-  border-color: #cccccc;
-  color: #4c5356;
-  background-color: #fff;
-}
-.k-calendar-range th {
-  color: inherit;
-  background-color: transparent;
-  text-transform: uppercase;
-}
-.k-calendar-range td.k-state-hover .k-link {
-  border-color: #12d7c3;
-  color: #fff;
-  background-color: #12d7c3;
-}
-.k-calendar-range td.k-state-selected .k-link {
-  border-color: #10c4b2;
-  color: #fff;
-  background-color: #10c4b2;
-}
-.k-calendar-range td.k-state-focused .k-link {
-  box-shadow: inset 0 0 0 1px #0c9083;
-}
-.k-calendar-range td.k-range-start,
-.k-calendar-range td.k-range-mid,
-.k-calendar-range td.k-range-end {
-  background-image: linear-gradient(transparent 1px, rgba(16, 196, 178, 0.3) 1px, rgba(16, 196, 178, 0.3) calc(100% - 1px), transparent calc(100% - 1px));
-}
-.k-ie .k-calendar-range td.k-range-start,
-.k-ie .k-calendar-range td.k-range-mid,
-.k-ie .k-calendar-range td.k-range-end,
-.k-edge .k-calendar-range td.k-range-start,
-.k-edge .k-calendar-range td.k-range-mid,
-.k-edge .k-calendar-range td.k-range-end {
-  background-image: none;
-  background-color: rgba(16, 196, 178, 0.3);
-}
-.k-calendar-range td.k-range-split-start::after {
-  background-image: linear-gradient(to left, rgba(16, 196, 178, 0.3), transparent);
-}
-.k-calendar-range td.k-range-split-end::after {
-  background-image: linear-gradient(to right, rgba(16, 196, 178, 0.3), transparent);
-}
-.k-calendar-range .k-footer .k-nav-today {
-  color: #10c4b2;
-  background: none;
-}
-.k-scrollview-nav > li.k-link {
-  border-color: #363940;
-  background-color: #363940;
-  background-clip: padding-box;
-}
-.k-scrollview-nav > li.k-link.k-primary {
-  border-color: #10c4b2;
-  background-color: #10c4b2;
-}
-.k-scrollview-elements {
-  color: #fff;
-}
-.k-scrollview-next,
-.k-scrollview-prev {
-  color: inherit;
-  background: rgba(0, 0, 0, 0);
-  text-shadow: rgba(0, 0, 0, 0.3) 0 0 15px;
-  opacity: 0.7;
-  outline-width: 0;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-.k-scrollview-next:hover,
-.k-scrollview-prev:hover {
-  color: #fff;
-  opacity: 1;
-}
-.k-scrollview-next:hover span::before,
-.k-scrollview-prev:hover span::before {
-  background-color: transparent;
-}
-.k-switch-handle {
-  background-clip: border-box;
-}
-.k-switch-on .k-switch-container {
-  border-color: #dbdbdb;
-  color: #2b2b2b;
-  background-color: #fff;
-}
-.k-switch-on .k-switch-handle {
-  border-color: #10c4b2;
-  color: #2b2b2b;
-  background-color: #10c4b2;
-}
-.k-switch-on:focus,
-.k-switch-on.k-state-focused {
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
-}
-.k-switch-on:focus .k-switch-container,
-.k-switch-on.k-state-focused .k-switch-container {
-  border-color: #dbdbdb;
-  color: #2b2b2b;
-  background-color: #fff;
-}
-.k-switch-on:focus .k-switch-handle,
-.k-switch-on.k-state-focused .k-switch-handle {
-  border-color: #10c4b2;
-  color: #2b2b2b;
-  background-color: #10c4b2;
-}
-.k-switch-on:hover .k-switch-container,
-.k-switch-on.k-state-hover .k-switch-container {
-  border-color: #dbdbdb;
-  color: #2b2b2b;
-  background-color: #fff;
-}
-.k-switch-on:hover .k-switch-handle,
-.k-switch-on.k-state-hover .k-switch-handle {
-  border-color: #12d7c3;
-  color: #2b2b2b;
-  background-color: #12d7c3;
-}
-.k-switch-on .k-switch-label-off {
-  color: transparent;
-}
-.k-switch-off .k-switch-container {
-  border-color: #dbdbdb;
-  color: #2b2b2b;
-  background-color: #fff;
-}
-.k-switch-off .k-switch-handle {
-  border-color: #363940;
-  color: #2b2b2b;
-  background-color: #363940;
-}
-.k-switch-off:focus,
-.k-switch-off.k-state-focused {
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.3);
-}
-.k-switch-off:focus .k-switch-container,
-.k-switch-off.k-state-focused .k-switch-container {
-  border-color: #dbdbdb;
-  color: #2b2b2b;
-  background-color: #fff;
-}
-.k-switch-off:focus .k-switch-handle,
-.k-switch-off.k-state-focused .k-switch-handle {
-  border-color: #363940;
-  color: #2b2b2b;
-  background-color: #363940;
-}
-.k-switch-off:hover .k-switch-container,
-.k-switch-off.k-state-hover .k-switch-container {
-  border-color: #dbdbdb;
-  color: #2b2b2b;
-  background-color: #fff;
-}
-.k-switch-off:hover .k-switch-handle,
-.k-switch-off.k-state-hover .k-switch-handle {
-  border-color: #12d7c3;
-  color: #2b2b2b;
-  background-color: #12d7c3;
-}
-.k-switch-off .k-switch-label-on {
-  color: transparent;
-}
-.k-switch {
-  background-color: transparent;
-  box-shadow: none;
-}
-.k-switch:focus .k-switch-container,
-.k-switch.k-state-focused .k-switch-container {
-  outline: none;
-}
-.k-switch.k-state-disabled {
-  cursor: default;
-}
-.k-switch[aria-readonly="true"] {
-  pointer-events: none;
 }

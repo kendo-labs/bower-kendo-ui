@@ -339,7 +339,7 @@
                     that._fetchData();
                 }
                 listView.value(value).done(function () {
-                    that._old = that._accessor();
+                    that._old = that._valueBeforeCascade = that._accessor();
                     that._oldIndex = that.selectedIndex;
                 });
             },

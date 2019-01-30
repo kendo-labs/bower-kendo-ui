@@ -465,7 +465,7 @@
                     that._clearFilter();
                 }
                 listView.value(value);
-                that._old = listView.value();
+                that._old = that._valueBeforeCascade = listView.value();
                 if (!clearFilters) {
                     that._fetchData();
                 }
