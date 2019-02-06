@@ -5364,7 +5364,7 @@ a.k-tool {
 .k-ct-popup .k-status {
   margin: 0.3em 0;
 }
-.k-ct-cell {
+.k-ct-popup .k-ct-cell {
   border-width: 1px;
   border-style: solid;
   width: 18px;
@@ -5373,6 +5373,7 @@ a.k-tool {
   vertical-align: top;
   display: inline-block;
   overflow: hidden;
+  pointer-events: all;
   -ms-high-contrast-adjust: none;
 }
 .k-editor .k-resize-handle {

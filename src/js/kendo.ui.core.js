@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2019.1.130'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.206'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -7979,7 +7979,7 @@
                 if (that._isServerGrouped()) {
                     wrapGroupItems(data, model);
                 }
-                if (that._changeHandler && that._data && that._data instanceof ObservableArray) {
+                if (that._changeHandler && that._data && that._data instanceof ObservableArray && !(that.options.useRanges && that.options.serverPaging)) {
                     that._data.unbind(CHANGE, that._changeHandler);
                 } else {
                     that._changeHandler = proxy(that._change, that);
@@ -8593,17 +8593,23 @@
             },
             _removeModelFromRanges: function (model) {
                 var that = this;
-                var result, range;
+                var range;
                 for (var idx = 0, length = this._ranges.length; idx < length; idx++) {
                     range = this._ranges[idx];
-                    this._eachItem(range.data, function (items) {
-                        result = removeModel(items, model);
-                    });
-                    if (result) {
-                        break;
-                    }
+                    that._removeModelFromRange(range, model);
                 }
                 that._updateRangesLength();
+            },
+            _removeModelFromRange: function (range, model) {
+                this._eachItem(range.data, function (data) {
+                    for (var idx = 0; idx < data.length; idx++) {
+                        var dataItem = data[idx];
+                        if (dataItem.uid && dataItem.uid == model.uid) {
+                            [].splice.call(data, idx, 1);
+                            break;
+                        }
+                    }
+                });
             },
             _insertModelInRange: function (index, model) {
                 var that = this;
@@ -18632,7 +18638,7 @@
                 if (that._isSelect && !that.listView.bound() && optionValue) {
                     value = optionValue;
                 }
-                if (value !== unifyType(that._old, typeof value)) {
+                if (value !== unifyType(that._old, typeof value) && value !== unifyType(that._oldText, typeof value)) {
                     trigger = true;
                 } else if (that._valueBeforeCascade !== undefined && that._valueBeforeCascade !== unifyType(that._old, typeof that._valueBeforeCascade) && that._userTriggered) {
                     trigger = true;
@@ -18650,6 +18656,7 @@
                         }
                     }
                     that._oldIndex = index;
+                    that._oldText = that.text && that.text();
                     if (!that._typing) {
                         that.element.trigger(CHANGE);
                     }
