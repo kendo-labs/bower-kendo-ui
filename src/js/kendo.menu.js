@@ -1837,6 +1837,7 @@
                 var overflowWrapper = that._overflowWrapper();
                 that._triggerProxy = proxy(that._triggerEvent, that);
                 that.popup = that.element.addClass('k-context-menu').kendoPopup({
+                    autosize: true,
                     anchor: that.target || 'body',
                     copyAnchorStyles: that.options.copyAnchorStyles,
                     collision: that.options.popupCollision || 'fit',

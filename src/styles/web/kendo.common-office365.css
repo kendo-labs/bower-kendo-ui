@@ -11319,8 +11319,6 @@ div.k-navigator .k-navigator-left {
 }
 .k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-name-editor .k-combobox .k-dropdown-wrap .k-select {
   border-radius: 0;
-  margin: -1px -1px -1px 0;
-  padding: 1px 1px 1px 0;
 }
 .k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar {
   width: 100%;
@@ -11393,6 +11391,9 @@ div.k-navigator .k-navigator-left {
   position: relative;
   font-size: 12px;
   font-family: Arial, Verdana, sans-serif;
+}
+.k-spreadsheet > .k-spreadsheet-view .k-state-disabled {
+  pointer-events: auto;
 }
 .k-spreadsheet .k-tabstrip-wrapper {
   position: relative;

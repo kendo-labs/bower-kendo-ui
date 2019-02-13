@@ -3283,6 +3283,9 @@ td.k-state-focused.k-state-selected,
 .k-spreadsheet .k-widget[data-property='fontFamily'] {
   width: 130px;
 }
+.k-spreadsheet-name-editor .k-select {
+  background-color: #ebebeb;
+}
 .k-window .k-popup-edit-form .k-edit-field input.k-checkbox {
   margin-top: 1.1em;
 }

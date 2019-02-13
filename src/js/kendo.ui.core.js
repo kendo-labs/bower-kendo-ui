@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2019.1.206'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.213'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1296,9 +1296,9 @@
         function wrap(element, autosize) {
             var browser = support.browser, percentage, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight;
             if (!element.parent().hasClass('k-animation-container')) {
-                var width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height);
+                var width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height), forceWidth = element.hasClass('k-tooltip') || element.is('.k-menu-horizontal.k-context-menu');
                 percentage = percentWidth || percentHeight;
-                if (!percentWidth && (!autosize || autosize && width || element.hasClass('k-tooltip'))) {
+                if (!percentWidth && (!autosize || autosize && width || forceWidth)) {
                     width = autosize ? outerWidth(element) + 1 : outerWidth(element);
                 }
                 if (!percentHeight && (!autosize || autosize && height)) {
@@ -35380,6 +35380,7 @@
                 var overflowWrapper = that._overflowWrapper();
                 that._triggerProxy = proxy(that._triggerEvent, that);
                 that.popup = that.element.addClass('k-context-menu').kendoPopup({
+                    autosize: true,
                     anchor: that.target || 'body',
                     copyAnchorStyles: that.options.copyAnchorStyles,
                     collision: that.options.popupCollision || 'fit',

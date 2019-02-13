@@ -3258,6 +3258,9 @@ div.k-window.k-state-focused {
   background-color: #007cc0;
   color: #fff;
 }
+.k-spreadsheet-name-editor .k-select {
+  background-color: #eaeaea;
+}
 .k-window .k-popup-edit-form .k-edit-field label.k-checkbox-label {
   margin-top: 0.7em;
 }
