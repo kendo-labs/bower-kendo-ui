@@ -926,7 +926,8 @@ html .km-pane-wrapper .k-header {
 }
 .k-state-active,
 .k-state-active:hover,
-.k-active-filter {
+.k-active-filter,
+.k-header-column-menu.k-state-active {
   background-color: #ffffff;
   border-color: #7ea700;
   color: #000000;
@@ -1034,6 +1035,7 @@ td.k-state-focused.k-state-selected {
 }
 .k-state-selected > .k-link,
 .k-panelbar > li > .k-state-selected,
+.k-panelbar .k-item .k-link.k-state-selected,
 .k-panelbar > li.k-state-default > .k-link.k-state-selected {
   color: #fff;
 }
@@ -1045,6 +1047,7 @@ td.k-state-focused.k-state-selected {
 .k-pager-wrap .k-link:hover,
 .k-dropdown .k-state-focused,
 .k-filebrowser-dropzone,
+.k-panelbar .k-item .k-link.k-state-hover,
 .k-mobile-list .k-item > .k-link:active,
 .k-mobile-list .k-item > .k-label:active,
 .k-mobile-list .k-edit-label.k-check:active,

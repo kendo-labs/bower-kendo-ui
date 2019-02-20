@@ -22,6 +22,134 @@
                                                                                                                                                                                                        
 
 */
+.k-flex-wrap {
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+.k-flex-nowrap {
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+}
+.k-flex-wrap-reverse {
+  -ms-flex-wrap: wrap-reverse;
+      flex-wrap: wrap-reverse;
+}
+.k-flex {
+  -ms-flex: 1 1 0px;
+      flex: 1 1 0;
+}
+.k-flex-auto {
+  -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+}
+.k-no-flex {
+  -ms-flex: 0 0 0px;
+      flex: 0 0 0;
+}
+.k-no-flex-auto {
+  -ms-flex: 0 0 auto;
+      flex: 0 0 auto;
+}
+.k-flex-grow {
+  -ms-flex-positive: 1;
+      flex-grow: 1;
+}
+.k-no-flex-grow {
+  -ms-flex-positive: 0;
+      flex-grow: 0;
+}
+.k-flex-shrink {
+  -ms-flex-negative: 1;
+      flex-shrink: 1;
+}
+.k-no-flex-shrink {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+.k-align-items-start {
+  -ms-flex-align: start;
+      align-items: flex-start;
+}
+.k-align-items-end {
+  -ms-flex-align: end;
+      align-items: flex-end;
+}
+.k-align-items-center {
+  -ms-flex-align: center;
+      align-items: center;
+}
+.k-align-items-stretch {
+  -ms-flex-align: stretch;
+      align-items: stretch;
+}
+.k-align-items-baseline {
+  -ms-flex-align: baseline;
+      align-items: baseline;
+}
+.k-align-content-start {
+  -ms-flex-line-pack: start;
+      align-content: flex-start;
+}
+.k-align-content-end {
+  -ms-flex-line-pack: end;
+      align-content: flex-end;
+}
+.k-align-content-center {
+  -ms-flex-line-pack: center;
+      align-content: center;
+}
+.k-align-content-stretch {
+  -ms-flex-line-pack: stretch;
+      align-content: stretch;
+}
+.k-align-content-baseline {
+  -ms-flex-line-pack: baseline;
+      align-content: baseline;
+}
+.k-align-self-start {
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+}
+.k-align-self-end {
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+}
+.k-align-self-center {
+  -ms-flex-item-align: center;
+      align-self: center;
+}
+.k-align-self-stretch {
+  -ms-flex-item-align: stretch;
+      align-self: stretch;
+}
+.k-align-self-baseline {
+  -ms-flex-item-align: baseline;
+      align-self: baseline;
+}
+.k-justify-content-start {
+  -ms-flex-pack: start;
+      justify-content: flex-start;
+}
+.k-justify-content-end {
+  -ms-flex-pack: end;
+      justify-content: flex-end;
+}
+.k-justify-content-center {
+  -ms-flex-pack: center;
+      justify-content: center;
+}
+.k-justify-content-between {
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+}
+.k-justify-content-around {
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+.k-justify-content-evenly {
+  -ms-flex-pack: space-evenly;
+      justify-content: space-evenly;
+}
 .fake {
   color: red;
 }
@@ -2674,7 +2802,7 @@ form.k-filter-menu .k-textbox {
   display: inline-block;
 }
 .k-grid .k-button {
-  margin: 0 0.16em;
+  margin: 0.16em;
 }
 .k-grid tbody .k-button {
   min-width: 64px;
@@ -2713,10 +2841,6 @@ html .k-grid-edit-row .k-tooltip {
 }
 .k-edit-cell input[type="checkbox"] {
   margin-left: 0.6em;
-}
-.k-grid tbody td > .k-grid-delete {
-  margin-top: -0.2em;
-  margin-bottom: -0.2em;
 }
 .k-grid-resize-indicator {
   position: absolute;
@@ -4394,12 +4518,9 @@ body .k-datetimepicker .k-select {
 .k-datetimepicker .k-select {
   width: 4em;
 }
-.k-datetimepicker .k-select .k-link-date {
-  margin-left: -0.285em;
-}
-.k-datetimepicker .k-select .k-link-time {
-  margin-right: -0.285em;
-  margin-left: 0.428em;
+.k-datetimepicker .k-select .k-link {
+  display: inline-block;
+  width: 50%;
 }
 .k-datetimepicker .k-link {
   color: inherit;
@@ -13758,6 +13879,9 @@ div.k-scrollview-wrap > [data-role=page] {
 .k-popup.k-list-container.k-popup-flush .k-list-scroller {
   margin: 0;
 }
+.k-popup.k-list-container.k-list-scroller {
+  padding: 0;
+}
 .k-popup.k-list-container .k-check-all {
   margin: 12px 12px 0;
 }
@@ -13776,7 +13900,7 @@ div.k-scrollview-wrap > [data-role=page] {
 .k-popup .k-list .k-item {
   padding: 1px 11px;
 }
-.k-list-scroller,
+.k-list-container .k-list-scroller,
 .k-virtual-wrap,
 .k-list-optionlabel,
 .k-popup > .k-group-header {

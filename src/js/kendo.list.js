@@ -337,7 +337,7 @@
                 return dataSource[force ? 'read' : 'query'](dataSource._mergeState(dataSourceState));
             },
             _pushFilterExpression: function (newExpression, filter) {
-                if (isValidFilterExpr(filter) && $.trim(filter.value).length) {
+                if (isValidFilterExpr(filter) && filter.value !== '') {
                     newExpression.filters.push(filter);
                 }
             },
@@ -1064,6 +1064,7 @@
                         current = null;
                     }
                     var activeFilter = that.filterInput && that.filterInput[0] === activeElement();
+                    var selection;
                     if (current) {
                         dataItem = listView.dataItemByIndex(listView.getElementIndex(current));
                         var shouldTrigger = true;
@@ -1076,7 +1077,7 @@
                             })) {
                             return;
                         }
-                        that._select(current);
+                        selection = that._select(current);
                     } else if (that.input) {
                         if (that._syncValueAndText() || that._isSelect) {
                             that._accessor(that.input.val());
@@ -1089,7 +1090,13 @@
                     if (activeFilter && key === keys.TAB) {
                         that.wrapper.focusout();
                     } else {
-                        that._blur();
+                        if (selection && typeof selection.done === 'function') {
+                            selection.done(function () {
+                                that._blur();
+                            });
+                        } else {
+                            that._blur();
+                        }
                     }
                     that.close();
                     pressed = true;

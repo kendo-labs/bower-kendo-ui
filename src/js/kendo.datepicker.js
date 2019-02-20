@@ -188,6 +188,7 @@
             },
             _click: function (e) {
                 if (e.currentTarget.className.indexOf(SELECTED) !== -1) {
+                    this.calendar.trigger('change');
                     this.close();
                 }
             },

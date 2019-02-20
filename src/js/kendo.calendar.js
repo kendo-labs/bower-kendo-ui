@@ -152,6 +152,9 @@
                 that._footer(that.footer);
                 that._index = views[that.options.start];
                 that.navigate();
+                if (options.weekNumber) {
+                    that.element.addClass('k-week-number');
+                }
             },
             destroy: function () {
                 var that = this, today = that._today;
@@ -787,7 +790,7 @@
             _navigate: function (arrow, modifier) {
                 var that = this, index = that._index + 1, currentValue = new DATE(+that._current);
                 if (that._isMultipleSelection()) {
-                    var firstDayCurrentMonth = that._table.find('td:not(.k-other-month)').has('.k-link').first();
+                    var firstDayCurrentMonth = that._table.find('td:not(.k-other-month):not(.k-out-of-range)').has('.k-link').first();
                     currentValue = toDateObject(firstDayCurrentMonth.find('a'));
                     that._current = new Date(+currentValue);
                 }

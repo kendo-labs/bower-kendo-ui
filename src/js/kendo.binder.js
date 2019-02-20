@@ -817,7 +817,7 @@
                 },
                 value: function () {
                     var element = this.element, value = element.value;
-                    if (value == 'on' || value == 'off') {
+                    if (value == 'on' || value == 'off' || this.element.type == 'checkbox') {
                         value = element.checked;
                     }
                     return value;

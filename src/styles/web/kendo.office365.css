@@ -2616,15 +2616,15 @@ input.k-textbox:focus {
 .k-gantt .k-treelist .k-alt {
   background-color: #fff;
 }
-.k-panelbar .k-state-selected.k-state-hover {
-  background-color: #cde6f7;
-}
 .k-panelbar > li > .k-state-selected,
-.k-panelbar > li > .k-state-selected.k-state-hover,
-.k-panelbar > li.k-state-default > .k-link.k-state-selected,
-.k-panelbar > li > .k-state-focused.k-state-hover {
+.k-panelbar > .k-item > .k-link.k-state-selected,
+.k-panelbar > li.k-state-default > .k-link.k-state-selected {
   color: #fff;
   background-color: #0072c6;
+}
+.k-panelbar .k-state-selected.k-state-hover {
+  background-color: #cde6f7;
+  color: #000;
 }
 .k-panelbar.k-header,
 .k-panelbar .k-content,

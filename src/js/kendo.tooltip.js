@@ -365,6 +365,12 @@
             },
             _positionCallout: function () {
                 var that = this, position = that.options.position, dimensions = that.dimensions, offset = dimensions.offset, popup = that.popup, anchor = popup.options.anchor, anchorOffset = $(anchor).offset(), elementOffset = $(popup.element).offset(), cssClass = DIRCLASSES[popup.flipped ? REVERSE[position] : position], offsetAmount = anchorOffset[offset] - elementOffset[offset] + $(anchor)[dimensions.size]() / 2;
+                this.popup.element.css('margin-top', '').css('margin-right', '').css('margin-bottom', '').css('margin-left', '');
+                if (position == 'top' || position == 'left') {
+                    this.popup.element.css('margin-' + position, -this.arrow.outerWidth() / 2 + 'px');
+                } else {
+                    this.popup.element.css('margin-' + REVERSE[position], this.arrow.outerWidth() / 2 + 'px');
+                }
                 that.arrow.removeClass('k-callout-n k-callout-s k-callout-w k-callout-e').addClass('k-callout-' + cssClass).css(offset, offsetAmount);
             },
             destroy: function () {

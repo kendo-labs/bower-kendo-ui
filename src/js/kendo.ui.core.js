@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2019.1.213'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.220'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -10165,7 +10165,7 @@
                 },
                 value: function () {
                     var element = this.element, value = element.value;
-                    if (value == 'on' || value == 'off') {
+                    if (value == 'on' || value == 'off' || this.element.type == 'checkbox') {
                         value = element.checked;
                     }
                     return value;
@@ -12703,6 +12703,13 @@
                 }
                 input.toggleClass(INVALIDINPUT, !valid);
                 input.toggleClass(VALIDINPUT, valid);
+                if (kendo.widgetInstance(input)) {
+                    var inputWrap = kendo.widgetInstance(input)._inputWrapper;
+                    if (inputWrap) {
+                        inputWrap.toggleClass(INVALIDINPUT, !valid);
+                        inputWrap.toggleClass(INVALIDINPUT, !valid);
+                    }
+                }
                 return valid;
             },
             hideMessages: function () {
@@ -16732,6 +16739,12 @@
             },
             _positionCallout: function () {
                 var that = this, position = that.options.position, dimensions = that.dimensions, offset = dimensions.offset, popup = that.popup, anchor = popup.options.anchor, anchorOffset = $(anchor).offset(), elementOffset = $(popup.element).offset(), cssClass = DIRCLASSES[popup.flipped ? REVERSE[position] : position], offsetAmount = anchorOffset[offset] - elementOffset[offset] + $(anchor)[dimensions.size]() / 2;
+                this.popup.element.css('margin-top', '').css('margin-right', '').css('margin-bottom', '').css('margin-left', '');
+                if (position == 'top' || position == 'left') {
+                    this.popup.element.css('margin-' + position, -this.arrow.outerWidth() / 2 + 'px');
+                } else {
+                    this.popup.element.css('margin-' + REVERSE[position], this.arrow.outerWidth() / 2 + 'px');
+                }
                 that.arrow.removeClass('k-callout-n k-callout-s k-callout-w k-callout-e').addClass('k-callout-' + cssClass).css(offset, offsetAmount);
             },
             destroy: function () {
@@ -18389,7 +18402,7 @@
                 return dataSource[force ? 'read' : 'query'](dataSource._mergeState(dataSourceState));
             },
             _pushFilterExpression: function (newExpression, filter) {
-                if (isValidFilterExpr(filter) && $.trim(filter.value).length) {
+                if (isValidFilterExpr(filter) && filter.value !== '') {
                     newExpression.filters.push(filter);
                 }
             },
@@ -19116,6 +19129,7 @@
                         current = null;
                     }
                     var activeFilter = that.filterInput && that.filterInput[0] === activeElement();
+                    var selection;
                     if (current) {
                         dataItem = listView.dataItemByIndex(listView.getElementIndex(current));
                         var shouldTrigger = true;
@@ -19128,7 +19142,7 @@
                             })) {
                             return;
                         }
-                        that._select(current);
+                        selection = that._select(current);
                     } else if (that.input) {
                         if (that._syncValueAndText() || that._isSelect) {
                             that._accessor(that.input.val());
@@ -19141,7 +19155,13 @@
                     if (activeFilter && key === keys.TAB) {
                         that.wrapper.focusout();
                     } else {
-                        that._blur();
+                        if (selection && typeof selection.done === 'function') {
+                            selection.done(function () {
+                                that._blur();
+                            });
+                        } else {
+                            that._blur();
+                        }
                     }
                     that.close();
                     pressed = true;
@@ -20263,6 +20283,9 @@
                 that._footer(that.footer);
                 that._index = views[that.options.start];
                 that.navigate();
+                if (options.weekNumber) {
+                    that.element.addClass('k-week-number');
+                }
             },
             destroy: function () {
                 var that = this, today = that._today;
@@ -20898,7 +20921,7 @@
             _navigate: function (arrow, modifier) {
                 var that = this, index = that._index + 1, currentValue = new DATE(+that._current);
                 if (that._isMultipleSelection()) {
-                    var firstDayCurrentMonth = that._table.find('td:not(.k-other-month)').has('.k-link').first();
+                    var firstDayCurrentMonth = that._table.find('td:not(.k-other-month):not(.k-out-of-range)').has('.k-link').first();
                     currentValue = toDateObject(firstDayCurrentMonth.find('a'));
                     that._current = new Date(+currentValue);
                 }
@@ -21549,6 +21572,7 @@
                         height: element[0].style.height
                     });
                 }
+                that._inputWrapper = $(that.wrapper[0]);
                 $('<span class=\'k-icon k-i-warning\'></span>').insertAfter(element);
                 that._form();
                 that.element.addClass(insidePicker ? ' ' : 'k-textbox').attr('autocomplete', 'off').on('focusout' + ns, function () {
@@ -22464,6 +22488,7 @@
             },
             _click: function (e) {
                 if (e.currentTarget.className.indexOf(SELECTED) !== -1) {
+                    this.calendar.trigger('change');
                     this.close();
                 }
             },
@@ -24752,6 +24777,7 @@
                 });
                 that._focused = that.element;
                 that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className);
+                that._inputWrapper = $(wrapper[0]);
             }
         });
         ui.plugin(AutoComplete);

@@ -2158,7 +2158,7 @@ html .km-pane-wrapper .km-widget,
 
 .k-tabstrip-items .k-state-hover .k-link,
 .k-panelbar > li.k-state-hover > .k-link,
-.k-panelbar >li > .k-link.k-state-hover {
+.k-panelbar .k-group >li > .k-link.k-state-hover {
     color: @hover-text-color;
 }
 
@@ -2517,16 +2517,14 @@ span.k-colorpicker {
 .k-datepicker,
 .k-timepicker,
 .k-datetimepicker {
-    background-color: @drop-down-background;
+    &,
+    .k-input {
+        background-color: @drop-down-background;
+    }
 }
 
 .k-picker-wrap.k-state-default > .k-select {
     border-color: @drop-down-background;
-}
-
-.k-datepicker .k-input,
-.k-timepicker .k-input {
-    background-color: @drop-down-background;
 }
 
 .k-autocomplete.k-state-active .k-input,

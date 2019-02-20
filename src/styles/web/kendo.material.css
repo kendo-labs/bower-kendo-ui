@@ -1875,7 +1875,7 @@ html .km-pane-wrapper .km-widget,
 }
 .k-tabstrip-items .k-state-hover .k-link,
 .k-panelbar > li.k-state-hover > .k-link,
-.k-panelbar > li > .k-link.k-state-hover {
+.k-panelbar .k-group > li > .k-link.k-state-hover {
   color: #444444;
 }
 .k-panelbar > li > .k-state-focused.k-state-hover {
@@ -2227,15 +2227,15 @@ span.k-colorpicker {
 .k-combobox,
 .k-datepicker,
 .k-timepicker,
-.k-datetimepicker {
+.k-datetimepicker,
+.k-combobox .k-input,
+.k-datepicker .k-input,
+.k-timepicker .k-input,
+.k-datetimepicker .k-input {
   background-color: #fafafa;
 }
 .k-picker-wrap.k-state-default > .k-select {
   border-color: #fafafa;
-}
-.k-datepicker .k-input,
-.k-timepicker .k-input {
-  background-color: #fafafa;
 }
 .k-autocomplete.k-state-active .k-input,
 .k-picker-wrap.k-state-active .k-input,

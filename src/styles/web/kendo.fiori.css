@@ -1078,8 +1078,16 @@ td.k-state-focused.k-state-selected {
 }
 .k-state-selected > .k-link,
 .k-panelbar > li > .k-state-selected,
+.k-panelbar .k-item .k-link.k-state-selected,
 .k-panelbar > li.k-state-default > .k-link.k-state-selected {
   color: #fff;
+  background-color: #007cc0;
+}
+.k-state-selected > .k-link:hover,
+.k-panelbar > li > .k-state-selected:hover,
+.k-panelbar .k-item .k-link.k-state-selected:hover,
+.k-panelbar > li.k-state-default > .k-link.k-state-selected:hover {
+  background-color: #0089d4;
 }
 .k-state-hover,
 .k-splitbar-horizontal-hover,
@@ -1883,8 +1891,7 @@ html .km-pane-wrapper .km-widget,
   color: #333;
 }
 .k-tabstrip-items .k-state-hover .k-link,
-.k-panelbar > li.k-state-hover > .k-link,
-.k-panelbar > li.k-state-default > .k-link.k-state-hover {
+.k-panelbar > li.k-state-hover > .k-link {
   color: #333;
 }
 .k-panelbar > .k-state-focused.k-state-hover {
@@ -2389,6 +2396,8 @@ div.k-window.k-state-focused {
 .k-list > .k-state-selected,
 .k-drag-clue.k-state-selected,
 .k-group > .k-item > .k-state-selected,
+.k-group > .k-item > .k-link.k-state-selected,
+.k-group > .k-item > .k-link.k-state-selected.k-state-hover,
 .k-gantt .k-treelist .k-state-selected,
 .k-gantt .k-treelist .k-state-selected td,
 .k-gantt .k-treelist .k-alt.k-state-selected,
