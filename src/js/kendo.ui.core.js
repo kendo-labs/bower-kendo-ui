@@ -33,7 +33,7 @@
     };
     (function ($, window, undefined) {
         var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2019.1.220'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.227'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -15390,6 +15390,7 @@
                 } else if ((value + '').toLowerCase() == 'all') {
                     dataSource._pageSize = undefined;
                     dataSource._take = undefined;
+                    dataSource._skip = 0;
                     dataSource.fetch();
                 }
             },
@@ -18792,12 +18793,16 @@
                 var li = this.ul.children('.k-first:first');
                 var groupHeader = this.listView.content.prev(GROUPHEADER);
                 var padding = 0;
+                var direction = 'right';
                 if (groupHeader[0] && groupHeader[0].style.display !== 'none') {
                     if (height !== 'auto') {
                         padding = kendo.support.scrollbar();
                     }
-                    padding += parseFloat(li.css('border-right-width'), 10) + parseFloat(li.children('.k-group').css('padding-right'), 10);
-                    groupHeader.css('padding-right', padding);
+                    if (this.element.parents('.k-rtl').length) {
+                        direction = 'left';
+                    }
+                    padding += parseFloat(li.css('border-' + direction + '-width'), 10) + parseFloat(li.children('.k-group').css('padding-' + direction), 10);
+                    groupHeader.css('padding-' + direction, padding);
                 }
             },
             _calculatePopupHeight: function (force) {

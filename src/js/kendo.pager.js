@@ -302,6 +302,7 @@
                 } else if ((value + '').toLowerCase() == 'all') {
                     dataSource._pageSize = undefined;
                     dataSource._take = undefined;
+                    dataSource._skip = 0;
                     dataSource.fetch();
                 }
             },
