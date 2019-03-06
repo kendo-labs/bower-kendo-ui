@@ -9968,6 +9968,9 @@ div.k-navigator .k-navigator-left {
 .k-i-checkmark:before {
   content: "\e118";
 }
+.k-i-tick:before {
+  content: "\e118";
+}
 .k-i-check-outline:before {
   content: "\e119";
 }
@@ -10292,6 +10295,9 @@ div.k-navigator .k-navigator-left {
 .k-i-info:before {
   content: "\e401";
 }
+.k-i-note:before {
+  content: "\e401";
+}
 .k-i-question:before {
   content: "\e402";
 }
@@ -10544,14 +10550,23 @@ div.k-navigator .k-navigator-left {
 .k-i-outdent:before {
   content: "\e616";
 }
+.k-i-insert-n::before {
+  content: "\e617";
+}
 .k-i-insert-up:before {
   content: "\e617";
 }
 .k-i-insert-top:before {
   content: "\e617";
 }
+.k-i-insert-m:before {
+  content: "\e618";
+}
 .k-i-insert-middle:before {
   content: "\e618";
+}
+.k-i-insert-s:before {
+  content: "\e619";
 }
 .k-i-insert-down:before {
   content: "\e619";
