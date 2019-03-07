@@ -62,7 +62,11 @@
                 var that = this, active = that.options.active;
                 if (candidate !== undefined) {
                     if (that._current) {
-                        that._current.removeClass(SELECTED).removeAttr(ARIA_SELECTED).removeAttr(ID);
+                        that._current.removeClass(SELECTED);
+                        if (that._current && that._current.length) {
+                            that._current[0].removeAttribute(ID);
+                            that._current[0].removeAttribute(ARIA_SELECTED);
+                        }
                     }
                     if (candidate) {
                         candidate = $(candidate).addClass(SELECTED).attr(ID, that._optionID).attr(ARIA_SELECTED, true);
@@ -383,7 +387,9 @@
                         }
                     },
                     active: function (current) {
-                        element.removeAttr(ARIA_ACTIVEDESCENDANT);
+                        if (element && element.length) {
+                            element[0].removeAttribute(ARIA_ACTIVEDESCENDANT);
+                        }
                         if (current) {
                             element.attr(ARIA_ACTIVEDESCENDANT, timeView._optionID);
                         }
@@ -467,7 +473,11 @@
                 var that = this, disable = options.disable, readonly = options.readonly, arrow = that._arrow.off(ns), element = that.element.off(ns), wrapper = that._inputWrapper.off(ns);
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
+                    if (element && element.length) {
+                        element[0].removeAttribute(DISABLED);
+                        element[0].removeAttribute(READONLY);
+                    }
+                    element.attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     });
                     arrow.on(CLICK, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);
@@ -534,7 +544,7 @@
                 var that = this, element = that.element;
                 that.timeView.toggle();
                 if (!support.touch && element[0] !== activeElement()) {
-                    element.focus();
+                    element.trigger('focus');
                 }
             },
             _change: function (value) {

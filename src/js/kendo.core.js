@@ -32,8 +32,48 @@
         description: 'The core of the Kendo framework.'
     };
     (function ($, window, undefined) {
-        var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2019.1.306'.replace(/^\s+|\s+$/g, '');
+        var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice, noDepricateExtend = function () {
+                var src, copyIsArray, copy, name, options, clone, target = arguments[0] || {}, i = 1, length = arguments.length, deep = false;
+                if (typeof target === 'boolean') {
+                    deep = target;
+                    target = arguments[i] || {};
+                    i++;
+                }
+                if (typeof target !== 'object' && !jQuery.isFunction(target)) {
+                    target = {};
+                }
+                if (i === length) {
+                    target = this;
+                    i--;
+                }
+                for (; i < length; i++) {
+                    if ((options = arguments[i]) != null) {
+                        for (name in options) {
+                            if (name == 'filters' || name == 'concat' || name == ':') {
+                                continue;
+                            }
+                            src = target[name];
+                            copy = options[name];
+                            if (target === copy) {
+                                continue;
+                            }
+                            if (deep && copy && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                                if (copyIsArray) {
+                                    copyIsArray = false;
+                                    clone = src && jQuery.isArray(src) ? src : [];
+                                } else {
+                                    clone = src && jQuery.isPlainObject(src) ? src : {};
+                                }
+                                target[name] = noDepricateExtend(deep, clone, copy);
+                            } else if (copy !== undefined) {
+                                target[name] = copy;
+                            }
+                        }
+                    }
+                }
+                return target;
+            };
+        kendo.version = '2019.1.307'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2610,11 +2650,11 @@
             return (/input|select|textarea|button|object/.test(nodeName) ? !element.disabled : 'a' === nodeName ? element.href || isTabIndexNotNaN : isTabIndexNotNaN) && visible(element);
         }
         function visible(element) {
-            return $.expr.filters.visible(element) && !$(element).parents().addBack().filter(function () {
+            return $.expr.pseudos.visible(element) && !$(element).parents().addBack().filter(function () {
                 return $.css(this, 'visibility') === 'hidden';
             }).length;
         }
-        $.extend($.expr[':'], {
+        $.extend($.expr.pseudos, {
             kendoFocusable: function (element) {
                 var idx = $.attr(element, 'tabindex');
                 return focusable(element, !isNaN(idx) && idx > -1);
@@ -2733,7 +2773,7 @@
         function kendoJQuery(selector, context) {
             return new kendoJQuery.fn.init(selector, context);
         }
-        extend(true, kendoJQuery, $);
+        noDepricateExtend(true, kendoJQuery, $);
         kendoJQuery.fn = kendoJQuery.prototype = new $();
         kendoJQuery.fn.constructor = kendoJQuery;
         kendoJQuery.fn.init = function (selector, context) {

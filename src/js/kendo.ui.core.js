@@ -32,8 +32,48 @@
         description: 'The core of the Kendo framework.'
     };
     (function ($, window, undefined) {
-        var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice;
-        kendo.version = '2019.1.306'.replace(/^\s+|\s+$/g, '');
+        var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice, noDepricateExtend = function () {
+                var src, copyIsArray, copy, name, options, clone, target = arguments[0] || {}, i = 1, length = arguments.length, deep = false;
+                if (typeof target === 'boolean') {
+                    deep = target;
+                    target = arguments[i] || {};
+                    i++;
+                }
+                if (typeof target !== 'object' && !jQuery.isFunction(target)) {
+                    target = {};
+                }
+                if (i === length) {
+                    target = this;
+                    i--;
+                }
+                for (; i < length; i++) {
+                    if ((options = arguments[i]) != null) {
+                        for (name in options) {
+                            if (name == 'filters' || name == 'concat' || name == ':') {
+                                continue;
+                            }
+                            src = target[name];
+                            copy = options[name];
+                            if (target === copy) {
+                                continue;
+                            }
+                            if (deep && copy && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                                if (copyIsArray) {
+                                    copyIsArray = false;
+                                    clone = src && jQuery.isArray(src) ? src : [];
+                                } else {
+                                    clone = src && jQuery.isPlainObject(src) ? src : {};
+                                }
+                                target[name] = noDepricateExtend(deep, clone, copy);
+                            } else if (copy !== undefined) {
+                                target[name] = copy;
+                            }
+                        }
+                    }
+                }
+                return target;
+            };
+        kendo.version = '2019.1.307'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2610,11 +2650,11 @@
             return (/input|select|textarea|button|object/.test(nodeName) ? !element.disabled : 'a' === nodeName ? element.href || isTabIndexNotNaN : isTabIndexNotNaN) && visible(element);
         }
         function visible(element) {
-            return $.expr.filters.visible(element) && !$(element).parents().addBack().filter(function () {
+            return $.expr.pseudos.visible(element) && !$(element).parents().addBack().filter(function () {
                 return $.css(this, 'visibility') === 'hidden';
             }).length;
         }
-        $.extend($.expr[':'], {
+        $.extend($.expr.pseudos, {
             kendoFocusable: function (element) {
                 var idx = $.attr(element, 'tabindex');
                 return focusable(element, !isNaN(idx) && idx > -1);
@@ -2733,7 +2773,7 @@
         function kendoJQuery(selector, context) {
             return new kendoJQuery.fn.init(selector, context);
         }
-        extend(true, kendoJQuery, $);
+        noDepricateExtend(true, kendoJQuery, $);
         kendoJQuery.fn = kendoJQuery.prototype = new $();
         kendoJQuery.fn.constructor = kendoJQuery;
         kendoJQuery.fn.init = function (selector, context) {
@@ -11121,7 +11161,7 @@
                     options.duration = $.fx ? $.fx.speeds[options.duration] || options.duration : options.duration;
                     css = normalizeCSS(element, properties);
                     $.merge(oldKeys, keys(css));
-                    element.data('keys', $.unique(oldKeys)).height();
+                    element.data('keys', $.uniqueSort(oldKeys)).height();
                     element.css(TRANSITION, options.exclusive + ' ' + options.duration + 'ms ' + options.ease).css(TRANSITION);
                     element.css(css).css(TRANSFORM);
                     if (transitions.event) {
@@ -15604,7 +15644,7 @@
                     $(options.toggleTarget).off(NS);
                 }
                 if (!options.modal) {
-                    DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy);
+                    DOCUMENT_ELEMENT.off(that.downEvent, that._mousedownProxy);
                     that._toggleResize(false);
                 }
                 kendo.destroy(that.element.children());
@@ -15636,7 +15676,7 @@
                     }
                     that._activated = false;
                     if (!options.modal) {
-                        DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy).bind(that.downEvent, that._mousedownProxy);
+                        DOCUMENT_ELEMENT.off(that.downEvent, that._mousedownProxy).on(that.downEvent, that._mousedownProxy);
                         that._toggleResize(false);
                         that._toggleResize(true);
                     }
@@ -15737,7 +15777,7 @@
                             popup.close(skipEffects);
                         }
                     });
-                    DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy);
+                    DOCUMENT_ELEMENT.off(that.downEvent, that._mousedownProxy);
                     if (skipEffects) {
                         animation = {
                             hide: true,
@@ -20314,7 +20354,7 @@
             focus: function (table) {
                 table = table || this._table;
                 this._bindTable(table);
-                table.focus();
+                table.trigger('focus');
             },
             min: function (value) {
                 return this._option(MIN, value);
@@ -20837,8 +20877,10 @@
             },
             _class: function (className, date) {
                 var that = this, id = that._cellID, cell = that._cell, value = that._view.toDateString(date), disabledDate;
-                if (cell) {
-                    cell.removeAttr(ARIA_SELECTED).removeAttr(ARIA_LABEL).removeAttr(ID);
+                if (cell && cell.length) {
+                    cell[0].removeAttribute(ARIA_SELECTED);
+                    cell[0].removeAttribute(ARIA_LABEL);
+                    cell[0].removeAttribute(ID);
                 }
                 if (date && that._view.name == 'month') {
                     disabledDate = that.options.disableDates(date);
@@ -20854,7 +20896,8 @@
                 }
                 if (id) {
                     cell.attr(ID, id);
-                    that._table.removeAttr('aria-activedescendant').attr('aria-activedescendant', id);
+                    that._table[0].removeAttribute('aria-activedescendant');
+                    that._table.attr('aria-activedescendant', id);
                 }
             },
             _bindTable: function (table) {
@@ -20909,7 +20952,9 @@
                 if (!element.find('.k-header')[0]) {
                     element.html('<div class="k-header">' + '<a href="#" role="button" class="k-link k-nav-prev" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="#" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" role="button" class="k-link k-nav-next" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>');
                 }
-                links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).click(false);
+                links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on('click', function () {
+                    return false;
+                });
                 that._title = links.eq(1).on(CLICK, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateUp();
@@ -21696,13 +21741,18 @@
                 that._unbindInput();
                 if (!readonly && !disable) {
                     wrapper.addClass(STATEDEFAULT).removeClass(STATEDISABLED);
-                    element.removeAttr(DISABLED).removeAttr(READONLY);
+                    if (element && element.length) {
+                        element[0].removeAttribute(DISABLED);
+                        element[0].removeAttribute(READONLY);
+                    }
                     that._bindInput();
                 } else {
                     if (disable) {
                         wrapper.addClass(STATEDISABLED).removeClass(STATEDEFAULT);
                         element.attr(DISABLED, disable);
-                        element.removeAttr(READONLY);
+                        if (element && element.length) {
+                            element[0].removeAttribute(READONLY);
+                        }
                     }
                     if (readonly) {
                         element.attr(READONLY, readonly);
@@ -22621,7 +22671,11 @@
                 var that = this, icon = that._dateIcon.off(ns), element = that.element.off(ns), wrapper = that._inputWrapper.off(ns), readonly = options.readonly, disable = options.disable;
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
+                    if (element && element.length) {
+                        element[0].removeAttribute(DISABLED);
+                        element[0].removeAttribute(READONLY);
+                    }
+                    element.attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     });
                     icon.on(UP, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);
@@ -22635,12 +22689,24 @@
                     readonly: readonly === undefined ? true : readonly,
                     disable: false
                 });
+                if (this._dateInput) {
+                    this._dateInput._editable({
+                        readonly: readonly === undefined ? true : readonly,
+                        disable: false
+                    });
+                }
             },
             enable: function (enable) {
                 this._editable({
                     readonly: false,
                     disable: !(enable = enable === undefined ? true : enable)
                 });
+                if (this._dateInput) {
+                    this._dateInput._editable({
+                        readonly: false,
+                        disable: !(enable = enable === undefined ? true : enable)
+                    });
+                }
             },
             destroy: function () {
                 var that = this;
@@ -22695,7 +22761,7 @@
             _focusElement: function (eventType) {
                 var element = this.element;
                 if ((!support.touch || support.mouseAndTouchPresent && !(eventType || '').match(/touch/i)) && element[0] !== activeElement()) {
-                    element.focus();
+                    element.trigger('focus');
                 }
             },
             _change: function (value) {
@@ -22828,7 +22894,9 @@
                 var cell;
                 var that = this;
                 var calendar = that.dateView.calendar;
-                that.element.removeAttr('aria-activedescendant');
+                if (that.element && that.element.length) {
+                    that.element[0].removeAttribute('aria-activedescendant');
+                }
                 if (calendar) {
                     cell = calendar._cell;
                     cell.attr('aria-label', that._ariaTemplate({ current: date || calendar.current() }));
@@ -30668,7 +30736,7 @@
                     var input = e.target, idx = caret(input)[0], value = input.value.substring(0, idx), format = that._format(that.options.format), group = format[','], result, groupRegExp, extractRegExp, caretPosition = 0;
                     if (group) {
                         groupRegExp = new RegExp('\\' + group, 'g');
-                        extractRegExp = new RegExp('([\\d\\' + group + ']+)(\\' + format[POINT] + ')?(\\d+)?');
+                        extractRegExp = new RegExp('(^(-)$)|(^(-)?([\\d\\' + group + ']+)(\\' + format[POINT] + ')?(\\d+)?)');
                     }
                     if (extractRegExp) {
                         result = extractRegExp.exec(value);
@@ -38243,7 +38311,11 @@
                 var that = this, active = that.options.active;
                 if (candidate !== undefined) {
                     if (that._current) {
-                        that._current.removeClass(SELECTED).removeAttr(ARIA_SELECTED).removeAttr(ID);
+                        that._current.removeClass(SELECTED);
+                        if (that._current && that._current.length) {
+                            that._current[0].removeAttribute(ID);
+                            that._current[0].removeAttribute(ARIA_SELECTED);
+                        }
                     }
                     if (candidate) {
                         candidate = $(candidate).addClass(SELECTED).attr(ID, that._optionID).attr(ARIA_SELECTED, true);
@@ -38564,7 +38636,9 @@
                         }
                     },
                     active: function (current) {
-                        element.removeAttr(ARIA_ACTIVEDESCENDANT);
+                        if (element && element.length) {
+                            element[0].removeAttribute(ARIA_ACTIVEDESCENDANT);
+                        }
                         if (current) {
                             element.attr(ARIA_ACTIVEDESCENDANT, timeView._optionID);
                         }
@@ -38648,7 +38722,11 @@
                 var that = this, disable = options.disable, readonly = options.readonly, arrow = that._arrow.off(ns), element = that.element.off(ns), wrapper = that._inputWrapper.off(ns);
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
+                    if (element && element.length) {
+                        element[0].removeAttribute(DISABLED);
+                        element[0].removeAttribute(READONLY);
+                    }
+                    element.attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     });
                     arrow.on(CLICK, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);
@@ -38715,7 +38793,7 @@
                 var that = this, element = that.element;
                 that.timeView.toggle();
                 if (!support.touch && element[0] !== activeElement()) {
-                    element.focus();
+                    element.trigger('focus');
                 }
             },
             _change: function (value) {
@@ -38950,7 +39028,12 @@
                 var that = this, element = that.element.off(ns), dateIcon = that._dateIcon.off(ns), timeIcon = that._timeIcon.off(ns), wrapper = that._inputWrapper.off(ns), readonly = options.readonly, disable = options.disable;
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).on('keydown' + ns, $.proxy(that._keydown, that)).on('focus' + ns, function () {
+                    if (element && element.length) {
+                        element[0].removeAttribute(DISABLED);
+                        element[0].removeAttribute(READONLY, false);
+                        element[0].removeAttribute(ARIA_DISABLED, false);
+                    }
+                    element.on('keydown' + ns, $.proxy(that._keydown, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     }).on('focusout' + ns, function () {
                         that._inputWrapper.removeClass(FOCUSED);
@@ -38976,7 +39059,7 @@
             _focusElement: function (eventType) {
                 var element = this.element;
                 if ((!support.touch || support.mouseAndTouchPresent && !(eventType || '').match(/touch/i)) && element[0] !== activeElement()) {
-                    element.focus();
+                    element.trigger('focus');
                 }
             },
             readonly: function (readonly) {
@@ -39230,7 +39313,9 @@
                             element.attr(ARIA_EXPANDED, false);
                             div.attr(ARIA_HIDDEN, true);
                             if (!timeView.popup.visible()) {
-                                element.removeAttr(ARIA_OWNS);
+                                if (element && element.length) {
+                                    element[0].removeAttribute(ARIA_OWNS);
+                                }
                             }
                         }
                     },
@@ -39288,7 +39373,9 @@
                             ul.attr(ARIA_HIDDEN, true);
                             element.attr(ARIA_EXPANDED, false);
                             if (!dateView.popup.visible()) {
-                                element.removeAttr(ARIA_OWNS);
+                                if (element && element.length) {
+                                    element[0].removeAttribute(ARIA_OWNS);
+                                }
                             }
                         }
                     },
@@ -39307,7 +39394,9 @@
                         }
                     },
                     active: function (current) {
-                        element.removeAttr(ARIA_ACTIVEDESCENDANT);
+                        if (element && element.length) {
+                            element[0].removeAttribute(ARIA_ACTIVEDESCENDANT);
+                        }
                         if (current) {
                             element.attr(ARIA_ACTIVEDESCENDANT, timeView._optionID);
                         }
@@ -39378,7 +39467,9 @@
                 var cell;
                 var that = this;
                 var calendar = that.dateView.calendar;
-                that.element.removeAttr(ARIA_ACTIVEDESCENDANT);
+                if (that.element && that.element.length) {
+                    that.element[0].removeAttribute(ARIA_ACTIVEDESCENDANT);
+                }
                 if (calendar) {
                     cell = calendar._cell;
                     cell.attr('aria-label', that._ariaTemplate({ current: date || calendar.current() }));

@@ -178,7 +178,7 @@
             focus: function (table) {
                 table = table || this._table;
                 this._bindTable(table);
-                table.focus();
+                table.trigger('focus');
             },
             min: function (value) {
                 return this._option(MIN, value);
@@ -701,8 +701,10 @@
             },
             _class: function (className, date) {
                 var that = this, id = that._cellID, cell = that._cell, value = that._view.toDateString(date), disabledDate;
-                if (cell) {
-                    cell.removeAttr(ARIA_SELECTED).removeAttr(ARIA_LABEL).removeAttr(ID);
+                if (cell && cell.length) {
+                    cell[0].removeAttribute(ARIA_SELECTED);
+                    cell[0].removeAttribute(ARIA_LABEL);
+                    cell[0].removeAttribute(ID);
                 }
                 if (date && that._view.name == 'month') {
                     disabledDate = that.options.disableDates(date);
@@ -718,7 +720,8 @@
                 }
                 if (id) {
                     cell.attr(ID, id);
-                    that._table.removeAttr('aria-activedescendant').attr('aria-activedescendant', id);
+                    that._table[0].removeAttribute('aria-activedescendant');
+                    that._table.attr('aria-activedescendant', id);
                 }
             },
             _bindTable: function (table) {
@@ -773,7 +776,9 @@
                 if (!element.find('.k-header')[0]) {
                     element.html('<div class="k-header">' + '<a href="#" role="button" class="k-link k-nav-prev" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="#" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" role="button" class="k-link k-nav-next" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>');
                 }
-                links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).click(false);
+                links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on('click', function () {
+                    return false;
+                });
                 that._title = links.eq(1).on(CLICK, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateUp();

@@ -190,13 +190,18 @@
                 that._unbindInput();
                 if (!readonly && !disable) {
                     wrapper.addClass(STATEDEFAULT).removeClass(STATEDISABLED);
-                    element.removeAttr(DISABLED).removeAttr(READONLY);
+                    if (element && element.length) {
+                        element[0].removeAttribute(DISABLED);
+                        element[0].removeAttribute(READONLY);
+                    }
                     that._bindInput();
                 } else {
                     if (disable) {
                         wrapper.addClass(STATEDISABLED).removeClass(STATEDEFAULT);
                         element.attr(DISABLED, disable);
-                        element.removeAttr(READONLY);
+                        if (element && element.length) {
+                            element[0].removeAttribute(READONLY);
+                        }
                     }
                     if (readonly) {
                         element.attr(READONLY, readonly);

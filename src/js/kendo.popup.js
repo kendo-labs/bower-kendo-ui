@@ -170,7 +170,7 @@
                     $(options.toggleTarget).off(NS);
                 }
                 if (!options.modal) {
-                    DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy);
+                    DOCUMENT_ELEMENT.off(that.downEvent, that._mousedownProxy);
                     that._toggleResize(false);
                 }
                 kendo.destroy(that.element.children());
@@ -202,7 +202,7 @@
                     }
                     that._activated = false;
                     if (!options.modal) {
-                        DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy).bind(that.downEvent, that._mousedownProxy);
+                        DOCUMENT_ELEMENT.off(that.downEvent, that._mousedownProxy).on(that.downEvent, that._mousedownProxy);
                         that._toggleResize(false);
                         that._toggleResize(true);
                     }
@@ -303,7 +303,7 @@
                             popup.close(skipEffects);
                         }
                     });
-                    DOCUMENT_ELEMENT.unbind(that.downEvent, that._mousedownProxy);
+                    DOCUMENT_ELEMENT.off(that.downEvent, that._mousedownProxy);
                     if (skipEffects) {
                         animation = {
                             hide: true,

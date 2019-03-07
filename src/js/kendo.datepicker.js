@@ -316,7 +316,11 @@
                 var that = this, icon = that._dateIcon.off(ns), element = that.element.off(ns), wrapper = that._inputWrapper.off(ns), readonly = options.readonly, disable = options.disable;
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
+                    if (element && element.length) {
+                        element[0].removeAttribute(DISABLED);
+                        element[0].removeAttribute(READONLY);
+                    }
+                    element.attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     });
                     icon.on(UP, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);
@@ -330,12 +334,24 @@
                     readonly: readonly === undefined ? true : readonly,
                     disable: false
                 });
+                if (this._dateInput) {
+                    this._dateInput._editable({
+                        readonly: readonly === undefined ? true : readonly,
+                        disable: false
+                    });
+                }
             },
             enable: function (enable) {
                 this._editable({
                     readonly: false,
                     disable: !(enable = enable === undefined ? true : enable)
                 });
+                if (this._dateInput) {
+                    this._dateInput._editable({
+                        readonly: false,
+                        disable: !(enable = enable === undefined ? true : enable)
+                    });
+                }
             },
             destroy: function () {
                 var that = this;
@@ -390,7 +406,7 @@
             _focusElement: function (eventType) {
                 var element = this.element;
                 if ((!support.touch || support.mouseAndTouchPresent && !(eventType || '').match(/touch/i)) && element[0] !== activeElement()) {
-                    element.focus();
+                    element.trigger('focus');
                 }
             },
             _change: function (value) {
@@ -523,7 +539,9 @@
                 var cell;
                 var that = this;
                 var calendar = that.dateView.calendar;
-                that.element.removeAttr('aria-activedescendant');
+                if (that.element && that.element.length) {
+                    that.element[0].removeAttribute('aria-activedescendant');
+                }
                 if (calendar) {
                     cell = calendar._cell;
                     cell.attr('aria-label', that._ariaTemplate({ current: date || calendar.current() }));

@@ -261,7 +261,7 @@
                     var input = e.target, idx = caret(input)[0], value = input.value.substring(0, idx), format = that._format(that.options.format), group = format[','], result, groupRegExp, extractRegExp, caretPosition = 0;
                     if (group) {
                         groupRegExp = new RegExp('\\' + group, 'g');
-                        extractRegExp = new RegExp('([\\d\\' + group + ']+)(\\' + format[POINT] + ')?(\\d+)?');
+                        extractRegExp = new RegExp('(^(-)$)|(^(-)?([\\d\\' + group + ']+)(\\' + format[POINT] + ')?(\\d+)?)');
                     }
                     if (extractRegExp) {
                         result = extractRegExp.exec(value);
