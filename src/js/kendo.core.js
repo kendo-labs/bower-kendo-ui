@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.1.307'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.313'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1341,7 +1341,7 @@
                 if (!percentWidth && (!autosize || autosize && width || forceWidth)) {
                     width = autosize ? outerWidth(element) + 1 : outerWidth(element);
                 }
-                if (!percentHeight && (!autosize || autosize && height)) {
+                if (!percentHeight && (!autosize || autosize && height) || element.is('.k-menu-horizontal.k-context-menu')) {
                     height = outerHeight(element);
                 }
                 element.wrap($('<div/>').addClass('k-animation-container').css({

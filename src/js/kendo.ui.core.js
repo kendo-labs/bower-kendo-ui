@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.1.307'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.313'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1341,7 +1341,7 @@
                 if (!percentWidth && (!autosize || autosize && width || forceWidth)) {
                     width = autosize ? outerWidth(element) + 1 : outerWidth(element);
                 }
-                if (!percentHeight && (!autosize || autosize && height)) {
+                if (!percentHeight && (!autosize || autosize && height) || element.is('.k-menu-horizontal.k-context-menu')) {
                     height = outerHeight(element);
                 }
                 element.wrap($('<div/>').addClass('k-animation-container').css({
@@ -14731,7 +14731,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECT = 'unselect', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up,label.k-checkbox-label.k-no-text', msie = kendo.support.browser.msie, supportEventDelegation = false;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECT = 'unselect', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up,label.k-checkbox-label.k-no-text,.k-icon.k-i-collapse,.k-icon.k-i-expand', msie = kendo.support.browser.msie, supportEventDelegation = false;
         (function ($) {
             (function () {
                 $('<div class="parent"><span /></div>').on('click', '>*', function () {
@@ -35479,7 +35479,7 @@
                 var overflowWrapper = that._overflowWrapper();
                 that._triggerProxy = proxy(that._triggerEvent, that);
                 that.popup = that.element.addClass('k-context-menu').kendoPopup({
-                    autosize: true,
+                    autosize: that.options.orientation === 'horizontal',
                     anchor: that.target || 'body',
                     copyAnchorStyles: that.options.copyAnchorStyles,
                     collision: that.options.popupCollision || 'fit',
@@ -41420,6 +41420,7 @@
                     newTop = this.minTop + (this.maxTop - this.minTop) / 2;
                     newLeft = this.minLeft + (this.maxLeft - this.minLeft) / 2;
                 } else {
+                    that._scrollIsAppended = true;
                     newLeft = scrollLeft + Math.max(0, (documentWindow.width() - wrapper.width()) / 2);
                     newTop = scrollTop + Math.max(0, (documentWindow.height() - wrapper.height() - toInt(wrapper, 'paddingTop')) / 2);
                 }
@@ -41544,8 +41545,8 @@
                     that._containerScrollLeft = doc.scrollLeft();
                     that._stopDocumentScrolling();
                 }
-                if (options.pinned && !that._isPinned) {
-                    that.pin();
+                if (this.options.pinned && !this._isPinned) {
+                    this.pin();
                 }
                 return that;
             },
@@ -41852,9 +41853,10 @@
                 if (!that.options.isMaximized) {
                     position.top = top;
                     position.left = left;
-                    if (!this.containment || this.containment.css('position') !== 'fixed') {
+                    if (that._scrollIsAppended && (!this.containment || this.containment.css('position') !== 'fixed')) {
                         position.top -= win.scrollTop();
                         position.left -= win.scrollLeft();
+                        that._scrollIsAppended = false;
                     }
                     wrapper.css(extend(position, { position: 'fixed' }));
                     wrapper.children(KWINDOWTITLEBAR).find(KPIN).addClass('k-i-unpin').removeClass('k-i-pin');
@@ -41873,6 +41875,7 @@
                 var that = this, win = $(window), wrapper = that.wrapper, options = that.options, position = that.options.position, containment = that.containment, top = parseInt(wrapper.css('top'), 10) + win.scrollTop(), left = parseInt(wrapper.css('left'), 10) + win.scrollLeft();
                 if (!that.options.isMaximized) {
                     that._isPinned = false;
+                    that._scrollIsAppended = true;
                     that.options.pinned = false;
                     if (containment) {
                         that._updateBoundaries();
