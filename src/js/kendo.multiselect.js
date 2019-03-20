@@ -107,6 +107,7 @@
                 if (disabled) {
                     that.enable(false);
                 }
+                this._ariaSetSize(this.value().length);
                 kendo.notify(that);
                 that._toggleCloseVisibility();
             },
@@ -469,6 +470,7 @@
                 if (!clearFilters) {
                     that._fetchData();
                 }
+                this._ariaSetSize(this.value().length);
                 that._toggleCloseVisibility();
             },
             _preselect: function (data, value) {
@@ -563,6 +565,7 @@
                     that.element.trigger(CHANGE);
                 }
                 that.popup.position();
+                that._ariaSetSize(value.length);
                 that._toggleCloseVisibility();
             },
             _click: function (e) {
@@ -1097,7 +1100,10 @@
                     'autocomplete': 'off',
                     'role': 'listbox',
                     'title': element[0].title,
-                    'aria-expanded': false
+                    'aria-expanded': false,
+                    'aria-haspopup': 'listbox',
+                    'aria-autocomplete': 'list',
+                    'aria-live': 'polite'
                 });
             },
             _tagList: function () {
@@ -1121,7 +1127,7 @@
                 defaultTemplate = isMultiple ? kendo.template('#:' + kendo.expr(options.dataTextField, 'data') + '#', { useWithBlock: false }) : kendo.template('#:values.length# item(s) selected');
                 that.tagTextTemplate = tagTemplate = tagTemplate ? kendo.template(tagTemplate) : defaultTemplate;
                 that.tagTemplate = function (data) {
-                    return '<li class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" aria-label="' + (isMultiple ? 'delete' : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
+                    return '<li role="option" aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" aria-label="' + (isMultiple ? 'delete' : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
                 };
             },
             _loader: function () {
@@ -1152,6 +1158,13 @@
                 }
                 that.wrapper = wrapper.addClass(element[0].className).css('display', '');
                 that._innerWrapper = $(wrapper[0].firstChild);
+            },
+            _ariaSetSize: function (value) {
+                var that = this;
+                var selectedItems = that.tagList.children();
+                if (value && selectedItems.length) {
+                    selectedItems.attr('aria-setsize', value);
+                }
             }
         });
         function compare(a, b) {

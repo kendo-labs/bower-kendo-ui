@@ -1191,6 +1191,20 @@
                         }
                     }
                 })
+            },
+            grid: {
+                source: dataSourceBinding('source', 'dataSource', 'setDataSource').extend({
+                    dataBound: function (e) {
+                        var idx, length, widget = this.widget, elements = e.addedItems || widget.items(), parents, data;
+                        if (elements.length) {
+                            data = e.addedDataItems || widget.dataItems();
+                            parents = this.bindings.source._parents();
+                            for (idx = 0, length = data.length; idx < length; idx++) {
+                                bindElement(elements[idx], data[idx], this._ns(e.ns), [data[idx]].concat(parents));
+                            }
+                        }
+                    }
+                })
             }
         };
         var arraySplice = function (arr, idx, remove, add) {

@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.1.313'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.320'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -10579,6 +10579,20 @@
                         }
                     }
                 })
+            },
+            grid: {
+                source: dataSourceBinding('source', 'dataSource', 'setDataSource').extend({
+                    dataBound: function (e) {
+                        var idx, length, widget = this.widget, elements = e.addedItems || widget.items(), parents, data;
+                        if (elements.length) {
+                            data = e.addedDataItems || widget.dataItems();
+                            parents = this.bindings.source._parents();
+                            for (idx = 0, length = data.length; idx < length; idx++) {
+                                bindElement(elements[idx], data[idx], this._ns(e.ns), [data[idx]].concat(parents));
+                            }
+                        }
+                    }
+                })
             }
         };
         var arraySplice = function (arr, idx, remove, add) {
@@ -15221,7 +15235,7 @@
                 if (options.numeric) {
                     that.list = that.element.find('.k-pager-numbers');
                     if (!that.list.length) {
-                        that.list = $('<ul class="k-pager-numbers k-reset" />').appendTo(that.element);
+                        that.list = $('<ul class="k-pager-numbers k-reset" />').append(that.currentPageTemplate({ text: 0 })).append(that.selectTemplate({ text: 0 })).appendTo(that.element);
                     }
                 }
                 if (options.input) {
@@ -16440,7 +16454,8 @@
 (function (f, define) {
     define('kendo.tooltip', [
         'kendo.core',
-        'kendo.popup'
+        'kendo.popup',
+        'kendo.fx'
     ], f);
 }(function () {
     var __meta__ = {
@@ -16562,7 +16577,9 @@
                 filter: '',
                 content: DEFAULTCONTENT,
                 showAfter: 100,
+                hideAfter: 100,
                 callout: true,
+                offset: 0,
                 position: 'bottom',
                 showOn: 'mouseenter',
                 autoHide: true,
@@ -16731,6 +16748,8 @@
                         }
                         if (options.callout) {
                             that._positionCallout();
+                        } else {
+                            that._offset(that.options.position, that.options.offset);
                         }
                         this.element.removeAttr('aria-hidden');
                         DOCUMENT.on('keydown' + NS, that._documentKeyDownHandler);
@@ -16759,14 +16778,17 @@
                 this.hide();
             },
             _mouseleave: function (e) {
-                this._closePopup(e.currentTarget);
-                clearTimeout(this.timeout);
+                var that = this;
+                clearTimeout(that.timeout);
+                that.timeout = setTimeout(function () {
+                    that._closePopup(e.currentTarget);
+                }, that.options.hideAfter);
             },
             _blur: function (e) {
                 this._closePopup(e.currentTarget);
             },
             _closePopup: function (target) {
-                if (this.popup) {
+                if (this.popup && !this.popup._hovered) {
                     this.popup.close();
                 } else {
                     restoreTitle($(target));
@@ -16780,12 +16802,7 @@
             },
             _positionCallout: function () {
                 var that = this, position = that.options.position, dimensions = that.dimensions, offset = dimensions.offset, popup = that.popup, anchor = popup.options.anchor, anchorOffset = $(anchor).offset(), elementOffset = $(popup.element).offset(), cssClass = DIRCLASSES[popup.flipped ? REVERSE[position] : position], offsetAmount = anchorOffset[offset] - elementOffset[offset] + $(anchor)[dimensions.size]() / 2;
-                this.popup.element.css('margin-top', '').css('margin-right', '').css('margin-bottom', '').css('margin-left', '');
-                if (position == 'top' || position == 'left') {
-                    this.popup.element.css('margin-' + position, -this.arrow.outerWidth() / 2 + 'px');
-                } else {
-                    this.popup.element.css('margin-' + REVERSE[position], this.arrow.outerWidth() / 2 + 'px');
-                }
+                that._offset(position, that.options.offset);
                 that.arrow.removeClass('k-callout-n k-callout-s k-callout-w k-callout-e').addClass('k-callout-' + cssClass).css(offset, offsetAmount);
             },
             destroy: function () {
@@ -16798,6 +16815,10 @@
                 this.element.off(NS);
                 DOCUMENT.off('keydown' + NS, this._documentKeyDownHandler);
                 Widget.fn.destroy.call(this);
+            },
+            _offset: function (position, offsetAmount) {
+                var that = this, isTopLeft = position == 'top' || position == 'left', isFlipped = that.popup.flipped, direction = isTopLeft && isFlipped || !isTopLeft && !isFlipped ? 1 : -1, marginRule = isTopLeft ? 'margin-' + position : 'margin-' + REVERSE[position], offset = kendo._outerWidth(that.arrow) / 2 + offsetAmount;
+                that.popup.wrapper.css(marginRule, offset * direction + 'px');
             }
         });
         kendo.ui.plugin(Tooltip);
@@ -26854,6 +26875,7 @@
                 if (disabled) {
                     that.enable(false);
                 }
+                this._ariaSetSize(this.value().length);
                 kendo.notify(that);
                 that._toggleCloseVisibility();
             },
@@ -27216,6 +27238,7 @@
                 if (!clearFilters) {
                     that._fetchData();
                 }
+                this._ariaSetSize(this.value().length);
                 that._toggleCloseVisibility();
             },
             _preselect: function (data, value) {
@@ -27310,6 +27333,7 @@
                     that.element.trigger(CHANGE);
                 }
                 that.popup.position();
+                that._ariaSetSize(value.length);
                 that._toggleCloseVisibility();
             },
             _click: function (e) {
@@ -27844,7 +27868,10 @@
                     'autocomplete': 'off',
                     'role': 'listbox',
                     'title': element[0].title,
-                    'aria-expanded': false
+                    'aria-expanded': false,
+                    'aria-haspopup': 'listbox',
+                    'aria-autocomplete': 'list',
+                    'aria-live': 'polite'
                 });
             },
             _tagList: function () {
@@ -27868,7 +27895,7 @@
                 defaultTemplate = isMultiple ? kendo.template('#:' + kendo.expr(options.dataTextField, 'data') + '#', { useWithBlock: false }) : kendo.template('#:values.length# item(s) selected');
                 that.tagTextTemplate = tagTemplate = tagTemplate ? kendo.template(tagTemplate) : defaultTemplate;
                 that.tagTemplate = function (data) {
-                    return '<li class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" aria-label="' + (isMultiple ? 'delete' : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
+                    return '<li role="option" aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" aria-label="' + (isMultiple ? 'delete' : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
                 };
             },
             _loader: function () {
@@ -27899,6 +27926,13 @@
                 }
                 that.wrapper = wrapper.addClass(element[0].className).css('display', '');
                 that._innerWrapper = $(wrapper[0].firstChild);
+            },
+            _ariaSetSize: function (value) {
+                var that = this;
+                var selectedItems = that.tagList.children();
+                if (value && selectedItems.length) {
+                    selectedItems.attr('aria-setsize', value);
+                }
             }
         });
         function compare(a, b) {
@@ -35402,7 +35436,7 @@
                 }
             },
             _showHandler: function (e) {
-                var ev = e, offset, that = this, options = that.options, target = $(ev.currentTarget);
+                var ev = e, offset, that = this, options = that.options, target = kendo.support.mobileOS ? $(ev.target) : $(ev.currentTarget);
                 if (e.event) {
                     ev = e.event;
                     ev.pageX = e.x.location;

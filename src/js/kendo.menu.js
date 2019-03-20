@@ -1760,7 +1760,7 @@
                 }
             },
             _showHandler: function (e) {
-                var ev = e, offset, that = this, options = that.options, target = $(ev.currentTarget);
+                var ev = e, offset, that = this, options = that.options, target = kendo.support.mobileOS ? $(ev.target) : $(ev.currentTarget);
                 if (e.event) {
                     ev = e.event;
                     ev.pageX = e.x.location;
