@@ -3985,9 +3985,9 @@ div.k-treeview {
   position: absolute;
   z-index: 10000;
   visibility: hidden;
-  width: 80px;
-  height: 5px;
-  margin-top: -3px;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
   background-color: transparent;
   background-repeat: no-repeat;
 }

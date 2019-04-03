@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.1.327'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.403'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -26856,7 +26856,8 @@
                     that.input.attr('aria-describedby', id);
                 }
                 that._initialOpen = true;
-                that._aria(id);
+                that._ariaLabel();
+                that._ariaSetLive();
                 that._dataSource();
                 that._ignoreCase();
                 that._popup();
@@ -26875,7 +26876,7 @@
                 if (disabled) {
                     that.enable(false);
                 }
-                this._ariaSetSize(this.value().length);
+                that._ariaSetSize(that.value().length);
                 kendo.notify(that);
                 that._toggleCloseVisibility();
             },
@@ -26941,10 +26942,12 @@
                 if (candidate !== undefined) {
                     if (that._currentTag) {
                         that._currentTag.removeClass(FOCUSEDCLASS).removeAttr(ID);
+                        that._currentTag.find('.k-select').attr('aria-hidden', true);
                         that.input.removeAttr('aria-activedescendant');
                     }
                     if (candidate) {
                         candidate.addClass(FOCUSEDCLASS).attr(ID, that._tagID);
+                        candidate.find('.k-select').removeAttr('aria-hidden');
                         that.input.attr('aria-activedescendant', that._tagID);
                     }
                     that._currentTag = candidate;
@@ -27238,7 +27241,7 @@
                 if (!clearFilters) {
                     that._fetchData();
                 }
-                this._ariaSetSize(this.value().length);
+                that._ariaSetSize(that.value().length);
                 that._toggleCloseVisibility();
             },
             _preselect: function (data, value) {
@@ -27870,14 +27873,13 @@
                     'title': element[0].title,
                     'aria-expanded': false,
                     'aria-haspopup': 'listbox',
-                    'aria-autocomplete': 'list',
-                    'aria-live': 'polite'
+                    'aria-autocomplete': 'list'
                 });
             },
             _tagList: function () {
                 var that = this, tagList = that._innerWrapper.children('ul');
                 if (!tagList[0]) {
-                    tagList = $('<ul role="listbox" unselectable="on" class="k-reset"/>').appendTo(that._innerWrapper);
+                    tagList = $('<ul unselectable="on" class="k-reset"/>').appendTo(that._innerWrapper);
                 }
                 that.tagList = tagList;
             },
@@ -27895,7 +27897,7 @@
                 defaultTemplate = isMultiple ? kendo.template('#:' + kendo.expr(options.dataTextField, 'data') + '#', { useWithBlock: false }) : kendo.template('#:values.length# item(s) selected');
                 that.tagTextTemplate = tagTemplate = tagTemplate ? kendo.template(tagTemplate) : defaultTemplate;
                 that.tagTemplate = function (data) {
-                    return '<li role="option" aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span unselectable="on" aria-label="' + (isMultiple ? 'delete' : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
+                    return '<li role="option" aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span aria-hidden="true" unselectable="on" aria-label="' + (isMultiple ? 'delete' : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
                 };
             },
             _loader: function () {
@@ -27922,7 +27924,7 @@
                     wrapper = element.wrap('<div class="k-widget k-multiselect" unselectable="on" />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                     wrapper[0].title = element[0].title;
-                    $('<div class="k-multiselect-wrap k-floatwrap" unselectable="on" />').insertBefore(element);
+                    $('<div class="k-multiselect-wrap k-floatwrap" role="listbox" unselectable="on" />').insertBefore(element);
                 }
                 that.wrapper = wrapper.addClass(element[0].className).css('display', '');
                 that._innerWrapper = $(wrapper[0].firstChild);
@@ -27933,6 +27935,10 @@
                 if (value && selectedItems.length) {
                     selectedItems.attr('aria-setsize', value);
                 }
+            },
+            _ariaSetLive: function () {
+                var that = this;
+                that.ul.attr('aria-live', !that._isFilterEnabled() ? 'off' : 'polite');
             }
         });
         function compare(a, b) {
