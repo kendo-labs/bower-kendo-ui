@@ -23,7 +23,14 @@
 
 */
 .k-button[disabled],
-[disabled] .k-button {
+.k-button[disabled]:focus,
+.k-button.k-state-focused[disabled],
+[disabled] .k-button,
+[disabled] .k-button:focus,
+[disabled] .k-button.k-state-focused,
+.k-button.k-state-disabled,
+.k-button.k-state-disabled:focus,
+.k-button.k-state-disabled.k-state-focused {
   outline: none;
   cursor: default;
   opacity: 0.65;
@@ -4181,7 +4188,8 @@ kendo-sortable {
 .k-button.k-flat,
 .k-calendar .k-calendar-header .k-button,
 .k-button.k-bare,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
   border-color: transparent !important;
   color: inherit;
   background: none !important;
@@ -4201,17 +4209,23 @@ kendo-sortable {
 .k-button.k-flat:hover.k-state-active,
 .k-calendar .k-calendar-header .k-button:hover.k-state-active,
 .k-button.k-bare:hover,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button:hover,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
 .k-button.k-bare.k-state-hover,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button.k-state-hover,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-state-hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-hover,
 .k-button.k-bare:active,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button:active,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active,
 .k-button.k-bare.k-state-active,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button.k-state-active,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-state-active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-active,
 .k-button.k-bare:hover:active,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button:hover:active,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover:active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover:active,
 .k-button.k-bare:hover.k-state-active,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button:hover.k-state-active {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover.k-state-active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover.k-state-active {
   color: inherit;
 }
 .k-button.k-flat::before,
@@ -4225,9 +4239,12 @@ kendo-sortable {
 .k-button.k-bare::before,
 .k-toolbar .k-bare.k-picker-wrap::before,
 .k-toolbar .k-bare.k-dropdown-wrap::before,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button::before,
-.k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite > .k-picker-wrap::before,
-.k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite > .k-dropdown-wrap::before {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::before,
+.k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-picker-wrap::before,
+.k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-dropdown-wrap::before,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
+.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before {
   display: block;
 }
 .k-button.k-outline {
@@ -4337,12 +4354,8 @@ kendo-sortable {
   opacity: 0.65;
   box-shadow: none;
 }
-.k-ie9 .k-button,
-.k-ie9 .k-button-group,
-.k-ie10 .k-button,
-.k-ie10 .k-button-group,
-.k-ie11 .k-button,
-.k-ie11 .k-button-group {
+.k-ie .k-button,
+.k-ie .k-button-group {
   display: inline-block;
 }
 .k-button {
@@ -4355,6 +4368,14 @@ kendo-sortable {
 .k-button.k-primary:focus,
 .k-button.k-primary.k-state-focused {
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+}
+.k-button.k-primary:focus[disabled],
+[disabled] .k-button.k-primary:focus,
+.k-button.k-primary:focus.k-state-disabled,
+.k-button.k-primary.k-state-focused[disabled],
+[disabled] .k-button.k-primary.k-state-focused,
+.k-button.k-primary.k-state-focused.k-state-disabled {
+  box-shadow: none;
 }
 .k-button-group {
   border: 0;
@@ -4430,13 +4451,15 @@ kendo-sortable {
 .k-button.k-flat,
 .k-calendar .k-calendar-header .k-button,
 .k-button.k-bare,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
   color: inherit;
 }
 .k-button.k-flat::after,
 .k-calendar .k-calendar-header .k-button::after,
 .k-button.k-bare::after,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button::after {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::after,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after {
   display: block;
 }
 .k-button.k-flat:focus::after,
@@ -4444,9 +4467,11 @@ kendo-sortable {
 .k-button.k-flat.k-state-focused::after,
 .k-calendar .k-calendar-header .k-state-focused.k-button::after,
 .k-button.k-bare:focus::after,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button:focus::after,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:focus::after,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:focus::after,
 .k-button.k-bare.k-state-focused::after,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button.k-state-focused::after {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-state-focused::after,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-focused::after {
   box-shadow: 0 0 0 3px currentColor;
   opacity: 0.25;
 }
@@ -4459,13 +4484,17 @@ kendo-sortable {
 .k-button.k-primary.k-flat.k-state-active,
 .k-calendar .k-calendar-header .k-primary.k-state-active.k-button,
 .k-button.k-primary.k-bare,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button.k-primary,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-primary,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary,
 .k-button.k-primary.k-bare:hover,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button.k-primary:hover,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-primary:hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary:hover,
 .k-button.k-primary.k-bare.k-state-hover,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button.k-primary.k-state-hover,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-primary.k-state-hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary.k-state-hover,
 .k-button.k-primary.k-bare.k-state-active,
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button.k-primary.k-state-active {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-primary.k-state-active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary.k-state-active {
   color: #007bff;
 }
 .k-popup {
@@ -4663,6 +4692,10 @@ kendo-sortable {
 .k-list-container .k-button .k-icon {
   margin: 0 0.5rem 0 0;
 }
+.k-ie11 .k-list-container .k-button {
+  display: -ms-flexbox;
+  display: flex;
+}
 .k-list-container .k-button.k-state-disabled {
   pointer-events: none;
 }
@@ -4828,6 +4861,13 @@ kendo-sortable {
 .k-pager-wrap .k-link.k-state-disabled {
   color: inherit;
 }
+.k-pager-wrap .k-pager-numbers-wrap {
+  width: auto;
+  height: auto;
+  position: relative;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
 .k-pager-wrap .k-pager-numbers {
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -4933,23 +4973,30 @@ kendo-sortable {
   position: relative;
   overflow: visible;
 }
+.k-pager-wrap.k-pager-lg .k-pager-nav + .k-pager-numbers-wrap,
+.k-pager-wrap.k-pager-md .k-pager-nav + .k-pager-numbers-wrap,
+.k-pager-wrap.k-pager-sm .k-pager-nav + .k-pager-numbers-wrap {
+  width: calc(4px + 1.5rem + 3em);
+  height: calc(2px + 0.75rem + 1.5em);
+  box-sizing: border-box;
+  border-color: inherit;
+  margin: 0 0.375rem;
+}
 .k-pager-wrap.k-pager-lg .k-pager-numbers,
 .k-pager-wrap.k-pager-md .k-pager-numbers,
 .k-pager-wrap.k-pager-sm .k-pager-numbers {
   border-radius: 0.25rem;
   position: absolute;
   overflow: hidden;
-  left: calc(4px + 1.5rem + 3em + 0.5625rem);
   -ms-flex-direction: column-reverse;
   flex-direction: column-reverse;
-  height: auto;
-  bottom: 50%;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  bottom: 0;
   z-index: 3;
   border-style: solid;
   border-width: 1px;
-  -webkit-transform: translateY(1px) translateY(0.375rem) translateY(0.75em) translateY(1px);
-  -ms-transform: translateY(1px) translateY(0.375rem) translateY(0.75em) translateY(1px);
-  transform: translateY(1px) translateY(0.375rem) translateY(0.75em) translateY(1px);
 }
 .k-pager-wrap.k-pager-lg .k-pager-numbers li:not(.k-current-page),
 .k-pager-wrap.k-pager-md .k-pager-numbers li:not(.k-current-page),
@@ -4969,8 +5016,15 @@ kendo-sortable {
 .k-pager-wrap.k-pager-md .k-pager-numbers .k-state-selected,
 .k-pager-wrap.k-pager-sm .k-pager-numbers .k-link,
 .k-pager-wrap.k-pager-sm .k-pager-numbers .k-state-selected {
+  margin: 0;
   border-width: 0;
   width: calc(4px + 1.5rem + 3em);
+  height: calc(2px + 0.75rem + 1.5em);
+}
+.k-pager-wrap.k-pager-lg .k-pager-numbers.k-state-expanded,
+.k-pager-wrap.k-pager-md .k-pager-numbers.k-state-expanded,
+.k-pager-wrap.k-pager-sm .k-pager-numbers.k-state-expanded {
+  height: auto;
 }
 .k-pager-wrap.k-pager-lg .k-pager-numbers.k-state-expanded li,
 .k-pager-wrap.k-pager-md .k-pager-numbers.k-state-expanded li,
@@ -4983,63 +5037,6 @@ kendo-sortable {
 .k-pager-wrap.k-pager-sm .k-pager-numbers.k-state-expanded .k-current-page {
   border-style: solid;
   border-width: 1px 0 0;
-}
-.k-pager-wrap.k-pager-lg .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-lg .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-md .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-md .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-sm .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-sm .k-pager-numbers + .k-pager-input {
-  margin-left: calc(4px + 1.5rem + 3em + 0.375rem + 2px);
-}
-.k-pager-wrap.k-pager-lg .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-md .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-sm .k-pager-numbers:first-child {
-  left: 1em;
-}
-.k-rtl .k-pager-wrap.k-pager-lg .k-pager-numbers,
-.k-pager-wrap.k-pager-lg[dir="rtl"] .k-pager-numbers,
-[dir="rtl"] .k-pager-wrap.k-pager-lg .k-pager-numbers,
-.k-rtl .k-pager-wrap.k-pager-md .k-pager-numbers,
-.k-pager-wrap.k-pager-md[dir="rtl"] .k-pager-numbers,
-[dir="rtl"] .k-pager-wrap.k-pager-md .k-pager-numbers,
-.k-rtl .k-pager-wrap.k-pager-sm .k-pager-numbers,
-.k-pager-wrap.k-pager-sm[dir="rtl"] .k-pager-numbers,
-[dir="rtl"] .k-pager-wrap.k-pager-sm .k-pager-numbers {
-  left: auto;
-  right: calc(4px + 1.5rem + 3em + 0.5625rem);
-}
-.k-rtl .k-pager-wrap.k-pager-lg .k-pager-numbers + .k-link,
-.k-rtl .k-pager-wrap.k-pager-lg .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-lg[dir="rtl"] .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-lg[dir="rtl"] .k-pager-numbers + .k-pager-input,
-[dir="rtl"] .k-pager-wrap.k-pager-lg .k-pager-numbers + .k-link,
-[dir="rtl"] .k-pager-wrap.k-pager-lg .k-pager-numbers + .k-pager-input,
-.k-rtl .k-pager-wrap.k-pager-md .k-pager-numbers + .k-link,
-.k-rtl .k-pager-wrap.k-pager-md .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-md[dir="rtl"] .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-md[dir="rtl"] .k-pager-numbers + .k-pager-input,
-[dir="rtl"] .k-pager-wrap.k-pager-md .k-pager-numbers + .k-link,
-[dir="rtl"] .k-pager-wrap.k-pager-md .k-pager-numbers + .k-pager-input,
-.k-rtl .k-pager-wrap.k-pager-sm .k-pager-numbers + .k-link,
-.k-rtl .k-pager-wrap.k-pager-sm .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-sm[dir="rtl"] .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-sm[dir="rtl"] .k-pager-numbers + .k-pager-input,
-[dir="rtl"] .k-pager-wrap.k-pager-sm .k-pager-numbers + .k-link,
-[dir="rtl"] .k-pager-wrap.k-pager-sm .k-pager-numbers + .k-pager-input {
-  margin-left: 0;
-  margin-right: calc(4px + 1.5rem + 3em + 0.375rem + 2px);
-}
-.k-rtl .k-pager-wrap.k-pager-lg .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-lg[dir="rtl"] .k-pager-numbers:first-child,
-[dir="rtl"] .k-pager-wrap.k-pager-lg .k-pager-numbers:first-child,
-.k-rtl .k-pager-wrap.k-pager-md .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-md[dir="rtl"] .k-pager-numbers:first-child,
-[dir="rtl"] .k-pager-wrap.k-pager-md .k-pager-numbers:first-child,
-.k-rtl .k-pager-wrap.k-pager-sm .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-sm[dir="rtl"] .k-pager-numbers:first-child,
-[dir="rtl"] .k-pager-wrap.k-pager-sm .k-pager-numbers:first-child {
-  right: 1em;
 }
 .k-pager-wrap.k-pager-md .k-pager-info,
 .k-pager-wrap.k-pager-sm .k-pager-info {
@@ -5111,21 +5108,6 @@ kendo-sortable {
 [dir="rtl"] .k-pager-wrap .k-pager-last {
   border-radius: 0.25rem 0 0 0.25rem;
 }
-.k-rtl .k-pager-wrap .k-pager-nav + .k-pager-nav,
-.k-rtl .k-pager-wrap .k-pager-nav + .k-pager-numbers,
-.k-rtl .k-pager-wrap .k-pager-numbers + .k-pager-nav,
-.k-rtl .k-pager-wrap .k-pager-numbers .k-current-page ~ li + li,
-.k-pager-wrap[dir="rtl"] .k-pager-nav + .k-pager-nav,
-.k-pager-wrap[dir="rtl"] .k-pager-nav + .k-pager-numbers,
-.k-pager-wrap[dir="rtl"] .k-pager-numbers + .k-pager-nav,
-.k-pager-wrap[dir="rtl"] .k-pager-numbers .k-current-page ~ li + li,
-[dir="rtl"] .k-pager-wrap .k-pager-nav + .k-pager-nav,
-[dir="rtl"] .k-pager-wrap .k-pager-nav + .k-pager-numbers,
-[dir="rtl"] .k-pager-wrap .k-pager-numbers + .k-pager-nav,
-[dir="rtl"] .k-pager-wrap .k-pager-numbers .k-current-page ~ li + li {
-  margin-right: -1px;
-  margin-left: 0;
-}
 .k-pager-wrap.k-pager-lg .k-pager-numbers,
 .k-pager-wrap.k-pager-md .k-pager-numbers,
 .k-pager-wrap.k-pager-sm .k-pager-numbers {
@@ -5149,9 +5131,26 @@ kendo-sortable {
 }
 .k-pager-nav + .k-pager-nav,
 .k-pager-nav + .k-pager-numbers,
+.k-pager-nav + .k-pager-numbers-wrap,
 .k-pager-numbers + .k-pager-nav,
-.k-pager-numbers .k-current-page ~ li + li {
+.k-pager-numbers .k-current-page ~ li + li,
+.k-pager-numbers-wrap + .k-pager-nav {
   margin-left: -1px;
+}
+.k-rtl .k-pager-nav + .k-pager-nav,
+[dir="rtl"] .k-pager-nav + .k-pager-nav,
+.k-rtl .k-pager-nav + .k-pager-numbers,
+[dir="rtl"] .k-pager-nav + .k-pager-numbers,
+.k-rtl .k-pager-nav + .k-pager-numbers-wrap,
+[dir="rtl"] .k-pager-nav + .k-pager-numbers-wrap,
+.k-rtl .k-pager-numbers + .k-pager-nav,
+[dir="rtl"] .k-pager-numbers + .k-pager-nav,
+.k-rtl .k-pager-numbers .k-current-page ~ li + li,
+[dir="rtl"] .k-pager-numbers .k-current-page ~ li + li,
+.k-rtl .k-pager-numbers-wrap + .k-pager-nav,
+[dir="rtl"] .k-pager-numbers-wrap + .k-pager-nav {
+  margin-right: -1px;
+  margin-left: 0;
 }
 .k-grid {
   display: -ms-flexbox;
@@ -5308,13 +5307,17 @@ kendo-sortable {
   border-width: 0 0 0 1px;
 }
 .k-grid[dir="rtl"] .k-group-indicator .k-button.k-bare,
-.k-grid[dir="rtl"] .k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite > .k-button,
+.k-grid[dir="rtl"] .k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-grid[dir="rtl"] .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-grid[dir="rtl"] .k-drag-clue .k-button.k-bare,
-.k-grid[dir="rtl"] .k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite > .k-button,
+.k-grid[dir="rtl"] .k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-grid[dir="rtl"] .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-rtl .k-grid .k-group-indicator .k-button.k-bare,
-.k-rtl .k-grid .k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite > .k-button,
+.k-rtl .k-grid .k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-rtl .k-grid .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-rtl .k-grid .k-drag-clue .k-button.k-bare,
-.k-rtl .k-grid .k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite > .k-button {
+.k-rtl .k-grid .k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-rtl .k-grid .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
   margin-left: -0.25rem;
   margin-right: 1rem;
 }
@@ -5541,10 +5544,12 @@ kendo-sortable {
 }
 .k-group-indicator .k-link,
 .k-group-indicator .k-button.k-bare,
-.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite > .k-button,
+.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-drag-clue .k-link,
 .k-drag-clue .k-button.k-bare,
-.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite > .k-button {
+.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
   padding: 0;
   border-width: 0;
   display: -ms-inline-flexbox;
@@ -5558,9 +5563,11 @@ kendo-sortable {
   margin-right: 0.5rem;
 }
 .k-group-indicator .k-button.k-bare,
-.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite > .k-button,
+.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-drag-clue .k-button.k-bare,
-.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite > .k-button {
+.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
   margin-left: 1rem;
   margin-right: -0.25rem;
   padding: 0;
@@ -5573,31 +5580,45 @@ kendo-sortable {
 .k-toolbar .k-group-indicator .k-bare.k-picker-wrap::before,
 .k-group-indicator .k-toolbar .k-bare.k-dropdown-wrap::before,
 .k-toolbar .k-group-indicator .k-bare.k-dropdown-wrap::before,
-.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite > .k-button::before,
-.k-group-indicator .k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite > .k-picker-wrap::before,
-.k-toolbar .k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite > .k-picker-wrap::before,
-.k-group-indicator .k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-toolbar .k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::before,
+.k-group-indicator .k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-picker-wrap::before,
+.k-toolbar .k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-picker-wrap::before,
+.k-group-indicator .k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-dropdown-wrap::before,
+.k-toolbar .k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-dropdown-wrap::before,
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
+.k-group-indicator .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-group-indicator .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
 .k-group-indicator .k-button.k-bare::after,
-.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite > .k-button::after,
+.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::after,
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after,
 .k-drag-clue .k-button.k-bare::before,
 .k-drag-clue .k-toolbar .k-bare.k-picker-wrap::before,
 .k-toolbar .k-drag-clue .k-bare.k-picker-wrap::before,
 .k-drag-clue .k-toolbar .k-bare.k-dropdown-wrap::before,
 .k-toolbar .k-drag-clue .k-bare.k-dropdown-wrap::before,
-.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite > .k-button::before,
-.k-drag-clue .k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite > .k-picker-wrap::before,
-.k-toolbar .k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite > .k-picker-wrap::before,
-.k-drag-clue .k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-toolbar .k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::before,
+.k-drag-clue .k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-picker-wrap::before,
+.k-toolbar .k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-picker-wrap::before,
+.k-drag-clue .k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-dropdown-wrap::before,
+.k-toolbar .k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-dropdown-wrap::before,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
+.k-drag-clue .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-drag-clue .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
 .k-drag-clue .k-button.k-bare::after,
-.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite > .k-button::after {
+.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::after,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after {
   display: none;
 }
 .k-group-indicator .k-button.k-bare:hover,
-.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite > .k-button:hover,
+.k-group-indicator .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover,
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
 .k-drag-clue .k-button.k-bare:hover,
-.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite > .k-button:hover {
+.k-drag-clue .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover {
   opacity: 1;
 }
 .k-group-indicator {
@@ -5712,7 +5733,8 @@ div.k-grid-footer {
 }
 .k-ie .k-grid-header .k-header > .k-link,
 .k-edge .k-grid-header .k-header > .k-link {
-  margin-right: calc(1em + 0.875rem);
+  margin: 0;
+  padding: 0;
 }
 .k-grid-header .k-with-icon,
 .k-grid-header .k-filterable {
@@ -5722,7 +5744,7 @@ div.k-grid-footer {
 .k-edge .k-grid-header .k-with-icon,
 .k-ie .k-grid-header .k-filterable,
 .k-edge .k-grid-header .k-filterable {
-  padding-right: 0.75rem;
+  padding-right: calc(2px + 0.75rem + 1.5em + 0.5rem);
 }
 .k-grid-header .k-header > .k-link:focus {
   text-decoration: none;
@@ -5754,9 +5776,9 @@ div.k-grid-footer {
 .k-edge .k-grid-header .k-header-column-menu {
   position: static;
   float: right;
-  width: auto;
-  height: auto;
-  padding: 0.25rem;
+  margin-top: calc(-1px + -0.375rem);
+  margin-bottom: calc(-1px + -0.375rem);
+  margin-right: calc(-1 * (2px + 0.75rem + 1.5em));
 }
 .k-grid-header .k-header > .k-link > .k-icon.k-i-sort-desc-sm,
 .k-grid-header .k-header > .k-link > .k-icon.k-i-sort-asc-sm {
@@ -6663,6 +6685,10 @@ div.k-grid-footer {
 .k-toolbar .k-dropdown-wrap::before {
   border-radius: 0.25rem;
 }
+.k-ie11 .k-toolbar .k-button {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
 .k-toolbar .k-button-group .k-button {
   border-radius: 0;
 }
@@ -6707,6 +6733,11 @@ div.k-grid-footer {
 }
 .k-toolbar .k-separator + * {
   margin-left: 0;
+}
+.k-toolbar .k-spacer {
+  height: 1.5em;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .k-overflow-container .k-overflow-tool-group {
   display: block;
@@ -7944,6 +7975,13 @@ div.k-grid-footer {
 .k-treeview .k-i-collapse {
   margin-left: -16px;
   cursor: pointer;
+}
+.k-treeview .k-i-drag-and-drop {
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: 1000;
 }
 .k-treeview .k-in .k-icon,
 .k-treeview .k-in .k-image,
@@ -9501,8 +9539,11 @@ div.k-scrollview .k-scrollview-nav > li {
   height: auto;
 }
 .k-calendar-infinite .k-calendar-yearview .k-content .k-link,
+.k-calendar-infinite .k-calendar-yearview .k-content td.k-empty,
 .k-calendar-infinite .k-calendar-decadeview .k-content .k-link,
-.k-calendar-infinite .k-calendar-centuryview .k-content .k-link {
+.k-calendar-infinite .k-calendar-decadeview .k-content td.k-empty,
+.k-calendar-infinite .k-calendar-centuryview .k-content .k-link,
+.k-calendar-infinite .k-calendar-centuryview .k-content td.k-empty {
   width: 56px;
   height: 56px;
 }
@@ -9660,14 +9701,47 @@ div.k-scrollview .k-scrollview-nav > li {
 .k-calendar.k-calendar-range.k-calendar-infinite table > tbody + tbody {
   margin-left: 2rem;
 }
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button {
   border-radius: 0;
   width: 50px;
 }
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-calendar-view {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-calendar-view {
   border-width: 0 1px;
   border-style: solid;
   border-color: inherit;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite {
+  padding: 0 0.5rem;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite .k-calendar-view,
+.k-calendar.k-calendar-minimal.k-calendar-infinite .k-calendar-monthview {
+  padding: 0 0.5rem;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+  width: auto;
+  height: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s ease-in-out;
+  padding: 0;
+  margin: calc(1rem + 2em + 2px) 0;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover:before,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active:before {
+  opacity: 0;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:focus:after {
+  opacity: 0;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button .k-icon {
+  font-size: 1.5em;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-calendar-view {
+  border-width: 0;
 }
 .k-widget.k-daterangepicker {
   border: 0;
@@ -10998,6 +11072,15 @@ fieldset legend {
 .k-maskedtextbox .k-state-invalid + .k-i-warning {
   color: #dc3545;
 }
+.k-ie .k-textbox:-ms-input-placeholder {
+  color: #212529;
+}
+.k-ie .k-textbox.k-invalid:-ms-input-placeholder,
+.k-ie .k-textbox.k-state-invalid:-ms-input-placeholder,
+.k-ie .k-textbox.ng-invalid.ng-touched:-ms-input-placeholder,
+.k-ie .k-textbox.ng-invalid.ng-dirty:-ms-input-placeholder {
+  color: #dc3545;
+}
 .k-dropdowntree .k-select {
   border-width: 0;
 }
@@ -12138,11 +12221,12 @@ html .k-upload {
 }
 .k-tooltip-validation {
   margin: 0.5rem 0 0;
-  padding: 0;
   position: static;
   border-width: 0;
   display: -ms-inline-flexbox;
   display: inline-flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
   -ms-flex-align: center;
   align-items: center;
 }
@@ -14952,8 +15036,8 @@ kendo-scheduler .k-event .k-event-template {
 .k-splitter-flex .k-pane[hidden],
 .k-splitter-flex .k-pane-flex.k-state-hidden,
 .k-splitter-flex .k-pane-flex[hidden] {
-  -ms-flex: 0 1 0px !important;
-  flex: 0 1 0 !important;
+  -ms-flex: 0 1 0% !important;
+  flex: 0 1 0% !important;
   overflow: hidden !important;
   display: block !important;
 }

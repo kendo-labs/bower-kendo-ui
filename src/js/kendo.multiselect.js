@@ -319,6 +319,7 @@
                 } else {
                     option = that.element[0].children[customIndex];
                     option.selected = false;
+                    listView._deselect([customIndex]);
                     listView.removeAt(position);
                     tag.remove();
                     done();

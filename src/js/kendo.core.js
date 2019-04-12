@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.1.403'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.412'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2590,6 +2590,9 @@
                     if (editorToolbar) {
                         return editorToolbar;
                     }
+                }
+                if (role === 'view') {
+                    return element.data('kendoView');
                 }
                 if (suites) {
                     if (suites[0]) {

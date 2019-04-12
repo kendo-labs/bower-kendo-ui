@@ -604,6 +604,107 @@
 .k-switch[aria-readonly="true"] {
   pointer-events: none;
 }
+.k-pane-wrapper .k-pane > .k-view > .k-content {
+  background-position: 50% 50%;
+  background-color: #f5f5f5;
+}
+.k-pane-wrapper .k-pane .k-grid-mobile .k-column-active + th.k-header {
+  border-left-color: #333333;
+}
+.k-pane-wrapper .k-pane .k-grid-mobile .k-sorted .k-sort-order,
+.k-pane-wrapper .k-pane .k-grid-mobile .k-sorted .k-i-sort-asc-sm,
+.k-pane-wrapper .k-pane .k-grid-mobile .k-sorted .k-i-sort-desc-sm {
+  color: #428bca;
+}
+.k-pane-wrapper .k-pane .k-grid-mobile .k-grid-filter.k-state-active,
+.k-pane-wrapper .k-pane .k-grid-mobile .k-header-column-menu.k-state-active {
+  color: #fff;
+  background-color: #428bca;
+}
+.k-pane-wrapper .k-pane .k-grid-mobile .k-resize-handle-inner::before {
+  background-color: #fff;
+}
+.k-pane-wrapper .k-pane .k-grid-edit-form .k-header,
+.k-pane-wrapper .k-pane .k-grid-column-menu .k-header,
+.k-pane-wrapper .k-pane .k-grid-filter-menu .k-header,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-header {
+  background-color: #428bca;
+}
+.k-pane-wrapper .k-pane .k-grid-edit-form .k-header,
+.k-pane-wrapper .k-pane .k-grid-column-menu .k-header,
+.k-pane-wrapper .k-pane .k-grid-filter-menu .k-header,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-header,
+.k-pane-wrapper .k-pane .k-grid-edit-form .k-header .k-link,
+.k-pane-wrapper .k-pane .k-grid-column-menu .k-header .k-link,
+.k-pane-wrapper .k-pane .k-grid-filter-menu .k-header .k-link,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-header .k-link {
+  color: #ffffff;
+}
+.k-pane-wrapper .k-pane .k-grid-edit-form .k-item,
+.k-pane-wrapper .k-pane .k-grid-column-menu .k-item,
+.k-pane-wrapper .k-pane .k-grid-filter-menu .k-item,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-item,
+.k-pane-wrapper .k-pane .k-grid-edit-form .k-link,
+.k-pane-wrapper .k-pane .k-grid-column-menu .k-link,
+.k-pane-wrapper .k-pane .k-grid-filter-menu .k-link,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-link {
+  color: #333333;
+}
+.k-pane-wrapper .k-pane .k-grid-edit-form .k-clear,
+.k-pane-wrapper .k-pane .k-grid-column-menu .k-clear,
+.k-pane-wrapper .k-pane .k-grid-filter-menu .k-clear,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-clear,
+.k-pane-wrapper .k-pane .k-grid-edit-form .k-select-all,
+.k-pane-wrapper .k-pane .k-grid-column-menu .k-select-all,
+.k-pane-wrapper .k-pane .k-grid-filter-menu .k-select-all,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-select-all {
+  color: #428bca;
+}
+.k-pane-wrapper .k-pane .k-column-menu .k-state-selected .k-link {
+  color: #428bca;
+}
+.k-pane-wrapper .k-pane .k-filter-menu .k-check {
+  color: #428bca;
+}
+.k-pane-wrapper .k-pane .k-mobile-list .k-item {
+  background-color: #fff;
+  border-top: 1px solid #d2d2d2;
+}
+.k-pane-wrapper .k-pane .k-mobile-list .k-item > .k-link:active,
+.k-pane-wrapper .k-pane .k-mobile-list .k-item > .k-label:active,
+.k-pane-wrapper .k-pane .k-mobile-list .k-item .k-edit-label.k-check:active,
+.k-pane-wrapper .k-pane .k-mobile-list .k-item .k-recur-view .k-check:active {
+  color: #333333;
+  background-color: #ebebeb;
+  border-color: #aeaeae;
+}
+.k-pane-wrapper .k-pane .k-mobile-list .k-item .k-state-selected {
+  background-color: #428bca;
+  border-top-color: #428bca;
+}
+.k-pane-wrapper .k-pane .k-mobile-list .k-item:last-child {
+  box-shadow: inset 0 -1px 0 #d2d2d2;
+}
+.k-pane-wrapper .k-pane .k-mobile-list.k-filter-menu .k-space-right > input {
+  background: #fff;
+  border-color: #c7c7c7;
+}
+.k-pane-wrapper .k-pane .k-mobile-list.k-filter-menu .k-space-right > input:focus {
+  box-shadow: 0 0 7px 0 #76abd9;
+}
+.k-pane-wrapper .k-pane .k-mobile-list .k-check:checked {
+  opacity: 1;
+  font-family: 'WebComponentsIcons';
+  border-color: transparent;
+}
+.k-pane-wrapper .k-pane .k-mobile-list .k-check:checked::before {
+  content: "\e118";
+}
+.k-pane-wrapper .k-pane .k-mobile-list .k-list-title,
+.k-pane-wrapper .k-pane .k-mobile-list .k-filter-help-text,
+.k-pane-wrapper .k-pane .k-mobile-list .k-filter-selected-items {
+  color: #333333;
+}
 .k-in,
 .k-item {
   border-color: transparent;
@@ -783,8 +884,7 @@ textarea.k-textbox:hover,
 .k-autocomplete,
 .k-state-highlight,
 .k-tabstrip-items .k-item,
-.k-panelbar .k-tabstrip-items .k-item,
-.km-pane-wrapper > .km-pane > .km-view > .km-content {
+.k-panelbar .k-tabstrip-items .k-item {
   background-position: 50% 50%;
   background-color: #f5f5f5;
 }
@@ -792,8 +892,7 @@ textarea.k-textbox:hover,
   background-image: none;
 }
 .k-block,
-.k-treemap-tile,
-html .km-pane-wrapper .k-header {
+.k-treemap-tile {
   background-color: #f5f5f5;
 }
 thead.k-grid-header,
@@ -813,21 +912,6 @@ thead.k-grid-header tr:first-child {
 }
 .k-tool {
   border-color: transparent;
-}
-.k-mobile-list .k-check:checked,
-.k-mobile-list .k-edit-field [type=checkbox]:checked,
-.k-mobile-list .k-edit-field [type=radio]:checked {
-  background-image: url('Bootstrap/sprite.png');
-  border-color: transparent;
-}
-.k-mobile-list .k-check:checked,
-.k-mobile-list .k-edit-field [type=checkbox]:checked {
-  font-family: 'WebComponentsIcons';
-  background-image: none;
-}
-.k-mobile-list .k-check:checked:before,
-.k-mobile-list .k-edit-field [type=checkbox]:checked:before {
-  content: "\e118";
 }
 .k-i-loading {
   background-image: url('Bootstrap/loading.gif');
@@ -1027,10 +1111,6 @@ td.k-state-focused.k-state-selected {
 .k-pager-wrap .k-link:hover,
 .k-dropdown .k-state-focused,
 .k-filebrowser-dropzone,
-.k-mobile-list .k-item > .k-link:active,
-.k-mobile-list .k-item > .k-label:active,
-.k-mobile-list .k-edit-label.k-check:active,
-.k-mobile-list .k-recur-view .k-check:active,
 .k-listbox .k-item:hover:not(.k-state-disabled) {
   color: #333333;
   background-color: #ebebeb;
@@ -1038,11 +1118,6 @@ td.k-state-focused.k-state-selected {
 }
 .k-pager-wrap .k-link.k-state-disabled:hover {
   background-color: #fff;
-}
-.k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active {
-  color: #333333;
-  background-color: #ebebeb;
-  border-color: #aeaeae;
 }
 .k-state-hover > .k-select,
 .k-state-focused > .k-select {
@@ -1096,24 +1171,8 @@ div.k-filebrowser-dropzone em {
   background-position: 50% 50%;
   border-color: #aeaeae;
 }
-.km-pane-wrapper .k-mobile-list input:not([type="checkbox"]):not([type="radio"]),
-.km-pane-wrapper .km-pane .k-mobile-list select:not([multiple]),
-.km-pane-wrapper .k-mobile-list textarea,
 .k-dropdown .k-state-focused .k-input {
   color: #333333;
-}
-.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right {
-  background-position: 50% 50%;
-  background: #ebebeb;
-  border-color: #ebebeb;
-}
-.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right > input {
-  background: #fff;
-  border-color: #cccccc;
-}
-.km-pane-wrapper .km-pane .k-mobile-list.k-filter-menu .k-space-right > input:focus {
-  border-color: #76abd9;
-  box-shadow: 0 0 7px 0 #76abd9;
 }
 .k-dropdown .k-state-hover .k-input {
   color: #333333;
@@ -1669,13 +1728,8 @@ div.k-filebrowser-dropzone em {
 .k-rtl .k-scheduler-toolbar > ul li:first-child,
 .k-rtl .k-scheduler-toolbar > ul li:first-child .k-link,
 .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views li:first-child + li,
-.k-rtl .k-scheduler-toolbar > ul.k-scheduler-views li:first-child + li .k-link,
-.km-view.k-popup-edit-form .k-scheduler-toolbar > ul li:last-child,
-.km-view.k-popup-edit-form .k-scheduler-toolbar > ul li:last-child .k-link,
-.k-rtl .k-gantt-toolbar > ul.k-gantt-views li:first-child + li,
-.k-rtl .k-gantt-toolbar > ul.k-gantt-views li:first-child + li .k-link,
-.km-view.k-popup-edit-form .k-gantt-toolbar > ul li:last-child,
-.km-view.k-popup-edit-form .k-gantt-toolbar > ul li:last-child .k-link {
+.k-rtl .k-scheduler-toolbar > ul.k-scheduler-views li:first-child + li .k-link .k-rtl .k-gantt-toolbar > ul.k-gantt-views li:first-child + li,
+.k-rtl .k-gantt-toolbar > ul.k-gantt-views li:first-child + li .k-link {
   border-radius: 0 4px 4px 0;
 }
 .k-scheduler-phone .k-scheduler-toolbar > ul li.k-nav-today,
@@ -1713,78 +1767,6 @@ div.k-filebrowser-dropzone em {
 }
 .k-scheduler-mobile .k-event {
   border-radius: 2px;
-}
-.k-grid-mobile .k-column-active + th.k-header {
-  border-left-color: #333333;
-}
-html .km-pane-wrapper .km-widget,
-.k-ie .km-pane-wrapper .k-widget,
-.k-ie .km-pane-wrapper .k-group,
-.k-ie .km-pane-wrapper .k-content,
-.k-ie .km-pane-wrapper .k-header,
-.k-ie .km-pane-wrapper .k-popup-edit-form .k-edit-field .k-button,
-.km-pane-wrapper .k-mobile-list .k-item,
-.km-pane-wrapper .k-mobile-list .k-edit-label,
-.km-pane-wrapper .k-mobile-list .k-edit-field {
-  color: #333333;
-}
-@media screen and (-ms-high-contrast: active) and (-ms-high-contrast: none) {
-  div.km-pane-wrapper a {
-    color: #333333;
-  }
-}
-.km-pane-wrapper .k-mobile-list .k-item,
-.km-pane-wrapper .k-mobile-list .k-edit-field,
-.km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-field .k-check {
-  background-color: #fff;
-  border-top: 1px solid #d2d2d2;
-}
-.km-pane-wrapper .k-mobile-list .k-edit-field textarea {
-  outline-width: 0;
-}
-.km-pane-wrapper .k-mobile-list .k-item.k-state-selected {
-  background-color: #428bca;
-  border-top-color: #428bca;
-}
-.km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-field .k-check:first-child {
-  border-top-color: transparent;
-}
-.km-pane-wrapper .k-mobile-list .k-item:last-child {
-  box-shadow: inset 0 -1px 0 #d2d2d2;
-}
-.km-pane-wrapper .k-mobile-list > ul > li > .k-link,
-.km-pane-wrapper .k-mobile-list .k-recur-view > .k-edit-label:nth-child(3),
-.km-pane-wrapper #recurrence .km-scroll-container > .k-edit-label:first-child {
-  color: #858585;
-}
-.km-pane-wrapper .k-mobile-list > ul > li > .k-link {
-  border-bottom: 1px solid #d2d2d2;
-}
-.km-pane-wrapper .k-mobile-list .k-edit-field {
-  box-shadow: 0 1px 1px #d2d2d2;
-}
-.km-actionsheet .k-grid-delete,
-.km-actionsheet .k-scheduler-delete,
-.km-pane-wrapper .k-scheduler-delete,
-.km-pane-wrapper .k-filter-menu .k-button[type=reset] {
-  color: #fff;
-  border-color: #dbdbdb;
-  background-color: red;
-  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
-}
-.km-actionsheet .k-grid-delete:active,
-.km-actionsheet .k-scheduler-delete:active,
-.km-pane-wrapper .k-scheduler-delete:active,
-.km-pane-wrapper .k-filter-menu .k-button[type=reset]:active {
-  background-color: #990000;
-}
-.km-pane-wrapper .k-pager-numbers .k-link,
-.km-pane-wrapper .k-pager-numbers .k-state-selected,
-.km-pane-wrapper .k-pager-wrap > .k-link {
-  border-radius: 0;
-}
-.km-pane-wrapper .k-pager-nav.k-pager-first {
-  border-radius: 4px 0 0 4px;
 }
 .k-autocomplete,
 .k-picker-wrap.k-state-default,
@@ -2091,21 +2073,9 @@ html .km-pane-wrapper .km-widget,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
   .k-edge .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
-  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
-  .k-webkit .k-pager-numbers .k-current-page .k-link,
-  .k-ff .k-pager-numbers .k-current-page .k-link,
-  .k-ie11 .k-pager-numbers .k-current-page .k-link,
-  .k-edge .k-pager-numbers .k-current-page .k-link,
-  .k-safari .k-pager-numbers .k-current-page .k-link {
+  .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
     background-position: 50% 50%;
     background-color: #fff;
-    border-color: #cccccc;
-  }
-  .k-webkit .k-pager-numbers .k-current-page .k-link,
-  .k-ff .k-pager-numbers .k-current-page .k-link,
-  .k-ie11 .k-pager-numbers .k-current-page .k-link,
-  .k-edge .k-pager-numbers .k-current-page .k-link,
-  .k-safari .k-pager-numbers .k-current-page .k-link {
     border-color: #cccccc;
   }
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view,
@@ -2163,11 +2133,6 @@ html .km-pane-wrapper .km-widget,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views li:last-child .k-link {
     border-radius: 0 0 3px 3px;
   }
-  .k-webkit .k-pager-numbers .k-current-page .k-link:hover,
-  .k-ff .k-pager-numbers .k-current-page .k-link:hover,
-  .k-ie11 .k-pager-numbers .k-current-page .k-link:hover,
-  .k-edge .k-pager-numbers .k-current-page .k-link:hover,
-  .k-safari .k-pager-numbers .k-current-page .k-link:hover,
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover,
@@ -2192,11 +2157,6 @@ html .km-pane-wrapper .km-widget,
   .k-safari .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover > .k-link {
     color: #333333;
   }
-  .k-webkit .k-pager-numbers .k-current-page .k-link:after,
-  .k-ff .k-pager-numbers .k-current-page .k-link:after,
-  .k-ie11 .k-pager-numbers .k-current-page .k-link:after,
-  .k-edge .k-pager-numbers .k-current-page .k-link:after,
-  .k-safari .k-pager-numbers .k-current-page .k-link:after,
   .k-webkit .k-scheduler-views > li.k-state-selected > .k-link:after,
   .k-ff .k-scheduler-views > li.k-state-selected > .k-link:after,
   .k-ie11 .k-scheduler-views > li.k-state-selected > .k-link:after,
@@ -2211,11 +2171,6 @@ html .km-pane-wrapper .km-widget,
     width: 1.333em;
     height: 1.333em;
   }
-  .k-webkit .k-pager-numbers.k-state-expanded,
-  .k-ff .k-pager-numbers.k-state-expanded,
-  .k-ie11 .k-pager-numbers.k-state-expanded,
-  .k-edge .k-pager-numbers.k-state-expanded,
-  .k-safari .k-pager-numbers.k-state-expanded,
   .k-webkit .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-ff .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
   .k-ie11 .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded,
@@ -2236,71 +2191,6 @@ html .km-pane-wrapper .km-widget,
     border-width: 1px;
     background-image: none;
     border-radius: 4px;
-  }
-  .k-webkit .k-pager-numbers .k-state-selected,
-  .k-ff .k-pager-numbers .k-state-selected,
-  .k-ie11 .k-pager-numbers .k-state-selected,
-  .k-edge .k-pager-numbers .k-state-selected,
-  .k-safari .k-pager-numbers .k-state-selected,
-  .k-webkit .k-pager-numbers .k-link,
-  .k-ff .k-pager-numbers .k-link,
-  .k-ie11 .k-pager-numbers .k-link,
-  .k-edge .k-pager-numbers .k-link,
-  .k-safari .k-pager-numbers .k-link {
-    border-radius: 3px;
-  }
-  .k-webkit .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
-  .k-ff .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
-  .k-ie11 .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
-  .k-edge .k-widget.k-grid .k-pager-nav + .k-pager-numbers,
-  .k-safari .k-widget.k-grid .k-pager-nav + .k-pager-numbers {
-    position: absolute;
-  }
-  .k-webkit .km-pane-wrapper .k-pager-numbers,
-  .k-ff .km-pane-wrapper .k-pager-numbers,
-  .k-ie11 .km-pane-wrapper .k-pager-numbers,
-  .k-edge .km-pane-wrapper .k-pager-numbers,
-  .k-safari .km-pane-wrapper .k-pager-numbers,
-  .k-webkit .km-pane-wrapper .k-grid .k-pager-numbers,
-  .k-ff .km-pane-wrapper .k-grid .k-pager-numbers,
-  .k-ie11 .km-pane-wrapper .k-grid .k-pager-numbers,
-  .k-edge .km-pane-wrapper .k-grid .k-pager-numbers,
-  .k-safari .km-pane-wrapper .k-grid .k-pager-numbers {
-    -ms-transform: translate(-50%, -100%);
-        transform: translate(-50%, -100%);
-    -webkit-transform: translate(-50%, -100%);
-  }
-  .k-webkit .km-pane-wrapper .k-pager-numbers.k-state-expanded,
-  .k-ff .km-pane-wrapper .k-pager-numbers.k-state-expanded,
-  .k-ie11 .km-pane-wrapper .k-pager-numbers.k-state-expanded,
-  .k-edge .km-pane-wrapper .k-pager-numbers.k-state-expanded,
-  .k-safari .km-pane-wrapper .k-pager-numbers.k-state-expanded,
-  .k-webkit .km-pane-wrapper .k-grid .k-pager-numbers.k-state-expanded,
-  .k-ff .km-pane-wrapper .k-grid .k-pager-numbers.k-state-expanded,
-  .k-ie11 .km-pane-wrapper .k-grid .k-pager-numbers.k-state-expanded,
-  .k-edge .km-pane-wrapper .k-grid .k-pager-numbers.k-state-expanded,
-  .k-safari .km-pane-wrapper .k-grid .k-pager-numbers.k-state-expanded {
-    -ms-transform: translate(-50%, -100%);
-        transform: translate(-50%, -100%);
-    -webkit-transform: translate(-50%, -100%);
-  }
-  .k-webkit .k-grid .k-pager-numbers:not(.k-state-expanded),
-  .k-ff .k-grid .k-pager-numbers:not(.k-state-expanded),
-  .k-ie11 .k-grid .k-pager-numbers:not(.k-state-expanded),
-  .k-edge .k-grid .k-pager-numbers:not(.k-state-expanded),
-  .k-safari .k-grid .k-pager-numbers:not(.k-state-expanded) {
-    -webkit-transform: none;
-        -ms-transform: none;
-            transform: none;
-  }
-  .k-webkit .k-grid .k-pager-numbers:not(.k-state-expanded) .k-current-page,
-  .k-ff .k-grid .k-pager-numbers:not(.k-state-expanded) .k-current-page,
-  .k-ie11 .k-grid .k-pager-numbers:not(.k-state-expanded) .k-current-page,
-  .k-edge .k-grid .k-pager-numbers:not(.k-state-expanded) .k-current-page,
-  .k-safari .k-grid .k-pager-numbers:not(.k-state-expanded) .k-current-page {
-    -webkit-transform: none;
-        -ms-transform: none;
-            transform: none;
   }
 }
 .k-grid,
@@ -2698,293 +2588,6 @@ td.k-state-focused.k-state-selected,
 }
 .k-pager-nav.k-pager-first + .k-link {
   border-right: 1px solid #cccccc;
-}
-@media only screen and (max-width: 1024px) {
-  .k-webkit .k-pager-wrap,
-  .k-ff .k-pager-wrap,
-  .k-ie11 .k-pager-wrap,
-  .k-edge .k-pager-wrap,
-  .k-safari .k-pager-wrap {
-    min-height: 2.4em;
-  }
-  .k-webkit .k-pager-wrap .k-pager-nav,
-  .k-ff .k-pager-wrap .k-pager-nav,
-  .k-ie11 .k-pager-wrap .k-pager-nav,
-  .k-edge .k-pager-wrap .k-pager-nav,
-  .k-safari .k-pager-wrap .k-pager-nav,
-  .k-webkit .k-pager-input,
-  .k-ff .k-pager-input,
-  .k-ie11 .k-pager-input,
-  .k-edge .k-pager-input,
-  .k-safari .k-pager-input {
-    display: inline-block;
-    vertical-align: top;
-  }
-  .k-webkit .k-pager-numbers,
-  .k-ff .k-pager-numbers,
-  .k-ie11 .k-pager-numbers,
-  .k-edge .k-pager-numbers,
-  .k-safari .k-pager-numbers,
-  .k-webkit .k-grid .k-pager-numbers,
-  .k-ff .k-grid .k-pager-numbers,
-  .k-ie11 .k-grid .k-pager-numbers,
-  .k-edge .k-grid .k-pager-numbers,
-  .k-safari .k-grid .k-pager-numbers {
-    position: absolute;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    -ms-flex-direction: column-reverse;
-        flex-direction: column-reverse;
-    left: 5.6em;
-    overflow: visible;
-    height: auto;
-    -ms-transform: translatey(-100%);
-        transform: translatey(-100%);
-    -webkit-transform: translatey(-100%);
-  }
-  .k-webkit .k-pager-numbers:first-child,
-  .k-ff .k-pager-numbers:first-child,
-  .k-ie11 .k-pager-numbers:first-child,
-  .k-edge .k-pager-numbers:first-child,
-  .k-safari .k-pager-numbers:first-child,
-  .k-webkit .k-grid .k-pager-numbers:first-child,
-  .k-ff .k-grid .k-pager-numbers:first-child,
-  .k-ie11 .k-grid .k-pager-numbers:first-child,
-  .k-edge .k-grid .k-pager-numbers:first-child,
-  .k-safari .k-grid .k-pager-numbers:first-child {
-    left: 0.3em;
-  }
-  .k-webkit .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-ff .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-ie11 .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-edge .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-safari .km-pane-wrapper .k-pager-numbers .k-link,
-  .k-webkit .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-ff .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-ie11 .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-edge .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-safari .km-pane-wrapper .k-pager-numbers .k-state-selected,
-  .k-webkit .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-ff .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-edge .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-safari .km-pane-wrapper .k-pager-wrap > .k-link,
-  .k-webkit .km-pane-wrapper .k-pager-wrap > .k-pager-info,
-  .k-ff .km-pane-wrapper .k-pager-wrap > .k-pager-info,
-  .k-ie11 .km-pane-wrapper .k-pager-wrap > .k-pager-info,
-  .k-edge .km-pane-wrapper .k-pager-wrap > .k-pager-info,
-  .k-safari .km-pane-wrapper .k-pager-wrap > .k-pager-info {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-  .k-webkit .km-pane-wrapper .k-pager-wrap .k-pager-numbers + .k-pager-nav,
-  .k-ff .km-pane-wrapper .k-pager-wrap .k-pager-numbers + .k-pager-nav,
-  .k-ie11 .km-pane-wrapper .k-pager-wrap .k-pager-numbers + .k-pager-nav,
-  .k-edge .km-pane-wrapper .k-pager-wrap .k-pager-numbers + .k-pager-nav,
-  .k-safari .km-pane-wrapper .k-pager-wrap .k-pager-numbers + .k-pager-nav,
-  .k-webkit .km-pane-wrapper .k-pager-nav:first-child + .k-pager-nav + .k-pager-nav,
-  .k-ff .km-pane-wrapper .k-pager-nav:first-child + .k-pager-nav + .k-pager-nav,
-  .k-ie11 .km-pane-wrapper .k-pager-nav:first-child + .k-pager-nav + .k-pager-nav,
-  .k-edge .km-pane-wrapper .k-pager-nav:first-child + .k-pager-nav + .k-pager-nav,
-  .k-safari .km-pane-wrapper .k-pager-nav:first-child + .k-pager-nav + .k-pager-nav {
-    right: 2.7em;
-  }
-  .k-webkit .k-rtl .k-pager-numbers,
-  .k-ff .k-rtl .k-pager-numbers,
-  .k-ie11 .k-rtl .k-pager-numbers,
-  .k-edge .k-rtl .k-pager-numbers,
-  .k-safari .k-rtl .k-pager-numbers,
-  .k-webkit .k-rtl .k-grid .k-pager-numbers,
-  .k-ff .k-rtl .k-grid .k-pager-numbers,
-  .k-ie11 .k-rtl .k-grid .k-pager-numbers,
-  .k-edge .k-rtl .k-grid .k-pager-numbers,
-  .k-safari .k-rtl .k-grid .k-pager-numbers {
-    right: 5.68em;
-    width: 4.45em;
-  }
-  .k-webkit .k-rtl .k-pager-numbers:first-child,
-  .k-ff .k-rtl .k-pager-numbers:first-child,
-  .k-ie11 .k-rtl .k-pager-numbers:first-child,
-  .k-edge .k-rtl .k-pager-numbers:first-child,
-  .k-safari .k-rtl .k-pager-numbers:first-child,
-  .k-webkit .k-rtl .k-grid .k-pager-numbers:first-child,
-  .k-ff .k-rtl .k-grid .k-pager-numbers:first-child,
-  .k-ie11 .k-rtl .k-grid .k-pager-numbers:first-child,
-  .k-edge .k-rtl .k-grid .k-pager-numbers:first-child,
-  .k-safari .k-rtl .k-grid .k-pager-numbers:first-child {
-    right: 0.3em;
-  }
-  .k-webkit .k-pager-numbers .k-current-page,
-  .k-ff .k-pager-numbers .k-current-page,
-  .k-ie11 .k-pager-numbers .k-current-page,
-  .k-edge .k-pager-numbers .k-current-page,
-  .k-safari .k-pager-numbers .k-current-page,
-  .k-webkit .k-grid .k-pager-numbers .k-current-page,
-  .k-ff .k-grid .k-pager-numbers .k-current-page,
-  .k-ie11 .k-grid .k-pager-numbers .k-current-page,
-  .k-edge .k-grid .k-pager-numbers .k-current-page,
-  .k-safari .k-grid .k-pager-numbers .k-current-page {
-    display: block;
-    border-left: 0;
-    -ms-transform: translatey(100%);
-        transform: translatey(100%);
-    -webkit-transform: translatey(100%);
-  }
-  .k-webkit .k-pager-numbers li:not(.k-current-page),
-  .k-ff .k-pager-numbers li:not(.k-current-page),
-  .k-ie11 .k-pager-numbers li:not(.k-current-page),
-  .k-edge .k-pager-numbers li:not(.k-current-page),
-  .k-safari .k-pager-numbers li:not(.k-current-page) {
-    display: none;
-  }
-  .k-webkit .k-pager-numbers .k-current-page .k-link,
-  .k-ff .k-pager-numbers .k-current-page .k-link,
-  .k-ie11 .k-pager-numbers .k-current-page .k-link,
-  .k-edge .k-pager-numbers .k-current-page .k-link,
-  .k-safari .k-pager-numbers .k-current-page .k-link {
-    width: 3.2em;
-    padding: 0 0.429em 0 0.714em;
-    border-radius: 4px;
-    border-right: 1px solid #cccccc;
-    color: #333333;
-    background-color: #fff;
-  }
-  .k-webkit .k-pager-numbers .k-link,
-  .k-ff .k-pager-numbers .k-link,
-  .k-ie11 .k-pager-numbers .k-link,
-  .k-edge .k-pager-numbers .k-link,
-  .k-safari .k-pager-numbers .k-link {
-    color: #333333;
-  }
-  .k-webkit .k-pager-nav.k-pager-first + .k-link,
-  .k-ff .k-pager-nav.k-pager-first + .k-link,
-  .k-ie11 .k-pager-nav.k-pager-first + .k-link,
-  .k-edge .k-pager-nav.k-pager-first + .k-link,
-  .k-safari .k-pager-nav.k-pager-first + .k-link {
-    border-right: 1px solid #cccccc;
-    border-radius: 0 4px 4px 0;
-  }
-  .k-webkit .k-pager-nav.k-pager-first,
-  .k-ff .k-pager-nav.k-pager-first,
-  .k-ie11 .k-pager-nav.k-pager-first,
-  .k-edge .k-pager-nav.k-pager-first,
-  .k-safari .k-pager-nav.k-pager-first,
-  .k-webkit .k-rtl .k-pager-nav.k-pager-first + .k-link,
-  .k-ff .k-rtl .k-pager-nav.k-pager-first + .k-link,
-  .k-ie11 .k-rtl .k-pager-nav.k-pager-first + .k-link,
-  .k-edge .k-rtl .k-pager-nav.k-pager-first + .k-link,
-  .k-safari .k-rtl .k-pager-nav.k-pager-first + .k-link {
-    border-right: 0;
-    border-radius: 4px 0 0 4px;
-  }
-  .k-webkit .k-pager-numbers + .k-link,
-  .k-ff .k-pager-numbers + .k-link,
-  .k-ie11 .k-pager-numbers + .k-link,
-  .k-edge .k-pager-numbers + .k-link,
-  .k-safari .k-pager-numbers + .k-link {
-    margin-left: 5.6em;
-    border-radius: 4px 0 0 4px;
-  }
-  .k-webkit .k-rtl .k-pager-numbers + .k-link,
-  .k-ff .k-rtl .k-pager-numbers + .k-link,
-  .k-ie11 .k-rtl .k-pager-numbers + .k-link,
-  .k-edge .k-rtl .k-pager-numbers + .k-link,
-  .k-safari .k-rtl .k-pager-numbers + .k-link {
-    margin-right: 5.6em;
-    margin-left: 0;
-    border-radius: 0 4px 4px 0;
-    border-right-width: 1px;
-    border-right-style: solid;
-    border-right-color: #cccccc;
-  }
-  .k-webkit .k-pager-numbers .k-state-selected,
-  .k-ff .k-pager-numbers .k-state-selected,
-  .k-ie11 .k-pager-numbers .k-state-selected,
-  .k-edge .k-pager-numbers .k-state-selected,
-  .k-safari .k-pager-numbers .k-state-selected,
-  .k-webkit .k-pager-numbers .k-link,
-  .k-ff .k-pager-numbers .k-link,
-  .k-ie11 .k-pager-numbers .k-link,
-  .k-edge .k-pager-numbers .k-link,
-  .k-safari .k-pager-numbers .k-link {
-    display: block;
-    margin-right: 0;
-    padding: 1px 5px 1px 5px;
-    text-align: left;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded,
-  .k-ff .k-pager-numbers.k-state-expanded,
-  .k-ie11 .k-pager-numbers.k-state-expanded,
-  .k-edge .k-pager-numbers.k-state-expanded,
-  .k-safari .k-pager-numbers.k-state-expanded {
-    box-sizing: border-box;
-    padding: 2px 2px 0;
-    background-color: #fff;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-ff .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-edge .k-pager-numbers.k-state-expanded .k-current-page,
-  .k-safari .k-pager-numbers.k-state-expanded .k-current-page {
-    margin: -2em -3px 0;
-    padding: 0;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-  .k-ff .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-  .k-ie11 .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-  .k-edge .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-  .k-safari .k-pager-numbers.k-state-expanded .k-current-page .k-link {
-    border-radius: 0 0 4px 4px;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded li,
-  .k-ff .k-pager-numbers.k-state-expanded li,
-  .k-ie11 .k-pager-numbers.k-state-expanded li,
-  .k-edge .k-pager-numbers.k-state-expanded li,
-  .k-safari .k-pager-numbers.k-state-expanded li {
-    display: inline-block;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link,
-  .k-ff .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link,
-  .k-ie11 .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link,
-  .k-edge .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link,
-  .k-safari .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link {
-    border: 0;
-    background-color: #fff;
-    border-radius: 3px;
-  }
-  .k-webkit .k-pager-numbers .k-state-selected,
-  .k-ff .k-pager-numbers .k-state-selected,
-  .k-ie11 .k-pager-numbers .k-state-selected,
-  .k-edge .k-pager-numbers .k-state-selected,
-  .k-safari .k-pager-numbers .k-state-selected {
-    border-radius: 3px;
-  }
-  .k-webkit .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link:hover,
-  .k-ff .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link:hover,
-  .k-ie11 .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link:hover,
-  .k-edge .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link:hover,
-  .k-safari .k-pager-numbers.k-state-expanded li:not(.k-current-page) .k-link:hover {
-    color: #333333;
-    background-color: #ebebeb;
-  }
-}
-@media only screen and (max-width: 640px) {
-  .k-webkit .k-pager-info,
-  .k-ff .k-pager-info,
-  .k-ie11 .k-pager-info,
-  .k-edge .k-pager-info,
-  .k-safari .k-pager-info {
-    display: none;
-  }
-}
-@media only screen and (max-width: 480px) {
-  .k-webkit .k-pager-sizes,
-  .k-ff .k-pager-sizes,
-  .k-ie11 .k-pager-sizes,
-  .k-edge .k-pager-sizes,
-  .k-safari .k-pager-sizes {
-    display: none;
-  }
 }
 .k-chart .k-selection {
   border-color: #cccccc;

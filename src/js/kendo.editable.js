@@ -138,6 +138,33 @@
                 $('<span ' + kendo.attr('for') + '="' + options.field + '" class="k-invalid-msg"/>').hide().appendTo(container);
             }
         };
+        var mobileEditors = {
+            'number': function (container, options) {
+                var attr = createAttributes(options);
+                $('<input type="number"/>').attr(attr).appendTo(container);
+            },
+            'date': function (container, options) {
+                var attr = createAttributes(options);
+                $('<input type="date"/>').attr(attr).appendTo(container);
+            },
+            'string': function (container, options) {
+                var attr = createAttributes(options);
+                $('<input type="text" />').attr(attr).appendTo(container);
+            },
+            'boolean': function (container, options) {
+                var attr = createAttributes(options);
+                $('<input type="checkbox" />').attr(attr).appendTo(container);
+            },
+            'values': function (container, options) {
+                var attr = createAttributes(options);
+                var items = options.values;
+                var select = $('<select />');
+                for (var index in items) {
+                    $('<option value="' + items[index].value + '">' + items[index].text + '</option>').appendTo(select);
+                }
+                select.attr(attr).appendTo(container);
+            }
+        };
         function addValidationRules(modelField, rules) {
             var validation = modelField ? modelField.validation || {} : {}, rule, descriptor;
             for (rule in validation) {
@@ -155,6 +182,9 @@
                 var that = this;
                 if (options.target) {
                     options.$angular = options.target.options.$angular;
+                    if (options.target.pane) {
+                        that._isMobile = true;
+                    }
                 }
                 Widget.fn.init.call(that, element, options);
                 that._validateProxy = $.proxy(that._validate, that);
@@ -164,12 +194,13 @@
             options: {
                 name: 'Editable',
                 editors: editors,
+                mobileEditors: mobileEditors,
                 clearContainer: true,
                 errorTemplate: ERRORTEMPLATE,
                 skipFocus: false
             },
             editor: function (field, modelField) {
-                var that = this, editors = that.options.editors, isObject = isPlainObject(field), fieldName = isObject ? field.field : field, model = that.options.model || {}, isValuesEditor = isObject && field.values, type = isValuesEditor ? 'values' : fieldType(modelField), isCustomEditor = isObject && field.editor, editor = isCustomEditor ? field.editor : editors[type], container = that.element.find('[' + kendo.attr('container-for') + '=' + fieldName.replace(nameSpecialCharRegExp, '\\$1') + ']');
+                var that = this, editors = that._isMobile ? mobileEditors : that.options.editors, isObject = isPlainObject(field), fieldName = isObject ? field.field : field, model = that.options.model || {}, isValuesEditor = isObject && field.values, type = isValuesEditor ? 'values' : fieldType(modelField), isCustomEditor = isObject && field.editor, editor = isCustomEditor ? field.editor : editors[type], container = that.element.find('[' + kendo.attr('container-for') + '=' + fieldName.replace(nameSpecialCharRegExp, '\\$1') + ']');
                 editor = editor ? editor : editors.string;
                 if (isCustomEditor && typeof field.editor === 'string') {
                     editor = function (container) {

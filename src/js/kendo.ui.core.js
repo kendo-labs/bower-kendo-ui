@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.1.403'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.412'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2590,6 +2590,9 @@
                     if (editorToolbar) {
                         return editorToolbar;
                     }
+                }
+                if (role === 'view') {
+                    return element.data('kendoView');
                 }
                 if (suites) {
                     if (suites[0]) {
@@ -12127,14 +12130,37 @@
         hidden: false
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Observable = kendo.Observable, SCRIPT = 'SCRIPT', INIT = 'init', SHOW = 'show', HIDE = 'hide', TRANSITION_START = 'transitionStart', TRANSITION_END = 'transitionEnd', ATTACH = 'attach', DETACH = 'detach', sizzleErrorRegExp = /unrecognized expression/;
-        var View = Observable.extend({
+        var kendo = window.kendo, attr = kendo.attr, ui = kendo.ui, attrValue = kendo.attrValue, directiveSelector = kendo.directiveSelector, Observable = kendo.Observable, Widget = kendo.ui.Widget, roleSelector = kendo.roleSelector, SCRIPT = 'SCRIPT', INIT = 'init', TRANSITION_START = 'transitionStart', TRANSITION_END = 'transitionEnd', SHOW = 'show', HIDE = 'hide', ATTACH = 'attach', DETACH = 'detach', sizzleErrorRegExp = /unrecognized expression/;
+        var bodyRegExp = /<body[^>]*>(([\u000a\u000d\u2028\u2029]|.)*)<\/body>/i;
+        var LOAD_START = 'loadStart';
+        var LOAD_COMPLETE = 'loadComplete';
+        var SHOW_START = 'showStart';
+        var SAME_VIEW_REQUESTED = 'sameViewRequested';
+        var VIEW_SHOW = 'viewShow';
+        var VIEW_TYPE_DETERMINED = 'viewTypeDetermined';
+        var AFTER = 'after';
+        var classNames = {
+            content: 'k-content',
+            view: 'k-view',
+            stretchedView: 'k-stretched-view',
+            widget: 'k-widget',
+            header: 'k-header',
+            footer: 'k-footer'
+        };
+        var View = kendo.ui.Widget.extend({
             init: function (content, options) {
                 var that = this;
                 options = options || {};
-                Observable.fn.init.call(that);
-                that.content = content;
                 that.id = kendo.guid();
+                Observable.fn.init.call(that);
+                that._initOptions(options);
+                that.content = content;
+                if (that.options.renderOnInit) {
+                    Widget.fn.init.call(that, that._createElement(), options);
+                }
+                if (that.options.wrapInSections) {
+                    that._renderSections();
+                }
                 that.tagName = options.tagName || 'div';
                 that.model = options.model;
                 that._wrap = options.wrap !== false;
@@ -12147,6 +12173,13 @@
                     TRANSITION_START,
                     TRANSITION_END
                 ], options);
+            },
+            options: {
+                name: 'View',
+                renderOnInit: false,
+                wrapInSections: false,
+                detachOnHide: true,
+                detachOnDestroy: true
             },
             render: function (container) {
                 var that = this, notInitialized = !that.element;
@@ -12176,7 +12209,12 @@
                 return true;
             },
             showStart: function () {
-                this.element.css('display', '');
+                var that = this;
+                var element = that.render();
+                if (element) {
+                    element.css('display', '');
+                }
+                this.trigger(SHOW, { view: this });
             },
             showEnd: function () {
             },
@@ -12190,17 +12228,28 @@
                 this.trigger(TRANSITION_END, { type: type });
             },
             hide: function () {
-                this._eachFragment(DETACH);
-                this.element.detach();
+                if (this.options.detachOnHide) {
+                    this._eachFragment(DETACH);
+                    $(this.element).detach();
+                }
                 this.trigger(HIDE);
             },
             destroy: function () {
-                var element = this.element;
+                var that = this;
+                var element = that.element;
                 if (element) {
+                    Widget.fn.destroy.call(that);
                     kendo.unbind(element);
                     kendo.destroy(element);
-                    element.remove();
+                    if (that.options.detachOnDestroy) {
+                        element.remove();
+                    }
                 }
+            },
+            purge: function () {
+                var that = this;
+                that.destroy();
+                $(that.element).add(that.content).add(that.wrapper).off().remove();
             },
             fragments: function (fragments) {
                 $.extend(this._fragments, fragments);
@@ -12245,6 +12294,55 @@
                     }
                 }
                 return element;
+            },
+            _renderSections: function () {
+                var that = this;
+                if (that.options.wrapInSections) {
+                    that._wrapper();
+                    that._createContent();
+                    that._createHeader();
+                    that._createFooter();
+                }
+            },
+            _wrapper: function () {
+                var that = this;
+                var content = that.content;
+                if (content.is(roleSelector('view'))) {
+                    that.wrapper = that.content;
+                } else {
+                    that.wrapper = content.wrap('<div data-' + kendo.ns + 'stretch="true" data-' + kendo.ns + 'role="view" data-' + kendo.ns + 'init-widgets="false"></div>').parent();
+                }
+                var wrapper = that.wrapper;
+                wrapper.attr('id', that.id);
+                wrapper.addClass(classNames.view);
+                wrapper.addClass(classNames.widget);
+                wrapper.attr('role', 'view');
+            },
+            _createContent: function () {
+                var that = this;
+                var wrapper = $(that.wrapper);
+                var contentSelector = roleSelector('content');
+                if (!wrapper.children(contentSelector)[0]) {
+                    var ccontentElements = wrapper.children().filter(function () {
+                        var child = $(this);
+                        if (!child.is(roleSelector('header')) && !child.is(roleSelector('footer'))) {
+                            return child;
+                        }
+                    });
+                    ccontentElements.wrap('<div ' + attr('role') + '="content"></div>');
+                }
+                this.contentElement = wrapper.children(roleSelector('content'));
+                this.contentElement.addClass(classNames.stretchedView).addClass(classNames.content);
+            },
+            _createHeader: function () {
+                var that = this;
+                var wrapper = that.wrapper;
+                this.header = wrapper.children(roleSelector('header')).addClass(classNames.header);
+            },
+            _createFooter: function () {
+                var that = this;
+                var wrapper = that.wrapper;
+                this.footer = wrapper.children(roleSelector('footer')).addClass(classNames.footer);
             }
         });
         var ViewClone = kendo.Class.extend({
@@ -12383,8 +12481,158 @@
                     });
                 }
                 return true;
+            },
+            destroy: function () {
+                var that = this;
+                var view = that.view;
+                if (view && view.destroy) {
+                    view.destroy();
+                }
             }
         });
+        var ViewEngine = Observable.extend({
+            init: function (options) {
+                var that = this, views, container;
+                Observable.fn.init.call(that);
+                that.options = options;
+                $.extend(that, options);
+                that.sandbox = $('<div />');
+                container = that.container;
+                views = that._hideViews(container);
+                that.rootView = views.first();
+                that.layouts = {};
+                that.viewContainer = new kendo.ViewContainer(that.container);
+                that.viewContainer.bind('accepted', function (e) {
+                    e.view.params = that.params;
+                });
+                that.viewContainer.bind('complete', function (e) {
+                    that.trigger(VIEW_SHOW, { view: e.view });
+                });
+                that.viewContainer.bind(AFTER, function () {
+                    that.trigger(AFTER);
+                });
+                this.bind(this.events, options);
+            },
+            events: [
+                SHOW_START,
+                AFTER,
+                VIEW_SHOW,
+                LOAD_START,
+                LOAD_COMPLETE,
+                SAME_VIEW_REQUESTED,
+                VIEW_TYPE_DETERMINED
+            ],
+            destroy: function () {
+                var that = this;
+                var viewContainer = that.viewContainer;
+                kendo.destroy(that.container);
+                for (var id in that.layouts) {
+                    this.layouts[id].destroy();
+                }
+                if (viewContainer) {
+                    viewContainer.destroy();
+                }
+            },
+            view: function () {
+                return this.viewContainer.view;
+            },
+            showView: function (url, transition, params) {
+                url = url.replace(new RegExp('^' + this.remoteViewURLPrefix), '');
+                if (url === '' && this.remoteViewURLPrefix) {
+                    url = '/';
+                }
+                if (url.replace(/^#/, '') === this.url) {
+                    this.trigger(SAME_VIEW_REQUESTED);
+                    return false;
+                }
+                this.trigger(SHOW_START);
+                var that = this, element = that._findViewElement(url), view = kendo.widgetInstance(element);
+                that.url = url.replace(/^#/, '');
+                that.params = params;
+                if (view && view.reload) {
+                    view.purge();
+                    element = [];
+                }
+                this.trigger(VIEW_TYPE_DETERMINED, {
+                    remote: element.length === 0,
+                    url: url
+                });
+                if (element[0]) {
+                    if (!view) {
+                        view = that._createView(element);
+                    }
+                    return that.viewContainer.show(view, transition, url);
+                } else {
+                    return true;
+                }
+            },
+            append: function (html, url) {
+                var sandbox = this.sandbox, urlPath = (url || '').split('?')[0], container = this.container, views, view;
+                if (bodyRegExp.test(html)) {
+                    html = RegExp.$1;
+                }
+                sandbox[0].innerHTML = html;
+                container.append(sandbox.children('script, style'));
+                views = this._hideViews(sandbox);
+                view = views.first();
+                if (!view.length) {
+                    views = view = sandbox.wrapInner('<div data-role=view />').children();
+                }
+                if (urlPath) {
+                    view.hide().attr(attr('url'), urlPath);
+                }
+                container.append(views);
+                return this._createView(view);
+            },
+            _locate: function (selectors) {
+                return this.$angular ? directiveSelector(selectors) : roleSelector(selectors);
+            },
+            _findViewElement: function (url) {
+                var element, urlPath = url.split('?')[0];
+                if (!urlPath) {
+                    return this.rootView;
+                }
+                element = this.container.children('[' + attr('url') + '=\'' + urlPath + '\']');
+                if (!element[0] && urlPath.indexOf('/') === -1) {
+                    element = this.container.children(urlPath.charAt(0) === '#' ? urlPath : '#' + urlPath);
+                }
+                if (!element[0]) {
+                    element = this._findViewElementById(url);
+                }
+                return element;
+            },
+            _findViewElementById: function (id) {
+                var element = this.container.children('[id=\'' + id + '\']');
+                return element;
+            },
+            _createView: function (element) {
+                return this._createSpaView(element);
+            },
+            _createMobileView: function (element) {
+                return kendo.initWidget(element, {
+                    defaultTransition: this.transition,
+                    loader: this.loader,
+                    container: this.container,
+                    getLayout: this.getLayoutProxy,
+                    modelScope: this.modelScope,
+                    reload: attrValue(element, 'reload')
+                }, ui.roles);
+            },
+            _createSpaView: function (element) {
+                var viewOptions = (this.options || {}).viewOptions || {};
+                return new kendo.View(element, {
+                    renderOnInit: viewOptions.renderOnInit,
+                    wrap: viewOptions.wrap || false,
+                    wrapInSections: viewOptions.wrapInSections,
+                    detachOnHide: viewOptions.detachOnHide,
+                    detachOnDestroy: viewOptions.detachOnDestroy
+                });
+            },
+            _hideViews: function (container) {
+                return container.children(this._locate('view')).hide();
+            }
+        });
+        kendo.ViewEngine = ViewEngine;
         kendo.ViewContainer = ViewContainer;
         kendo.Fragment = Fragment;
         kendo.Layout = Layout;
@@ -15236,6 +15484,7 @@
                     that.list = that.element.find('.k-pager-numbers');
                     if (!that.list.length) {
                         that.list = $('<ul class="k-pager-numbers k-reset" />').append(that.currentPageTemplate({ text: 0 })).append(that.selectTemplate({ text: 0 })).appendTo(that.element);
+                        that.list.wrap('<div class="k-pager-numbers-wrap"></div>');
                     }
                 }
                 if (options.input) {
@@ -15838,7 +16087,12 @@
                 if (!(support.mobileOS.ios || support.mobileOS.android)) {
                     eventNames += ' ' + SCROLL;
                 }
-                this._scrollableParents()[method](SCROLL, this._resizeProxy);
+                if (toggle && !this.scrollableParents) {
+                    this.scrollableParents = this._scrollableParents();
+                }
+                if (this.scrollableParents && this.scrollableParents.length) {
+                    this.scrollableParents[method](SCROLL, this._resizeProxy);
+                }
                 WINDOW[method](eventNames, this._resizeProxy);
             },
             _mousedown: function (e) {
@@ -25002,7 +25256,8 @@
                 optionLabelTemplate: null,
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
-                autoWidth: false
+                autoWidth: false,
+                popup: null
             },
             events: [
                 'open',
@@ -27087,6 +27342,7 @@
                 } else {
                     option = that.element[0].children[customIndex];
                     option.selected = false;
+                    listView._deselect([customIndex]);
                     listView.removeAt(position);
                     tag.remove();
                     done();
@@ -31205,6 +31461,33 @@
                 $('<span ' + kendo.attr('for') + '="' + options.field + '" class="k-invalid-msg"/>').hide().appendTo(container);
             }
         };
+        var mobileEditors = {
+            'number': function (container, options) {
+                var attr = createAttributes(options);
+                $('<input type="number"/>').attr(attr).appendTo(container);
+            },
+            'date': function (container, options) {
+                var attr = createAttributes(options);
+                $('<input type="date"/>').attr(attr).appendTo(container);
+            },
+            'string': function (container, options) {
+                var attr = createAttributes(options);
+                $('<input type="text" />').attr(attr).appendTo(container);
+            },
+            'boolean': function (container, options) {
+                var attr = createAttributes(options);
+                $('<input type="checkbox" />').attr(attr).appendTo(container);
+            },
+            'values': function (container, options) {
+                var attr = createAttributes(options);
+                var items = options.values;
+                var select = $('<select />');
+                for (var index in items) {
+                    $('<option value="' + items[index].value + '">' + items[index].text + '</option>').appendTo(select);
+                }
+                select.attr(attr).appendTo(container);
+            }
+        };
         function addValidationRules(modelField, rules) {
             var validation = modelField ? modelField.validation || {} : {}, rule, descriptor;
             for (rule in validation) {
@@ -31222,6 +31505,9 @@
                 var that = this;
                 if (options.target) {
                     options.$angular = options.target.options.$angular;
+                    if (options.target.pane) {
+                        that._isMobile = true;
+                    }
                 }
                 Widget.fn.init.call(that, element, options);
                 that._validateProxy = $.proxy(that._validate, that);
@@ -31231,12 +31517,13 @@
             options: {
                 name: 'Editable',
                 editors: editors,
+                mobileEditors: mobileEditors,
                 clearContainer: true,
                 errorTemplate: ERRORTEMPLATE,
                 skipFocus: false
             },
             editor: function (field, modelField) {
-                var that = this, editors = that.options.editors, isObject = isPlainObject(field), fieldName = isObject ? field.field : field, model = that.options.model || {}, isValuesEditor = isObject && field.values, type = isValuesEditor ? 'values' : fieldType(modelField), isCustomEditor = isObject && field.editor, editor = isCustomEditor ? field.editor : editors[type], container = that.element.find('[' + kendo.attr('container-for') + '=' + fieldName.replace(nameSpecialCharRegExp, '\\$1') + ']');
+                var that = this, editors = that._isMobile ? mobileEditors : that.options.editors, isObject = isPlainObject(field), fieldName = isObject ? field.field : field, model = that.options.model || {}, isValuesEditor = isObject && field.values, type = isValuesEditor ? 'values' : fieldType(modelField), isCustomEditor = isObject && field.editor, editor = isCustomEditor ? field.editor : editors[type], container = that.element.find('[' + kendo.attr('container-for') + '=' + fieldName.replace(nameSpecialCharRegExp, '\\$1') + ']');
                 editor = editor ? editor : editors.string;
                 if (isCustomEditor && typeof field.editor === 'string') {
                     editor = function (container) {
@@ -35941,6 +36228,14 @@
                     }
                 });
                 this.element.append(rootItemsHtml);
+                var elements = this.element.children('.k-item');
+                for (var i = 0; i < items.length; i++) {
+                    this.trigger('itemChange', {
+                        item: elements.eq(i).find('.k-link').first(),
+                        data: items[i],
+                        ns: ui
+                    });
+                }
                 this._angularCompileElements(rootItemsHtml, items);
             },
             _refreshChildren: function (item, parentNode) {
@@ -35960,7 +36255,7 @@
                     for (i = 0; i < children.length; i++) {
                         child = children.eq(i);
                         this.trigger('itemChange', {
-                            item: child,
+                            item: child.find('.k-link').first(),
                             data: this.dataItem(child),
                             ns: ui
                         });
@@ -36189,7 +36484,7 @@
                         }
                         if (nodeWrapper.length) {
                             this.trigger('itemChange', {
-                                item: nodeWrapper,
+                                item: nodeWrapper.find('.k-link').first(),
                                 data: item,
                                 ns: ui
                             });

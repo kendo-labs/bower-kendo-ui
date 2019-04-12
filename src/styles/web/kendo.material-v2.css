@@ -23,7 +23,14 @@
 
 */
 .k-button[disabled],
-[disabled] .k-button {
+.k-button[disabled]:focus,
+.k-button.k-state-focused[disabled],
+[disabled] .k-button,
+[disabled] .k-button:focus,
+[disabled] .k-button.k-state-focused,
+.k-button.k-state-disabled,
+.k-button.k-state-disabled:focus,
+.k-button.k-state-disabled.k-state-focused {
   outline: none;
   cursor: default;
   opacity: 0.6;
@@ -4207,8 +4214,6 @@ kendo-sortable {
   border-bottom-right-radius: 2px;
 }
 .k-button.k-flat,
-.k-toolbar > .k-button:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-button,
 .k-toolbar .k-split-button.k-state-disabled .k-button,
 .k-spreadsheet-quick-access-toolbar .k-button,
 .k-spreadsheet-sheets-bar .k-button,
@@ -4223,7 +4228,8 @@ kendo-sortable {
 .k-gantt-views li a,
 .k-scheduler-toolbar li a,
 .k-scheduler-footer li a,
-.k-button.k-bare {
+.k-button.k-bare,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
   border-color: transparent !important;
   color: inherit;
   background: none !important;
@@ -4231,8 +4237,6 @@ kendo-sortable {
   transition: color 0.2s ease-in-out;
 }
 .k-button.k-flat:hover,
-.k-toolbar > .k-button:hover:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-button:hover,
 .k-toolbar .k-split-button.k-state-disabled .k-button:hover,
 .k-spreadsheet-quick-access-toolbar .k-button:hover,
 .k-spreadsheet-sheets-bar .k-button:hover,
@@ -4248,8 +4252,6 @@ kendo-sortable {
 .k-scheduler-toolbar li a:hover,
 .k-scheduler-footer li a:hover,
 .k-button.k-flat.k-state-hover,
-.k-toolbar > .k-state-hover.k-button:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-state-hover.k-button,
 .k-toolbar .k-split-button.k-state-disabled .k-state-hover.k-button,
 .k-spreadsheet-quick-access-toolbar .k-state-hover.k-button,
 .k-spreadsheet-sheets-bar .k-state-hover.k-button,
@@ -4265,8 +4267,6 @@ kendo-sortable {
 .k-scheduler-toolbar li a.k-state-hover,
 .k-scheduler-footer li a.k-state-hover,
 .k-button.k-flat:active,
-.k-toolbar > .k-button:active:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-button:active,
 .k-toolbar .k-split-button.k-state-disabled .k-button:active,
 .k-spreadsheet-quick-access-toolbar .k-button:active,
 .k-spreadsheet-sheets-bar .k-button:active,
@@ -4282,8 +4282,6 @@ kendo-sortable {
 .k-scheduler-toolbar li a:active,
 .k-scheduler-footer li a:active,
 .k-button.k-flat.k-state-active,
-.k-toolbar > .k-state-active.k-button:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-state-active.k-button,
 .k-toolbar .k-split-button.k-state-disabled .k-state-active.k-button,
 .k-spreadsheet-quick-access-toolbar .k-state-active.k-button,
 .k-spreadsheet-sheets-bar .k-state-active.k-button,
@@ -4299,8 +4297,6 @@ kendo-sortable {
 .k-scheduler-toolbar li a.k-state-active,
 .k-scheduler-footer li a.k-state-active,
 .k-button.k-flat:hover:active,
-.k-toolbar > .k-button:hover:active:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-button:hover:active,
 .k-toolbar .k-split-button.k-state-disabled .k-button:hover:active,
 .k-spreadsheet-quick-access-toolbar .k-button:hover:active,
 .k-spreadsheet-sheets-bar .k-button:hover:active,
@@ -4316,8 +4312,6 @@ kendo-sortable {
 .k-scheduler-toolbar li a:hover:active,
 .k-scheduler-footer li a:hover:active,
 .k-button.k-flat:hover.k-state-active,
-.k-toolbar > .k-button:hover.k-state-active:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-button:hover.k-state-active,
 .k-toolbar .k-split-button.k-state-disabled .k-button:hover.k-state-active,
 .k-spreadsheet-quick-access-toolbar .k-button:hover.k-state-active,
 .k-spreadsheet-sheets-bar .k-button:hover.k-state-active,
@@ -4333,34 +4327,22 @@ kendo-sortable {
 .k-scheduler-toolbar li a:hover.k-state-active,
 .k-scheduler-footer li a:hover.k-state-active,
 .k-button.k-bare:hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
 .k-button.k-bare.k-state-hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-hover,
 .k-button.k-bare:active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active,
 .k-button.k-bare.k-state-active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-active,
 .k-button.k-bare:hover:active,
-.k-button.k-bare:hover.k-state-active {
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover:active,
+.k-button.k-bare:hover.k-state-active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover.k-state-active {
   color: inherit;
 }
 .k-button.k-flat::before,
 .k-toolbar .k-flat.k-picker-wrap::before,
 .k-toolbar .k-flat.k-dropdown-wrap::before,
-.k-toolbar > .k-button:not(.k-overflow-anchor)::before,
-.k-toolbar > .k-picker-wrap:not(.k-overflow-anchor)::before,
-.k-toolbar > .k-dropdown-wrap:not(.k-overflow-anchor)::before,
-.k-editor-toolbar .k-toolbar > .k-picker-wrap:not(.k-overflow-anchor)::before,
-.k-editor-toolbar .k-toolbar > .k-dropdown-wrap:not(.k-overflow-anchor)::before,
-.k-editor-toolbar .k-toolbar > a.k-tool:not(.k-overflow-anchor)::before,
-.k-gantt-views li .k-toolbar > a:not(.k-overflow-anchor)::before,
-.k-scheduler-toolbar li .k-toolbar > a:not(.k-overflow-anchor)::before,
-.k-scheduler-footer li .k-toolbar > a:not(.k-overflow-anchor)::before,
-.k-toolbar > .k-button-group > .k-button::before,
-.k-toolbar > .k-button-group > .k-picker-wrap::before,
-.k-toolbar > .k-button-group > .k-dropdown-wrap::before,
-.k-editor-toolbar .k-toolbar > .k-button-group > .k-picker-wrap::before,
-.k-editor-toolbar .k-toolbar > .k-button-group > .k-dropdown-wrap::before,
-.k-editor-toolbar .k-toolbar > .k-button-group > a.k-tool::before,
-.k-gantt-views li .k-toolbar > .k-button-group > a::before,
-.k-scheduler-toolbar li .k-toolbar > .k-button-group > a::before,
-.k-scheduler-footer li .k-toolbar > .k-button-group > a::before,
 .k-toolbar .k-split-button.k-state-disabled .k-button::before,
 .k-toolbar .k-split-button.k-state-disabled .k-picker-wrap::before,
 .k-toolbar .k-split-button.k-state-disabled .k-dropdown-wrap::before,
@@ -4538,6 +4520,15 @@ kendo-sortable {
 .k-button.k-bare::before,
 .k-toolbar .k-bare.k-picker-wrap::before,
 .k-toolbar .k-bare.k-dropdown-wrap::before,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
+.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
+.k-gantt-views li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-scheduler-toolbar li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-scheduler-footer li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
 .k-editor-toolbar .k-bare.k-picker-wrap::before,
 .k-editor-toolbar .k-bare.k-dropdown-wrap::before,
 .k-editor-toolbar a.k-bare.k-tool::before,
@@ -4721,12 +4712,8 @@ kendo-sortable {
   opacity: 0.6;
   box-shadow: none;
 }
-.k-ie9 .k-button,
-.k-ie9 .k-button-group,
-.k-ie10 .k-button,
-.k-ie10 .k-button-group,
-.k-ie11 .k-button,
-.k-ie11 .k-button-group {
+.k-ie .k-button,
+.k-ie .k-button-group {
   display: inline-block;
 }
 .k-button {
@@ -4770,7 +4757,9 @@ kendo-sortable {
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 .k-button.k-state-disabled,
-.k-button.k-state-disabled:hover {
+.k-button.k-state-disabled:hover,
+.k-button.k-state-disabled:focus,
+.k-button.k-state-disabled.k-state-focused {
   color: rgba(0, 0, 0, 0.38);
   opacity: 1;
 }
@@ -4782,8 +4771,6 @@ kendo-sortable {
   background: transparent;
 }
 .k-button.k-flat.k-primary,
-.k-toolbar > .k-primary.k-button:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-primary.k-button,
 .k-toolbar .k-split-button.k-state-disabled .k-primary.k-button,
 .k-spreadsheet-quick-access-toolbar .k-primary.k-button,
 .k-spreadsheet-sheets-bar .k-primary.k-button,
@@ -4799,8 +4786,6 @@ kendo-sortable {
 .k-scheduler-toolbar li a.k-primary,
 .k-scheduler-footer li a.k-primary,
 .k-button.k-flat.k-primary:hover,
-.k-toolbar > .k-primary.k-button:hover:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-primary.k-button:hover,
 .k-toolbar .k-split-button.k-state-disabled .k-primary.k-button:hover,
 .k-spreadsheet-quick-access-toolbar .k-primary.k-button:hover,
 .k-spreadsheet-sheets-bar .k-primary.k-button:hover,
@@ -4816,8 +4801,6 @@ kendo-sortable {
 .k-scheduler-toolbar li a.k-primary:hover,
 .k-scheduler-footer li a.k-primary:hover,
 .k-button.k-flat.k-primary.k-state-hover,
-.k-toolbar > .k-primary.k-state-hover.k-button:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-primary.k-state-hover.k-button,
 .k-toolbar .k-split-button.k-state-disabled .k-primary.k-state-hover.k-button,
 .k-spreadsheet-quick-access-toolbar .k-primary.k-state-hover.k-button,
 .k-spreadsheet-sheets-bar .k-primary.k-state-hover.k-button,
@@ -4833,16 +4816,17 @@ kendo-sortable {
 .k-scheduler-toolbar li a.k-primary.k-state-hover,
 .k-scheduler-footer li a.k-primary.k-state-hover,
 .k-button.k-bare.k-primary,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary,
 .k-button.k-bare.k-primary:hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary:hover,
 .k-button.k-bare.k-primary.k-state-hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary.k-state-hover,
 .k-button.k-outline.k-primary,
 .k-button.k-outline.k-primary:hover,
 .k-button.k-outline.k-primary.k-state-hover {
   color: #3f51b5;
 }
 .k-button.k-flat.k-primary.k-state-disabled,
-.k-toolbar > .k-primary.k-state-disabled.k-button:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group > .k-primary.k-state-disabled.k-button,
 .k-toolbar .k-split-button.k-state-disabled .k-primary.k-state-disabled.k-button,
 .k-spreadsheet-quick-access-toolbar .k-primary.k-state-disabled.k-button,
 .k-spreadsheet-sheets-bar .k-primary.k-state-disabled.k-button,
@@ -4858,6 +4842,7 @@ kendo-sortable {
 .k-scheduler-toolbar li a.k-primary.k-state-disabled,
 .k-scheduler-footer li a.k-primary.k-state-disabled,
 .k-button.k-bare.k-primary.k-state-disabled,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary.k-state-disabled,
 .k-button.k-outline.k-primary.k-state-disabled {
   color: rgba(0, 0, 0, 0.38);
 }
@@ -5088,6 +5073,10 @@ kendo-sortable {
 .k-list-container .k-button .k-icon {
   margin: 0 4px 0 0;
 }
+.k-ie11 .k-list-container .k-button {
+  display: -ms-flexbox;
+  display: flex;
+}
 .k-list-container .k-button.k-state-disabled {
   pointer-events: none;
 }
@@ -5277,6 +5266,13 @@ kendo-sortable {
 .k-pager-wrap .k-link.k-state-disabled {
   color: inherit;
 }
+.k-pager-wrap .k-pager-numbers-wrap {
+  width: auto;
+  height: auto;
+  position: relative;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
 .k-pager-wrap .k-pager-numbers {
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -5382,23 +5378,30 @@ kendo-sortable {
   position: relative;
   overflow: visible;
 }
+.k-pager-wrap.k-pager-lg .k-pager-nav + .k-pager-numbers-wrap,
+.k-pager-wrap.k-pager-md .k-pager-nav + .k-pager-numbers-wrap,
+.k-pager-wrap.k-pager-sm .k-pager-nav + .k-pager-numbers-wrap {
+  width: calc(32px + 2.85714286em);
+  height: calc(16px + 1.42857143em);
+  box-sizing: border-box;
+  border-color: inherit;
+  margin: 0 8px;
+}
 .k-pager-wrap.k-pager-lg .k-pager-numbers,
 .k-pager-wrap.k-pager-md .k-pager-numbers,
 .k-pager-wrap.k-pager-sm .k-pager-numbers {
   border-radius: 2px;
   position: absolute;
   overflow: hidden;
-  left: calc(44px + 2.85714286em);
   -ms-flex-direction: column-reverse;
   flex-direction: column-reverse;
-  height: auto;
-  bottom: 50%;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  bottom: 0;
   z-index: 3;
   border-style: solid;
   border-width: 0;
-  -webkit-transform: translateY(0) translateY(8px) translateY(0.71428571em) translateY(0);
-  -ms-transform: translateY(0) translateY(8px) translateY(0.71428571em) translateY(0);
-  transform: translateY(0) translateY(8px) translateY(0.71428571em) translateY(0);
 }
 .k-pager-wrap.k-pager-lg .k-pager-numbers li:not(.k-current-page),
 .k-pager-wrap.k-pager-md .k-pager-numbers li:not(.k-current-page),
@@ -5418,8 +5421,15 @@ kendo-sortable {
 .k-pager-wrap.k-pager-md .k-pager-numbers .k-state-selected,
 .k-pager-wrap.k-pager-sm .k-pager-numbers .k-link,
 .k-pager-wrap.k-pager-sm .k-pager-numbers .k-state-selected {
+  margin: 0;
   border-width: 0;
   width: calc(32px + 2.85714286em);
+  height: calc(16px + 1.42857143em);
+}
+.k-pager-wrap.k-pager-lg .k-pager-numbers.k-state-expanded,
+.k-pager-wrap.k-pager-md .k-pager-numbers.k-state-expanded,
+.k-pager-wrap.k-pager-sm .k-pager-numbers.k-state-expanded {
+  height: auto;
 }
 .k-pager-wrap.k-pager-lg .k-pager-numbers.k-state-expanded li,
 .k-pager-wrap.k-pager-md .k-pager-numbers.k-state-expanded li,
@@ -5432,63 +5442,6 @@ kendo-sortable {
 .k-pager-wrap.k-pager-sm .k-pager-numbers.k-state-expanded .k-current-page {
   border-style: solid;
   border-width: 0 0 0;
-}
-.k-pager-wrap.k-pager-lg .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-lg .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-md .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-md .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-sm .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-sm .k-pager-numbers + .k-pager-input {
-  margin-left: calc(40px + 2.85714286em);
-}
-.k-pager-wrap.k-pager-lg .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-md .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-sm .k-pager-numbers:first-child {
-  left: 1em;
-}
-.k-rtl .k-pager-wrap.k-pager-lg .k-pager-numbers,
-.k-pager-wrap.k-pager-lg[dir="rtl"] .k-pager-numbers,
-[dir="rtl"] .k-pager-wrap.k-pager-lg .k-pager-numbers,
-.k-rtl .k-pager-wrap.k-pager-md .k-pager-numbers,
-.k-pager-wrap.k-pager-md[dir="rtl"] .k-pager-numbers,
-[dir="rtl"] .k-pager-wrap.k-pager-md .k-pager-numbers,
-.k-rtl .k-pager-wrap.k-pager-sm .k-pager-numbers,
-.k-pager-wrap.k-pager-sm[dir="rtl"] .k-pager-numbers,
-[dir="rtl"] .k-pager-wrap.k-pager-sm .k-pager-numbers {
-  left: auto;
-  right: calc(44px + 2.85714286em);
-}
-.k-rtl .k-pager-wrap.k-pager-lg .k-pager-numbers + .k-link,
-.k-rtl .k-pager-wrap.k-pager-lg .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-lg[dir="rtl"] .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-lg[dir="rtl"] .k-pager-numbers + .k-pager-input,
-[dir="rtl"] .k-pager-wrap.k-pager-lg .k-pager-numbers + .k-link,
-[dir="rtl"] .k-pager-wrap.k-pager-lg .k-pager-numbers + .k-pager-input,
-.k-rtl .k-pager-wrap.k-pager-md .k-pager-numbers + .k-link,
-.k-rtl .k-pager-wrap.k-pager-md .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-md[dir="rtl"] .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-md[dir="rtl"] .k-pager-numbers + .k-pager-input,
-[dir="rtl"] .k-pager-wrap.k-pager-md .k-pager-numbers + .k-link,
-[dir="rtl"] .k-pager-wrap.k-pager-md .k-pager-numbers + .k-pager-input,
-.k-rtl .k-pager-wrap.k-pager-sm .k-pager-numbers + .k-link,
-.k-rtl .k-pager-wrap.k-pager-sm .k-pager-numbers + .k-pager-input,
-.k-pager-wrap.k-pager-sm[dir="rtl"] .k-pager-numbers + .k-link,
-.k-pager-wrap.k-pager-sm[dir="rtl"] .k-pager-numbers + .k-pager-input,
-[dir="rtl"] .k-pager-wrap.k-pager-sm .k-pager-numbers + .k-link,
-[dir="rtl"] .k-pager-wrap.k-pager-sm .k-pager-numbers + .k-pager-input {
-  margin-left: 0;
-  margin-right: calc(40px + 2.85714286em);
-}
-.k-rtl .k-pager-wrap.k-pager-lg .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-lg[dir="rtl"] .k-pager-numbers:first-child,
-[dir="rtl"] .k-pager-wrap.k-pager-lg .k-pager-numbers:first-child,
-.k-rtl .k-pager-wrap.k-pager-md .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-md[dir="rtl"] .k-pager-numbers:first-child,
-[dir="rtl"] .k-pager-wrap.k-pager-md .k-pager-numbers:first-child,
-.k-rtl .k-pager-wrap.k-pager-sm .k-pager-numbers:first-child,
-.k-pager-wrap.k-pager-sm[dir="rtl"] .k-pager-numbers:first-child,
-[dir="rtl"] .k-pager-wrap.k-pager-sm .k-pager-numbers:first-child {
-  right: 1em;
 }
 .k-pager-wrap.k-pager-md .k-pager-info,
 .k-pager-wrap.k-pager-sm .k-pager-info {
@@ -5771,9 +5724,13 @@ kendo-sortable {
   border-width: 0 0 0 1px;
 }
 .k-grid[dir="rtl"] .k-group-indicator .k-button.k-bare,
+.k-grid[dir="rtl"] .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-grid[dir="rtl"] .k-drag-clue .k-button.k-bare,
+.k-grid[dir="rtl"] .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-rtl .k-grid .k-group-indicator .k-button.k-bare,
-.k-rtl .k-grid .k-drag-clue .k-button.k-bare {
+.k-rtl .k-grid .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
+.k-rtl .k-grid .k-drag-clue .k-button.k-bare,
+.k-rtl .k-grid .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
   margin-left: -2px;
   margin-right: 8px;
 }
@@ -6000,8 +5957,10 @@ kendo-sortable {
 }
 .k-group-indicator .k-link,
 .k-group-indicator .k-button.k-bare,
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-drag-clue .k-link,
-.k-drag-clue .k-button.k-bare {
+.k-drag-clue .k-button.k-bare,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
   padding: 0;
   border-width: 0;
   display: -ms-inline-flexbox;
@@ -6015,7 +5974,9 @@ kendo-sortable {
   margin-right: 4px;
 }
 .k-group-indicator .k-button.k-bare,
-.k-drag-clue .k-button.k-bare {
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
+.k-drag-clue .k-button.k-bare,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
   margin-left: 8px;
   margin-right: -2px;
   padding: 0;
@@ -6028,6 +5989,23 @@ kendo-sortable {
 .k-toolbar .k-group-indicator .k-bare.k-picker-wrap::before,
 .k-group-indicator .k-toolbar .k-bare.k-dropdown-wrap::before,
 .k-toolbar .k-group-indicator .k-bare.k-dropdown-wrap::before,
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
+.k-group-indicator .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-group-indicator .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-group-indicator .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-editor-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-group-indicator .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-editor-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-group-indicator .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
+.k-editor-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
+.k-group-indicator .k-gantt-views li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-gantt-views li .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-group-indicator .k-scheduler-toolbar li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-scheduler-toolbar li .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-group-indicator .k-scheduler-footer li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-scheduler-footer li .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
 .k-group-indicator .k-editor-toolbar .k-bare.k-picker-wrap::before,
 .k-editor-toolbar .k-group-indicator .k-bare.k-picker-wrap::before,
 .k-group-indicator .k-editor-toolbar .k-bare.k-dropdown-wrap::before,
@@ -6041,11 +6019,29 @@ kendo-sortable {
 .k-group-indicator .k-scheduler-footer li a.k-bare::before,
 .k-scheduler-footer li .k-group-indicator a.k-bare::before,
 .k-group-indicator .k-button.k-bare::after,
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after,
 .k-drag-clue .k-button.k-bare::before,
 .k-drag-clue .k-toolbar .k-bare.k-picker-wrap::before,
 .k-toolbar .k-drag-clue .k-bare.k-picker-wrap::before,
 .k-drag-clue .k-toolbar .k-bare.k-dropdown-wrap::before,
 .k-toolbar .k-drag-clue .k-bare.k-dropdown-wrap::before,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
+.k-drag-clue .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-drag-clue .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-drag-clue .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-editor-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
+.k-drag-clue .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-editor-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
+.k-drag-clue .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
+.k-editor-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
+.k-drag-clue .k-gantt-views li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-gantt-views li .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-drag-clue .k-scheduler-toolbar li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-scheduler-toolbar li .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-drag-clue .k-scheduler-footer li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
+.k-scheduler-footer li .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
 .k-drag-clue .k-editor-toolbar .k-bare.k-picker-wrap::before,
 .k-editor-toolbar .k-drag-clue .k-bare.k-picker-wrap::before,
 .k-drag-clue .k-editor-toolbar .k-bare.k-dropdown-wrap::before,
@@ -6058,11 +6054,14 @@ kendo-sortable {
 .k-scheduler-toolbar li .k-drag-clue a.k-bare::before,
 .k-drag-clue .k-scheduler-footer li a.k-bare::before,
 .k-scheduler-footer li .k-drag-clue a.k-bare::before,
-.k-drag-clue .k-button.k-bare::after {
+.k-drag-clue .k-button.k-bare::after,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after {
   display: none;
 }
 .k-group-indicator .k-button.k-bare:hover,
-.k-drag-clue .k-button.k-bare:hover {
+.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
+.k-drag-clue .k-button.k-bare:hover,
+.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover {
   opacity: 1;
 }
 .k-group-indicator {
@@ -6177,7 +6176,8 @@ div.k-grid-footer {
 }
 .k-ie .k-grid-header .k-header > .k-link,
 .k-edge .k-grid-header .k-header > .k-link {
-  margin-right: calc(1em + 22px);
+  margin: 0;
+  padding: 0;
 }
 .k-grid-header .k-with-icon,
 .k-grid-header .k-filterable {
@@ -6187,7 +6187,7 @@ div.k-grid-footer {
 .k-edge .k-grid-header .k-with-icon,
 .k-ie .k-grid-header .k-filterable,
 .k-edge .k-grid-header .k-filterable {
-  padding-right: 24px;
+  padding-right: calc(30px + 1.42857143em);
 }
 .k-grid-header .k-header > .k-link:focus {
   text-decoration: none;
@@ -6219,9 +6219,9 @@ div.k-grid-footer {
 .k-edge .k-grid-header .k-header-column-menu {
   position: static;
   float: right;
-  width: auto;
-  height: auto;
-  padding: 4px;
+  margin-top: calc(-8px - -0.28571429em);
+  margin-bottom: calc(-8px - -0.28571429em);
+  margin-right: calc(-16px + -1.42857143em);
 }
 .k-grid-header .k-header > .k-link > .k-icon.k-i-sort-desc-sm,
 .k-grid-header .k-header > .k-link > .k-icon.k-i-sort-asc-sm {
@@ -7759,6 +7759,10 @@ th.k-sorted {
 .k-scheduler-footer li .k-toolbar a::before {
   border-radius: 0;
 }
+.k-ie11 .k-toolbar .k-button {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
 .k-toolbar .k-button-group .k-button {
   border-radius: 0;
 }
@@ -7803,6 +7807,11 @@ th.k-sorted {
 }
 .k-toolbar .k-separator + * {
   margin-left: 0;
+}
+.k-toolbar .k-spacer {
+  height: 2em;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .k-overflow-container .k-overflow-tool-group {
   display: block;
@@ -7927,6 +7936,7 @@ th.k-sorted {
   box-shadow: none;
 }
 .k-toolbar .k-overflow-anchor {
+  border-width: 0;
   color: inherit;
   background: transparent;
 }
@@ -7938,6 +7948,10 @@ th.k-sorted {
 .k-toolbar .k-state-border-up .k-button::before,
 .k-toolbar .k-state-border-up .k-picker-wrap::before,
 .k-toolbar .k-state-border-up .k-dropdown-wrap::before,
+.k-toolbar .k-state-border-up .k-editor-toolbar .k-picker-wrap::before,
+.k-editor-toolbar .k-toolbar .k-state-border-up .k-picker-wrap::before,
+.k-toolbar .k-state-border-up .k-editor-toolbar .k-dropdown-wrap::before,
+.k-editor-toolbar .k-toolbar .k-state-border-up .k-dropdown-wrap::before,
 .k-toolbar .k-state-border-up .k-editor-toolbar a.k-tool::before,
 .k-editor-toolbar .k-toolbar .k-state-border-up a.k-tool::before,
 .k-toolbar .k-state-border-up .k-gantt-views li a::before,
@@ -7950,6 +7964,10 @@ th.k-sorted {
 .k-toolbar .k-state-border-down .k-button::before,
 .k-toolbar .k-state-border-down .k-picker-wrap::before,
 .k-toolbar .k-state-border-down .k-dropdown-wrap::before,
+.k-toolbar .k-state-border-down .k-editor-toolbar .k-picker-wrap::before,
+.k-editor-toolbar .k-toolbar .k-state-border-down .k-picker-wrap::before,
+.k-toolbar .k-state-border-down .k-editor-toolbar .k-dropdown-wrap::before,
+.k-editor-toolbar .k-toolbar .k-state-border-down .k-dropdown-wrap::before,
 .k-toolbar .k-state-border-down .k-editor-toolbar a.k-tool::before,
 .k-editor-toolbar .k-toolbar .k-state-border-down a.k-tool::before,
 .k-toolbar .k-state-border-down .k-gantt-views li a::before,
@@ -7966,20 +7984,15 @@ th.k-sorted {
 .k-toolbar .k-button.k-state-disabled::after {
   opacity: 0;
 }
-.k-toolbar .k-overflow-anchor {
-  border-width: 0;
-}
-.k-toolbar {
-  background-color: #f5f5f5;
-}
-.k-toolbar .k-dropdown-button,
-.k-toolbar .k-split-button,
-.k-toolbar .k-button {
+.k-toolbar .k-dropdown-button:not(.k-primary),
+.k-toolbar .k-split-button:not(.k-primary),
+.k-toolbar .k-button:not(.k-primary) {
   background-color: initial;
 }
 .k-toolbar .k-button.k-state-disabled,
 .k-toolbar .k-state-disabled > .k-button {
   color: rgba(0, 0, 0, 0.38);
+  background-color: transparent !important;
 }
 .k-toolbar .k-split-button:hover,
 .k-toolbar .k-split-button:hover .k-button {
@@ -9413,6 +9426,13 @@ th.k-sorted {
 .k-treeview .k-i-collapse {
   margin-left: -16px;
   cursor: pointer;
+}
+.k-treeview .k-i-drag-and-drop {
+  position: absolute;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  z-index: 1000;
 }
 .k-treeview .k-in .k-icon,
 .k-treeview .k-in .k-image,
@@ -11243,8 +11263,11 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
   height: auto;
 }
 .k-calendar-infinite .k-calendar-yearview .k-content .k-link,
+.k-calendar-infinite .k-calendar-yearview .k-content td.k-empty,
 .k-calendar-infinite .k-calendar-decadeview .k-content .k-link,
-.k-calendar-infinite .k-calendar-centuryview .k-content .k-link {
+.k-calendar-infinite .k-calendar-decadeview .k-content td.k-empty,
+.k-calendar-infinite .k-calendar-centuryview .k-content .k-link,
+.k-calendar-infinite .k-calendar-centuryview .k-content td.k-empty {
   width: 4em;
   height: 4em;
 }
@@ -11388,11 +11411,6 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
   -ms-flex-direction: column;
   flex-direction: column;
 }
-.k-calendar.k-calendar-range.k-calendar-infinite {
-  background-color: transparent;
-  border-width: 0;
-  overflow: visible;
-}
 .k-calendar.k-calendar-range.k-calendar-infinite table {
   padding: 0;
   display: -ms-flexbox;
@@ -11407,19 +11425,57 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
 .k-calendar.k-calendar-range.k-calendar-infinite table > tbody + tbody {
   margin-left: 32px;
 }
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-calendar-view {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) {
+  background-color: transparent;
+  border-width: 0;
+  overflow: visible;
+}
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-calendar-view {
   border-width: 1px;
   border-style: solid;
   border-color: inherit;
   padding: 0 calc(20px + 1em);
   margin: 0 -20px;
 }
-.k-calendar.k-calendar-range.k-calendar-infinite > .k-button {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button {
   -ms-flex-item-align: center;
   align-self: center;
   width: 40px;
   height: 40px;
   border-radius: 50%;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite {
+  padding: 0 8px;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite .k-calendar-view,
+.k-calendar.k-calendar-minimal.k-calendar-infinite .k-calendar-monthview {
+  padding: 0 8px;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+  width: auto;
+  height: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s ease-in-out;
+  padding: 0;
+  margin: calc(16px + 2em) 0;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover:before,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active:before {
+  opacity: 0;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:focus:after {
+  opacity: 0;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button .k-icon {
+  font-size: 1.5em;
+}
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-calendar-view {
+  border-width: 0;
 }
 .k-widget.k-daterangepicker {
   border: 0;
@@ -14237,6 +14293,26 @@ html .k-upload {
 .k-upload .k-clear-selected.k-state-focused,
 .k-upload .k-clear-selected:active {
   color: #bababa;
+}
+.k-tooltip-validation {
+  margin: 0.5em 0 0;
+  position: static;
+  border-width: 0;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.k-tooltip-validation[hidden] {
+  display: none;
+}
+.k-tooltip-validation > .k-icon {
+  margin-right: 8px;
+}
+.k-tooltip-validation .k-callout {
+  display: none;
 }
 .k-switch {
   border-radius: 4.6em;
@@ -17139,8 +17215,8 @@ kendo-scheduler .k-event .k-event-template {
 .k-splitter-flex .k-pane[hidden],
 .k-splitter-flex .k-pane-flex.k-state-hidden,
 .k-splitter-flex .k-pane-flex[hidden] {
-  -ms-flex: 0 1 0px !important;
-  flex: 0 1 0 !important;
+  -ms-flex: 0 1 0% !important;
+  flex: 0 1 0% !important;
   overflow: hidden !important;
   display: block !important;
 }
@@ -18389,8 +18465,6 @@ kendo-scheduler .k-event .k-event-template {
   border-color: inherit;
 }
 .k-card-actions > .k-button.k-flat:first-child,
-.k-toolbar.k-card-actions > .k-button:first-child:not(.k-overflow-anchor),
-.k-toolbar > .k-button-group.k-card-actions > .k-button:first-child,
 .k-toolbar .k-split-button.k-state-disabled .k-card-actions > .k-button:first-child,
 .k-spreadsheet-quick-access-toolbar .k-card-actions > .k-button:first-child,
 .k-spreadsheet-sheets-bar .k-card-actions > .k-button:first-child,

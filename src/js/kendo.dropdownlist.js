@@ -144,7 +144,8 @@
                 optionLabelTemplate: null,
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
-                autoWidth: false
+                autoWidth: false,
+                popup: null
             },
             events: [
                 'open',
