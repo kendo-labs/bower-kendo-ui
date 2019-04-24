@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.1.412'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.1.424'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -24653,7 +24653,8 @@
                 virtual: false,
                 value: null,
                 clearButton: true,
-                autoWidth: false
+                autoWidth: false,
+                popup: null
             },
             _dataSource: function () {
                 var that = this;
@@ -26301,7 +26302,8 @@
                 fixedGroupTemplate: '#:data#',
                 clearButton: true,
                 syncValueAndText: true,
-                autoWidth: false
+                autoWidth: false,
+                popup: null
             },
             events: [
                 'open',
@@ -27160,7 +27162,8 @@
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
                 clearButton: true,
-                autoWidth: false
+                autoWidth: false,
+                popup: null
             },
             events: [
                 OPEN,

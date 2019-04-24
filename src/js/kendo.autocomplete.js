@@ -142,7 +142,8 @@
                 virtual: false,
                 value: null,
                 clearButton: true,
-                autoWidth: false
+                autoWidth: false,
+                popup: null
             },
             _dataSource: function () {
                 var that = this;

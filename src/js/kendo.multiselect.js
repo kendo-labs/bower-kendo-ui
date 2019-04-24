@@ -137,7 +137,8 @@
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
                 clearButton: true,
-                autoWidth: false
+                autoWidth: false,
+                popup: null
             },
             events: [
                 OPEN,
