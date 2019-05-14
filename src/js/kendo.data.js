@@ -810,24 +810,24 @@
                 return JSON.stringify(str);
             }
             function textOp(impl) {
-                return function (a, b, ignore) {
+                return function (a, b, ignore, accentFoldingFiltering) {
                     b += '';
                     if (ignore) {
-                        a = '(' + a + ' || \'\').toString().toLowerCase()';
-                        b = b.toLowerCase();
+                        a = '(' + a + ' || \'\').toString()' + (accentFoldingFiltering ? '.toLocaleLowerCase(\'' + accentFoldingFiltering + '\')' : '.toLowerCase()');
+                        b = accentFoldingFiltering ? b.toLocaleLowerCase(accentFoldingFiltering) : b.toLowerCase();
                     }
                     return impl(a, quote(b), ignore);
                 };
             }
-            function operator(op, a, b, ignore) {
+            function operator(op, a, b, ignore, accentFoldingFiltering) {
                 if (b != null) {
                     if (typeof b === STRING) {
                         var date = dateRegExp.exec(b);
                         if (date) {
                             b = new Date(+date[1]);
                         } else if (ignore) {
-                            b = quote(b.toLowerCase());
-                            a = '((' + a + ' || \'\')+\'\').toLowerCase()';
+                            b = quote(accentFoldingFiltering ? b.toLocaleLowerCase(accentFoldingFiltering) : b.toLowerCase());
+                            a = '((' + a + ' || \'\')+\'\')' + (accentFoldingFiltering ? '.toLocaleLowerCase(\'' + accentFoldingFiltering + '\')' : '.toLowerCase()');
                         } else {
                             b = quote(b);
                         }
@@ -867,11 +867,11 @@
                     }
                     return quote(value);
                 },
-                eq: function (a, b, ignore) {
-                    return operator('==', a, b, ignore);
+                eq: function (a, b, ignore, accentFoldingFiltering) {
+                    return operator('==', a, b, ignore, accentFoldingFiltering);
                 },
-                neq: function (a, b, ignore) {
-                    return operator('!=', a, b, ignore);
+                neq: function (a, b, ignore, accentFoldingFiltering) {
+                    return operator('!=', a, b, ignore, accentFoldingFiltering);
                 },
                 gt: function (a, b, ignore) {
                     return operator('>', a, b, ignore);
@@ -967,7 +967,7 @@
                         filter = '__o[' + operatorFunctions.length + '](' + expr + ', ' + operators.quote(filter.value) + ')';
                         operatorFunctions.push(operator);
                     } else {
-                        filter = operators[(operator || 'eq').toLowerCase()](expr, filter.value, filter.ignoreCase !== undefined ? filter.ignoreCase : true);
+                        filter = operators[(operator || 'eq').toLowerCase()](expr, filter.value, filter.ignoreCase !== undefined ? filter.ignoreCase : true, expression.accentFoldingFiltering);
                     }
                 }
                 expressions.push(filter);
@@ -3005,7 +3005,7 @@
                         that._sort = options.sort = normalizeSort(options.sort);
                     }
                     if (options.filter) {
-                        that._filter = options.filter = normalizeFilter(options.filter);
+                        that._filter = options.filter = that.options.accentFoldingFiltering && !$.isEmptyObject(options.filter) ? $.extend({}, normalizeFilter(options.filter), { accentFoldingFiltering: that.options.accentFoldingFiltering }) : normalizeFilter(options.filter);
                     }
                     if (options.group) {
                         that._group = options.group = normalizeGroup(options.group);
@@ -3891,7 +3891,8 @@
                 var fields;
                 var operators;
                 var filter;
-                expressions = normalizeFilter(expressions);
+                var accentFoldingFiltering = this.options.accentFoldingFiltering;
+                expressions = accentFoldingFiltering ? $.extend({}, normalizeFilter(expressions), { accentFoldingFiltering: accentFoldingFiltering }) : normalizeFilter(expressions);
                 if (!expressions || expressions.filters.length === 0) {
                     this._updateHierarchicalFilter(function () {
                         return true;

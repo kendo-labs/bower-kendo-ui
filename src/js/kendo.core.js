@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.1.424'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.2.514'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1334,8 +1334,9 @@
             };
         }
         function wrap(element, autosize) {
-            var browser = support.browser, percentage, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight;
-            if (!element.parent().hasClass('k-animation-container')) {
+            var browser = support.browser, percentage, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, parent = element.parent(), windowOuterWidth = outerWidth(window);
+            parent.removeClass('k-animation-container-sm');
+            if (!parent.hasClass('k-animation-container')) {
                 var width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height), forceWidth = element.hasClass('k-tooltip') || element.is('.k-menu-horizontal.k-context-menu');
                 percentage = percentWidth || percentHeight;
                 if (!percentWidth && (!autosize || autosize && width || forceWidth)) {
@@ -1348,6 +1349,7 @@
                     width: width,
                     height: height
                 }));
+                parent = element.parent();
                 if (percentage) {
                     element.css({
                         width: '100%',
@@ -1358,29 +1360,36 @@
                     });
                 }
             } else {
-                var wrapper = element.parent('.k-animation-container'), wrapperStyle = wrapper[0].style;
-                if (wrapper.is(':hidden')) {
-                    wrapper.css({
-                        display: '',
-                        position: ''
-                    });
-                }
-                percentage = percentRegExp.test(wrapperStyle.width) || percentRegExp.test(wrapperStyle.height);
-                if (!percentage) {
-                    wrapper.css({
-                        width: autosize ? outerWidth(element) + 1 : outerWidth(element),
-                        height: outerHeight(element),
-                        boxSizing: 'content-box',
-                        mozBoxSizing: 'content-box',
-                        webkitBoxSizing: 'content-box'
-                    });
-                }
+                wrapResize(element, autosize);
+            }
+            if (windowOuterWidth < outerWidth(parent)) {
+                parent.addClass('k-animation-container-sm');
+                wrapResize(element, autosize);
             }
             if (browser.msie && math.floor(browser.version) <= 7) {
                 element.css({ zoom: 1 });
                 element.children('.k-menu').width(element.width());
             }
-            return element.parent();
+            return parent;
+        }
+        function wrapResize(element, autosize) {
+            var percentage, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, wrapper = element.parent('.k-animation-container'), wrapperStyle = wrapper[0].style;
+            if (wrapper.is(':hidden')) {
+                wrapper.css({
+                    display: '',
+                    position: ''
+                });
+            }
+            percentage = percentRegExp.test(wrapperStyle.width) || percentRegExp.test(wrapperStyle.height);
+            if (!percentage) {
+                wrapper.css({
+                    width: autosize ? outerWidth(element) + 1 : outerWidth(element),
+                    height: outerHeight(element),
+                    boxSizing: 'content-box',
+                    mozBoxSizing: 'content-box',
+                    webkitBoxSizing: 'content-box'
+                });
+            }
         }
         function deepExtend(destination) {
             var i = 1, length = arguments.length;
@@ -2289,11 +2298,11 @@
             return value;
         }
         function parseOptions(element, options, source) {
-            var result = {}, option, value;
+            var result = {}, option, value, role = element.getAttribute('data-' + kendo.ns + 'role');
             for (option in options) {
                 value = parseOption(element, option);
                 if (value !== undefined) {
-                    if (templateRegExp.test(option)) {
+                    if (templateRegExp.test(option) && role != 'drawer') {
                         if (typeof value === 'string') {
                             if ($('#' + value).length) {
                                 value = kendo.template($('#' + value).html());

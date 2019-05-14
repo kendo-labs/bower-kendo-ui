@@ -72,7 +72,9 @@
           "isnull": "Null ist",
           "isnotnull": "nicht Null ist",
           "isempty": "leer ist",
-          "isnotempty": "nicht leer ist"
+          "isnotempty": "nicht leer ist",
+          "isnullorempty": "Besitzt keinen Wert",
+          "isnotnullorempty": "Besitzt einen Wert"
         }
       });
   }
@@ -118,7 +120,9 @@
           "isnull": "Null ist",
           "isnotnull": "nicht Null ist",
           "isempty": "leer ist",
-          "isnotempty": "nicht leer ist"
+          "isnotempty": "nicht leer ist",
+          "isnullorempty": "Besitzt keinen Wert",
+          "isnotnullorempty": "Besitzt einen Wert"
         }
       });
   }

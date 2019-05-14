@@ -215,7 +215,7 @@
                 this._select(li);
             },
             search: function (word) {
-                var that = this, options = that.options, ignoreCase = options.ignoreCase, separator = that._separator(), length;
+                var that = this, options = that.options, ignoreCase = options.ignoreCase, separator = that._separator(), length, accentFoldingFiltering = that.dataSource.options.accentFoldingFiltering;
                 word = word || that._accessor();
                 clearTimeout(that._typingTimeout);
                 if (separator) {
@@ -228,7 +228,7 @@
                         this.listView.value([]);
                     });
                     that._filterSource({
-                        value: ignoreCase ? word.toLowerCase() : word,
+                        value: ignoreCase ? accentFoldingFiltering ? word.toLocaleLowerCase(accentFoldingFiltering) : word.toLowerCase() : word,
                         operator: options.filter,
                         field: options.dataTextField,
                         ignoreCase: ignoreCase
@@ -238,7 +238,7 @@
                 that._toggleCloseVisibility();
             },
             suggest: function (word) {
-                var that = this, key = that._last, value = that._accessor(), element = that.element[0], caretIdx = caret(element)[0], separator = that._separator(), words = value.split(separator), wordIndex = indexOfWordAtCaret(caretIdx, value, separator), selectionEnd = caretIdx, idx;
+                var that = this, key = that._last, value = that._accessor(), element = that.element[0], caretIdx = caret(element)[0], separator = that._separator(), words = value.split(separator), wordIndex = indexOfWordAtCaret(caretIdx, value, separator), selectionEnd = caretIdx, idx, accentFoldingFiltering = that.dataSource.options.accentFoldingFiltering;
                 if (key == keys.BACKSPACE || key == keys.DELETE) {
                     that._last = undefined;
                     return;
@@ -251,14 +251,14 @@
                     word = word ? that._text(word) : '';
                 }
                 if (caretIdx <= 0) {
-                    caretIdx = value.toLowerCase().indexOf(word.toLowerCase()) + 1;
+                    caretIdx = (accentFoldingFiltering ? value.toLocaleLowerCase(accentFoldingFiltering) : value.toLowerCase()).indexOf(accentFoldingFiltering ? word.toLocaleLowerCase(accentFoldingFiltering) : word.toLowerCase()) + 1;
                 }
                 idx = value.substring(0, caretIdx).lastIndexOf(separator);
                 idx = idx > -1 ? caretIdx - (idx + separator.length) : caretIdx;
                 value = words[wordIndex].substring(0, idx);
                 if (word) {
                     word = word.toString();
-                    idx = word.toLowerCase().indexOf(value.toLowerCase());
+                    idx = (accentFoldingFiltering ? word.toLocaleLowerCase(accentFoldingFiltering) : word.toLowerCase()).indexOf(accentFoldingFiltering ? value.toLocaleLowerCase(accentFoldingFiltering) : value.toLowerCase());
                     if (idx > -1) {
                         word = word.substring(idx + value.length);
                         selectionEnd = caretIdx + word.length;

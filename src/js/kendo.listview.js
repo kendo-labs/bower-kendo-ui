@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, CHANGE = 'change', CANCEL = 'cancel', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', Widget = kendo.ui.Widget, keys = kendo.keys, FOCUSSELECTOR = '>*:not(.k-loading-mask)', PROGRESS = 'progress', ERROR = 'error', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', KEDITITEM = 'k-edit-item', EDIT = 'edit', REMOVE = 'remove', SAVE = 'save', CLICK = 'click', NS = '.kendoListView', proxy = $.proxy, activeElement = kendo._activeElement, progress = kendo.ui.progress, DataSource = kendo.data.DataSource;
+        var kendo = window.kendo, CHANGE = 'change', CANCEL = 'cancel', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', Widget = kendo.ui.Widget, keys = kendo.keys, FOCUSSELECTOR = '>*:not(.k-loading-mask)', PROGRESS = 'progress', ERROR = 'error', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', KEDITITEM = 'k-edit-item', EDIT = 'edit', REMOVE = 'remove', SAVE = 'save', MOUSEDOWN = 'mousedown', CLICK = 'click', TOUCHSTART = 'touchstart', NS = '.kendoListView', proxy = $.proxy, activeElement = kendo._activeElement, progress = kendo.ui.progress, DataSource = kendo.data.DataSource;
         var ListView = kendo.ui.DataBoundWidget.extend({
             init: function (element, options) {
                 var that = this;
@@ -69,6 +69,7 @@
                 that._selectable();
                 that._pageable();
                 that._crudHandlers();
+                that._scrollable();
                 if (that.options.autoBind) {
                     that.dataSource.fetch();
                 }
@@ -88,6 +89,7 @@
                 autoBind: true,
                 selectable: false,
                 navigatable: false,
+                height: null,
                 template: '',
                 altTemplate: '',
                 editTemplate: ''
@@ -140,17 +142,23 @@
                 }
                 that.dataSource = DataSource.create(that.options.dataSource).bind(CHANGE, that._refreshHandler).bind(PROGRESS, that._progressHandler).bind(ERROR, that._errorHandler);
             },
-            _progress: function () {
-                progress(this.element, true);
+            _progress: function (toggle) {
+                var element = this.element;
+                progress(element, toggle, { opacity: true });
             },
             _error: function () {
                 progress(this.element, false);
             },
             _element: function () {
+                var height = this.options.height;
+                this.hasHeight = height || this.element.height();
                 this.element.addClass('k-widget k-listview').attr('role', 'listbox');
+                if (height) {
+                    this.element.css('height', height);
+                }
             },
             refresh: function (e) {
-                var that = this, view = that.dataSource.view(), data, items, item, html = '', idx, length, template = that.template, altTemplate = that.altTemplate, active = activeElement();
+                var that = this, view = that.dataSource.view(), data, items, item, html = '', idx, length, template = that.template, altTemplate = that.altTemplate, active = activeElement(), endlessAppend = that._endlessFetchInProgress, index = endlessAppend ? that._skipRerenderItemsCount : 0, height = that.hasHeight;
                 e = e || {};
                 if (e.action === 'itemchange') {
                     if (!that._hasBindingTarget() && !that.editable) {
@@ -186,23 +194,37 @@
                     return;
                 }
                 that._angularItems('cleanup');
-                that._destroyEditable();
-                for (idx = 0, length = view.length; idx < length; idx++) {
+                if (!endlessAppend) {
+                    that._destroyEditable();
+                }
+                for (idx = index, length = view.length; idx < length; idx++) {
                     if (idx % 2) {
                         html += altTemplate(view[idx]);
                     } else {
                         html += template(view[idx]);
                     }
                 }
-                that.element.html(html);
-                items = that.items();
-                for (idx = 0, length = view.length; idx < length; idx++) {
+                if (endlessAppend) {
+                    that.element.append(html);
+                } else {
+                    that.element.html(html);
+                }
+                items = that.items().not('.k-loading-mask');
+                for (idx = index, length = view.length; idx < length; idx++) {
                     items.eq(idx).attr(kendo.attr('uid'), view[idx].uid).attr('role', 'option').attr('aria-selected', 'false');
                 }
                 if (that.element[0] === active && that.options.navigatable) {
-                    that.current(items.eq(0));
+                    if (that._focusNext) {
+                        that.current(that.current().next());
+                    } else {
+                        if (!height) {
+                            that.current(items.eq(0));
+                        }
+                    }
                 }
                 that._angularItems('compile');
+                that._progress(false);
+                that._endlessFetchInProgress = null;
                 that.trigger(DATABOUND, {
                     action: e.action || 'rebind',
                     items: e.items,
@@ -257,6 +279,30 @@
                     }
                 }
             },
+            _scrollable: function () {
+                var that = this;
+                var scrollable = that.options.scrollable;
+                var height = that.hasHeight;
+                if (scrollable || height) {
+                    that.element.css({
+                        'overflow-y': 'scroll',
+                        'position': 'relative',
+                        '-webkit-overflow-scrolling': 'touch'
+                    });
+                    if (scrollable === 'endless') {
+                        var originalPageSize = that._endlessPageSize = that.dataSource.options.pageSize;
+                        that.element.off('scroll' + NS).on('scroll' + NS, function () {
+                            if (this.scrollTop + this.clientHeight - this.scrollHeight >= -15 && !that._endlessFetchInProgress && that._endlessPageSize < that.dataSource.total()) {
+                                that._skipRerenderItemsCount = that._endlessPageSize;
+                                that._endlessPageSize = that._skipRerenderItemsCount + originalPageSize;
+                                that.dataSource.options.endless = true;
+                                that._endlessFetchInProgress = true;
+                                that.dataSource.pageSize(that._endlessPageSize);
+                            }
+                        });
+                    }
+                }
+            },
             current: function (candidate) {
                 var that = this, element = that.element, current = that._current, id = that._itemId;
                 if (candidate === undefined) {
@@ -279,7 +325,7 @@
             },
             _scrollTo: function (element) {
                 var that = this, container, UseJQueryoffset = false, SCROLL = 'scroll';
-                if (that.wrapper.css('overflow') == 'auto' || that.wrapper.css('overflow') == SCROLL) {
+                if (that.wrapper.css('overflow') == 'auto' || that.wrapper.css('overflow') == SCROLL || that.wrapper.css('overflow-y') == SCROLL) {
                     container = that.wrapper[0];
                 } else {
                     container = window;
@@ -316,21 +362,35 @@
                             that._current.removeClass(FOCUSED);
                         }
                     }).on('keydown' + NS, function (e) {
-                        var key = e.keyCode, current = that.current(), target = $(e.target), canHandle = !target.is(':button,textarea,a,a>.t-icon,input'), isTextBox = target.is(':text,:password'), preventDefault = kendo.preventDefault, editItem = element.find('.' + KEDITITEM), active = activeElement(), idx;
+                        var key = e.keyCode, current = that.current(), target = $(e.target), canHandle = !target.is(':button,textarea,a,a>.t-icon,input'), isTextBox = target.is(':text,:password'), preventDefault = kendo.preventDefault, editItem = element.find('.' + KEDITITEM), active = activeElement(), idx, scrollable = that.options.scrollable, height = that.hasHeight;
                         if (!canHandle && !isTextBox && keys.ESC != key || isTextBox && keys.ESC != key && keys.ENTER != key) {
                             return;
                         }
                         if (keys.UP === key || keys.LEFT === key) {
-                            if (current) {
+                            if (current && current[0]) {
                                 current = current.prev();
                             }
-                            that.current(!current || !current[0] ? that._item('last') : current);
+                            if (current && current[0]) {
+                                that.current(current);
+                            } else if (!height) {
+                                that.current(that._item('last'));
+                            }
                             preventDefault(e);
                         } else if (keys.DOWN === key || keys.RIGHT === key) {
-                            if (current) {
+                            if (scrollable || height) {
+                                if (that.options.scrollable === 'endless' && !current.next().length) {
+                                    that.element[0].scrollTop = that.element[0].scrollHeight;
+                                    that._focusNext = true;
+                                } else {
+                                    current = current.next();
+                                    if (current && current[0]) {
+                                        that.current(current);
+                                    }
+                                }
+                            } else {
                                 current = current.next();
+                                that.current(!current || !current[0] ? that._item('first') : current);
                             }
-                            that.current(!current || !current[0] ? that._item('first') : current);
                             preventDefault(e);
                         } else if (keys.PAGEUP === key) {
                             that.current(null);
@@ -372,7 +432,7 @@
                             that.current(that.items().eq(idx));
                         }
                     });
-                    element.on('mousedown' + NS + ' touchstart' + NS, FOCUSSELECTOR, proxy(clickCallback, that));
+                    element.on(MOUSEDOWN + NS + ' ' + TOUCHSTART + NS, FOCUSSELECTOR, proxy(clickCallback, that));
                 }
             },
             clearSelection: function () {
@@ -503,22 +563,26 @@
                 }
             },
             _crudHandlers: function () {
-                var that = this, clickNS = CLICK + NS;
-                that.element.on(clickNS, '.k-edit-button', function (e) {
-                    var item = $(this).closest('[' + kendo.attr('uid') + ']');
-                    that.edit(item);
+                var that = this, mousedownNs = MOUSEDOWN + NS, touchstartNs = TOUCHSTART + NS, clickNs = CLICK + NS;
+                that.element.on(mousedownNs + ' ' + touchstartNs, '.k-edit-button', function (e) {
                     e.preventDefault();
-                });
-                that.element.on(clickNS, '.k-delete-button', function (e) {
                     var item = $(this).closest('[' + kendo.attr('uid') + ']');
-                    that.remove(item);
-                    e.preventDefault();
+                    setTimeout(function () {
+                        that.edit(item);
+                    });
                 });
-                that.element.on(clickNS, '.k-update-button', function (e) {
+                that.element.on(mousedownNs + ' ' + touchstartNs, '.k-delete-button', function (e) {
+                    e.preventDefault();
+                    var item = $(this).closest('[' + kendo.attr('uid') + ']');
+                    setTimeout(function () {
+                        that.remove(item);
+                    });
+                });
+                that.element.on(clickNs, '.k-update-button', function (e) {
                     that.save();
                     e.preventDefault();
                 });
-                that.element.on(clickNS, '.k-cancel-button', function (e) {
+                that.element.on(clickNs, '.k-cancel-button', function (e) {
                     that.cancel();
                     e.preventDefault();
                 });
@@ -529,6 +593,7 @@
                 that._unbindDataSource();
                 that._destroyEditable();
                 that.element.off(NS);
+                that._endlessFetchInProgress = that._endlessPageSize = that._skipRerenderItemsCount = that._focusNext = null;
                 if (that.pager) {
                     that.pager.destroy();
                 }

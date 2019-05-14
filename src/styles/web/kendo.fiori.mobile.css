@@ -186,7 +186,7 @@
   display: none;
 }
 [data-role="view"],
-[data-role="drawer"],
+.km-drawer,
 kendo-mobile-view,
 kendo-mobile-split-view,
 kendo-mobile-drawer {
@@ -2432,8 +2432,7 @@ button.km-button {
 .km-popover-root .km-content {
   -ms-flex: auto;
 }
-.km-drawer,
-[data-role=drawer] {
+.km-drawer {
   top: 0;
   left: auto;
   width: 250px;

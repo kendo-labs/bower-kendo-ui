@@ -23,29 +23,33 @@
 
 */
 (function (f, define) {
-    define('kendo.menu', ['kendo.popup'], f);
+    define('kendo.menu', [
+        'kendo.popup',
+        'kendo.data'
+    ], f);
 }(function () {
     var __meta__ = {
         id: 'menu',
         name: 'Menu',
         category: 'web',
         description: 'The Menu widget displays hierarchical data as a multi-level menu.',
-        depends: ['popup']
+        depends: [
+            'popup',
+            'data',
+            'data.odata'
+        ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, MOUSEDOWN = 'mousedown', CLICK = 'click', DELAY = 30, SCROLLSPEED = 50, extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link k-menu-link', LINK_SELECTOR = '.k-link', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, TOUCHSTART = kendo.support.touch ? 'touchstart' : '', MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', MOUSEWHEEL = 'DOMMouseScroll' + NS + ' mousewheel' + NS, RESIZE = kendo.support.resize + NS, SCROLLWIDTH = 'scrollWidth', SCROLLHEIGHT = 'scrollHeight', OFFSETWIDTH = 'offsetWidth', OFFSETHEIGHT = 'offsetHeight', POPUP_ID_ATTR = 'group', POPUP_OPENER_ATTR = 'groupparent', DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', animationContainerSelector = '.k-animation-container', popupSelector = groupSelector + ',' + animationContainerSelector, allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item', availableItemsSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = itemSelector + exclusionSelector + ':eq(0)', lastSelector = itemSelector + exclusionSelector + ':last', templateSelector = 'div:not(.k-animation-container,.k-list-container)', scrollButtonSelector = '.k-menu-scroll-button', touchPointerTypes = {
+        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, isArray = $.isArray, HierarchicalDataSource = kendo.data.HierarchicalDataSource, MOUSEDOWN = 'mousedown', CLICK = 'click', DELAY = 30, SCROLLSPEED = 50, extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link k-menu-link', LINK_SELECTOR = '.k-link', ICON_SELECTOR = '.k-icon', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, CHANGE = 'change', ERROR = 'error', TOUCHSTART = kendo.support.touch ? 'touchstart' : '', MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', MOUSEWHEEL = 'DOMMouseScroll' + NS + ' mousewheel' + NS, RESIZE = kendo.support.resize + NS, SCROLLWIDTH = 'scrollWidth', SCROLLHEIGHT = 'scrollHeight', OFFSETWIDTH = 'offsetWidth', OFFSETHEIGHT = 'offsetHeight', POPUP_ID_ATTR = 'group', POPUP_OPENER_ATTR = 'groupparent', DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', animationContainerSelector = '.k-animation-container', popupSelector = groupSelector + ',' + animationContainerSelector, allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item', availableItemsSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = itemSelector + exclusionSelector + ':eq(0)', lastSelector = itemSelector + exclusionSelector + ':last', templateSelector = 'div:not(.k-animation-container,.k-list-container)', scrollButtonSelector = '.k-menu-scroll-button', touchPointerTypes = {
                 '2': 1,
                 'touch': 1
-            }, templates = {
-                content: template('<div #= contentCssAttributes(item) # tabindex=\'-1\'>#= content(item) #</div>'),
-                group: template('<ul class=\'#= groupCssClass(group) #\'#= groupAttributes(group) # role=\'menu\' aria-hidden=\'true\'>' + '#= renderItems(data) #' + '</ul>'),
-                itemWrapper: template('<#= tag(item) # class=\'#= textClass(item) #\'#= textAttributes(item) #>' + '#= image(data) ##= sprite(item) ##= text(item) #' + '#= arrow(data) #' + '</#= tag(item) #>'),
-                item: template('<li class=\'#= wrapperCssClass(group, item) #\' #= itemCssAttributes(item) # role=\'menuitem\'  #=item.items ? "aria-haspopup=\'true\'": ""#' + '#=item.enabled === false ? "aria-disabled=\'true\'" : \'\'#>' + '#= itemWrapper(data) #' + '# if (item.items) { #' + '#= subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
-                scrollButton: template('<span class=\'k-button k-button-icon k-menu-scroll-button k-scroll-#= direction #\' unselectable=\'on\'>' + '<span class=\'k-icon k-i-arrow-60-#= direction #\'></span></span>'),
-                image: template('<img #= imageCssAttributes(item) # alt=\'\' src=\'#= item.imageUrl #\' />'),
-                arrow: template('<span class=\'#= arrowClass(item, group) #\'></span>'),
-                sprite: template('<span class=\'k-sprite #= spriteCssClass #\'></span>'),
-                empty: template('')
+            }, STRING = 'string', DATABOUND = 'dataBound', bindings = {
+                text: 'dataTextField',
+                url: 'dataUrlField',
+                spriteCssClass: 'dataSpriteCssClassField',
+                imageUrl: 'dataImageUrlField',
+                imageAttr: 'dataImageAttrField',
+                content: 'dataContentField'
             }, rendering = {
                 wrapperCssClass: function (group, item) {
                     var result = 'k-item', index = item.index;
@@ -81,9 +85,9 @@
                     }
                     return result;
                 },
-                imageCssAttributes: function (item) {
+                imageCssAttributes: function (imgAttributes) {
                     var result = '';
-                    var attributes = item.imageAttr || {};
+                    var attributes = imgAttributes && imgAttributes.toJSON ? imgAttributes.toJSON() : {};
                     if (!attributes['class']) {
                         attributes['class'] = IMAGE;
                     } else {
@@ -115,9 +119,6 @@
                 textClass: function () {
                     return LINK;
                 },
-                textAttributes: function (item) {
-                    return item.url ? ' href=\'' + item.url + '\'' : '';
-                },
                 arrowClass: function (item, group) {
                     var result = 'k-icon';
                     if (group.horizontal) {
@@ -126,12 +127,6 @@
                         result += ' k-i-arrow-60-right';
                     }
                     return result;
-                },
-                text: function (item) {
-                    return item.encoded === false ? item.text : kendo.htmlEncode(item.text);
-                },
-                tag: function (item) {
-                    return item.url ? 'a' : 'span';
                 },
                 groupAttributes: function (group) {
                     return group.expanded !== true ? ' style=\'display:none\'' : '';
@@ -351,13 +346,15 @@
                 return this.nodeName != 'LI';
             }).remove();
         }
-        var Menu = Widget.extend({
+        var Menu = kendo.ui.DataBoundWidget.extend({
             init: function (element, options) {
                 var that = this;
                 Widget.fn.init.call(that, element, options);
                 element = that.wrapper = that.element;
                 options = that.options;
-                that._initData(options);
+                that._accessors();
+                that._templates();
+                that._dataSource();
                 that._updateClasses();
                 that._animations(options);
                 that.nextItemZIndex = 100;
@@ -378,7 +375,8 @@
                 CLOSE,
                 ACTIVATE,
                 DEACTIVATE,
-                SELECT
+                SELECT,
+                DATABOUND
             ],
             options: {
                 name: 'Menu',
@@ -394,14 +392,14 @@
                 scrollable: false,
                 popupCollision: undefined
             },
-            _initData: function (options) {
+            _initData: function () {
                 var that = this;
-                if (options.dataSource) {
+                if (that.dataSource) {
                     that.angular('cleanup', function () {
                         return { elements: that.element.children() };
                     });
                     that.element.empty();
-                    that.append(options.dataSource, that.element);
+                    that.append(that.dataSource.view(), that.element);
                     that.angular('compile', function () {
                         return { elements: that.element.children() };
                     });
@@ -443,8 +441,8 @@
                     if (isHorizontal) {
                         removeSpacesBetweenItems(that.element);
                     }
-                    backwardBtn = $(templates.scrollButton({ direction: isHorizontal ? 'left' : 'up' }));
-                    forwardBtn = $(templates.scrollButton({ direction: isHorizontal ? 'right' : 'down' }));
+                    backwardBtn = $(that.templates.scrollButton({ direction: isHorizontal ? 'left' : 'up' }));
+                    forwardBtn = $(that.templates.scrollButton({ direction: isHorizontal ? 'right' : 'down' }));
                     backwardBtn.add(forwardBtn).appendTo(that._scrollWrapper);
                     that._initScrolling(that.element, backwardBtn, forwardBtn, isHorizontal);
                     var initialWidth = that.element.outerWidth();
@@ -583,7 +581,7 @@
                 this._animations(options);
                 options.animation = extend(true, animation, options.animation);
                 if ('dataSource' in options) {
-                    this._initData(options);
+                    this._dataSource(options);
                 }
                 this._updateClasses();
                 this._reinitOverflow(options);
@@ -604,8 +602,18 @@
                 this._toggleDisabled(element, false);
                 return this;
             },
+            attemptGetItem: function (candidate) {
+                candidate = candidate || this.element;
+                var item = this.element.find(candidate);
+                var overflowWrapper = this._overflowWrapper();
+                if (item.length || candidate === this.element) {
+                    return item;
+                } else {
+                    return overflowWrapper && overflowWrapper.find(candidate);
+                }
+            },
             append: function (item, referenceItem) {
-                referenceItem = this.element.find(referenceItem);
+                referenceItem = this.attemptGetItem(referenceItem);
                 var inserted = this._insert(item, referenceItem, referenceItem.length ? referenceItem.find('> .k-menu-group, > .k-animation-container > .k-menu-group') : null);
                 each(inserted.items, function (i) {
                     inserted.group.append(this);
@@ -618,7 +626,7 @@
                 return this;
             },
             insertBefore: function (item, referenceItem) {
-                referenceItem = this.element.find(referenceItem);
+                referenceItem = this.attemptGetItem(referenceItem);
                 var inserted = this._insert(item, referenceItem, referenceItem.parent());
                 each(inserted.items, function (i) {
                     referenceItem.before(this);
@@ -630,7 +638,7 @@
                 return this;
             },
             insertAfter: function (item, referenceItem) {
-                referenceItem = this.element.find(referenceItem);
+                referenceItem = this.attemptGetItem(referenceItem);
                 var inserted = this._insert(item, referenceItem, referenceItem.parent());
                 each(inserted.items, function (i) {
                     referenceItem.after(this);
@@ -646,21 +654,24 @@
                 if (!referenceItem || !referenceItem.length) {
                     parent = that.element;
                 }
-                var plain = $.isPlainObject(item), groupData = {
+                var plain = $.isPlainObject(item) || item instanceof kendo.data.ObservableObject, groupData = {
                         firstLevel: parent.hasClass(MENU),
                         horizontal: parent.hasClass(MENU + '-horizontal'),
                         expanded: true,
                         length: parent.children().length
                     };
                 if (referenceItem && !parent.length) {
-                    parent = $(Menu.renderGroup({ group: groupData })).appendTo(referenceItem);
+                    parent = $(that.renderGroup({
+                        group: groupData,
+                        options: that.options
+                    })).appendTo(referenceItem);
                 }
-                if (plain || $.isArray(item)) {
+                if (plain || isArray(item) || item instanceof kendo.data.ObservableArray) {
                     items = $($.map(plain ? [item] : item, function (value, idx) {
                         if (typeof value === 'string') {
                             return $(value).get();
                         } else {
-                            return $(Menu.renderItem({
+                            return $(that.renderItem({
                                 group: groupData,
                                 item: extend(value, { index: idx })
                             })).get();
@@ -684,7 +695,7 @@
                 };
             },
             remove: function (element) {
-                element = this.element.find(element);
+                element = this.attemptGetItem(element);
                 var that = this, parent = element.parentsUntil(that.element, allItemsSelector), group = element.parent('ul:not(.k-menu)');
                 element.remove();
                 if (group && !group.children(allItemsSelector).length) {
@@ -704,6 +715,20 @@
                 }
                 return that;
             },
+            _openAfterLoad: function (element, dataItem) {
+                var that = this;
+                if (dataItem.loaded()) {
+                    that.open(element);
+                } else {
+                    dataItem.one(CHANGE, function () {
+                        element.find(ICON_SELECTOR).removeClass('k-i-loading');
+                        if (that._loading) {
+                            that.open(element);
+                            that._loading = false;
+                        }
+                    });
+                }
+            },
             open: function (element) {
                 var that = this;
                 var options = that.options;
@@ -712,6 +737,14 @@
                 var isRtl = kendo.support.isRtl(that.wrapper);
                 var overflowWrapper = that._overflowWrapper();
                 element = (overflowWrapper || that.element).find(element);
+                var dataItem = that.dataSource && that.dataSource.getByUid(element.data('uid'));
+                if (dataItem && dataItem.hasChildren && !dataItem.loaded() && !that._loading) {
+                    that._loading = true;
+                    element.find(ICON_SELECTOR).addClass('k-i-loading');
+                    dataItem.load();
+                    that._openAfterLoad(element, dataItem);
+                    return;
+                }
                 if (/^(top|bottom|default)$/.test(direction)) {
                     if (isRtl) {
                         direction = horizontal ? (direction + ' left').replace('default', 'bottom') : 'left';
@@ -878,8 +911,8 @@
                 var timeout = (animation && animation.open && animation.open.duration || 0) + DELAY;
                 setTimeout(function () {
                     if (!scrollButtons.length) {
-                        var backwardBtn = $(templates.scrollButton({ direction: isHorizontal ? 'left' : 'up' }));
-                        var forwardBtn = $(templates.scrollButton({ direction: isHorizontal ? 'right' : 'down' }));
+                        var backwardBtn = $(that.templates.scrollButton({ direction: isHorizontal ? 'left' : 'up' }));
+                        var forwardBtn = $(that.templates.scrollButton({ direction: isHorizontal ? 'right' : 'down' }));
                         scrollButtons = backwardBtn.add(forwardBtn).appendTo(popup.wrapper);
                         that._initScrolling(popup.element, backwardBtn, forwardBtn, isHorizontal);
                         if (!skipMouseEvents) {
@@ -1089,6 +1122,7 @@
                 }
                 if ((that.options.openOnClick === false || !that.options.openOnClick.rootMenuItems && that._isRootItem(element) || !that.options.openOnClick.subMenuItems && !that._isRootItem(element)) && !touch && !isPointerTouch(e) && !contains(e.currentTarget, e.relatedTarget || e.target) && hasChildren && !contains(e.currentTarget, kendo._activeElement())) {
                     that.close(element, true);
+                    that._loading = false;
                     return;
                 }
                 if (kendo.support.browser.msie && !e.toElement && !e.relatedTarget && !isPointerTouch(e) || e.clientX < 0 || e.clientY < 0 || e.clientY > $window.height() || e.clientX > $window.width()) {
@@ -1552,30 +1586,177 @@
                         }
                     };
                 }
-            }
-        });
-        extend(Menu, {
+            },
+            _dataSource: function (options) {
+                var that = this, dataSource = options ? options.dataSource : that.options.dataSource;
+                if (!dataSource) {
+                    return;
+                }
+                dataSource = isArray(dataSource) ? { data: dataSource } : dataSource;
+                that._unbindDataSource();
+                if (!dataSource.fields) {
+                    dataSource.fields = [
+                        { field: 'uid' },
+                        { field: 'text' },
+                        { field: 'url' },
+                        { field: 'cssClass' },
+                        { field: 'spriteCssClass' },
+                        { field: 'imageUrl' },
+                        { field: 'imageAttr' },
+                        { field: 'attr' },
+                        { field: 'contentAttr' },
+                        { field: 'content' },
+                        { field: 'encoded' },
+                        { field: 'items' },
+                        { field: 'select' }
+                    ];
+                }
+                that.dataSource = HierarchicalDataSource.create(dataSource);
+                that._bindDataSource();
+                that.dataSource.fetch();
+            },
+            _bindDataSource: function () {
+                this._refreshHandler = proxy(this.refresh, this);
+                this._errorHandler = proxy(this._error, this);
+                this.dataSource.bind(CHANGE, this._refreshHandler);
+                this.dataSource.bind(ERROR, this._errorHandler);
+            },
+            _unbindDataSource: function () {
+                var dataSource = this.dataSource;
+                if (dataSource) {
+                    dataSource.unbind(CHANGE, this._refreshHandler);
+                    dataSource.unbind(ERROR, this._errorHandler);
+                }
+            },
+            _error: function () {
+            },
+            findByUid: function (uid) {
+                var wrapperElement = this._overflowWrapper() || this.element;
+                return wrapperElement.find('[data-uid=' + uid + ']');
+            },
+            refresh: function (ev) {
+                var that = this;
+                var node = ev.node;
+                var action = ev.action;
+                var parentElement = node ? that.findByUid(node.uid) : that.element;
+                var itemsToUpdate = ev.items;
+                var index = ev.index;
+                var updateProxy = $.proxy(that._updateItem, that);
+                var removeProxy = $.proxy(that._removeItem, that);
+                if (action == 'add') {
+                    that._appendItems(itemsToUpdate, index, parentElement);
+                } else if (action == 'remove') {
+                    itemsToUpdate.forEach(removeProxy);
+                } else if (action == 'itemchange') {
+                    itemsToUpdate.forEach(updateProxy);
+                } else if (action === 'itemloaded') {
+                    that.append(ev.items, parentElement);
+                } else {
+                    this._initData();
+                }
+                this.trigger(DATABOUND, {
+                    item: parentElement,
+                    dataItem: node
+                });
+            },
+            _appendItems: function (items, index, parent) {
+                var that = this;
+                var referenceItem = parent.find(itemSelector).eq(index);
+                if (referenceItem.length) {
+                    that.insertBefore(items, referenceItem);
+                } else {
+                    that.append(items, parent);
+                }
+            },
+            _removeItem: function (item) {
+                var that = this;
+                var element = that.findByUid(item.uid);
+                that.remove(element);
+            },
+            _updateItem: function (item) {
+                var that = this;
+                var element = that.findByUid(item.uid);
+                var nextElement = element.next();
+                var parentNode = item.parentNode();
+                that.remove(element);
+                if (nextElement.length) {
+                    that.insertBefore(item, nextElement);
+                } else {
+                    that.append(item, parentNode && that.findByUid(parentNode.uid));
+                }
+            },
+            _accessors: function () {
+                var that = this, options = that.options, i, field, textField, element = that.element;
+                for (i in bindings) {
+                    field = options[bindings[i]];
+                    textField = element.attr(kendo.attr(i + '-field'));
+                    if (!field && textField) {
+                        field = textField;
+                    }
+                    if (!field) {
+                        field = i;
+                    }
+                    if (!isArray(field)) {
+                        field = [field];
+                    }
+                    options[bindings[i]] = field;
+                }
+            },
+            _fieldAccessor: function (fieldName) {
+                var fieldBindings = this.options[bindings[fieldName]] || [], count = fieldBindings.length, result = '(function(item) {';
+                if (count === 0) {
+                    result += 'return item[\'' + fieldName + '\'];';
+                } else {
+                    result += 'var levels = [' + $.map(fieldBindings, function (x) {
+                        return 'function(d){ return ' + kendo.expr(x) + '}';
+                    }).join(',') + '];';
+                    result += 'if(item.level){return levels[Math.min(item.level(), ' + count + '-1)](item);}else';
+                    result += '{return levels[' + count + '-1](item)}';
+                }
+                result += '})';
+                return result;
+            },
+            _templates: function () {
+                var that = this, options = that.options, fieldAccessor = proxy(that._fieldAccessor, that);
+                if (options.template && typeof options.template == STRING) {
+                    options.template = template(options.template);
+                } else if (!options.template) {
+                    options.template = template('# var text = ' + fieldAccessor('text') + '(data.item); #' + '# if (typeof data.item.encoded != \'undefined\' && data.item.encoded === false) {#' + '#= text #' + '# } else { #' + '#: text #' + '# } #');
+                }
+                that.templates = {
+                    content: template('#var contentHtml = ' + fieldAccessor('content') + '(item);#' + '<div #= contentCssAttributes(item.toJSON ? item.toJSON() : item) # tabindex=\'-1\'>#= contentHtml || \'\' #</div>'),
+                    group: template('<ul class=\'#= groupCssClass(group) #\'#= groupAttributes(group) # role=\'menu\' aria-hidden=\'true\'>' + '#= renderItems(data) #' + '</ul>'),
+                    itemWrapper: template('# var url = ' + fieldAccessor('url') + '(item); #' + '# var imageUrl = ' + fieldAccessor('imageUrl') + '(item); #' + '# var imgAttributes = ' + fieldAccessor('imageAttr') + '(item);#' + '# var tag = url ? \'a\' : \'span\' #' + '<#= tag # class=\'#= textClass(item) #\' #if(url){#href=\'#= url #\'#}#>' + '# if (imageUrl) { #' + '<img #= imageCssAttributes(imgAttributes) #  alt=\'\' src=\'#= imageUrl #\' />' + '# } #' + '#= sprite(item) ##= data.menu.options.template(data) #' + '#= arrow(data) #' + '</#= tag #>'),
+                    item: template('#var contentHtml = ' + fieldAccessor('content') + '(item);#' + '<li class=\'#= wrapperCssClass(group, item) #\' #= itemCssAttributes(item.toJSON ? item.toJSON() : item) # role=\'menuitem\'  #=item.items ? "aria-haspopup=\'true\'": ""#' + '#=item.enabled === false ? "aria-disabled=\'true\'" : \'\'#' + kendo.attr('uid') + '=\'#= item.uid #\' >' + '#= itemWrapper(data) #' + '#if (item.hasChildren || item.items) { #' + '#= subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl || contentHtml) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
+                    scrollButton: template('<span class=\'k-button k-button-icon k-menu-scroll-button k-scroll-#= direction #\' unselectable=\'on\'>' + '<span class=\'k-icon k-i-arrow-60-#= direction #\'></span></span>'),
+                    arrow: template('<span class=\'#= arrowClass(item, group) #\'></span>'),
+                    sprite: template('# var spriteCssClass = ' + fieldAccessor('spriteCssClass') + '(data); if(spriteCssClass) {#<span class=\'k-sprite #= spriteCssClass #\'></span>#}#'),
+                    empty: template('')
+                };
+            },
             renderItem: function (options) {
+                var that = this;
                 options = extend({
-                    menu: {},
+                    menu: that,
                     group: {}
                 }, options);
-                var empty = templates.empty, item = options.item;
-                return templates.item(extend(options, {
-                    image: item.imageUrl ? templates.image : empty,
-                    sprite: item.spriteCssClass ? templates.sprite : empty,
-                    itemWrapper: templates.itemWrapper,
-                    renderContent: Menu.renderContent,
-                    arrow: item.items || item.content ? templates.arrow : empty,
-                    subGroup: Menu.renderGroup
+                var empty = that.templates.empty, item = options.item;
+                return that.templates.item(extend(options, {
+                    sprite: that.templates.sprite,
+                    itemWrapper: that.templates.itemWrapper,
+                    renderContent: that.renderContent,
+                    arrow: item.items || item.content || item[that.options.dataContentField[0]] ? that.templates.arrow : empty,
+                    subGroup: that.renderGroup
                 }, rendering));
             },
             renderGroup: function (options) {
+                var that = this;
+                var templates = that.templates || options.menu.templates;
                 return templates.group(extend({
                     renderItems: function (options) {
                         var html = '', i = 0, items = options.items, len = items ? items.length : 0, group = extend({ length: len }, options.group);
                         for (; i < len; i++) {
-                            html += Menu.renderItem(extend(options, {
+                            html += options.menu.renderItem(extend(options, {
                                 group: group,
                                 item: extend({ index: i }, items[i])
                             }));
@@ -1585,7 +1766,7 @@
                 }, options, rendering));
             },
             renderContent: function (options) {
-                return templates.content(extend(options, rendering));
+                return options.menu.templates.content(extend(options, rendering));
             }
         });
         var ContextMenu = Menu.extend({

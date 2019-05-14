@@ -186,7 +186,7 @@
   display: none;
 }
 [data-role="view"],
-[data-role="drawer"],
+.km-drawer,
 kendo-mobile-view,
 kendo-mobile-split-view,
 kendo-mobile-drawer {
@@ -1567,8 +1567,7 @@ div.km-split-horizontal > .km-content > .km-pane {
   width: 0px;
   display: inline-block;
 }
-.km-drawer,
-[data-role=drawer] {
+.km-drawer {
   top: 0;
   left: auto;
   width: 250px;

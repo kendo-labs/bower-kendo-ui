@@ -701,6 +701,11 @@
     border-right-width: 1px;
 }
 
+.k-rtl .k-scheduler-agendaview .k-scheduler-table td.k-first
+{
+    border-right-width: 0;
+}
+
 .k-rtl .k-scheduler-agendaview .k-scheduler-table td.k-scheduler-datecolumn
 {
     border-right-width: 0;
@@ -909,31 +914,29 @@
 
 // TabStrip
 
-.k-rtl .k-tabstrip-items .k-item,
-.k-rtl .k-panelbar .k-tabstrip-items .k-item
-{
-    margin-left: -1px;
-    margin-right: 0;
-}
+.k-rtl {
+    .k-tabstrip-items .k-item,
+    .k-panelbar .k-tabstrip-items .k-item {
+        margin-left: -1px;
+        margin-right: 0;
 
-.k-rtl .k-tabstrip-items .k-item .k-image,
-.k-rtl .k-tabstrip-items .k-item .k-sprite,
-.k-rtl .k-panelbar .k-tabstrip-items .k-item .k-image,
-.k-rtl .k-panelbar .k-tabstrip-items .k-item .k-sprite
-{
-    margin: -3px -6px 0 3px;
-}
+        .k-image,
+        .k-sprite {
+            margin: -3px -6px 0 3px;
+        }
+    }
 
-.k-rtl .k-tabstrip-prev
-{
-    left: auto;
-    right: .4em;
-}
+    .k-tabstrip-prev {
+        left: auto;
+        right: .4em;
+        transform: scaleX(-1);
+    }
 
-.k-rtl .k-tabstrip-next
-{
-    right: auto;
-    left: .4em;
+    .k-tabstrip-next {
+        right: auto;
+        left: .4em;
+        transform: scaleX(-1);
+    }
 }
 
 // ToolBar
@@ -1157,3 +1160,21 @@
         margin-left: 0;
     }
 }
+
+// Spreadsheet
+
+.k-rtl .k-spreadsheet {
+
+    .k-spreadsheet-cell {
+
+        .k-dirty {
+            margin: 0;
+        }
+
+        &.k-spreadsheet-has-comment::after {
+            left: 0;
+            right: auto;
+        }
+    }
+}
+

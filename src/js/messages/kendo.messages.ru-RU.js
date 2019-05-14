@@ -207,7 +207,7 @@ $.extend(true, kendo.ui.Grid.prototype.options.messages,{
     "cancelDelete": "Отмена",
     "confirmDelete": "Удалить"
   },
-  "noRecords": "Нет записей доступны."
+  "noRecords": "Нет доступных записей."
 });
 }
 
@@ -298,7 +298,7 @@ $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages,{
 if (kendo.ui.Groupable) {
 kendo.ui.Groupable.prototype.options.messages =
 $.extend(true, kendo.ui.Groupable.prototype.options.messages,{
-  "empty": "Переместите сюда заголовок столбца, чтобы сгрупировать записи по этому столбцу"
+  "empty": "Переместите сюда заголовок столбца, чтобы сгруппировать записи по этому столбцу"
 });
 }
 
@@ -319,7 +319,7 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
   "insertHtml": "Вставить HTML",
   "insertImage": "Изображение",
   "insertOrderedList": "Нумерованный список",
-  "insertUnorderedList": "Маркированныйсписок",
+  "insertUnorderedList": "Маркированный список",
   "italic": "Курсив",
   "justifyCenter": "По центру",
   "justifyFull": "По ширине",
@@ -345,7 +345,7 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
   "createTable": "Вставить таблицу",
   "addColumnLeft": "Добавить столбец слева",
   "addColumnRight": "Добавить столбец справа",
-  "addRowAbove": "Добавить стороку выше",
+  "addRowAbove": "Добавить строку выше",
   "addRowBelow": "Добавить строку ниже",
   "deleteColumn": "Удалить столбец",
   "deleteRow": "Удалить строку",
@@ -404,7 +404,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
     "description": "Описание",
     "editorTitle": "Событие",
     "end": "Окончание",
-    "endTimezone": "Часовой поис окончания",
+    "endTimezone": "Часовой пояс окончания",
     "repeat": "Повторение",
     "separateTimezones": "Для начала и окончания используйте свой часовой пояс",
     "start": "Начало",

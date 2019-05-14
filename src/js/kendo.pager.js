@@ -93,9 +93,12 @@
                 if (options.numeric) {
                     that.list = that.element.find('.k-pager-numbers');
                     if (!that.list.length) {
-                        that.list = $('<ul class="k-pager-numbers k-reset" />').append(that.currentPageTemplate({ text: 0 })).append(that.selectTemplate({ text: 0 })).appendTo(that.element);
-                        that.list.wrap('<div class="k-pager-numbers-wrap"></div>');
+                        that.list = $('<ul class="k-pager-numbers k-reset" />').appendTo(that.element);
                     }
+                    if (options.dataSource && !options.dataSource.total()) {
+                        that.list.empty().append(that.currentPageTemplate({ text: 0 })).append(that.selectTemplate({ text: 0 }));
+                    }
+                    that.list.wrap('<div class="k-pager-numbers-wrap"></div>');
                 }
                 if (options.input) {
                     if (!that.element.find('.k-pager-input').length) {
@@ -183,6 +186,7 @@
                 previousNext: true,
                 pageSizes: false,
                 refresh: false,
+                responsive: true,
                 messages: {
                     allPages: 'All',
                     display: '{0} - {1} of {2} items',
@@ -352,8 +356,10 @@
                 }
             },
             _getWidthSizeClass: function (width) {
-                var sizes = SIZE.split(' ');
-                if (width <= 480) {
+                var that = this, sizes = SIZE.split(' ');
+                if (!that.options.responsive) {
+                    return null;
+                } else if (width <= 480) {
                     return sizes[2];
                 } else if (width <= 640) {
                     return sizes[1];

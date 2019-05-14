@@ -130,21 +130,6 @@
 .k-button:focus:active {
   box-shadow: 0 0 7px 0 #76abd9, inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
-.k-button[disabled],
-.k-state-disabled .k-button,
-.k-state-disabled .k-button:hover,
-.k-button.k-state-disabled,
-.k-button.k-state-disabled:hover {
-  color: #333333;
-  border-color: #cccccc;
-  background-color: #fff;
-  background-image: none;
-}
-.k-button[disabled],
-.k-button.k-state-disabled,
-.k-button.k-state-disabled:active {
-  box-shadow: none;
-}
 .k-button:focus,
 .k-button:focus:hover,
 .k-button.k-state-focused,
@@ -152,6 +137,24 @@
 .k-state-disabled .k-button.k-state-focused {
   border-color: #69ace6;
   box-shadow: 0 0 7px 0 #76abd9;
+}
+.k-button[disabled],
+.k-state-disabled .k-button,
+.k-button.k-state-disabled,
+.k-button[disabled]:hover,
+.k-state-disabled .k-button:hover,
+.k-button.k-state-disabled:hover,
+.k-button[disabled]:focus,
+.k-state-disabled .k-button:focus,
+.k-button.k-state-disabled:focus,
+.k-button[disabled]:active,
+.k-state-disabled .k-button:active,
+.k-button.k-state-disabled:active {
+  color: #333333;
+  border-color: #cccccc;
+  background-color: #fff;
+  box-shadow: none;
+  background-image: none;
 }
 .k-primary {
   color: #fff;
@@ -177,20 +180,6 @@
 .k-primary:focus:active:not(.k-state-disabled):not([disabled]) {
   box-shadow: 0 0 3px 0 #2698fb, inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
-.k-primary[disabled],
-.k-state-disabled .k-primary,
-.k-state-disabled .k-primary:hover,
-.k-primary.k-state-disabled,
-.k-primary.k-state-disabled:hover {
-  color: #fff;
-  border-color: #357ebd;
-  background-color: #428bca;
-  box-shadow: none;
-}
-.k-primary[disabled],
-.k-primary.k-state-disabled {
-  box-shadow: none;
-}
 .k-primary:focus,
 .k-primary:focus:hover,
 .k-primary.k-state-focused,
@@ -198,6 +187,17 @@
 .k-state-disabled .k-primary.k-state-focused {
   border-color: #eef8fc;
   box-shadow: 0 0 3px 0 #2698fb;
+}
+.k-primary[disabled],
+.k-state-disabled .k-primary,
+.k-primary.k-state-disabled,
+.k-primary[disabled]:hover,
+.k-state-disabled .k-primary:hover,
+.k-primary.k-state-disabled:hover {
+  color: #fff;
+  border-color: #357ebd;
+  background-color: #428bca;
+  box-shadow: none;
 }
 .k-button-group {
   border-radius: 4px;
@@ -463,6 +463,19 @@
   color: #428bca;
   background: none;
 }
+.k-pdf-viewer .k-toolbar .k-icon,
+.k-pdf-viewer .k-toolbar .k-pager-input {
+  color: #333333;
+}
+.k-pdf-viewer .k-canvas {
+  background-color: #fff;
+}
+.k-pdf-viewer .k-page {
+  border-color: #cccccc;
+  color: #333333;
+  background-color: #fff;
+  box-shadow: 0 0 15px #cccccc;
+}
 .k-scrollview-nav > li.k-link {
   border-color: #cccccc;
   background-color: #fff;
@@ -624,6 +637,35 @@
 .k-pane-wrapper .k-pane .k-grid-mobile .k-resize-handle-inner::before {
   background-color: #fff;
 }
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-nav-current {
+  color: #428bca;
+}
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-times,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-header,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-groupcolumn,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-mobile-scheduler-agendadate {
+  color: inherit;
+}
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-time-period,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-mobile-scheduler-agendaweekday {
+  color: #bfbfbf;
+}
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-times,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-header,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-header-wrap,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-datecolumn,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-groupcolumn,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-group-cell,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-header-all-day {
+  background-color: #f5f5f5;
+}
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-other-month {
+  background-color: #f5f5f5;
+}
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-toolbar .k-scheduler-tools > li,
+.k-pane-wrapper .k-pane .k-scheduler-mobile .k-scheduler-toolbar .k-scheduler-navigation {
+  background-color: inherit;
+}
 .k-pane-wrapper .k-pane .k-grid-edit-form .k-header,
 .k-pane-wrapper .k-pane .k-grid-column-menu .k-header,
 .k-pane-wrapper .k-pane .k-grid-filter-menu .k-header,
@@ -657,18 +699,27 @@
 .k-pane-wrapper .k-pane .k-grid-edit-form .k-select-all,
 .k-pane-wrapper .k-pane .k-grid-column-menu .k-select-all,
 .k-pane-wrapper .k-pane .k-grid-filter-menu .k-select-all,
-.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-select-all {
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-select-all,
+.k-pane-wrapper .k-pane .k-grid-edit-form .k-scheduler-delete,
+.k-pane-wrapper .k-pane .k-grid-column-menu .k-scheduler-delete,
+.k-pane-wrapper .k-pane .k-grid-filter-menu .k-scheduler-delete,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-scheduler-delete,
+.k-pane-wrapper .k-pane .k-grid-edit-form .k-scheduler-resetSeries,
+.k-pane-wrapper .k-pane .k-grid-column-menu .k-scheduler-resetSeries,
+.k-pane-wrapper .k-pane .k-grid-filter-menu .k-scheduler-resetSeries,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-scheduler-resetSeries {
   color: #428bca;
 }
 .k-pane-wrapper .k-pane .k-column-menu .k-state-selected .k-link {
   color: #428bca;
 }
-.k-pane-wrapper .k-pane .k-filter-menu .k-check {
+.k-pane-wrapper .k-pane .k-filter-menu .k-check,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check {
   color: #428bca;
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-item {
   background-color: #fff;
-  border-top: 1px solid #d2d2d2;
+  border-bottom: 1px solid #d2d2d2;
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-item > .k-link:active,
 .k-pane-wrapper .k-pane .k-mobile-list .k-item > .k-label:active,
@@ -682,8 +733,9 @@
   background-color: #428bca;
   border-top-color: #428bca;
 }
-.k-pane-wrapper .k-pane .k-mobile-list .k-item:last-child {
-  box-shadow: inset 0 -1px 0 #d2d2d2;
+.k-pane-wrapper .k-pane .k-mobile-list .k-item:first-child,
+.k-pane-wrapper .k-pane .k-mobile-list .k-item.k-clear-wrap {
+  box-shadow: inset 0 1px 0 #d2d2d2;
 }
 .k-pane-wrapper .k-pane .k-mobile-list.k-filter-menu .k-space-right > input {
   background: #fff;
@@ -704,6 +756,57 @@
 .k-pane-wrapper .k-pane .k-mobile-list .k-filter-help-text,
 .k-pane-wrapper .k-pane .k-mobile-list .k-filter-selected-items {
   color: #333333;
+}
+.k-drawer-container {
+  background-color: #fff;
+  color: #333333;
+  border-color: #cccccc;
+}
+.k-drawer-container::-webkit-scrollbar-track,
+.k-drawer-container .k-drawer-items::-webkit-scrollbar-track {
+  background: #dedede;
+}
+.k-drawer-container::-webkit-scrollbar-thumb,
+.k-drawer-container .k-drawer-items::-webkit-scrollbar-thumb {
+  background: rgba(156, 156, 156, 0.7);
+}
+.k-drawer-container::-webkit-scrollbar-thumb:hover,
+.k-drawer-container .k-drawer-items::-webkit-scrollbar-thumb:hover {
+  background: #9c9c9c;
+}
+.k-drawer-items .k-drawer-item {
+  color: #333333;
+}
+.k-drawer-items .k-drawer-item:hover,
+.k-drawer-items .k-drawer-item.k-state-hover {
+  color: #333333;
+  background-color: #ebebeb;
+  background-image: none;
+  cursor: pointer;
+}
+.k-drawer-items .k-drawer-item:focus,
+.k-drawer-items .k-drawer-item.k-state-focused {
+  background-color: #fff;
+  box-shadow: inset 0 0 7px 0 #76abd9;
+}
+.k-drawer-items .k-drawer-item:focus:hover,
+.k-drawer-items .k-drawer-item.k-state-focused:hover,
+.k-drawer-items .k-drawer-item:focus.k-state-hover,
+.k-drawer-items .k-drawer-item.k-state-focused.k-state-hover {
+  color: #333333;
+  background-color: #ebebeb;
+}
+.k-drawer-items .k-drawer-item.k-state-selected {
+  color: #ffffff;
+  background-color: #428bca;
+}
+.k-drawer-items .k-drawer-item.k-state-selected:hover,
+.k-drawer-items .k-drawer-item.k-state-selected.k-state-hover {
+  color: #ffffff;
+  background-color: #357ebd;
+}
+.k-drawer-items .k-drawer-item.k-drawer-separator {
+  background-color: #cccccc;
 }
 .k-in,
 .k-item {
@@ -1176,9 +1279,6 @@ div.k-filebrowser-dropzone em {
 }
 .k-dropdown .k-state-hover .k-input {
   color: #333333;
-}
-.k-button.k-state-disabled {
-  opacity: 0.6;
 }
 .k-state-error {
   border-color: #dbdbdb;
@@ -1732,8 +1832,6 @@ div.k-filebrowser-dropzone em {
 .k-rtl .k-gantt-toolbar > ul.k-gantt-views li:first-child + li .k-link {
   border-radius: 0 4px 4px 0;
 }
-.k-scheduler-phone .k-scheduler-toolbar > ul li.k-nav-today,
-.k-scheduler-phone .k-scheduler-toolbar > ul li.k-nav-today .k-link,
 .k-edit-field > .k-scheduler-navigation {
   border-radius: 4px;
 }
@@ -2743,6 +2841,17 @@ td.k-state-focused.k-state-selected,
 .k-spreadsheet .k-single-selection.k-dim-auto-fill-handle::after {
   background-color: rgba(66, 139, 202, 0.5);
 }
+.k-spreadsheet .k-spreadsheet-cell-comment {
+  color: #fff;
+  background-color: #000000;
+  border-color: #000000;
+}
+.k-spreadsheet .k-spreadsheet-has-comment:after {
+  border-color: #428bca #428bca transparent transparent;
+}
+.k-spreadsheet .k-dirty {
+  border-color: #d92800 transparent transparent #d92800;
+}
 .k-spreadsheet-format-cells .k-spreadsheet-preview {
   border-color: #cccccc;
 }
@@ -2872,6 +2981,36 @@ td.k-state-focused.k-state-selected,
 .k-spreadsheet-formula-list .k-state-focused {
   background-color: #428bca;
   color: #ffffff;
+}
+.k-spreadsheet-insert-image-dialog {
+  border-color: #cccccc;
+  border-radius: 4px;
+}
+.k-spreadsheet-insert-image-dialog .k-spreadsheet-has-image:hover,
+.k-spreadsheet-insert-image-dialog .k-spreadsheet-has-image.k-state-hovered {
+  box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
+.k-spreadsheet-insert-image-dialog .k-spreadsheet-has-image:hover div,
+.k-spreadsheet-insert-image-dialog .k-spreadsheet-has-image.k-state-hovered div {
+  color: #fff;
+}
+.k-spreadsheet-drawing.k-spreadsheet-active-drawing {
+  outline-color: #428bca;
+}
+.k-spreadsheet-drawing .k-spreadsheet-drawing-handle {
+  border-color: #fff;
+  background-color: #428bca;
+  border-radius: 50%;
+}
+.k-spreadsheet-drawing-anchor-cell {
+  background: rgba(66, 139, 202, 0.2);
+}
+.k-rtl .k-spreadsheet .k-spreadsheet-has-comment::after {
+  border-color: #428bca transparent transparent #428bca;
+}
+.k-rtl .k-spreadsheet .k-dirty {
+  border-color: #d92800 #d92800 transparent transparent;
 }
 .k-spreadsheet .k-widget[data-property='fontSize'] {
   width: 70px;

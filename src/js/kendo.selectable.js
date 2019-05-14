@@ -44,7 +44,7 @@
             (function () {
                 $('<div class="parent"><span /></div>').on('click', '>*', function () {
                     supportEventDelegation = true;
-                }).find('span').click().end().off();
+                }).find('span').trigger('click').end().off();
             }());
         }($));
         var Selectable = Widget.extend({

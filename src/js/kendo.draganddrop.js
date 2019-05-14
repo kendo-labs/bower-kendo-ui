@@ -618,7 +618,7 @@
             },
             _hold: function (e) {
                 this.currentTarget = e.target;
-                if (this._trigger(HOLD, e)) {
+                if (this.options.holdToDrag && this._trigger(HOLD, e)) {
                     this.userEvents.cancel();
                 } else {
                     this._activated = true;

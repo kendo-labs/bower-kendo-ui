@@ -485,6 +485,9 @@
   border-left-width: 0;
   border-right-width: 1px;
 }
+.k-rtl .k-scheduler-agendaview .k-scheduler-table td.k-first {
+  border-right-width: 0;
+}
 .k-rtl .k-scheduler-agendaview .k-scheduler-table td.k-scheduler-datecolumn {
   border-right-width: 0;
 }
@@ -629,18 +632,24 @@
   margin-right: 0;
 }
 .k-rtl .k-tabstrip-items .k-item .k-image,
-.k-rtl .k-tabstrip-items .k-item .k-sprite,
 .k-rtl .k-panelbar .k-tabstrip-items .k-item .k-image,
+.k-rtl .k-tabstrip-items .k-item .k-sprite,
 .k-rtl .k-panelbar .k-tabstrip-items .k-item .k-sprite {
   margin: -3px -6px 0 3px;
 }
 .k-rtl .k-tabstrip-prev {
   left: auto;
   right: 0.4em;
+  -webkit-transform: scaleX(-1);
+      -ms-transform: scaleX(-1);
+          transform: scaleX(-1);
 }
 .k-rtl .k-tabstrip-next {
   right: auto;
   left: 0.4em;
+  -webkit-transform: scaleX(-1);
+      -ms-transform: scaleX(-1);
+          transform: scaleX(-1);
 }
 .k-rtl .k-toolbar .k-overflow-anchor {
   right: auto;
@@ -793,4 +802,11 @@
 }
 .k-rtl .k-grid td .k-checkbox {
   margin-left: 0;
+}
+.k-rtl .k-spreadsheet .k-spreadsheet-cell .k-dirty {
+  margin: 0;
+}
+.k-rtl .k-spreadsheet .k-spreadsheet-cell.k-spreadsheet-has-comment::after {
+  left: 0;
+  right: auto;
 }

@@ -296,7 +296,9 @@
                 var value = listView.value()[position];
                 var dataItem = that.listView.selectedDataItems()[position];
                 var customIndex = that._customOptions[value];
+                var listViewChildren = listView.element[0].children;
                 var option;
+                var listViewChild;
                 if (that.trigger(DESELECT, {
                         dataItem: dataItem,
                         item: tag
@@ -320,9 +322,16 @@
                 } else {
                     option = that.element[0].children[customIndex];
                     option.selected = false;
-                    listView._deselect([customIndex]);
                     listView.removeAt(position);
-                    tag.remove();
+                    listViewChild = listViewChildren[customIndex];
+                    if (listViewChild) {
+                        listViewChildren[customIndex].classList.remove('k-state-selected');
+                    }
+                    if (that.options.tagMode !== 'single') {
+                        tag.remove();
+                    } else {
+                        that._updateTagListHTML();
+                    }
                     done();
                 }
             },
@@ -335,7 +344,7 @@
             _clearClick: function () {
                 var that = this;
                 if (that.options.tagMode === 'single') {
-                    that.listView.value([]);
+                    that._clearSingleTagValue();
                 } else {
                     that.tagList.children().each(function (index, tag) {
                         that._removeTag($(tag), false);
@@ -349,6 +358,15 @@
                 if (that._state === FILTER) {
                     that._state = ACCEPT;
                 }
+            },
+            _clearSingleTagValue: function () {
+                var that = this;
+                var persistTagList = that.persistTagList;
+                if (persistTagList) {
+                    that.persistTagList = false;
+                }
+                that.listView.value([]);
+                that.persistTagList = persistTagList;
             },
             _editable: function (options) {
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), tagList = that.tagList.off(ns), input = that.element.add(that.input.off(ns));
@@ -599,7 +617,6 @@
                 var visible = that.popup.visible();
                 var dir = 0;
                 var activeItemIdx;
-                var persistTagList;
                 if (key !== keys.ENTER) {
                     this._multipleSelection = false;
                 }
@@ -747,14 +764,9 @@
                 } else if ((key === keys.DELETE || key === keys.BACKSPACE) && !hasValue) {
                     that._state = ACCEPT;
                     if (that.options.tagMode === 'single') {
-                        persistTagList = that.persistTagList;
-                        if (persistTagList) {
-                            that.persistTagList = false;
-                        }
-                        listView.value([]);
+                        that._clearSingleTagValue();
                         that._change();
                         that._close();
-                        that.persistTagList = persistTagList;
                         return;
                     }
                     if (key === keys.BACKSPACE && !tag) {
@@ -962,7 +974,6 @@
             },
             _selectValue: function (added, removed) {
                 var that = this;
-                var values = that.value();
                 var total = that.dataSource.total();
                 var tagList = that.tagList;
                 var getter = that._value;
@@ -991,15 +1002,7 @@
                     if (!that._maxTotal || that._maxTotal < total) {
                         that._maxTotal = total;
                     }
-                    tagList.html('');
-                    if (values.length) {
-                        tagList.append(that.tagTemplate({
-                            values: values,
-                            dataItems: that.dataItems(),
-                            maxTotal: that._maxTotal,
-                            currentTotal: total
-                        }));
-                    }
+                    this._updateTagListHTML();
                     for (idx = removed.length - 1; idx > -1; idx--) {
                         that._setOption(getter(removed[idx].dataItem), false);
                     }
@@ -1009,6 +1012,21 @@
                 }
                 that._angularTagItems('compile');
                 that._placeholder();
+            },
+            _updateTagListHTML: function () {
+                var that = this;
+                var values = that.value();
+                var total = that.dataSource.total();
+                var tagList = that.tagList;
+                tagList.html('');
+                if (values.length) {
+                    tagList.append(that.tagTemplate({
+                        values: values,
+                        dataItems: that.dataItems(),
+                        maxTotal: that._maxTotal,
+                        currentTotal: total
+                    }));
+                }
             },
             _select: function (candidate) {
                 var resolved = $.Deferred().resolve();

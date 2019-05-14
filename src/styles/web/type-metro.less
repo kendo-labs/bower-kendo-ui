@@ -390,6 +390,23 @@
 @switch-off-handle-hovered-gradient: @button-hover-gradient;
 
 
+// PDF viewer
+@pdf-viewer-bg: null;
+@pdf-viewer-text: null;
+@pdf-viewer-border: null;
+
+@pdf-viewer-canvas-bg: @chat-bg;
+@pdf-viewer-canvas-text: null;
+@pdf-viewer-canvas-border: null;
+
+@pdf-viewer-page-bg: @component-bg;
+@pdf-viewer-page-text: @component-text;
+@pdf-viewer-page-border: @component-border;
+@pdf-viewer-page-shadow: 0 0 15px @pdf-viewer-page-border;
+
+@pdf-viewer-toolbar-button-bg: @button-text-color;
+
+
 // Adaptive Common
 @adaptive-content-bg: @header-background-color;
 @adaptive-content-text: @accent;
@@ -407,6 +424,44 @@
 // Adaptive Grid
 @adaptive-grid-sort-text: @accent;
 
+// Adaptive Scheduler
+@adaptive-scheduler-current-text: @accent;
+@adaptive-scheduler-base-text: inherit;
+
+
+// Drawer
+@drawer-text:  @widget-text-color;
+@drawer-bg: @widget-background-color;
+@drawer-border: @widget-border-color;
+
+@drawer-scrollbar-color: rgba(156, 156, 156, 0.7);
+@drawer-scrollbar-bg: #dedede;
+@drawer-scrollbar-hovered-color: rgba(156, 156, 156, 1);
+
+@drawer-hovered-text: @hover-text-color;
+@drawer-hovered-bg: @hover-background;
+@drawer-hovered-gradient: @hover-gradient;
+
+@drawer-focused-bg: @drawer-bg;
+@drawer-focused-shadow: @focused-item-shadow;
+
+@drawer-selected-text: @selected-text-color;
+@drawer-selected-bg: @selected-background;
+@drawer-selected-hover-bg: contrast(@background, lighten(@selected-background, 5%), darken(@selected-background, 5%), 0.5);
+@drawer-selected-hover-text: @selected-text-color;
+
+
+// Spreadsheet
+@spreadsheet-insert-image-dialog-preview-overlay: inset 0 0 0 2000px rgba(0,0,0, 0.5);
+@spreadsheet-insert-image-dialog-hovered-text: #fff;
+
+@spreadsheet-drawing-handle-bg: @spreadsheet-selection-border;
+@spreadsheet-drawing-handle-border-color: #fff;
+@spreadsheet-drawing-handle-border-radius: 50%;
+@spreadsheet-drawing-handle-outline: @spreadsheet-selection-border;
+
+@spreadsheet-drawing-anchor-bg:  @spreadsheet-selection-background;
+
 
 // Kendo skin
 
@@ -417,13 +472,15 @@
 @import "mixins/border-radius.less";
 @import "themes/type.less";
 @import "themes/button.less";
-@import "Default/card/theme.less";
-@import "Default/chat/theme.less";
+@import "Default/card/_theme.less";
+@import "Default/chat/_theme.less";
 @import "Default/calendar/_theme.less";
 @import "Default/multiviewcalendar/_theme.less";
+@import "Default/pdf-viewer/_theme.less";
 @import "Default/scrollview/_theme.less";
 @import "Default/switch/_theme.less";
 @import "common/adaptive/_theme.less";
+@import "Default/drawer/_theme.less";
 
 
 .k-in,
@@ -768,6 +825,10 @@ textarea.k-textbox:hover,
 .k-scheduler-table .k-nonwork-hour
 {
     background-color: @scheduler-nonwork-background-color;
+}
+
+.k-scheduler-mobile .k-scheduler-navigation .k-state-hover > .k-link {
+    color: @normal-text-color;
 }
 
 .k-gantt .k-nonwork-hour
@@ -1854,8 +1915,6 @@ div.k-filebrowser-dropzone em
     border-radius: 0 @border-radius @border-radius 0;
 }
 
-.k-scheduler-phone .k-scheduler-toolbar > ul li.k-nav-today,
-.k-scheduler-phone .k-scheduler-toolbar > ul li.k-nav-today .k-link,
 .k-edit-field > .k-scheduler-navigation
 {
     border-radius: @border-radius;
