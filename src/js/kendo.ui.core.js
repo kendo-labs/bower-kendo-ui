@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.2.514'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.2.517'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -11234,7 +11234,11 @@
                     options.duration = $.fx ? $.fx.speeds[options.duration] || options.duration : options.duration;
                     css = normalizeCSS(element, properties);
                     $.merge(oldKeys, keys(css));
-                    element.data('keys', $.uniqueSort(oldKeys)).height();
+                    if ($.hasOwnProperty('uniqueSort')) {
+                        element.data('keys', $.uniqueSort(oldKeys)).height();
+                    } else {
+                        element.data('keys', $.unique(oldKeys)).height();
+                    }
                     element.css(TRANSITION, options.exclusive + ' ' + options.duration + 'ms ' + options.ease).css(TRANSITION);
                     element.css(css).css(TRANSFORM);
                     if (transitions.event) {
