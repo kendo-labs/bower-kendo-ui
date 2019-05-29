@@ -301,6 +301,7 @@
                     this.element.removeAttr('id').attr('aria-hidden', true);
                     DOCUMENT.off('keydown' + NS, that._documentKeyDownHandler);
                 });
+                that.popup._hovered = true;
                 that.popup.open();
             },
             _initPopup: function () {
@@ -325,6 +326,7 @@
                         this.element.removeAttr('aria-hidden');
                         DOCUMENT.on('keydown' + NS, that._documentKeyDownHandler);
                         that.trigger(SHOW);
+                        that.popup._hovered = undefined;
                     },
                     close: function () {
                         that.trigger(HIDE);

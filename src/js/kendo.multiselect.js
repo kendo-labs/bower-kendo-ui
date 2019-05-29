@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = $.extend({ A: 65 }, kendo.keys), activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', SELECTEDCLASS = 'k-state-selected', HIDDENCLASS = 'k-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = $.extend({ A: 65 }, kendo.keys), activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', SELECTEDCLASS = 'k-state-selected', HIDDENCLASS = 'k-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', AUTOCOMPLETEVALUE = kendo.support.browser.chrome ? 'disabled' : 'off', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
                 'font-family',
                 'font-size',
                 'font-stretch',
@@ -256,7 +256,7 @@
                 if (closeButton) {
                     closeButton = !target.closest('.k-select').children('.k-i-arrow-60-down').length;
                 }
-                if (notInput && !(closeButton && kendo.support.mobileOS)) {
+                if (notInput && !(closeButton && kendo.support.mobileOS) && e.cancelable) {
                     e.preventDefault();
                 }
                 if (!closeButton) {
@@ -316,12 +316,14 @@
                     }
                     that._close();
                 };
-                if (customIndex === undefined) {
+                if (customIndex === undefined && listView.select().length) {
                     that.persistTagList = false;
                     listView.select(listView.select()[position]).done(done);
                 } else {
                     option = that.element[0].children[customIndex];
-                    option.selected = false;
+                    if (option) {
+                        option.selected = false;
+                    }
                     listView.removeAt(position);
                     listViewChild = listViewChildren[customIndex];
                     if (listViewChild) {
@@ -489,7 +491,7 @@
                     that._clearFilter();
                 }
                 listView.value(value);
-                that._old = that._valueBeforeCascade = listView.value();
+                that._old = that._valueBeforeCascade = value.slice();
                 if (!clearFilters) {
                     that._fetchData();
                 }
@@ -1120,7 +1122,7 @@
                 element.removeAttr('accesskey');
                 that._focused = that.input = input.attr({
                     'accesskey': accessKey,
-                    'autocomplete': 'off',
+                    'autocomplete': AUTOCOMPLETEVALUE,
                     'role': 'listbox',
                     'title': element[0].title,
                     'aria-expanded': false,

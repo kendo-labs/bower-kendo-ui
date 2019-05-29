@@ -819,6 +819,7 @@
                                         });
                                     },
                                     deactivate: function (e) {
+                                        that._closing = false;
                                         e.sender.element.removeData('targetTransform').css({ opacity: '' });
                                         that._triggerEvent({
                                             item: this.wrapper.parent(),
@@ -836,6 +837,7 @@
                                     },
                                     open: proxy(that._popupOpen, that),
                                     close: function (e) {
+                                        that._closing = true;
                                         var li = e.sender.wrapper.parent();
                                         if (overflowWrapper) {
                                             var popupId = e.sender.element.data(POPUP_ID_ATTR);
@@ -1080,7 +1082,7 @@
                 if (popupId) {
                     that._openedPopups[popupId.toString()] = true;
                 }
-                if (e.delegateTarget != element.parents(menuSelector)[0] && e.delegateTarget != element.parents('.k-menu-scroll-wrapper,.k-popups-wrapper')[0]) {
+                if (that._closing || e.delegateTarget != element.parents(menuSelector)[0] && e.delegateTarget != element.parents('.k-menu-scroll-wrapper,.k-popups-wrapper')[0]) {
                     return;
                 }
                 that._keyTriggered = false;

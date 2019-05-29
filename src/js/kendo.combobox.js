@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', nsFocusEvent = ns + 'FocusEvent', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', LOADING = 'k-i-loading', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy, newLineRegEx = /(\r\n|\n|\r)/gm;
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', nsFocusEvent = ns + 'FocusEvent', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', LOADING = 'k-i-loading', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', AUTOCOMPLETEVALUE = support.browser.chrome ? 'disabled' : 'off', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy, newLineRegEx = /(\r\n|\n|\r)/gm;
         var ComboBox = Select.extend({
             init: function (element, options) {
                 var that = this, text, disabled;
@@ -700,7 +700,7 @@
                 }
                 input = wrapper.find(SELECTOR);
                 if (!input[0]) {
-                    wrapper.append('<span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default"><input ' + name + 'class="k-input" type="text" autocomplete="off"/><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
+                    wrapper.append('<span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default"><input ' + name + 'class="k-input" type="text" autocomplete="' + AUTOCOMPLETEVALUE + '"/><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
                     input = wrapper.find(SELECTOR);
                 }
                 input[0].style.cssText = element.style.cssText;

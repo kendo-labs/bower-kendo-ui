@@ -753,6 +753,16 @@
                     list.columnsHeader.css(isRtl ? 'padding-left' : 'padding-right', height !== 'auto' ? scrollbar : 0);
                 }
             },
+            _refreshScroll: function () {
+                var listView = this.listView;
+                var enableYScroll = listView.element.height() > listView.content.height();
+                if (this.options.autoWidth) {
+                    listView.content.css({
+                        overflowX: 'hidden',
+                        overflowY: enableYScroll ? 'scroll' : 'auto'
+                    });
+                }
+            },
             _resizePopup: function (force) {
                 if (this.options.virtual) {
                     return;
@@ -763,6 +773,7 @@
                             this._calculatePopupHeight(force);
                         }, this);
                     }.call(this, force));
+                    this.popup.one('activate', proxy(this._refreshScroll, this));
                 } else {
                     this._calculatePopupHeight(force);
                 }
@@ -1861,7 +1872,7 @@
                     return;
                 }
                 var visibleItem = this._firstVisibleItem();
-                if (visibleItem && visibleItem.group) {
+                if (visibleItem && visibleItem.group.toString().length) {
                     this.header.html(template(visibleItem.group));
                 }
             },

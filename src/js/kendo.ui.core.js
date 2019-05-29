@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.2.517'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.2.529'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -17050,6 +17050,7 @@
                     this.element.removeAttr('id').attr('aria-hidden', true);
                     DOCUMENT.off('keydown' + NS, that._documentKeyDownHandler);
                 });
+                that.popup._hovered = true;
                 that.popup.open();
             },
             _initPopup: function () {
@@ -17074,6 +17075,7 @@
                         this.element.removeAttr('aria-hidden');
                         DOCUMENT.on('keydown' + NS, that._documentKeyDownHandler);
                         that.trigger(SHOW);
+                        that.popup._hovered = undefined;
                     },
                     close: function () {
                         that.trigger(HIDE);
@@ -19214,6 +19216,16 @@
                     list.columnsHeader.css(isRtl ? 'padding-left' : 'padding-right', height !== 'auto' ? scrollbar : 0);
                 }
             },
+            _refreshScroll: function () {
+                var listView = this.listView;
+                var enableYScroll = listView.element.height() > listView.content.height();
+                if (this.options.autoWidth) {
+                    listView.content.css({
+                        overflowX: 'hidden',
+                        overflowY: enableYScroll ? 'scroll' : 'auto'
+                    });
+                }
+            },
             _resizePopup: function (force) {
                 if (this.options.virtual) {
                     return;
@@ -19224,6 +19236,7 @@
                             this._calculatePopupHeight(force);
                         }, this);
                     }.call(this, force));
+                    this.popup.one('activate', proxy(this._refreshScroll, this));
                 } else {
                     this._calculatePopupHeight(force);
                 }
@@ -20322,7 +20335,7 @@
                     return;
                 }
                 var visibleItem = this._firstVisibleItem();
-                if (visibleItem && visibleItem.group) {
+                if (visibleItem && visibleItem.group.toString().length) {
                     this.header.html(template(visibleItem.group));
                 }
             },
@@ -24645,7 +24658,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, support = kendo.support, caret = kendo.caret, activeElement = kendo._activeElement, placeholderSupported = support.placeholder, ui = kendo.ui, List = ui.List, keys = kendo.keys, DataSource = kendo.data.DataSource, ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CHANGE = 'change', DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', HOVER = 'k-state-hover', ns = '.kendoAutoComplete', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
+        var kendo = window.kendo, support = kendo.support, caret = kendo.caret, activeElement = kendo._activeElement, placeholderSupported = support.placeholder, ui = kendo.ui, List = ui.List, keys = kendo.keys, DataSource = kendo.data.DataSource, ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CHANGE = 'change', DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', AUTOCOMPLETEVALUE = support.browser.chrome ? 'disabled' : 'off', HOVER = 'k-state-hover', ns = '.kendoAutoComplete', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
         function indexOfWordAtCaret(caretIdx, text, separator) {
             return separator ? text.substring(0, caretIdx).split(separator).length - 1 : 0;
         }
@@ -24691,7 +24704,7 @@
                     that.close();
                     wrapper.removeClass(FOCUSED);
                 }).attr({
-                    autocomplete: 'off',
+                    autocomplete: AUTOCOMPLETEVALUE,
                     role: 'textbox',
                     'aria-haspopup': true
                 });
@@ -26310,7 +26323,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', nsFocusEvent = ns + 'FocusEvent', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', LOADING = 'k-i-loading', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy, newLineRegEx = /(\r\n|\n|\r)/gm;
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', nsFocusEvent = ns + 'FocusEvent', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', LOADING = 'k-i-loading', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', AUTOCOMPLETEVALUE = support.browser.chrome ? 'disabled' : 'off', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy, newLineRegEx = /(\r\n|\n|\r)/gm;
         var ComboBox = Select.extend({
             init: function (element, options) {
                 var that = this, text, disabled;
@@ -26959,7 +26972,7 @@
                 }
                 input = wrapper.find(SELECTOR);
                 if (!input[0]) {
-                    wrapper.append('<span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default"><input ' + name + 'class="k-input" type="text" autocomplete="off"/><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
+                    wrapper.append('<span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default"><input ' + name + 'class="k-input" type="text" autocomplete="' + AUTOCOMPLETEVALUE + '"/><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
                     input = wrapper.find(SELECTOR);
                 }
                 input[0].style.cssText = element.style.cssText;
@@ -27160,7 +27173,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = $.extend({ A: 65 }, kendo.keys), activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', SELECTEDCLASS = 'k-state-selected', HIDDENCLASS = 'k-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = $.extend({ A: 65 }, kendo.keys), activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', SELECTEDCLASS = 'k-state-selected', HIDDENCLASS = 'k-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', AUTOCOMPLETEVALUE = kendo.support.browser.chrome ? 'disabled' : 'off', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
                 'font-family',
                 'font-size',
                 'font-stretch',
@@ -27365,7 +27378,7 @@
                 if (closeButton) {
                     closeButton = !target.closest('.k-select').children('.k-i-arrow-60-down').length;
                 }
-                if (notInput && !(closeButton && kendo.support.mobileOS)) {
+                if (notInput && !(closeButton && kendo.support.mobileOS) && e.cancelable) {
                     e.preventDefault();
                 }
                 if (!closeButton) {
@@ -27425,12 +27438,14 @@
                     }
                     that._close();
                 };
-                if (customIndex === undefined) {
+                if (customIndex === undefined && listView.select().length) {
                     that.persistTagList = false;
                     listView.select(listView.select()[position]).done(done);
                 } else {
                     option = that.element[0].children[customIndex];
-                    option.selected = false;
+                    if (option) {
+                        option.selected = false;
+                    }
                     listView.removeAt(position);
                     listViewChild = listViewChildren[customIndex];
                     if (listViewChild) {
@@ -27598,7 +27613,7 @@
                     that._clearFilter();
                 }
                 listView.value(value);
-                that._old = that._valueBeforeCascade = listView.value();
+                that._old = that._valueBeforeCascade = value.slice();
                 if (!clearFilters) {
                     that._fetchData();
                 }
@@ -28229,7 +28244,7 @@
                 element.removeAttr('accesskey');
                 that._focused = that.input = input.attr({
                     'accesskey': accessKey,
-                    'autocomplete': 'off',
+                    'autocomplete': AUTOCOMPLETEVALUE,
                     'role': 'listbox',
                     'title': element[0].title,
                     'aria-expanded': false,
@@ -34958,6 +34973,7 @@
                                         });
                                     },
                                     deactivate: function (e) {
+                                        that._closing = false;
                                         e.sender.element.removeData('targetTransform').css({ opacity: '' });
                                         that._triggerEvent({
                                             item: this.wrapper.parent(),
@@ -34975,6 +34991,7 @@
                                     },
                                     open: proxy(that._popupOpen, that),
                                     close: function (e) {
+                                        that._closing = true;
                                         var li = e.sender.wrapper.parent();
                                         if (overflowWrapper) {
                                             var popupId = e.sender.element.data(POPUP_ID_ATTR);
@@ -35219,7 +35236,7 @@
                 if (popupId) {
                     that._openedPopups[popupId.toString()] = true;
                 }
-                if (e.delegateTarget != element.parents(menuSelector)[0] && e.delegateTarget != element.parents('.k-menu-scroll-wrapper,.k-popups-wrapper')[0]) {
+                if (that._closing || e.delegateTarget != element.parents(menuSelector)[0] && e.delegateTarget != element.parents('.k-menu-scroll-wrapper,.k-popups-wrapper')[0]) {
                     return;
                 }
                 that._keyTriggered = false;
