@@ -129,6 +129,10 @@
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
 }
+.k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
+  padding-left: 1em;
+  text-align: left;
+}
 .k-rtl .k-form-text-row input {
   margin-right: 0;
   margin-left: 1em;
@@ -408,8 +412,8 @@
 .k-rtl .k-multiselect-wrap > .k-i-close {
   right: auto;
 }
-.k-rtl .k-notification-button .k-notification-wrap,
-.k-rtl.k-notification-button .k-notification-wrap {
+.k-rtl .k-notification-closable .k-notification-wrap,
+.k-rtl.k-notification-closable .k-notification-wrap {
   padding-right: 0.5em;
   padding-left: 20px;
 }

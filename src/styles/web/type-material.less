@@ -426,7 +426,7 @@
 @pdf-viewer-canvas-text: null;
 @pdf-viewer-canvas-border: null;
 
-@pdf-viewer-page-bg: @component-bg;
+@pdf-viewer-page-bg: white;
 @pdf-viewer-page-text: @component-text;
 @pdf-viewer-page-border: @component-border;
 @pdf-viewer-page-shadow: 0 0 15px @pdf-viewer-page-border;
@@ -473,8 +473,8 @@
 @drawer-focused-shadow: @focused-item-shadow;
 
 @drawer-selected-text: @selected-text-color;
-@drawer-selected-bg: @selected-background;
-@drawer-selected-hover-bg: contrast(@background, lighten(@selected-background, 5%), darken(@selected-background, 5%), 0.5);
+@drawer-selected-bg: @selected-background-color;
+@drawer-selected-hover-bg: @hover-background;
 @drawer-selected-hover-text: @selected-text-color;
 
 
@@ -3220,20 +3220,14 @@ div.k-scheduler-marquee:after {
 
 @media only screen and (max-width: 1024px) {
 
-    .k-scheduler-toolbar > ul.k-scheduler-views {
-        right: 13px;
-        top: 0;
-    }
-
     .k-webkit,
     .k-ff,
-    .k-ie11,
+    .k-ie,
     .k-edge,
     .k-safari {
         // Responsive Scheduler
 
         .k-scheduler-toolbar > ul.k-scheduler-views {
-            right: 13px;
             top: 0;
         }
 
@@ -3244,7 +3238,6 @@ div.k-scheduler-marquee:after {
             background-color: transparent;
             border-color: transparent;
             border-radius: @border-radius;
-            text-align: right;
         }
 
         .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li {

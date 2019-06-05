@@ -465,8 +465,21 @@
                 }
             },
             _dateInView: function (date) {
-                var that = this, firstDateInView = toDateObject(that._cellsBySelector(CELLSELECTOR + ':first').find('a')), lastDateInView = toDateObject(that._cellsBySelector(CELLSELECTOR + ':last').find('a'));
+                var that = this, firstDateInView = toDateObject(that._cellsBySelector(CELLSELECTORVALID + ':first').find('a')), lastDateInView = toDateObject(that._cellsBySelector(CELLSELECTORVALID + ':last').find('a'));
                 return +date <= +lastDateInView && +date >= +firstDateInView;
+            },
+            _isNavigatable: function (currentValue, cellIndex) {
+                var that = this;
+                var isDisabled = that.options.disableDates;
+                var cell;
+                var index;
+                if (that._view.name == 'month') {
+                    return !isDisabled(currentValue);
+                } else {
+                    index = that.wrapper.find('.' + FOCUSED).index();
+                    cell = that.wrapper.find('.k-content td:eq(' + (index + cellIndex) + ')');
+                    return cell.is(CELLSELECTORVALID) || !isDisabled(currentValue);
+                }
             },
             _move: function (e) {
                 var that = this, options = that.options, key = e.keyCode, view = that._view, index = that._index, min = that.options.min, max = that.options.max, currentValue = new DATE(+that._current), isRtl = kendo.support.isRtl(that.wrapper), isDisabled = that.options.disableDates, value, prevent, method, temp;
@@ -556,7 +569,7 @@
                         if (!isInRange(currentValue, min, max)) {
                             currentValue = restrictValue(currentValue, options.min, options.max);
                         }
-                        if (isDisabled(currentValue)) {
+                        if (!that._isNavigatable(currentValue, value)) {
                             currentValue = that._nextNavigatable(currentValue, value);
                         }
                         if (that._isMultipleSelection()) {

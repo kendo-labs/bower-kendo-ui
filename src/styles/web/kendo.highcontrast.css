@@ -484,7 +484,7 @@
 .k-pdf-viewer .k-page {
   border-color: #674c63;
   color: #fff;
-  background-color: #1b141a;
+  background-color: white;
   box-shadow: 0 0 15px #674c63;
 }
 .k-scrollview-nav > li.k-link {
@@ -778,6 +778,12 @@
   background-color: #1b141a;
   color: #fff;
   border-color: #674c63;
+}
+.k-drawer-container,
+.k-drawer-container .k-drawer-items {
+  /* Scrollbar styles for Chrome, Safari and Opera */
+  /* Scrollbar styles for Mozilla */
+  scrollbar-color: rgba(156, 156, 156, 0.7) #dedede;
 }
 .k-drawer-container::-webkit-scrollbar-track,
 .k-drawer-container .k-drawer-items::-webkit-scrollbar-track {

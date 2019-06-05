@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.2.529'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.2.605'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -16568,6 +16568,7 @@
                     origin: that._popupOrigin,
                     position: that._popupPosition,
                     animation: options.animation,
+                    copyAnchorStyles: false,
                     modal: true,
                     collision: '',
                     isRtl: that._isRtl,
@@ -16586,10 +16587,10 @@
                     popup.open();
                 } else {
                     if (x === null) {
-                        x = $(window).width() - wrapper.width() - options.position.right;
+                        x = $(window).width() - wrapper.outerWidth() - options.position.right;
                     }
                     if (y === null) {
-                        y = $(window).height() - wrapper.height() - options.position.bottom;
+                        y = $(window).height() - wrapper.outerHeight() - options.position.bottom;
                     }
                     popup.open(x, y);
                 }
@@ -16691,7 +16692,7 @@
                     } else {
                         args = extend(defaultArgs, { content: content });
                     }
-                    wrapper.addClass(KNOTIFICATION + '-' + type).toggleClass(KNOTIFICATION + '-button', options.button).attr('data-role', 'alert').css({
+                    wrapper.addClass(KNOTIFICATION + '-' + type).toggleClass(KNOTIFICATION + '-button', options.button).toggleClass(KNOTIFICATION + '-closable', options.button).attr('data-role', 'alert').css({
                         width: options.width,
                         height: options.height
                     }).append(that._getCompiled(type, safe)(args));
@@ -21010,8 +21011,21 @@
                 }
             },
             _dateInView: function (date) {
-                var that = this, firstDateInView = toDateObject(that._cellsBySelector(CELLSELECTOR + ':first').find('a')), lastDateInView = toDateObject(that._cellsBySelector(CELLSELECTOR + ':last').find('a'));
+                var that = this, firstDateInView = toDateObject(that._cellsBySelector(CELLSELECTORVALID + ':first').find('a')), lastDateInView = toDateObject(that._cellsBySelector(CELLSELECTORVALID + ':last').find('a'));
                 return +date <= +lastDateInView && +date >= +firstDateInView;
+            },
+            _isNavigatable: function (currentValue, cellIndex) {
+                var that = this;
+                var isDisabled = that.options.disableDates;
+                var cell;
+                var index;
+                if (that._view.name == 'month') {
+                    return !isDisabled(currentValue);
+                } else {
+                    index = that.wrapper.find('.' + FOCUSED).index();
+                    cell = that.wrapper.find('.k-content td:eq(' + (index + cellIndex) + ')');
+                    return cell.is(CELLSELECTORVALID) || !isDisabled(currentValue);
+                }
             },
             _move: function (e) {
                 var that = this, options = that.options, key = e.keyCode, view = that._view, index = that._index, min = that.options.min, max = that.options.max, currentValue = new DATE(+that._current), isRtl = kendo.support.isRtl(that.wrapper), isDisabled = that.options.disableDates, value, prevent, method, temp;
@@ -21101,7 +21115,7 @@
                         if (!isInRange(currentValue, min, max)) {
                             currentValue = restrictValue(currentValue, options.min, options.max);
                         }
-                        if (isDisabled(currentValue)) {
+                        if (!that._isNavigatable(currentValue, value)) {
                             currentValue = that._nextNavigatable(currentValue, value);
                         }
                         if (that._isMultipleSelection()) {
@@ -31568,7 +31582,7 @@
             },
             'string': function (container, options) {
                 var attr = createAttributes(options);
-                $('<input type="text" class="k-input k-textbox"/>').attr(attr).appendTo(container);
+                $('<input type="text" class="k-textbox"/>').attr(attr).appendTo(container);
             },
             'boolean': function (container, options) {
                 var attr = createAttributes(options);
@@ -34762,8 +34776,10 @@
                 var overflowWrapper = this._overflowWrapper();
                 if (item.length || candidate === this.element) {
                     return item;
+                } else if (overflowWrapper) {
+                    return overflowWrapper.find(candidate);
                 } else {
-                    return overflowWrapper && overflowWrapper.find(candidate);
+                    return $();
                 }
             },
             append: function (item, referenceItem) {

@@ -2237,6 +2237,7 @@ ul.k-menu-vertical .k-separator,
 }
 .k-grid-header th.k-header {
   vertical-align: bottom;
+  cursor: default;
 }
 .k-filtercell,
 .k-filtercell > span,
@@ -5570,13 +5571,16 @@ a.k-tool {
   padding: 1em 0.8em;
   margin: 0.5em 0 0;
 }
-.k-notification-wrap {
+.k-notification {
   padding: 0.6em 0.5em;
+  border-width: 1px;
+  border-style: solid;
   cursor: default;
   position: relative;
   white-space: nowrap;
+  box-sizing: border-box;
 }
-.k-notification-button .k-notification-wrap {
+.k-notification-closable {
   padding-right: 20px;
 }
 .k-notification-wrap > .k-i-information,
@@ -5589,11 +5593,14 @@ a.k-tool {
 }
 .k-notification-wrap > .k-i-close {
   position: absolute;
-  top: 7px;
+  top: 50%;
   right: 4px;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
   display: none;
 }
-.k-notification-button .k-notification-wrap > .k-i-close {
+.k-notification-closable .k-notification-wrap > .k-i-close {
   display: block;
 }
 .k-progressbar {
@@ -6717,10 +6724,7 @@ div[name="recurrenceRule"] > .k-dropdown {
   .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
     display: block;
     border-width: 1px;
-  }
-  .k-rtl .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view {
-    text-align: left;
-    padding-left: 1em;
+    text-align: right;
   }
   .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link {
     display: block;
@@ -13269,6 +13273,9 @@ div.k-spreadsheet-window {
 .k-pdf-viewer .k-page {
   margin: 30px auto;
 }
+.k-pdf-viewer .k-page canvas {
+  direction: ltr;
+}
 .k-pdf-viewer-window {
   -ms-flex: 1 1 auto;
       flex: 1 1 auto;
@@ -13550,6 +13557,8 @@ div.k-scrollview-wrap > [data-role=page] {
 .k-drawer-container .k-drawer-items {
   overflow-y: auto;
   /* Scrollbar styles for Chrome, Safari and Opera */
+  /* Scrollbar styles for Mozilla */
+  scrollbar-width: thin;
 }
 .k-drawer-container::-webkit-scrollbar,
 .k-drawer-container .k-drawer-items::-webkit-scrollbar {
@@ -14217,11 +14226,8 @@ div.editorToolbarWindow.k-window-content {
 .k-gantt-edit-form > .k-edit-form-container .k-numerictextbox {
   width: 19.5em;
 }
-.k-notification-wrap {
+.k-notification {
   padding: 1.786em;
-}
-.k-notification-wrap > .k-i-close {
-  top: 21px;
 }
 .k-slider-track {
   border-width: 0;

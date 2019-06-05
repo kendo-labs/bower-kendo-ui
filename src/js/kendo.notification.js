@@ -188,6 +188,7 @@
                     origin: that._popupOrigin,
                     position: that._popupPosition,
                     animation: options.animation,
+                    copyAnchorStyles: false,
                     modal: true,
                     collision: '',
                     isRtl: that._isRtl,
@@ -206,10 +207,10 @@
                     popup.open();
                 } else {
                     if (x === null) {
-                        x = $(window).width() - wrapper.width() - options.position.right;
+                        x = $(window).width() - wrapper.outerWidth() - options.position.right;
                     }
                     if (y === null) {
-                        y = $(window).height() - wrapper.height() - options.position.bottom;
+                        y = $(window).height() - wrapper.outerHeight() - options.position.bottom;
                     }
                     popup.open(x, y);
                 }
@@ -311,7 +312,7 @@
                     } else {
                         args = extend(defaultArgs, { content: content });
                     }
-                    wrapper.addClass(KNOTIFICATION + '-' + type).toggleClass(KNOTIFICATION + '-button', options.button).attr('data-role', 'alert').css({
+                    wrapper.addClass(KNOTIFICATION + '-' + type).toggleClass(KNOTIFICATION + '-button', options.button).toggleClass(KNOTIFICATION + '-closable', options.button).attr('data-role', 'alert').css({
                         width: options.width,
                         height: options.height
                     }).append(that._getCompiled(type, safe)(args));

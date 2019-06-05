@@ -332,7 +332,7 @@
 @pdf-viewer-canvas-text: null;
 @pdf-viewer-canvas-border: null;
 
-@pdf-viewer-page-bg: @component-bg;
+@pdf-viewer-page-bg: white;
 @pdf-viewer-page-text: @component-text;
 @pdf-viewer-page-border: @component-border;
 @pdf-viewer-page-shadow: 0 0 15px @pdf-viewer-page-border;
@@ -1924,11 +1924,10 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
 @media only screen and (max-width: 1024px) {
     .k-webkit,
     .k-ff,
-    .k-ie11,
+    .k-ie,
     .k-edge,
     .k-safari {
         .k-scheduler-toolbar > ul.k-scheduler-views {
-            right: 13px;
             top: 0;
         }
 
