@@ -116,6 +116,7 @@
 @error-background-color: lighten(@error, 2%);
 @error-border-color: darken(@background, 14%);
 @disabled-text-color: darken(@hover-background, 31%);
+@notification-border-radius: @border-radius;
 @notification-info-background-color: lighten(@info, 39%);
 @notification-info-text-color: lighten(@normal-text-color, 10%);
 @notification-info-border-color: @notification-info-background-color;
@@ -928,9 +929,8 @@ textarea.k-textbox:hover,
 .k-state-active,
 .k-state-active:hover,
 .k-active-filter,
-.k-tabstrip .k-state-active
-{
-    background-color: @active-background-color;
+.k-tabstrip .k-state-active {
+    background-color: @hover-background;
     border-color: @active-border-color;
     color: @active-text-color;
 }
@@ -1683,7 +1683,6 @@ div.k-filebrowser-dropzone em
 .k-timepicker,
 .k-colorpicker,
 .k-datetimepicker,
-.k-notification,
 .k-numerictextbox,
 .k-picker-wrap,
 .k-numeric-wrap,
@@ -2544,11 +2543,6 @@ input.k-textbox:focus {
 
 .k-group-footer td {
     border-top-color: @group-border-color;
-}
-
-.k-grouping-header,
-.k-pager-info {
-    color: @disabled-text-color;
 }
 
 .k-grouping-header .k-group-indicator {

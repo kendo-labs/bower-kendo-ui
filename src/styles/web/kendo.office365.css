@@ -692,6 +692,14 @@
 .k-pane-wrapper .k-pane .k-filter-menu .k-check,
 .k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check {
   color: #0072c6;
+  border-color: #0072c6;
+}
+.k-pane-wrapper .k-pane .k-filter-menu .k-check:focus,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check:focus,
+.k-pane-wrapper .k-pane .k-filter-menu .k-check.k-state-focused,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check.k-state-focused {
+  border-color: #00467a;
+  box-shadow: false;
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-item {
   background-color: #fff;
@@ -723,7 +731,6 @@
 .k-pane-wrapper .k-pane .k-mobile-list .k-check:checked {
   opacity: 0.6;
   font-family: 'WebComponentsIcons';
-  border-color: transparent;
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-check:checked::before {
   content: "\e118";
@@ -1120,7 +1127,7 @@ textarea.k-textbox:hover,
 .k-state-active:hover,
 .k-active-filter,
 .k-tabstrip .k-state-active {
-  background-color: #fff;
+  background-color: #f4f4f4;
   border-color: #0072c6;
   color: #333333;
 }
@@ -1586,6 +1593,9 @@ div.k-filebrowser-dropzone em {
   text-shadow: none;
   color: #fff;
 }
+.k-notification {
+  border-radius: 0;
+}
 .k-notification-info {
   background-color: #bbd9f7;
   color: #4d4d4d;
@@ -1684,7 +1694,6 @@ div.k-filebrowser-dropzone em {
 .k-timepicker,
 .k-colorpicker,
 .k-datetimepicker,
-.k-notification,
 .k-numerictextbox,
 .k-picker-wrap,
 .k-numeric-wrap,
@@ -2453,10 +2462,6 @@ input.k-textbox:focus {
 }
 .k-group-footer td {
   border-top-color: #c9c9c9;
-}
-.k-grouping-header,
-.k-pager-info {
-  color: #a5a5a5;
 }
 .k-grouping-header .k-group-indicator {
   background-color: #f4f4f4;

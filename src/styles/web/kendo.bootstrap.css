@@ -716,6 +716,14 @@
 .k-pane-wrapper .k-pane .k-filter-menu .k-check,
 .k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check {
   color: #428bca;
+  border-color: #428bca;
+}
+.k-pane-wrapper .k-pane .k-filter-menu .k-check:focus,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check:focus,
+.k-pane-wrapper .k-pane .k-filter-menu .k-check.k-state-focused,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check.k-state-focused {
+  border-color: #eef8fc;
+  box-shadow: 0 0 3px 0 #2698fb;
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-item {
   background-color: #fff;
@@ -747,7 +755,6 @@
 .k-pane-wrapper .k-pane .k-mobile-list .k-check:checked {
   opacity: 1;
   font-family: 'WebComponentsIcons';
-  border-color: transparent;
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-check:checked::before {
   content: "\e118";
@@ -1551,6 +1558,9 @@ div.k-filebrowser-dropzone em {
   text-shadow: none;
   color: #fff;
 }
+.k-notification {
+  border-radius: 4px;
+}
 .k-notification-info {
   background-color: #e5f5fa;
   color: #2498bc;
@@ -1648,7 +1658,6 @@ div.k-filebrowser-dropzone em {
 .k-timepicker,
 .k-colorpicker,
 .k-datetimepicker,
-.k-notification,
 .k-numerictextbox,
 .k-picker-wrap,
 .k-numeric-wrap,

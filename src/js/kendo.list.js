@@ -1538,6 +1538,7 @@
                 var selectable = that.options.selectable;
                 var singleSelection = selectable !== 'multiple' && selectable !== false;
                 var selectedIndices = that._selectedIndices;
+                var uiSelectedIndices = [this.element.find('.k-state-selected').index()];
                 var added = [];
                 var removed = [];
                 var result;
@@ -1553,7 +1554,7 @@
                 if (filtered && !singleSelection && that._deselectFiltered(indices)) {
                     return deferred;
                 }
-                if (singleSelection && !filtered && $.inArray(last(indices), selectedIndices) !== -1) {
+                if (singleSelection && !filtered && $.inArray(last(indices), selectedIndices) !== -1 && $.inArray(last(indices), uiSelectedIndices) !== -1) {
                     if (that._dataItems.length && that._view.length) {
                         that._dataItems = [that._view[selectedIndices[0]].item];
                     }

@@ -151,14 +151,13 @@
             },
             _element: function () {
                 var height = this.options.height;
-                this.hasHeight = height || this.element.height();
                 this.element.addClass('k-widget k-listview').attr('role', 'listbox');
                 if (height) {
                     this.element.css('height', height);
                 }
             },
             refresh: function (e) {
-                var that = this, view = that.dataSource.view(), data, items, item, html = '', idx, length, template = that.template, altTemplate = that.altTemplate, active = activeElement(), endlessAppend = that._endlessFetchInProgress, index = endlessAppend ? that._skipRerenderItemsCount : 0, height = that.hasHeight;
+                var that = this, view = that.dataSource.view(), data, items, item, html = '', idx, length, template = that.template, altTemplate = that.altTemplate, active = activeElement(), endlessAppend = that._endlessFetchInProgress, index = endlessAppend ? that._skipRerenderItemsCount : 0, scrollable = that.options.scrollable;
                 e = e || {};
                 if (e.action === 'itemchange') {
                     if (!that._hasBindingTarget() && !that.editable) {
@@ -217,7 +216,7 @@
                     if (that._focusNext) {
                         that.current(that.current().next());
                     } else {
-                        if (!height) {
+                        if (!scrollable) {
                             that.current(items.eq(0));
                         }
                     }
@@ -282,8 +281,7 @@
             _scrollable: function () {
                 var that = this;
                 var scrollable = that.options.scrollable;
-                var height = that.hasHeight;
-                if (scrollable || height) {
+                if (scrollable) {
                     that.element.css({
                         'overflow-y': 'scroll',
                         'position': 'relative',
@@ -362,7 +360,7 @@
                             that._current.removeClass(FOCUSED);
                         }
                     }).on('keydown' + NS, function (e) {
-                        var key = e.keyCode, current = that.current(), target = $(e.target), canHandle = !target.is(':button,textarea,a,a>.t-icon,input'), isTextBox = target.is(':text,:password'), preventDefault = kendo.preventDefault, editItem = element.find('.' + KEDITITEM), active = activeElement(), idx, scrollable = that.options.scrollable, height = that.hasHeight;
+                        var key = e.keyCode, current = that.current(), target = $(e.target), canHandle = !target.is(':button,textarea,a,a>.t-icon,input'), isTextBox = target.is(':text,:password'), preventDefault = kendo.preventDefault, editItem = element.find('.' + KEDITITEM), active = activeElement(), idx, scrollable = that.options.scrollable;
                         if (!canHandle && !isTextBox && keys.ESC != key || isTextBox && keys.ESC != key && keys.ENTER != key) {
                             return;
                         }
@@ -372,12 +370,12 @@
                             }
                             if (current && current[0]) {
                                 that.current(current);
-                            } else if (!height) {
+                            } else if (!scrollable) {
                                 that.current(that._item('last'));
                             }
                             preventDefault(e);
                         } else if (keys.DOWN === key || keys.RIGHT === key) {
-                            if (scrollable || height) {
+                            if (scrollable) {
                                 if (that.options.scrollable === 'endless' && !current.next().length) {
                                     that.element[0].scrollTop = that.element[0].scrollHeight;
                                     that._focusNext = true;

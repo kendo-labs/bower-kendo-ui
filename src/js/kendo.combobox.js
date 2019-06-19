@@ -558,6 +558,9 @@
                 if (ignoreCase) {
                     loweredText = loweredText.toLowerCase();
                 }
+                if (that.dataItem() && that._text(that.dataItem()) === text) {
+                    return;
+                }
                 that._select(function (data) {
                     data = that._text(data);
                     if (ignoreCase) {

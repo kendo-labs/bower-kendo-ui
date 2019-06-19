@@ -104,6 +104,7 @@
 @input-validation-error: darken(@error, 25%);
 @column-highlight-background-color: darken(@background, 4%);
 @scheduler-nonwork-background-color: darken(@background, 2%);
+@notification-border-radius: @border-radius;
 @notification-info-background-color: @info;
 @notification-info-text-color: darken(@info, 38%);
 @notification-info-border-color: @info;
@@ -590,7 +591,6 @@ textarea.k-textbox:hover,
 .k-inline-block,
 .k-grid .k-filter-options,
 .k-grouping-header .k-group-indicator,
-.k-notification,
 .k-treeview .k-in,
 .k-editor-inline,
 .k-tile,
@@ -1172,6 +1172,7 @@ input.k-textbox:active {
 .k-grid-content .k-button {
     color: @accent;
     border-color: transparent;
+    background-color: @normal-background;
 }
 
 .k-grid-toolbar .k-button-icontext .k-icon,

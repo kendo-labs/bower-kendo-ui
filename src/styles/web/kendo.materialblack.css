@@ -105,7 +105,7 @@
   color: #d5d5d5;
   background-color: #616161;
   background-position: 50% 50%;
-  box-shadow: none;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
 }
 .k-button.k-state-default {
   border-color: #616161;
@@ -162,6 +162,7 @@
   color: #ffffff;
   border-color: #3f51b5;
   background-color: #3f51b5;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
 }
 .k-primary.k-state-default {
   border-color: #3f51b5;
@@ -488,7 +489,7 @@
 .k-scrollview-nav > li.k-link {
   border-color: #616161;
   background-color: #616161;
-  box-shadow: none;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
 }
 .k-scrollview-nav > li.k-link.k-primary {
@@ -708,6 +709,14 @@
 .k-pane-wrapper .k-pane .k-filter-menu .k-check,
 .k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check {
   color: #3f51b5;
+  border-color: #3f51b5;
+}
+.k-pane-wrapper .k-pane .k-filter-menu .k-check:focus,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check:focus,
+.k-pane-wrapper .k-pane .k-filter-menu .k-check.k-state-focused,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check.k-state-focused {
+  border-color: #273895;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 3px rgba(0, 0, 0, 0.05);
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-item {
   background-color: #363636;
@@ -739,7 +748,6 @@
 .k-pane-wrapper .k-pane .k-mobile-list .k-check:checked {
   opacity: 0.7;
   font-family: 'WebComponentsIcons';
-  border-color: transparent;
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-check:checked::before {
   content: "\e118";
@@ -1614,6 +1622,9 @@ div.k-filebrowser-dropzone em {
   text-shadow: none;
   color: #fff;
 }
+.k-notification {
+  border-radius: 2px;
+}
 .k-notification-info {
   background-color: #207ec8;
   color: #ffffff;
@@ -1716,7 +1727,6 @@ div.k-filebrowser-dropzone em {
 .k-timepicker,
 .k-colorpicker,
 .k-datetimepicker,
-.k-notification,
 .k-numerictextbox,
 .k-picker-wrap,
 .k-numeric-wrap,
@@ -2053,6 +2063,9 @@ div.k-filebrowser-dropzone em {
   border-color: #505050;
 }
 .k-button-group {
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
+}
+.k-button-group.k-state-disabled {
   box-shadow: none;
 }
 .k-button-group .k-button {
@@ -2062,22 +2075,6 @@ div.k-filebrowser-dropzone em {
   color: #ffffff;
   background-color: #717171;
   border-color: #717171;
-}
-.k-button-group .k-button:focus.k-state-active,
-.k-button-group .k-button.k-state-focused.k-state-active {
-  color: #ffffff;
-  border-color: #616161;
-  background: #616161;
-  box-shadow: none;
-}
-.k-button-group .k-button.k-state-disabled,
-.k-state-disabled.k-button-group .k-button,
-.k-button-group .k-button.k-state-disabled.k-state-active,
-.k-state-disabled.k-button-group .k-button.k-state-active {
-  color: #999999;
-  border-color: #616161;
-  background-color: #616161;
-  box-shadow: none;
 }
 .k-button-group .k-button:focus,
 .k-button-group .k-button.k-state-focused {

@@ -721,6 +721,7 @@
                 var that = this;
                 if (dataItem.loaded()) {
                     that.open(element);
+                    that._loading = false;
                 } else {
                     dataItem.one(CHANGE, function () {
                         element.find(ICON_SELECTOR).removeClass('k-i-loading');

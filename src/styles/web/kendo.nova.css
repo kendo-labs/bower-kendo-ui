@@ -685,6 +685,14 @@
 .k-pane-wrapper .k-pane .k-filter-menu .k-check,
 .k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check {
   color: #ff4350;
+  border-color: #ff4350;
+}
+.k-pane-wrapper .k-pane .k-filter-menu .k-check:focus,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check:focus,
+.k-pane-wrapper .k-pane .k-filter-menu .k-check.k-state-focused,
+.k-pane-wrapper .k-pane .k-scheduler-edit-form .k-check.k-state-focused {
+  border-color: #db3a45;
+  box-shadow: false;
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-item {
   background-color: #fff;
@@ -716,7 +724,6 @@
 .k-pane-wrapper .k-pane .k-mobile-list .k-check:checked {
   opacity: 1;
   font-family: 'WebComponentsIcons';
-  border-color: transparent;
 }
 .k-pane-wrapper .k-pane .k-mobile-list .k-check:checked::before {
   content: "\e118";
@@ -940,7 +947,6 @@ textarea.k-textbox:hover,
 .k-inline-block,
 .k-grid .k-filter-options,
 .k-grouping-header .k-group-indicator,
-.k-notification,
 .k-treeview .k-in,
 .k-editor-inline,
 .k-tile,
@@ -1236,6 +1242,9 @@ input.k-textbox:active {
 .k-nodata {
   color: #c4c4c4;
 }
+.k-notification {
+  border-radius: 0;
+}
 .k-notification-info {
   background-color: #80deea;
   color: #188390;
@@ -1417,6 +1426,7 @@ input.k-textbox:active {
 .k-grid-content .k-button {
   color: #ff4350;
   border-color: transparent;
+  background-color: #fff;
 }
 .k-grid-toolbar .k-button-icontext .k-icon,
 .k-grid-content .k-button-icontext .k-icon,

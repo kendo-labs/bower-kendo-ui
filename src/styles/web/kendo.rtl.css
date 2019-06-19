@@ -370,30 +370,32 @@
 .k-rtl .k-timeline .k-grid-header-wrap {
   border-left-width: 1px;
 }
-.k-rtl .k-menu .k-item,
-.k-rtl .k-widget.k-menu-horizontal > .k-item {
-  border-width: 0 0 0 1px;
+.k-rtl .k-menu.k-menu-vertical .k-item,
+[dir="rtl"] .k-menu.k-menu-vertical .k-item {
+  border: 0;
 }
-.k-rtl .k-widget.k-menu-horizontal > .k-item {
+.k-rtl .k-widget.k-menu-horizontal > .k-item,
+[dir="rtl"] .k-widget.k-menu-horizontal > .k-item {
   float: right;
 }
-.k-rtl .k-menu .k-item > .k-link > .k-i-arrow-60-down {
-  margin-right: 0;
-  margin-left: -8px;
-}
 .k-rtl .k-menu-group .k-item > .k-link > .k-menu-expand-arrow,
-.k-rtl .k-menu-vertical .k-item > .k-link > .k-menu-expand-arrow {
+[dir="rtl"] .k-menu-group .k-item > .k-link > .k-menu-expand-arrow,
+.k-rtl .k-menu-vertical .k-item > .k-link > .k-menu-expand-arrow,
+[dir="rtl"] .k-menu-vertical .k-item > .k-link > .k-menu-expand-arrow {
   right: auto;
   left: 0.2rem;
 }
-.k-rtl .k-menu .k-menu-group .k-item > .k-link {
-  padding-left: 4.929em;
-  padding-right: 1.714em;
-}
 .k-rtl .k-menu .k-image,
-.k-rtl .k-menu .k-sprite {
+[dir="rtl"] .k-menu .k-image,
+.k-rtl .k-menu .k-sprite,
+[dir="rtl"] .k-menu .k-sprite {
   margin-left: 4px;
   margin-right: -4px;
+}
+.k-rtl .k-menu .k-item > .k-link > .k-i-arrow-60-down,
+[dir="rtl"] .k-menu .k-item > .k-link > .k-i-arrow-60-down {
+  margin-right: 0;
+  margin-left: -8px;
 }
 .k-rtl .k-multiselect-wrap .k-input {
   float: right;
@@ -411,23 +413,6 @@
 .k-rtl .k-autocomplete > .k-i-close,
 .k-rtl .k-multiselect-wrap > .k-i-close {
   right: auto;
-}
-.k-rtl .k-notification-closable .k-notification-wrap,
-.k-rtl.k-notification-closable .k-notification-wrap {
-  padding-right: 0.5em;
-  padding-left: 20px;
-}
-.k-rtl .k-notification-wrap > .k-i-information,
-.k-rtl .k-notification-wrap > .k-i-information,
-.k-rtl .k-notification-wrap > .k-i-information,
-.k-rtl .k-notification-wrap > .k-i-warning,
-.k-rtl .k-notification-wrap > .k-i-erorr {
-  margin-right: 0;
-  margin-left: 4px;
-}
-.k-rtl .k-notification-wrap > .k-i-close {
-  right: auto;
-  left: 4px;
 }
 .k-rtl .k-panelbar-expand,
 .k-rtl .k-panelbar-collapse {

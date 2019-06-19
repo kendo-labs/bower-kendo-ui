@@ -43,7 +43,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, extend = $.extend, oldIE = kendo.support.browser.msie && kendo.support.browser.version < 9, isFunction = kendo.isFunction, isPlainObject = $.isPlainObject, inArray = $.inArray, POINT = '.', nameSpecialCharRegExp = /("|\%|'|\[|\]|\$|\.|\,|\:|\;|\+|\*|\&|\!|\#|\(|\)|<|>|\=|\?|\@|\^|\{|\}|\~|\/|\||`)/g, ERRORTEMPLATE = '<div class="k-widget k-tooltip k-tooltip-validation" style="margin:0.5em"><span class="k-icon k-i-warning"> </span>' + '#=message#<div class="k-callout k-callout-n"></div></div>', CHANGE = 'change';
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, extend = $.extend, oldIE = kendo.support.browser.msie && kendo.support.browser.version < 9, isFunction = kendo.isFunction, isPlainObject = $.isPlainObject, inArray = $.inArray, POINT = '.', support = kendo.support, AUTOCOMPLETEVALUE = support.browser.chrome ? 'disabled' : 'off', nameSpecialCharRegExp = /("|\%|'|\[|\]|\$|\.|\,|\:|\;|\+|\*|\&|\!|\#|\(|\)|<|>|\=|\?|\@|\^|\{|\}|\~|\/|\||`)/g, ERRORTEMPLATE = '<div class="k-widget k-tooltip k-tooltip-validation" style="margin:0.5em"><span class="k-icon k-i-warning"> </span>' + '#=message#<div class="k-callout k-callout-n"></div></div>', CHANGE = 'change';
         var EQUAL_SET = 'equalSet';
         var specialRules = [
             'url',
@@ -68,7 +68,7 @@
         function createAttributes(options) {
             var field = (options.model.fields || options.model)[options.field], type = fieldType(field), validation = field ? field.validation : {}, ruleName, DATATYPE = kendo.attr('type'), BINDING = kendo.attr('bind'), rule, attr = {
                     name: options.field,
-                    title: options.title
+                    title: options.title ? options.title : options.field
                 };
             for (ruleName in validation) {
                 rule = validation[ruleName];
@@ -85,11 +85,20 @@
                     }
                 }
                 attr[kendo.attr(ruleName + '-msg')] = rule.message;
+                attr.autocomplete = AUTOCOMPLETEVALUE;
             }
             if (inArray(type, specialRules) >= 0) {
                 attr[DATATYPE] = type;
             }
             attr[BINDING] = (type === 'boolean' ? 'checked:' : 'value:') + options.field;
+            return attr;
+        }
+        function addIdAttribute(container, attr) {
+            var id = container.attr('id');
+            if (id) {
+                attr.id = id;
+                container.removeAttr('id');
+            }
             return attr;
         }
         function convertItems(items) {
@@ -141,24 +150,29 @@
         var mobileEditors = {
             'number': function (container, options) {
                 var attr = createAttributes(options);
+                attr = addIdAttribute(container, attr);
                 $('<input type="number"/>').attr(attr).appendTo(container);
             },
             'date': function (container, options) {
                 var attr = createAttributes(options);
+                attr = addIdAttribute(container, attr);
                 $('<input type="date"/>').attr(attr).appendTo(container);
             },
             'string': function (container, options) {
                 var attr = createAttributes(options);
+                attr = addIdAttribute(container, attr);
                 $('<input type="text" />').attr(attr).appendTo(container);
             },
             'boolean': function (container, options) {
                 var attr = createAttributes(options);
+                attr = addIdAttribute(container, attr);
                 $('<input type="checkbox" />').attr(attr).appendTo(container);
             },
             'values': function (container, options) {
                 var attr = createAttributes(options);
                 var items = options.values;
                 var select = $('<select />');
+                attr = addIdAttribute(container, attr);
                 for (var index in items) {
                     $('<option value="' + items[index].value + '">' + items[index].text + '</option>').appendTo(select);
                 }
