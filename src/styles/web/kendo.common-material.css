@@ -6415,7 +6415,6 @@ div.k-more-events {
 .k-event-drag-hint {
   filter: alpha(opacity=60);
   opacity: 0.6;
-  cursor: -webkit-grabbing;
   cursor: -moz-grabbing;
 }
 .k-scheduler-header .k-event {

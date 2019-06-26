@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.2.619'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.2.626'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1408,7 +1408,7 @@
                 } else {
                     propInit = null;
                 }
-                if (propInit && propInit !== Array && propInit !== ObservableArray && propInit !== LazyObservableArray && propInit !== DataSource && propInit !== HierarchicalDataSource && propInit !== RegExp) {
+                if (propInit && propInit !== Array && propInit !== ObservableArray && propInit !== LazyObservableArray && propInit !== DataSource && propInit !== HierarchicalDataSource && propInit !== RegExp && propInit !== ArrayBuffer) {
                     if (propValue instanceof Date) {
                         destination[property] = new Date(propValue.getTime());
                     } else if (isFunction(propValue.clone)) {
@@ -12274,7 +12274,7 @@
                 if (element) {
                     element.css('display', '');
                 }
-                this.trigger(SHOW, { view: this });
+                this.trigger(SHOW_START, { view: this });
             },
             showEnd: function () {
             },
@@ -29351,7 +29351,7 @@
         }
         function createTrack(options, element) {
             var dragHandleCount = element.is('input') ? 1 : 2, firstDragHandleTitle = dragHandleCount == 2 ? options.leftDragHandleTitle : options.dragHandleTitle;
-            return '<div class=\'k-slider-track\'><div class=\'k-slider-selection\'><!-- --></div>' + '<a href=\'#\' class=\'k-draghandle\' title=\'' + firstDragHandleTitle + '\' role=\'slider\' aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (dragHandleCount > 1 ? options.selectionStart || options.min : options.value || options.min) + '\'>Drag</a>' + (dragHandleCount > 1 ? '<a href=\'#\' class=\'k-draghandle\' title=\'' + options.rightDragHandleTitle + '\'role=\'slider\' aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (options.selectionEnd || options.max) + '\'>Drag</a>' : '') + '</div>';
+            return '<div class=\'k-slider-track\'><div class=\'k-slider-selection\'><!-- --></div>' + '<a href=\'#\' class=\'k-draghandle\' title=\'' + firstDragHandleTitle + '\' role=\'slider\' aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (dragHandleCount > 1 ? options.selectionStart || options.min : options.value || options.min) + '\'></a>' + (dragHandleCount > 1 ? '<a href=\'#\' class=\'k-draghandle\' title=\'' + options.rightDragHandleTitle + '\'role=\'slider\' aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (options.selectionEnd || options.max) + '\'></a>' : '') + '</div>';
         }
         function step(stepValue) {
             return function (value) {
@@ -35988,6 +35988,7 @@
                 showOn: 'contextmenu',
                 orientation: 'vertical',
                 alignToAnchor: false,
+                copyAnchorStyles: true,
                 target: 'body'
             },
             events: [

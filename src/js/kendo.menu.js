@@ -1804,6 +1804,7 @@
                 showOn: 'contextmenu',
                 orientation: 'vertical',
                 alignToAnchor: false,
+                copyAnchorStyles: true,
                 target: 'body'
             },
             events: [

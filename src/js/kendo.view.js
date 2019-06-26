@@ -126,7 +126,7 @@
                 if (element) {
                     element.css('display', '');
                 }
-                this.trigger(SHOW, { view: this });
+                this.trigger(SHOW_START, { view: this });
             },
             showEnd: function () {
             },
