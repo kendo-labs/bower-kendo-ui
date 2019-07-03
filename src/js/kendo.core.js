@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.2.626'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.2.703'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1408,7 +1408,7 @@
                 } else {
                     propInit = null;
                 }
-                if (propInit && propInit !== Array && propInit !== ObservableArray && propInit !== LazyObservableArray && propInit !== DataSource && propInit !== HierarchicalDataSource && propInit !== RegExp && propInit !== ArrayBuffer) {
+                if (propInit && propInit !== Array && propInit !== ObservableArray && propInit !== LazyObservableArray && propInit !== DataSource && propInit !== HierarchicalDataSource && propInit !== RegExp && (!kendo.isFunction(window.ArrayBuffer) || propInit !== ArrayBuffer)) {
                     if (propValue instanceof Date) {
                         destination[property] = new Date(propValue.getTime());
                     } else if (isFunction(propValue.clone)) {
