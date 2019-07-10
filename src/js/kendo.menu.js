@@ -740,7 +740,7 @@
                 var isRtl = kendo.support.isRtl(that.wrapper);
                 var overflowWrapper = that._overflowWrapper();
                 element = (overflowWrapper || that.element).find(element);
-                var dataItem = that.dataSource && that.dataSource.getByUid(element.data('uid'));
+                var dataItem = that.dataSource && that.dataSource.getByUid(element.data(kendo.ns + 'uid'));
                 if (dataItem && dataItem.hasChildren && !dataItem.loaded() && !that._loading) {
                     that._loading = true;
                     element.find(ICON_SELECTOR).addClass('k-i-loading');
@@ -1637,7 +1637,7 @@
             },
             findByUid: function (uid) {
                 var wrapperElement = this._overflowWrapper() || this.element;
-                return wrapperElement.find('[data-uid=' + uid + ']');
+                return wrapperElement.find('[' + kendo.attr('uid') + '=' + uid + ']');
             },
             refresh: function (ev) {
                 var that = this;
