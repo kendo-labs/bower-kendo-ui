@@ -2072,6 +2072,8 @@ kendo-sortable {
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
   white-space: nowrap;
 }
 .k-textbox.k-space-left {
@@ -2204,7 +2206,7 @@ kendo-sortable {
   padding: 0.5rem 0.75rem;
 }
 .k-maskedtextbox.form-control-sm .k-textbox {
-  height: calc(1.8125rem + 2px);
+  height: calc(1.8125rem + 3px);
   padding: 0.25rem 0.5rem;
   line-height: 1.5;
 }
@@ -4451,8 +4453,14 @@ kendo-sortable {
   line-height: 1.42857143;
   box-sizing: content-box;
 }
-.k-popup > .k-widget:only-child {
+.k-popup > .k-widget {
   border-width: 0;
+}
+.k-popup.k-colorpicker-popup {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
 }
 .k-popup .k-item {
   cursor: pointer;
@@ -4487,6 +4495,10 @@ kendo-sortable {
   padding: 4px 8px;
   min-height: 1.42857143em;
   white-space: normal;
+}
+.k-popup .k-outer-group-header.k-virtual-item {
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .k-popup > .k-colorpalette,
 .k-popup > .k-flatcolorpicker {
@@ -4658,11 +4670,17 @@ kendo-sortable {
 .k-edge13 .k-popup {
   background-clip: border-box;
 }
+.k-popup > kendo-list > .k-first {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
 .k-popup > .k-group-header,
 .k-popup .k-outer-group-header.k-first,
 .k-popup > .k-virtual-wrap > .k-group-header {
   border-bottom-color: rgba(0, 0, 0, 0.08);
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.06);
+}
+.k-popup .k-outer-group-header {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
 }
 .k-popup .k-list .k-item > .k-group {
   color: #fff;
@@ -4683,6 +4701,10 @@ kendo-sortable {
 }
 .k-popup > .k-colorpalette,
 .k-popup > .k-flatcolorpicker {
+  background: transparent;
+}
+.k-popup > .k-colorpalette:only-child,
+.k-popup > .k-flatcolorpicker:only-child {
   background: #f5f5f5;
 }
 .k-list .k-item,
@@ -5209,66 +5231,62 @@ kendo-sortable {
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
 }
+.k-button-flat,
 .k-button.k-flat,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
-.k-calendar .k-calendar-header .k-button,
 .k-button.k-bare,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
+.k-calendar .k-calendar-header .k-button {
   border-color: transparent !important;
   color: inherit;
   background: none !important;
   box-shadow: none !important;
   transition: color 0.2s ease-in-out;
 }
+.k-button-flat:hover,
 .k-button.k-flat:hover,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover,
-.k-calendar .k-calendar-header .k-button:hover,
-.k-button.k-flat.k-state-hover,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-state-hover,
-.k-calendar .k-calendar-header .k-state-hover.k-button,
-.k-button.k-flat:active,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:active,
-.k-calendar .k-calendar-header .k-button:active,
-.k-button.k-flat.k-state-active,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-state-active,
-.k-calendar .k-calendar-header .k-state-active.k-button,
-.k-button.k-flat:hover:active,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover:active,
-.k-calendar .k-calendar-header .k-button:hover:active,
-.k-button.k-flat:hover.k-state-active,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover.k-state-active,
-.k-calendar .k-calendar-header .k-button:hover.k-state-active,
 .k-button.k-bare:hover,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover,
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
-.k-button.k-bare.k-state-hover,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-hover,
+.k-calendar .k-calendar-header .k-button:hover,
+.k-button-flat.k-state-hover,
+.k-state-hover.k-button.k-flat,
+.k-state-hover.k-button.k-bare,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-state-hover.k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-state-hover.k-button,
+.k-calendar .k-calendar-header .k-state-hover.k-button,
+.k-button-flat:active,
+.k-button.k-flat:active,
 .k-button.k-bare:active,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:active,
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active,
-.k-button.k-bare.k-state-active,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-active,
+.k-calendar .k-calendar-header .k-button:active,
+.k-button-flat.k-state-active,
+.k-state-active.k-button.k-flat,
+.k-state-active.k-button.k-bare,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-state-active.k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-state-active.k-button,
+.k-calendar .k-calendar-header .k-state-active.k-button,
+.k-button-flat:hover:active,
+.k-button.k-flat:hover:active,
 .k-button.k-bare:hover:active,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover:active,
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover:active,
+.k-calendar .k-calendar-header .k-button:hover:active,
+.k-button-flat:hover.k-state-active,
+.k-button.k-flat:hover.k-state-active,
 .k-button.k-bare:hover.k-state-active,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover.k-state-active {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:hover.k-state-active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover.k-state-active,
+.k-calendar .k-calendar-header .k-button:hover.k-state-active {
   color: inherit;
 }
+.k-button-flat::before,
 .k-button.k-flat::before,
-.k-toolbar .k-flat.k-picker-wrap::before,
-.k-toolbar .k-flat.k-dropdown-wrap::before,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::before,
-.k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-picker-wrap::before,
-.k-toolbar .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-dropdown-wrap::before,
-.k-calendar .k-calendar-header .k-button::before,
-.k-calendar .k-calendar-header .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-calendar .k-calendar-header .k-picker-wrap::before,
-.k-calendar .k-calendar-header .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-calendar .k-calendar-header .k-dropdown-wrap::before,
 .k-button.k-bare::before,
-.k-toolbar .k-bare.k-picker-wrap::before,
-.k-toolbar .k-bare.k-dropdown-wrap::before,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::before,
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before {
+.k-calendar .k-calendar-header .k-button::before {
   display: block;
 }
 .k-button.k-outline {
@@ -5305,6 +5323,7 @@ kendo-sortable {
   margin-left: 0;
   margin-right: -1px;
 }
+.k-button-overlay,
 .k-button::before,
 .k-toolbar .k-picker-wrap::before,
 .k-toolbar .k-dropdown-wrap::before {
@@ -5323,32 +5342,18 @@ kendo-sortable {
   transition: opacity 0.2s ease-in-out;
 }
 .k-button:hover::before,
-.k-toolbar .k-picker-wrap:hover::before,
-.k-toolbar .k-dropdown-wrap:hover::before,
-.k-button.k-state-hover::before,
-.k-toolbar .k-state-hover.k-picker-wrap::before,
-.k-toolbar .k-state-hover.k-dropdown-wrap::before {
+.k-button.k-state-hover::before {
   opacity: 0.08;
 }
 .k-button.k-no-focus:not(:hover)::before,
-.k-toolbar .k-no-focus.k-picker-wrap:not(:hover)::before,
-.k-toolbar .k-no-focus.k-dropdown-wrap:not(:hover)::before,
-.k-button.k-no-focus:not(.k-state-hover)::before,
-.k-toolbar .k-no-focus.k-picker-wrap:not(.k-state-hover)::before,
-.k-toolbar .k-no-focus.k-dropdown-wrap:not(.k-state-hover)::before {
+.k-button.k-no-focus:not(.k-state-hover)::before {
   opacity: 0;
 }
 .k-button:active::before,
-.k-toolbar .k-picker-wrap:active::before,
-.k-toolbar .k-dropdown-wrap:active::before,
-.k-button.k-state-active::before,
-.k-toolbar .k-state-active.k-picker-wrap::before,
-.k-toolbar .k-state-active.k-dropdown-wrap::before {
+.k-button.k-state-active::before {
   opacity: 0.16;
 }
-.k-button.k-state-selected::before,
-.k-toolbar .k-state-selected.k-picker-wrap::before,
-.k-toolbar .k-state-selected.k-dropdown-wrap::before {
+.k-button.k-state-selected::before {
   opacity: 0.2;
 }
 .k-button::after {
@@ -5524,61 +5529,70 @@ kendo-sortable {
   background-image: none;
   box-shadow: none;
 }
+.k-button-flat,
 .k-button.k-flat,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
-.k-calendar .k-calendar-header .k-button,
-.k-button-group .k-button.k-flat,
-.k-button-group .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
-.k-button-group .k-calendar .k-calendar-header .k-button,
-.k-calendar .k-calendar-header .k-button-group .k-button,
 .k-button.k-bare,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
+.k-calendar .k-calendar-header .k-button,
+.k-button-group .k-button-flat,
+.k-button-group .k-button.k-flat,
 .k-button-group .k-button.k-bare,
-.k-button-group .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+.k-button-group .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button,
+.k-button-group .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
+.k-button-group .k-calendar .k-calendar-header .k-button,
+.k-calendar .k-calendar-header .k-button-group .k-button {
   color: inherit;
   background: none;
 }
+.k-button-flat::after,
 .k-button.k-flat::after,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::after,
-.k-calendar .k-calendar-header .k-button::after,
 .k-button.k-bare::after,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after {
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button::after,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after,
+.k-calendar .k-calendar-header .k-button::after {
   display: block;
 }
+.k-button-flat:focus::after,
 .k-button.k-flat:focus::after,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:focus::after,
-.k-calendar .k-calendar-header .k-button:focus::after,
-.k-button.k-flat.k-state-focused::after,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-state-focused::after,
-.k-calendar .k-calendar-header .k-state-focused.k-button::after,
 .k-button.k-bare:focus::after,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button:focus::after,
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:focus::after,
-.k-button.k-bare.k-state-focused::after,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-focused::after {
+.k-calendar .k-calendar-header .k-button:focus::after,
+.k-button-flat.k-state-focused::after,
+.k-state-focused.k-button.k-flat::after,
+.k-state-focused.k-button.k-bare::after,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-state-focused.k-button::after,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-state-focused.k-button::after,
+.k-calendar .k-calendar-header .k-state-focused.k-button::after {
   box-shadow: inset 0 0 0 2px currentColor;
   opacity: 0.12;
 }
-.k-button.k-primary.k-flat,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-primary,
+.k-button-flat.k-primary,
+.k-primary.k-button.k-flat,
+.k-primary.k-button.k-bare,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-primary.k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-primary.k-button,
 .k-calendar .k-calendar-header .k-primary.k-button,
-.k-button.k-primary.k-flat:hover,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-primary:hover,
+.k-button-flat.k-primary:hover,
+.k-primary.k-button.k-flat:hover,
+.k-primary.k-button.k-bare:hover,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-primary.k-button:hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-primary.k-button:hover,
 .k-calendar .k-calendar-header .k-primary.k-button:hover,
-.k-button.k-primary.k-flat.k-state-hover,
-.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-primary.k-state-hover,
+.k-button-flat.k-primary.k-state-hover,
+.k-primary.k-state-hover.k-button.k-flat,
+.k-primary.k-state-hover.k-button.k-bare,
+.k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-primary.k-state-hover.k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-primary.k-state-hover.k-button,
 .k-calendar .k-calendar-header .k-primary.k-state-hover.k-button,
-.k-button-group .k-button.k-primary.k-flat,
-.k-button-group .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-button.k-primary,
+.k-button-group .k-button-flat.k-primary,
+.k-button-group .k-primary.k-button.k-flat,
+.k-button-group .k-primary.k-button.k-bare,
+.k-button-group .k-calendar.k-calendar-range.k-calendar-infinite:not(.k-calendar-minimal) > .k-primary.k-button,
+.k-button-group .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-primary.k-button,
 .k-button-group .k-calendar .k-calendar-header .k-primary.k-button,
-.k-calendar .k-calendar-header .k-button-group .k-primary.k-button,
-.k-button.k-primary.k-bare,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary,
-.k-button.k-primary.k-bare:hover,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary:hover,
-.k-button.k-primary.k-bare.k-state-hover,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary.k-state-hover,
-.k-button-group .k-button.k-primary.k-bare,
-.k-button-group .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary {
+.k-calendar .k-calendar-header .k-button-group .k-primary.k-button {
   color: #ff6358;
   background: none;
 }
@@ -5748,10 +5762,6 @@ kendo-sortable {
   flex-direction: column;
   position: absolute;
   z-index: 10002;
-}
-.k-window .k-overlay {
-  position: absolute;
-  opacity: 0;
 }
 .k-window.k-window-maximized {
   max-width: 100vw;
@@ -6067,6 +6077,14 @@ kendo-sortable {
 .k-pane-wrapper .k-grid-edit-form .k-edit-form-container {
   width: auto;
   min-width: auto;
+}
+.k-pane-wrapper .k-grid .k-grid-search {
+  width: 100%;
+  margin-left: 0;
+  margin-top: 8px;
+}
+.k-pane-wrapper .k-grid .k-grid-search:first-child {
+  margin-top: 0;
 }
 .k-grid-mobile {
   border-width: 0;
@@ -6917,13 +6935,9 @@ kendo-sortable {
   border-width: 0 0 0 1px;
 }
 .k-grid[dir="rtl"] .k-group-indicator .k-button.k-bare,
-.k-grid[dir="rtl"] .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-grid[dir="rtl"] .k-drag-clue .k-button.k-bare,
-.k-grid[dir="rtl"] .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-rtl .k-grid .k-group-indicator .k-button.k-bare,
-.k-rtl .k-grid .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
-.k-rtl .k-grid .k-drag-clue .k-button.k-bare,
-.k-rtl .k-grid .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+.k-rtl .k-grid .k-drag-clue .k-button.k-bare {
   margin-left: -2px;
   margin-right: 8px;
 }
@@ -7053,6 +7067,10 @@ kendo-sortable {
   margin-left: 8px;
   margin-right: -4px;
 }
+.k-grid[dir="rtl"] .k-grid-search,
+.k-rtl .k-grid .k-grid-search {
+  float: left;
+}
 .k-grid .k-tooltip.k-tooltip-validation {
   display: -ms-flexbox;
   display: flex;
@@ -7083,6 +7101,10 @@ kendo-sortable {
   visibility: hidden;
   height: 1px;
   bottom: 1px;
+}
+.k-grid .k-grid-search {
+  width: 15.7em;
+  float: right;
 }
 .k-grid-toolbar {
   padding: 8px 8px;
@@ -7151,10 +7173,8 @@ kendo-sortable {
 }
 .k-group-indicator .k-link,
 .k-group-indicator .k-button.k-bare,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-drag-clue .k-link,
-.k-drag-clue .k-button.k-bare,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+.k-drag-clue .k-button.k-bare {
   padding: 0;
   border-width: 0;
   display: -ms-inline-flexbox;
@@ -7168,9 +7188,7 @@ kendo-sortable {
   margin-right: 4px;
 }
 .k-group-indicator .k-button.k-bare,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
-.k-drag-clue .k-button.k-bare,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+.k-drag-clue .k-button.k-bare {
   margin-left: 8px;
   margin-right: -2px;
   padding: 0;
@@ -7179,35 +7197,13 @@ kendo-sortable {
   opacity: 0.5;
 }
 .k-group-indicator .k-button.k-bare::before,
-.k-group-indicator .k-toolbar .k-bare.k-picker-wrap::before,
-.k-toolbar .k-group-indicator .k-bare.k-picker-wrap::before,
-.k-group-indicator .k-toolbar .k-bare.k-dropdown-wrap::before,
-.k-toolbar .k-group-indicator .k-bare.k-dropdown-wrap::before,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
-.k-group-indicator .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-group-indicator .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
 .k-group-indicator .k-button.k-bare::after,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after,
 .k-drag-clue .k-button.k-bare::before,
-.k-drag-clue .k-toolbar .k-bare.k-picker-wrap::before,
-.k-toolbar .k-drag-clue .k-bare.k-picker-wrap::before,
-.k-drag-clue .k-toolbar .k-bare.k-dropdown-wrap::before,
-.k-toolbar .k-drag-clue .k-bare.k-dropdown-wrap::before,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
-.k-drag-clue .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-drag-clue .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-drag-clue .k-button.k-bare::after,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after {
+.k-drag-clue .k-button.k-bare::after {
   display: none;
 }
 .k-group-indicator .k-button.k-bare:hover,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
-.k-drag-clue .k-button.k-bare:hover,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover {
+.k-drag-clue .k-button.k-bare:hover {
   opacity: 1;
 }
 .k-group-indicator {
@@ -7631,9 +7627,11 @@ div.k-grid-footer {
   overflow-y: auto;
 }
 .k-grid-norecords {
+  text-align: center;
+}
+div.k-grid-norecords {
   width: 100%;
   height: 100%;
-  text-align: center;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: center;
@@ -8303,9 +8301,7 @@ th.k-sorted {
   padding: 4px 8px;
   line-height: 1.42857143;
 }
-.k-toolbar .k-button::before,
-.k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-dropdown-wrap::before {
+.k-toolbar .k-button::before {
   border-radius: 0;
 }
 .k-ie11 .k-toolbar .k-button {
@@ -8432,12 +8428,8 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 }
 .k-toolbar .k-state-border-up::before,
 .k-toolbar .k-state-border-up .k-button::before,
-.k-toolbar .k-state-border-up .k-picker-wrap::before,
-.k-toolbar .k-state-border-up .k-dropdown-wrap::before,
 .k-toolbar .k-state-border-down::before,
-.k-toolbar .k-state-border-down .k-button::before,
-.k-toolbar .k-state-border-down .k-picker-wrap::before,
-.k-toolbar .k-state-border-down .k-dropdown-wrap::before {
+.k-toolbar .k-state-border-down .k-button::before {
   opacity: 0;
 }
 .k-toolbar .k-separator {
@@ -9742,6 +9734,21 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   background-color: transparent;
   background-repeat: no-repeat;
 }
+.k-treelist-scrollable > table,
+.k-treelist-scrollable .k-grid-header tr,
+.k-treelist-scrollable .k-grid-header th {
+  background-color: inherit;
+}
+.k-treelist-scrollable .k-grid-toolbar,
+.k-treelist-scrollable .k-grid-header th {
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 1;
+}
+.k-treelist-scrollable .k-grid-toolbar {
+  top: 0px;
+  left: 0px;
+}
 .k-drag-separator {
   display: inline-block;
   border-right: 1px solid;
@@ -9825,16 +9832,8 @@ div.k-scrollview .k-scrollview-nav > li.k-link {
   pointer-events: all;
 }
 kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-button::before,
-kendo-scrollview.k-scrollview-wrap .k-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-picker-wrap::before,
-kendo-scrollview.k-scrollview-wrap .k-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-dropdown-wrap::before,
 kendo-scrollview.k-scrollview-wrap .k-scrollview-nav > li.k-link::before,
 div.k-scrollview .k-scrollview-pageable > li.k-button::before,
-div.k-scrollview .k-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-toolbar div.k-scrollview .k-scrollview-pageable > li.k-picker-wrap::before,
-div.k-scrollview .k-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-toolbar div.k-scrollview .k-scrollview-pageable > li.k-dropdown-wrap::before,
 div.k-scrollview .k-scrollview-nav > li.k-link::before {
   content: "";
   width: 28px;
@@ -9848,15 +9847,7 @@ div.k-scrollview .k-scrollview-nav > li.k-link::before {
   transform: translate(-50%, -50%);
 }
 kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-button::before,
-kendo-scrollview.k-scrollview-wrap .k-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-picker-wrap::before,
-kendo-scrollview.k-scrollview-wrap .k-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-dropdown-wrap::before,
-div.k-scrollview .k-scrollview-pageable > li.k-button::before,
-div.k-scrollview .k-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-toolbar div.k-scrollview .k-scrollview-pageable > li.k-picker-wrap::before,
-div.k-scrollview .k-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-toolbar div.k-scrollview .k-scrollview-pageable > li.k-dropdown-wrap::before {
+div.k-scrollview .k-scrollview-pageable > li.k-button::before {
   pointer-events: initial;
   border-radius: 0;
 }
@@ -10055,10 +10046,17 @@ div.k-scrollview .k-scrollview-prev:hover {
 .k-tooltip-closable .k-tooltip-content {
   padding-right: 20px;
 }
-.k-rtl .k-tooltip-closable .k-tooltip-content,
-[dir-rtl] .k-tooltip-closable .k-tooltip-content {
-  padding-left: 20px;
+.k-rtl .k-tooltip-title,
+.k-rtl .k-tooltip-content,
+[dir="rtl"] .k-tooltip-title,
+[dir="rtl"] .k-tooltip-content {
   padding-right: 0;
+  padding-left: 20px;
+}
+.k-rtl .k-tooltip-button,
+[dir="rtl"] .k-tooltip-button {
+  left: 16px;
+  right: auto;
 }
 .k-tooltip-button {
   position: absolute;
@@ -10394,11 +10392,9 @@ div.k-scrollview .k-scrollview-prev:hover {
   border-style: solid;
   border-width: 1px;
   outline: 0;
-  overflow: hidden;
   position: absolute;
   text-align: center;
   text-decoration: none;
-  text-indent: -3333px;
   box-sizing: content-box;
   width: 14px;
   height: 14px;
@@ -10788,6 +10784,13 @@ div.k-scrollview .k-scrollview-prev:hover {
   margin: 1em 1em 0;
   text-align: center;
 }
+.k-rtl .k-alpha-slider.k-slider-vertical,
+.k-rtl .k-hue-slider.k-slider-vertical,
+[dir="rtl"] .k-alpha-slider.k-slider-vertical,
+[dir="rtl"] .k-hue-slider.k-slider-vertical {
+  margin-right: 12px;
+  margin-left: 0;
+}
 .k-colorpalette {
   border-width: 0;
   line-height: 0;
@@ -10803,6 +10806,7 @@ div.k-scrollview .k-scrollview-prev:hover {
 .k-colorpalette .k-item {
   width: 14px;
   height: 14px;
+  box-sizing: border-box;
   overflow: hidden;
   -ms-high-contrast-adjust: none;
   cursor: pointer;
@@ -11335,11 +11339,7 @@ div.k-scrollview .k-scrollview-prev:hover {
   transition: opacity 0.2s ease-in-out;
 }
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap:hover::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap:hover::before,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap:active::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap:active::before {
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active::before {
   opacity: 0;
 }
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:focus::after {
@@ -12160,7 +12160,7 @@ div.k-scrollview .k-scrollview-prev:hover {
 }
 .k-textarea {
   width: 18em;
-  min-height: calc(8px + 5.71428571em);
+  min-height: calc(10px + 1.42857143em);
 }
 .k-maskedtextbox {
   display: -ms-inline-flexbox;
@@ -12270,6 +12270,26 @@ div.k-scrollview .k-scrollview-prev:hover {
   -webkit-transform: translate(8px, -3px) translate(1px, -1.07142857em) translate(12.5%, -9.375%) scale(0.75);
   -ms-transform: translate(8px, -3px) translate(1px, -1.07142857em) translate(12.5%, -9.375%) scale(0.75);
   transform: translate(8px, -3px) translate(1px, -1.07142857em) translate(12.5%, -9.375%) scale(0.75);
+}
+.k-input-icon {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 32px;
+}
+.k-ie9 .k-input-icon {
+  position: absolute;
+  height: 100%;
+  right: 0;
+  top: 0;
+}
+.k-ie9 .k-rtl .k-input-icon,
+.k-ie9 [dir="rtl"] .k-input-icon {
+  left: 0;
+  right: auto;
 }
 .k-checkbox,
 .k-radio {
@@ -14312,6 +14332,92 @@ table.k-editor {
 li.k-item.k-drag-clue {
   background-color: #ff6358;
   color: #fff;
+}
+.k-rating {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  box-sizing: border-box;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+}
+.k-rating-container {
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  position: relative;
+  box-sizing: border-box;
+}
+.k-rating-container .k-rating-item {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  position: relative;
+  padding: 4px 8px;
+  -ms-flex-align: center;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0;
+  outline: 0;
+  overflow: hidden;
+  transition: color 200ms ease-out 0s;
+}
+.k-rating-container .k-rating-item * {
+  pointer-events: none;
+}
+.k-rating-container .k-rating-item .k-icon {
+  font-size: 24px;
+}
+.k-rating-container .k-rating-item .k-rating-precision-part {
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  overflow: hidden;
+}
+.k-ie9 .k-rating-container .k-rating-item .k-rating-precision-part {
+  top: auto;
+}
+.k-ie9 .k-rating-container .k-rating-item {
+  vertical-align: auto;
+}
+.k-rating-label {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-align: center;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1.5;
+  margin: 4px 8px;
+}
+.k-rtl .k-rating-precision-part,
+[dir="rtl"] .k-rating-precision-part {
+  left: auto;
+  right: 8px;
+}
+.k-rating:focus .k-rating-item > .k-icon,
+.k-rating.k-state-focused .k-rating-item > .k-icon {
+  text-shadow: 0 2px 3.6px rgba(0, 0, 0, 0.1);
+}
+.k-rating:focus .k-rating-item.k-state-selected > .k-icon,
+.k-rating.k-state-focused .k-rating-item.k-state-selected > .k-icon {
+  text-shadow: 0 2px 3.6px rgba(255, 99, 88, 0.4);
+}
+.k-rating-item {
+  color: #d8d8d8;
+}
+.k-rating-item.k-state-selected {
+  color: #ff6358;
+}
+.k-rating-item:hover,
+.k-rating-item.k-state-hover {
+  color: #ff6358;
+  cursor: pointer;
+}
+.k-rating-item:focus,
+.k-rating-item.k-state-focused {
+  color: #ff6358;
 }
 .k-var--chart-font {
   font-size: 14px;
@@ -16749,20 +16855,20 @@ kendo-scheduler .k-event.k-event-inverse,
 }
 .k-notification-wrap > .k-icon {
   margin-right: 4px;
-  -ms-flex: 0 0 0%;
-  flex: 0 0 0%;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
 }
 .k-notification-wrap > .k-i-close,
 .k-notification-wrap > .k-i-group-delete::before {
   margin-right: 0;
   margin-left: 4px;
-  -ms-flex: 0 0 0%;
-  flex: 0 0 0%;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
   cursor: pointer;
 }
 .k-notification-wrap > .k-notification-content {
-  -ms-flex: 1 1 0%;
-  flex: 1 1 0%;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .k-rtl .k-notification .k-notification-wrap > .k-icon,
 [dir="rtl"] .k-notification .k-notification-wrap > .k-icon {
@@ -18101,9 +18207,7 @@ kendo-scheduler .k-event.k-event-inverse,
   border-top-width: 1px;
   border-color: inherit;
 }
-.k-card-actions > .k-button.k-flat:first-child,
-.k-calendar.k-calendar-range.k-calendar-infinite.k-card-actions:not(.k-calendar-minimal) > .k-button:first-child,
-.k-calendar .k-calendar-header .k-card-actions > .k-button:first-child {
+.k-card-actions > .k-button.k-flat:first-child {
   margin-left: -8px;
 }
 .k-card-action {
@@ -18543,10 +18647,6 @@ kendo-scheduler .k-event.k-event-inverse,
   display: inline-block;
 }
 .k-message-box .k-button::before,
-.k-message-box .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-message-box .k-picker-wrap::before,
-.k-message-box .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-message-box .k-dropdown-wrap::before,
 .k-message-box .k-button::after {
   display: none;
 }

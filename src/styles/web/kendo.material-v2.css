@@ -1909,6 +1909,8 @@ kendo-sortable {
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
   white-space: nowrap;
 }
 .k-textbox.k-space-left {
@@ -2041,7 +2043,7 @@ kendo-sortable {
   padding: 0.5rem 0.75rem;
 }
 .k-maskedtextbox.form-control-sm .k-textbox {
-  height: calc(1.8125rem + 2px);
+  height: calc(1.8125rem + 3px);
   padding: 0.25rem 0.5rem;
   line-height: 1.5;
 }
@@ -4589,7 +4591,9 @@ kendo-sortable {
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
 }
+.k-button-flat,
 .k-button.k-flat,
+.k-button.k-bare,
 .k-edit-buttons .k-button,
 .k-dialog-button-group .k-button,
 .k-edit-field .k-button,
@@ -4599,21 +4603,22 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-button,
 .k-spreadsheet-popup .k-button,
 .k-action-buttons .k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-calendar .k-calendar-header .k-button,
 .k-editor-toolbar a.k-tool,
 .k-gantt-toolbar .k-button,
 .k-gantt-views li a,
 .k-scheduler-toolbar li a,
-.k-scheduler-footer li a,
-.k-button.k-bare,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+.k-scheduler-footer li a {
   border-color: transparent !important;
   color: inherit;
   background: none !important;
   box-shadow: none !important;
   transition: color 0.2s ease-in-out;
 }
+.k-button-flat:hover,
 .k-button.k-flat:hover,
+.k-button.k-bare:hover,
 .k-edit-buttons .k-button:hover,
 .k-dialog-button-group .k-button:hover,
 .k-edit-field .k-button:hover,
@@ -4623,13 +4628,16 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-button:hover,
 .k-spreadsheet-popup .k-button:hover,
 .k-action-buttons .k-button:hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
 .k-calendar .k-calendar-header .k-button:hover,
 .k-editor-toolbar a.k-tool:hover,
 .k-gantt-toolbar .k-button:hover,
 .k-gantt-views li a:hover,
 .k-scheduler-toolbar li a:hover,
 .k-scheduler-footer li a:hover,
-.k-button.k-flat.k-state-hover,
+.k-button-flat.k-state-hover,
+.k-state-hover.k-button.k-flat,
+.k-state-hover.k-button.k-bare,
 .k-edit-buttons .k-state-hover.k-button,
 .k-dialog-button-group .k-state-hover.k-button,
 .k-edit-field .k-state-hover.k-button,
@@ -4639,13 +4647,16 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-state-hover.k-button,
 .k-spreadsheet-popup .k-state-hover.k-button,
 .k-action-buttons .k-state-hover.k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-state-hover.k-button,
 .k-calendar .k-calendar-header .k-state-hover.k-button,
 .k-editor-toolbar a.k-state-hover.k-tool,
 .k-gantt-toolbar .k-state-hover.k-button,
 .k-gantt-views li a.k-state-hover,
 .k-scheduler-toolbar li a.k-state-hover,
 .k-scheduler-footer li a.k-state-hover,
+.k-button-flat:active,
 .k-button.k-flat:active,
+.k-button.k-bare:active,
 .k-edit-buttons .k-button:active,
 .k-dialog-button-group .k-button:active,
 .k-edit-field .k-button:active,
@@ -4655,13 +4666,16 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-button:active,
 .k-spreadsheet-popup .k-button:active,
 .k-action-buttons .k-button:active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active,
 .k-calendar .k-calendar-header .k-button:active,
 .k-editor-toolbar a.k-tool:active,
 .k-gantt-toolbar .k-button:active,
 .k-gantt-views li a:active,
 .k-scheduler-toolbar li a:active,
 .k-scheduler-footer li a:active,
-.k-button.k-flat.k-state-active,
+.k-button-flat.k-state-active,
+.k-state-active.k-button.k-flat,
+.k-state-active.k-button.k-bare,
 .k-edit-buttons .k-state-active.k-button,
 .k-dialog-button-group .k-state-active.k-button,
 .k-edit-field .k-state-active.k-button,
@@ -4671,13 +4685,16 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-state-active.k-button,
 .k-spreadsheet-popup .k-state-active.k-button,
 .k-action-buttons .k-state-active.k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-state-active.k-button,
 .k-calendar .k-calendar-header .k-state-active.k-button,
 .k-editor-toolbar a.k-state-active.k-tool,
 .k-gantt-toolbar .k-state-active.k-button,
 .k-gantt-views li a.k-state-active,
 .k-scheduler-toolbar li a.k-state-active,
 .k-scheduler-footer li a.k-state-active,
+.k-button-flat:hover:active,
 .k-button.k-flat:hover:active,
+.k-button.k-bare:hover:active,
 .k-edit-buttons .k-button:hover:active,
 .k-dialog-button-group .k-button:hover:active,
 .k-edit-field .k-button:hover:active,
@@ -4687,13 +4704,16 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-button:hover:active,
 .k-spreadsheet-popup .k-button:hover:active,
 .k-action-buttons .k-button:hover:active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover:active,
 .k-calendar .k-calendar-header .k-button:hover:active,
 .k-editor-toolbar a.k-tool:hover:active,
 .k-gantt-toolbar .k-button:hover:active,
 .k-gantt-views li a:hover:active,
 .k-scheduler-toolbar li a:hover:active,
 .k-scheduler-footer li a:hover:active,
+.k-button-flat:hover.k-state-active,
 .k-button.k-flat:hover.k-state-active,
+.k-button.k-bare:hover.k-state-active,
 .k-edit-buttons .k-button:hover.k-state-active,
 .k-dialog-button-group .k-button:hover.k-state-active,
 .k-edit-field .k-button:hover.k-state-active,
@@ -4703,238 +4723,34 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-button:hover.k-state-active,
 .k-spreadsheet-popup .k-button:hover.k-state-active,
 .k-action-buttons .k-button:hover.k-state-active,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover.k-state-active,
 .k-calendar .k-calendar-header .k-button:hover.k-state-active,
 .k-editor-toolbar a.k-tool:hover.k-state-active,
 .k-gantt-toolbar .k-button:hover.k-state-active,
 .k-gantt-views li a:hover.k-state-active,
 .k-scheduler-toolbar li a:hover.k-state-active,
-.k-scheduler-footer li a:hover.k-state-active,
-.k-button.k-bare:hover,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
-.k-button.k-bare.k-state-hover,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-hover,
-.k-button.k-bare:active,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active,
-.k-button.k-bare.k-state-active,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-state-active,
-.k-button.k-bare:hover:active,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover:active,
-.k-button.k-bare:hover.k-state-active,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover.k-state-active {
+.k-scheduler-footer li a:hover.k-state-active {
   color: inherit;
 }
+.k-button-flat::before,
 .k-button.k-flat::before,
-.k-edit-buttons .k-button::before,
-.k-edit-buttons .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-edit-buttons .k-picker-wrap::before,
-.k-edit-buttons .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-edit-buttons .k-dropdown-wrap::before,
-.k-edit-buttons .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-edit-buttons .k-picker-wrap::before,
-.k-edit-buttons .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-edit-buttons .k-dropdown-wrap::before,
-.k-edit-buttons .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-edit-buttons a.k-tool::before,
-.k-edit-buttons .k-gantt-views li a::before,
-.k-gantt-views li .k-edit-buttons a::before,
-.k-edit-buttons .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-edit-buttons a::before,
-.k-edit-buttons .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-edit-buttons a::before,
-.k-dialog-button-group .k-button::before,
-.k-dialog-button-group .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-dialog-button-group .k-picker-wrap::before,
-.k-dialog-button-group .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-dialog-button-group .k-dropdown-wrap::before,
-.k-dialog-button-group .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-dialog-button-group .k-picker-wrap::before,
-.k-dialog-button-group .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-dialog-button-group .k-dropdown-wrap::before,
-.k-dialog-button-group .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-dialog-button-group a.k-tool::before,
-.k-dialog-button-group .k-gantt-views li a::before,
-.k-gantt-views li .k-dialog-button-group a::before,
-.k-dialog-button-group .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-dialog-button-group a::before,
-.k-dialog-button-group .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-dialog-button-group a::before,
-.k-edit-field .k-button::before,
-.k-edit-field .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-edit-field .k-picker-wrap::before,
-.k-edit-field .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-edit-field .k-dropdown-wrap::before,
-.k-edit-field .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-edit-field .k-picker-wrap::before,
-.k-edit-field .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-edit-field .k-dropdown-wrap::before,
-.k-edit-field .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-edit-field a.k-tool::before,
-.k-edit-field .k-gantt-views li a::before,
-.k-gantt-views li .k-edit-field a::before,
-.k-edit-field .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-edit-field a::before,
-.k-edit-field .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-edit-field a::before,
-.k-dialog-buttongroup .k-button::before,
-.k-dialog-buttongroup .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-dialog-buttongroup .k-picker-wrap::before,
-.k-dialog-buttongroup .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-dialog-buttongroup .k-dropdown-wrap::before,
-.k-dialog-buttongroup .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-dialog-buttongroup .k-picker-wrap::before,
-.k-dialog-buttongroup .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-dialog-buttongroup .k-dropdown-wrap::before,
-.k-dialog-buttongroup .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-dialog-buttongroup a.k-tool::before,
-.k-dialog-buttongroup .k-gantt-views li a::before,
-.k-gantt-views li .k-dialog-buttongroup a::before,
-.k-dialog-buttongroup .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-dialog-buttongroup a::before,
-.k-dialog-buttongroup .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-dialog-buttongroup a::before,
-.k-toolbar .k-flat.k-picker-wrap::before,
-.k-toolbar .k-flat.k-dropdown-wrap::before,
-.k-toolbar .k-split-button.k-state-disabled .k-button::before,
-.k-toolbar .k-split-button.k-state-disabled .k-picker-wrap::before,
-.k-toolbar .k-split-button.k-state-disabled .k-dropdown-wrap::before,
-.k-toolbar .k-split-button.k-state-disabled .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button.k-state-disabled a.k-tool::before,
-.k-toolbar .k-split-button.k-state-disabled .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button.k-state-disabled a::before,
-.k-toolbar .k-split-button.k-state-disabled .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button.k-state-disabled a::before,
-.k-toolbar .k-split-button.k-state-disabled .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button.k-state-disabled a::before,
-.k-spreadsheet-quick-access-toolbar .k-button::before,
-.k-spreadsheet-quick-access-toolbar .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-spreadsheet-quick-access-toolbar .k-picker-wrap::before,
-.k-spreadsheet-quick-access-toolbar .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-spreadsheet-quick-access-toolbar .k-dropdown-wrap::before,
-.k-spreadsheet-quick-access-toolbar .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-spreadsheet-quick-access-toolbar .k-picker-wrap::before,
-.k-spreadsheet-quick-access-toolbar .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-spreadsheet-quick-access-toolbar .k-dropdown-wrap::before,
-.k-spreadsheet-quick-access-toolbar .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-spreadsheet-quick-access-toolbar a.k-tool::before,
-.k-spreadsheet-quick-access-toolbar .k-gantt-views li a::before,
-.k-gantt-views li .k-spreadsheet-quick-access-toolbar a::before,
-.k-spreadsheet-quick-access-toolbar .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-spreadsheet-quick-access-toolbar a::before,
-.k-spreadsheet-quick-access-toolbar .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-spreadsheet-quick-access-toolbar a::before,
-.k-spreadsheet-sheets-bar .k-button::before,
-.k-spreadsheet-sheets-bar .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-spreadsheet-sheets-bar .k-picker-wrap::before,
-.k-spreadsheet-sheets-bar .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-spreadsheet-sheets-bar .k-dropdown-wrap::before,
-.k-spreadsheet-sheets-bar .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-spreadsheet-sheets-bar .k-picker-wrap::before,
-.k-spreadsheet-sheets-bar .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-spreadsheet-sheets-bar .k-dropdown-wrap::before,
-.k-spreadsheet-sheets-bar .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-spreadsheet-sheets-bar a.k-tool::before,
-.k-spreadsheet-sheets-bar .k-gantt-views li a::before,
-.k-gantt-views li .k-spreadsheet-sheets-bar a::before,
-.k-spreadsheet-sheets-bar .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-spreadsheet-sheets-bar a::before,
-.k-spreadsheet-sheets-bar .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-spreadsheet-sheets-bar a::before,
-.k-spreadsheet-popup .k-button::before,
-.k-spreadsheet-popup .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-spreadsheet-popup .k-picker-wrap::before,
-.k-spreadsheet-popup .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-spreadsheet-popup .k-dropdown-wrap::before,
-.k-spreadsheet-popup .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-spreadsheet-popup .k-picker-wrap::before,
-.k-spreadsheet-popup .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-spreadsheet-popup .k-dropdown-wrap::before,
-.k-spreadsheet-popup .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-spreadsheet-popup a.k-tool::before,
-.k-spreadsheet-popup .k-gantt-views li a::before,
-.k-gantt-views li .k-spreadsheet-popup a::before,
-.k-spreadsheet-popup .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-spreadsheet-popup a::before,
-.k-spreadsheet-popup .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-spreadsheet-popup a::before,
-.k-action-buttons .k-button::before,
-.k-action-buttons .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-action-buttons .k-picker-wrap::before,
-.k-action-buttons .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-action-buttons .k-dropdown-wrap::before,
-.k-action-buttons .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-action-buttons .k-picker-wrap::before,
-.k-action-buttons .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-action-buttons .k-dropdown-wrap::before,
-.k-action-buttons .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-action-buttons a.k-tool::before,
-.k-action-buttons .k-gantt-views li a::before,
-.k-gantt-views li .k-action-buttons a::before,
-.k-action-buttons .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-action-buttons a::before,
-.k-action-buttons .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-action-buttons a::before,
-.k-calendar .k-calendar-header .k-button::before,
-.k-calendar .k-calendar-header .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-calendar .k-calendar-header .k-picker-wrap::before,
-.k-calendar .k-calendar-header .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-calendar .k-calendar-header .k-dropdown-wrap::before,
-.k-calendar .k-calendar-header .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-calendar .k-calendar-header .k-picker-wrap::before,
-.k-calendar .k-calendar-header .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-calendar .k-calendar-header .k-dropdown-wrap::before,
-.k-calendar .k-calendar-header .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-calendar .k-calendar-header a.k-tool::before,
-.k-calendar .k-calendar-header .k-gantt-views li a::before,
-.k-gantt-views li .k-calendar .k-calendar-header a::before,
-.k-calendar .k-calendar-header .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-calendar .k-calendar-header a::before,
-.k-calendar .k-calendar-header .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-calendar .k-calendar-header a::before,
-.k-editor-toolbar .k-flat.k-picker-wrap::before,
-.k-editor-toolbar .k-flat.k-dropdown-wrap::before,
-.k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar a.k-flat.k-tool::before,
-.k-gantt-toolbar .k-button::before,
-.k-gantt-toolbar .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-gantt-toolbar .k-picker-wrap::before,
-.k-gantt-toolbar .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-gantt-toolbar .k-dropdown-wrap::before,
-.k-gantt-toolbar .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-gantt-toolbar .k-picker-wrap::before,
-.k-gantt-toolbar .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-gantt-toolbar .k-dropdown-wrap::before,
-.k-gantt-toolbar .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-gantt-toolbar a.k-tool::before,
-.k-gantt-toolbar .k-gantt-views li a::before,
-.k-gantt-views li .k-gantt-toolbar a::before,
-.k-gantt-toolbar .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-gantt-toolbar a::before,
-.k-gantt-toolbar .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-gantt-toolbar a::before,
-.k-gantt-views li a::before,
-.k-gantt-views li a.k-flat::before,
-.k-scheduler-toolbar li a::before,
-.k-scheduler-footer li a::before,
-.k-scheduler-toolbar li a.k-flat::before,
-.k-scheduler-footer li a.k-flat::before,
 .k-button.k-bare::before,
-.k-toolbar .k-bare.k-picker-wrap::before,
-.k-toolbar .k-bare.k-dropdown-wrap::before,
+.k-edit-buttons .k-button::before,
+.k-dialog-button-group .k-button::before,
+.k-edit-field .k-button::before,
+.k-dialog-buttongroup .k-button::before,
+.k-toolbar .k-split-button.k-state-disabled .k-button::before,
+.k-spreadsheet-quick-access-toolbar .k-button::before,
+.k-spreadsheet-sheets-bar .k-button::before,
+.k-spreadsheet-popup .k-button::before,
+.k-action-buttons .k-button::before,
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
-.k-gantt-views li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-scheduler-toolbar li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-scheduler-footer li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-editor-toolbar .k-bare.k-picker-wrap::before,
-.k-editor-toolbar .k-bare.k-dropdown-wrap::before,
-.k-editor-toolbar a.k-bare.k-tool::before,
-.k-gantt-views li a.k-bare::before,
-.k-scheduler-toolbar li a.k-bare::before,
-.k-scheduler-footer li a.k-bare::before {
+.k-calendar .k-calendar-header .k-button::before,
+.k-editor-toolbar a.k-tool::before,
+.k-gantt-toolbar .k-button::before,
+.k-gantt-views li a::before,
+.k-scheduler-toolbar li a::before,
+.k-scheduler-footer li a::before {
   display: block;
 }
 .k-button.k-outline {
@@ -4971,6 +4787,7 @@ kendo-sortable {
   margin-left: 0;
   margin-right: -1px;
 }
+.k-button-overlay,
 .k-button::before,
 .k-toolbar .k-picker-wrap::before,
 .k-toolbar .k-dropdown-wrap::before,
@@ -4995,94 +4812,22 @@ kendo-sortable {
   transition: opacity 0.2s ease-in-out;
 }
 .k-button:hover::before,
-.k-toolbar .k-picker-wrap:hover::before,
-.k-toolbar .k-dropdown-wrap:hover::before,
-.k-editor-toolbar .k-picker-wrap:hover::before,
-.k-editor-toolbar .k-dropdown-wrap:hover::before,
-.k-editor-toolbar a.k-tool:hover::before,
-.k-gantt-views li a:hover::before,
-.k-scheduler-toolbar li a:hover::before,
-.k-scheduler-footer li a:hover::before,
-.k-button.k-state-hover::before,
-.k-toolbar .k-state-hover.k-picker-wrap::before,
-.k-toolbar .k-state-hover.k-dropdown-wrap::before,
-.k-editor-toolbar .k-state-hover.k-picker-wrap::before,
-.k-editor-toolbar .k-state-hover.k-dropdown-wrap::before,
-.k-editor-toolbar a.k-state-hover.k-tool::before,
-.k-gantt-views li a.k-state-hover::before,
-.k-scheduler-toolbar li a.k-state-hover::before,
-.k-scheduler-footer li a.k-state-hover::before {
+.k-button.k-state-hover::before {
   opacity: 0.12;
 }
 .k-button:focus::before,
-.k-toolbar .k-picker-wrap:focus::before,
-.k-toolbar .k-dropdown-wrap:focus::before,
-.k-editor-toolbar .k-picker-wrap:focus::before,
-.k-editor-toolbar .k-dropdown-wrap:focus::before,
-.k-editor-toolbar a.k-tool:focus::before,
-.k-gantt-views li a:focus::before,
-.k-scheduler-toolbar li a:focus::before,
-.k-scheduler-footer li a:focus::before,
-.k-button.k-state-focused::before,
-.k-toolbar .k-state-focused.k-picker-wrap::before,
-.k-toolbar .k-state-focused.k-dropdown-wrap::before,
-.k-editor-toolbar .k-state-focused.k-picker-wrap::before,
-.k-editor-toolbar .k-state-focused.k-dropdown-wrap::before,
-.k-editor-toolbar a.k-state-focused.k-tool::before,
-.k-gantt-views li a.k-state-focused::before,
-.k-scheduler-toolbar li a.k-state-focused::before,
-.k-scheduler-footer li a.k-state-focused::before {
+.k-button.k-state-focused::before {
   opacity: 0.12;
 }
 .k-button.k-no-focus:not(:hover)::before,
-.k-toolbar .k-no-focus.k-picker-wrap:not(:hover)::before,
-.k-toolbar .k-no-focus.k-dropdown-wrap:not(:hover)::before,
-.k-editor-toolbar .k-no-focus.k-picker-wrap:not(:hover)::before,
-.k-editor-toolbar .k-no-focus.k-dropdown-wrap:not(:hover)::before,
-.k-editor-toolbar a.k-no-focus.k-tool:not(:hover)::before,
-.k-gantt-views li a.k-no-focus:not(:hover)::before,
-.k-scheduler-toolbar li a.k-no-focus:not(:hover)::before,
-.k-scheduler-footer li a.k-no-focus:not(:hover)::before,
-.k-button.k-no-focus:not(.k-state-hover)::before,
-.k-toolbar .k-no-focus.k-picker-wrap:not(.k-state-hover)::before,
-.k-toolbar .k-no-focus.k-dropdown-wrap:not(.k-state-hover)::before,
-.k-editor-toolbar .k-no-focus.k-picker-wrap:not(.k-state-hover)::before,
-.k-editor-toolbar .k-no-focus.k-dropdown-wrap:not(.k-state-hover)::before,
-.k-editor-toolbar a.k-no-focus.k-tool:not(.k-state-hover)::before,
-.k-gantt-views li a.k-no-focus:not(.k-state-hover)::before,
-.k-scheduler-toolbar li a.k-no-focus:not(.k-state-hover)::before,
-.k-scheduler-footer li a.k-no-focus:not(.k-state-hover)::before {
+.k-button.k-no-focus:not(.k-state-hover)::before {
   opacity: 0;
 }
 .k-button:active::before,
-.k-toolbar .k-picker-wrap:active::before,
-.k-toolbar .k-dropdown-wrap:active::before,
-.k-editor-toolbar .k-picker-wrap:active::before,
-.k-editor-toolbar .k-dropdown-wrap:active::before,
-.k-editor-toolbar a.k-tool:active::before,
-.k-gantt-views li a:active::before,
-.k-scheduler-toolbar li a:active::before,
-.k-scheduler-footer li a:active::before,
-.k-button.k-state-active::before,
-.k-toolbar .k-state-active.k-picker-wrap::before,
-.k-toolbar .k-state-active.k-dropdown-wrap::before,
-.k-editor-toolbar .k-state-active.k-picker-wrap::before,
-.k-editor-toolbar .k-state-active.k-dropdown-wrap::before,
-.k-editor-toolbar a.k-state-active.k-tool::before,
-.k-gantt-views li a.k-state-active::before,
-.k-scheduler-toolbar li a.k-state-active::before,
-.k-scheduler-footer li a.k-state-active::before {
+.k-button.k-state-active::before {
   opacity: 0.16;
 }
-.k-button.k-state-selected::before,
-.k-toolbar .k-state-selected.k-picker-wrap::before,
-.k-toolbar .k-state-selected.k-dropdown-wrap::before,
-.k-editor-toolbar .k-state-selected.k-picker-wrap::before,
-.k-editor-toolbar .k-state-selected.k-dropdown-wrap::before,
-.k-editor-toolbar a.k-state-selected.k-tool::before,
-.k-gantt-views li a.k-state-selected::before,
-.k-scheduler-toolbar li a.k-state-selected::before,
-.k-scheduler-footer li a.k-state-selected::before {
+.k-button.k-state-selected::before {
   opacity: 0.22;
 }
 .k-button::after {
@@ -5119,15 +4864,7 @@ kendo-sortable {
 .k-button {
   text-transform: uppercase;
 }
-.k-button::before,
-.k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar a.k-tool::before,
-.k-gantt-views li a::before,
-.k-scheduler-toolbar li a::before,
-.k-scheduler-footer li a::before {
+.k-button::before {
   display: block;
   transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
@@ -5167,10 +4904,12 @@ kendo-sortable {
   background-color: rgba(0, 0, 0, 0.12);
   box-shadow: none !important;
 }
-.k-split-button .k-button .k-state-disabled {
+.k-split-button .k-button:not(.k-flat):not(.k-bare):not(.k-outline):not(.k-overflow-button).k-state-disabled {
   background: transparent;
 }
-.k-button.k-flat.k-primary,
+.k-button-flat.k-primary,
+.k-primary.k-button.k-flat,
+.k-primary.k-button.k-bare,
 .k-edit-buttons .k-primary.k-button,
 .k-dialog-button-group .k-primary.k-button,
 .k-edit-field .k-primary.k-button,
@@ -5180,13 +4919,16 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-primary.k-button,
 .k-spreadsheet-popup .k-primary.k-button,
 .k-action-buttons .k-primary.k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-primary.k-button,
 .k-calendar .k-calendar-header .k-primary.k-button,
 .k-editor-toolbar a.k-primary.k-tool,
 .k-gantt-toolbar .k-primary.k-button,
 .k-gantt-views li a.k-primary,
 .k-scheduler-toolbar li a.k-primary,
 .k-scheduler-footer li a.k-primary,
-.k-button.k-flat.k-primary:hover,
+.k-button-flat.k-primary:hover,
+.k-primary.k-button.k-flat:hover,
+.k-primary.k-button.k-bare:hover,
 .k-edit-buttons .k-primary.k-button:hover,
 .k-dialog-button-group .k-primary.k-button:hover,
 .k-edit-field .k-primary.k-button:hover,
@@ -5196,13 +4938,16 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-primary.k-button:hover,
 .k-spreadsheet-popup .k-primary.k-button:hover,
 .k-action-buttons .k-primary.k-button:hover,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-primary.k-button:hover,
 .k-calendar .k-calendar-header .k-primary.k-button:hover,
 .k-editor-toolbar a.k-primary.k-tool:hover,
 .k-gantt-toolbar .k-primary.k-button:hover,
 .k-gantt-views li a.k-primary:hover,
 .k-scheduler-toolbar li a.k-primary:hover,
 .k-scheduler-footer li a.k-primary:hover,
-.k-button.k-flat.k-primary.k-state-hover,
+.k-button-flat.k-primary.k-state-hover,
+.k-primary.k-state-hover.k-button.k-flat,
+.k-primary.k-state-hover.k-button.k-bare,
 .k-edit-buttons .k-primary.k-state-hover.k-button,
 .k-dialog-button-group .k-primary.k-state-hover.k-button,
 .k-edit-field .k-primary.k-state-hover.k-button,
@@ -5212,24 +4957,21 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-primary.k-state-hover.k-button,
 .k-spreadsheet-popup .k-primary.k-state-hover.k-button,
 .k-action-buttons .k-primary.k-state-hover.k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-primary.k-state-hover.k-button,
 .k-calendar .k-calendar-header .k-primary.k-state-hover.k-button,
 .k-editor-toolbar a.k-primary.k-state-hover.k-tool,
 .k-gantt-toolbar .k-primary.k-state-hover.k-button,
 .k-gantt-views li a.k-primary.k-state-hover,
 .k-scheduler-toolbar li a.k-primary.k-state-hover,
 .k-scheduler-footer li a.k-primary.k-state-hover,
-.k-button.k-bare.k-primary,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary,
-.k-button.k-bare.k-primary:hover,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary:hover,
-.k-button.k-bare.k-primary.k-state-hover,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary.k-state-hover,
 .k-button.k-outline.k-primary,
 .k-button.k-outline.k-primary:hover,
 .k-button.k-outline.k-primary.k-state-hover {
   color: #3f51b5;
 }
-.k-button.k-flat.k-primary.k-state-disabled,
+.k-button-flat.k-primary.k-state-disabled,
+.k-primary.k-state-disabled.k-button.k-flat,
+.k-primary.k-state-disabled.k-button.k-bare,
 .k-edit-buttons .k-primary.k-state-disabled.k-button,
 .k-dialog-button-group .k-primary.k-state-disabled.k-button,
 .k-edit-field .k-primary.k-state-disabled.k-button,
@@ -5239,14 +4981,13 @@ kendo-sortable {
 .k-spreadsheet-sheets-bar .k-primary.k-state-disabled.k-button,
 .k-spreadsheet-popup .k-primary.k-state-disabled.k-button,
 .k-action-buttons .k-primary.k-state-disabled.k-button,
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-primary.k-state-disabled.k-button,
 .k-calendar .k-calendar-header .k-primary.k-state-disabled.k-button,
 .k-editor-toolbar a.k-primary.k-state-disabled.k-tool,
 .k-gantt-toolbar .k-primary.k-state-disabled.k-button,
 .k-gantt-views li a.k-primary.k-state-disabled,
 .k-scheduler-toolbar li a.k-primary.k-state-disabled,
 .k-scheduler-footer li a.k-primary.k-state-disabled,
-.k-button.k-bare.k-primary.k-state-disabled,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button.k-primary.k-state-disabled,
 .k-button.k-outline.k-primary.k-state-disabled {
   color: rgba(0, 0, 0, 0.38);
 }
@@ -5270,7 +5011,7 @@ kendo-sortable {
 .k-button-group.k-state-disabled .k-button {
   color: rgba(0, 0, 0, 0.38);
 }
-.k-button-group.k-state-disabled .k-button {
+.k-button-group.k-state-disabled .k-button:not(.k-flat):not(.k-bare):not(.k-outline):not(.k-overflow-button) {
   background-color: rgba(0, 0, 0, 0.12);
 }
 .k-button-group-flat,
@@ -5286,15 +5027,21 @@ kendo-sortable {
   -ms-flex-align: stretch;
   align-items: stretch;
   margin: 0;
-  padding: 8px 0;
+  padding: 0 0;
   border-width: 0;
   border-style: solid;
   font-size: 14px;
   line-height: 2;
   box-sizing: content-box;
 }
-.k-popup > .k-widget:only-child {
+.k-popup > .k-widget {
   border-width: 0;
+}
+.k-popup.k-colorpicker-popup {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
 }
 .k-popup .k-item {
   cursor: pointer;
@@ -5325,7 +5072,7 @@ kendo-sortable {
   border-bottom-style: solid;
 }
 .k-popup > .k-group-header {
-  margin-top: -8px;
+  margin-top: 0;
 }
 .k-popup .k-outer-group-header {
   padding: 6px 24px;
@@ -5333,6 +5080,10 @@ kendo-sortable {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.54);
   white-space: normal;
+}
+.k-popup .k-outer-group-header.k-virtual-item {
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .k-popup > .k-colorpalette,
 .k-popup > .k-flatcolorpicker {
@@ -5502,26 +5253,13 @@ kendo-sortable {
 .k-popup.k-colorpicker-popup {
   padding: 0;
 }
+.k-popup .k-outer-group-header {
+  line-height: 1.5;
+}
 .k-list-container .k-button {
   box-shadow: none;
 }
-.k-list-container .k-button::before,
-.k-list-container .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-list-container .k-picker-wrap::before,
-.k-list-container .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-list-container .k-dropdown-wrap::before,
-.k-list-container .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-list-container .k-picker-wrap::before,
-.k-list-container .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-list-container .k-dropdown-wrap::before,
-.k-list-container .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-list-container a.k-tool::before,
-.k-list-container .k-gantt-views li a::before,
-.k-gantt-views li .k-list-container a::before,
-.k-list-container .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-list-container a::before,
-.k-list-container .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-list-container a::before {
+.k-list-container .k-button::before {
   display: none;
 }
 .k-list-filter {
@@ -5545,11 +5283,17 @@ kendo-sortable {
 .k-edge13 .k-popup {
   background-clip: border-box;
 }
+.k-popup > kendo-list > .k-first {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
 .k-popup > .k-group-header,
 .k-popup .k-outer-group-header.k-first,
 .k-popup > .k-virtual-wrap > .k-group-header {
   border-bottom-color: rgba(0, 0, 0, 0.12);
   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.06);
+}
+.k-popup .k-outer-group-header {
+  border-bottom-color: rgba(0, 0, 0, 0.12);
 }
 .k-popup .k-list .k-item > .k-group {
   color: rgba(0, 0, 0, 0.54);
@@ -5570,6 +5314,10 @@ kendo-sortable {
 }
 .k-popup > .k-colorpalette,
 .k-popup > .k-flatcolorpicker {
+  background: transparent;
+}
+.k-popup > .k-colorpalette:only-child,
+.k-popup > .k-flatcolorpicker:only-child {
   background: #f5f5f5;
 }
 .k-list .k-item,
@@ -6140,10 +5888,6 @@ kendo-sortable {
   position: absolute;
   z-index: 10002;
 }
-.k-window .k-overlay {
-  position: absolute;
-  opacity: 0;
-}
 .k-window.k-window-maximized {
   max-width: 100vw;
   max-height: 100vh;
@@ -6464,6 +6208,14 @@ kendo-sortable {
 .k-pane-wrapper .k-grid-edit-form .k-edit-form-container {
   width: auto;
   min-width: auto;
+}
+.k-pane-wrapper .k-grid .k-grid-search {
+  width: 100%;
+  margin-left: 0;
+  margin-top: 0;
+}
+.k-pane-wrapper .k-grid .k-grid-search:first-child {
+  margin-top: 0;
 }
 .k-grid-mobile {
   border-width: 0;
@@ -7311,13 +7063,9 @@ kendo-sortable {
   border-width: 0 0 0 1px;
 }
 .k-grid[dir="rtl"] .k-group-indicator .k-button.k-bare,
-.k-grid[dir="rtl"] .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-grid[dir="rtl"] .k-drag-clue .k-button.k-bare,
-.k-grid[dir="rtl"] .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-rtl .k-grid .k-group-indicator .k-button.k-bare,
-.k-rtl .k-grid .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
-.k-rtl .k-grid .k-drag-clue .k-button.k-bare,
-.k-rtl .k-grid .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+.k-rtl .k-grid .k-drag-clue .k-button.k-bare {
   margin-left: -2px;
   margin-right: 8px;
 }
@@ -7447,6 +7195,10 @@ kendo-sortable {
   margin-left: 8px;
   margin-right: -16px;
 }
+.k-grid[dir="rtl"] .k-grid-search,
+.k-rtl .k-grid .k-grid-search {
+  float: left;
+}
 .k-grid .k-tooltip.k-tooltip-validation {
   display: -ms-flexbox;
   display: flex;
@@ -7477,6 +7229,10 @@ kendo-sortable {
   visibility: hidden;
   height: 1px;
   bottom: 1px;
+}
+.k-grid .k-grid-search {
+  width: 15.7em;
+  float: right;
 }
 .k-grid-toolbar {
   padding: 14px 14px;
@@ -7545,10 +7301,8 @@ kendo-sortable {
 }
 .k-group-indicator .k-link,
 .k-group-indicator .k-button.k-bare,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
 .k-drag-clue .k-link,
-.k-drag-clue .k-button.k-bare,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+.k-drag-clue .k-button.k-bare {
   padding: 0;
   border-width: 0;
   display: -ms-inline-flexbox;
@@ -7562,9 +7316,7 @@ kendo-sortable {
   margin-right: 4px;
 }
 .k-group-indicator .k-button.k-bare,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button,
-.k-drag-clue .k-button.k-bare,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button {
+.k-drag-clue .k-button.k-bare {
   margin-left: 8px;
   margin-right: -2px;
   padding: 0;
@@ -7573,83 +7325,13 @@ kendo-sortable {
   opacity: 0.5;
 }
 .k-group-indicator .k-button.k-bare::before,
-.k-group-indicator .k-toolbar .k-bare.k-picker-wrap::before,
-.k-toolbar .k-group-indicator .k-bare.k-picker-wrap::before,
-.k-group-indicator .k-toolbar .k-bare.k-dropdown-wrap::before,
-.k-toolbar .k-group-indicator .k-bare.k-dropdown-wrap::before,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
-.k-group-indicator .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-group-indicator .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-group-indicator .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-editor-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-group-indicator .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-editor-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-group-indicator .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
-.k-editor-toolbar .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
-.k-group-indicator .k-gantt-views li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-gantt-views li .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-group-indicator .k-scheduler-toolbar li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-scheduler-toolbar li .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-group-indicator .k-scheduler-footer li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-scheduler-footer li .k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-group-indicator .k-editor-toolbar .k-bare.k-picker-wrap::before,
-.k-editor-toolbar .k-group-indicator .k-bare.k-picker-wrap::before,
-.k-group-indicator .k-editor-toolbar .k-bare.k-dropdown-wrap::before,
-.k-editor-toolbar .k-group-indicator .k-bare.k-dropdown-wrap::before,
-.k-group-indicator .k-editor-toolbar a.k-bare.k-tool::before,
-.k-editor-toolbar .k-group-indicator a.k-bare.k-tool::before,
-.k-group-indicator .k-gantt-views li a.k-bare::before,
-.k-gantt-views li .k-group-indicator a.k-bare::before,
-.k-group-indicator .k-scheduler-toolbar li a.k-bare::before,
-.k-scheduler-toolbar li .k-group-indicator a.k-bare::before,
-.k-group-indicator .k-scheduler-footer li a.k-bare::before,
-.k-scheduler-footer li .k-group-indicator a.k-bare::before,
 .k-group-indicator .k-button.k-bare::after,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after,
 .k-drag-clue .k-button.k-bare::before,
-.k-drag-clue .k-toolbar .k-bare.k-picker-wrap::before,
-.k-toolbar .k-drag-clue .k-bare.k-picker-wrap::before,
-.k-drag-clue .k-toolbar .k-bare.k-dropdown-wrap::before,
-.k-toolbar .k-drag-clue .k-bare.k-dropdown-wrap::before,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::before,
-.k-drag-clue .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-drag-clue .k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-drag-clue .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-editor-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap::before,
-.k-drag-clue .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-editor-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap::before,
-.k-drag-clue .k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
-.k-editor-toolbar .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool::before,
-.k-drag-clue .k-gantt-views li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-gantt-views li .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-drag-clue .k-scheduler-toolbar li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-scheduler-toolbar li .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-drag-clue .k-scheduler-footer li .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-scheduler-footer li .k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > a::before,
-.k-drag-clue .k-editor-toolbar .k-bare.k-picker-wrap::before,
-.k-editor-toolbar .k-drag-clue .k-bare.k-picker-wrap::before,
-.k-drag-clue .k-editor-toolbar .k-bare.k-dropdown-wrap::before,
-.k-editor-toolbar .k-drag-clue .k-bare.k-dropdown-wrap::before,
-.k-drag-clue .k-editor-toolbar a.k-bare.k-tool::before,
-.k-editor-toolbar .k-drag-clue a.k-bare.k-tool::before,
-.k-drag-clue .k-gantt-views li a.k-bare::before,
-.k-gantt-views li .k-drag-clue a.k-bare::before,
-.k-drag-clue .k-scheduler-toolbar li a.k-bare::before,
-.k-scheduler-toolbar li .k-drag-clue a.k-bare::before,
-.k-drag-clue .k-scheduler-footer li a.k-bare::before,
-.k-scheduler-footer li .k-drag-clue a.k-bare::before,
-.k-drag-clue .k-button.k-bare::after,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button::after {
+.k-drag-clue .k-button.k-bare::after {
   display: none;
 }
 .k-group-indicator .k-button.k-bare:hover,
-.k-group-indicator .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover,
-.k-drag-clue .k-button.k-bare:hover,
-.k-drag-clue .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover {
+.k-drag-clue .k-button.k-bare:hover {
   opacity: 1;
 }
 .k-group-indicator {
@@ -8073,9 +7755,11 @@ div.k-grid-footer {
   overflow-y: auto;
 }
 .k-grid-norecords {
+  text-align: center;
+}
+div.k-grid-norecords {
   width: 100%;
   height: 100%;
-  text-align: center;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: center;
@@ -8144,7 +7828,7 @@ div.k-grid-footer {
   padding: 0.5em 1em;
 }
 .k-filter-menu .k-filter-menu-container .k-action-buttons {
-  margin: 1em -1em calc(-0.5em + -8px);
+  margin: 1em -1em -0.5em;
 }
 .k-filter-menu .k-widget,
 .k-filter-menu .k-radio-list,
@@ -8954,7 +8638,7 @@ th.k-sorted {
 }
 .k-grid-lockedcolumns .k-grid-content,
 .k-grid-lockedcolumns .k-grid-header-wrap {
-  box-shadow: inset 18px 0 5px -15px rgba(0, 0, 0, 0.14);
+  box-shadow: inset 18px 0 4px -16px rgba(0, 0, 0, 0.14);
 }
 .k-grid-edit-row > td > .k-textbox,
 .k-grid-edit-row > td > .k-input.k-textbox,
@@ -9363,17 +9047,7 @@ th.k-sorted {
   padding: 14px 16px;
   line-height: 1.42857143;
 }
-.k-toolbar .k-button::before,
-.k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar a.k-tool::before,
-.k-toolbar .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar a::before,
-.k-toolbar .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar a::before,
-.k-toolbar .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar a::before {
+.k-toolbar .k-button::before {
   border-radius: 0;
 }
 .k-ie11 .k-toolbar .k-button {
@@ -9469,17 +9143,7 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 .k-toolbar .k-button-group {
   box-shadow: none;
 }
-.k-toolbar .k-button::before,
-.k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar a.k-tool::before,
-.k-toolbar .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar a::before,
-.k-toolbar .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar a::before,
-.k-toolbar .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar a::before {
+.k-toolbar .k-button::before {
   display: block;
 }
 .k-toolbar .k-button::after {
@@ -9576,28 +9240,8 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 }
 .k-toolbar .k-state-border-up::before,
 .k-toolbar .k-state-border-up .k-button::before,
-.k-toolbar .k-state-border-up .k-picker-wrap::before,
-.k-toolbar .k-state-border-up .k-dropdown-wrap::before,
-.k-toolbar .k-state-border-up .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-state-border-up a.k-tool::before,
-.k-toolbar .k-state-border-up .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-state-border-up a::before,
-.k-toolbar .k-state-border-up .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-state-border-up a::before,
-.k-toolbar .k-state-border-up .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-state-border-up a::before,
 .k-toolbar .k-state-border-down::before,
-.k-toolbar .k-state-border-down .k-button::before,
-.k-toolbar .k-state-border-down .k-picker-wrap::before,
-.k-toolbar .k-state-border-down .k-dropdown-wrap::before,
-.k-toolbar .k-state-border-down .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-state-border-down a.k-tool::before,
-.k-toolbar .k-state-border-down .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-state-border-down a::before,
-.k-toolbar .k-state-border-down .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-state-border-down a::before,
-.k-toolbar .k-state-border-down .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-state-border-down a::before {
+.k-toolbar .k-state-border-down .k-button::before {
   opacity: 0;
 }
 .k-toolbar .k-separator {
@@ -9627,75 +9271,15 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   border-left-color: #fff;
 }
 .k-toolbar .k-split-button:hover .k-button::before,
-.k-toolbar .k-split-button:hover .k-picker-wrap::before,
-.k-toolbar .k-split-button:hover .k-dropdown-wrap::before,
-.k-toolbar .k-split-button:hover .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button:hover a.k-tool::before,
-.k-toolbar .k-split-button:hover .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button:hover a::before,
-.k-toolbar .k-split-button:hover .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button:hover a::before,
-.k-toolbar .k-split-button:hover .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button:hover a::before,
-.k-toolbar .k-split-button.k-state-hover .k-button::before,
-.k-toolbar .k-split-button.k-state-hover .k-picker-wrap::before,
-.k-toolbar .k-split-button.k-state-hover .k-dropdown-wrap::before,
-.k-toolbar .k-split-button.k-state-hover .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button.k-state-hover a.k-tool::before,
-.k-toolbar .k-split-button.k-state-hover .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button.k-state-hover a::before,
-.k-toolbar .k-split-button.k-state-hover .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button.k-state-hover a::before,
-.k-toolbar .k-split-button.k-state-hover .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button.k-state-hover a::before {
+.k-toolbar .k-split-button.k-state-hover .k-button::before {
   opacity: 0.12;
 }
 .k-toolbar .k-split-button:focus .k-button::before,
-.k-toolbar .k-split-button:focus .k-picker-wrap::before,
-.k-toolbar .k-split-button:focus .k-dropdown-wrap::before,
-.k-toolbar .k-split-button:focus .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button:focus a.k-tool::before,
-.k-toolbar .k-split-button:focus .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button:focus a::before,
-.k-toolbar .k-split-button:focus .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button:focus a::before,
-.k-toolbar .k-split-button:focus .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button:focus a::before,
-.k-toolbar .k-split-button.k-state-focused .k-button::before,
-.k-toolbar .k-split-button.k-state-focused .k-picker-wrap::before,
-.k-toolbar .k-split-button.k-state-focused .k-dropdown-wrap::before,
-.k-toolbar .k-split-button.k-state-focused .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button.k-state-focused a.k-tool::before,
-.k-toolbar .k-split-button.k-state-focused .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button.k-state-focused a::before,
-.k-toolbar .k-split-button.k-state-focused .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button.k-state-focused a::before,
-.k-toolbar .k-split-button.k-state-focused .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button.k-state-focused a::before {
+.k-toolbar .k-split-button.k-state-focused .k-button::before {
   opacity: 0.12;
 }
 .k-toolbar .k-split-button.k-state-border-down .k-button::before,
-.k-toolbar .k-split-button.k-state-border-down .k-picker-wrap::before,
-.k-toolbar .k-split-button.k-state-border-down .k-dropdown-wrap::before,
-.k-toolbar .k-split-button.k-state-border-down .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button.k-state-border-down a.k-tool::before,
-.k-toolbar .k-split-button.k-state-border-down .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button.k-state-border-down a::before,
-.k-toolbar .k-split-button.k-state-border-down .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button.k-state-border-down a::before,
-.k-toolbar .k-split-button.k-state-border-down .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button.k-state-border-down a::before,
-.k-toolbar .k-split-button.k-state-border-up .k-button::before,
-.k-toolbar .k-split-button.k-state-border-up .k-picker-wrap::before,
-.k-toolbar .k-split-button.k-state-border-up .k-dropdown-wrap::before,
-.k-toolbar .k-split-button.k-state-border-up .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button.k-state-border-up a.k-tool::before,
-.k-toolbar .k-split-button.k-state-border-up .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button.k-state-border-up a::before,
-.k-toolbar .k-split-button.k-state-border-up .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button.k-state-border-up a::before,
-.k-toolbar .k-split-button.k-state-border-up .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button.k-state-border-up a::before {
+.k-toolbar .k-split-button.k-state-border-up .k-button::before {
   opacity: 0;
 }
 .k-toolbar .k-split-button.k-state-disabled {
@@ -9707,41 +9291,11 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 .k-toolbar .k-split-button.k-state-disabled .k-button {
   color: rgba(0, 0, 0, 0.38);
 }
-.k-toolbar .k-split-button.k-state-disabled .k-button::before,
-.k-toolbar .k-split-button.k-state-disabled .k-picker-wrap::before,
-.k-toolbar .k-split-button.k-state-disabled .k-dropdown-wrap::before,
-.k-toolbar .k-split-button.k-state-disabled .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button.k-state-disabled a.k-tool::before,
-.k-toolbar .k-split-button.k-state-disabled .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button.k-state-disabled a::before,
-.k-toolbar .k-split-button.k-state-disabled .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button.k-state-disabled a::before,
-.k-toolbar .k-split-button.k-state-disabled .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button.k-state-disabled a::before {
+.k-toolbar .k-split-button.k-state-disabled .k-button::before {
   opacity: 0;
 }
 .k-toolbar .k-split-button.k-state-disabled:focus .k-button::before,
-.k-toolbar .k-split-button.k-state-disabled:focus .k-picker-wrap::before,
-.k-toolbar .k-split-button.k-state-disabled:focus .k-dropdown-wrap::before,
-.k-toolbar .k-split-button.k-state-disabled:focus .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button.k-state-disabled:focus a.k-tool::before,
-.k-toolbar .k-split-button.k-state-disabled:focus .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button.k-state-disabled:focus a::before,
-.k-toolbar .k-split-button.k-state-disabled:focus .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button.k-state-disabled:focus a::before,
-.k-toolbar .k-split-button.k-state-disabled:focus .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button.k-state-disabled:focus a::before,
-.k-toolbar .k-split-button.k-state-disabled.k-state-focused .k-button::before,
-.k-toolbar .k-split-button.k-state-disabled.k-state-focused .k-picker-wrap::before,
-.k-toolbar .k-split-button.k-state-disabled.k-state-focused .k-dropdown-wrap::before,
-.k-toolbar .k-split-button.k-state-disabled.k-state-focused .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-toolbar .k-split-button.k-state-disabled.k-state-focused a.k-tool::before,
-.k-toolbar .k-split-button.k-state-disabled.k-state-focused .k-gantt-views li a::before,
-.k-gantt-views li .k-toolbar .k-split-button.k-state-disabled.k-state-focused a::before,
-.k-toolbar .k-split-button.k-state-disabled.k-state-focused .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-toolbar .k-split-button.k-state-disabled.k-state-focused a::before,
-.k-toolbar .k-split-button.k-state-disabled.k-state-focused .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-toolbar .k-split-button.k-state-disabled.k-state-focused a::before {
+.k-toolbar .k-split-button.k-state-disabled.k-state-focused .k-button::before {
   opacity: 0.12;
 }
 .k-toolbar .k-picker-wrap,
@@ -10335,7 +9889,7 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   border-top-width: 1px;
 }
 .k-spreadsheet-popup .k-spreadsheet-color-palette {
-  padding: 8px;
+  padding: 0;
 }
 .k-spreadsheet-popup .k-spreadsheet-border-type-palette {
   width: 12.5rem;
@@ -10541,23 +10095,7 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 .k-spreadsheet-quick-access-toolbar .k-button {
   border-radius: 50%;
 }
-.k-spreadsheet-quick-access-toolbar .k-button::before,
-.k-spreadsheet-quick-access-toolbar .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-spreadsheet-quick-access-toolbar .k-picker-wrap::before,
-.k-spreadsheet-quick-access-toolbar .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-spreadsheet-quick-access-toolbar .k-dropdown-wrap::before,
-.k-spreadsheet-quick-access-toolbar .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-spreadsheet-quick-access-toolbar .k-picker-wrap::before,
-.k-spreadsheet-quick-access-toolbar .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-spreadsheet-quick-access-toolbar .k-dropdown-wrap::before,
-.k-spreadsheet-quick-access-toolbar .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-spreadsheet-quick-access-toolbar a.k-tool::before,
-.k-spreadsheet-quick-access-toolbar .k-gantt-views li a::before,
-.k-gantt-views li .k-spreadsheet-quick-access-toolbar a::before,
-.k-spreadsheet-quick-access-toolbar .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-spreadsheet-quick-access-toolbar a::before,
-.k-spreadsheet-quick-access-toolbar .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-spreadsheet-quick-access-toolbar a::before {
+.k-spreadsheet-quick-access-toolbar .k-button::before {
   display: block;
 }
 .k-spreadsheet-sheets-bar {
@@ -10567,23 +10105,7 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   margin: 4px;
   border-radius: 50%;
 }
-.k-spreadsheet-sheets-bar .k-button::before,
-.k-spreadsheet-sheets-bar .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-spreadsheet-sheets-bar .k-picker-wrap::before,
-.k-spreadsheet-sheets-bar .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-spreadsheet-sheets-bar .k-dropdown-wrap::before,
-.k-spreadsheet-sheets-bar .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-spreadsheet-sheets-bar .k-picker-wrap::before,
-.k-spreadsheet-sheets-bar .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-spreadsheet-sheets-bar .k-dropdown-wrap::before,
-.k-spreadsheet-sheets-bar .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-spreadsheet-sheets-bar a.k-tool::before,
-.k-spreadsheet-sheets-bar .k-gantt-views li a::before,
-.k-gantt-views li .k-spreadsheet-sheets-bar a::before,
-.k-spreadsheet-sheets-bar .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-spreadsheet-sheets-bar a::before,
-.k-spreadsheet-sheets-bar .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-spreadsheet-sheets-bar a::before {
+.k-spreadsheet-sheets-bar .k-button::before {
   display: block;
 }
 .k-spreadsheet-window {
@@ -10594,23 +10116,7 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 .k-spreadsheet-window .k-action-buttons {
   margin: 1em -24px -24px;
 }
-.k-spreadsheet-popup .k-button::before,
-.k-spreadsheet-popup .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-spreadsheet-popup .k-picker-wrap::before,
-.k-spreadsheet-popup .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-spreadsheet-popup .k-dropdown-wrap::before,
-.k-spreadsheet-popup .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-spreadsheet-popup .k-picker-wrap::before,
-.k-spreadsheet-popup .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-spreadsheet-popup .k-dropdown-wrap::before,
-.k-spreadsheet-popup .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-spreadsheet-popup a.k-tool::before,
-.k-spreadsheet-popup .k-gantt-views li a::before,
-.k-gantt-views li .k-spreadsheet-popup a::before,
-.k-spreadsheet-popup .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-spreadsheet-popup a::before,
-.k-spreadsheet-popup .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-spreadsheet-popup a::before {
+.k-spreadsheet-popup .k-button::before {
   display: block;
 }
 .k-spreadsheet-popup .k-separator {
@@ -11047,22 +10553,6 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   top: initial;
 }
 .k-pivot-toolbar .k-button::before,
-.k-pivot-toolbar .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-pivot-toolbar .k-picker-wrap::before,
-.k-pivot-toolbar .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-pivot-toolbar .k-dropdown-wrap::before,
-.k-pivot-toolbar .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-pivot-toolbar .k-picker-wrap::before,
-.k-pivot-toolbar .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-pivot-toolbar .k-dropdown-wrap::before,
-.k-pivot-toolbar .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-pivot-toolbar a.k-tool::before,
-.k-pivot-toolbar .k-gantt-views li a::before,
-.k-gantt-views li .k-pivot-toolbar a::before,
-.k-pivot-toolbar .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-pivot-toolbar a::before,
-.k-pivot-toolbar .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-pivot-toolbar a::before,
 .k-fieldselector .k-list li.k-item::before {
   display: none;
 }
@@ -11230,12 +10720,32 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   background-color: transparent;
   background-repeat: no-repeat;
 }
+.k-treelist-scrollable > table,
+.k-treelist-scrollable .k-grid-header tr,
+.k-treelist-scrollable .k-grid-header th {
+  background-color: inherit;
+}
+.k-treelist-scrollable .k-grid-toolbar,
+.k-treelist-scrollable .k-grid-header th {
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 1;
+}
+.k-treelist-scrollable .k-grid-toolbar {
+  top: 0px;
+  left: 0px;
+}
 .k-drag-separator {
   display: inline-block;
   border-right: 1px solid;
   height: 1em;
   vertical-align: top;
   margin: 0 0.5em;
+}
+.k-treelist-scrollable .k-grid-toolbar,
+.k-treelist-scrollable .k-grid-header,
+.k-treelist-scrollable .k-grid-header tr:hover {
+  background-color: inherit;
 }
 kendo-scrollview.k-scrollview-wrap,
 div.k-scrollview {
@@ -11313,24 +10823,8 @@ div.k-scrollview .k-scrollview-nav > li.k-link {
   pointer-events: all;
 }
 kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-button::before,
-kendo-scrollview.k-scrollview-wrap .k-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-picker-wrap::before,
-kendo-scrollview.k-scrollview-wrap .k-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-dropdown-wrap::before,
-kendo-scrollview.k-scrollview-wrap .k-editor-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-editor-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-picker-wrap::before,
-kendo-scrollview.k-scrollview-wrap .k-editor-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-editor-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-dropdown-wrap::before,
 kendo-scrollview.k-scrollview-wrap .k-scrollview-nav > li.k-link::before,
 div.k-scrollview .k-scrollview-pageable > li.k-button::before,
-div.k-scrollview .k-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-toolbar div.k-scrollview .k-scrollview-pageable > li.k-picker-wrap::before,
-div.k-scrollview .k-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-toolbar div.k-scrollview .k-scrollview-pageable > li.k-dropdown-wrap::before,
-div.k-scrollview .k-editor-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-editor-toolbar div.k-scrollview .k-scrollview-pageable > li.k-picker-wrap::before,
-div.k-scrollview .k-editor-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-editor-toolbar div.k-scrollview .k-scrollview-pageable > li.k-dropdown-wrap::before,
 div.k-scrollview .k-scrollview-nav > li.k-link::before {
   content: "";
   width: 16px;
@@ -11344,23 +10838,7 @@ div.k-scrollview .k-scrollview-nav > li.k-link::before {
   transform: translate(-50%, -50%);
 }
 kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-button::before,
-kendo-scrollview.k-scrollview-wrap .k-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-picker-wrap::before,
-kendo-scrollview.k-scrollview-wrap .k-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-dropdown-wrap::before,
-kendo-scrollview.k-scrollview-wrap .k-editor-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-editor-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-picker-wrap::before,
-kendo-scrollview.k-scrollview-wrap .k-editor-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-editor-toolbar kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > li.k-dropdown-wrap::before,
-div.k-scrollview .k-scrollview-pageable > li.k-button::before,
-div.k-scrollview .k-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-toolbar div.k-scrollview .k-scrollview-pageable > li.k-picker-wrap::before,
-div.k-scrollview .k-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-toolbar div.k-scrollview .k-scrollview-pageable > li.k-dropdown-wrap::before,
-div.k-scrollview .k-editor-toolbar .k-scrollview-pageable > li.k-picker-wrap::before,
-.k-editor-toolbar div.k-scrollview .k-scrollview-pageable > li.k-picker-wrap::before,
-div.k-scrollview .k-editor-toolbar .k-scrollview-pageable > li.k-dropdown-wrap::before,
-.k-editor-toolbar div.k-scrollview .k-scrollview-pageable > li.k-dropdown-wrap::before {
+div.k-scrollview .k-scrollview-pageable > li.k-button::before {
   pointer-events: initial;
   border-radius: 0;
 }
@@ -11561,10 +11039,17 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
 .k-tooltip-closable .k-tooltip-content {
   padding-right: 20px;
 }
-.k-rtl .k-tooltip-closable .k-tooltip-content,
-[dir-rtl] .k-tooltip-closable .k-tooltip-content {
-  padding-left: 20px;
+.k-rtl .k-tooltip-title,
+.k-rtl .k-tooltip-content,
+[dir="rtl"] .k-tooltip-title,
+[dir="rtl"] .k-tooltip-content {
   padding-right: 0;
+  padding-left: 20px;
+}
+.k-rtl .k-tooltip-button,
+[dir="rtl"] .k-tooltip-button {
+  left: 16px;
+  right: auto;
 }
 .k-tooltip-button {
   position: absolute;
@@ -11900,11 +11385,9 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
   border-style: solid;
   border-width: 0;
   outline: 0;
-  overflow: hidden;
   position: absolute;
   text-align: center;
   text-decoration: none;
-  text-indent: -3333px;
   box-sizing: content-box;
   width: 16px;
   height: 16px;
@@ -12035,39 +11518,7 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
   border-radius: 50%;
 }
 .k-slider .k-button:hover::before,
-.k-slider .k-toolbar .k-picker-wrap:hover::before,
-.k-toolbar .k-slider .k-picker-wrap:hover::before,
-.k-slider .k-toolbar .k-dropdown-wrap:hover::before,
-.k-toolbar .k-slider .k-dropdown-wrap:hover::before,
-.k-slider .k-editor-toolbar .k-picker-wrap:hover::before,
-.k-editor-toolbar .k-slider .k-picker-wrap:hover::before,
-.k-slider .k-editor-toolbar .k-dropdown-wrap:hover::before,
-.k-editor-toolbar .k-slider .k-dropdown-wrap:hover::before,
-.k-slider .k-editor-toolbar a.k-tool:hover::before,
-.k-editor-toolbar .k-slider a.k-tool:hover::before,
-.k-slider .k-gantt-views li a:hover::before,
-.k-gantt-views li .k-slider a:hover::before,
-.k-slider .k-scheduler-toolbar li a:hover::before,
-.k-scheduler-toolbar li .k-slider a:hover::before,
-.k-slider .k-scheduler-footer li a:hover::before,
-.k-scheduler-footer li .k-slider a:hover::before,
-.k-slider .k-button.k-state-hover::before,
-.k-slider .k-toolbar .k-state-hover.k-picker-wrap::before,
-.k-toolbar .k-slider .k-state-hover.k-picker-wrap::before,
-.k-slider .k-toolbar .k-state-hover.k-dropdown-wrap::before,
-.k-toolbar .k-slider .k-state-hover.k-dropdown-wrap::before,
-.k-slider .k-editor-toolbar .k-state-hover.k-picker-wrap::before,
-.k-editor-toolbar .k-slider .k-state-hover.k-picker-wrap::before,
-.k-slider .k-editor-toolbar .k-state-hover.k-dropdown-wrap::before,
-.k-editor-toolbar .k-slider .k-state-hover.k-dropdown-wrap::before,
-.k-slider .k-editor-toolbar a.k-state-hover.k-tool::before,
-.k-editor-toolbar .k-slider a.k-state-hover.k-tool::before,
-.k-slider .k-gantt-views li a.k-state-hover::before,
-.k-gantt-views li .k-slider a.k-state-hover::before,
-.k-slider .k-scheduler-toolbar li a.k-state-hover::before,
-.k-scheduler-toolbar li .k-slider a.k-state-hover::before,
-.k-slider .k-scheduler-footer li a.k-state-hover::before,
-.k-scheduler-footer li .k-slider a.k-state-hover::before {
+.k-slider .k-button.k-state-hover::before {
   opacity: 0;
 }
 .k-slider .k-draghandle {
@@ -12362,6 +11813,13 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
   margin: 1em 1em 0;
   text-align: center;
 }
+.k-rtl .k-alpha-slider.k-slider-vertical,
+.k-rtl .k-hue-slider.k-slider-vertical,
+[dir="rtl"] .k-alpha-slider.k-slider-vertical,
+[dir="rtl"] .k-hue-slider.k-slider-vertical {
+  margin-right: 12px;
+  margin-left: 0;
+}
 .k-colorpalette {
   border-width: 0;
   line-height: 0;
@@ -12377,6 +11835,7 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
 .k-colorpalette .k-item {
   width: 14px;
   height: 14px;
+  box-sizing: border-box;
   overflow: hidden;
   -ms-high-contrast-adjust: none;
   cursor: pointer;
@@ -12473,23 +11932,7 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
   box-shadow: none;
   min-width: auto;
 }
-.k-action-buttons .k-button::before,
-.k-action-buttons .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-action-buttons .k-picker-wrap::before,
-.k-action-buttons .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-action-buttons .k-dropdown-wrap::before,
-.k-action-buttons .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-action-buttons .k-picker-wrap::before,
-.k-action-buttons .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-action-buttons .k-dropdown-wrap::before,
-.k-action-buttons .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-action-buttons a.k-tool::before,
-.k-action-buttons .k-gantt-views li a::before,
-.k-gantt-views li .k-action-buttons a::before,
-.k-action-buttons .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-action-buttons a::before,
-.k-action-buttons .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-action-buttons a::before {
+.k-action-buttons .k-button::before {
   display: block;
 }
 .k-action-buttons .k-button + .k-button {
@@ -12980,23 +12423,7 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
   transition: opacity 0.2s ease-in-out;
 }
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:hover::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap:hover::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap:hover::before,
-.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap:hover::before,
-.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap:hover::before,
-.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool:hover::before,
-.k-gantt-views li .k-calendar.k-calendar-minimal.k-calendar-infinite > a:hover::before,
-.k-scheduler-toolbar li .k-calendar.k-calendar-minimal.k-calendar-infinite > a:hover::before,
-.k-scheduler-footer li .k-calendar.k-calendar-minimal.k-calendar-infinite > a:hover::before,
-.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap:active::before,
-.k-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap:active::before,
-.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-picker-wrap:active::before,
-.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-dropdown-wrap:active::before,
-.k-editor-toolbar .k-calendar.k-calendar-minimal.k-calendar-infinite > a.k-tool:active::before,
-.k-gantt-views li .k-calendar.k-calendar-minimal.k-calendar-infinite > a:active::before,
-.k-scheduler-toolbar li .k-calendar.k-calendar-minimal.k-calendar-infinite > a:active::before,
-.k-scheduler-footer li .k-calendar.k-calendar-minimal.k-calendar-infinite > a:active::before {
+.k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:active::before {
   opacity: 0;
 }
 .k-calendar.k-calendar-minimal.k-calendar-infinite > .k-button:focus::after {
@@ -13799,7 +13226,7 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
 }
 .k-textarea {
   width: 18em;
-  min-height: calc(16px + 4.5em);
+  min-height: calc(18px + 1.125em);
 }
 .k-maskedtextbox {
   display: -ms-inline-flexbox;
@@ -13909,6 +13336,26 @@ div.k-scrollview .k-scrollview-prev:hover span::before {
   -webkit-transform: translate(0, -6px) translate(1px, -1.03125em) translate(12.5%, -9.375%) scale(0.75);
   -ms-transform: translate(0, -6px) translate(1px, -1.03125em) translate(12.5%, -9.375%) scale(0.75);
   transform: translate(0, -6px) translate(1px, -1.03125em) translate(12.5%, -9.375%) scale(0.75);
+}
+.k-input-icon {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 16px;
+}
+.k-ie9 .k-input-icon {
+  position: absolute;
+  height: 100%;
+  right: 0;
+  top: 0;
+}
+.k-ie9 .k-rtl .k-input-icon,
+.k-ie9 [dir="rtl"] .k-input-icon {
+  left: 0;
+  right: auto;
 }
 .k-checkbox,
 .k-radio {
@@ -15200,6 +14647,9 @@ table.k-editor {
 .k-multiselect-wrap {
   min-height: 0;
 }
+.k-multiselect-wrap > .k-readonly {
+  opacity: 0.6;
+}
 .k-multiselect-wrap .k-button {
   min-height: 2em;
   padding-top: 0;
@@ -15210,23 +14660,7 @@ table.k-editor {
   border-radius: 2em;
   background: transparent;
 }
-.k-multiselect-wrap .k-button::before,
-.k-multiselect-wrap .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-multiselect-wrap .k-picker-wrap::before,
-.k-multiselect-wrap .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-multiselect-wrap .k-dropdown-wrap::before,
-.k-multiselect-wrap .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-multiselect-wrap .k-picker-wrap::before,
-.k-multiselect-wrap .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-multiselect-wrap .k-dropdown-wrap::before,
-.k-multiselect-wrap .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-multiselect-wrap a.k-tool::before,
-.k-multiselect-wrap .k-gantt-views li a::before,
-.k-gantt-views li .k-multiselect-wrap a::before,
-.k-multiselect-wrap .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-multiselect-wrap a::before,
-.k-multiselect-wrap .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-multiselect-wrap a::before {
+.k-multiselect-wrap .k-button::before {
   border-radius: 2em;
   opacity: 0.07;
 }
@@ -15236,39 +14670,7 @@ table.k-editor {
   background: rgba(0, 0, 0, 0.87);
 }
 .k-multiselect-wrap .k-button.k-state-focused::before,
-.k-multiselect-wrap .k-toolbar .k-state-focused.k-picker-wrap::before,
-.k-toolbar .k-multiselect-wrap .k-state-focused.k-picker-wrap::before,
-.k-multiselect-wrap .k-toolbar .k-state-focused.k-dropdown-wrap::before,
-.k-toolbar .k-multiselect-wrap .k-state-focused.k-dropdown-wrap::before,
-.k-multiselect-wrap .k-editor-toolbar .k-state-focused.k-picker-wrap::before,
-.k-editor-toolbar .k-multiselect-wrap .k-state-focused.k-picker-wrap::before,
-.k-multiselect-wrap .k-editor-toolbar .k-state-focused.k-dropdown-wrap::before,
-.k-editor-toolbar .k-multiselect-wrap .k-state-focused.k-dropdown-wrap::before,
-.k-multiselect-wrap .k-editor-toolbar a.k-state-focused.k-tool::before,
-.k-editor-toolbar .k-multiselect-wrap a.k-state-focused.k-tool::before,
-.k-multiselect-wrap .k-gantt-views li a.k-state-focused::before,
-.k-gantt-views li .k-multiselect-wrap a.k-state-focused::before,
-.k-multiselect-wrap .k-scheduler-toolbar li a.k-state-focused::before,
-.k-scheduler-toolbar li .k-multiselect-wrap a.k-state-focused::before,
-.k-multiselect-wrap .k-scheduler-footer li a.k-state-focused::before,
-.k-scheduler-footer li .k-multiselect-wrap a.k-state-focused::before,
-.k-multiselect-wrap .k-button:focus::before,
-.k-multiselect-wrap .k-toolbar .k-picker-wrap:focus::before,
-.k-toolbar .k-multiselect-wrap .k-picker-wrap:focus::before,
-.k-multiselect-wrap .k-toolbar .k-dropdown-wrap:focus::before,
-.k-toolbar .k-multiselect-wrap .k-dropdown-wrap:focus::before,
-.k-multiselect-wrap .k-editor-toolbar .k-picker-wrap:focus::before,
-.k-editor-toolbar .k-multiselect-wrap .k-picker-wrap:focus::before,
-.k-multiselect-wrap .k-editor-toolbar .k-dropdown-wrap:focus::before,
-.k-editor-toolbar .k-multiselect-wrap .k-dropdown-wrap:focus::before,
-.k-multiselect-wrap .k-editor-toolbar a.k-tool:focus::before,
-.k-editor-toolbar .k-multiselect-wrap a.k-tool:focus::before,
-.k-multiselect-wrap .k-gantt-views li a:focus::before,
-.k-gantt-views li .k-multiselect-wrap a:focus::before,
-.k-multiselect-wrap .k-scheduler-toolbar li a:focus::before,
-.k-scheduler-toolbar li .k-multiselect-wrap a:focus::before,
-.k-multiselect-wrap .k-scheduler-footer li a:focus::before,
-.k-scheduler-footer li .k-multiselect-wrap a:focus::before {
+.k-multiselect-wrap .k-button:focus::before {
   opacity: 0.46;
 }
 .k-multiselect-wrap .k-button.k-state-focused .k-select,
@@ -15342,6 +14744,15 @@ table.k-editor {
 }
 .k-numeric-wrap > .k-input:invalid {
   box-shadow: none;
+}
+.k-numerictextbox .k-numeric-wrap {
+  border-top: 1px solid transparent;
+}
+.k-numerictextbox.k-invalid .k-numeric-wrap,
+.k-numerictextbox.k-state-invalid .k-numeric-wrap,
+.k-numerictextbox.ng-invalid.ng-touched .k-numeric-wrap,
+.k-numerictextbox.ng-invalid.ng-dirty .k-numeric-wrap {
+  border-top: 1px solid transparent;
 }
 .k-numerictextbox .k-numeric-wrap {
   background-clip: padding-box;
@@ -16212,6 +15623,92 @@ li.k-item.k-drag-clue {
 }
 .k-item.k-drag-clue {
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+}
+.k-rating {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  box-sizing: border-box;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+}
+.k-rating-container {
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  position: relative;
+  box-sizing: border-box;
+}
+.k-rating-container .k-rating-item {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  position: relative;
+  padding: 4px 8px;
+  -ms-flex-align: center;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0;
+  outline: 0;
+  overflow: hidden;
+  transition: color 200ms ease-out 0s;
+}
+.k-rating-container .k-rating-item * {
+  pointer-events: none;
+}
+.k-rating-container .k-rating-item .k-icon {
+  font-size: 24px;
+}
+.k-rating-container .k-rating-item .k-rating-precision-part {
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  overflow: hidden;
+}
+.k-ie9 .k-rating-container .k-rating-item .k-rating-precision-part {
+  top: auto;
+}
+.k-ie9 .k-rating-container .k-rating-item {
+  vertical-align: auto;
+}
+.k-rating-label {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-align: center;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1.5;
+  margin: 4px 8px;
+}
+.k-rtl .k-rating-precision-part,
+[dir="rtl"] .k-rating-precision-part {
+  left: auto;
+  right: 8px;
+}
+.k-rating:focus .k-rating-item > .k-icon,
+.k-rating.k-state-focused .k-rating-item > .k-icon {
+  text-shadow: 0 2px 3.6px rgba(0, 0, 0, 0.2);
+}
+.k-rating:focus .k-rating-item.k-state-selected > .k-icon,
+.k-rating.k-state-focused .k-rating-item.k-state-selected > .k-icon {
+  text-shadow: 0 2px 3.6px rgba(63, 81, 181, 0.5);
+}
+.k-rating-item {
+  color: rgba(140, 140, 140, 0.87);
+}
+.k-rating-item.k-state-selected {
+  color: #303f9f;
+}
+.k-rating-item:hover,
+.k-rating-item.k-state-hover {
+  color: #303f9f;
+  cursor: pointer;
+}
+.k-rating-item:focus,
+.k-rating-item.k-state-focused {
+  color: #303f9f;
 }
 .k-var--chart-font {
   font-size: 14px;
@@ -18561,20 +18058,20 @@ kendo-scheduler .k-event .k-event-template {
 .k-notification-wrap > .k-icon {
   margin-top: 4px;
   margin-right: 4px;
-  -ms-flex: 0 0 0%;
-  flex: 0 0 0%;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
 }
 .k-notification-wrap > .k-i-close,
 .k-notification-wrap > .k-i-group-delete::before {
   margin-right: 0;
   margin-left: 4px;
-  -ms-flex: 0 0 0%;
-  flex: 0 0 0%;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
   cursor: pointer;
 }
 .k-notification-wrap > .k-notification-content {
-  -ms-flex: 1 1 0%;
-  flex: 1 1 0%;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .k-rtl .k-notification .k-notification-wrap > .k-icon,
 [dir="rtl"] .k-notification .k-notification-wrap > .k-icon {
@@ -18952,7 +18449,7 @@ kendo-scheduler .k-event .k-event-template {
 }
 .k-menu-group {
   margin: 0;
-  padding: 8px 0;
+  padding: 0 0;
   white-space: nowrap;
   list-style: none;
   display: none;
@@ -19007,7 +18504,7 @@ kendo-scheduler .k-event .k-event-template {
 }
 .k-menu-group .k-item.k-separator,
 .k-menu-vertical .k-item.k-separator {
-  margin: 8px 0;
+  margin: 0 0;
 }
 .k-popups-wrapper {
   position: relative;
@@ -19022,7 +18519,7 @@ kendo-scheduler .k-event .k-event-template {
   box-sizing: content-box;
 }
 .k-context-menu.k-menu-horizontal {
-  padding: 0 8px;
+  padding: 0 0;
 }
 .k-context-menu > .k-item + .k-item:not(.k-separator) {
   margin-left: 0;
@@ -20287,22 +19784,7 @@ kendo-scheduler .k-event .k-event-template {
   border-top-width: 0;
   border-color: inherit;
 }
-.k-card-actions > .k-button.k-flat:first-child,
-.k-edit-buttons .k-card-actions > .k-button:first-child,
-.k-dialog-button-group .k-card-actions > .k-button:first-child,
-.k-edit-field .k-card-actions > .k-button:first-child,
-.k-dialog-buttongroup .k-card-actions > .k-button:first-child,
-.k-toolbar .k-split-button.k-state-disabled .k-card-actions > .k-button:first-child,
-.k-spreadsheet-quick-access-toolbar .k-card-actions > .k-button:first-child,
-.k-spreadsheet-sheets-bar .k-card-actions > .k-button:first-child,
-.k-spreadsheet-popup .k-card-actions > .k-button:first-child,
-.k-action-buttons .k-card-actions > .k-button:first-child,
-.k-calendar .k-calendar-header .k-card-actions > .k-button:first-child,
-.k-editor-toolbar .k-card-actions > a.k-tool:first-child,
-.k-gantt-toolbar .k-card-actions > .k-button:first-child,
-.k-gantt-views li .k-card-actions > a:first-child,
-.k-scheduler-toolbar li .k-card-actions > a:first-child,
-.k-scheduler-footer li .k-card-actions > a:first-child {
+.k-card-actions > .k-button.k-flat:first-child {
   margin-left: -16px;
 }
 .k-card-action {
@@ -20742,22 +20224,6 @@ kendo-scheduler .k-event .k-event-template {
   display: inline-block;
 }
 .k-message-box .k-button::before,
-.k-message-box .k-toolbar .k-picker-wrap::before,
-.k-toolbar .k-message-box .k-picker-wrap::before,
-.k-message-box .k-toolbar .k-dropdown-wrap::before,
-.k-toolbar .k-message-box .k-dropdown-wrap::before,
-.k-message-box .k-editor-toolbar .k-picker-wrap::before,
-.k-editor-toolbar .k-message-box .k-picker-wrap::before,
-.k-message-box .k-editor-toolbar .k-dropdown-wrap::before,
-.k-editor-toolbar .k-message-box .k-dropdown-wrap::before,
-.k-message-box .k-editor-toolbar a.k-tool::before,
-.k-editor-toolbar .k-message-box a.k-tool::before,
-.k-message-box .k-gantt-views li a::before,
-.k-gantt-views li .k-message-box a::before,
-.k-message-box .k-scheduler-toolbar li a::before,
-.k-scheduler-toolbar li .k-message-box a::before,
-.k-message-box .k-scheduler-footer li a::before,
-.k-scheduler-footer li .k-message-box a::before,
 .k-message-box .k-button::after {
   display: none;
 }
