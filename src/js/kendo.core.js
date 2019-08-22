@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.2.807'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.2.822'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1946,6 +1946,17 @@
         function htmlEncode(value) {
             return ('' + value).replace(ampRegExp, '&amp;').replace(ltRegExp, '&lt;').replace(gtRegExp, '&gt;').replace(quoteRegExp, '&quot;').replace(aposRegExp, '&#39;');
         }
+        function unescape(value) {
+            var template;
+            try {
+                template = window.decodeURIComponent(value);
+            } catch (error) {
+                template = value.replace(/%u([\dA-F]{4})|%([\dA-F]{2})/gi, function (_, m1, m2) {
+                    return String.fromCharCode(parseInt('0x' + (m1 || m2), 16));
+                });
+            }
+            return template;
+        }
         var eventTarget = function (e) {
             return e.target;
         };
@@ -2087,6 +2098,7 @@
             stringify: proxy(JSON.stringify, JSON),
             eventTarget: eventTarget,
             htmlEncode: htmlEncode,
+            unescape: unescape,
             isLocalUrl: function (url) {
                 return url && !localUrlRe.test(url);
             },
@@ -2600,7 +2612,7 @@
                         return editorToolbar;
                     }
                 }
-                if (role === 'view') {
+                if (role === 'view' && element.data('kendoView')) {
                     return element.data('kendoView');
                 }
                 if (suites) {

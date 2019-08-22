@@ -51,7 +51,7 @@
                 Widget.fn.init.call(that, element, options);
                 element = that.wrapper = that.element;
                 options = that.options;
-                options.url = window.unescape(options.url);
+                options.url = kendo.unescape(options.url);
                 that.options.disableDates = getDisabledExpr(that.options.disableDates);
                 that._templates();
                 that._selectable();
