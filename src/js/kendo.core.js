@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.2.822'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.2.910'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
