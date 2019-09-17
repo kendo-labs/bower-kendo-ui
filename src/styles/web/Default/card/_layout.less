@@ -22,28 +22,6 @@
                                                                                                                                                                                                        
 
 */
-@form-line-height: (20 / 14);
-@card-border-radius: 4px;
-@card-border-width: 1px;
-@card-header-padding-x: 8px;
-@card-header-padding-y: 4px;
-@card-header-border-width: 1px;
-@card-body-padding-x: 8px;
-@card-body-padding-y: 8px;
-@paragraph-margin-bottom: 8px;
-@card-title-margin-bottom: 8px;
-@card-subtitle-margin-bottom: 8px;
-@card-actions-padding-x: 8px;
-@card-actions-padding-y: 8px;
-@card-actions-border-width: 1px;
-@card-button-padding-x: 8px;
-@card-button-padding-y: 4px;
-@card-deck-gap: 16px;
-
-
-@card-deck-scroll-button-radius: 0;
-@card-deck-scroll-button-offset: -1px;
-
 // Card
 .k-card {
     .border-radius( @card-border-radius );
@@ -52,7 +30,42 @@
     border-style: solid;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    position: relative;
+
+    .k-card-callout {
+        position: absolute;
+        width: @card-callout-width;
+        height: @card-callout-height;
+        border-width: @card-border-width @card-border-width 0 0;
+        border-style: solid;
+        margin: 0;
+
+        &.k-callout-n {
+            top: 0;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            left: 50%;
+        }
+
+        &.k-callout-e {
+            top: 50%;
+            left: auto;
+            right: 0;
+            transform: translate(50%, -50%) rotate(135deg) scaleX(-1);
+        }
+
+        &.k-callout-s {
+            top: auto;
+            bottom: 0;
+            transform: translate(-50%, 50%) rotate(135deg);
+            left: 50%;
+        }
+
+        &.k-callout-w {
+            top: 50%;
+            left: 0;
+            transform: translate(-50%, -50%) rotate(-135deg);
+        }
+    }
 }
 .k-card.k-card-flat {
     box-shadow: none;
@@ -80,6 +93,8 @@
     border-width: 0 0 @card-header-border-width;
     border-style: solid;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
 
     .k-card > &:first-child {
         .border-top-radius( @card-border-radius );
@@ -96,6 +111,10 @@
     > h6 {
         margin: 0;
     }
+
+    .k-card-title+.k-card-subtitle {
+        margin-top: 0;
+    }
 }
 
 
@@ -104,7 +123,7 @@
     // @extend %top-rounded-child;
     // @extend %bottom-rounded-child;
     padding: @card-body-padding-y @card-body-padding-x;
-    flex: 1 1 0;
+    flex: 1 1 auto;
 
     .k-card > &:first-child {
         .border-top-radius( @card-border-radius );
@@ -148,7 +167,8 @@
 
 // Card title
 .k-card-title {
-    // @include typography-styles( card-title );
+   // @include typography-styles( card-title );
+    font-size: @card-title-font-size;
     margin: 0 0 @card-title-margin-bottom;
 }
 
@@ -156,7 +176,9 @@
 // Card subtitle
 .k-card-subtitle {
     // @include typography-styles( card-subtitle );
+    font-size: @card-subtitle-font-size;
     margin: 0 0 @card-subtitle-margin-bottom;
+    opacity: .6;
 }
 .k-card-title + .k-card-subtitle {
     margin-top: ( -@card-title-margin-bottom * .75 );
@@ -193,6 +215,11 @@
     .k-card > & {
         border-top-width: @card-actions-border-width;
         border-color: inherit;
+    }
+
+    .k-button {
+        max-width: 100%;
+        white-space: normal;
     }
 
     > .k-button.k-flat:first-child {
@@ -275,6 +302,7 @@
         .border-radius( @card-deck-scroll-button-radius );
         flex: 0 0 auto;
         position: absolute;
+        z-index: 1;
 
         &:first-child {
             left: @card-deck-scroll-button-offset;

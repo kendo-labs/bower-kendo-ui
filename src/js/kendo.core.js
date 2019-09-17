@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.2.910'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.3.917'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2217,6 +2217,9 @@
                     e = that.events[idx];
                     if (that.options[e] && options[e]) {
                         that.unbind(e, that.options[e]);
+                        if (that._events && that._events[e]) {
+                            delete that._events[e];
+                        }
                     }
                 }
                 that.bind(that.events, options);
@@ -2601,7 +2604,7 @@
             e.preventDefault();
         };
         kendo.widgetInstance = function (element, suites) {
-            var role = element.data(kendo.ns + 'role'), widgets = [], i, length;
+            var role = element.data(kendo.ns + 'role'), widgets = [], i, length, elementData = element.data('kendoView');
             if (role) {
                 if (role === 'content') {
                     role = 'scroller';
@@ -2612,8 +2615,8 @@
                         return editorToolbar;
                     }
                 }
-                if (role === 'view' && element.data('kendoView')) {
-                    return element.data('kendoView');
+                if (role === 'view' && elementData) {
+                    return elementData;
                 }
                 if (suites) {
                     if (suites[0]) {
@@ -3152,7 +3155,7 @@
                 }
             }
             function setHours(date, time) {
-                date = new Date(kendo.date.getDate(date).getTime() + kendo.date.getMilliseconds(time));
+                date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
                 adjustDST(date, time.getHours());
                 return date;
             }

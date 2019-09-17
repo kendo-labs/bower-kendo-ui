@@ -325,6 +325,9 @@
                 }
             },
             _wheelScroll: function (e) {
+                if (e.ctrlKey) {
+                    return;
+                }
                 if (!this._wheel) {
                     this._wheel = true;
                     this._wheelY = 0;

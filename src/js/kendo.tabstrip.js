@@ -233,7 +233,7 @@
             },
             _keydown: function (e) {
                 var that = this, key = e.keyCode, current = that._current(), rtl = that._isRtl, isHorizontal = /top|bottom/.test(that.options.tabPosition), action;
-                if (e.target != e.currentTarget) {
+                if (e.target != e.currentTarget || !current) {
                     return;
                 }
                 if (key === keys.DOWN && !isHorizontal) {

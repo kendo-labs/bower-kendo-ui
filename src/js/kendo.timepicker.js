@@ -116,7 +116,7 @@
                 that._html(html);
             },
             refresh: function () {
-                var that = this, options = that.options, format = options.format, offset = dst(), ignoreDST = offset < 0, min = options.min, max = options.max, msMin = getMilliseconds(min), msMax = getMilliseconds(max), msLastTime = getMilliseconds(lastTimeOption(options.interval)), msInterval = options.interval * MS_PER_MINUTE, toString = kendo.toString, template = that.template, start = new DATE(+min), startDate = new DATE(start), msStart, lastIdx, idx = 0, length, html = '';
+                var that = this, options = that.options, format = options.format, offset = dst(), ignoreDST = offset < 0, value = kendo.parseDate(that._value), parsedValue = value ? mergeDateAndTime(value, options.min) : mergeDateAndTime(new Date(), options.min), min = options.min, max = options.max, msMin = getMilliseconds(min), msMax = getMilliseconds(max), msLastTime = getMilliseconds(lastTimeOption(options.interval)), msInterval = options.interval * MS_PER_MINUTE, toString = kendo.toString, template = that.template, start = options.useValueToRender ? parsedValue : new Date(+options.min), startDate = new DATE(start), msStart, length, html = '';
                 if (ignoreDST) {
                     length = (MS_PER_DAY + offset * MS_PER_MINUTE) / msInterval;
                 } else {
@@ -128,12 +128,8 @@
                     }
                     length = (msMax - msMin) / msInterval + 1;
                 }
-                lastIdx = parseInt(length, 10);
-                for (; idx < length; idx++) {
-                    if (idx) {
-                        setTime(start, msInterval, ignoreDST);
-                    }
-                    if (msMax && lastIdx == idx) {
+                while (true) {
+                    if (msMax && (getMilliseconds(start) >= msMax || startDate.getDate() != start.getDate())) {
                         msStart = getMilliseconds(start);
                         if (startDate < start) {
                             msStart += MS_PER_DAY;
@@ -141,9 +137,16 @@
                         if (msStart > msMax) {
                             start = new DATE(+max);
                         }
+                        if (getMilliseconds(start) > 0) {
+                            html += template(toString(start, format, options.culture));
+                        }
+                        break;
                     }
-                    that._dates.push(getMilliseconds(start));
+                    if (startDate.getDate() != start.getDate()) {
+                        break;
+                    }
                     html += template(toString(start, format, options.culture));
+                    start.setTime(start.getTime() + msInterval);
                 }
                 that._html(html);
             },
@@ -311,14 +314,6 @@
                 }
             }
         };
-        function setTime(date, time, ignoreDST) {
-            var offset = date.getTimezoneOffset(), offsetDiff;
-            date.setTime(date.getTime() + time);
-            if (!ignoreDST) {
-                offsetDiff = date.getTimezoneOffset() - offset;
-                date.setTime(date.getTime() + offsetDiff * MS_PER_MINUTE);
-            }
-        }
         function dst() {
             var today = new DATE(), midnight = new DATE(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0), noon = new DATE(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0);
             return -1 * (midnight.getTimezoneOffset() - noon.getTimezoneOffset());
@@ -428,7 +423,8 @@
                         format: options.format,
                         min: min,
                         max: max,
-                        value: options.value
+                        value: options.value,
+                        interval: options.interval
                     });
                 }
                 that._old = that._update(options.value || that.element.val());
@@ -660,6 +656,9 @@
         }
         function preventDefault(e) {
             e.preventDefault();
+        }
+        function mergeDateAndTime(date, time) {
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
         }
         ui.plugin(TimePicker);
     }(window.kendo.jQuery));

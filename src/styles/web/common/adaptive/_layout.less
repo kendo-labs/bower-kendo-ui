@@ -24,20 +24,15 @@
 */
 // common mobile css
 
-.k-root,
-.k-pane,
-.k-pane-wrapper {
-    width: 100%;
-    height: 100%;
-    user-select: none;
-    box-sizing: border-box;
-}
-
 .k-pane-wrapper {
     position: relative;
     font-size: 14px;
 
     .k-pane {
+        width: 100%;
+        height: 100%;
+        user-select: none;
+        box-sizing: border-box;
         font-family: sans-serif;
         overflow-x: hidden;
     }
@@ -146,6 +141,17 @@
         .k-popup-edit-form,
         .k-edit-form-container {
             width: auto;
+        }
+    }
+
+    .k-grid .k-grid-search {
+        width: 100%;
+        margin-left: 0;
+        margin-top: @grid-header-padding-y;
+
+        // Remove top margin if search is the first child within the grid toolbar
+        &:first-child {
+            margin-top: 0;
         }
     }
 }

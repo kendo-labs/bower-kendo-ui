@@ -40,8 +40,18 @@
     };
     (function ($, undefined) {
         var kendo = window.kendo, ui = kendo.ui, outerHeight = kendo._outerHeight, percentageUnitsRegex = /^\d+(\.\d+)?%$/i, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', GROUPHEADER = '.k-group-header', ITEMSELECTOR = '.k-item', LABELIDPART = '_label', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, HIDDENCLASS = 'k-hidden', WIDTH = 'width', isIE = browser.msie, isIE8 = isIE && browser.version < 9, quotRegExp = /"/g, alternativeNames = {
-                'ComboBox': 'DropDownList',
-                'DropDownList': 'ComboBox'
+                'ComboBox': [
+                    'DropDownList',
+                    'MultiColumnComboBox'
+                ],
+                'DropDownList': [
+                    'ComboBox',
+                    'MultiColumnComboBox'
+                ],
+                'MultiColumnComboBox': [
+                    'ComboBox',
+                    'DropDownList'
+                ]
             };
         var List = kendo.ui.DataBoundWidget.extend({
             init: function (element, options) {
@@ -81,7 +91,11 @@
                 valuePrimitive: false,
                 footerTemplate: '',
                 headerTemplate: '',
-                noDataTemplate: 'No data found.'
+                noDataTemplate: true,
+                messages: {
+                    'noData': 'No data found.',
+                    'clear': 'clear'
+                }
             },
             setOptions: function (options) {
                 Widget.fn.setOptions.call(this, options);
@@ -135,7 +149,7 @@
                 this._angularElement(columnsHeader, 'cleanup');
                 kendo.destroy(columnsHeader);
                 columnsHeader.remove();
-                var header = '<div class=\'k-grid-header\'><div class=\'k-grid-header-wrap\'><table>';
+                var header = '<div class=\'k-grid-header\'><div class=\'k-grid-header-wrap\'><table role=\'presentation\'>';
                 var colGroup = '<colgroup>';
                 var row = '<tr>';
                 for (var idx = 0; idx < this.options.columns.length; idx++) {
@@ -169,7 +183,7 @@
             _noData: function () {
                 var list = this;
                 var noData = $(list.noData);
-                var template = list.options.noDataTemplate;
+                var template = list.options.noDataTemplate === true ? list.options.messages.noData : list.options.noDataTemplate;
                 list.angular('cleanup', function () {
                     return { elements: noData };
                 });
@@ -451,7 +465,7 @@
             },
             _clearButton: function () {
                 var list = this;
-                var clearTitle = list.options.messages && list.options.messages.clear ? list.options.messages.clear : 'clear';
+                var clearTitle = list.options.messages.clear;
                 if (!list._clear) {
                     list._clear = $('<span unselectable="on" class="k-icon k-clear-value k-i-close" title="' + clearTitle + '"></span>').attr({
                         'role': 'button',
@@ -835,6 +849,9 @@
         function unifyType(value, type) {
             if (value !== undefined && value !== '' && value !== null) {
                 if (type === 'boolean') {
+                    if (typeof value !== 'boolean') {
+                        value = value.toLowerCase() === 'true';
+                    }
                     value = Boolean(value);
                 } else if (type === 'number') {
                     value = Number(value);
@@ -1200,7 +1217,12 @@
                 var parentElement = $('#' + this.options.cascadeFrom);
                 var parent = parentElement.data('kendo' + name);
                 if (!parent) {
-                    parent = parentElement.data('kendo' + alternativeNames[name]);
+                    for (var i = 0; i < alternativeNames[name].length; i += 1) {
+                        parent = parentElement.data('kendo' + alternativeNames[name][i]);
+                        if (!!parent) {
+                            break;
+                        }
+                    }
                 }
                 return parent;
             },

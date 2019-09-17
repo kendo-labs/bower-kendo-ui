@@ -65,7 +65,7 @@
                 options = options || {};
                 that.id = kendo.guid();
                 Observable.fn.init.call(that);
-                that._initOptions(options);
+                this.options = $.extend({}, this.options, options);
                 that.content = content;
                 if (that.options.renderOnInit) {
                     Widget.fn.init.call(that, that._createElement(), options);

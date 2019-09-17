@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = $.extend({ A: 65 }, kendo.keys), activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', SELECTEDCLASS = 'k-state-selected', HIDDENCLASS = 'k-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', DISABLED = 'disabled', READONLY = 'readonly', AUTOCOMPLETEVALUE = kendo.support.browser.chrome ? 'disabled' : 'off', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, keys = $.extend({ A: 65 }, kendo.keys), activeElement = kendo._activeElement, ObservableArray = kendo.data.ObservableArray, proxy = $.proxy, ID = 'id', LI = 'li', ACCEPT = 'accept', FILTER = 'filter', REBIND = 'rebind', OPEN = 'open', CLOSE = 'close', CHANGE = 'change', PROGRESS = 'progress', SELECT = 'select', DESELECT = 'deselect', ARIA_DISABLED = 'aria-disabled', FOCUSEDCLASS = 'k-state-focused', SELECTEDCLASS = 'k-state-selected', HIDDENCLASS = 'k-hidden', HOVERCLASS = 'k-state-hover', STATEDISABLED = 'k-state-disabled', NOCLICKCLASS = 'k-no-click', DISABLED = 'disabled', READONLY = 'readonly', AUTOCOMPLETEVALUE = 'off', ns = '.kendoMultiSelect', CLICK = 'click' + ns, KEYDOWN = 'keydown' + ns, MOUSEENTER = 'mouseenter' + ns, MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = MOUSEENTER + ' ' + MOUSELEAVE, quotRegExp = /"/g, isArray = $.isArray, styles = [
                 'font-family',
                 'font-size',
                 'font-stretch',
@@ -124,6 +124,12 @@
                 filter: 'startswith',
                 ignoreCase: true,
                 minLength: 1,
+                messages: {
+                    'singleTag': 'item(s) selected',
+                    'clear': 'clear',
+                    'deleteTag': 'delete',
+                    'noData': 'No data found.'
+                },
                 enforceMinLength: false,
                 delay: 100,
                 value: null,
@@ -383,11 +389,7 @@
                         $(this).removeClass(HOVERCLASS);
                     }).on(CLICK, 'li.k-button .k-select', proxy(that._tagListClick, that));
                 } else {
-                    if (disable) {
-                        wrapper.addClass(STATEDISABLED);
-                    } else {
-                        wrapper.removeClass(STATEDISABLED);
-                    }
+                    wrapper.toggleClass(STATEDISABLED, disable).toggleClass(NOCLICKCLASS, readonly);
                     input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
             },
@@ -1143,15 +1145,16 @@
                 var tagTemplate = options.tagTemplate;
                 var hasDataSource = options.dataSource;
                 var isMultiple = options.tagMode === 'multiple';
+                var singleTag = options.messages.singleTag;
                 var defaultTemplate;
                 if (that.element[0].length && !hasDataSource) {
                     options.dataTextField = options.dataTextField || 'text';
                     options.dataValueField = options.dataValueField || 'value';
                 }
-                defaultTemplate = isMultiple ? kendo.template('#:' + kendo.expr(options.dataTextField, 'data') + '#', { useWithBlock: false }) : kendo.template('#:values.length# item(s) selected');
+                defaultTemplate = isMultiple ? kendo.template('#:' + kendo.expr(options.dataTextField, 'data') + '#', { useWithBlock: false }) : kendo.template('#:values.length# ' + singleTag);
                 that.tagTextTemplate = tagTemplate = tagTemplate ? kendo.template(tagTemplate) : defaultTemplate;
                 that.tagTemplate = function (data) {
-                    return '<li role="option" aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span><span aria-hidden="true" unselectable="on" aria-label="' + (isMultiple ? 'delete' : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
+                    return '<li role="option" aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span>' + '<span aria-hidden="true" unselectable="on" aria-label="' + (isMultiple ? 'delete" title="' + that.options.messages.deleteTag + '" aria-label="' + that.options.messages.deleteTag : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
                 };
             },
             _loader: function () {

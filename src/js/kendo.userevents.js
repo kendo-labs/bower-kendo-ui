@@ -166,7 +166,8 @@
             },
             move: function (touchInfo) {
                 var that = this;
-                if (that._finished) {
+                var preventMove = touchInfo.type !== 'api' && that.userEvents._shouldNotMove;
+                if (that._finished || preventMove) {
                     return;
                 }
                 that.x.move(touchInfo.location);

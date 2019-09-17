@@ -331,7 +331,7 @@
                 var target = $(e.currentTarget);
                 e.preventDefault();
                 if (!target.is('.k-state-disabled')) {
-                    this.page(target.attr(kendo.attr('page')));
+                    this.page(parseInt(target.attr(kendo.attr('page')), 10));
                 }
             },
             totalPages: function () {
@@ -341,7 +341,7 @@
                 return this.dataSource.pageSize() || this.dataSource.total();
             },
             page: function (page) {
-                if (page !== undefined) {
+                if (page) {
                     if (this.trigger('pageChange', { index: page })) {
                         return;
                     }

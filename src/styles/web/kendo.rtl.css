@@ -254,6 +254,9 @@
   right: auto;
   left: 2.5em;
 }
+.k-rtl .k-header .k-grid-search {
+  float: left;
+}
 .k-rtl .k-edit-label,
 .k-rtl .k-edit-form-container .editor-label {
   float: right;

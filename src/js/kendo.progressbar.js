@@ -33,11 +33,11 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, HORIZONTAL = 'horizontal', VERTICAL = 'vertical', DEFAULTMIN = 0, DEFAULTMAX = 100, DEFAULTVALUE = 0, DEFAULTCHUNKCOUNT = 5, KPROGRESSBAR = 'k-progressbar', KPROGRESSBARREVERSE = 'k-progressbar-reverse', KPROGRESSBARINDETERMINATE = 'k-progressbar-indeterminate', KPROGRESSBARCOMPLETE = 'k-complete', KPROGRESSWRAPPER = 'k-state-selected', KPROGRESSSTATUS = 'k-progress-status', KCOMPLETEDCHUNK = 'k-state-selected', KUPCOMINGCHUNK = 'k-state-default', KSTATEDISABLED = 'k-state-disabled', PROGRESSTYPE = {
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, HORIZONTAL = 'horizontal', VERTICAL = 'vertical', DEFAULTMIN = 0, DEFAULTMAX = 100, DEFAULTVALUE = 0, DEFAULTCHUNKCOUNT = 5, KPROGRESSBAR = 'k-progressbar', KPROGRESSBARREVERSE = 'k-progressbar-reverse', KPROGRESSBARINDETERMINATE = 'k-progressbar-indeterminate', KPROGRESSBARCOMPLETE = 'k-complete', KPROGRESSWRAPPER = 'k-state-selected', KPROGRESSSTATUS = 'k-progress-status', LABEL_POSITION_END = 'k-progress-end', KCOMPLETEDCHUNK = 'k-state-selected', KUPCOMINGCHUNK = 'k-state-default', STATEDISABLED = 'k-state-disabled', PROGRESSTYPE = {
                 VALUE: 'value',
                 PERCENT: 'percent',
                 CHUNK: 'chunk'
-            }, CHANGE = 'change', COMPLETE = 'complete', BOOLEAN = 'boolean', math = Math, extend = $.extend, proxy = $.proxy, HUNDREDPERCENT = 100, DEFAULTANIMATIONDURATION = 400, PRECISION = 3, templates = { progressStatus: '<span class=\'k-progress-status-wrap\'><span class=\'k-progress-status\'></span></span>' };
+            }, CHANGE = 'change', COMPLETE = 'complete', BOOLEAN = 'boolean', math = Math, extend = $.extend, proxy = $.proxy, HUNDREDPERCENT = 100, DEFAULTANIMATIONDURATION = 400, PRECISION = 3, templates = { progressStatus: '<span class=\'k-progress-status-wrap ' + LABEL_POSITION_END + '\'><span class=\'k-progress-status\'></span></span>' };
         var ProgressBar = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -109,7 +109,7 @@
                 container.addClass('k-widget ' + KPROGRESSBAR);
                 container.addClass(KPROGRESSBAR + '-' + (orientation === HORIZONTAL ? HORIZONTAL : VERTICAL));
                 if (options.enable === false) {
-                    container.addClass(KSTATEDISABLED);
+                    container.addClass(STATEDISABLED);
                 }
                 if (options.reverse) {
                     container.addClass(KPROGRESSBARREVERSE);
@@ -277,7 +277,7 @@
                 var that = this;
                 var options = that.options;
                 options.enable = typeof enable === 'undefined' ? true : enable;
-                that.wrapper.toggleClass(KSTATEDISABLED, !options.enable);
+                that.wrapper.toggleClass(STATEDISABLED, !options.enable);
             },
             destroy: function () {
                 var that = this;

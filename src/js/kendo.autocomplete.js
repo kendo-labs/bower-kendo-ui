@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, support = kendo.support, caret = kendo.caret, activeElement = kendo._activeElement, placeholderSupported = support.placeholder, ui = kendo.ui, List = ui.List, keys = kendo.keys, DataSource = kendo.data.DataSource, ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CHANGE = 'change', DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', AUTOCOMPLETEVALUE = support.browser.chrome ? 'disabled' : 'off', HOVER = 'k-state-hover', ns = '.kendoAutoComplete', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
+        var kendo = window.kendo, support = kendo.support, caret = kendo.caret, activeElement = kendo._activeElement, placeholderSupported = support.placeholder, ui = kendo.ui, List = ui.List, keys = kendo.keys, DataSource = kendo.data.DataSource, ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CHANGE = 'change', DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', AUTOCOMPLETEVALUE = 'off', HOVER = 'k-state-hover', ns = '.kendoAutoComplete', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
         function indexOfWordAtCaret(caretIdx, text, separator) {
             return separator ? text.substring(0, caretIdx).split(separator).length - 1 : 0;
         }

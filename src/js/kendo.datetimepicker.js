@@ -512,7 +512,8 @@
                         if (current) {
                             element.attr(ARIA_ACTIVEDESCENDANT, timeView._optionID);
                         }
-                    }
+                    },
+                    useValueToRender: true
                 });
                 ul = timeView.ul;
             },
@@ -568,7 +569,8 @@
                         culture: options.culture,
                         format: options.format,
                         min: options.min,
-                        max: options.max
+                        max: options.max,
+                        interval: options.interval
                     });
                 }
             },
