@@ -2026,6 +2026,13 @@ kendo-sortable {
   padding-left: calc(1.42857143em + 8px);
   padding-right: 0;
 }
+.k-rtl .k-autocomplete .k-clear-value,
+.k-rtl .k-autocomplete .k-i-loading,
+.k-autocomplete[dir="rtl"] .k-clear-value,
+.k-autocomplete[dir="rtl"] .k-i-loading {
+  right: auto;
+  left: 6px;
+}
 .k-dateinput .k-select,
 .k-numerictextbox .k-select {
   padding: 0;
@@ -5618,6 +5625,11 @@ kendo-sortable {
   border-right-style: solid;
   margin-left: 0;
 }
+.k-popup > .k-action-buttons,
+.k-popup > kendo-grid-columnlist > .k-action-buttons {
+  margin-top: 1em;
+  margin-bottom: 0;
+}
 .k-action-buttons {
   border-color: rgba(0, 0, 0, 0.08);
 }
@@ -5786,14 +5798,23 @@ kendo-sortable {
   align-items: center;
 }
 .k-window-title {
-  margin: -0.15em 0;
+  margin: 0;
   font-size: 19px;
-  line-height: 1.3;
+  line-height: 1.05263158;
   text-overflow: ellipsis;
   overflow: hidden;
   cursor: default;
   -ms-flex: 1;
   flex: 1;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.k-window-title::before {
+  content: "\200b";
 }
 .k-window-actions {
   margin: -5px;
@@ -7782,6 +7803,7 @@ div.k-grid-norecords {
   padding-right: 32px;
 }
 .k-column-list-item {
+  position: relative;
   display: block;
   margin: 0;
   cursor: pointer;
@@ -8437,6 +8459,9 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   margin-left: 0;
   margin-right: 8px;
 }
+.k-overflow-container .k-overflow-button {
+  width: 100%;
+}
 .k-toolbar {
   background-clip: padding-box;
 }
@@ -9032,9 +9057,6 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 .k-spreadsheet-filter-menu .k-details-content .k-filter-and {
   width: 75px;
   margin: 8px 0;
-}
-.k-spreadsheet-filter-menu .k-action-buttons {
-  margin: 1em 0 0;
 }
 .k-spreadsheet-popup {
   padding: 0;
@@ -11022,6 +11044,9 @@ div.k-scrollview .k-scrollview-prev:hover {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.k-popup .k-calendar {
+  height: 100%;
 }
 .k-calendar .k-link {
   outline: 0;
@@ -13350,6 +13375,9 @@ kendo-editor > .k-content > .ProseMirror,
 kendo-editor .k-editor-content > .ProseMirror {
   padding: 8px;
 }
+kendo-editor .k-toolbar {
+  overflow: visible;
+}
 .k-editor-sandbox > .k-content *,
 .k-editor-sandbox .k-editor-content * {
   color: initial;
@@ -15065,6 +15093,85 @@ svg .k-var--gauge-track {
 }
 .k-treemap .k-leaf.k-state-hover {
   box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.08);
+}
+.km-scrollview,
+.km-scroll-container {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border-collapse: separate;
+}
+.km-scroll-wrapper {
+  position: relative;
+}
+.km-scroll-header {
+  position: absolute;
+  z-index: 1001;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+.km-scroller-pull {
+  width: 100%;
+  display: block;
+  position: absolute;
+  line-height: 3em;
+  font-size: 1.4em;
+  text-align: center;
+  -webkit-transform: translate3d(0, -3em, 0);
+  transform: translate3d(0, -3em, 0);
+}
+.km-scroller-pull .km-template {
+  display: inline-block;
+  min-width: 200px;
+  text-align: left;
+}
+.km-load-more .km-icon,
+.km-widget .km-scroller-pull .km-icon {
+  display: inline-block;
+  height: 2rem;
+  margin-right: 1rem;
+  vertical-align: middle;
+  width: 2rem;
+  font-size: 2rem;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  transition: -webkit-transform 300ms linear;
+  transition: transform 300ms linear;
+  transition: transform 300ms linear, -webkit-transform 300ms linear;
+}
+.km-widget .km-scroller-release .km-icon {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+.km-widget .km-scroller-refresh .km-icon {
+  transition: none;
+}
+.km-touch-scrollbar {
+  position: absolute;
+  visibility: hidden;
+  z-index: 200000;
+  height: 0.4em;
+  width: 0.4em;
+  background-color: #333333;
+  opacity: 0;
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  transition: opacity 0.3s linear;
+}
+.km-vertical-scrollbar {
+  height: 100%;
+  right: 2px;
+  top: 0;
+}
+.km-horizontal-scrollbar {
+  width: 100%;
+  left: 0;
+  bottom: 2px;
 }
 .k-map {
   height: 600px;
@@ -17769,6 +17876,7 @@ kendo-drawer .k-drawer-wrapper {
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   transition: all 300ms ease-in-out;
+  overflow: hidden;
 }
 .k-drawer-mini .k-drawer.k-drawer-start,
 .k-drawer-expanded .k-drawer.k-drawer-start,
@@ -17861,6 +17969,19 @@ kendo-drawer .k-drawer-wrapper {
   flex-wrap: nowrap;
   cursor: pointer;
 }
+.k-drawer-item > .k-drawer-link {
+  margin: -8px -8px;
+  padding: 8px 8px;
+  color: inherit;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
 .k-drawer-item .k-icon {
   margin: 0 8px;
   font-size: 18px;
@@ -17878,6 +17999,40 @@ kendo-drawer .k-drawer-wrapper {
 }
 .k-drawer-mini .k-drawer-wrapper {
   width: 50px;
+}
+.k-rtl.k-drawer-mini .k-drawer-start,
+.k-rtl .k-drawer-mini .k-drawer-start,
+.k-rtl .k-drawer-expanded .k-drawer-start,
+.k-rtl.k-drawer-expanded .k-drawer-start,
+[dir="rtl"].k-drawer-mini .k-drawer-start,
+[dir="rtl"] .k-drawer-mini .k-drawer-start,
+[dir="rtl"] .k-drawer-expanded .k-drawer-start,
+[dir="rtl"].k-drawer-expanded .k-drawer-start {
+  border-left-width: 1px;
+  border-right-width: 0;
+}
+.k-rtl.k-drawer-mini .k-drawer-end,
+.k-rtl .k-drawer-mini .k-drawer-end,
+.k-rtl.k-drawer-expanded .k-drawer-end .k-drawer-expanded .k-drawer-end,
+[dir="rtl"].k-drawer-mini .k-drawer-end,
+[dir="rtl"] .k-drawer-mini .k-drawer-end,
+[dir="rtl"].k-drawer-expanded .k-drawer-end .k-drawer-expanded .k-drawer-end {
+  border-left-width: 0;
+  border-right-width: 1px;
+}
+.k-rtl.k-drawer-overlay .k-drawer-start,
+.k-rtl .k-drawer-overlay .k-drawer-start,
+[dir="rtl"].k-drawer-overlay .k-drawer-start,
+[dir="rtl"] .k-drawer-overlay .k-drawer-start {
+  left: auto;
+  right: 0;
+}
+.k-rtl.k-drawer-overlay .k-drawer-end,
+.k-rtl .k-drawer-overlay .k-drawer-end,
+[dir="rtl"].k-drawer-overlay .k-drawer-end,
+[dir="rtl"] .k-drawer-overlay .k-drawer-end {
+  left: 0;
+  right: auto;
 }
 .k-rtl .k-drawer-left.k-drawer-push .k-drawer,
 [dir="rtl"] .k-drawer-left.k-drawer-push .k-drawer {
@@ -18153,85 +18308,6 @@ kendo-drawer .k-drawer-wrapper {
   background-size: 22px 22px;
   -webkit-animation: progressbar-indeterminate-animation 1s linear infinite;
   animation: progressbar-indeterminate-animation 1s linear infinite;
-}
-.km-scrollview,
-.km-scroll-container {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  border-collapse: separate;
-}
-.km-scroll-wrapper {
-  position: relative;
-}
-.km-scroll-header {
-  position: absolute;
-  z-index: 1001;
-  width: 100%;
-  top: 0;
-  left: 0;
-}
-.km-scroller-pull {
-  width: 100%;
-  display: block;
-  position: absolute;
-  line-height: 3em;
-  font-size: 1.4em;
-  text-align: center;
-  -webkit-transform: translate3d(0, -3em, 0);
-  transform: translate3d(0, -3em, 0);
-}
-.km-scroller-pull .km-template {
-  display: inline-block;
-  min-width: 200px;
-  text-align: left;
-}
-.km-load-more .km-icon,
-.km-widget .km-scroller-pull .km-icon {
-  display: inline-block;
-  height: 2rem;
-  margin-right: 1rem;
-  vertical-align: middle;
-  width: 2rem;
-  font-size: 2rem;
-  -webkit-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  transform: rotate(0deg);
-  transition: -webkit-transform 300ms linear;
-  transition: transform 300ms linear;
-  transition: transform 300ms linear, -webkit-transform 300ms linear;
-}
-.km-widget .km-scroller-release .km-icon {
-  -webkit-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  transform: rotate(180deg);
-}
-.km-widget .km-scroller-refresh .km-icon {
-  transition: none;
-}
-.km-touch-scrollbar {
-  position: absolute;
-  visibility: hidden;
-  z-index: 200000;
-  height: 0.4em;
-  width: 0.4em;
-  background-color: #333333;
-  opacity: 0;
-  -webkit-transform-origin: 0 0;
-  -ms-transform-origin: 0 0;
-  transform-origin: 0 0;
-  transition: opacity 0.3s linear;
-}
-.km-vertical-scrollbar {
-  height: 100%;
-  right: 2px;
-  top: 0;
-}
-.km-horizontal-scrollbar {
-  width: 100%;
-  left: 0;
-  bottom: 2px;
 }
 .k-typography {
   font-size: 14px;

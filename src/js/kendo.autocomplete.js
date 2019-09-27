@@ -616,6 +616,10 @@
                 that._focused = that.element;
                 that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className);
                 that._inputWrapper = $(wrapper[0]);
+            },
+            _clearValue: function () {
+                List.fn._clearValue.call(this);
+                this.element.focus();
             }
         });
         ui.plugin(AutoComplete);

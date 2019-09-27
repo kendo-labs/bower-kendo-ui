@@ -116,8 +116,8 @@
 .k-button.k-state-hover,
 .k-dropdown > :hover,
 .k-dropdown .k-state-hover,
-.k-spreadsheet-filter:hover,
 .k-action-buttons .k-button:hover,
+.k-spreadsheet-filter:hover,
 .k-pivot-toolbar .k-button:hover,
 .k-pivot-toolbar .k-button.k-state-hover,
 .k-fieldselector .k-list li.k-item:hover,
@@ -156,8 +156,8 @@
 .k-button-group > input[type="radio"]:checked + .k-button,
 .k-button-group > input[type="checkbox"]:checked + .k-button,
 .k-dropdown .k-state-active,
-.k-spreadsheet-filter.k-state-active,
 .k-action-buttons .k-button:active,
+.k-spreadsheet-filter.k-state-active,
 .k-pivot-toolbar .k-button:active,
 .k-pivot-toolbar .k-button.k-state-active,
 .k-fieldselector .k-list li.k-item:active,
@@ -1992,6 +1992,13 @@ kendo-sortable {
 .k-autocomplete[dir="rtl"] {
   padding-left: calc(0.75rem + 17px);
   padding-right: 0;
+}
+.k-rtl .k-autocomplete .k-clear-value,
+.k-rtl .k-autocomplete .k-i-loading,
+.k-autocomplete[dir="rtl"] .k-clear-value,
+.k-autocomplete[dir="rtl"] .k-i-loading {
+  right: auto;
+  left: 6.5px;
 }
 .k-dateinput .k-select,
 .k-numerictextbox .k-select {
@@ -7310,6 +7317,7 @@ div.k-grid-norecords {
   padding-right: calc(3rem + 16px);
 }
 .k-column-list-item {
+  position: relative;
   display: block;
   margin: 0;
   cursor: pointer;
@@ -7954,6 +7962,9 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   margin-left: 0;
   margin-right: 0.375rem;
 }
+.k-overflow-container .k-overflow-button {
+  width: 100%;
+}
 .k-toolbar .k-separator {
   border-color: inherit;
 }
@@ -7967,6 +7978,284 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 .k-toolbar .k-split-button.k-state-disabled:focus,
 .k-toolbar .k-split-button.k-state-disabled.k-state-focused {
   box-shadow: 0 0 0 3px rgba(228, 231, 235, 0.5);
+}
+.k-action-buttons {
+  border-width: 1px 0 0;
+  border-style: solid;
+  border-color: inherit;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  clear: both;
+}
+.k-action-buttons .k-button {
+  border-radius: 0;
+  padding: 0.75rem 1rem;
+  border-width: 0;
+  border-color: inherit;
+  color: inherit;
+  background: none;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+.k-action-buttons .k-button + .k-button {
+  border-left-width: 1px;
+}
+.k-rtl .k-action-buttons .k-button + .k-button,
+[dir="rtl"] .k-action-buttons .k-button + .k-button {
+  border-left-width: 0;
+  border-right-width: 1px;
+  border-right-style: solid;
+  margin-left: 0;
+}
+.k-popup > .k-action-buttons,
+.k-popup > kendo-grid-columnlist > .k-action-buttons {
+  margin-top: 1rem;
+  margin-bottom: -0.5rem;
+}
+.k-action-buttons {
+  border-color: rgba(33, 37, 41, 0.15);
+}
+.k-action-buttons .k-button:first-child {
+  border-radius: 0 0 0 0.25rem;
+}
+.k-action-buttons .k-button:last-child {
+  border-radius: 0 0 0.25rem 0;
+}
+.k-action-buttons .k-button {
+  color: inherit;
+}
+.k-action-buttons .k-primary {
+  color: #007bff;
+}
+.k-edit-form-container {
+  width: 400px;
+  min-width: 400px;
+  border-color: inherit;
+  position: relative;
+}
+.k-edit-form-container .k-tabstrip-wrapper {
+  margin: -1rem -1rem;
+}
+.k-edit-form-container .k-tabstrip.k-root-tabs {
+  margin-bottom: 1rem;
+}
+.k-edit-form-container .k-tabstrip .k-tabstrip-items {
+  padding: 1rem 1rem 0;
+}
+.k-edit-form-container .k-tabstrip .k-content {
+  padding: 1rem 1rem;
+  border-width: 0;
+}
+.k-edit-buttons {
+  padding: 0.375rem 0.375rem;
+  border-width: 1px 0 0;
+  border-style: solid;
+  border-color: inherit;
+  text-align: right;
+  clear: both;
+}
+.k-edit-buttons .k-button + .k-button {
+  margin-left: 0.5rem;
+}
+.k-edit-form-container .k-edit-buttons {
+  margin: 1rem -1rem -1rem;
+  padding: 1rem 1rem;
+}
+.k-popup-edit-form > .k-action-buttons,
+.k-edit-form-container .k-action-buttons {
+  margin: 1rem -1rem -1rem;
+}
+.k-edit-label {
+  margin: 0 0 1rem 0;
+  padding: calc(0.375rem + 1px) 0;
+  width: 30%;
+  line-height: 1.5;
+  text-align: right;
+  float: left;
+  clear: both;
+}
+.k-edit-field {
+  margin: 0 0 1rem 0;
+  width: 65%;
+  float: right;
+  clear: right;
+}
+.k-edit-field > .k-widget,
+.k-edit-field > .k-textbox,
+.k-edit-field > .k-input.k-textbox {
+  width: 100%;
+  box-sizing: border-box;
+}
+.k-edit-field > .k-colorpicker {
+  width: auto;
+}
+.k-edit-field input[type="radio"]:not(.k-radio),
+.k-edit-field input[type="checkbox"]:not(.k-checkbox) {
+  margin-right: 0.4ex;
+}
+.k-edit-field .k-radio-label,
+.k-edit-field .k-checkbox-label {
+  margin-right: 1rem;
+}
+.k-edit-field .k-checkbox-label {
+  margin-top: calc(0.375rem + 1px);
+}
+.k-edit-field .k-reset > li + li {
+  margin-top: 0.5rem;
+}
+.k-edit-field .k-reset .k-widget {
+  margin: 0 0.4ex 0 1ex;
+}
+.k-rtl .k-edit-buttons {
+  text-align: left;
+}
+.k-rtl .k-edit-buttons .k-button + .k-button {
+  margin-left: 0;
+  margin-right: 0.5em;
+}
+.k-edit-label {
+  padding: calc(0.5rem - 1px) 0;
+}
+.k-window {
+  border-radius: 0.25rem;
+  padding: 0;
+  border-width: 1px;
+  border-style: solid;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: absolute;
+  z-index: 10002;
+}
+.k-window.k-window-maximized {
+  max-width: 100vw;
+  max-height: 100vh;
+  box-shadow: none;
+}
+.k-window-sm {
+  width: 300px;
+}
+.k-window-md {
+  width: 800px;
+}
+.k-window-lg {
+  width: 1200px;
+}
+.k-window-titlebar {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  padding: 1rem 1rem 1rem 1rem;
+  border-width: 0 0 1px;
+  border-style: solid;
+  white-space: nowrap;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.k-window-title {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: default;
+  -ms-flex: 1;
+  flex: 1;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+}
+.k-window-title::before {
+  content: "\200b";
+}
+.k-window-actions {
+  margin: calc(-0.375rem + -1px);
+  line-height: 1;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -ms-flex-align: center;
+  align-items: center;
+  vertical-align: top;
+}
+.k-window-content,
+.k-prompt-container {
+  padding: 1rem 1rem;
+  border-width: 0;
+  color: inherit;
+  background: none;
+  outline: 0;
+  overflow: auto;
+  position: relative;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+.k-window-content + .k-prompt-container {
+  margin-top: -0.5rem;
+}
+.k-window-iframecontent {
+  padding: 0;
+  overflow: visible;
+}
+.k-window-iframecontent .k-content-frame {
+  vertical-align: top;
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
+.k-window {
+  border-color: rgba(33, 37, 41, 0.125);
+  color: #212529;
+  background-color: #fff;
+}
+.k-window-titlebar {
+  border-color: rgba(33, 37, 41, 0.125);
+  background-clip: padding-box;
+}
+.k-ie11 .k-window-titlebar,
+.k-edge12 .k-window-titlebar,
+.k-edge13 .k-window-titlebar {
+  background-clip: border-box;
+}
+.k-window-actions {
+  margin-top: -1rem 1rem;
+  margin-bottom: -1rem 1rem;
+}
+.k-window-action {
+  margin: 0 0 0 0.5rem;
+  padding: 1rem 1rem 1rem 1rem;
+  width: 1em;
+  height: 1em;
+  border-width: 0;
+  opacity: 0.5;
+}
+.k-ie .k-window-action {
+  padding: 0;
+  line-height: 1;
+}
+.k-window-action:hover {
+  opacity: 0.75;
+}
+.k-button.k-window-action::before,
+.k-button.k-window-action::after {
+  display: none;
+}
+.k-popup-edit-form .k-edit-buttons {
+  border-color: rgba(33, 37, 41, 0.125);
 }
 .k-spreadsheet {
   width: 800px;
@@ -8519,9 +8808,6 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   width: 75px;
   margin: 8px 0;
 }
-.k-spreadsheet-filter-menu .k-action-buttons {
-  margin: 1rem 0 0;
-}
 .k-spreadsheet-popup {
   padding: 0;
 }
@@ -8889,275 +9175,6 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 }
 .k-listview > .k-state-selected {
   border-color: #005dc2;
-}
-.k-action-buttons {
-  border-width: 1px 0 0;
-  border-style: solid;
-  border-color: inherit;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  clear: both;
-}
-.k-action-buttons .k-button {
-  border-radius: 0;
-  padding: 0.75rem 1rem;
-  border-width: 0;
-  border-color: inherit;
-  color: inherit;
-  background: none;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-}
-.k-action-buttons .k-button + .k-button {
-  border-left-width: 1px;
-}
-.k-rtl .k-action-buttons .k-button + .k-button,
-[dir="rtl"] .k-action-buttons .k-button + .k-button {
-  border-left-width: 0;
-  border-right-width: 1px;
-  border-right-style: solid;
-  margin-left: 0;
-}
-.k-action-buttons {
-  border-color: rgba(33, 37, 41, 0.15);
-}
-.k-action-buttons .k-button:first-child {
-  border-radius: 0 0 0 0.25rem;
-}
-.k-action-buttons .k-button:last-child {
-  border-radius: 0 0 0.25rem 0;
-}
-.k-action-buttons .k-button {
-  color: inherit;
-}
-.k-action-buttons .k-primary {
-  color: #007bff;
-}
-.k-popup .k-action-buttons {
-  margin-bottom: -0.5rem;
-}
-.k-edit-form-container {
-  width: 400px;
-  min-width: 400px;
-  border-color: inherit;
-  position: relative;
-}
-.k-edit-form-container .k-tabstrip-wrapper {
-  margin: -1rem -1rem;
-}
-.k-edit-form-container .k-tabstrip.k-root-tabs {
-  margin-bottom: 1rem;
-}
-.k-edit-form-container .k-tabstrip .k-tabstrip-items {
-  padding: 1rem 1rem 0;
-}
-.k-edit-form-container .k-tabstrip .k-content {
-  padding: 1rem 1rem;
-  border-width: 0;
-}
-.k-edit-buttons {
-  padding: 0.375rem 0.375rem;
-  border-width: 1px 0 0;
-  border-style: solid;
-  border-color: inherit;
-  text-align: right;
-  clear: both;
-}
-.k-edit-buttons .k-button + .k-button {
-  margin-left: 0.5rem;
-}
-.k-edit-form-container .k-edit-buttons {
-  margin: 1rem -1rem -1rem;
-  padding: 1rem 1rem;
-}
-.k-popup-edit-form > .k-action-buttons,
-.k-edit-form-container .k-action-buttons {
-  margin: 1rem -1rem -1rem;
-}
-.k-edit-label {
-  margin: 0 0 1rem 0;
-  padding: calc(0.375rem + 1px) 0;
-  width: 30%;
-  line-height: 1.5;
-  text-align: right;
-  float: left;
-  clear: both;
-}
-.k-edit-field {
-  margin: 0 0 1rem 0;
-  width: 65%;
-  float: right;
-  clear: right;
-}
-.k-edit-field > .k-widget,
-.k-edit-field > .k-textbox,
-.k-edit-field > .k-input.k-textbox {
-  width: 100%;
-  box-sizing: border-box;
-}
-.k-edit-field > .k-colorpicker {
-  width: auto;
-}
-.k-edit-field input[type="radio"]:not(.k-radio),
-.k-edit-field input[type="checkbox"]:not(.k-checkbox) {
-  margin-right: 0.4ex;
-}
-.k-edit-field .k-radio-label,
-.k-edit-field .k-checkbox-label {
-  margin-right: 1rem;
-}
-.k-edit-field .k-checkbox-label {
-  margin-top: calc(0.375rem + 1px);
-}
-.k-edit-field .k-reset > li + li {
-  margin-top: 0.5rem;
-}
-.k-edit-field .k-reset .k-widget {
-  margin: 0 0.4ex 0 1ex;
-}
-.k-rtl .k-edit-buttons {
-  text-align: left;
-}
-.k-rtl .k-edit-buttons .k-button + .k-button {
-  margin-left: 0;
-  margin-right: 0.5em;
-}
-.k-edit-label {
-  padding: calc(0.5rem - 1px) 0;
-}
-.k-window {
-  border-radius: 0.25rem;
-  padding: 0;
-  border-width: 1px;
-  border-style: solid;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  position: absolute;
-  z-index: 10002;
-}
-.k-window.k-window-maximized {
-  max-width: 100vw;
-  max-height: 100vh;
-  box-shadow: none;
-}
-.k-window-sm {
-  width: 300px;
-}
-.k-window-md {
-  width: 800px;
-}
-.k-window-lg {
-  width: 1200px;
-}
-.k-window-titlebar {
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-  padding: 1rem 1rem 1rem 1rem;
-  border-width: 0 0 1px;
-  border-style: solid;
-  white-space: nowrap;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -ms-flex-align: center;
-  align-items: center;
-}
-.k-window-title {
-  margin: -0.15em 0;
-  font-size: 1.25rem;
-  line-height: 1.3;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  cursor: default;
-  -ms-flex: 1;
-  flex: 1;
-}
-.k-window-actions {
-  margin: calc(-0.375rem + -1px);
-  line-height: 1;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -ms-flex-align: center;
-  align-items: center;
-  vertical-align: top;
-}
-.k-window-content,
-.k-prompt-container {
-  padding: 1rem 1rem;
-  border-width: 0;
-  color: inherit;
-  background: none;
-  outline: 0;
-  overflow: auto;
-  position: relative;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-}
-.k-window-content + .k-prompt-container {
-  margin-top: -0.5rem;
-}
-.k-window-iframecontent {
-  padding: 0;
-  overflow: visible;
-}
-.k-window-iframecontent .k-content-frame {
-  vertical-align: top;
-  border: 0;
-  width: 100%;
-  height: 100%;
-}
-.k-window {
-  border-color: rgba(33, 37, 41, 0.125);
-  color: #212529;
-  background-color: #fff;
-}
-.k-window-titlebar {
-  border-color: rgba(33, 37, 41, 0.125);
-  color: #212529;
-  background-color: #fff;
-  background-clip: padding-box;
-}
-.k-ie11 .k-window-titlebar,
-.k-edge12 .k-window-titlebar,
-.k-edge13 .k-window-titlebar {
-  background-clip: border-box;
-}
-.k-window-actions {
-  margin-top: -1rem 1rem;
-  margin-bottom: -1rem 1rem;
-}
-.k-window-action {
-  margin: 0 0 0 0.5rem;
-  padding: 1rem 1rem 1rem 1rem;
-  width: 1em;
-  height: 1em;
-  border-width: 0;
-  opacity: 0.5;
-}
-.k-ie .k-window-action {
-  padding: 0;
-  line-height: 1;
-}
-.k-window-action:hover {
-  opacity: 0.75;
-}
-.k-button.k-window-action::before,
-.k-button.k-window-action::after {
-  display: none;
-}
-.k-popup-edit-form .k-edit-buttons {
-  border-color: rgba(33, 37, 41, 0.125);
 }
 .k-dialog-wrapper {
   display: -ms-flexbox;
@@ -10859,6 +10876,9 @@ div.k-scrollview .k-scrollview-nav > li {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.k-popup .k-calendar {
+  height: 100%;
 }
 .k-calendar .k-link {
   outline: 0;
@@ -12732,6 +12752,9 @@ kendo-editor .k-editor-content {
 kendo-editor > .k-content > .ProseMirror,
 kendo-editor .k-editor-content > .ProseMirror {
   padding: 1rem;
+}
+kendo-editor .k-toolbar {
+  overflow: visible;
 }
 .k-editor-sandbox > .k-content *,
 .k-editor-sandbox .k-editor-content * {
@@ -17487,6 +17510,7 @@ kendo-drawer .k-drawer-wrapper {
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
   transition: all 300ms ease-in-out;
+  overflow: hidden;
 }
 .k-drawer-mini .k-drawer.k-drawer-start,
 .k-drawer-expanded .k-drawer.k-drawer-start,
@@ -17579,6 +17603,19 @@ kendo-drawer .k-drawer-wrapper {
   flex-wrap: nowrap;
   cursor: pointer;
 }
+.k-drawer-item > .k-drawer-link {
+  margin: -0.5rem -1rem;
+  padding: 0.5rem 1rem;
+  color: inherit;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -ms-flex: 1 0 auto;
+  flex: 1 0 auto;
+}
 .k-drawer-item .k-icon {
   margin: 0 1rem;
   font-size: 18px;
@@ -17596,6 +17633,40 @@ kendo-drawer .k-drawer-wrapper {
 }
 .k-drawer-mini .k-drawer-wrapper {
   width: calc(2rem + 18px);
+}
+.k-rtl.k-drawer-mini .k-drawer-start,
+.k-rtl .k-drawer-mini .k-drawer-start,
+.k-rtl .k-drawer-expanded .k-drawer-start,
+.k-rtl.k-drawer-expanded .k-drawer-start,
+[dir="rtl"].k-drawer-mini .k-drawer-start,
+[dir="rtl"] .k-drawer-mini .k-drawer-start,
+[dir="rtl"] .k-drawer-expanded .k-drawer-start,
+[dir="rtl"].k-drawer-expanded .k-drawer-start {
+  border-left-width: 1px;
+  border-right-width: 0;
+}
+.k-rtl.k-drawer-mini .k-drawer-end,
+.k-rtl .k-drawer-mini .k-drawer-end,
+.k-rtl.k-drawer-expanded .k-drawer-end .k-drawer-expanded .k-drawer-end,
+[dir="rtl"].k-drawer-mini .k-drawer-end,
+[dir="rtl"] .k-drawer-mini .k-drawer-end,
+[dir="rtl"].k-drawer-expanded .k-drawer-end .k-drawer-expanded .k-drawer-end {
+  border-left-width: 0;
+  border-right-width: 1px;
+}
+.k-rtl.k-drawer-overlay .k-drawer-start,
+.k-rtl .k-drawer-overlay .k-drawer-start,
+[dir="rtl"].k-drawer-overlay .k-drawer-start,
+[dir="rtl"] .k-drawer-overlay .k-drawer-start {
+  left: auto;
+  right: 0;
+}
+.k-rtl.k-drawer-overlay .k-drawer-end,
+.k-rtl .k-drawer-overlay .k-drawer-end,
+[dir="rtl"].k-drawer-overlay .k-drawer-end,
+[dir="rtl"] .k-drawer-overlay .k-drawer-end {
+  left: 0;
+  right: auto;
 }
 .k-rtl .k-drawer-left.k-drawer-push .k-drawer,
 [dir="rtl"] .k-drawer-left.k-drawer-push .k-drawer {

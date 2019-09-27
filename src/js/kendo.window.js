@@ -651,6 +651,7 @@
                 }
                 if (value === false) {
                     wrapper.addClass('k-window-titleless');
+                    wrapper.css('padding-top', 0);
                     titleBar.remove();
                 } else {
                     if (!titleBar.length) {

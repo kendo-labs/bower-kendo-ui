@@ -145,6 +145,7 @@
                 var that = this;
                 normalize(options);
                 options.disableDates = getDisabledExpr(options.disableDates);
+                that._destroySelectable();
                 Widget.fn.setOptions.call(that, options);
                 that._templates();
                 that._selectable();

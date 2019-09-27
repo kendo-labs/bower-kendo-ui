@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.3.917'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.3.927'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -6569,8 +6569,10 @@
                 }
                 total = query.toArray().length;
             }
-            if (sort && !inPlace) {
-                query = query.sort(sort);
+            if (sort) {
+                if (!inPlace) {
+                    query = query.sort(sort);
+                }
                 if (group) {
                     data = query.toArray();
                 }
@@ -19750,12 +19752,11 @@
             _toggleCascadeOnFocus: function () {
                 var that = this;
                 var parent = that._parentWidget();
-                var focusout = isIE ? 'blur' : 'focusout';
                 parent._focused.add(parent.filterInput).bind('focus', function () {
                     parent.unbind(CASCADE, that._cascadeHandlerProxy);
                     parent.first(CHANGE, that._cascadeHandlerProxy);
                 });
-                parent._focused.add(parent.filterInput).bind(focusout, function () {
+                parent._focused.add(parent.filterInput).bind('focusout', function () {
                     parent.unbind(CHANGE, that._cascadeHandlerProxy);
                     parent.first(CASCADE, that._cascadeHandlerProxy);
                 });
@@ -20736,6 +20737,7 @@
                 var that = this;
                 normalize(options);
                 options.disableDates = getDisabledExpr(options.disableDates);
+                that._destroySelectable();
                 Widget.fn.setOptions.call(that, options);
                 that._templates();
                 that._selectable();
@@ -25286,6 +25288,10 @@
                 that._focused = that.element;
                 that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className);
                 that._inputWrapper = $(wrapper[0]);
+            },
+            _clearValue: function () {
+                List.fn._clearValue.call(this);
+                this.element.focus();
             }
         });
         ui.plugin(AutoComplete);
@@ -25984,8 +25990,8 @@
                 }
                 that._userTriggered = true;
                 that._select(item).done(function () {
-                    that._focusElement(that.wrapper);
                     that._blur();
+                    that._focusElement(that.wrapper);
                 });
             },
             _focusElement: function (element) {
@@ -26565,9 +26571,7 @@
                     arrow.on(CLICK, proxy(that._arrowClick, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
-                    clear.on(CLICK + ' touchend' + ns, proxy(that._clearValue, that)).on(MOUSEDOWN, function (e) {
-                        e.preventDefault();
-                    });
+                    clear.on(CLICK + ' touchend' + ns, proxy(that._clearValue, that));
                     that.input.on('keydown' + ns, proxy(that._keydown, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
@@ -27202,6 +27206,10 @@
                 this._initialIndex = null;
                 this._presetValue = true;
                 this._toggleCloseVisibility();
+            },
+            _clearValue: function () {
+                Select.fn._clearValue.call(this);
+                this.input.focus();
             }
         });
         ui.plugin(ComboBox);
@@ -27537,7 +27545,7 @@
                     this._removeTag(target.closest(LI), true);
                 }
             },
-            _clearClick: function () {
+            _clearValue: function () {
                 var that = this;
                 if (that.options.tagMode === 'single') {
                     that._clearSingleTagValue();
@@ -27569,7 +27577,7 @@
                 if (!readonly && !disable) {
                     wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that));
                     that.input.on(KEYDOWN, proxy(that._keydown, that)).on('paste' + ns, proxy(that._search, that)).on('input' + ns, proxy(that._search, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
-                    that._clear.on(CLICK + ns + ' touchend' + ns, proxy(that._clearClick, that));
+                    that._clear.on(CLICK + ns + ' touchend' + ns, proxy(that._clearValue, that));
                     input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
                     tagList.on(MOUSEENTER, LI, function () {
                         $(this).addClass(HOVERCLASS);
@@ -42243,6 +42251,7 @@
                 }
                 if (value === false) {
                     wrapper.addClass('k-window-titleless');
+                    wrapper.css('padding-top', 0);
                     titleBar.remove();
                 } else {
                     if (!titleBar.length) {

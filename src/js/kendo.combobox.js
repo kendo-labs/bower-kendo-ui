@@ -230,9 +230,7 @@
                     arrow.on(CLICK, proxy(that._arrowClick, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
-                    clear.on(CLICK + ' touchend' + ns, proxy(that._clearValue, that)).on(MOUSEDOWN, function (e) {
-                        e.preventDefault();
-                    });
+                    clear.on(CLICK + ' touchend' + ns, proxy(that._clearValue, that));
                     that.input.on('keydown' + ns, proxy(that._keydown, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
@@ -867,6 +865,10 @@
                 this._initialIndex = null;
                 this._presetValue = true;
                 this._toggleCloseVisibility();
+            },
+            _clearValue: function () {
+                Select.fn._clearValue.call(this);
+                this.input.focus();
             }
         });
         ui.plugin(ComboBox);

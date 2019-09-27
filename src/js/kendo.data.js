@@ -1390,8 +1390,10 @@
                 }
                 total = query.toArray().length;
             }
-            if (sort && !inPlace) {
-                query = query.sort(sort);
+            if (sort) {
+                if (!inPlace) {
+                    query = query.sort(sort);
+                }
                 if (group) {
                     data = query.toArray();
                 }

@@ -712,8 +712,8 @@
                 }
                 that._userTriggered = true;
                 that._select(item).done(function () {
-                    that._focusElement(that.wrapper);
                     that._blur();
+                    that._focusElement(that.wrapper);
                 });
             },
             _focusElement: function (element) {
