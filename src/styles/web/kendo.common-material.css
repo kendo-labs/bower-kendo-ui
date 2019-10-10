@@ -1442,7 +1442,6 @@ input[type="reset"].k-button-expand {
   border-top: 1px solid transparent;
   border-color: inherit;
   transition: width 200ms linear;
-  transition: "width 200ms linear";
   -webkit-animation: k-tab-loader 1s ease-in-out infinite;
           animation: k-tab-loader 1s ease-in-out infinite;
 }
@@ -4102,8 +4101,7 @@ span.k-textbox:after {
 .k-dropdown-wrap,
 .k-picker-wrap,
 .k-numeric-wrap {
-  transition: box-shadow .15s ease-out;
-  transition: "box-shadow .15s ease-out";
+  transition: box-shadow 0.15s ease-out;
 }
 .k-textbox > input,
 .k-picker-wrap .k-input,
@@ -9003,7 +9001,6 @@ div.k-navigator .k-navigator-left {
   background-color: rgba(0, 0, 0, 0.7);
   opacity: 0;
   transition: opacity 0.3s linear;
-  transition: "opacity 0.3s linear";
 }
 .km-vertical-scrollbar {
   height: 100%;

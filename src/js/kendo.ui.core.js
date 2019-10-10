@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.3.927'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.3.1010'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1787,9 +1787,9 @@
             var documentMode = document.documentMode;
             support.hashChange = 'onhashchange' in window && !(support.browser.msie && (!documentMode || documentMode <= 8));
             support.customElements = 'registerElement' in window.document;
-            var chrome = support.browser.chrome, mozilla = support.browser.mozilla;
+            var chrome = support.browser.chrome, mozilla = support.browser.mozilla, safari = support.browser.safari;
             support.msPointers = !chrome && window.MSPointerEvent;
-            support.pointers = !chrome && !mozilla && window.PointerEvent;
+            support.pointers = !chrome && !mozilla && !safari && window.PointerEvent;
             support.kineticScrollNeeded = mobileOS && (support.touch || support.msPointers || support.pointers);
         }());
         function size(obj) {
@@ -13748,7 +13748,7 @@
             },
             _hold: function (e) {
                 this.currentTarget = e.target;
-                if (this.options.holdToDrag && this._trigger(HOLD, e)) {
+                if (this._trigger(HOLD, e)) {
                     this.userEvents.cancel();
                 } else {
                     this._activated = true;
@@ -26494,6 +26494,7 @@
                 that.input.off(ns);
                 that.input.off(nsFocusEvent);
                 that.element.off(ns);
+                that.wrapper.off(ns);
                 that._inputWrapper.off(ns);
                 clearTimeout(that._pasteTimeout);
                 that._arrow.off(CLICK + ' ' + MOUSEDOWN);
@@ -26573,6 +26574,7 @@
                     });
                     clear.on(CLICK + ' touchend' + ns, proxy(that._clearValue, that));
                     that.input.on('keydown' + ns, proxy(that._keydown, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
+                    that.wrapper.on(CLICK + ns, proxy(that._focusHandler, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
@@ -27572,10 +27574,13 @@
                 that.listView.value([]);
                 that.persistTagList = persistTagList;
             },
+            _focusHandler: function () {
+                this.input.focus();
+            },
             _editable: function (options) {
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), tagList = that.tagList.off(ns), input = that.element.add(that.input.off(ns));
                 if (!readonly && !disable) {
-                    wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that));
+                    wrapper.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that)).on(CLICK + ns, proxy(that._focusHandler, that));
                     that.input.on(KEYDOWN, proxy(that._keydown, that)).on('paste' + ns, proxy(that._search, that)).on('input' + ns, proxy(that._search, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
                     that._clear.on(CLICK + ns + ' touchend' + ns, proxy(that._clearValue, that));
                     input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
@@ -27623,7 +27628,7 @@
                     that._focusItem();
                 } else if (that._allowOpening()) {
                     if (that._initialOpen && !that.options.autoBind && !that.options.virtual && that.options.value && !$.isPlainObject(that.options.value[0])) {
-                        that.value(that._initialValues);
+                        that.value(that.value() || that._initialValues);
                     }
                     that.popup._hovered = true;
                     that._initialOpen = false;
@@ -39845,6 +39850,9 @@
                         that._inputWrapper.removeClass(FOCUSED);
                         if (element.val() !== that._oldText) {
                             that._change(element.val());
+                            if (!element.val()) {
+                                that.dateView.current(kendo.calendar.getToday());
+                            }
                         }
                         that.close('date');
                         that.close('time');
@@ -40207,6 +40215,7 @@
                             element.attr(ARIA_ACTIVEDESCENDANT, timeView._optionID);
                         }
                     },
+                    popup: options.popup,
                     useValueToRender: true
                 });
                 ul = timeView.ul;
@@ -42340,6 +42349,7 @@
                     }
                     if (!wrapper.is(VISIBLE)) {
                         contentElement.css(OVERFLOW, HIDDEN);
+                        that.wrapper.find(TITLEBAR_BUTTONS).addClass('k-bare');
                         wrapper.show().kendoStop().kendoAnimate({
                             effects: showOptions.effects,
                             duration: showOptions.duration,
@@ -42407,6 +42417,7 @@
                         }
                     });
                     this._removeOverlay();
+                    that.wrapper.find(TITLEBAR_BUTTONS).removeClass('k-bare');
                     wrapper.kendoStop().kendoAnimate({
                         effects: hideOptions.effects || showOptions.effects,
                         reverse: hideOptions.reverse === true,

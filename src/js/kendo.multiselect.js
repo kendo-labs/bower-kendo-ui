@@ -376,10 +376,13 @@
                 that.listView.value([]);
                 that.persistTagList = persistTagList;
             },
+            _focusHandler: function () {
+                this.input.focus();
+            },
             _editable: function (options) {
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), tagList = that.tagList.off(ns), input = that.element.add(that.input.off(ns));
                 if (!readonly && !disable) {
-                    wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that));
+                    wrapper.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that)).on(CLICK + ns, proxy(that._focusHandler, that));
                     that.input.on(KEYDOWN, proxy(that._keydown, that)).on('paste' + ns, proxy(that._search, that)).on('input' + ns, proxy(that._search, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
                     that._clear.on(CLICK + ns + ' touchend' + ns, proxy(that._clearValue, that));
                     input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
@@ -427,7 +430,7 @@
                     that._focusItem();
                 } else if (that._allowOpening()) {
                     if (that._initialOpen && !that.options.autoBind && !that.options.virtual && that.options.value && !$.isPlainObject(that.options.value[0])) {
-                        that.value(that._initialValues);
+                        that.value(that.value() || that._initialValues);
                     }
                     that.popup._hovered = true;
                     that._initialOpen = false;

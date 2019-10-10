@@ -153,6 +153,7 @@
                 that.input.off(ns);
                 that.input.off(nsFocusEvent);
                 that.element.off(ns);
+                that.wrapper.off(ns);
                 that._inputWrapper.off(ns);
                 clearTimeout(that._pasteTimeout);
                 that._arrow.off(CLICK + ' ' + MOUSEDOWN);
@@ -232,6 +233,7 @@
                     });
                     clear.on(CLICK + ' touchend' + ns, proxy(that._clearValue, that));
                     that.input.on('keydown' + ns, proxy(that._keydown, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
+                    that.wrapper.on(CLICK + ns, proxy(that._focusHandler, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
