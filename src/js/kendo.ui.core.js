@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.3.1010'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.3.1016'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1787,9 +1787,9 @@
             var documentMode = document.documentMode;
             support.hashChange = 'onhashchange' in window && !(support.browser.msie && (!documentMode || documentMode <= 8));
             support.customElements = 'registerElement' in window.document;
-            var chrome = support.browser.chrome, mozilla = support.browser.mozilla, safari = support.browser.safari;
+            var chrome = support.browser.chrome, mobileChrome = support.browser.crios, mozilla = support.browser.mozilla, safari = support.browser.safari;
             support.msPointers = !chrome && window.MSPointerEvent;
-            support.pointers = !chrome && !mozilla && !safari && window.PointerEvent;
+            support.pointers = !chrome && !mobileChrome && !mozilla && !safari && window.PointerEvent;
             support.kineticScrollNeeded = mobileOS && (support.touch || support.msPointers || support.pointers);
         }());
         function size(obj) {

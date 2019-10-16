@@ -82,7 +82,6 @@
   background-color: #f6f6f6;
 }
 .k-list-container .k-nodata .k-button,
-.k-dropdown .k-dropdown-wrap,
 .k-button,
 .k-button-group.k-state-disabled .k-button:not(.k-state-active),
 .k-button-group .k-state-disabled:not(.k-state-active),
@@ -114,8 +113,6 @@
   background-color: #f6f6f6;
   background-image: linear-gradient(#f6f6f6, #f1f1f1);
 }
-.k-dropdown .k-dropdown-wrap:hover,
-.k-dropdown .k-dropdown-wrap.k-state-hover,
 .k-button:hover,
 .k-button.k-state-hover,
 .k-action-buttons .k-button:hover,
@@ -269,7 +266,6 @@
   color: #656565;
   background-color: #fff;
 }
-.k-dropdown .k-dropdown-wrap.k-state-focused,
 .k-autocomplete.k-state-focused,
 .k-autocomplete.k-state-active,
 .k-combobox > .k-state-focused,
@@ -367,6 +363,7 @@
   border-style: solid;
   box-sizing: border-box;
   outline: 0;
+  font-family: inherit;
   font-size: 14px;
   line-height: 1.42857143;
   display: block;
@@ -382,7 +379,7 @@ kendo-sortable {
 .k-overlay {
   width: 100%;
   height: 100%;
-  background-color: #000000;
+  background-color: #000;
   opacity: 0.5;
   position: fixed;
   top: 0;
@@ -4789,6 +4786,10 @@ kendo-sortable {
   height: calc(8px + 1.42857143em);
 }
 .k-dropdown .k-dropdown-wrap {
+  border-color: rgba(0, 0, 0, 0.08);
+  color: #656565;
+  background-color: #f6f6f6;
+  background-image: linear-gradient(#f6f6f6, #f1f1f1);
   background-clip: padding-box;
 }
 .k-ie11 .k-dropdown .k-dropdown-wrap,
@@ -4799,6 +4800,19 @@ kendo-sortable {
 .k-dropdown .k-dropdown-wrap .k-select {
   padding: 0;
   width: calc(8px + 1.42857143em);
+}
+.k-dropdown .k-dropdown-wrap:hover,
+.k-dropdown .k-dropdown-wrap.k-state-hover {
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #656565;
+  background-color: #ededed;
+  background-image: linear-gradient(#ededed, #e8e8e8);
+}
+.k-dropdown .k-dropdown-wrap.k-state-focused {
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #656565;
+  background-color: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.03), 0 4px 5px 0 rgba(0, 0, 0, 0.04);
 }
 .k-pager-wrap {
   padding: 8px 8px;
@@ -7103,14 +7117,14 @@ kendo-sortable {
 .k-rtl .k-grid .k-grid-search {
   float: left;
 }
-.k-grid .k-tooltip.k-tooltip-validation {
+.k-grid .k-widget.k-tooltip.k-tooltip-validation {
   display: -ms-flexbox;
   display: flex;
   position: absolute;
   width: auto;
   padding: 4px 8px;
 }
-.k-grid .k-tooltip.k-tooltip-validation .k-callout {
+.k-grid .k-widget.k-tooltip.k-tooltip-validation .k-callout {
   display: block;
 }
 .k-grid .k-animation-container-fixed .k-tooltip.k-tooltip-validation {
@@ -10339,14 +10353,23 @@ div.k-scrollview .k-scrollview-prev:hover {
 .k-slider.k-state-disabled .k-draghandle {
   cursor: default;
 }
+.k-rtl .k-slider .k-slider-selection,
+.k-slider.k-rtl .k-slider-selection,
+[dir="rtl"] .k-slider .k-slider-selection,
 .k-slider[dir="rtl"] .k-slider-selection {
   left: auto;
   right: 0;
 }
+.k-rtl .k-slider .k-button-increase,
+.k-slider.k-rtl .k-button-increase,
+[dir="rtl"] .k-slider .k-button-increase,
 .k-slider[dir="rtl"] .k-button-increase {
   left: 0;
   right: auto;
 }
+.k-rtl .k-slider .k-button-decrease,
+.k-slider.k-rtl .k-button-decrease,
+[dir="rtl"] .k-slider .k-button-decrease,
 .k-slider[dir="rtl"] .k-button-decrease {
   right: 0;
   left: auto;
@@ -10436,6 +10459,20 @@ div.k-scrollview .k-scrollview-prev:hover {
   left: auto;
   right: 120%;
 }
+.k-rtl .k-slider-vertical .k-label,
+.k-slider-vertical.k-rtl .k-label,
+[dir="rtl"] .k-slider-vertical .k-label,
+.k-slider-vertical[dir="rtl"] .k-label {
+  left: auto;
+  right: 120%;
+}
+.k-rtl .k-slider-vertical .k-slider-topleft .k-label,
+.k-slider-vertical.k-rtl .k-slider-topleft .k-label,
+[dir="rtl"] .k-slider-vertical .k-slider-topleft .k-label,
+.k-slider-vertical[dir="rtl"] .k-slider-topleft .k-label {
+  left: 120%;
+  right: auto;
+}
 .k-slider-horizontal {
   display: inline-block;
   height: 30px;
@@ -10446,7 +10483,6 @@ div.k-scrollview .k-scrollview-prev:hover {
   float: left;
   height: 100%;
   text-align: center;
-  margin-top: 2px;
 }
 .k-slider-horizontal .k-tick {
   background-position: center -92px;
@@ -10518,11 +10554,43 @@ div.k-scrollview .k-scrollview-prev:hover {
 .k-slider-horizontal .k-slider-topleft .k-label {
   top: -1.2em;
 }
-.k-slider-horizontal[dir="rtl"] .k-button-increase .k-icon,
-.k-slider-horizontal[dir="rtl"] .k-button-decrease .k-icon {
-  -webkit-transform: rotate(180deg);
-  -ms-transform: rotate(180deg);
-  transform: rotate(180deg);
+.k-rtl .k-slider-horizontal .k-slider-track,
+.k-rtl .k-slider-horizontal .k-slider-selection,
+.k-slider-horizontal.k-rtl .k-slider-track,
+.k-slider-horizontal.k-rtl .k-slider-selection,
+[dir="rtl"] .k-slider-horizontal .k-slider-track,
+[dir="rtl"] .k-slider-horizontal .k-slider-selection,
+.k-slider-horizontal[dir="rtl"] .k-slider-track,
+.k-slider-horizontal[dir="rtl"] .k-slider-selection {
+  right: 0;
+  left: auto;
+}
+.k-rtl .k-slider-horizontal .k-slider-buttons .k-slider-track,
+.k-slider-horizontal.k-rtl .k-slider-buttons .k-slider-track,
+[dir="rtl"] .k-slider-horizontal .k-slider-buttons .k-slider-track,
+.k-slider-horizontal[dir="rtl"] .k-slider-buttons .k-slider-track {
+  right: 38px;
+}
+.k-rtl .k-slider-horizontal .k-label,
+.k-slider-horizontal.k-rtl .k-label,
+[dir="rtl"] .k-slider-horizontal .k-label,
+.k-slider-horizontal[dir="rtl"] .k-label {
+  left: auto;
+  right: 0;
+}
+.k-rtl .k-slider-horizontal .k-first .k-label,
+.k-slider-horizontal.k-rtl .k-first .k-label,
+[dir="rtl"] .k-slider-horizontal .k-first .k-label,
+.k-slider-horizontal[dir="rtl"] .k-first .k-label {
+  right: -50%;
+  left: auto;
+}
+.k-rtl .k-slider-horizontal .k-last .k-label,
+.k-slider-horizontal.k-rtl .k-last .k-label,
+[dir="rtl"] .k-slider-horizontal .k-last .k-label,
+.k-slider-horizontal[dir="rtl"] .k-last .k-label {
+  left: 50%;
+  right: auto;
 }
 .k-slider-wrap {
   height: 100%;
@@ -10624,12 +10692,11 @@ div.k-scrollview .k-scrollview-prev:hover {
 }
 .k-slider-horizontal .k-slider-items {
   height: 100%;
+  padding: 2px 0;
+  box-sizing: border-box;
 }
 .k-slider-vertical .k-slider-items {
   padding-top: 1px;
-}
-.k-slider-horizontal .k-slider-buttons .k-slider-items {
-  padding-top: 0;
 }
 .k-slider-vertical .k-slider-buttons .k-slider-items {
   margin: 0;
@@ -10663,7 +10730,8 @@ div.k-scrollview .k-scrollview-prev:hover {
 .k-slider .k-draghandle.k-pressed {
   box-shadow: inset 0 2px 2px 0 rgba(0, 0, 0, 0.06);
 }
-.k-slider .k-draghandle:focus {
+.k-slider .k-draghandle:focus,
+.k-slider .k-draghandle.k-state-focused {
   box-shadow: 0 3px 4px 0 rgba(255, 99, 88, 0.4);
 }
 .k-slider.k-state-focused .k-draghandle {
@@ -10882,6 +10950,10 @@ div.k-scrollview .k-scrollview-prev:hover {
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
+.k-flatcolorpicker .k-gradient-values .k-input,
+.k-flatcolorpicker .k-gradient-values .k-textbox {
+  padding: 4px 4px;
+}
 .k-flatcolorpicker .k-gradient-values div,
 .k-flatcolorpicker .k-gradient-values input,
 .k-flatcolorpicker .k-gradient-values .k-numerictextbox {
@@ -10894,6 +10966,9 @@ div.k-scrollview .k-scrollview-prev:hover {
 }
 .k-flatcolorpicker .k-gradient-values .k-hex-value {
   width: 65px;
+}
+.k-flatcolorpicker .k-numerictextbox .k-input {
+  text-overflow: clip;
 }
 .k-flatcolorpicker .k-selected-color {
   border-width: 0 0 1px;
@@ -12297,6 +12372,23 @@ div.k-scrollview .k-scrollview-prev:hover {
   position: relative;
   -webkit-appearance: none;
 }
+.k-textbox:disabled,
+.k-textbox[disabled],
+.k-textbox.k-state-disabled,
+.k-input.k-textbox:disabled,
+.k-input.k-textbox[disabled],
+.k-input.k-textbox.k-state-disabled,
+.k-textarea:disabled,
+.k-textarea[disabled],
+.k-textarea.k-state-disabled {
+  outline: none;
+  cursor: default;
+  opacity: 0.6;
+  -webkit-filter: grayscale(0.1);
+  filter: grayscale(0.1);
+  pointer-events: none;
+  box-shadow: none;
+}
 .k-textbox,
 .k-input.k-textbox {
   height: calc(10px + 1.42857143em);
@@ -12343,17 +12435,6 @@ div.k-scrollview .k-scrollview-prev:hover {
 }
 .k-textbox:focus {
   box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.06);
-}
-.k-textbox:disabled,
-.k-textbox[disabled],
-.k-textbox.k-state-disabled {
-  outline: none;
-  cursor: default;
-  opacity: 0.6;
-  -webkit-filter: grayscale(0.1);
-  filter: grayscale(0.1);
-  pointer-events: none;
-  box-shadow: none;
 }
 .k-textbox-container {
   padding-top: 1.07142857em;
@@ -12805,11 +12886,28 @@ div.k-scrollview .k-scrollview-prev:hover {
 .k-textarea::-ms-input-placeholder {
   color: rgba(101, 101, 101, 0.5);
 }
+.k-textbox::-webkit-input-placeholder, .k-input::-webkit-input-placeholder, .k-input.k-textbox::-webkit-input-placeholder, .k-textarea::-webkit-input-placeholder {
+  color: rgba(101, 101, 101, 0.5);
+}
+.k-textbox:-ms-input-placeholder, .k-input:-ms-input-placeholder, .k-input.k-textbox:-ms-input-placeholder, .k-textarea:-ms-input-placeholder {
+  color: rgba(101, 101, 101, 0.5);
+}
+.k-textbox::-ms-input-placeholder, .k-input::-ms-input-placeholder, .k-input.k-textbox::-ms-input-placeholder, .k-textarea::-ms-input-placeholder {
+  color: rgba(101, 101, 101, 0.5);
+}
 .k-textbox::placeholder,
 .k-input::placeholder,
 .k-input.k-textbox::placeholder,
 .k-textarea::placeholder {
   color: rgba(101, 101, 101, 0.5);
+}
+.k-textbox:-webkit-autofill {
+  -webkit-animation-name: autoFillStart;
+  animation-name: autoFillStart;
+}
+.k-textbox:not(:-webkit-autofill) {
+  -webkit-animation-name: autoFillEnd;
+  animation-name: autoFillEnd;
 }
 .k-radio-label::before {
   border-color: rgba(0, 0, 0, 0.08);
@@ -16826,6 +16924,9 @@ kendo-scheduler .k-event .k-event-bottom-actions,
 .k-scheduler-agendaview .k-scheduler-table td.k-first {
   border-left-width: 0;
 }
+.k-scheduler-agendaview .k-scheduler-table .k-scheduler-datecolumn {
+  border-left-width: 0 !important;
+}
 .k-scheduler-agendaview .k-task > .k-event-delete {
   color: inherit;
   position: absolute;
@@ -17023,6 +17124,10 @@ kendo-scheduler .k-event .k-event-bottom-actions,
 .k-rtl.k-scheduler .k-scheduler-agendaview .k-scheduler-table tr + tr td:first-child,
 .k-rtl.k-scheduler .k-scheduler-agendaview .k-scheduler-table tr + tr th:first-child {
   border-right-width: 1px;
+}
+.k-rtl .k-scheduler .k-scheduler-agendaview .k-scheduler-table .k-scheduler-datecolumn,
+.k-rtl.k-scheduler .k-scheduler-agendaview .k-scheduler-table .k-scheduler-datecolumn {
+  border-right-width: 0 !important;
 }
 .k-scheduler {
   background-clip: padding-box;
@@ -18883,7 +18988,6 @@ kendo-drawer .k-drawer-wrapper {
 .k-timeline-card .k-card .k-card-header {
   overflow: visible;
   border-bottom: 0;
-  border-radius: 4px;
 }
 .k-timeline-card .k-card .k-card-header + .k-card-body {
   padding-top: 0;
@@ -18972,6 +19076,9 @@ kendo-drawer .k-drawer-wrapper {
   min-height: 70px;
   width: 400px;
   max-width: 100%;
+}
+.k-timeline-vertical .k-timeline-card .k-card .k-card-header {
+  border-radius: 4px;
 }
 .k-timeline-vertical .k-timeline-card .k-card .k-card-title {
   display: -ms-flexbox;
