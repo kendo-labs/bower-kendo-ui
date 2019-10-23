@@ -1434,7 +1434,7 @@ div.k-filebrowser-dropzone em {
 .k-state-disabled .k-link,
 .k-other-month,
 .k-other-month .k-link,
-.k-dropzone em,
+.k-dropzone .k-dropzone-hint,
 .k-dropzone .k-upload-status,
 .k-tile-empty strong,
 .k-slider .k-draghandle {
@@ -1508,9 +1508,17 @@ div.k-filebrowser-dropzone em {
 .k-restricted-size-horizontal {
   background-color: #6b6b6b;
 }
+.k-dropzone {
+  color: #333333;
+  background-color: #f5f5f5;
+  background-position: 50% 50%;
+}
 .k-file {
   background-color: #fff;
   border-color: #d2d2d2;
+}
+.k-file:last-child {
+  border-radius: 0 0 4px 4px;
 }
 .k-file-progress {
   color: #2498bc;

@@ -1578,9 +1578,19 @@ div.k-filebrowser-dropzone em {
 .k-restricted-size-horizontal {
   background-color: #68cbf5;
 }
+.k-dropzone {
+  color: #00435e;
+  background-color: #d9ecf5;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
+  background-position: 50% 50%;
+}
 .k-file {
   background-color: #ffffff;
-  border-color: #bbdceb;
+  border-color: #a3d0e4;
+}
+.k-file:last-child {
+  border-radius: 0 0 4px 4px;
 }
 .k-file-progress {
   color: #00435e;

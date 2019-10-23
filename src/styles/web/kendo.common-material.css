@@ -270,7 +270,7 @@
   -webkit-touch-callout: none;
 }
 .k-header-column-menu {
-  color: inhert;
+  color: inherit;
 }
 .k-block {
   padding: 2px;
@@ -1934,10 +1934,10 @@ input[type="reset"].k-button-expand {
 .k-menu-scroll-wrapper .k-item div,
 .k-popups-wrapper .k-item div,
 .k-menu .k-item div {
-  -webkit-user-select: default;
-     -moz-user-select: default;
-      -ms-user-select: default;
-          user-select: default;
+  -webkit-user-select: all;
+     -moz-user-select: all;
+      -ms-user-select: all;
+          user-select: all;
 }
 .k-popups-wrapper .k-item .k-item,
 .k-popups-wrapper.vertical > .k-item,
@@ -2594,7 +2594,7 @@ form.k-filter-menu .k-textbox {
 .k-grouping-row .k-group-cell,
 .k-grouping-row + tr .k-group-cell {
   border-top-width: 0;
-  text-overflow: none;
+  text-overflow: clip;
 }
 .k-grid .k-hierarchy-cell + td {
   border-left-width: 0;
@@ -5147,8 +5147,6 @@ table.k-editor {
 }
 .k-editortoolbar-dragHandle {
   cursor: move;
-  padding-left: 0;
-  padding-right: 3px;
   box-shadow: none !important;
 }
 .k-editor-widget > .k-window-content {
@@ -5424,10 +5422,31 @@ a.k-tool {
   min-height: 2.4375em;
   position: relative;
 }
-.k-overflow-tools {
+.k-editor-toolbar {
+  width: 100%;
+  position: relative;
+  -ms-flex: 1;
+      flex: 1;
+}
+.editorToolbarWindow {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-line-pack: start;
+      align-content: flex-start;
+}
+.k-editortoolbar-dragHandle {
+  position: relative;
+  padding: 0;
+  margin: 0 3px 0 0;
+}
+.k-editor-toolbar .k-overflow-tools {
   position: absolute;
   right: 0;
   top: 0;
+  margin: 0;
+}
+.k-editor-toolbar .k-tool-group .k-widget:last-child {
+  margin-right: 0;
 }
 .k-editor-overflow-popup .k-tool {
   width: auto;
@@ -7337,7 +7356,7 @@ span.k-tooltip {
 html .k-upload {
   position: relative;
 }
-.k-dropzone em,
+.k-dropzone .k-dropzone-hint,
 .k-upload-button {
   vertical-align: middle;
 }
@@ -7351,11 +7370,11 @@ html .k-upload {
   padding: 0.8em;
   background-color: transparent;
 }
-.k-dropzone em {
+.k-dropzone .k-dropzone-hint {
   display: none;
   margin-left: 0.6em;
 }
-.k-dropzone-active em {
+.k-dropzone-active .k-dropzone-hint {
   display: inline-block;
 }
 .k-dropzone-active .k-upload-status {
@@ -7370,16 +7389,12 @@ html .k-upload {
   min-width: 7.167em;
   margin-right: 1.6em;
 }
-.k-upload-sync .k-upload-button {
-  margin: 0.8em;
-}
 .k-upload-button input {
   position: absolute;
   bottom: 0;
   right: 0;
   z-index: 1;
   font: 170px monospace !important;
-  filter: alpha(opacity=0);
   opacity: 0;
   margin: 0;
   padding: 0;
@@ -7389,7 +7404,6 @@ html .k-upload {
   line-height: 2.66;
   border-style: solid;
   border-width: 1px 0 0;
-  padding-bottom: 5px;
 }
 .k-upload-files .k-button {
   padding: 0;
@@ -7451,6 +7465,9 @@ html .k-upload {
   border-width: 0;
   box-shadow: none;
   margin-right: 3px;
+}
+.k-file:last-child {
+  border-bottom-width: 0;
 }
 .k-file .k-icon {
   display: inline-block;
@@ -8726,9 +8743,9 @@ div.k-navigator .k-navigator-left {
 .k-scheduler-mobile .k-scheduler-agenda .k-scheduler-group-cell .k-scheduler-group-text,
 .k-scheduler-mobile .k-scheduler-times .k-scheduler-groupcolumn .k-scheduler-group-text,
 .k-scheduler-mobile .k-scheduler-agenda .k-scheduler-groupcolumn .k-scheduler-group-text {
-  -webkit-writing-mode: tb;
-      -ms-writing-mode: tb;
-          writing-mode: tb;
+  -webkit-writing-mode: vertical-lr;
+      -ms-writing-mode: tb-lr;
+          writing-mode: vertical-lr;
   -webkit-transform: rotate(180deg);
       -ms-transform: rotate(180deg);
           transform: rotate(180deg);

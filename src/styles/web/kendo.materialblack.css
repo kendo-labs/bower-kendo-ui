@@ -1576,6 +1576,9 @@ div.k-filebrowser-dropzone em {
   background-color: #363636;
   border-color: #4d4d4d;
 }
+.k-file:last-child {
+  border-radius: 0 0 2px 2px;
+}
 .k-file-progress {
   color: #207ec8;
 }

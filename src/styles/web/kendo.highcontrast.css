@@ -1552,9 +1552,18 @@ div.k-filebrowser-dropzone em {
 .k-restricted-size-horizontal {
   background-color: #fff;
 }
+.k-dropzone {
+  color: #fff;
+  background-color: #2c232b;
+  background-image: url(textures/glass-lighter.png);
+  background-position: 50% 50%;
+}
 .k-file {
   background-color: #2c232b;
   border-color: #674c63;
+}
+.k-file:last-child {
+  border-radius: 0 0 13px 13px;
 }
 .k-file-progress {
   color: #fff;

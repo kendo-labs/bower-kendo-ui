@@ -186,6 +186,19 @@
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
 }
+.k-rtl .k-overflow-tools {
+  left: 0;
+  right: auto;
+}
+.k-rtl .k-editortoolbar-dragHandle {
+  float: right;
+}
+.k-rtl .k-editor-toolbar .k-tool-group .k-widget:last-child {
+  margin-right: 6px;
+}
+.k-rtl .k-editor-toolbar .k-tool-group .k-widget:first-child {
+  margin-right: 0;
+}
 .k-rtl div.k-grid-header,
 .k-rtl div.k-grid-footer {
   padding-right: 0;

@@ -1501,13 +1501,12 @@ div.k-filebrowser-dropzone em {
 .k-restricted-size-horizontal {
   background-color: #3f434b;
 }
-.k-upload.k-header {
-  background: #fff;
-  border-color: #cccccc;
-}
 .k-file {
   color: #4c5356;
   border-color: #cccccc;
+}
+.k-file:last-child {
+  border-radius: 0 0 3px 3px;
 }
 .k-file .k-icon {
   border-radius: 50%;

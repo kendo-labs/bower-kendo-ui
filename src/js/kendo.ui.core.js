@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.3.1016'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.3.1023'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -27542,6 +27542,8 @@
                 }
             },
             _tagListClick: function (e) {
+                e.preventDefault();
+                e.stopPropagation();
                 var target = $(e.currentTarget);
                 if (!target.children('.k-i-arrow-60-down').length) {
                     this._removeTag(target.closest(LI), true);
@@ -27580,15 +27582,15 @@
             _editable: function (options) {
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), tagList = that.tagList.off(ns), input = that.element.add(that.input.off(ns));
                 if (!readonly && !disable) {
-                    wrapper.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that)).on(CLICK + ns, proxy(that._focusHandler, that));
+                    wrapper.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS).on(HOVEREVENTS, that._toggleHover).on('mousedown' + ns + ' touchend' + ns, proxy(that._wrapperMousedown, that)).on(CLICK, proxy(that._focusHandler, that));
                     that.input.on(KEYDOWN, proxy(that._keydown, that)).on('paste' + ns, proxy(that._search, that)).on('input' + ns, proxy(that._search, that)).on('focus' + ns, proxy(that._inputFocus, that)).on('focusout' + ns, proxy(that._inputFocusout, that));
-                    that._clear.on(CLICK + ns + ' touchend' + ns, proxy(that._clearValue, that));
+                    that._clear.on(CLICK + ' touchend' + ns, proxy(that._clearValue, that));
                     input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
                     tagList.on(MOUSEENTER, LI, function () {
                         $(this).addClass(HOVERCLASS);
                     }).on(MOUSELEAVE, LI, function () {
                         $(this).removeClass(HOVERCLASS);
-                    }).on(CLICK, 'li.k-button .k-select', proxy(that._tagListClick, that));
+                    }).on(CLICK + ' touchend' + ns, 'li.k-button .k-select', proxy(that._tagListClick, that));
                 } else {
                     wrapper.toggleClass(STATEDISABLED, disable).toggleClass(NOCLICKCLASS, readonly);
                     input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
