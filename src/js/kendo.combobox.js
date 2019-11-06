@@ -854,7 +854,6 @@
                 if (isFiltered || !hasValue || custom) {
                     that.options.value = '';
                     that.value('');
-                    that._selectedValue = null;
                 }
             },
             _preselect: function (value, text) {

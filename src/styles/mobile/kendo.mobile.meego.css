@@ -1687,7 +1687,6 @@ div.km-split-horizontal > .km-content > .km-pane {
   text-align: center;
   padding: 0.44em;
   -webkit-user-select: none;
-     -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
 }
@@ -1749,7 +1748,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-widget input,
 .km-widget textarea {
   -webkit-user-select: text;
-     -moz-user-select: text;
       -ms-user-select: text;
           user-select: text;
 }
@@ -1757,7 +1755,6 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-widget input[type=image],
 .km-widget select:not([multiple]) {
   -webkit-user-select: none;
-     -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
 }
@@ -5469,7 +5466,6 @@ body:before {
   text-align: center;
   padding: 0.3rem;
   -webkit-user-select: none;
-     -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
   border-radius: 4px;

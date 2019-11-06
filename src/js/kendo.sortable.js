@@ -391,6 +391,7 @@
             _cancel: function () {
                 this.draggedElement.show();
                 this.placeholder.remove();
+                this.draggable.dropped = true;
             },
             _items: function () {
                 var filter = this.options.filter, items;

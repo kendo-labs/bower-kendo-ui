@@ -161,7 +161,7 @@
             _roundValue: function (value) {
                 value = parseFloat(value);
                 var power = math.pow(10, PRECISION);
-                return math.floor(value * power) / power;
+                return kendo._round(value * power) / power;
             },
             _validateValue: function (value) {
                 var that = this;

@@ -1192,7 +1192,6 @@ button.km-button {
   text-align: center;
   padding: 0.44em;
   -webkit-user-select: none;
-     -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
 }
@@ -1254,7 +1253,6 @@ button.km-button {
 .km-widget input,
 .km-widget textarea {
   -webkit-user-select: text;
-     -moz-user-select: text;
       -ms-user-select: text;
           user-select: text;
 }
@@ -1262,7 +1260,6 @@ button.km-button {
 .km-widget input[type=image],
 .km-widget select:not([multiple]) {
   -webkit-user-select: none;
-     -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
 }

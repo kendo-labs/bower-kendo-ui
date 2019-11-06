@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.3.1023'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2019.3.1106'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -15022,6 +15022,7 @@
             _cancel: function () {
                 this.draggedElement.show();
                 this.placeholder.remove();
+                this.draggable.dropped = true;
             },
             _items: function () {
                 var filter = this.options.filter, items;
@@ -19764,7 +19765,7 @@
             _cascadeHandler: function (e) {
                 var parent = this._parentWidget();
                 var valueBeforeCascade = this.value();
-                this._userTriggered = e.userTriggered;
+                this._userTriggered = e.userTriggered || parent._userTriggered;
                 if (this.listView.bound()) {
                     this._clearSelection(parent, true);
                 }
@@ -27195,7 +27196,6 @@
                 if (isFiltered || !hasValue || custom) {
                     that.options.value = '';
                     that.value('');
-                    that._selectedValue = null;
                 }
             },
             _preselect: function (value, text) {
@@ -37677,7 +37677,7 @@
             _roundValue: function (value) {
                 value = parseFloat(value);
                 var power = math.pow(10, PRECISION);
-                return math.floor(value * power) / power;
+                return kendo._round(value * power) / power;
             },
             _validateValue: function (value) {
                 var that = this;
