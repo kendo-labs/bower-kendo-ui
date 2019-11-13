@@ -110,7 +110,13 @@
                     return;
                 }
                 if (that.paneAxis.outOfBounds()) {
-                    that._snapBack();
+                    if (that.transition._started) {
+                        that.transition.cancel();
+                        that.velocity = Math.min(e.touch[that.axis].velocity * that.velocityMultiplier, MAX_VELOCITY);
+                        Animation.fn.start.call(that);
+                    } else {
+                        that._snapBack();
+                    }
                 } else {
                     velocity = e.touch.id === MOUSE_WHEEL_ID ? 0 : e.touch[that.axis].velocity;
                     that.velocity = Math.max(Math.min(velocity * that.velocityMultiplier, MAX_VELOCITY), -MAX_VELOCITY);

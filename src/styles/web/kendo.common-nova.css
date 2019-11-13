@@ -1928,13 +1928,6 @@ input[type="reset"].k-button-expand {
   -ms-user-select: none;
       user-select: none;
 }
-.k-menu-scroll-wrapper .k-item div,
-.k-popups-wrapper .k-item div,
-.k-menu .k-item div {
-  -webkit-user-select: all;
-      -ms-user-select: all;
-          user-select: all;
-}
 .k-popups-wrapper .k-item .k-item,
 .k-popups-wrapper.vertical > .k-item,
 .k-menu-scroll-wrapper .k-item .k-item,
