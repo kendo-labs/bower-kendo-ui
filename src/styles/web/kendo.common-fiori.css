@@ -1349,6 +1349,9 @@ input[type="reset"].k-button-expand {
   border-width: 1px 0 0;
   border-style: solid;
 }
+.k-ie .k-window-content {
+  border-radius: 0;
+}
 .k-tabstrip {
   margin: 0;
   padding: 0;

@@ -263,7 +263,8 @@
             return id ? 'li[data-groupparent=\'' + id + '\']' : 'li[data-groupparent]';
         }
         function popupGroupSelector(id) {
-            return id ? 'ul[data-group=\'' + id + '\']' : 'ul[data-group]';
+            var selector = id ? '[data-group=\'' + id + '\']' : '[data-group]';
+            return 'ul' + selector + ',div' + selector;
         }
         function getChildPopups(currentPopup, overflowWrapper) {
             var childPopupOpener = currentPopup.find(popupOpenerSelector());
@@ -616,7 +617,7 @@
             },
             append: function (item, referenceItem) {
                 referenceItem = this.attemptGetItem(referenceItem);
-                var inserted = this._insert(item, referenceItem, referenceItem.length ? referenceItem.find('> .k-menu-group, > .k-animation-container > .k-menu-group') : null);
+                var inserted = this._insert(item, referenceItem, referenceItem.length ? this._childPopupElement(referenceItem) : null);
                 each(inserted.items, function (i) {
                     inserted.group.append(this);
                     updateArrow(this);
