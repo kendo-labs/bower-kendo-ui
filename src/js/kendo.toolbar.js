@@ -512,13 +512,14 @@
                 this.toolbar = toolbar;
                 this.overflow = true;
                 splitContainerId = (options.id || options.uid) + OPTION_LIST_SUFFIX;
-                this.mainButton = new OverflowButton($.extend({}, options));
+                this.mainButton = new OverflowButton($.extend({ isChild: true }, options));
                 this.mainButton.element.appendTo(element);
                 for (var i = 0; i < items.length; i++) {
                     item = new OverflowButton($.extend({
                         mobile: options.mobile,
                         type: 'button',
-                        splitContainerId: splitContainerId
+                        splitContainerId: splitContainerId,
+                        isChild: true
                     }, items[i]), this.toolbar);
                     item.element.appendTo(element);
                 }
