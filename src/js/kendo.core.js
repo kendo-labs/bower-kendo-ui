@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.3.1219'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.1.114'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2428,7 +2428,8 @@
             var widget = $(this);
             return $.inArray(widget.attr('data-' + kendo.ns + 'role'), [
                 'slider',
-                'rangeslider'
+                'rangeslider',
+                'breadcrumb'
             ]) > -1 || widget.is(':visible');
         }
         kendo.resize = function (element, force) {
@@ -2909,6 +2910,11 @@
                     targetDay = days[on.substr(0, 3)];
                     ourDay = date.getUTCDay();
                     date.setUTCDate(date.getUTCDate() + targetDay - ourDay + (targetDay < ourDay ? 7 : 0));
+                } else if (on.indexOf('<=') >= 0) {
+                    date = new Date(Date.UTC(year, months[month], on.substr(5), time[0], time[1], time[2], 0));
+                    targetDay = days[on.substr(0, 3)];
+                    ourDay = date.getUTCDay();
+                    date.setUTCDate(date.getUTCDate() + targetDay - ourDay - (targetDay > ourDay ? 7 : 0));
                 }
                 return cache[year] = date;
             }
@@ -3438,6 +3444,187 @@
                 'lg': '(min-width: 992px)',
                 'xl': '(min-width: 1200px)'
             }[bootstrapMedia];
+        };
+        kendo.fileGroupMap = {
+            audio: [
+                '.aif',
+                '.iff',
+                '.m3u',
+                '.m4a',
+                '.mid',
+                '.mp3',
+                '.mpa',
+                '.wav',
+                '.wma',
+                '.ogg',
+                '.wav',
+                '.wma',
+                '.wpl'
+            ],
+            video: [
+                '.3g2',
+                '.3gp',
+                '.avi',
+                '.asf',
+                '.flv',
+                '.m4u',
+                '.rm',
+                '.h264',
+                '.m4v',
+                '.mkv',
+                '.mov',
+                '.mp4',
+                '.mpg',
+                '.rm',
+                '.swf',
+                '.vob',
+                '.wmv'
+            ],
+            image: [
+                '.ai',
+                '.dds',
+                '.heic',
+                '.jpe',
+                'jfif',
+                '.jif',
+                '.jp2',
+                '.jps',
+                '.eps',
+                '.bmp',
+                '.gif',
+                '.jpeg',
+                '.jpg',
+                '.png',
+                '.ps',
+                '.psd',
+                '.svg',
+                '.svgz',
+                '.tif',
+                '.tiff'
+            ],
+            txt: [
+                '.doc',
+                '.docx',
+                '.log',
+                '.pages',
+                '.tex',
+                '.wpd',
+                '.wps',
+                '.odt',
+                '.rtf',
+                '.text',
+                '.txt',
+                '.wks'
+            ],
+            presentation: [
+                '.key',
+                '.odp',
+                '.pps',
+                '.ppt',
+                '.pptx'
+            ],
+            data: [
+                '.xlr',
+                '.xls',
+                '.xlsx'
+            ],
+            programming: [
+                '.tmp',
+                '.bak',
+                '.msi',
+                '.cab',
+                '.cpl',
+                '.cur',
+                '.dll',
+                '.dmp',
+                '.drv',
+                '.icns',
+                '.ico',
+                '.link',
+                '.sys',
+                '.cfg',
+                '.ini',
+                '.asp',
+                '.aspx',
+                '.cer',
+                '.csr',
+                '.css',
+                '.dcr',
+                '.htm',
+                '.html',
+                '.js',
+                '.php',
+                '.rss',
+                '.xhtml'
+            ],
+            pdf: ['.pdf'],
+            config: [
+                '.apk',
+                '.app',
+                '.bat',
+                '.cgi',
+                '.com',
+                '.exe',
+                '.gadget',
+                '.jar',
+                '.wsf'
+            ],
+            zip: [
+                '.7z',
+                '.cbr',
+                '.gz',
+                '.sitx',
+                '.arj',
+                '.deb',
+                '.pkg',
+                '.rar',
+                '.rpm',
+                '.tar.gz',
+                '.z',
+                '.zip',
+                '.zipx'
+            ],
+            'disc-image': [
+                '.dmg',
+                '.iso',
+                '.toast',
+                '.vcd',
+                '.bin',
+                '.cue',
+                '.mdf'
+            ]
+        };
+        kendo.getFileGroup = function (extension, withPrefix) {
+            var fileTypeMap = kendo.fileGroupMap;
+            var groups = Object.keys(fileTypeMap);
+            var type = 'file';
+            if (extension === undefined) {
+                return '';
+            }
+            if (extension === '') {
+                return 'folder';
+            }
+            for (var i = 0; i < groups.length; i += 1) {
+                var extensions = fileTypeMap[groups[i]];
+                if (extensions.indexOf(extension.toLowerCase()) > -1) {
+                    return withPrefix ? 'file-' + groups[i] : groups[i];
+                }
+            }
+            return type;
+        };
+        kendo.getFileSizeMessage = function (size) {
+            var sizes = [
+                'Bytes',
+                'KB',
+                'MB',
+                'GB',
+                'TB'
+            ];
+            if (size === 0) {
+                return '0 Byte';
+            }
+            var i = parseInt(Math.floor(Math.log(size) / Math.log(1024)), 10);
+            return Math.round(size / Math.pow(1024, i), 2) + ' ' + sizes[i];
         };
         (function () {
             function postToProxy(dataURI, fileName, proxyURL, proxyTarget) {

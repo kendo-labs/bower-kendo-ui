@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -375,7 +375,7 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
   "borderStyle": "Styl CSS brzegów",
   "collapseBorders": "Sklejaj brzegi",
   "wrapText": "Zawijanie wierszy",
-  "associateCellsWithHeaders": "Powiąż komórki z nagłówkami",
+  "associateCellsWithHeaders": "Powiąż nagłówkami",
   "alignLeft": "Wyrównaj w lewo",
   "alignCenter": "Centruj",
   "alignRight": "Wyrównaj w prawo",

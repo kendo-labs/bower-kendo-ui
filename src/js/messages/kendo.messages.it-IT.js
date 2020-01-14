@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -846,6 +846,17 @@ if (kendo.ui.MultiSelect) {
         "clear": "cancelli",
         "deleteTag": "rimuovi",
         "noData": "Nessun dato trovato."
+    });
+}
+
+/* Chat messages */
+
+if (kendo.ui.Chat) {
+    kendo.ui.Chat.prototype.options.messages =
+    $.extend(true, kendo.ui.Chat.prototype.options.messages,{
+        "placeholder": "Scrivi...",
+        "toggleButton": "Apri/chiudi barra degli strumenti",
+        "sendButton": "Invia messaggio"
     });
 }
 

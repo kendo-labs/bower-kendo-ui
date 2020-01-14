@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -550,10 +550,16 @@
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {
-                var that = this, element = that.element, formId = element.attr('form'), form = formId ? $('#' + formId) : element.closest('form');
+                var that = this, element = that.element, formId = element.attr('form'), form = formId ? $('#' + formId) : element.closest('form'), options = that.options, disabledDate = options.disableDates, parseFormats = options.parseFormats.length ? options.parseFormats : null, optionsValue = that._initialOptions.value, initialValue = element[0].defaultValue;
+                if (optionsValue && (disabledDate && disabledDate(optionsValue))) {
+                    optionsValue = null;
+                }
+                if ((!initialValue || !kendo.parseDate(initialValue, parseFormats, options.culture)) && optionsValue) {
+                    element.attr('value', kendo.toString(optionsValue, options.format, options.culture));
+                }
                 if (form[0]) {
                     that._resetHandler = function () {
-                        that.value(element[0].defaultValue);
+                        that.value(optionsValue || element[0].defaultValue);
                         that.max(that._initialOptions.max);
                         that.min(that._initialOptions.min);
                     };

@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -172,7 +172,7 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
   "borderStyle": "Border Style",
   "collapseBorders": "Collapse borders",
   "wrapText": "Wrap text",
-  "associateCellsWithHeaders": "Associate cells with headers",
+  "associateCellsWithHeaders": "Associate headers",
   "alignLeft": "Align Left",
   "alignCenter": "Align Center",
   "alignRight": "Align Right",
@@ -189,7 +189,15 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
   "columns": "Columns",
   "rows": "Rows",
   "selectAllCells": "Select All Cells",
-  "print": "Print"
+  "print": "Print",
+  "headerRows": "Header Rows",
+  "headerColumns": "Header Columns",
+  "tableSummaryPlaceholder": "Summary attribute is not HTML5 compatible.",
+  "associateNone": "None",
+  "associateScope": "Associate using 'scope' attribute",
+  "associateIds": "Associate using Ids",
+  "copyFormat": "Copy format",
+  "applyFormat": "Apply format"
 });
 }
 
@@ -1168,6 +1176,17 @@ if (kendo.ui.MultiSelect) {
         "clear": "clear",
         "deleteTag": "delete",
         "noData": "No data found."
+    });
+}
+
+/* Chat messages */
+
+if (kendo.ui.Chat) {
+    kendo.ui.Chat.prototype.options.messages =
+    $.extend(true, kendo.ui.Chat.prototype.options.messages,{
+        "placeholder": "Type a message...",
+        "toggleButton": "Toggle toolbar",
+        "sendButton": "Send message"
     });
 }
 

@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -790,18 +790,18 @@
                 if (!element.find('.k-header')[0]) {
                     element.html('<div class="k-header">' + '<a href="#" role="button" class="k-link k-nav-prev" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="#" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" role="button" class="k-link k-nav-next" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>');
                 }
-                links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on('click', function () {
+                links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on(CLICK + ' touchend' + ns, function () {
                     return false;
                 });
-                that._title = links.eq(1).on(CLICK, function () {
+                that._title = links.eq(1).on(CLICK + ' touchend' + ns, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateUp();
                 });
-                that[PREVARROW] = links.eq(0).on(CLICK, function () {
+                that[PREVARROW] = links.eq(0).on(CLICK + ' touchend' + ns, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateToPast();
                 });
-                that[NEXTARROW] = links.eq(2).on(CLICK, function () {
+                that[NEXTARROW] = links.eq(2).on(CLICK + ' touchend' + ns, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateToFuture();
                 });

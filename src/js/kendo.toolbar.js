@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -106,7 +106,7 @@
         kendo.toolbar.Item = Item;
         var Button = Item.extend({
             init: function (options, toolbar) {
-                var element = options.useButtonTag ? $('<button tabindex="0"></button>') : $('<a href tabindex="0"></a>');
+                var element = options.useButtonTag ? $('<button tabindex="0"></button>') : $('<a role="button" href tabindex="0"></a>');
                 this.element = element;
                 this.options = options;
                 this.toolbar = toolbar;

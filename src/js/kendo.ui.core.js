@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2019.3.1219'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.1.114'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2428,7 +2428,8 @@
             var widget = $(this);
             return $.inArray(widget.attr('data-' + kendo.ns + 'role'), [
                 'slider',
-                'rangeslider'
+                'rangeslider',
+                'breadcrumb'
             ]) > -1 || widget.is(':visible');
         }
         kendo.resize = function (element, force) {
@@ -2909,6 +2910,11 @@
                     targetDay = days[on.substr(0, 3)];
                     ourDay = date.getUTCDay();
                     date.setUTCDate(date.getUTCDate() + targetDay - ourDay + (targetDay < ourDay ? 7 : 0));
+                } else if (on.indexOf('<=') >= 0) {
+                    date = new Date(Date.UTC(year, months[month], on.substr(5), time[0], time[1], time[2], 0));
+                    targetDay = days[on.substr(0, 3)];
+                    ourDay = date.getUTCDay();
+                    date.setUTCDate(date.getUTCDate() + targetDay - ourDay - (targetDay > ourDay ? 7 : 0));
                 }
                 return cache[year] = date;
             }
@@ -3438,6 +3444,187 @@
                 'lg': '(min-width: 992px)',
                 'xl': '(min-width: 1200px)'
             }[bootstrapMedia];
+        };
+        kendo.fileGroupMap = {
+            audio: [
+                '.aif',
+                '.iff',
+                '.m3u',
+                '.m4a',
+                '.mid',
+                '.mp3',
+                '.mpa',
+                '.wav',
+                '.wma',
+                '.ogg',
+                '.wav',
+                '.wma',
+                '.wpl'
+            ],
+            video: [
+                '.3g2',
+                '.3gp',
+                '.avi',
+                '.asf',
+                '.flv',
+                '.m4u',
+                '.rm',
+                '.h264',
+                '.m4v',
+                '.mkv',
+                '.mov',
+                '.mp4',
+                '.mpg',
+                '.rm',
+                '.swf',
+                '.vob',
+                '.wmv'
+            ],
+            image: [
+                '.ai',
+                '.dds',
+                '.heic',
+                '.jpe',
+                'jfif',
+                '.jif',
+                '.jp2',
+                '.jps',
+                '.eps',
+                '.bmp',
+                '.gif',
+                '.jpeg',
+                '.jpg',
+                '.png',
+                '.ps',
+                '.psd',
+                '.svg',
+                '.svgz',
+                '.tif',
+                '.tiff'
+            ],
+            txt: [
+                '.doc',
+                '.docx',
+                '.log',
+                '.pages',
+                '.tex',
+                '.wpd',
+                '.wps',
+                '.odt',
+                '.rtf',
+                '.text',
+                '.txt',
+                '.wks'
+            ],
+            presentation: [
+                '.key',
+                '.odp',
+                '.pps',
+                '.ppt',
+                '.pptx'
+            ],
+            data: [
+                '.xlr',
+                '.xls',
+                '.xlsx'
+            ],
+            programming: [
+                '.tmp',
+                '.bak',
+                '.msi',
+                '.cab',
+                '.cpl',
+                '.cur',
+                '.dll',
+                '.dmp',
+                '.drv',
+                '.icns',
+                '.ico',
+                '.link',
+                '.sys',
+                '.cfg',
+                '.ini',
+                '.asp',
+                '.aspx',
+                '.cer',
+                '.csr',
+                '.css',
+                '.dcr',
+                '.htm',
+                '.html',
+                '.js',
+                '.php',
+                '.rss',
+                '.xhtml'
+            ],
+            pdf: ['.pdf'],
+            config: [
+                '.apk',
+                '.app',
+                '.bat',
+                '.cgi',
+                '.com',
+                '.exe',
+                '.gadget',
+                '.jar',
+                '.wsf'
+            ],
+            zip: [
+                '.7z',
+                '.cbr',
+                '.gz',
+                '.sitx',
+                '.arj',
+                '.deb',
+                '.pkg',
+                '.rar',
+                '.rpm',
+                '.tar.gz',
+                '.z',
+                '.zip',
+                '.zipx'
+            ],
+            'disc-image': [
+                '.dmg',
+                '.iso',
+                '.toast',
+                '.vcd',
+                '.bin',
+                '.cue',
+                '.mdf'
+            ]
+        };
+        kendo.getFileGroup = function (extension, withPrefix) {
+            var fileTypeMap = kendo.fileGroupMap;
+            var groups = Object.keys(fileTypeMap);
+            var type = 'file';
+            if (extension === undefined) {
+                return '';
+            }
+            if (extension === '') {
+                return 'folder';
+            }
+            for (var i = 0; i < groups.length; i += 1) {
+                var extensions = fileTypeMap[groups[i]];
+                if (extensions.indexOf(extension.toLowerCase()) > -1) {
+                    return withPrefix ? 'file-' + groups[i] : groups[i];
+                }
+            }
+            return type;
+        };
+        kendo.getFileSizeMessage = function (size) {
+            var sizes = [
+                'Bytes',
+                'KB',
+                'MB',
+                'GB',
+                'TB'
+            ];
+            if (size === 0) {
+                return '0 Byte';
+            }
+            var i = parseInt(Math.floor(Math.log(size) / Math.log(1024)), 10);
+            return Math.round(size / Math.pow(1024, i), 2) + ' ' + sizes[i];
         };
         (function () {
             function postToProxy(dataURI, fileName, proxyURL, proxyTarget) {
@@ -5255,12 +5442,12 @@
             at: function (index) {
                 return this[index];
             },
-            toJSON: function () {
+            toJSON: function (serializeFunctions) {
                 var idx, length = this.length, value, json = new Array(length);
                 for (idx = 0; idx < length; idx++) {
                     value = this[idx];
                     if (value instanceof ObservableObject) {
-                        value = value.toJSON();
+                        value = value.toJSON(serializeFunctions);
                     }
                     json[idx] = value;
                 }
@@ -5544,8 +5731,8 @@
                 }
                 that.uid = kendo.guid();
             },
-            shouldSerialize: function (field) {
-                return this.hasOwnProperty(field) && field !== '_handlers' && field !== '_events' && typeof this[field] !== FUNCTION && field !== 'uid';
+            shouldSerialize: function (field, serializeFunctions) {
+                return this.hasOwnProperty(field) && field !== '_handlers' && field !== '_events' && (serializeFunctions && serializeFunctions[field] || typeof this[field] !== FUNCTION) && field !== 'uid';
             },
             forEach: function (f) {
                 for (var i in this) {
@@ -5554,13 +5741,13 @@
                     }
                 }
             },
-            toJSON: function () {
+            toJSON: function (serializeFunctions) {
                 var result = {}, value, field;
                 for (field in this) {
-                    if (this.shouldSerialize(field)) {
+                    if (this.shouldSerialize(field, serializeFunctions)) {
                         value = this[field];
                         if (value instanceof ObservableObject || value instanceof ObservableArray) {
-                            value = value.toJSON();
+                            value = value.toJSON(serializeFunctions);
                         }
                         result[field] = value;
                     }
@@ -5778,7 +5965,7 @@
                 field = (this.fields || {})[field];
                 return field ? field.editable !== false : true;
             },
-            set: function (field, value, initiator) {
+            set: function (field, value) {
                 var that = this;
                 var dirty = that.dirty;
                 if (that.editable(field)) {
@@ -5786,7 +5973,7 @@
                     if (!equal(value, that.get(field))) {
                         that.dirty = true;
                         that.dirtyFields[field] = true;
-                        if (ObservableObject.fn.set.call(that, field, value, initiator) && !dirty) {
+                        if (ObservableObject.fn.set.call(that, field, value) && !dirty) {
                             that.dirty = dirty;
                             if (!that.dirty) {
                                 that.dirtyFields[field] = false;
@@ -6167,6 +6354,22 @@
                     return !!d.dir;
                 });
             }
+        }
+        function sortFields(sorts, dir) {
+            var sortObject = {};
+            if (sorts) {
+                var descriptor = typeof sorts === STRING ? {
+                        field: sorts,
+                        dir: dir
+                    } : sorts, descriptors = isArray(descriptor) ? descriptor : descriptor !== undefined ? [descriptor] : [];
+                for (var i = 0; i < descriptors.length; i++) {
+                    sortObject[descriptors[i].field] = {
+                        dir: descriptors[i].dir,
+                        index: i + 1
+                    };
+                }
+            }
+            return sortObject;
         }
         var operatorMap = {
             '==': 'eq',
@@ -8184,6 +8387,7 @@
                     }
                     if (options.sort) {
                         that._sort = options.sort = normalizeSort(options.sort);
+                        that._sortFields = sortFields(options.sort);
                     }
                     if (options.filter) {
                         that._filter = options.filter = that.options.accentFoldingFiltering && !$.isEmptyObject(options.filter) ? $.extend({}, normalizeFilter(options.filter), { accentFoldingFiltering: that.options.accentFoldingFiltering }) : normalizeFilter(options.filter);
@@ -8304,6 +8508,7 @@
             sort: function (val) {
                 var that = this;
                 if (val !== undefined) {
+                    that.trigger('sort');
                     that._query({ sort: val });
                     return;
                 }
@@ -15084,7 +15289,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECT = 'unselect', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up,label.k-checkbox-label.k-no-text,.k-icon.k-i-collapse,.k-icon.k-i-expand,span.k-numeric-wrap', msie = kendo.support.browser.msie, supportEventDelegation = false;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECT = 'unselect', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up,label.k-checkbox-label.k-no-text,.k-icon.k-i-collapse,.k-icon.k-i-expand,span.k-numeric-wrap,.k-focusable', msie = kendo.support.browser.msie, supportEventDelegation = false;
         (function ($) {
             (function () {
                 $('<div class="parent"><span /></div>').on('click', '>*', function () {
@@ -15360,17 +15565,120 @@
     (a3 || a2)();
 }));
 (function (f, define) {
-    define('kendo.button', ['kendo.core'], f);
+    define('kendo.badge', ['kendo.core'], f);
+}(function () {
+    var __meta__ = {
+        id: 'badge',
+        name: 'Badge',
+        category: 'web',
+        description: 'The Badge decorates avatars, navigation menus, or other components in the application when visual notification is needed',
+        depends: ['core']
+    };
+    (function ($, undefined) {
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, PRIMARY = 'k-badge-primary', SECONDARY = 'k-badge-secondary', INFO = 'k-badge-info', SUCCESS = 'k-badge-success', WARNING = 'k-badge-warning', ERROR = 'k-badge-error', OUTLINE = 'k-badge-outline', PILL = 'k-badge-pill', FUNCTION = 'function', STRING = 'string';
+        var Badge = Widget.extend({
+            init: function (element, options) {
+                var that = this, type;
+                Widget.fn.init.call(that, element, options);
+                options = $.extend(true, {}, options);
+                type = options.type || 'primary';
+                that.element = $(element).addClass('k-badge').addClass(that.classPerType[type]);
+                if (options.look == 'outline') {
+                    that.element.addClass(OUTLINE);
+                }
+                if (options.appearance != 'rectangle') {
+                    that.element.addClass(PILL);
+                }
+                if (typeof options.visible !== 'undefined' && !options.visible) {
+                    that.element.hide();
+                }
+                that._setInitialValue();
+                kendo.notify(that);
+            },
+            options: {
+                name: 'Badge',
+                value: '',
+                visible: true,
+                appearance: 'rectangle',
+                template: null,
+                type: 'secondary',
+                look: null
+            },
+            classPerType: {
+                primary: PRIMARY,
+                info: INFO,
+                success: SUCCESS,
+                warning: WARNING,
+                error: ERROR,
+                secondary: SECONDARY
+            },
+            value: function (newValue) {
+                var that = this;
+                if (!newValue) {
+                    return that._value;
+                }
+                that.element.html(kendo.htmlEncode(that._createContent(newValue)));
+                that._value = newValue;
+            },
+            _createContent: function (value) {
+                var template = this.options.template, type = typeof template, html;
+                if (type == FUNCTION) {
+                    html = template(value);
+                } else if (type === STRING) {
+                    html = kendo.template(template)({ value: value });
+                } else {
+                    html = value;
+                }
+                return html;
+            },
+            _setInitialValue: function () {
+                var that = this, value = that.options.value || that.element.html();
+                if (!/\S/.test(value)) {
+                    value = '';
+                }
+                that._value = value;
+                that.element.html(kendo.htmlEncode(that._createContent(value)));
+            },
+            hide: function () {
+                this.element.hide();
+            },
+            show: function () {
+                this.element.show();
+            },
+            setOptions: function (newOptions) {
+                var that = this;
+                that.element.removeClass(function (index, className) {
+                    if (className.indexOf('k-') >= 0) {
+                        that.element.removeClass(className);
+                    }
+                });
+                that.init(that.element, newOptions);
+            }
+        });
+        ui.plugin(Badge);
+    }(window.kendo.jQuery));
+    return window.kendo;
+}, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
+    (a3 || a2)();
+}));
+(function (f, define) {
+    define('kendo.button', [
+        'kendo.core',
+        'kendo.badge'
+    ], f);
 }(function () {
     var __meta__ = {
         id: 'button',
         name: 'Button',
         category: 'web',
         description: 'The Button widget displays styled buttons.',
-        depends: ['core']
+        depends: [
+            'core',
+            'badge'
+        ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, keys = kendo.keys, CLICK = 'click', MOUSEDOWN = kendo.support.mousedown, MOUSEUP = kendo.support.mouseup, MOUSEOUT = 'mouseout', KBUTTON = 'k-button', KBUTTONICON = 'k-button-icon', KBUTTONICONTEXT = 'k-button-icontext', NS = '.kendoButton', DISABLED = 'disabled', DISABLEDSTATE = 'k-state-disabled', FOCUSEDSTATE = 'k-state-focused', SELECTEDSTATE = 'k-state-active';
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, proxy = $.proxy, keys = kendo.keys, CLICK = 'click', MOUSEDOWN = kendo.support.mousedown, MOUSEUP = kendo.support.mouseup, MOUSEOUT = 'mouseout', KBUTTON = 'k-button', KBUTTONICON = 'k-button-icon', KBUTTONICONTEXT = 'k-button-icontext', NS = '.kendoButton', DISABLED = 'disabled', DISABLEDSTATE = 'k-state-disabled', FOCUSEDSTATE = 'k-state-focused', SELECTEDSTATE = 'k-state-active', OVERLAY = 'k-badge-overlay';
         var Button = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -15383,6 +15691,9 @@
                 if (options.enable) {
                     that._tabindex();
                 }
+                if (options.badge) {
+                    that.createBadge(options.badge);
+                }
                 that.iconElement();
                 element.on(CLICK + NS, proxy(that._click, that)).on('focus' + NS, proxy(that._focus, that)).on('blur' + NS, proxy(that._blur, that)).on('keydown' + NS, proxy(that._keydown, that)).on('keyup' + NS, proxy(that._removeActive, that)).on(MOUSEDOWN + NS, proxy(that._addActive, that)).on(MOUSEUP + NS + ' ' + MOUSEOUT + NS, proxy(that._removeActive, that));
                 kendo.notify(that);
@@ -15390,6 +15701,9 @@
             destroy: function () {
                 var that = this;
                 that.wrapper.off(NS);
+                if (that.badge) {
+                    that.badge.destroy();
+                }
                 Widget.fn.destroy.call(that);
             },
             events: [CLICK],
@@ -15495,6 +15809,20 @@
                 try {
                     element.blur();
                 } catch (err) {
+                }
+            },
+            createBadge: function (badgeOptions) {
+                var that = this;
+                var span = $('<span />').appendTo(that.element);
+                if (badgeOptions.overlay !== false) {
+                    that.element.addClass(OVERLAY);
+                }
+                if (typeof badgeOptions == 'string' || typeof badgeOptions == 'number') {
+                    that.badge = new ui.Badge(span, { value: badgeOptions });
+                } else if (typeof badgeOptions == 'boolean') {
+                    that.badge = new ui.Badge(span);
+                } else {
+                    that.badge = new ui.Badge(span, badgeOptions);
                 }
             }
         });
@@ -17266,7 +17594,7 @@
         kendo.toolbar.Item = Item;
         var Button = Item.extend({
             init: function (options, toolbar) {
-                var element = options.useButtonTag ? $('<button tabindex="0"></button>') : $('<a href tabindex="0"></a>');
+                var element = options.useButtonTag ? $('<button tabindex="0"></button>') : $('<a role="button" href tabindex="0"></a>');
                 this.element = element;
                 this.options = options;
                 this.toolbar = toolbar;
@@ -21391,18 +21719,18 @@
                 if (!element.find('.k-header')[0]) {
                     element.html('<div class="k-header">' + '<a href="#" role="button" class="k-link k-nav-prev" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="#" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" role="button" class="k-link k-nav-next" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>');
                 }
-                links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on('click', function () {
+                links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on(CLICK + ' touchend' + ns, function () {
                     return false;
                 });
-                that._title = links.eq(1).on(CLICK, function () {
+                that._title = links.eq(1).on(CLICK + ' touchend' + ns, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateUp();
                 });
-                that[PREVARROW] = links.eq(0).on(CLICK, function () {
+                that[PREVARROW] = links.eq(0).on(CLICK + ' touchend' + ns, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateToPast();
                 });
-                that[NEXTARROW] = links.eq(2).on(CLICK, function () {
+                that[NEXTARROW] = links.eq(2).on(CLICK + ' touchend' + ns, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateToFuture();
                 });
@@ -22295,10 +22623,14 @@
                 var element = that.element;
                 var formId = element.attr('form');
                 var form = formId ? $('#' + formId) : element.closest('form');
+                var initialValue = element[0].value;
+                if (!initialValue && that.options.value) {
+                    initialValue = that.options.value;
+                }
                 if (form[0]) {
                     that._resetHandler = function () {
                         setTimeout(function () {
-                            that.value(element[0].value);
+                            that.value(initialValue);
                         });
                     };
                     that._formElement = form.on('reset', that._resetHandler);
@@ -23195,6 +23527,9 @@
                 that.close();
                 if (value !== that._oldText) {
                     that._change(value);
+                    if (!value) {
+                        that.dateView.current(kendo.calendar.getToday());
+                    }
                 }
                 that._inputWrapper.removeClass(FOCUSED);
             },
@@ -23308,10 +23643,16 @@
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {
-                var that = this, element = that.element, formId = element.attr('form'), form = formId ? $('#' + formId) : element.closest('form');
+                var that = this, element = that.element, formId = element.attr('form'), options = that.options, disabledDate = options.disableDates, parseFormats = options.parseFormats.length ? options.parseFormats : null, optionsValue = that._initialOptions.value, form = formId ? $('#' + formId) : element.closest('form'), initialValue = element[0].defaultValue;
+                if (optionsValue && (disabledDate && disabledDate(optionsValue))) {
+                    optionsValue = null;
+                }
+                if ((!initialValue || !kendo.parseDate(initialValue, parseFormats, options.culture)) && optionsValue) {
+                    element.attr('value', kendo.toString(optionsValue, options.format, options.culture));
+                }
                 if (form[0]) {
                     that._resetHandler = function () {
-                        that.value(element[0].defaultValue);
+                        that.value(optionsValue || element[0].defaultValue);
                         that.max(that._initialOptions.max);
                         that.min(that._initialOptions.min);
                     };
@@ -27216,6 +27557,10 @@
                 this._initialIndex = null;
                 this._presetValue = true;
                 this._toggleCloseVisibility();
+            },
+            _clearText: function () {
+                this._old = this.value();
+                this.text('');
             },
             _clearValue: function () {
                 Select.fn._clearValue.call(this);
@@ -36326,7 +36671,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, extend = $.extend, proxy = $.proxy, each = $.each, isArray = $.isArray, template = kendo.template, Widget = ui.Widget, HierarchicalDataSource = kendo.data.HierarchicalDataSource, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoPanelBar', IMG = 'img', HREF = 'href', LAST = 'k-last', LINK = 'k-link', LINKSELECTOR = '.' + LINK, ERROR = 'error', ITEM = '.k-item', GROUP = '.k-group', VISIBLEGROUP = GROUP + ':visible', IMAGE = 'k-image', FIRST = 'k-first', CHANGE = 'change', EXPAND = 'expand', SELECT = 'select', CONTENT = 'k-content', ACTIVATE = 'activate', COLLAPSE = 'collapse', DATABOUND = 'dataBound', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', UNDEFINED = 'undefined', ACTIVECLASS = 'k-state-active', GROUPS = '> .k-panel', CONTENTS = '> .k-content', STRING = 'string', FOCUSEDCLASS = 'k-state-focused', DISABLEDCLASS = 'k-state-disabled', SELECTEDCLASS = 'k-state-selected', SELECTEDSELECTOR = '.' + SELECTEDCLASS, HIGHLIGHTCLASS = 'k-state-highlight', ACTIVEITEMSELECTOR = ITEM + ':not(.k-state-disabled)', clickableItems = '> ' + ACTIVEITEMSELECTOR + ' > ' + LINKSELECTOR + ', .k-panel > ' + ACTIVEITEMSELECTOR + ' > ' + LINKSELECTOR, disabledItems = ITEM + '.k-state-disabled > .k-link', selectableItems = '> li > ' + SELECTEDSELECTOR + ', .k-panel > li > ' + SELECTEDSELECTOR, defaultState = 'k-state-default', ARIA_DISABLED = 'aria-disabled', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_SELECTED = 'aria-selected', VISIBLE = ':visible', EMPTY = ':empty', SINGLE = 'single', bindings = {
+        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, extend = $.extend, proxy = $.proxy, each = $.each, isArray = $.isArray, template = kendo.template, Widget = ui.Widget, HierarchicalDataSource = kendo.data.HierarchicalDataSource, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoPanelBar', IMG = 'img', HREF = 'href', LAST = 'k-last', LINK = 'k-link', LINKSELECTOR = '.' + LINK, ICONEXPAND = 'k-panelbar-expand', ICONCOLLAPSE = 'k-panelbar-collapse', ERROR = 'error', ITEM = '.k-item', GROUP = '.k-group', VISIBLEGROUP = GROUP + ':visible', IMAGE = 'k-image', FIRST = 'k-first', CHANGE = 'change', EXPAND = 'expand', SELECT = 'select', CLICK = 'click', CONTENT = 'k-content', ACTIVATE = 'activate', COLLAPSE = 'collapse', DATABOUND = 'dataBound', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', UNDEFINED = 'undefined', ACTIVECLASS = 'k-state-active', GROUPS = '> .k-panel', CONTENTS = '> .k-content', STRING = 'string', FOCUSEDCLASS = 'k-state-focused', DISABLEDCLASS = 'k-state-disabled', SELECTEDCLASS = 'k-state-selected', SELECTEDSELECTOR = '.' + SELECTEDCLASS, HIGHLIGHTCLASS = 'k-state-highlight', ACTIVEITEMSELECTOR = ITEM + ':not(.k-state-disabled)', clickableItems = '> ' + ACTIVEITEMSELECTOR + ' > ' + LINKSELECTOR + ', .k-panel > ' + ACTIVEITEMSELECTOR + ' > ' + LINKSELECTOR, disabledItems = ITEM + '.k-state-disabled > .k-link', selectableItems = '> li > ' + SELECTEDSELECTOR + ', .k-panel > li > ' + SELECTEDSELECTOR, defaultState = 'k-state-default', ARIA_DISABLED = 'aria-disabled', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_SELECTED = 'aria-selected', VISIBLE = ':visible', EMPTY = ':empty', SINGLE = 'single', bindings = {
                 text: 'dataTextField',
                 url: 'dataUrlField',
                 spriteCssClass: 'dataSpriteCssClassField',
@@ -36444,11 +36789,7 @@
                 that._initData(hasDataSource);
                 that._updateClasses();
                 that._animations(options);
-                element.on('click' + NS, clickableItems, function (e) {
-                    if (that._click($(e.currentTarget))) {
-                        e.preventDefault();
-                    }
-                }).on(MOUSEENTER + NS + ' ' + MOUSELEAVE + NS, clickableItems, that._toggleHover).on('click' + NS, disabledItems, false).on('click' + NS, '.k-request-retry', proxy(that._retryRequest, that)).on('keydown' + NS, $.proxy(that._keydown, that)).on('focus' + NS, function () {
+                element.on(CLICK + NS, clickableItems, proxy(that._click, that)).on(MOUSEENTER + NS + ' ' + MOUSELEAVE + NS, clickableItems, that._toggleHover).on(CLICK + NS, disabledItems, false).on(CLICK + NS, '.k-request-retry', proxy(that._retryRequest, that)).on('keydown' + NS, proxy(that._keydown, that)).on('focus' + NS, function () {
                     var item = that.select();
                     that._current(item[0] ? item : that._first());
                 }).on('blur' + NS, function () {
@@ -37115,7 +37456,7 @@
                     that._current(that._prevItem(current));
                     e.preventDefault();
                 } else if (key == keys.ENTER || key == keys.SPACEBAR) {
-                    that._click(current.children(LINKSELECTOR));
+                    that._click(e);
                     e.preventDefault();
                 } else if (key == keys.HOME) {
                     that._current(that._first());
@@ -37286,12 +37627,18 @@
                     item.children(LINKSELECTOR).addClass('k-header');
                 }
             },
-            _click: function (target) {
-                var that = this, element = that.element, prevent, contents, href, isAnchor;
+            _click: function (e) {
+                var that = this, target = e.type == CLICK ? $(e.target) : that._current().children(LINKSELECTOR), element = that.element, prevent, contents, href, isAnchor;
                 if (target.parents('li.' + DISABLEDCLASS).length) {
                     return;
                 }
                 if (target.closest('.k-widget')[0] != element[0]) {
+                    return;
+                }
+                if (target.hasClass(LINK) || target.hasClass(ICONEXPAND) || target.hasClass(ICONCOLLAPSE)) {
+                    e.preventDefault();
+                }
+                if (target.is(':kendoFocusable') && !target.hasClass(LINK)) {
                     return;
                 }
                 var link = target.closest(LINKSELECTOR), item = link.closest(ITEM);
@@ -40261,10 +40608,16 @@
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {
-                var that = this, element = that.element, formId = element.attr('form'), form = formId ? $('#' + formId) : element.closest('form');
+                var that = this, element = that.element, formId = element.attr('form'), form = formId ? $('#' + formId) : element.closest('form'), options = that.options, disabledDate = options.disableDates, parseFormats = options.parseFormats.length ? options.parseFormats : null, optionsValue = that._initialOptions.value, initialValue = element[0].defaultValue;
+                if (optionsValue && (disabledDate && disabledDate(optionsValue))) {
+                    optionsValue = null;
+                }
+                if ((!initialValue || !kendo.parseDate(initialValue, parseFormats, options.culture)) && optionsValue) {
+                    element.attr('value', kendo.toString(optionsValue, options.format, options.culture));
+                }
                 if (form[0]) {
                     that._resetHandler = function () {
-                        that.value(element[0].defaultValue);
+                        that.value(optionsValue || element[0].defaultValue);
                         that.max(that._initialOptions.max);
                         that.min(that._initialOptions.min);
                     };

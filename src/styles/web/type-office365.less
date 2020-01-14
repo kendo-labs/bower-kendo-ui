@@ -239,6 +239,10 @@
 @card-header-text: @header-text-color;
 @card-header-border: @card-border;
 
+@card-footer-bg: @header-background-color;
+@card-footer-text: @header-text-color;
+@card-footer-border: @card-border;
+
 @card-primary: @accent;
 @card-primary-bg: mix( white, @card-primary, 70%);
 @card-primary-text: mix(black, @card-primary);
@@ -537,6 +541,190 @@
 @timeline-circle-color: @base;
 
 
+// Breadcrumb
+@breadcrumb-focused-shadow: inset 0 0 0 1px @focused-border-color;
+
+@breadcrumb-link-text: @link-text;
+@breadcrumb-link-bg: transparent;
+@breadcrumb-link-border: transparent;
+
+@breadcrumb-link-hovered-text: @link-hovered-text;
+@breadcrumb-link-hovered-bg: rgba(0,0,0, 0.08);
+@breadcrumb-link-hovered-border: transparent;
+
+@breadcrumb-link-focused-text: @link-text;
+@breadcrumb-link-focused-bg: false;
+@breadcrumb-link-focused-border: false;
+@breadcrumb-link-focused-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
+
+@breadcrumb-root-link-text: @button-text-color;
+@breadcrumb-root-link-bg: false;
+@breadcrumb-root-link-border: false;
+
+@breadcrumb-root-link-hovered-text: false;
+@breadcrumb-root-link-hovered-bg: @breadcrumb-link-hovered-bg;
+@breadcrumb-root-link-hovered-border: false;
+
+@breadcrumb-root-link-focused-text: false;
+@breadcrumb-root-link-focused-bg: false;
+@breadcrumb-root-link-focused-border: false;
+@breadcrumb-root-link-focused-shadow: @breadcrumb-link-focused-shadow;
+
+// Listgroup
+@listgroup-border-radius: @border-radius;
+
+@listgroup-bg: @component-bg;
+@listgroup-text: @component-text;
+@listgroup-border: @component-border;
+
+
+// Badge
+@badge-secondary-bg: @base;
+@badge-secondary-text: @normal-text-color;
+@badge-secondary-border: @badge-secondary-bg;
+
+@badge-primary-bg: @primary-background-color;
+@badge-primary-text: @primary-text-color;
+@badge-primary-border: @badge-primary-bg;
+
+@badge-info-bg: @info;
+@badge-info-text: contrast( @badge-info-bg );
+@badge-info-border: @badge-info-bg;
+
+@badge-success-bg: @success;
+@badge-success-text: contrast( @badge-success-bg );
+@badge-success-border: @badge-success-bg;
+
+@badge-warning-bg: darken(@warning, 30%);
+@badge-warning-text: contrast( @badge-warning-bg );
+@badge-warning-border: @badge-warning-bg;
+
+@badge-error-bg: @error;
+@badge-error-text: contrast( @badge-error-bg );
+@badge-error-border: @badge-error-bg;
+
+//Checkboxes
+@checkbox-icon-size: 12px;
+@checkbox-size: @icon-size;
+@checkbox-radius: @border-radius;
+@checkbox-border-width: 1px;
+@checkbox-line-height: (@checkbox-size + @checkbox-border-width);
+
+@checkbox-bg: @input-bg;
+@checkbox-text: @base;
+@checkbox-border: contrast(@checkbox-bg, darken(@checkbox-bg, 20%), lighten(@checkbox-bg, 30%));
+@checkbox-hovered-bg: @checkbox-bg;
+@checkbox-hovered-text: @checkbox-text;
+@checkbox-hovered-border: @checkbox-border;
+@checkbox-checked-bg: @checkbox-bg;
+@checkbox-checked-text: @checkbox-text;
+@checkbox-checked-border: @checkbox-border;
+@checkbox-indeterminate-bg: @checkbox-bg;
+@checkbox-indeterminate-text: @checkbox-text;
+@checkbox-indeterminate-border: @checkbox-border;
+@checkbox-focused-border: @checkbox-text;
+@checkbox-focused-shadow: none;
+@checkbox-focused-checked-border: @checkbox-focused-border;
+@checkbox-focused-checked-shadow: none;
+@checkbox-disabled-bg: null;
+@checkbox-disabled-text: null;
+@checkbox-disabled-border: null;
+@checkbox-disabled-checked-bg: null;
+@checkbox-disabled-checked-text: null;
+@checkbox-disabled-checked-border: null;
+@checkbox-invalid-bg: null;
+@checkbox-invalid-text: null;
+@checkbox-invalid-border: @checkbox-checked-bg;
+
+
+//Radio Buttons
+@radio-icon-size: 12px;
+@radio-size: @icon-size;
+@radio-radius: 50%;
+@radio-border-width: 1px;
+@radio-line-height: @radio-size + @radio-border-width;
+
+@radio-bg: @checkbox-bg;
+@radio-text: @checkbox-text;
+@radio-border: @checkbox-border;
+@radio-hovered-bg: @checkbox-hovered-bg;
+@radio-hovered-text: @checkbox-hovered-text;
+@radio-hovered-border: @checkbox-hovered-border;
+@radio-checked-bg: @checkbox-checked-bg;
+@radio-checked-text: @checkbox-checked-text;
+@radio-checked-border: @checkbox-checked-border;
+@radio-indeterminate-bg: @radio-checked-bg;
+@radio-indeterminate-text: @radio-checked-text;
+@radio-indeterminate-border: @radio-checked-border;
+@radio-focused-border: @checkbox-hovered-border;
+@radio-focused-shadow: @checkbox-focused-shadow;
+@radio-focused-checked-border: @checkbox-checked-border;
+@radio-focused-checked-shadow: @checkbox-focused-checked-shadow;
+@radio-disabled-bg: null;
+@radio-disabled-text: null;
+@radio-disabled-border: null;
+@radio-disabled-checked-bg: null;
+@radio-disabled-checked-text: null;
+@radio-disabled-checked-border: null;
+
+
+// FileManager
+@filemanager-bg: false;
+@filemanager-text: false;
+@filemanager-border: false;
+
+@filemanager-toolbar-bg: false;
+@filemanager-toolbar-text: false;
+@filemanager-toolbar-border: @widget-border-color;
+
+@filemanager-navigation-bg: false;
+@filemanager-navigation-text: false;
+@filemanager-navigation-border: @widget-border-color;
+
+@filemanager-breadcrumb-bg: @base;
+@filemanager-breadcrumb-text: false;
+@filemanager-breadcrumb-border: @widget-border-color;
+
+@filemanager-listview-bg: false;
+@filemanager-listview-text: false;
+@filemanager-listview-border: false;
+
+@filemanager-listview-item-bg: false;
+@filemanager-listview-item-text: false;
+@filemanager-listview-item-border: false;
+
+@filemanager-listview-item-icon-bg: false;
+@filemanager-listview-item-icon-text: mix(@normal-text-color, @base, 41.5%);
+@filemanager-listview-item-icon-border: false;
+@filemanager-listview-item-icon-selected-bg: false;
+@filemanager-listview-item-icon-selected-text: @selected-text-color;
+@filemanager-listview-item-icon-selected-border: false;
+
+@filemanager-grid-bg: false;
+@filemanager-grid-text: false;
+@filemanager-grid-border: false;
+
+@filemanager-preview-bg: false;
+@filemanager-preview-text: false;
+@filemanager-preview-border: @widget-border-color;
+
+@filemanager-preview-icon-bg: false;
+@filemanager-preview-icon-text: mix(@normal-text-color, @base, 41.5%);
+@filemanager-preview-icon-border: false;
+
+@filemanager-drag-hint-bg: @accent;
+@filemanager-drag-hint-text: contrast(@filemanager-drag-hint-bg);
+@filemanager-drag-hint-border: false;
+
+@filemanager-drag-hint-icon-bg: false;
+@filemanager-drag-hint-icon-text: contrast(@filemanager-drag-hint-bg);
+@filemanager-drag-hint-icon-border: false;
+
+@filemanager-view-dropzone-hovered-text: inherit;
+@filemanager-view-dropzone-hovered-bg: inherit;
+@filemanager-view-dropzone-hovered-border: false;
+
+
 // Kendo skin
 
 @theme-name: ~"office365";
@@ -558,6 +746,13 @@
 @import "Default/drawer/_theme.less";
 @import "Default/rating/_theme.less";
 @import "Default/timeline/_theme.less";
+@import "Default/breadcrumb/_theme.less";
+@import "Default/listgroup/_theme.less";
+@import "Default/badge/_theme.less";
+@import "Default/checkbox/_theme.less";
+@import "Default/radio/_theme.less";
+@import "Default/filemanager/_theme.less";
+
 
 .k-in,
 .k-item
@@ -799,13 +994,6 @@ textarea.k-textbox:hover,
 
 .k-hr {
     border-color: @widget-border-color;
-}
-
-// Badge
-.k-badge {
-    background-color: @accent;
-    color: contrast(@accent, @normal-background, @normal-text-color, 0.5);
-    border-radius: @inner-border-radius;
 }
 
 .k-tool
@@ -1447,7 +1635,9 @@ div.k-filebrowser-dropzone em
     color: @upload-error-text-color;
 
     .k-file-extension-wrapper,
-    .k-multiple-files-extension-wrapper {
+    .k-multiple-files-extension-wrapper,
+    .k-file-group-wrapper,
+    .k-multiple-files-group-wrapper {
         color: @upload-error-text-color;
         border-color: @upload-error-text-color;
 
@@ -1463,7 +1653,9 @@ div.k-filebrowser-dropzone em
 }
 
 .k-file-extension-wrapper,
-.k-multiple-files-extension-wrapper {
+.k-multiple-files-extension-wrapper,
+.k-file-group-wrapper,
+.k-multiple-files-group-wrapper {
     color: @disabled-text-color;
     border-color: @disabled-text-color;
 }
@@ -1473,7 +1665,9 @@ div.k-filebrowser-dropzone em
 }
 
 .k-file-invalid-extension-wrapper,
-.k-multiple-files-invalid-extension-wrapper {
+.k-multiple-files-invalid-extension-wrapper,
+.k-file-invalid-group-wrapper,
+.k-multiple-files-invalid-group-wrapper {
     color: @error;
     border-color: @upload-error-text-color;
 }
@@ -2288,33 +2482,6 @@ div.k-filebrowser-dropzone em
    .box-shadow(@button-focused-shadow);
 }
 
-@import "themes/checkbox.less";
-
-@checkbox-border-color: lighten(@normal-text-color, 20%);
-@checkbox-border-radius: 1px;
-@checkbox-hover-border-color: darken(@normal-text-color, 7%);
-@checkbox-hover-box-shadow: none;
-@checkbox-checked-border-color: lighten(@normal-text-color, 20%);
-@checkbox-checked-color: @normal-text-color;
-@checkbox-active-border-color: @base;
-@checkbox-active-box-shadow: none;
-@checkbox-disabled-color: darken(@hover-background, 29%);
-@checkbox-disabled-border-color: darken(@hover-background, 29%);
-@checkbox-indeterminate-border-color: @checkbox-checked-border-color;
-@checkbox-indeterminate-background-color: @checkbox-checked-border-color;
-@checkbox-indeterminate-hover-background-color: @checkbox-hover-border-color;
-@checkbox-indeterminate-hover-border-color: @checkbox-hover-border-color;
-
-@import "themes/radiobutton.less";
-
-@radio-border-color: lighten(@normal-text-color, 20%);
-@radio-hover-border-color: darken(@normal-text-color, 7%);
-@radio-checked-background-color: darken(@normal-text-color, 7%);
-@radio-active-border-color: lighten(@normal-text-color, 20%);
-@radio-active-box-shadow: none;
-@radio-disabled-color: darken(@hover-background, 29%);
-@radio-disabled-border-color: #bfbfbf;
-
 // Responsive styles
 
 @media only screen and (max-width: 1024px) {
@@ -2805,8 +2972,8 @@ input.k-textbox:focus {
 .k-flatcolorpicker .k-transparency-slider .k-draghandle:hover,
 .k-flatcolorpicker .k-hue-slider .k-draghandle:focus,
 .k-flatcolorpicker .k-transparency-slider .k-draghandle:focus {
-    background-color: @checkbox-border-color;
-    border-color: @checkbox-border-color;
+    background-color: @widget-border-color;
+    border-color: @widget-border-color;
 }
 
 .k-flatcolorpicker .k-slider-horizontal .k-slider-track {
@@ -3131,12 +3298,6 @@ input.k-textbox:focus {
 
     .k-item, .k-item.k-state-active {
         border-color: @spreadsheet-header-border;
-    }
-}
-
-.k-window .k-popup-edit-form .k-edit-field {
-    label.k-checkbox-label {
-        margin-top: 0.3em;
     }
 }
 

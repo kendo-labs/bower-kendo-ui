@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -866,6 +866,10 @@
                 this._initialIndex = null;
                 this._presetValue = true;
                 this._toggleCloseVisibility();
+            },
+            _clearText: function () {
+                this._old = this.value();
+                this.text('');
             },
             _clearValue: function () {
                 Select.fn._clearValue.call(this);

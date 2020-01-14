@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -23,17 +23,23 @@
 
 */
 (function (f, define) {
-    define('kendo.button', ['kendo.core'], f);
+    define('kendo.button', [
+        'kendo.core',
+        'kendo.badge'
+    ], f);
 }(function () {
     var __meta__ = {
         id: 'button',
         name: 'Button',
         category: 'web',
         description: 'The Button widget displays styled buttons.',
-        depends: ['core']
+        depends: [
+            'core',
+            'badge'
+        ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, keys = kendo.keys, CLICK = 'click', MOUSEDOWN = kendo.support.mousedown, MOUSEUP = kendo.support.mouseup, MOUSEOUT = 'mouseout', KBUTTON = 'k-button', KBUTTONICON = 'k-button-icon', KBUTTONICONTEXT = 'k-button-icontext', NS = '.kendoButton', DISABLED = 'disabled', DISABLEDSTATE = 'k-state-disabled', FOCUSEDSTATE = 'k-state-focused', SELECTEDSTATE = 'k-state-active';
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, proxy = $.proxy, keys = kendo.keys, CLICK = 'click', MOUSEDOWN = kendo.support.mousedown, MOUSEUP = kendo.support.mouseup, MOUSEOUT = 'mouseout', KBUTTON = 'k-button', KBUTTONICON = 'k-button-icon', KBUTTONICONTEXT = 'k-button-icontext', NS = '.kendoButton', DISABLED = 'disabled', DISABLEDSTATE = 'k-state-disabled', FOCUSEDSTATE = 'k-state-focused', SELECTEDSTATE = 'k-state-active', OVERLAY = 'k-badge-overlay';
         var Button = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -46,6 +52,9 @@
                 if (options.enable) {
                     that._tabindex();
                 }
+                if (options.badge) {
+                    that.createBadge(options.badge);
+                }
                 that.iconElement();
                 element.on(CLICK + NS, proxy(that._click, that)).on('focus' + NS, proxy(that._focus, that)).on('blur' + NS, proxy(that._blur, that)).on('keydown' + NS, proxy(that._keydown, that)).on('keyup' + NS, proxy(that._removeActive, that)).on(MOUSEDOWN + NS, proxy(that._addActive, that)).on(MOUSEUP + NS + ' ' + MOUSEOUT + NS, proxy(that._removeActive, that));
                 kendo.notify(that);
@@ -53,6 +62,9 @@
             destroy: function () {
                 var that = this;
                 that.wrapper.off(NS);
+                if (that.badge) {
+                    that.badge.destroy();
+                }
                 Widget.fn.destroy.call(that);
             },
             events: [CLICK],
@@ -158,6 +170,20 @@
                 try {
                     element.blur();
                 } catch (err) {
+                }
+            },
+            createBadge: function (badgeOptions) {
+                var that = this;
+                var span = $('<span />').appendTo(that.element);
+                if (badgeOptions.overlay !== false) {
+                    that.element.addClass(OVERLAY);
+                }
+                if (typeof badgeOptions == 'string' || typeof badgeOptions == 'number') {
+                    that.badge = new ui.Badge(span, { value: badgeOptions });
+                } else if (typeof badgeOptions == 'boolean') {
+                    that.badge = new ui.Badge(span);
+                } else {
+                    that.badge = new ui.Badge(span, badgeOptions);
                 }
             }
         });

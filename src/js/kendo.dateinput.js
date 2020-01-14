@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -305,10 +305,14 @@
                 var element = that.element;
                 var formId = element.attr('form');
                 var form = formId ? $('#' + formId) : element.closest('form');
+                var initialValue = element[0].value;
+                if (!initialValue && that.options.value) {
+                    initialValue = that.options.value;
+                }
                 if (form[0]) {
                     that._resetHandler = function () {
                         setTimeout(function () {
-                            that.value(element[0].value);
+                            that.value(initialValue);
                         });
                     };
                     that._formElement = form.on('reset', that._resetHandler);

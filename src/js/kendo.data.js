@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -76,12 +76,12 @@
             at: function (index) {
                 return this[index];
             },
-            toJSON: function () {
+            toJSON: function (serializeFunctions) {
                 var idx, length = this.length, value, json = new Array(length);
                 for (idx = 0; idx < length; idx++) {
                     value = this[idx];
                     if (value instanceof ObservableObject) {
-                        value = value.toJSON();
+                        value = value.toJSON(serializeFunctions);
                     }
                     json[idx] = value;
                 }
@@ -365,8 +365,8 @@
                 }
                 that.uid = kendo.guid();
             },
-            shouldSerialize: function (field) {
-                return this.hasOwnProperty(field) && field !== '_handlers' && field !== '_events' && typeof this[field] !== FUNCTION && field !== 'uid';
+            shouldSerialize: function (field, serializeFunctions) {
+                return this.hasOwnProperty(field) && field !== '_handlers' && field !== '_events' && (serializeFunctions && serializeFunctions[field] || typeof this[field] !== FUNCTION) && field !== 'uid';
             },
             forEach: function (f) {
                 for (var i in this) {
@@ -375,13 +375,13 @@
                     }
                 }
             },
-            toJSON: function () {
+            toJSON: function (serializeFunctions) {
                 var result = {}, value, field;
                 for (field in this) {
-                    if (this.shouldSerialize(field)) {
+                    if (this.shouldSerialize(field, serializeFunctions)) {
                         value = this[field];
                         if (value instanceof ObservableObject || value instanceof ObservableArray) {
-                            value = value.toJSON();
+                            value = value.toJSON(serializeFunctions);
                         }
                         result[field] = value;
                     }
@@ -599,7 +599,7 @@
                 field = (this.fields || {})[field];
                 return field ? field.editable !== false : true;
             },
-            set: function (field, value, initiator) {
+            set: function (field, value) {
                 var that = this;
                 var dirty = that.dirty;
                 if (that.editable(field)) {
@@ -607,7 +607,7 @@
                     if (!equal(value, that.get(field))) {
                         that.dirty = true;
                         that.dirtyFields[field] = true;
-                        if (ObservableObject.fn.set.call(that, field, value, initiator) && !dirty) {
+                        if (ObservableObject.fn.set.call(that, field, value) && !dirty) {
                             that.dirty = dirty;
                             if (!that.dirty) {
                                 that.dirtyFields[field] = false;
@@ -988,6 +988,22 @@
                     return !!d.dir;
                 });
             }
+        }
+        function sortFields(sorts, dir) {
+            var sortObject = {};
+            if (sorts) {
+                var descriptor = typeof sorts === STRING ? {
+                        field: sorts,
+                        dir: dir
+                    } : sorts, descriptors = isArray(descriptor) ? descriptor : descriptor !== undefined ? [descriptor] : [];
+                for (var i = 0; i < descriptors.length; i++) {
+                    sortObject[descriptors[i].field] = {
+                        dir: descriptors[i].dir,
+                        index: i + 1
+                    };
+                }
+            }
+            return sortObject;
         }
         var operatorMap = {
             '==': 'eq',
@@ -3005,6 +3021,7 @@
                     }
                     if (options.sort) {
                         that._sort = options.sort = normalizeSort(options.sort);
+                        that._sortFields = sortFields(options.sort);
                     }
                     if (options.filter) {
                         that._filter = options.filter = that.options.accentFoldingFiltering && !$.isEmptyObject(options.filter) ? $.extend({}, normalizeFilter(options.filter), { accentFoldingFiltering: that.options.accentFoldingFiltering }) : normalizeFilter(options.filter);
@@ -3125,6 +3142,7 @@
             sort: function (val) {
                 var that = this;
                 if (val !== undefined) {
+                    that.trigger('sort');
                     that._query({ sort: val });
                     return;
                 }

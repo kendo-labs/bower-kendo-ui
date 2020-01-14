@@ -1,5 +1,5 @@
 /** 
- * Copyright 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -24,10 +24,6 @@
 */
 .k-rtl {
   direction: rtl;
-}
-.k-rtl .k-badge {
-  margin-left: 0;
-  margin-right: 6px;
 }
 .k-rtl .k-autocomplete .k-i-loading,
 .k-rtl .k-multiselect .k-i-loading {
@@ -285,9 +281,6 @@
   margin-right: 0;
   margin-left: 2%;
 }
-.k-rtl .k-edit-field > input[type="checkbox"]:first-child,
-.k-rtl .k-edit-field > input[type="radio"]:first-child,
-.k-rtl .k-edit-field > label:first-child > input[type="checkbox"],
 .k-rtl .k-edit-field > .k-button:first-child {
   margin-right: 0;
 }
@@ -712,10 +705,6 @@
   margin-right: -16px;
   margin-left: auto;
 }
-.k-rtl .k-treeview .k-checkbox-label {
-  padding-left: 0;
-  padding-right: calc(14px + 0.7ex);
-}
 .k-rtl .k-treelist .k-i-arrow-60-right,
 .k-rtl .k-treelist .k-i-arrow-45-down-right {
   -webkit-transform: scaleX(-1);
@@ -759,6 +748,10 @@
   margin-right: 0.8em;
   margin-left: 0.2em;
 }
+.k-rtl .k-file-name-size-wrapper {
+  margin-left: 0;
+  margin-right: 1em;
+}
 .k-rtl .k-window-titlebar .k-window-actions {
   right: auto;
   left: 0.5em;
@@ -800,18 +793,24 @@
   right: auto;
   left: 0;
 }
-.k-rtl .k-grid th .k-checkbox {
-  margin-top: 0;
-  margin-right: 1px;
-  margin-left: 0;
-}
-.k-rtl .k-grid td .k-checkbox {
-  margin-left: 0;
-}
 .k-rtl .k-spreadsheet .k-spreadsheet-cell .k-dirty {
   margin: 0;
 }
 .k-rtl .k-spreadsheet .k-spreadsheet-cell.k-spreadsheet-has-comment::after {
   left: 0;
   right: auto;
+}
+.k-rtl .k-flatcolorpicker .k-selected-color {
+  text-align: left;
+}
+.k-rtl .k-flatcolorpicker .k-selected-color .k-color-value {
+  direction: initial;
+  text-align: right;
+  border-left: 0;
+}
+.k-rtl .k-flatcolorpicker .k-transparency-slider .k-slider-track {
+  background-image: url("textures/transparency-reversed.png");
+}
+.k-rtl .k-flatcolorpicker .k-hue-slider .k-slider-track {
+  background: linear-gradient(to left, #ff0000 0%, #ffff00 16%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 84%, #ff0004 100%);
 }
