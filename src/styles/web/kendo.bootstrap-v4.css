@@ -4483,8 +4483,8 @@ kendo-sortable {
   box-shadow: 0 0 0 3px rgba(228, 231, 235, 0.5);
 }
 .k-badge {
-  background-color: #007bff;
   color: #fff;
+  background-color: #007bff;
 }
 .k-button.k-outline {
   border-color: currentColor;
@@ -8321,9 +8321,10 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 .k-spreadsheet-cell {
   padding: 1px;
   box-sizing: border-box;
+  position: absolute;
+  line-height: normal;
   background-clip: padding-box;
   white-space: pre;
-  position: absolute;
   overflow: hidden;
 }
 .k-spreadsheet-merged-cell {
@@ -8609,6 +8610,7 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
   height: auto;
 }
 .k-spreadsheet-insert-image-dialog {
+  border-radius: 0.25rem;
   border-style: dashed;
   border-width: 2px;
 }
@@ -8822,7 +8824,6 @@ kendo-toolbar.k-toolbar[dir="rtl"] kendo-toolbar-renderer:not(:last-child) {
 }
 .k-spreadsheet-insert-image-dialog {
   border-color: #dee2e6;
-  border-radius: 0.25rem;
 }
 .k-spreadsheet-insert-image-dialog .k-spreadsheet-has-image:hover,
 .k-spreadsheet-insert-image-dialog .k-spreadsheet-has-image.k-state-hovered {
@@ -11131,6 +11132,10 @@ fieldset legend {
 .k-menu-expand-arrow.k-i-expand-w::before {
   left: 0.5rem;
 }
+.k-menu-popup {
+  overflow: auto;
+  max-height: 80vh;
+}
 .k-menu-group {
   margin: 0;
   padding: 0.5rem 0;
@@ -11602,7 +11607,7 @@ fieldset legend {
   align-items: center;
 }
 .k-filemanager-drag-hint .k-icon {
-  margin-right: 1rem;
+  margin-right: 0.5rem;
 }
 .k-filemanager-toolbar {
   border-color: rgba(33, 37, 41, 0.125);
@@ -11629,9 +11634,6 @@ fieldset legend {
 .k-filemanager-drag-hint {
   color: #fff;
   background-color: #007bff;
-}
-.k-filemanager-drag-hint .k-icon {
-  color: #fff;
 }
 .k-autocomplete {
   border-radius: 0.25rem;
@@ -13247,6 +13249,7 @@ fieldset legend {
 }
 .k-calendar > .k-calendar-header {
   min-width: 280px;
+  box-sizing: border-box;
 }
 .k-calendar .k-footer,
 .k-calendar .k-calendar-footer {
@@ -16095,6 +16098,18 @@ svg .k-var--accent {
   background-color: #fff;
 }
 svg .k-var--accent-contrast {
+  fill: #fff;
+}
+.k-var--primary {
+  background-color: #007bff;
+}
+svg .k-var--primary {
+  fill: #007bff;
+}
+.k-var--primary-contrast {
+  background-color: #fff;
+}
+svg .k-var--primary-contrast {
   fill: #fff;
 }
 .k-var--base {
@@ -20639,8 +20654,8 @@ a.k-badge:hover,
   padding-top: 1.25rem;
 }
 .k-timeline .k-timeline-flag {
-  background-color: #007bff;
   color: #fff;
+  background-color: #007bff;
 }
 .k-timeline .k-timeline-circle {
   background-color: #007bff;

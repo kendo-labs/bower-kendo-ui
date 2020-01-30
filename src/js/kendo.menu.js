@@ -1793,6 +1793,7 @@
                         removeSpacesBetweenItems(that.element);
                     }
                     if (options.appendTo) {
+                        options.appendTo = $(options.appendTo);
                         options.appendTo.append(that._popupsWrapper);
                     }
                     that._initialHeight = that.element[0].style.height;

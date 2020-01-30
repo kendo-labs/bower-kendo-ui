@@ -132,6 +132,9 @@
                 axis = that.options.position.match(/left|right/) ? 'horizontal' : 'vertical';
                 that.dimensions = DIMENSIONS[axis];
                 that._documentKeyDownHandler = proxy(that._documentKeyDown, that);
+                if (kendo.support.touch && this._isShownOnMouseEnter()) {
+                    that.element.on(kendo.support.mousedown + NS, that.options.filter, proxy(that._showOn, that));
+                }
                 that.element.on(that.options.showOn + NS, that.options.filter, proxy(that._showOn, that));
                 if (this._isShownOnMouseEnter() || this._isShownOnClick()) {
                     that.element.on('mouseenter' + NS, that.options.filter, proxy(that._mouseenter, that));
@@ -141,6 +144,9 @@
                 }
                 if (this.options.autoHide && this._isShownOnFocus()) {
                     that.element.on('blur' + NS, that.options.filter, proxy(that._blur, that));
+                }
+                if (kendo.support.touch) {
+                    that.element.on(kendo.support.mousedown + NS, that.options.filter, proxy(that._mouseenter, that));
                 }
             },
             options: {

@@ -821,13 +821,16 @@
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = setTimeout(function () {
                     var value = that.text();
-                    if (that._prev !== value) {
+                    if (value !== '' && that._prev !== value) {
                         that._prev = value;
                         if (that.options.filter === 'none' && that.options.virtual) {
                             that.listView.select(-1);
                         }
                         that.search(value);
                         that._toggleCloseVisibility();
+                    } else if (value === '') {
+                        that._clearValue();
+                        that.search('');
                     }
                     that._typingTimeout = null;
                 }, that.options.delay);

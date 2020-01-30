@@ -329,7 +329,7 @@
                 that._resizePopup();
                 popup.position();
                 if (length) {
-                    if (options.suggest && isActive) {
+                    if (options.suggest && isActive && that._inputValue()) {
                         that.suggest(data[0]);
                     }
                 }

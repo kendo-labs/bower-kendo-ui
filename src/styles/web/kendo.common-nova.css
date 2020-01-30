@@ -8576,14 +8576,6 @@ div.k-navigator .k-navigator-left {
 .k-scheduler-mobile .k-mobile-header .k-scheduler-table th {
   height: 1.5em;
 }
-.k-scheduler-mobile .k-time-text,
-.k-scheduler-mobile .k-time-period {
-  display: block;
-  line-height: 1;
-}
-.k-scheduler-mobile .k-time-period {
-  font-size: 0.7em;
-}
 .k-scheduler-mobile .k-scheduler-table td,
 .k-scheduler-mobile .k-scheduler-table th {
   height: 2em;

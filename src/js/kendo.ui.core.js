@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.1.115'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.1.130'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -17242,6 +17242,9 @@
                 axis = that.options.position.match(/left|right/) ? 'horizontal' : 'vertical';
                 that.dimensions = DIMENSIONS[axis];
                 that._documentKeyDownHandler = proxy(that._documentKeyDown, that);
+                if (kendo.support.touch && this._isShownOnMouseEnter()) {
+                    that.element.on(kendo.support.mousedown + NS, that.options.filter, proxy(that._showOn, that));
+                }
                 that.element.on(that.options.showOn + NS, that.options.filter, proxy(that._showOn, that));
                 if (this._isShownOnMouseEnter() || this._isShownOnClick()) {
                     that.element.on('mouseenter' + NS, that.options.filter, proxy(that._mouseenter, that));
@@ -17251,6 +17254,9 @@
                 }
                 if (this.options.autoHide && this._isShownOnFocus()) {
                     that.element.on('blur' + NS, that.options.filter, proxy(that._blur, that));
+                }
+                if (kendo.support.touch) {
+                    that.element.on(kendo.support.mousedown + NS, that.options.filter, proxy(that._mouseenter, that));
                 }
             },
             options: {
@@ -20987,7 +20993,7 @@
                 that._header();
                 that._viewWrapper();
                 that._footer(that.footer);
-                id = element.addClass('k-widget k-calendar ' + (options.weekNumber ? ' k-week-number' : '')).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK, CELLSELECTOR, function (e) {
+                id = element.addClass('k-widget k-calendar ' + (options.weekNumber ? ' k-week-number' : '')).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK + ' touchend', CELLSELECTOR, function (e) {
                     var link = e.currentTarget.firstChild, value = toDateObject(link);
                     if (link.href.indexOf('#') != -1) {
                         e.preventDefault();
@@ -25351,7 +25357,7 @@
                 that._resizePopup();
                 popup.position();
                 if (length) {
-                    if (options.suggest && isActive) {
+                    if (options.suggest && isActive && that._inputValue()) {
                         that.suggest(data[0]);
                     }
                 }
@@ -27512,13 +27518,16 @@
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = setTimeout(function () {
                     var value = that.text();
-                    if (that._prev !== value) {
+                    if (value !== '' && that._prev !== value) {
                         that._prev = value;
                         if (that.options.filter === 'none' && that.options.virtual) {
                             that.listView.select(-1);
                         }
                         that.search(value);
                         that._toggleCloseVisibility();
+                    } else if (value === '') {
+                        that._clearValue();
+                        that.search('');
                     }
                     that._typingTimeout = null;
                 }, that.options.delay);
@@ -36397,6 +36406,7 @@
                         removeSpacesBetweenItems(that.element);
                     }
                     if (options.appendTo) {
+                        options.appendTo = $(options.appendTo);
                         options.appendTo.append(that._popupsWrapper);
                     }
                     that._initialHeight = that.element[0].style.height;
