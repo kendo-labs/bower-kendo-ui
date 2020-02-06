@@ -1406,9 +1406,6 @@ textarea.k-textbox:hover,
 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after {
   opacity: 0.9;
 }
-.k-tool {
-  border-color: transparent;
-}
 .k-i-loading {
   background-image: url('BlueOpal/loading.gif');
 }
@@ -2674,13 +2671,26 @@ textarea.k-textbox,
   background: rgba(123, 210, 246, 0.7);
   height: 4px;
 }
+.k-map {
+  border-color: #bbdceb;
+  color: #003f59;
+  background-color: #fff;
+}
+.k-map .k-navigator {
+  border-color: #93c8df;
+  color: #003f59;
+  background-color: #daecf4;
+  background-position: 50% 50%;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
+.k-map .k-zoom-control {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+}
 .k-map .k-marker {
-  font-size: 28px;
   color: #7bd2f6;
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
-}
-.k-map .k-attribution {
-  color: #666666;
 }
 .k-spreadsheet-row-header,
 .k-spreadsheet-column-header {

@@ -2581,16 +2581,19 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
 .k-chart-tooltip {
   background-image: none;
 }
-.k-map .k-header {
-  background-color: #fff;
+.k-map {
   border-color: #e0e0e0;
+  color: #32364c;
+  background-color: #fff;
+}
+.k-map .k-navigator {
+  border-color: #9da2a4;
+  color: #9da2a4;
+  background-color: #fff;
+  background-position: 50% 50%;
 }
 .k-map .k-marker {
-  font-size: 28px;
   color: #ff4350;
-}
-.k-map .k-attribution {
-  color: #666666;
 }
 .k-spreadsheet-row-header,
 .k-spreadsheet-column-header {

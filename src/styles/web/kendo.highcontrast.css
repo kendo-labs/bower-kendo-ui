@@ -1393,9 +1393,6 @@ textarea.k-textbox:hover,
 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after {
   opacity: 1;
 }
-.k-tool {
-  border-color: transparent;
-}
 .k-i-loading {
   background-image: url('HighContrast/loading.gif');
 }
@@ -2634,8 +2631,23 @@ div.k-filebrowser-dropzone em {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAABkCAYAAACGqxDMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAGRJREFUeNrs19EJgDAMQMFG3X9bf01xBvMRzGWA46UUSiMzYxXOsYoHCAQCgUDgj8GrGn3BaF94ti8ETriHAQQ2eAIUfi+8q8GsBp/24MCVB57hsEL/FCAQCAQCgUAgsDm4BRgAO7ERCNGW1L4AAAAASUVORK5CYII=);
   background-position: 0 -37px;
 }
+.k-map {
+  border-color: #674c63;
+  color: #fff;
+  background-color: #1b141a;
+}
+.k-map .k-navigator {
+  border-color: #674c63;
+  color: #fff;
+  background-color: #2c232b;
+  background-position: 50% 50%;
+  background-image: url(textures/glass-lighter.png);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.7);
+}
+.k-map .k-zoom-control {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.7);
+}
 .k-map .k-marker {
-  font-size: 28px;
   color: #870074;
 }
 .k-spreadsheet-row-header,

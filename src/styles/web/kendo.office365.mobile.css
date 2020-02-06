@@ -3028,6 +3028,11 @@ div.km-split-horizontal > .km-content > .km-pane {
 .km-meego .km-view .km-absolute {
   position: absolute;
 }
+.km-on-ios [contenteditable] {
+  -webkit-user-select: text;
+  -ms-user-select: text;
+      user-select: text;
+}
 .km-widget {
   font-size: 1em;
 }

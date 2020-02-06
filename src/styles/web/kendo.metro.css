@@ -1352,9 +1352,6 @@ textarea.k-textbox:hover,
 .k-clear-value {
   color: #787878;
 }
-.k-tool {
-  border-color: transparent;
-}
 .k-i-loading {
   background-image: url('Metro/loading.gif');
 }
@@ -2631,8 +2628,22 @@ div.k-filebrowser-dropzone em {
   background-image: none;
   border-radius: 0;
 }
+.k-map {
+  border-color: #dbdbdb;
+  color: #787878;
+  background-color: #fff;
+}
+.k-map .k-navigator {
+  border-color: #dbdbdb;
+  color: #000000;
+  background-color: #fff;
+  background-position: 50% 50%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+.k-map .k-zoom-control {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
 .k-map .k-marker {
-  font-size: 28px;
   color: #7ea700;
 }
 .k-spreadsheet-row-header,

@@ -98,7 +98,9 @@
                     if (options.dataSource && !options.dataSource.total()) {
                         that.list.empty().append(that.currentPageTemplate({ text: 0 })).append(that.selectTemplate({ text: 0 }));
                     }
-                    that.list.wrap('<div class="k-pager-numbers-wrap"></div>');
+                    if (!that.list.parent().hasClass('k-pager-numbers-wrap')) {
+                        that.list.wrap('<div class="k-pager-numbers-wrap"></div>');
+                    }
                 }
                 if (options.input) {
                     if (!that.element.find('.k-pager-input').length) {

@@ -1357,9 +1357,6 @@ thead.k-grid-header tr:first-child {
 .k-hr {
   border-color: #cccccc;
 }
-.k-tool {
-  border-color: transparent;
-}
 .k-i-loading {
   background-image: url('Bootstrap/loading.gif');
 }
@@ -3002,8 +2999,22 @@ td.k-state-focused.k-state-selected,
 .k-chart-shared-tooltip {
   background-image: none;
 }
+.k-map {
+  border-color: #cccccc;
+  color: #333333;
+  background-color: #fff;
+}
+.k-map .k-navigator {
+  border-color: #cccccc;
+  color: #333333;
+  background-color: #fff;
+  background-position: 50% 50%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+.k-map .k-zoom-control {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
 .k-map .k-marker {
-  font-size: 28px;
   color: #428bca;
 }
 .k-spreadsheet-row-header,

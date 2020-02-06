@@ -505,6 +505,9 @@
                     cancel: proxy(that._cancel, that),
                     select: proxy(that._select, that)
                 });
+                if (kendo.support.touch) {
+                    that.element.css('touch-action', 'none');
+                }
                 that._afterEndHandler = proxy(that._afterEnd, that);
                 that._captureEscape = proxy(that._captureEscape, that);
             },

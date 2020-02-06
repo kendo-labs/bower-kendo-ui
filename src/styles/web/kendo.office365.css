@@ -1327,9 +1327,6 @@ textarea.k-textbox:hover,
 .k-hr {
   border-color: #c9c9c9;
 }
-.k-tool {
-  border-color: transparent;
-}
 .k-i-loading {
   background-image: url('Office365/loading.gif');
 }
@@ -3144,12 +3141,23 @@ input.k-textbox:focus {
 .k-chart-tooltip {
   background-image: none;
 }
-.k-map .k-marker {
-  font-size: 28px;
-  color: #cde6f7;
+.k-map {
+  border-color: #c9c9c9;
+  color: #333333;
+  background-color: #fff;
 }
-.k-map .k-attribution {
-  color: #666666;
+.k-map .k-navigator {
+  border-color: #f4f4f4;
+  color: #000000;
+  background-color: #f4f4f4;
+  background-position: 50% 50%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.18);
+}
+.k-map .k-zoom-control {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.18);
+}
+.k-map .k-marker {
+  color: #cde6f7;
 }
 .k-spreadsheet-row-header,
 .k-spreadsheet-column-header {

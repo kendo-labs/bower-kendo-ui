@@ -1354,9 +1354,6 @@ textarea.k-textbox:hover,
 .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after {
   opacity: 0.6;
 }
-.k-tool {
-  border-color: transparent;
-}
 .k-i-loading {
   background-image: url('Fiori/loading.gif');
 }
@@ -3037,12 +3034,23 @@ div.k-window.k-state-focused {
 .k-chart-tooltip {
   background-image: none;
 }
-.k-map .k-marker {
-  font-size: 28px;
-  color: #007cc0;
+.k-map {
+  border-color: #bfbfbf;
+  color: #333;
+  background-color: #fff;
 }
-.k-map .k-attribution {
-  color: #666666;
+.k-map .k-navigator {
+  border-color: #bfbfbf;
+  color: #333;
+  background-color: #f7f7f7;
+  background-position: 50% 50%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+.k-map .k-zoom-control {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+.k-map .k-marker {
+  color: #007cc0;
 }
 .k-spreadsheet-row-header,
 .k-spreadsheet-column-header {

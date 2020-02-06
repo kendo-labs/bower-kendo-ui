@@ -316,6 +316,7 @@
                 }
             },
             destroy: function () {
+                this._hsvEvents.destroy();
                 this._hueSlider.destroy();
                 if (this._opacitySlider) {
                     this._opacitySlider.destroy();

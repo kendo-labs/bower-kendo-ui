@@ -3296,43 +3296,23 @@ div.k-scheduler-marquee:after {
 .k-chart-tooltip {
   background-image: none;
 }
+.k-map {
+  border-color: #4d4d4d;
+  color: #d5d5d5;
+  background-color: #363636;
+}
+.k-map .k-navigator {
+  border-color: #616161;
+  color: #d5d5d5;
+  background-color: #616161;
+  background-position: 50% 50%;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.2);
+}
+.k-map .k-navigator .k-button {
+  box-shadow: none;
+}
 .k-map .k-marker {
-  font-size: 28px;
   color: #3f51b5;
-}
-.k-map .k-attribution {
-  color: #666666;
-}
-.k-map .k-shadow {
-  background-color: #f9f9f9;
-  border-color: #f9f9f9;
-}
-.k-map .k-zoom-control {
-  border-color: #fff;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  border-radius: 2px;
-}
-.k-map .k-map-controls .k-button {
-  box-shadow: none;
-}
-.k-map .k-map-controls .k-button:focus,
-.k-map .k-map-controls .k-button:active,
-.k-map .k-map-controls .k-button:focus:active {
-  background-color: #d6d6d6;
-  border-color: #d6d6d6;
-  box-shadow: none;
-}
-.k-buttons-horizontal .k-zoom-out {
-  border-radius: 0 2px 2px 0;
-}
-.k-buttons-horizontal :first-child {
-  border-radius: 2px 0 0 2px;
-}
-.k-rtl .k-buttons-horizontal .k-zoom-out {
-  border-radius: 2px 0 0 2px;
-}
-.k-rtl .k-buttons-horizontal :first-child {
-  border-radius: 0 2px 2px 0;
 }
 .k-spreadsheet-row-header,
 .k-spreadsheet-column-header {
@@ -3905,9 +3885,6 @@ div.k-scheduler-marquee:after {
 }
 .k-editor .k-tool {
   color: inherit;
-}
-.k-tool {
-  border-color: transparent;
 }
 .k-tool {
   text-align: center;
