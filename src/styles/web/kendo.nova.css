@@ -2082,11 +2082,11 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
 .k-state-selected.k-task-single {
   border-color: #ff4350;
 }
-.k-line {
+.k-gantt-line {
   background-color: #32364c;
   color: #32364c;
 }
-.k-state-selected.k-line {
+.k-state-selected.k-gantt-line {
   background-color: #ff4350;
   color: #ff4350;
 }
@@ -2258,12 +2258,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
   color: #c4c4c4;
 }
 .k-upload .k-upload-selected {
-  color: #ff4350;
   border-color: #e0e0e0;
-}
-.k-upload .k-upload-selected:hover {
-  color: #fff;
-  background-color: #ff4350;
 }
 .k-slider-track {
   background-color: #e0e0e0;

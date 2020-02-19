@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.1.206'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.1.219'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -3432,6 +3432,16 @@
                 $(parent).scrollTop(scrollTopPositions[index]);
             });
         };
+        kendo.focusNextElement = function () {
+            if (document.activeElement) {
+                var focussable = $(':kendoFocusable');
+                var index = focussable.index(document.activeElement);
+                if (index > -1) {
+                    var nextElement = focussable[index + 1] || focussable[0];
+                    nextElement.focus();
+                }
+            }
+        };
         kendo.matchesMedia = function (mediaQuery) {
             var media = kendo._bootstrapToMedia(mediaQuery) || mediaQuery;
             return support.matchMedia && window.matchMedia(media).matches;
@@ -3598,11 +3608,8 @@
             var fileTypeMap = kendo.fileGroupMap;
             var groups = Object.keys(fileTypeMap);
             var type = 'file';
-            if (extension === undefined) {
-                return '';
-            }
-            if (extension === '') {
-                return 'folder';
+            if (extension === undefined || !extension.length) {
+                return type;
             }
             for (var i = 0; i < groups.length; i += 1) {
                 var extensions = fileTypeMap[groups[i]];
@@ -13329,7 +13336,7 @@
                     nonDefaultMessage = kendo.isFunction(customMessage) ? customMessage(input) : customMessage;
                 }
                 customMessage = kendo.isFunction(customMessage) ? customMessage(input) : customMessage;
-                return kendo.format(input.attr(kendo.attr(ruleKey + '-msg')) || input.attr('validationMessage') || nonDefaultMessage || input.attr('title') || customMessage || '', fieldName, input.attr(ruleKey) || input.attr(kendo.attr(ruleKey)));
+                return kendo.format(input.attr(kendo.attr(ruleKey + '-msg')) || input.attr('validationMessage') || nonDefaultMessage || customMessage || input.attr('title') || '', fieldName, input.attr(ruleKey) || input.attr(kendo.attr(ruleKey)));
             },
             _checkValidity: function (input) {
                 var rules = this.options.rules, rule;
@@ -13841,7 +13848,7 @@
                     select: proxy(that._select, that)
                 });
                 if (kendo.support.touch) {
-                    that.element.css('touch-action', 'none');
+                    that.element.find(that.options.filter).css('touch-action', 'none');
                 }
                 that._afterEndHandler = proxy(that._afterEnd, that);
                 that._captureEscape = proxy(that._captureEscape, that);
@@ -15990,7 +15997,7 @@
             events: [CHANGE],
             options: {
                 name: 'Pager',
-                selectTemplate: '<li><span class="k-state-selected">#=text#</span></li>',
+                selectTemplate: '<li><span class="k-link k-state-selected">#=text#</span></li>',
                 currentPageTemplate: '<li class="k-current-page"><span class="k-link k-pager-nav">#=text#</span></li>',
                 linkTemplate: '<li><a tabindex="-1" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
                 buttonCount: 10,
@@ -16070,7 +16077,7 @@
                 }
                 if (options.info) {
                     if (total > 0) {
-                        html = kendo.format(options.messages.display, that.dataSource.options.endless ? 1 : Math.min((page - 1) * (that.dataSource.pageSize() || 0) + 1, collapsedTotal), Math.min(page * pageSize, collapsedTotal), total);
+                        html = kendo.format(options.messages.display, that.dataSource.options.endless ? 1 : Math.min((page - 1) * (that.dataSource.pageSize() || 0) + 1, collapsedTotal), Math.min(page * pageSize, collapsedTotal, total), total);
                     } else {
                         html = options.messages.empty;
                     }
@@ -22394,7 +22401,7 @@
                     that.wrapper = element.parent();
                 } else {
                     that.wrapper = element.wrap('<span class=\'k-widget k-dateinput\'></span>').parent();
-                    that.wrapper.addClass(element[0].className);
+                    that.wrapper.addClass(element[0].className).removeClass('input-validation-error');
                     that.wrapper[0].style.cssText = element[0].style.cssText;
                     element.css({
                         width: '100%',
@@ -23317,7 +23324,9 @@
             },
             current: function (date) {
                 this._current = date;
-                this.calendar._focus(date);
+                if (this.calendar) {
+                    this.calendar._focus(date);
+                }
             },
             value: function (value) {
                 var that = this, calendar = that.calendar, options = that.options, disabledDate = options.disableDates;
@@ -23651,7 +23660,7 @@
                     width: '100%',
                     height: element[0].style.height
                 });
-                that.wrapper = wrapper.addClass('k-widget k-datepicker').addClass(element[0].className);
+                that.wrapper = wrapper.addClass('k-widget k-datepicker').addClass(element[0].className).removeClass('input-validation-error');
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {
@@ -25648,7 +25657,7 @@
                     height: DOMelement.style.height
                 });
                 that._focused = that.element;
-                that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className);
+                that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className).removeClass('input-validation-error');
                 that._inputWrapper = $(wrapper[0]);
             },
             _clearValue: function () {
@@ -26603,7 +26612,7 @@
                     wrapper[0].style.cssText = DOMelement.style.cssText;
                     wrapper[0].title = DOMelement.title;
                 }
-                that._focused = that.wrapper = wrapper.addClass('k-widget k-dropdown').addClass(DOMelement.className).css('display', '').attr({
+                that._focused = that.wrapper = wrapper.addClass('k-widget k-dropdown').addClass(DOMelement.className).removeClass('input-validation-error').css('display', '').attr({
                     accesskey: element.attr('accesskey'),
                     unselectable: 'on',
                     role: 'listbox',
@@ -27531,7 +27540,7 @@
                         }
                         that.search(value);
                         that._toggleCloseVisibility();
-                    } else if (value === '') {
+                    } else if (value === '' && that._prev !== '') {
                         that._clearValue();
                         that.search('');
                     }
@@ -27548,7 +27557,7 @@
                     wrapper = element.hide().wrap('<span />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                 }
-                that.wrapper = wrapper.addClass('k-widget k-combobox').addClass(element[0].className).css('display', '');
+                that.wrapper = wrapper.addClass('k-widget k-combobox').addClass(element[0].className).removeClass('input-validation-error').css('display', '');
             },
             _clearSelection: function (parent, isFiltered) {
                 var that = this;
@@ -28754,7 +28763,7 @@
                     wrapper[0].title = element[0].title;
                     $('<div class="k-multiselect-wrap k-floatwrap" role="listbox" unselectable="on" />').insertBefore(element);
                 }
-                that.wrapper = wrapper.addClass(element[0].className).css('display', '');
+                that.wrapper = wrapper.addClass(element[0].className).removeClass('input-validation-error').css('display', '');
                 that._innerWrapper = $(wrapper[0].firstChild);
             },
             _ariaSetSize: function (value) {
@@ -30611,7 +30620,7 @@
                 noColor: 'no color',
                 clearColor: 'Clear color',
                 previewInput: 'Color Hexadecimal Code'
-            }, NS = '.kendoColorTools', CLICK_NS = 'click' + NS, KEYDOWN_NS = 'keydown' + NS, browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9;
+            }, NS = '.kendoColorTools', CLICK_NS = 'click' + NS, KEYDOWN_NS = 'keydown' + NS, DISABLED = 'k-state-disabled', browser = kendo.support.browser, isIE8 = browser.msie && browser.version < 9;
         var ColorSelector = Widget.extend({
             init: function (element, options) {
                 var that = this, ariaId;
@@ -30660,10 +30669,7 @@
                 if (arguments.length === 0) {
                     enable = true;
                 }
-                $('.k-disabled-overlay', this.wrapper).remove();
-                if (!enable) {
-                    this.wrapper.append('<div class=\'k-disabled-overlay\'></div>');
-                }
+                this.wrapper.toggleClass(DISABLED, !enable);
                 this._onEnable(enable);
             },
             _select: function (color, nohooks) {
@@ -31474,7 +31480,7 @@
                 that._toggleText(true);
                 that._upArrowEventHandler.unbind('press');
                 that._downArrowEventHandler.unbind('press');
-                element.off('keydown' + ns).off('keypress' + ns).off('keyup' + ns).off('paste' + ns);
+                element.off('keydown' + ns).off('keyup' + ns).off('input' + ns).off('paste' + ns);
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
                     text.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
@@ -31488,7 +31494,7 @@
                         that._spin(-1);
                         that._downArrow.addClass(SELECTED);
                     });
-                    that.element.on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('keyup' + ns, proxy(that._keyup, that)).on('paste' + ns, proxy(that._paste, that));
+                    that.element.on('keydown' + ns, proxy(that._keydown, that)).on('keyup' + ns, proxy(that._keyup, that)).on('paste' + ns, proxy(that._paste, that)).on('input' + ns, proxy(that._inputHandler, that));
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     text.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
@@ -31693,49 +31699,45 @@
             },
             _keydown: function (e) {
                 var that = this, key = e.keyCode;
-                that._key = key;
                 if (key == keys.DOWN) {
                     that._step(-1);
+                    return;
                 } else if (key == keys.UP) {
                     that._step(1);
+                    return;
                 } else if (key == keys.ENTER) {
                     that._change(that.element.val());
-                } else if (key != keys.TAB) {
-                    that._typing = true;
-                }
-            },
-            _keypress: function (e) {
-                if (e.which === 0 || e.metaKey || e.ctrlKey || e.keyCode === keys.BACKSPACE || e.keyCode === keys.ENTER) {
                     return;
                 }
-                var that = this;
-                var min = that.options.min;
-                var element = that.element;
-                var selection = caret(element);
-                var selectionStart = selection[0];
-                var selectionEnd = selection[1];
-                var character = String.fromCharCode(e.which);
-                var numberFormat = that._format(that.options.format);
-                var isNumPadDecimal = that._key === keys.NUMPAD_DOT;
-                var value = element.val();
-                var isValid;
-                if (isNumPadDecimal) {
-                    character = numberFormat[POINT];
+                if (key != keys.TAB) {
+                    that._typing = true;
                 }
-                value = value.substring(0, selectionStart) + character + value.substring(selectionEnd);
-                isValid = that._numericRegex(numberFormat).test(value);
-                if (isValid && isNumPadDecimal) {
-                    element.val(value);
-                    caret(element, selectionStart + character.length);
-                    e.preventDefault();
-                } else if (min !== null && min >= 0 && value.charAt(0) === '-' || !isValid) {
-                    that._addInvalidState();
-                    e.preventDefault();
-                }
-                that._key = 0;
+                that._cachedCaret = caret(that.element);
             },
             _keyup: function () {
                 this._removeInvalidState();
+            },
+            _inputHandler: function () {
+                var element = this.element;
+                var value = element.val();
+                var numberFormat = this._format(this.options.format);
+                var isValid = this._numericRegex(numberFormat).test(value);
+                if (isValid) {
+                    this._oldText = value;
+                } else {
+                    this._blinkInvalidState();
+                    this.element.val(this._oldText);
+                    if (this._cachedCaret) {
+                        caret(element, this._cachedCaret[0]);
+                        this._cachedCaret = null;
+                    }
+                }
+            },
+            _blinkInvalidState: function () {
+                var that = this;
+                that._addInvalidState();
+                clearTimeout(that._invalidStateTimeout);
+                that._invalidStateTimeout = setTimeout(proxy(that._removeInvalidState, that), 100);
             },
             _addInvalidState: function () {
                 var that = this;
@@ -31746,6 +31748,7 @@
                 var that = this;
                 that._inputWrapper.removeClass(STATE_INVALID);
                 that._validationIcon.hide();
+                that._invalidStateTimeout = null;
             },
             _numericRegex: function (numberFormat) {
                 var that = this;
@@ -31865,6 +31868,7 @@
                     value = null;
                 }
                 that.element.val(value);
+                that._oldText = value;
                 that.element.add(that._text).attr('aria-valuenow', value);
             },
             _placeholder: function (value) {
@@ -31884,7 +31888,7 @@
                 }
                 wrapper[0].style.cssText = DOMElement.style.cssText;
                 DOMElement.style.width = '';
-                that.wrapper = wrapper.addClass('k-widget k-numerictextbox').addClass(DOMElement.className).css('display', '');
+                that.wrapper = wrapper.addClass('k-widget k-numerictextbox').addClass(DOMElement.className).removeClass('input-validation-error').css('display', '');
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {
@@ -32986,21 +32990,24 @@
                 var that = this;
                 var items = dataItems && dataItems.length ? dataItems : [dataItems];
                 var itemsLength = items.length;
+                var list = that._getList();
                 var i;
                 that._unbindDataSource();
+                that._unbindDataChange();
                 for (i = 0; i < itemsLength; i++) {
-                    that._addItem(items[i]);
+                    that._addItem(items[i], list);
                 }
+                that._bindDataChange();
                 that._bindDataSource();
                 that._syncElement();
             },
-            _addItem: function (dataItem) {
+            _addItem: function (dataItem, list) {
                 var that = this;
                 var item = that.templates.itemTemplate({
                     item: dataItem,
                     r: that.templates.itemContent
                 });
-                $(item).attr(kendoAttr(UNIQUE_ID), dataItem.uid).appendTo(that._getList());
+                $(item).attr(kendoAttr(UNIQUE_ID), dataItem.uid).appendTo(list);
                 if (typeof dataItem === typeof '') {
                     that.dataSource._data.push(dataItem);
                 } else {
@@ -33463,9 +33470,11 @@
                 var itemsLength = listItems.length;
                 var i;
                 that._unbindDataSource();
+                that._unbindDataChange();
                 for (i = 0; i < itemsLength; i++) {
                     that._removeItem($(listItems[i]));
                 }
+                that._bindDataChange();
                 that._bindDataSource();
                 that._syncElement();
                 that._updateToolbar();
@@ -33582,6 +33591,19 @@
                 that._bindDataSource();
                 if (that.options.autoBind) {
                     that.dataSource.fetch();
+                }
+            },
+            _bindDataChange: function () {
+                var dataSource = this.dataSource;
+                if (dataSource._data && dataSource._changeHandler) {
+                    dataSource._data.bind(CHANGE, dataSource._changeHandler);
+                    dataSource._data.trigger(CHANGE);
+                }
+            },
+            _unbindDataChange: function () {
+                var dataSource = this.dataSource;
+                if (dataSource._data && dataSource._changeHandler) {
+                    dataSource._data.unbind(CHANGE, dataSource._changeHandler);
                 }
             },
             _bindDataSource: function () {
@@ -33927,13 +33949,16 @@
                 }
             },
             getUpdatedSelection: function (items) {
+                if (items.length !== 1) {
+                    return null;
+                }
                 var that = this;
                 var itemFilter = that.options.filter;
                 var sourceListBox = that.getSourceListBox();
                 var lastEnabledItem = sourceListBox ? sourceListBox.items().filter(itemFilter).last() : null;
                 var containsLastItem = $(items).filter(lastEnabledItem).length > 0;
                 var itemToSelect = containsLastItem ? $(items).prevAll(itemFilter)[0] : $(items).nextAll(itemFilter)[0];
-                if ($(items).length === 1 && itemToSelect) {
+                if (itemToSelect) {
                     return itemToSelect;
                 } else {
                     return null;
@@ -33988,7 +34013,7 @@
         var TransferAllItemsToCommand = TransferItemsToCommand.extend({
             canExecute: function () {
                 var sourceListBox = this.getSourceListBox();
-                return sourceListBox ? sourceListBox.items().filter(ENABLED_ITEM_SELECTOR).length > 0 : false;
+                return sourceListBox ? sourceListBox.wrapper.find(ENABLED_ITEMS_SELECTOR).length > 0 : false;
             },
             getItems: function () {
                 var sourceListBox = this.getSourceListBox();
@@ -34001,7 +34026,7 @@
         var TransferAllItemsFromCommand = TransferItemsFromCommand.extend({
             canExecute: function () {
                 var sourceListBox = this.getSourceListBox();
-                return sourceListBox ? sourceListBox.items().filter(ENABLED_ITEM_SELECTOR).length > 0 : false;
+                return sourceListBox ? sourceListBox.wrapper.find(ENABLED_ITEMS_SELECTOR).length > 0 : false;
             },
             getItems: function () {
                 var sourceListBox = this.getSourceListBox();
@@ -34085,12 +34110,13 @@
             _updateToolState: function (toolName) {
                 var that = this;
                 var command = CommandFactory.current.create(toolName, { listBox: that.listBox });
-                var toolElement = that.element.find('[data-command=\'' + toolName + '\']')[0];
+                var tool = that.element.find('[data-command=\'' + toolName + '\']');
+                var toolElement = tool[0];
                 if (toolElement && command && command.canExecute) {
                     if (command.canExecute()) {
-                        $(toolElement).removeClass(DISABLED_STATE_CLASS).removeAttr(TABINDEX);
+                        tool.removeClass(DISABLED_STATE_CLASS).removeAttr(TABINDEX);
                     } else {
-                        $(toolElement).addClass(DISABLED_STATE_CLASS).attr(TABINDEX, '-1');
+                        tool.addClass(DISABLED_STATE_CLASS).attr(TABINDEX, '-1');
                     }
                 }
             }
@@ -34578,7 +34604,7 @@
                 var wrapper = element.wrap('<span class=\'k-widget k-maskedtextbox\'></span>').parent();
                 wrapper[0].style.cssText = DOMElement.style.cssText;
                 DOMElement.style.width = '100%';
-                that.wrapper = wrapper.addClass(DOMElement.className);
+                that.wrapper = wrapper.addClass(DOMElement.className).removeClass('input-validation-error');
             },
             _blinkInvalidState: function () {
                 var that = this;
@@ -34672,7 +34698,7 @@
                 content: 'dataContentField'
             }, rendering = {
                 wrapperCssClass: function (group, item) {
-                    var result = 'k-item', index = item.index;
+                    var result = 'k-item k-menu-item', index = item.index;
                     if (item.enabled === false) {
                         result += ' k-state-disabled';
                     } else {
@@ -34740,7 +34766,7 @@
                     return LINK;
                 },
                 arrowClass: function (item, group) {
-                    var result = 'k-icon';
+                    var result = 'k-menu-expand-arrow k-icon';
                     if (group.horizontal) {
                         result += ' k-i-arrow-60-down';
                     } else {
@@ -34797,10 +34823,10 @@
         }
         function updateItemClasses(item) {
             item = $(item);
-            item.addClass('k-item').children(IMG).addClass(IMAGE);
+            item.addClass('k-item k-menu-item').children(IMG).addClass(IMAGE);
             item.children('a').addClass(LINK).children(IMG).addClass(IMAGE);
             item.filter(':not([disabled])').addClass(DEFAULTSTATE);
-            item.filter('.k-separator').empty().append('&nbsp;');
+            item.filter('.k-separator').removeClass('k-menu-item').addClass('k-menu-separator').empty().append('&nbsp;');
             item.filter('li[disabled]').addClass(DISABLEDSTATE).removeAttr('disabled').attr('aria-disabled', true);
             if (!item.filter('[role]').length) {
                 item.attr('role', 'menuitem');
@@ -34818,18 +34844,18 @@
             item.find('> .k-link > [class*=k-i-arrow-60]:not(.k-sprite)').remove();
             item.filter(':has(.k-menu-group)').children('.k-link:not(:has([class*=k-i-arrow]:not(.k-sprite)))').each(function () {
                 var item = $(this), arrowCssClass = getArrowCssClass(item);
-                item.append('<span class=\'k-icon' + arrowCssClass + ' k-menu-expand-arrow\'/>');
+                item.append('<span class=\'k-menu-expand-arrow k-icon ' + arrowCssClass + '\' />');
             });
         }
         function getArrowCssClass(item) {
             var arrowCssClass, parent = item.parent().parent(), isRtl = kendo.support.isRtl(parent);
             if (parent.hasClass(MENU + '-horizontal')) {
-                arrowCssClass = ' k-i-arrow-60-down';
+                arrowCssClass = 'k-i-arrow-60-down';
             } else {
                 if (isRtl) {
-                    arrowCssClass = ' k-i-arrow-60-left';
+                    arrowCssClass = 'k-i-arrow-60-left';
                 } else {
-                    arrowCssClass = ' k-i-arrow-60-right';
+                    arrowCssClass = 'k-i-arrow-60-right';
                 }
             }
             return arrowCssClass;
@@ -40622,7 +40648,7 @@
                     width: '100%',
                     height: element[0].style.height
                 });
-                that.wrapper = wrapper.addClass('k-widget k-datetimepicker').addClass(element[0].className);
+                that.wrapper = wrapper.addClass('k-widget k-datetimepicker').addClass(element[0].className).removeClass('input-validation-error');
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {

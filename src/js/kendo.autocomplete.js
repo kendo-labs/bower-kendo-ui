@@ -614,7 +614,7 @@
                     height: DOMelement.style.height
                 });
                 that._focused = that.element;
-                that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className);
+                that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className).removeClass('input-validation-error');
                 that._inputWrapper = $(wrapper[0]);
             },
             _clearValue: function () {

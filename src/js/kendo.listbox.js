@@ -206,21 +206,24 @@
                 var that = this;
                 var items = dataItems && dataItems.length ? dataItems : [dataItems];
                 var itemsLength = items.length;
+                var list = that._getList();
                 var i;
                 that._unbindDataSource();
+                that._unbindDataChange();
                 for (i = 0; i < itemsLength; i++) {
-                    that._addItem(items[i]);
+                    that._addItem(items[i], list);
                 }
+                that._bindDataChange();
                 that._bindDataSource();
                 that._syncElement();
             },
-            _addItem: function (dataItem) {
+            _addItem: function (dataItem, list) {
                 var that = this;
                 var item = that.templates.itemTemplate({
                     item: dataItem,
                     r: that.templates.itemContent
                 });
-                $(item).attr(kendoAttr(UNIQUE_ID), dataItem.uid).appendTo(that._getList());
+                $(item).attr(kendoAttr(UNIQUE_ID), dataItem.uid).appendTo(list);
                 if (typeof dataItem === typeof '') {
                     that.dataSource._data.push(dataItem);
                 } else {
@@ -683,9 +686,11 @@
                 var itemsLength = listItems.length;
                 var i;
                 that._unbindDataSource();
+                that._unbindDataChange();
                 for (i = 0; i < itemsLength; i++) {
                     that._removeItem($(listItems[i]));
                 }
+                that._bindDataChange();
                 that._bindDataSource();
                 that._syncElement();
                 that._updateToolbar();
@@ -802,6 +807,19 @@
                 that._bindDataSource();
                 if (that.options.autoBind) {
                     that.dataSource.fetch();
+                }
+            },
+            _bindDataChange: function () {
+                var dataSource = this.dataSource;
+                if (dataSource._data && dataSource._changeHandler) {
+                    dataSource._data.bind(CHANGE, dataSource._changeHandler);
+                    dataSource._data.trigger(CHANGE);
+                }
+            },
+            _unbindDataChange: function () {
+                var dataSource = this.dataSource;
+                if (dataSource._data && dataSource._changeHandler) {
+                    dataSource._data.unbind(CHANGE, dataSource._changeHandler);
                 }
             },
             _bindDataSource: function () {
@@ -1147,13 +1165,16 @@
                 }
             },
             getUpdatedSelection: function (items) {
+                if (items.length !== 1) {
+                    return null;
+                }
                 var that = this;
                 var itemFilter = that.options.filter;
                 var sourceListBox = that.getSourceListBox();
                 var lastEnabledItem = sourceListBox ? sourceListBox.items().filter(itemFilter).last() : null;
                 var containsLastItem = $(items).filter(lastEnabledItem).length > 0;
                 var itemToSelect = containsLastItem ? $(items).prevAll(itemFilter)[0] : $(items).nextAll(itemFilter)[0];
-                if ($(items).length === 1 && itemToSelect) {
+                if (itemToSelect) {
                     return itemToSelect;
                 } else {
                     return null;
@@ -1208,7 +1229,7 @@
         var TransferAllItemsToCommand = TransferItemsToCommand.extend({
             canExecute: function () {
                 var sourceListBox = this.getSourceListBox();
-                return sourceListBox ? sourceListBox.items().filter(ENABLED_ITEM_SELECTOR).length > 0 : false;
+                return sourceListBox ? sourceListBox.wrapper.find(ENABLED_ITEMS_SELECTOR).length > 0 : false;
             },
             getItems: function () {
                 var sourceListBox = this.getSourceListBox();
@@ -1221,7 +1242,7 @@
         var TransferAllItemsFromCommand = TransferItemsFromCommand.extend({
             canExecute: function () {
                 var sourceListBox = this.getSourceListBox();
-                return sourceListBox ? sourceListBox.items().filter(ENABLED_ITEM_SELECTOR).length > 0 : false;
+                return sourceListBox ? sourceListBox.wrapper.find(ENABLED_ITEMS_SELECTOR).length > 0 : false;
             },
             getItems: function () {
                 var sourceListBox = this.getSourceListBox();
@@ -1305,12 +1326,13 @@
             _updateToolState: function (toolName) {
                 var that = this;
                 var command = CommandFactory.current.create(toolName, { listBox: that.listBox });
-                var toolElement = that.element.find('[data-command=\'' + toolName + '\']')[0];
+                var tool = that.element.find('[data-command=\'' + toolName + '\']');
+                var toolElement = tool[0];
                 if (toolElement && command && command.canExecute) {
                     if (command.canExecute()) {
-                        $(toolElement).removeClass(DISABLED_STATE_CLASS).removeAttr(TABINDEX);
+                        tool.removeClass(DISABLED_STATE_CLASS).removeAttr(TABINDEX);
                     } else {
-                        $(toolElement).addClass(DISABLED_STATE_CLASS).attr(TABINDEX, '-1');
+                        tool.addClass(DISABLED_STATE_CLASS).attr(TABINDEX, '-1');
                     }
                 }
             }

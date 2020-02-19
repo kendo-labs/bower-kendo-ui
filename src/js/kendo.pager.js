@@ -177,7 +177,7 @@
             events: [CHANGE],
             options: {
                 name: 'Pager',
-                selectTemplate: '<li><span class="k-state-selected">#=text#</span></li>',
+                selectTemplate: '<li><span class="k-link k-state-selected">#=text#</span></li>',
                 currentPageTemplate: '<li class="k-current-page"><span class="k-link k-pager-nav">#=text#</span></li>',
                 linkTemplate: '<li><a tabindex="-1" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
                 buttonCount: 10,
@@ -257,7 +257,7 @@
                 }
                 if (options.info) {
                     if (total > 0) {
-                        html = kendo.format(options.messages.display, that.dataSource.options.endless ? 1 : Math.min((page - 1) * (that.dataSource.pageSize() || 0) + 1, collapsedTotal), Math.min(page * pageSize, collapsedTotal), total);
+                        html = kendo.format(options.messages.display, that.dataSource.options.endless ? 1 : Math.min((page - 1) * (that.dataSource.pageSize() || 0) + 1, collapsedTotal), Math.min(page * pageSize, collapsedTotal, total), total);
                     } else {
                         html = options.messages.empty;
                     }

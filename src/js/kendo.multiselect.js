@@ -1188,7 +1188,7 @@
                     wrapper[0].title = element[0].title;
                     $('<div class="k-multiselect-wrap k-floatwrap" role="listbox" unselectable="on" />').insertBefore(element);
                 }
-                that.wrapper = wrapper.addClass(element[0].className).css('display', '');
+                that.wrapper = wrapper.addClass(element[0].className).removeClass('input-validation-error').css('display', '');
                 that._innerWrapper = $(wrapper[0].firstChild);
             },
             _ariaSetSize: function (value) {

@@ -2012,11 +2012,11 @@ div.k-filebrowser-dropzone em {
 .k-state-selected.k-task-single {
   border-color: #870074;
 }
-.k-line {
+.k-gantt-line {
   background-color: #fff;
   color: #fff;
 }
-.k-state-selected.k-line {
+.k-state-selected.k-gantt-line {
   background-color: #870074;
   color: #870074;
 }

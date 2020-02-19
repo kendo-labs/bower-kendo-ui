@@ -1874,7 +1874,6 @@ div.k-filebrowser-dropzone em {
   color: #cbcbcf;
 }
 .k-upload .k-upload-selected {
-  color: #1984c8;
   border-color: #dedee0;
 }
 .k-upload-action:focus:active:not(.k-state-disabled):not([disabled]) {
@@ -2068,11 +2067,11 @@ div.k-filebrowser-dropzone em {
 .k-state-selected.k-task-single {
   border-color: #1a87cd;
 }
-.k-line {
+.k-gantt-line {
   background-color: #515967;
   color: #515967;
 }
-.k-state-selected.k-line {
+.k-state-selected.k-gantt-line {
   background-color: #1984c8;
   color: #1984c8;
 }

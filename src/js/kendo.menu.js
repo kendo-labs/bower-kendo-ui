@@ -52,7 +52,7 @@
                 content: 'dataContentField'
             }, rendering = {
                 wrapperCssClass: function (group, item) {
-                    var result = 'k-item', index = item.index;
+                    var result = 'k-item k-menu-item', index = item.index;
                     if (item.enabled === false) {
                         result += ' k-state-disabled';
                     } else {
@@ -120,7 +120,7 @@
                     return LINK;
                 },
                 arrowClass: function (item, group) {
-                    var result = 'k-icon';
+                    var result = 'k-menu-expand-arrow k-icon';
                     if (group.horizontal) {
                         result += ' k-i-arrow-60-down';
                     } else {
@@ -177,10 +177,10 @@
         }
         function updateItemClasses(item) {
             item = $(item);
-            item.addClass('k-item').children(IMG).addClass(IMAGE);
+            item.addClass('k-item k-menu-item').children(IMG).addClass(IMAGE);
             item.children('a').addClass(LINK).children(IMG).addClass(IMAGE);
             item.filter(':not([disabled])').addClass(DEFAULTSTATE);
-            item.filter('.k-separator').empty().append('&nbsp;');
+            item.filter('.k-separator').removeClass('k-menu-item').addClass('k-menu-separator').empty().append('&nbsp;');
             item.filter('li[disabled]').addClass(DISABLEDSTATE).removeAttr('disabled').attr('aria-disabled', true);
             if (!item.filter('[role]').length) {
                 item.attr('role', 'menuitem');
@@ -198,18 +198,18 @@
             item.find('> .k-link > [class*=k-i-arrow-60]:not(.k-sprite)').remove();
             item.filter(':has(.k-menu-group)').children('.k-link:not(:has([class*=k-i-arrow]:not(.k-sprite)))').each(function () {
                 var item = $(this), arrowCssClass = getArrowCssClass(item);
-                item.append('<span class=\'k-icon' + arrowCssClass + ' k-menu-expand-arrow\'/>');
+                item.append('<span class=\'k-menu-expand-arrow k-icon ' + arrowCssClass + '\' />');
             });
         }
         function getArrowCssClass(item) {
             var arrowCssClass, parent = item.parent().parent(), isRtl = kendo.support.isRtl(parent);
             if (parent.hasClass(MENU + '-horizontal')) {
-                arrowCssClass = ' k-i-arrow-60-down';
+                arrowCssClass = 'k-i-arrow-60-down';
             } else {
                 if (isRtl) {
-                    arrowCssClass = ' k-i-arrow-60-left';
+                    arrowCssClass = 'k-i-arrow-60-left';
                 } else {
-                    arrowCssClass = ' k-i-arrow-60-right';
+                    arrowCssClass = 'k-i-arrow-60-right';
                 }
             }
             return arrowCssClass;

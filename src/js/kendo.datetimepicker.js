@@ -546,7 +546,7 @@
                     width: '100%',
                     height: element[0].style.height
                 });
-                that.wrapper = wrapper.addClass('k-widget k-datetimepicker').addClass(element[0].className);
+                that.wrapper = wrapper.addClass('k-widget k-datetimepicker').addClass(element[0].className).removeClass('input-validation-error');
                 that._inputWrapper = $(wrapper[0].firstChild);
             },
             _reset: function () {

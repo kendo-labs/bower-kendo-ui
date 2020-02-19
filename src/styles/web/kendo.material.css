@@ -1862,12 +1862,7 @@ div.k-filebrowser-dropzone em {
   color: #999999;
 }
 .k-upload .k-upload-selected {
-  color: #3f51b5;
   border-color: #e6e6e6;
-}
-.k-upload .k-upload-selected:hover {
-  color: #fff;
-  background-color: #3f51b5;
 }
 .k-tile {
   border-color: #fff;
@@ -2039,11 +2034,11 @@ div.k-filebrowser-dropzone em {
 .k-state-selected.k-task-single {
   border-color: #ffffff;
 }
-.k-line {
+.k-gantt-line {
   background-color: #444444;
   color: #444444;
 }
-.k-state-selected.k-line {
+.k-state-selected.k-gantt-line {
   background-color: #fff;
   color: #fff;
 }
@@ -2777,10 +2772,10 @@ td.k-group-cell,
 .k-gantt .k-treelist .k-alt.k-state-selected,
 .k-gantt .k-treelist .k-alt.k-state-selected > td,
 .k-listview > .k-state-selected,
-.k-state-selected.k-line {
+.k-state-selected.k-gantt-line {
   background-color: #00b0ff;
 }
-.k-state-selected.k-line {
+.k-state-selected.k-gantt-line {
   color: #00b0ff;
 }
 .k-grid tr.k-state-selected,

@@ -1960,11 +1960,11 @@ div.k-filebrowser-dropzone em {
 .k-state-selected.k-task-single {
   border-color: #10c4b2;
 }
-.k-line {
+.k-gantt-line {
   background-color: #4c5356;
   color: #4c5356;
 }
-.k-state-selected.k-line {
+.k-state-selected.k-gantt-line {
   background-color: #10c4b2;
   color: #10c4b2;
 }
