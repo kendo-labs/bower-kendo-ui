@@ -103,7 +103,7 @@
             _sliderItemsInit: function () {
                 var that = this, options = that.options;
                 var sizeBetweenTicks = that._maxSelection / ((options.max - options.min) / options.smallStep);
-                var pixelWidths = that._calculateItemsWidth(math.floor(that._distance() / options.smallStep));
+                var pixelWidths = that._calculateItemsWidth(math.floor(removeFraction(that._distance()) / removeFraction(options.smallStep)));
                 if (options.tickPlacement != 'none' && sizeBetweenTicks >= 2) {
                     $(this.element).parent().find('.k-slider-items').remove();
                     that._trackDiv.before(createSliderItems(options, that._distance()));
@@ -170,9 +170,9 @@
                 }
             },
             _calculateItemsWidth: function (itemsCount) {
-                var that = this, options = that.options, trackDivSize = parseFloat(that._trackDiv.css(that._sizeFn)) + 1, distance = that._distance(), pixelStep = trackDivSize / distance, itemWidth, pixelWidths, i;
-                if (distance / options.smallStep - math.floor(distance / options.smallStep) > 0) {
-                    trackDivSize -= distance % options.smallStep * pixelStep;
+                var that = this, options = that.options, trackDivSize = parseFloat(that._trackDiv.css(that._sizeFn)) + 1, distance = that._distance(), preciseItemsCount = removeFraction(distance) / removeFraction(options.smallStep), pixelStep = trackDivSize / removeFraction(distance), itemWidth, pixelWidths, i;
+                if (preciseItemsCount - itemsCount > 0) {
+                    trackDivSize -= removeFraction(distance) % removeFraction(options.smallStep) * pixelStep;
                 }
                 itemWidth = trackDivSize / itemsCount;
                 pixelWidths = [];
@@ -202,8 +202,8 @@
                 return pixelWidthsArray;
             },
             _calculateSteps: function (pixelWidths) {
-                var that = this, options = that.options, val = options.min, selection = 0, distance = that._distance(), itemsCount = math.ceil(distance / options.smallStep), i = 1, lastItem;
-                itemsCount += distance / options.smallStep % 1 === 0 ? 1 : 0;
+                var that = this, options = that.options, val = options.min, selection = 0, distance = that._distance(), itemsCount = math.ceil(removeFraction(distance) / removeFraction(options.smallStep)), i = 1, lastItem;
+                itemsCount += removeFraction(distance) / removeFraction(options.smallStep) % 1 === 0 ? 1 : 0;
                 pixelWidths.splice(0, 0, pixelWidths[itemsCount - 2] * 2);
                 pixelWidths.splice(itemsCount - 1, 1, pixelWidths.pop() * 2);
                 that._pixelSteps = [selection];
@@ -218,7 +218,7 @@
                     that._values[i] = round(val);
                     i++;
                 }
-                lastItem = distance % options.smallStep === 0 ? itemsCount - 1 : itemsCount;
+                lastItem = removeFraction(distance) % removeFraction(options.smallStep) === 0 ? itemsCount - 1 : itemsCount;
                 that._pixelSteps[lastItem] = that._maxSelection;
                 that._values[lastItem] = options.max;
                 if (that._isRtl) {

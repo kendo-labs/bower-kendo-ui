@@ -286,7 +286,8 @@
         "checkAll": "Seleccionar todo",
         "clear": "Limpiar filtros",
         "filter": "Filtrar",
-        "search": "Buscar"
+        "search": "Buscar",
+        "selectedItemsFormat": "{0} articulos seleccionados"
       });
   }
 
