@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.1.226'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.1.305'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -27495,8 +27495,12 @@
                         if (that._syncValueAndText() || that._isSelect) {
                             that._accessor(that.input.val());
                         }
-                        that.listView.value(that.input.val());
-                        that._blur();
+                        if (that.options.highlightFirst) {
+                            that.listView.value(that.input.val());
+                            that._blur();
+                        } else {
+                            that._oldText = that.text();
+                        }
                     }
                 } else if (key != keys.TAB && !that._move(e)) {
                     that._search();
@@ -27946,7 +27950,18 @@
             },
             _clearSingleTagValue: function () {
                 var that = this;
+                var items = that.dataItems();
+                var tags = that.tagList.children();
                 var persistTagList = that.persistTagList;
+                for (var i = 0; i < items.length; i += 1) {
+                    if (that.trigger(DESELECT, {
+                            dataItem: items[i],
+                            item: tags.first()
+                        })) {
+                        that._close();
+                        return;
+                    }
+                }
                 if (persistTagList) {
                     that.persistTagList = false;
                 }
@@ -36638,6 +36653,7 @@
             },
             _wire: function () {
                 var that = this, options = that.options, target = that.target;
+                that._preventProxy = null;
                 that._showProxy = proxy(that._showHandler, that);
                 that._closeProxy = proxy(that._closeHandler, that);
                 that._closeTimeoutProxy = proxy(that.close, that);
@@ -36647,14 +36663,15 @@
                             filter: options.filter,
                             allowSelection: false
                         });
-                        target.on(options.showOn + NS + that._marker, false);
+                        that._preventProxy = function () {
+                            return false;
+                        };
                         that.userEvents.bind('hold', that._showProxy);
+                    }
+                    if (options.filter) {
+                        target.on(options.showOn + NS + that._marker, options.filter, that._preventProxy || that._showProxy);
                     } else {
-                        if (options.filter) {
-                            target.on(options.showOn + NS + that._marker, options.filter, that._showProxy);
-                        } else {
-                            target.on(options.showOn + NS + that._marker, that._showProxy);
-                        }
+                        target.on(options.showOn + NS + that._marker, that._preventProxy || that._showProxy);
                     }
                 }
             },

@@ -783,8 +783,12 @@
                         if (that._syncValueAndText() || that._isSelect) {
                             that._accessor(that.input.val());
                         }
-                        that.listView.value(that.input.val());
-                        that._blur();
+                        if (that.options.highlightFirst) {
+                            that.listView.value(that.input.val());
+                            that._blur();
+                        } else {
+                            that._oldText = that.text();
+                        }
                     }
                 } else if (key != keys.TAB && !that._move(e)) {
                     that._search();
