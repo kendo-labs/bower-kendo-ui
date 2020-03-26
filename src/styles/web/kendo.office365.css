@@ -1172,9 +1172,6 @@
 .k-grid td,
 .k-grid td.k-state-selected,
 .k-grid-footer-wrap,
-.k-pager-wrap,
-.k-pager-wrap .k-link,
-.k-pager-refresh,
 .k-grouping-header,
 .k-grouping-header .k-group-indicator,
 .k-panelbar > .k-item > .k-link,
@@ -1197,7 +1194,6 @@
 }
 .k-group,
 .k-grouping-header,
-.k-pager-wrap,
 .k-group-footer td,
 .k-grid-footer,
 .k-footer-template td,
@@ -1303,7 +1299,6 @@ textarea.k-textbox:hover,
 .k-picker-wrap,
 .k-numeric-wrap,
 .k-grouping-header,
-.k-pager-wrap,
 .k-textbox,
 .k-progressbar,
 .k-draghandle,
@@ -1573,15 +1568,11 @@ td.k-state-focused.k-state-selected {
 .k-splitbar-vertical-hover,
 .k-list > .k-state-hover,
 .k-scheduler .k-scheduler-toolbar ul li.k-state-hover,
-.k-pager-wrap .k-link:hover,
 .k-dropdown .k-state-focused,
 .k-filebrowser-dropzone {
   color: #000;
   background-color: #f4f4f4;
   border-color: #8f8f8f;
-}
-.k-pager-wrap .k-link.k-state-disabled {
-  color: #0072c6;
 }
 .k-state-hover > .k-select,
 .k-state-focused > .k-select {
@@ -1589,7 +1580,6 @@ td.k-state-focused.k-state-selected {
 }
 .k-textbox:hover,
 .k-state-hover,
-.k-pager-wrap .k-link:hover,
 .k-other-month.k-state-hover .k-link,
 div.k-filebrowser-dropzone em,
 .k-draghandle:hover,
@@ -1597,33 +1587,34 @@ div.k-filebrowser-dropzone em,
   background-image: none;
 }
 .k-pager-wrap {
-  background-color: #fff;
+  border-color: #c9c9c9;
   color: #333333;
-}
-.k-pager-wrap.k-pager-lg .k-pager-numbers,
-.k-pager-wrap.k-pager-md .k-pager-numbers,
-.k-pager-wrap.k-pager-sm .k-pager-numbers {
-  color: #0072c6;
   background-color: #fff;
 }
-.k-pager-wrap.k-pager-lg .k-pager-numbers.k-state-expanded .k-link:hover,
-.k-pager-wrap.k-pager-md .k-pager-numbers.k-state-expanded .k-link:hover,
-.k-pager-wrap.k-pager-sm .k-pager-numbers.k-state-expanded .k-link:hover {
+.k-pager-wrap .k-link {
+  border-color: transparent;
+  color: #0072c6;
+  background-color: transparent;
+}
+.k-pager-wrap .k-link:hover {
   color: #000;
   background-color: #f4f4f4;
-  border-color: #f4f4f4;
+  border-color: #8f8f8f;
 }
-.k-pager-wrap.k-pager-lg .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-.k-pager-wrap.k-pager-md .k-pager-numbers.k-state-expanded .k-current-page .k-link,
-.k-pager-wrap.k-pager-sm .k-pager-numbers.k-state-expanded .k-current-page .k-link {
-  color: #ffffff;
-  background-color: #0072c6;
-  border-color: #0072c6;
+.k-pager-wrap .k-link.k-state-disabled {
+  color: #0072c6;
 }
-.k-pager-wrap.k-pager-lg .k-pager-numbers.k-state-expanded .k-state-selected,
-.k-pager-wrap.k-pager-md .k-pager-numbers.k-state-expanded .k-state-selected,
-.k-pager-wrap.k-pager-sm .k-pager-numbers.k-state-expanded .k-state-selected {
-  background-color: #cde6f7;
+.k-pager-wrap .k-pager-numbers .k-link {
+  border-color: transparent;
+  background-color: transparent;
+  color: #333333;
+}
+.k-pager-wrap .k-pager-numbers .k-link:hover {
+  background-color: #f4f4f4;
+}
+.k-pager-wrap .k-pager-numbers .k-state-selected {
+  border-top-color: #0072c6;
+  color: #0072c6;
 }
 .k-autocomplete.k-state-active,
 .k-picker-wrap.k-state-active,
@@ -2394,14 +2385,10 @@ div.k-filebrowser-dropzone em {
 .k-grid-header-wrap,
 .k-grid .k-grouping-header,
 .k-grid-header,
-.k-pager-wrap,
-.k-pager-wrap .k-textbox,
-.k-pager-wrap .k-link,
 .k-grouping-header .k-group-indicator,
 .k-gantt-toolbar .k-state-default {
   border-color: #c9c9c9;
 }
-.k-pager-numbers .k-link,
 .k-treeview .k-in {
   border-color: transparent;
 }
@@ -2718,29 +2705,6 @@ input.k-textbox:focus {
 }
 .k-grouping-header .k-group-indicator .k-link {
   color: #333333;
-}
-.k-pager-wrap > .k-link,
-.k-pager-numbers .k-link,
-.k-pager-numbers .k-link:hover,
-.k-pager-numbers .k-state-selected {
-  background: none;
-  border-radius: 0;
-}
-.k-pager-wrap > .k-link,
-.k-pager-wrap > .k-link.k-state-disabled:hover,
-.k-pager-wrap > .k-link:hover,
-.k-pager-numbers .k-link:hover {
-  border-radius: 0;
-  border-color: transparent;
-  background: none;
-}
-.k-pager-numbers .k-link {
-  border-color: transparent;
-  color: #333333;
-}
-.k-pager-numbers .k-state-selected {
-  color: #0072c6;
-  border-color: #0072c6;
 }
 .k-progressbar {
   background-color: #e5e5e5;
