@@ -15165,7 +15165,7 @@ a.k-badge:hover,
 .k-radio-label {
   margin: 0;
   padding: 0;
-  line-height: 16px + 1px;
+  line-height: 17px;
   display: -ms-inline-flexbox;
   display: inline-flex;
   -ms-flex-align: start;
