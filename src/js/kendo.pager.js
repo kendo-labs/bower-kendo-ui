@@ -33,7 +33,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', SIZE = 'k-pager-lg k-pager-md k-pager-sm', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', MAX_VALUE = Number.MAX_VALUE, iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, proxy = $.proxy, FIRST = '.k-i-arrow-end-left', LAST = '.k-i-arrow-end-right', PREV = '.k-i-arrow-60-left', NEXT = '.k-i-arrow-60-right', SIZE = 'k-pager-lg k-pager-md k-pager-sm', CHANGE = 'change', NS = '.kendoPager', CLICK = 'click', KEYDOWN = 'keydown', DISABLED = 'disabled', MOUSEDOWN = 'down', DOCUMENT_ELEMENT = $(document.documentElement), MAX_VALUE = Number.MAX_VALUE, iconTemplate = kendo.template('<a href="\\#" aria-label="#=text#" title="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
         function button(template, idx, text, numeric, title) {
             return template({
                 idx: idx,
@@ -41,13 +41,6 @@
                 ns: kendo.ns,
                 numeric: numeric,
                 title: title || ''
-            });
-        }
-        function selectOption(template, idx, text, selected) {
-            return template({
-                idx: idx,
-                text: text || idx,
-                selected: selected || false
             });
         }
         function icon(className, text, wrapClassName) {
@@ -82,7 +75,6 @@
                 that.linkTemplate = kendo.template(that.options.linkTemplate);
                 that.selectTemplate = kendo.template(that.options.selectTemplate);
                 that.currentPageTemplate = kendo.template(that.options.currentPageTemplate);
-                that.numericSelectItemTemplate = kendo.template(that.options.numericSelectItemTemplate);
                 page = that.page();
                 totalPages = that.totalPages();
                 that._refreshHandler = proxy(that.refresh, that);
@@ -99,27 +91,15 @@
                     }
                 }
                 if (options.numeric) {
-                    if (!that._numericWrap) {
-                        that._numericWrap = that.element.find('.k-pager-numbers-wrap');
-                        if (that._numericWrap.length === 0) {
-                            that._numericWrap = $('<div class=\'k-pager-numbers-wrap\' />').appendTo(that.element);
-                        }
-                    }
-                    if (!that._numericSelect) {
-                        that._numericSelect = that._numericWrap.find('.k-dropdown');
-                        if (that._numericSelect.length === 0) {
-                            that._numericSelect = $('<select class=\'k-dropdown\' />').appendTo(that._numericWrap);
-                        }
-                    }
-                    if (!that.list) {
-                        that.list = that._numericWrap.find('.k-pager-numbers');
-                        if (that.list.length === 0) {
-                            that.list = $('<ul class="k-pager-numbers" />').appendTo(that._numericWrap);
-                        }
+                    that.list = that.element.find('.k-pager-numbers');
+                    if (!that.list.length) {
+                        that.list = $('<ul class="k-pager-numbers k-reset" />').appendTo(that.element);
                     }
                     if (options.dataSource && !options.dataSource.total()) {
-                        that._numericSelect.empty().append('<option value=\'0\' />');
-                        that.list.empty().append(that.selectTemplate({ text: 0 }));
+                        that.list.empty().append(that.currentPageTemplate({ text: 0 })).append(that.selectTemplate({ text: 0 }));
+                    }
+                    if (!that.list.parent().hasClass('k-pager-numbers-wrap')) {
+                        that.list.wrap('<div class="k-pager-numbers-wrap"></div>');
                     }
                 }
                 if (options.input) {
@@ -171,7 +151,8 @@
                         that.element.append('<span class="k-pager-info k-label" />');
                     }
                 }
-                that.element.on(CLICK + NS, 'a', proxy(that._click, that)).on(CHANGE + NS, 'select.k-dropdown', proxy(that._numericSelectChange, that)).addClass('k-pager-wrap k-widget k-floatwrap');
+                that.element.on(CLICK + NS, 'a', proxy(that._click, that)).addClass('k-pager-wrap k-widget k-floatwrap');
+                that.element.on(CLICK + NS, '.k-current-page', proxy(that._toggleActive, that));
                 if (options.autoBind) {
                     that.refresh();
                 }
@@ -199,8 +180,6 @@
                 selectTemplate: '<li><span class="k-link k-state-selected">#=text#</span></li>',
                 currentPageTemplate: '<li class="k-current-page"><span class="k-link k-pager-nav">#=text#</span></li>',
                 linkTemplate: '<li><a tabindex="-1" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
-                numericItemTemplate: '<li><a tabindex="-1" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
-                numericSelectItemTemplate: '<option value="#= idx #" #if (selected) {# selected="selected" #}#>#= text #</option>',
                 buttonCount: 10,
                 autoBind: true,
                 numeric: true,
@@ -250,7 +229,8 @@
                 this.dataSource = kendo.data.DataSource.create(options.dataSource);
             },
             refresh: function (e) {
-                var that = this, idx, end, start = 1, reminder, page = that.page(), html = '', selectHtml = '', options = that.options, pageSize = that.pageSize(), collapsedTotal = that._collapsedTotal(), total = that.dataSource.total(), totalPages = that.totalPages(), linkTemplate = that.linkTemplate, numericSelectItemTemplate = that.numericSelectItemTemplate, buttonCount = options.buttonCount;
+                var that = this, idx, end, start = 1, reminder, page = that.page(), html = '', options = that.options, pageSize = that.pageSize(), collapsedTotal = that._collapsedTotal(), total = that.dataSource.total(), totalPages = that.totalPages(), linkTemplate = that.linkTemplate, buttonCount = options.buttonCount;
+                DOCUMENT_ELEMENT.unbind(that.downEvent, $.proxy(that._hideList, that));
                 if (e && e.action == 'itemchange') {
                     return;
                 }
@@ -262,22 +242,18 @@
                     end = Math.min(start + buttonCount - 1, totalPages);
                     if (start > 1) {
                         html += button(linkTemplate, start - 1, '...', false, options.messages.morePages);
-                        selectHtml += selectOption(numericSelectItemTemplate, start - 1, options.messages.morePages);
                     }
                     for (idx = start; idx <= end; idx++) {
                         html += button(idx == page ? that.selectTemplate : linkTemplate, idx, idx, true);
-                        selectHtml += selectOption(numericSelectItemTemplate, idx, idx, idx == page);
                     }
                     if (end < totalPages) {
                         html += button(linkTemplate, idx, '...', false, options.messages.morePages);
-                        selectHtml += selectOption(numericSelectItemTemplate, idx, options.messages.morePages);
                     }
                     if (html === '') {
                         html = that.selectTemplate({ text: 0 });
-                        selectHtml = $('<option value=\'0\' />');
                     }
-                    that.list.html(html);
-                    that._numericSelect.html(selectHtml);
+                    html = this.currentPageTemplate({ text: page }) + html;
+                    that.list.removeClass('k-state-expanded').html(html);
                 }
                 if (options.info) {
                     if (total > 0) {
@@ -337,12 +313,21 @@
                     dataSource.fetch();
                 }
             },
-            _numericSelectChange: function (e) {
-                var target = e.currentTarget;
-                var value = target.value;
-                var page = parseInt(value, 10);
-                target.blur();
-                this.page(page);
+            _toggleActive: function () {
+                var that = this;
+                if (that.list.hasClass('k-state-expanded')) {
+                    DOCUMENT_ELEMENT.unbind(that.downEvent, $.proxy(that._hideList, that));
+                } else {
+                    DOCUMENT_ELEMENT.bind(that.downEvent, $.proxy(that._hideList, that));
+                }
+                that.list.toggleClass('k-state-expanded');
+            },
+            _hideList: function (e) {
+                var that = this, target = kendo.eventTarget(e);
+                if (!$.contains(that.list[0], target)) {
+                    DOCUMENT_ELEMENT.unbind(that.downEvent, $.proxy(that._hideList, that));
+                    that.list.removeClass('k-state-expanded');
+                }
             },
             _click: function (e) {
                 var target = $(e.currentTarget);
