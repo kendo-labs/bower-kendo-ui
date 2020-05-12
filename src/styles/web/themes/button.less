@@ -48,14 +48,16 @@
 
     // Pressed state
     &:active,
-    &.k-state-active {
+    &.k-state-active,
+    &.k-state-selected {
         color: @button-active-text-color;
         background-color: @button-active-background;
         border-color: @button-active-border-color;
         .composite-background(@button-active-gradient);
         .box-shadow(@button-active-shadow);
     }
-    &.k-state-active {
+    &.k-state-active,
+    &.k-state-selected {
         &:hover {
             color: @primary-hover-text-color;
             border-color: @primary-hover-border-color;
@@ -98,7 +100,7 @@
 
 
 
-//Primary buttons
+// Primary buttons
 .k-primary {
     color: @primary-text-color;
     border-color: @primary-border-color;
@@ -167,7 +169,6 @@
 
 // Button group
 .k-button-group {
-    .border-radius();
 
     // Border-radius
     .k-button {
@@ -188,28 +189,28 @@
     }
 
 }
-.k-rtl .k-button-group {
-    .k-button {
-        .border-radius( 0 );
-    }
-
-    .k-group-start,
-    .k-button:first-child {
-        .border-right-radius();
-    }
-    .k-group-end,
-    .k-button:last-child {
-        .border-left-radius();
-    }
-    .k-group-start.k-group-end,
-    .k-button:first-child:last-child {
-        .border-radius();
-    }
+// TODO: refactor when k-widgte is gone
+.k-widget.k-button-group {
+    background: none;
 }
+
 
 // Split button
 .k-split-button {
     .border-radius();
+
+    // Border-radius
+    .k-button {
+        .border-radius( 0 );
+    }
+
+    // .k-button,
+    .k-button:first-child {
+        .border-left-radius();
+    }
+    .k-button:last-child {
+        .border-right-radius();
+    }
 
     // Expanded state
     &.k-state-border-down > .k-button,
@@ -223,32 +224,16 @@
 
     // Focus state
     &:focus {
-        border-color: @button-focused-border-color;
-        outline:none;
         .box-shadow(@button-focused-shadow);
+        border-color: @button-focused-border-color;
 
-        & > .k-button {
-            background: transparent;
-            border-color: @button-focused-border-color;
-        }
-
-        &:not(.k-state-disabled) > .k-state-active,
-        &:not(.k-state-disabled) > .k-button:hover {
-            color: @button-hover-text-color;
-            background-color: @button-hover-background-color;
-            border-color: @button-focused-border-color;
-            .composite-background(@button-hover-gradient);
+        .k-button {
             .box-shadow(none);
+            border-color: inherit;
         }
-    }
-
-    // Disabled state - ensure the disabled background when button is focused
-    &.k-state-disabled {
-        color: @disabled-text-color;
-        background: @disabled-background-color;
-        .composite-background(@disabled-gradient);
     }
 }
+
 
 // Edit buttons
 .k-edit-buttons {
@@ -271,6 +256,44 @@
         &:hover:active,
         &:hover.k-state-active {
             color: @primary-background-color;
+        }
+    }
+}
+
+
+
+
+// RTL
+.k-rtl {
+    .k-button-group {
+        .k-button {
+            .border-radius( 0 );
+        }
+
+        .k-group-start,
+        .k-button:first-child {
+            .border-right-radius();
+        }
+        .k-group-end,
+        .k-button:last-child {
+            .border-left-radius();
+        }
+        .k-group-start.k-group-end,
+        .k-button:first-child:last-child {
+            .border-radius();
+        }
+    }
+
+    .k-split-button {
+        .k-button {
+            .border-radius( 0 );
+        }
+
+        .k-button:first-child {
+            .border-right-radius();
+        }
+        .k-button:last-child {
+            .border-left-radius();
         }
     }
 }

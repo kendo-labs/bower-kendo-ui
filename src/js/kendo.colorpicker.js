@@ -515,7 +515,7 @@
             _selectOnHide: function () {
                 return this.options.buttons ? null : this._getHSV();
             },
-            _template: kendo.template('# if (preview) { #' + '<div class="k-selected-color"><div class="k-selected-color-display"><div class="k-color-input"><input class="k-color-value" ' + '# if (clearButton && !_standalone) { #' + 'placeholder="#: messages.noColor #" ' + '# } #' + '#= !data.input ? \'style="visibility: hidden;"\' : "" #>' + '# if (clearButton && !_standalone) { #' + '<span class="k-clear-color k-button k-bare" title="#: messages.clearColor #"></span>' + '# } #' + '</div></div></div>' + '# } #' + '# if (clearButton && !_standalone && !preview) { #' + '<div class="k-clear-color-container"><span class="k-clear-color k-button k-bare">#: messages.clearColor #</span></div>' + '# } #' + '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"></div><div class="k-draghandle"></div></div>' + '<div class="k-sliders-wrap k-vbox">' + '<input class="k-hue-slider" />' + '# if (opacity) { #' + '<input class="k-alpha-slider k-transparency-slider" />' + '# } #' + '</div>' + '# if (buttons) { #' + '<div unselectable="on" class="k-controls"><button class="k-button k-primary apply">#: messages.apply #</button> <button class="k-button cancel">#: messages.cancel #</button></div>' + '# } #')
+            _template: kendo.template('# if (preview) { #' + '<div class="k-selected-color"><div class="k-selected-color-display"><div class="k-color-input"><input class="k-color-value" ' + '# if (clearButton && !_standalone) { #' + 'placeholder="#: messages.noColor #" ' + '# } #' + '#= !data.input ? \'style="visibility: hidden;"\' : "" #>' + '# if (clearButton && !_standalone) { #' + '<span class="k-clear-color k-button k-flat" title="#: messages.clearColor #"></span>' + '# } #' + '</div></div></div>' + '# } #' + '# if (clearButton && !_standalone && !preview) { #' + '<div class="k-clear-color-container"><span class="k-clear-color k-button k-flat">#: messages.clearColor #</span></div>' + '# } #' + '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"></div><div class="k-draghandle"></div></div>' + '<div class="k-sliders-wrap k-vbox">' + '<input class="k-hue-slider" />' + '# if (opacity) { #' + '<input class="k-alpha-slider k-transparency-slider" />' + '# } #' + '</div>' + '# if (buttons) { #' + '<div unselectable="on" class="k-controls"><button class="k-button k-primary apply">#: messages.apply #</button> <button class="k-button cancel">#: messages.cancel #</button></div>' + '# } #')
         });
         function relative(array, element, delta) {
             array = Array.prototype.slice.call(array);
@@ -702,7 +702,7 @@
                     delete options.change;
                     delete options.cancel;
                     var id = kendo.guid();
-                    var selector = that._selector = new selectorType($('<div id="' + id + '"/>').appendTo(document.body), options);
+                    var selector = that._selector = new selectorType($('<div id="' + id + '"></div>').appendTo(document.body), options);
                     that.wrapper.attr('aria-owns', id);
                     that._popup = popup = selector.wrapper.kendoPopup({
                         anchor: that.wrapper,

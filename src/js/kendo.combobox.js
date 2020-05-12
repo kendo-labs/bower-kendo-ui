@@ -184,8 +184,10 @@
                 var that = this;
                 that.input.on('focus' + nsFocusEvent, proxy(that._inputFocus, that)).on('focusout' + nsFocusEvent, proxy(that._inputFocusout, that));
             },
-            _focusHandler: function () {
-                this.input.focus();
+            _focusHandler: function (e) {
+                if (e.target === this.element[0]) {
+                    this.input.focus();
+                }
             },
             _arrowClick: function () {
                 this._toggle();
@@ -212,6 +214,7 @@
                     return;
                 }
                 that._placeholder();
+                that._valueBeforeCascade = that._old;
                 that._blur();
                 that.element.blur();
             },
@@ -593,7 +596,7 @@
                 }
                 that.requireValueMapper(that.options, value);
                 that.trigger('set', { value: value });
-                if (value === options.value && that.input.val() === options.text) {
+                if (value === options.value && that.input.val() === options.text && !that.options.cascadeFrom) {
                     return;
                 }
                 that._accessor(value);
@@ -608,9 +611,13 @@
                         that.input.val(value);
                         that._placeholder(true);
                     }
-                    that._old = that._valueBeforeCascade = that._accessor();
+                    if (that._userTriggered) {
+                        that._old = that._accessor();
+                    } else {
+                        that._old = that._valueBeforeCascade = that._accessor();
+                    }
                     that._oldIndex = that.selectedIndex;
-                    that._prev = that.input.val();
+                    that._prev = that._oldText = that.input.val();
                     if (that._state === STATE_FILTER) {
                         that._state = STATE_ACCEPT;
                     }

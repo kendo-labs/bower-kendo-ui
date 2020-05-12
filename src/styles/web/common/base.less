@@ -43,12 +43,9 @@
 .k-grid-header,
 .k-toolbar,
 .k-grouping-header,
-.k-tooltip,
 .k-pager-wrap,
 .k-tabstrip-items .k-item,
 .k-link.k-state-hover,
-.k-textbox,
-.k-textbox:hover,
 .k-autocomplete,
 .k-dropdown-wrap,
 .k-picker-wrap,
@@ -57,8 +54,7 @@
 .k-dropdown-wrap.k-state-hover,
 .k-picker-wrap.k-state-hover,
 .k-numeric-wrap.k-state-hover,
-.k-draghandle
-{
+.k-draghandle {
     background-repeat: repeat;
     background-position: 0 center;
 }
@@ -76,10 +72,12 @@
 // widget
 
 .k-textbox > input,
+.k-textarea > textarea,
 .k-multiselect .k-input,
 .k-input[type="text"],
 .k-input[type="number"],
 .k-textbox,
+.k-textarea,
 .k-picker-wrap .k-input {
     font-size: 100%;
     font-family: inherit;
@@ -503,13 +501,12 @@ html .k-error-colored
 .k-widget *:before,
 .k-animation-container *:after,
 .k-block .k-header,
-.k-list-container,
-.k-dialog .k-window-content
-{
+.k-list-container {
     .box-sizing(content-box);
 }
 
 .k-textbox,
+.k-textarea,
 .k-autocomplete,
 .k-tabstrip > .k-content > .km-scroll-container,
 .k-block,
@@ -517,9 +514,7 @@ html .k-error-colored
 .k-grid-edit-row .k-widget,
 .k-grid-edit-row .text-box,
 .km-actionsheet > li,
-.km-shim,
-div.k-window-content
-{
+.km-shim {
     .box-sizing(border-box);
 }
 
@@ -585,7 +580,6 @@ div.k-window-content
 .k-grid-mobile .k-resize-handle-inner:before,
 .k-grid-mobile .k-resize-handle-inner:after,
 .k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after,
 .k-gantt-views > .k-current-view > .k-link:after {
     .use-font-icon();
 }

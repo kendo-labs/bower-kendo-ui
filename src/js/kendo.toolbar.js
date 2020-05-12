@@ -37,7 +37,7 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Class = kendo.Class, Widget = kendo.ui.Widget, proxy = $.proxy, isFunction = kendo.isFunction, keys = kendo.keys, outerWidth = kendo._outerWidth, ns = '.kendoToolBar', TOOLBAR = 'k-toolbar', BUTTON = 'k-button', OVERFLOW_BUTTON = 'k-overflow-button', TOGGLE_BUTTON = 'k-toggle-button', BUTTON_GROUP = 'k-button-group', SPLIT_BUTTON = 'k-split-button', SEPARATOR = 'k-separator', SPACER_CLASS = 'k-spacer', SPACER = 'spacer', POPUP = 'k-popup', RESIZABLE_TOOLBAR = 'k-toolbar-resizable', STATE_ACTIVE = 'k-state-active', STATE_DISABLED = 'k-state-disabled', STATE_HIDDEN = 'k-state-hidden', GROUP_START = 'k-group-start', GROUP_END = 'k-group-end', PRIMARY = 'k-primary', ICON = 'k-icon', ICON_PREFIX = 'k-i-', BUTTON_ICON = 'k-button-icon', BUTTON_ICON_TEXT = 'k-button-icontext', LIST_CONTAINER = 'k-list-container k-split-container', SPLIT_BUTTON_ARROW = 'k-split-button-arrow', OVERFLOW_ANCHOR = 'k-overflow-anchor', OVERFLOW_CONTAINER = 'k-overflow-container', FIRST_TOOLBAR_VISIBLE = 'k-toolbar-first-visible', LAST_TOOLBAR_VISIBLE = 'k-toolbar-last-visible', CLICK = 'click', TOGGLE = 'toggle', OPEN = 'open', CLOSE = 'close', OVERFLOW_OPEN = 'overflowOpen', OVERFLOW_CLOSE = 'overflowClose', OVERFLOW_NEVER = 'never', OVERFLOW_AUTO = 'auto', OVERFLOW_ALWAYS = 'always', OVERFLOW_HIDDEN = 'k-overflow-hidden', OPTION_LIST_SUFFIX = '_optionlist', KENDO_UID_ATTR = kendo.attr('uid');
+        var kendo = window.kendo, Class = kendo.Class, Widget = kendo.ui.Widget, proxy = $.proxy, isFunction = kendo.isFunction, keys = kendo.keys, outerWidth = kendo._outerWidth, ns = '.kendoToolBar', TOOLBAR = 'k-toolbar', BUTTON = 'k-button', OVERFLOW_BUTTON = 'k-overflow-button', TOGGLE_BUTTON = 'k-toggle-button', BUTTON_GROUP = 'k-button-group', SPLIT_BUTTON = 'k-split-button', SEPARATOR = 'k-separator', SPACER_CLASS = 'k-spacer', SPACER = 'spacer', POPUP = 'k-popup', RESIZABLE_TOOLBAR = 'k-toolbar-resizable', STATE_ACTIVE = 'k-state-active', STATE_DISABLED = 'k-state-disabled', STATE_HIDDEN = 'k-state-hidden', HIDDEN = 'k-hidden', GROUP_START = 'k-group-start', GROUP_END = 'k-group-end', PRIMARY = 'k-primary', ARIA_DISABLED = 'aria-disabled', ARIA_PRESSED = 'aria-pressed', ICON = 'k-icon', ICON_PREFIX = 'k-i-', BUTTON_ICON = 'k-button-icon', BUTTON_ICON_TEXT = 'k-button-icontext', LIST_CONTAINER = 'k-list-container k-split-container', SPLIT_BUTTON_ARROW = 'k-split-button-arrow', OVERFLOW_ANCHOR = 'k-overflow-anchor', OVERFLOW_CONTAINER = 'k-overflow-container', FIRST_TOOLBAR_VISIBLE = 'k-toolbar-first-visible', LAST_TOOLBAR_VISIBLE = 'k-toolbar-last-visible', CLICK = 'click', TOGGLE = 'toggle', OPEN = 'open', CLOSE = 'close', OVERFLOW_OPEN = 'overflowOpen', OVERFLOW_CLOSE = 'overflowClose', OVERFLOW_NEVER = 'never', OVERFLOW_AUTO = 'auto', OVERFLOW_ALWAYS = 'always', OVERFLOW_HIDDEN = 'k-overflow-hidden', OPTION_LIST_SUFFIX = '_optionlist', KENDO_UID_ATTR = kendo.attr('uid');
         kendo.toolbar = {};
         var components = {
             overflowAnchor: '<div tabindex="0" class="k-overflow-anchor k-button"></div>',
@@ -72,11 +72,13 @@
                 }
             },
             show: function () {
-                this.element.removeClass(STATE_HIDDEN).show();
+                this.element.removeClass(STATE_HIDDEN);
+                this.element.removeClass(HIDDEN);
                 this.options.hidden = false;
             },
             hide: function () {
-                this.element.addClass(STATE_HIDDEN).hide();
+                this.element.addClass(STATE_HIDDEN);
+                this.element.addClass(HIDDEN);
                 if (this.overflow && this.overflowHidden) {
                     this.overflowHidden();
                 }
@@ -90,6 +92,7 @@
                     isEnabled = true;
                 }
                 this.element.toggleClass(STATE_DISABLED, !isEnabled);
+                this.element.attr(ARIA_DISABLED, !isEnabled);
                 this.options.enable = isEnabled;
             },
             twin: function () {
@@ -158,7 +161,7 @@
                     element.contents().filter(function () {
                         return !$(this).hasClass('k-sprite') && !$(this).hasClass(ICON) && !$(this).hasClass('k-image');
                     }).each(function (idx, el) {
-                        if (el.nodeType == 1 || el.nodeType == 3 && $.trim(el.nodeValue).length > 0) {
+                        if (el.nodeType == 1 || el.nodeType == 3 && kendo.trim(el.nodeValue).length > 0) {
                             isEmpty = false;
                         }
                     });
@@ -224,6 +227,9 @@
             select: function (selected) {
                 if (selected === undefined) {
                     selected = false;
+                }
+                if (this.options.togglable) {
+                    this.element.attr(ARIA_PRESSED, selected);
                 }
                 this.element.toggleClass(STATE_ACTIVE, selected);
                 this.options.selected = selected;
@@ -487,6 +493,7 @@
                 }
                 this.mainButton.enable(isEnabled);
                 this.element.toggleClass(STATE_DISABLED, !isEnabled);
+                this.element.attr(ARIA_DISABLED, !isEnabled);
                 this.options.enable = isEnabled;
             },
             focus: function () {
@@ -496,11 +503,13 @@
                 if (this.popup) {
                     this.popup.close();
                 }
-                this.element.addClass(STATE_HIDDEN).hide();
+                this.element.addClass(STATE_HIDDEN);
+                this.element.addClass(HIDDEN);
                 this.options.hidden = true;
             },
             show: function () {
-                this.element.removeClass(STATE_HIDDEN).hide();
+                this.element.removeClass(STATE_HIDDEN);
+                this.element.removeClass(HIDDEN);
                 this.options.hidden = false;
             }
         });
@@ -1331,14 +1340,17 @@
                 }
             },
             _hideItem: function (item) {
-                item.hide();
+                item.addClass(HIDDEN);
                 if (this.popup) {
                     this.popup.container.find('>li[data-uid=\'' + item.data('uid') + '\']').removeClass(OVERFLOW_HIDDEN);
                 }
             },
             _showItem: function (item, containerWidth) {
-                if (item.length && containerWidth > this._childrenWidth() + outerWidth(item, true)) {
-                    item.show();
+                item.removeClass(HIDDEN);
+                var itemOuterWidth = outerWidth(item, true);
+                item.addClass(HIDDEN);
+                if (item.length && containerWidth > this._childrenWidth() + itemOuterWidth) {
+                    item.removeClass(HIDDEN);
                     if (this.popup) {
                         this.popup.container.find('>li[data-uid=\'' + item.data('uid') + '\']').addClass(OVERFLOW_HIDDEN);
                     }

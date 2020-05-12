@@ -27,23 +27,23 @@
 @widget-text-color: @normal-text-color;
 @widget-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 8%), 0.5);
 @widget-gradient: @normal-gradient;
-@widget-shadow: false;
+@widget-shadow: null;
 //Button
 @button-text-color: @normal-text-color;
 @button-background-color: saturate(@base, 1%);
 @button-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 18%), 0.5);
 @button-gradient: @widget-gradient;
-@button-shadow: false;
+@button-shadow: null;
 @button-hover-text-color: @hover-text-color;
 @button-hover-background-color: contrast(@background, lighten(@hover-background, 5%), darken(@hover-background, 8%), 0.5);
 @button-hover-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 20%), 0.5);
 @button-hover-gradient: @hover-gradient;
-@button-hover-shadow: false;
+@button-hover-shadow: null;
 @button-active-background: contrast(@background, darken(@accent, 2%), darken(@selected-background, 2%), 0.5);
 @button-active-text-color: contrast(@button-active-background, @normal-text-color, @background, 0.4);
 @button-active-border-color: @button-active-background;
 @button-active-gradient: @selected-gradient;
-@button-active-shadow: false;
+@button-active-shadow: null;
 @button-focused-border-color: contrast(@accent, lighten(@accent, 1%), darken(@accent, 4%), 0.5);
 @button-focused-shadow: 0 0 2px 1px contrast(@base, @accent, lighten(@accent, 20%), 0.5);
 @button-focused-active-shadow:  @button-focused-shadow;
@@ -54,17 +54,17 @@
 @primary-background-color: @accent;
 @primary-border-color: contrast(@base, lighten(@primary-color-desatured, 3%), darken(@primary-color-desatured, 3%), 0.5);
 @primary-gradient: @widget-gradient;
-@primary-shadow: false;
+@primary-shadow: null;
 @primary-hover-text-color: @primary-text-color;
 @primary-hover-background-color: contrast(@background, lighten(@accent, 5%), darken(@accent, 5%), 0.5);
 @primary-hover-border-color: @primary-border-color;
 @primary-hover-gradient: @hover-gradient;
-@primary-hover-shadow: false;
+@primary-hover-shadow: null;
 @primary-active-text-color: contrast(@primary-active-background-color, @normal-text-color, @background, 0.4);
 @primary-active-background-color: contrast(@background, darken(@accent, 2%), darken(@selected-background, 2%), 0.5);
 @primary-active-border-color: @primary-active-background-color;
 @primary-active-gradient: @selected-gradient;
-@primary-active-shadow: false;
+@primary-active-shadow: null;
 @primary-focused-border-color: darken(@primary-hover-background-color, 2%);
 @primary-focused-shadow: 0 0 2px 1px contrast(@background, @accent, @selected-background, 0.5);
 @primary-focused-active-shadow: @primary-focused-shadow;
@@ -76,16 +76,15 @@
 @input-text: @normal-text-color;
 @input-bg: contrast(@normal-text-color, @base, #fff, 0.5);
 @input-border: @drop-down-border-color;
-@input-shadow: false;
+@input-shadow: null;
 @input-hovered-text: @input-text;
 @input-hovered-bg: @input-bg;
 @input-hovered-border: @drop-down-hover-border-color;
-@input-hovered-shadow: false;
+@input-hovered-shadow: null;
 @input-focused-text: @input-text;
 @input-focused-bg: @input-bg;
 @input-focused-border: @drop-down-focused-border-color;
 @input-focused-shadow: @focused-shadow;
-@tooltip-texture: @texture;
 @sprite-image: url('@{image-folder}/sprite.png');
 @inverse-text-color: contrast(@normal-text-color);
 @select-background-color: @base;
@@ -119,22 +118,30 @@
 @error-border-color: darken(@error, 29%);
 @disabled-text-color: contrast(@base, lighten(@base, 40%), darken(@base, 15%), 0.5);
 @notification-border-radius: @border-radius;
-@notification-info-background-color: @info;
-@notification-info-text-color: #fff;
-@notification-info-border-color: @notification-info-background-color;
-@notification-success-background-color: @success;
-@notification-success-text-color: @notification-info-text-color;
-@notification-success-border-color: @notification-success-background-color;
-@notification-warning-background-color: @warning;
-@notification-warning-text-color: #000;
-@notification-warning-border-color: @notification-warning-background-color;
-@notification-error-background-color: @error;
-@notification-error-text-color: @notification-info-text-color;
-@notification-error-border-color: @notification-error-background-color;
+@notification-info-bg: @info;
+@notification-info-text: contrast( @notification-info-bg );
+@notification-info-border: @notification-info-bg;
+@notification-success-bg: @success;
+@notification-success-text: contrast( @notification-success-bg );
+@notification-success-border: @notification-success-bg;
+@notification-warning-bg: @warning;
+@notification-warning-text: contrast( @notification-warning-bg );
+@notification-warning-border: @notification-warning-bg;
+@notification-error-bg: @error;
+@notification-error-text: contrast( @notification-error-bg );
+@notification-error-border: @notification-error-bg;
 @notification-gradient: rgba(255,255,255,.25) 0%, rgba(255,255,255,0) 100%;
-@tooltip-text-color: @header-text-color;
-@tooltip-background-color: @header-background-color;
-@tooltip-border-color: @secondary-border-color;
+
+
+// Tooltip
+@tooltip-border-radius: @border-radius;
+@tooltip-shadow: 0 4px 6px @shadow-color;
+
+@tooltip-bg: @header-background-color;
+@tooltip-text: @header-text-color;
+@tooltip-border: @secondary-border-color;
+
+
 @validation-text-color: contrast(@validation-background-color, lighten(@warning, 80%), darken(@warning, 60%), 0.5);
 @validation-background-color: @warning;
 @validation-border-color: @warning;
@@ -154,8 +161,8 @@
 @scheduler-background-color: contrast(@normal-text-color, @background, @base, 0.5);
 @current-time-color: darken(@error, 29%);
 @event-background-color: contrast(@selected-background, lighten(@selected-background, 33%), darken(@selected-background, 7%), 0.5);
-@event-text-color: contrast(@event-background-color, @normal-text-color, @primary-text-color, 0.4);
-@event-inverse-text-color: contrast(@normal-text-color, @background, darken(@background, 10%), 0.5);
+@event-text-color: contrast( @event-background-color );
+@event-inverse-text-color: contrast( @event-text-color );
 @scheduler-nonwork-background-color: contrast(@base, lighten(@base, 4%), lighten(@base, 6%), 0.5);
 @resize-background-color: contrast(@hover-background, lighten(@normal-text-color, 29%), darken(@normal-text-color, 1%), 0.5);
 @upload-progress-background-color: @info;
@@ -190,7 +197,6 @@
 @panelbar-items-border: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
 @panelbar-content-background: @background;
 @panelbar-content-color: @normal-text-color;
-@window-shadow-style: 1px 1px 7px 1px;
 @filter-menu-content-background: @background;
 @icon-background-color: transparent;
 @disabled-background-color: saturate(@base, 1%);
@@ -215,6 +221,7 @@
 @toolbar-text: @widget-text-color;
 @toolbar-border: @widget-border-color;
 @toolbar-gradient: @widget-gradient;
+@toolbar-shadow: null;
 
 
 // Cards
@@ -254,6 +261,13 @@
 @card-info-bg: mix( white, @card-info, 70%);
 @card-info-text: mix(black, @card-info);
 @card-info-border: mix(white, @card-info);
+
+
+//TileLayout
+@tilelayout-bg: contrast(@base, lighten(@background, 4%), darken(@background, 4%), 0.5);
+
+@tilelayout-hint-bg: rgba(255, 255, 255, .2);
+@tilelayout-hint-border: @component-border;
 
 
 // Chat
@@ -334,9 +348,29 @@
 @calendar-cell-focused-shadow: inset @button-focused-shadow;
 
 
+// Timepicker
+@time-list-highlight-color: @widget-border-color;
+@time-list-focused-bg: rgba(contrast(@background), .04);
+@time-list-title-focus: contrast(@background);
+
+
+// Window
+@window-border-radius: @border-radius;
+@window-action-border-radius: @border-radius;
+
+@window-bg: @component-bg;
+@window-text: @component-text;
+@window-border: @component-border;
+@window-shadow: 1px 1px 7px 1px rgba(contrast(@window-bg), .12);
+@window-focus-shadow: 1px 1px 7px 1px rgba(contrast(@window-bg), .25);
+
+@window-titlebar-bg: @header-background-color;
+@window-titlebar-text: @header-text-color;
+@window-titlebar-border: @secondary-border-color;
+@window-titlebar-gradient: rgba(white, .25), rgba(white, 0);
+
+
 // Dialog
-@dialog-button-stretched-padding-x: 12px;
-@dialog-button-stretched-padding-y: @dialog-button-stretched-padding-x;
 
 // ScrollView
 @scrollview-pagebutton-bg: @button-background-color;
@@ -354,15 +388,15 @@
 
 
 // Switch
-@switch-container-shadow: false;
-@switch-container-hovered-shadow: false;
-@switch-container-focused-shadow: false;
+@switch-container-shadow: null;
+@switch-container-hovered-shadow: null;
+@switch-container-focused-shadow: null;
 
 @switch-on-bg: contrast(contrast(@background), @normal-background, @base, .5);
 @switch-on-text: contrast(@background, @accent, white, .5);
 @switch-on-border: contrast(@background, @button-border-color, @switch-on-bg, .5);
-@switch-on-gradient: false;
-@switch-on-shadow: false;
+@switch-on-gradient: null;
+@switch-on-shadow: null;
 @switch-on-focused-shadow: 0 0 3px 1px contrast(@background, rgba( black, .3 ), rgba( white, 1), .5);
 
 @switch-on-focused-bg: @switch-on-bg;
@@ -373,13 +407,13 @@
 @switch-on-hovered-bg: @switch-on-bg;
 @switch-on-hovered-text: @switch-on-text;
 @switch-on-hovered-border: @switch-on-focused-border;
-@switch-on-hovered-gradient: false;
+@switch-on-hovered-gradient: null;
 
 @switch-on-handle-bg: @primary-background-color;
 @switch-on-handle-text: @switch-on-text;
 @switch-on-handle-border: @primary-border-color;
 @switch-on-handle-gradient: rgba(255,255,255,.25) 0%, rgba(255,255,255,.0) 100%;
-@switch-on-handle-shadow: false;
+@switch-on-handle-shadow: null;
 
 @switch-on-handle-focused-bg: @switch-on-handle-bg;
 @switch-on-handle-focused-text: @switch-on-handle-text;
@@ -394,8 +428,8 @@
 @switch-off-bg: @switch-on-bg;
 @switch-off-text: @normal-text-color;
 @switch-off-border: @switch-on-border;
-@switch-off-gradient: false;
-@switch-off-shadow: false;
+@switch-off-gradient: null;
+@switch-off-shadow: null;
 @switch-off-focused-shadow: @switch-on-focused-shadow;
 
 @switch-off-focused-bg: @switch-off-bg;
@@ -406,13 +440,13 @@
 @switch-off-hovered-bg: @switch-off-bg;
 @switch-off-hovered-text: @switch-off-text;
 @switch-off-hovered-border: @switch-on-hovered-border;
-@switch-off-hovered-gradient: false;
+@switch-off-hovered-gradient: null;
 
 @switch-off-handle-bg: @button-background-color;
 @switch-off-handle-text: @switch-off-text;
 @switch-off-handle-border: @button-border-color;
 @switch-off-handle-gradient: @button-gradient;
-@switch-off-handle-shadow: false;
+@switch-off-handle-shadow: null;
 
 @switch-off-handle-focused-bg: @switch-off-handle-bg;
 @switch-off-handle-focused-text: @switch-off-handle-text;
@@ -620,7 +654,7 @@
 @checkbox-disabled-checked-border: null;
 @checkbox-invalid-bg: null;
 @checkbox-invalid-text: null;
-@checkbox-invalid-border: @checkbox-checked-bg;
+@checkbox-invalid-border: @checkbox-border;
 
 
 //Radio Buttons
@@ -628,7 +662,7 @@
 // @radio-size: @icon-size;
 @radio-radius: 50%;
 @radio-border-width: 1px;
-// @radio-line-height: @radio-size + @radio-border-width;
+// @radio-line-height: calc(@radio-size + @radio-border-width);
 
 @radio-bg: @checkbox-bg;
 @radio-text: @checkbox-text;
@@ -711,6 +745,53 @@
 @filemanager-view-dropzone-hovered-border: false;
 
 
+// Stepper
+@stepper-bg: false;
+@stepper-text: false;
+@stepper-border: false;
+
+@stepper-indicator-bg: @component-bg;
+@stepper-indicator-text: @component-text;
+@stepper-indicator-border: @component-border;
+
+@stepper-indicator-hover-bg: darken( @stepper-indicator-bg, 10% );
+@stepper-indicator-hover-text: false;
+@stepper-indicator-hover-border: false;
+
+@stepper-indicator-disabled-bg: @stepper-indicator-bg;
+@stepper-indicator-disabled-text: mix(@stepper-indicator-text, #ffffff, 60%);
+@stepper-indicator-disabled-border: @stepper-indicator-border;
+
+@stepper-indicator-done-bg: @accent;
+@stepper-indicator-done-text: contrast( @stepper-indicator-done-bg );
+@stepper-indicator-done-border: @stepper-indicator-done-bg;
+
+@stepper-indicator-done-hover-bg: darken( @stepper-indicator-done-bg, 10% );
+@stepper-indicator-done-hover-text: false;
+@stepper-indicator-done-hover-border: false;
+
+@stepper-indicator-done-disabled-bg: mix( @stepper-indicator-done-bg, @component-bg, 60%);
+@stepper-indicator-done-disabled-text: contrast( @stepper-indicator-done-bg );
+@stepper-indicator-done-disabled-border: @stepper-indicator-done-disabled-bg;
+
+@stepper-indicator-current-bg: @stepper-indicator-done-bg;
+@stepper-indicator-current-text: @stepper-indicator-done-text;
+@stepper-indicator-current-border: @stepper-indicator-done-border;
+
+@stepper-indicator-current-hover-bg: @stepper-indicator-done-hover-bg;
+@stepper-indicator-current-hover-text: @stepper-indicator-done-hover-text;
+@stepper-indicator-current-hover-border: @stepper-indicator-done-hover-border;
+
+@stepper-indicator-current-disabled-bg: @stepper-indicator-done-disabled-bg;
+@stepper-indicator-current-disabled-text: @stepper-indicator-done-disabled-text;
+@stepper-indicator-current-disabled-border: @stepper-indicator-done-disabled-border;
+
+@stepper-label-text: @component-text;
+@stepper-label-success-text: contrast(@base, lighten(@success, 1%), darken(@success, 30%));
+@stepper-label-error-text: contrast(@hover-background, lighten(@error, 15%), darken(@error, 4%));
+@stepper-label-disabled-text: @disabled-text-color;
+
+
 // Kendo skin
 
 @theme-name: ~"default";
@@ -721,6 +802,7 @@
 @import "themes/type.less";
 @import "themes/button.less";
 @import "Default/card/_theme.less";
+@import "Default/tilelayout/_theme.less";
 @import "Default/chat/_theme.less";
 @import "Default/calendar/_theme.less";
 @import "Default/multiviewcalendar/_theme.less";
@@ -734,23 +816,28 @@
 @import "Default/timeline/_theme.less";
 @import "Default/breadcrumb/_theme.less";
 @import "Default/listgroup/_theme.less";
+@import "Default/messagebox/_theme.less";
 @import "Default/badge/_theme.less";
 @import "Default/checkbox/_theme.less";
 @import "Default/radio/_theme.less";
 @import "Default/filemanager/_theme.less";
+@import "Default/toolbar/_theme.less";
+@import "Default/window/_theme.less";
+@import "Default/dialog/_theme.less";
+@import "Default/stepper/_theme.less";
+@import "Default/forms/_theme.less";
 
+.k-text-error {
+    color: @error;
+}
 
 .k-in,
-.k-item,
-.k-window-action
+.k-item
 {
     border-color: transparent;
 }
 
 // main colors
-.k-tool.k-state-hover {
-    color: @selected-text-color;
-}
 
 .k-splitbar .k-resize-handle {
     background-color: @normal-text-color;
@@ -773,14 +860,10 @@
 .k-block,
 .k-widget,
 .k-input,
-.k-textbox,
 .k-group,
 .k-content,
-.k-header,
 .k-filter-row > th,
-.k-editable-area,
 .k-separator,
-.k-textbox > input,
 .k-autocomplete,
 .k-dropdown-wrap,
 .k-toolbar,
@@ -798,9 +881,6 @@
 .k-grid td,
 .k-grid td.k-state-selected,
 .k-grid-footer-wrap,
-.k-pager-wrap,
-.k-pager-wrap .k-link,
-.k-pager-refresh,
 .k-grouping-header,
 .k-grouping-header .k-group-indicator,
 .k-panelbar > .k-item > .k-link,
@@ -811,19 +891,14 @@
 .k-slider-track,
 .k-splitbar,
 .k-dropzone-active,
-.k-tiles,
-.k-tooltip,
-.k-button-group .k-tool,
 .k-upload-files,
 .k-popup.k-align .k-list .k-item:last-child,
-.k-editor-dialog .k-tabstrip-items
-{
+.k-editor-dialog .k-tabstrip-items {
     border-color: @widget-border-color;
 }
 
 .k-group,
 .k-grouping-header,
-.k-pager-wrap,
 .k-group-footer td,
 .k-grid-footer,
 .k-footer-template td,
@@ -852,9 +927,7 @@ td.k-group-cell,
 
 .k-content,
 .k-panelbar > li.k-item,
-.k-panel > li.k-item,
-.k-tiles
-{
+.k-panel > li.k-item {
     background-color: @content-background-color;
 }
 
@@ -873,6 +946,7 @@ td.k-group-cell,
 }
 
 .k-textbox,
+.k-textarea,
 .k-autocomplete.k-header,
 .k-dropdown-wrap.k-state-active,
 .k-picker-wrap.k-state-active,
@@ -885,6 +959,7 @@ td.k-group-cell,
 .k-textbox > input,
 .k-autocomplete .k-input,
 .k-dropdown-wrap .k-input,
+.k-textbox.k-state-focused,
 .k-autocomplete.k-state-focused .k-input,
 .k-dropdown-wrap.k-state-focused .k-input,
 .k-picker-wrap.k-state-focused .k-input,
@@ -894,23 +969,17 @@ td.k-group-cell,
     border-color: @widget-border-color;
 }
 
-input.k-textbox,
-textarea.k-textbox,
-input.k-textbox:hover,
-textarea.k-textbox:hover,
-.k-textbox > input
-{
-    background: none;
-}
-
 .k-input,
-input.k-textbox,
-textarea.k-textbox,
-input.k-textbox:hover,
-textarea.k-textbox:hover,
+.k-textbox,
+.k-textarea,
 .k-textbox > input,
+.k-textarea > textarea,
 .k-multiselect-wrap {
     background-color: @input-bg;
+    color: @input-text;
+}
+
+.k-input-label {
     color: @input-text;
 }
 
@@ -941,9 +1010,7 @@ textarea.k-textbox:hover,
     color: @header-text-color;
 }
 
-.k-link,
-.k-nav-current.k-state-hover .k-link
-{
+.k-link {
     color: @link-text-color;
 }
 
@@ -967,8 +1034,6 @@ textarea.k-textbox:hover,
 .k-picker-wrap,
 .k-numeric-wrap,
 .k-grouping-header,
-.k-pager-wrap,
-.k-textbox,
 .k-progressbar,
 .k-draghandle,
 .k-autocomplete,
@@ -1002,19 +1067,13 @@ textarea.k-textbox:hover,
 .k-state-selected .k-icon,
 .k-state-focused .k-icon,
 .k-column-menu .k-state-hover .k-sprite,
-.k-column-menu .k-state-active .k-sprite,
-.k-pager-numbers .k-current-page .k-link:hover:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view.k-state-hover > .k-link:after
-{
+.k-column-menu .k-state-active .k-sprite {
     opacity:1;
 }
 
 //Normal state
 .k-state-disabled .k-icon,
-.k-column-menu .k-sprite,
-.k-pager-numbers .k-current-page .k-link:after,
-.k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after
-{
+.k-column-menu .k-sprite {
     opacity: @default-icon-opacity;
 }
 
@@ -1107,7 +1166,7 @@ textarea.k-textbox:hover,
 .k-task-complete
 {
     border-color: @event-background-color;
-    background: darken(@event-background-color, 15%) 0 -257px @tooltip-texture repeat-x;
+    background: darken(@event-background-color, 15%);
     color: @event-text-color;
 }
 
@@ -1176,7 +1235,7 @@ textarea.k-textbox:hover,
     background-color: transparent;
 }
 
-.k-mediaplayer-toolbar .k-button.k-bare {
+.k-mediaplayer-toolbar .k-button.k-flat {
     &:active,
     &.k-state-active,
     &.k-state-active:hover {
@@ -1219,10 +1278,6 @@ textarea.k-textbox:hover,
     border-color: @focused-border-color;
 }
 
-.k-window-titlebar .k-link {
-    border-radius: @border-radius;
-}
-
 .k-calendar-container.k-group {
     border-color: @group-border-color;
 }
@@ -1230,17 +1285,14 @@ textarea.k-textbox:hover,
 .k-state-selected,
 .k-state-selected:link,
 .k-state-selected:visited,
-.k-tool.k-state-selected,
 .k-list>.k-state-selected,
 .k-list>.k-state-highlight,
 .k-panel > .k-state-selected,
 .k-ghost-splitbar-vertical,
 .k-ghost-splitbar-horizontal,
 .k-draghandle.k-state-selected:hover,
-.k-scheduler .k-scheduler-toolbar .k-state-selected,
 .k-scheduler .k-today.k-state-selected,
-.k-marquee-color
-{
+.k-marquee-color {
     color: @selected-text-color;
     background-color: @selected-background-color;
     border-color: @selected-border-color;
@@ -1319,19 +1371,12 @@ td.k-state-focused.k-state-selected
 .k-splitbar-horizontal-hover,
 .k-splitbar-vertical-hover,
 .k-list>.k-state-hover,
-.k-scheduler .k-scheduler-toolbar ul li.k-state-hover,
-.k-pager-wrap .k-link:hover,
 .k-dropdown .k-state-focused,
 .k-filebrowser-dropzone
 {
     color: @hover-text-color;
     background-color: @hover-background-color;
     border-color: @hover-border-color;
-}
-
-.k-pager-wrap .k-link.k-state-disabled {
-    color: @normal-text-color;
-    border-color: @widget-border-color;
 }
 
 .k-state-hover > .k-select,
@@ -1341,7 +1386,6 @@ td.k-state-focused.k-state-selected
 }
 
 .k-state-hover,
-.k-pager-wrap .k-link:hover,
 div.k-filebrowser-dropzone em,
 .k-draghandle:hover,
 .k-listbox .k-item:hover:not(.k-state-disabled)
@@ -1349,19 +1393,44 @@ div.k-filebrowser-dropzone em,
     .composite-background(@hover-gradient);
 }
 
-.k-pager-wrap
-{
-    background-color: @header-background-color;
+
+
+// Pager
+.k-pager-wrap {
+    .composite-background(@widget-gradient);
+    border-color: @widget-border-color;
     color: @header-text-color;
+    background-color: @header-background-color;
+    background-position: 50% 50%;
 
-    &.k-pager-lg,
-    &.k-pager-md,
-    &.k-pager-sm {
-
-        .k-pager-numbers.k-state-expanded {
-            background-color: @header-background-color;
-        }
+    .k-link {
+        border-color: @widget-border-color;
     }
+    .k-link:hover {
+        .composite-background(@hover-gradient);
+        border-color: @hover-border-color;
+        color: @hover-text-color;
+        background-color: @hover-background-color;
+    }
+    .k-link.k-state-disabled {
+        color: @normal-text-color;
+        border-color: @widget-border-color;
+    }
+    .k-link.k-state-selected {
+        color: @selected-text-color;
+        background-color: @selected-background-color;
+        border-color: @selected-border-color;
+    }
+
+
+    .k-pager-numbers .k-link {
+        border-color: transparent;
+    }
+
+    .k-pager-refresh {
+        border-color: transparent;
+    }
+
 }
 
 .k-picker-wrap.k-state-active,
@@ -1413,7 +1482,6 @@ div.k-filebrowser-dropzone em
     opacity: .6;
 }
 
-.k-tile-empty.k-state-selected,
 .k-loading-mask.k-state-selected {
     border-width: 0;
     background-image: none;
@@ -1423,7 +1491,6 @@ div.k-filebrowser-dropzone em
 .k-state-disabled,
 .k-state-disabled .k-link,
 .k-dropzone em,
-.k-tile-empty strong,
 .k-slider .k-draghandle
 {
     color: @disabled-text-color;
@@ -1472,72 +1539,15 @@ div.k-filebrowser-dropzone em
 }
 
 // Tooltip
-.k-widget.k-tooltip,
 .k-chart-crosshair-tooltip,
 .k-chart-shared-tooltip
 {
     .composite-background(@widget-gradient);
     background-position: 50% 50%;
-    background-color: @tooltip-background-color;
-    color: @tooltip-text-color;
+    background-color: @tooltip-bg;
+    color: @tooltip-text;
     border-color: transparent;
     .box-shadow(0 4px 6px @shadow-color);
-}
-
-.k-widget.k-tooltip-validation
-{
-    border-color: @validation-border-color;
-    background-color: @validation-background-color;
-    color: @validation-text-color;
-}
-
-// Bootstrap theme fix
-.input-prepend .k-tooltip-validation,
-.input-append .k-tooltip-validation
-{
-    font-size: 12px;
-    position: relative;
-    top: 3px;
-}
-
-.k-callout-n
-{
-    border-bottom-color: @tooltip-background-color;
-}
-
-.k-callout-w
-{
-    border-right-color: @tooltip-background-color;
-}
-
-.k-callout-s
-{
-    border-top-color: @tooltip-background-color;
-}
-
-.k-callout-e
-{
-    border-left-color: @tooltip-background-color;
-}
-
-.k-tooltip-validation .k-callout-n
-{
-    border-bottom-color: @validation-border-color;
-}
-
-.k-tooltip-validation .k-callout-w
-{
-    border-right-color: @validation-border-color;
-}
-
-.k-tooltip-validation .k-callout-s
-{
-    border-top-color: @validation-border-color;
-}
-
-.k-tooltip-validation .k-callout-e
-{
-    border-left-color: @validation-border-color;
 }
 
 // Splitter
@@ -1567,68 +1577,42 @@ div.k-filebrowser-dropzone em
     border-radius: 0 0 @border-radius @border-radius;
 }
 
-.k-file-progress
-{
-    color: @upload-progress-text-color;
-}
-
-.k-file-progress .k-progress
-{
+.k-file-progress .k-progress {
     background-color: @upload-progress-background-color;
 }
 
-.k-file-success .k-file-name,
-.k-file-success .k-upload-pct
-{
-    color: @upload-success-text-color;
-}
+.k-file-success {
 
-.k-file-success .k-progress
-{
-    background-color: @upload-success-background-color;
-}
+    .k-file-validation-message,
+    .k-upload-pct {
+        color: @upload-success-text-color;
+    }
 
-.k-file-error
-{
-    color: @upload-error-text-color;
-
-    .k-file-extension-wrapper,
-    .k-multiple-files-extension-wrapper,
-    .k-file-group-wrapper,
-    .k-multiple-files-group-wrapper {
-        color: @upload-error-text-color;
-        border-color: @upload-error-text-color;
-
-        &:before {
-            border-color: transparent transparent @upload-error-text-color @upload-error-text-color;
-        }
+    .k-progress {
+        background-color: @upload-success-background-color;
     }
 }
 
-.k-file-error .k-progress,
-.k-file-invalid .k-progress
-{
-    background-color: @upload-error-background-color;
+.k-file-error,
+.k-file-invalid {
+
+    .k-file-validation-message,
+    .k-upload-pct {
+        color: @upload-error-text-color;
+    }
+
+    .k-progress {
+        background-color: @upload-error-background-color;
+    }
 }
 
 .k-file-extension-wrapper,
 .k-multiple-files-extension-wrapper,
 .k-file-group-wrapper,
-.k-multiple-files-group-wrapper {
+.k-multiple-files-group-wrapper,
+.k-file-invalid-group-wrapper {
     color: @disabled-text-color;
     border-color: @disabled-text-color;
-}
-
-.k-file-invalid .k-file-name-invalid {
-    color: @error;
-}
-
-.k-file-invalid-extension-wrapper,
-.k-multiple-files-invalid-extension-wrapper,
-.k-file-invalid-group-wrapper,
-.k-multiple-files-invalid-group-wrapper {
-    color: @error;
-    border-color: @upload-invalid-color;
 }
 
 .k-file-extension-wrapper:before,
@@ -1637,20 +1621,9 @@ div.k-filebrowser-dropzone em
     border-color: transparent transparent @disabled-text-color @disabled-text-color;
 }
 
-.k-file-invalid-extension-wrapper:before,
-.k-multiple-files-invalid-extension-wrapper:before {
-    background-color: @widget-background-color;
-    border-color: transparent transparent @upload-invalid-color @upload-invalid-color;
-}
-
 .k-multiple-files-extension-wrapper:after {
     border-top-color: @disabled-text-color;
     border-left-color: @disabled-text-color;
-}
-
-.k-multiple-files-invalid-extension-wrapper:after {
-    border-top-color: @upload-invalid-color;
-    border-left-color: @upload-invalid-color;
 }
 
 .k-file-size,
@@ -1667,22 +1640,9 @@ div.k-filebrowser-dropzone em
     box-shadow: @button-focused-shadow;
 }
 
-// ImageBrowser
-
-.k-tile
-{
-    border-color: @content-background-color;
-}
-
 .k-textbox:hover,
-.k-tiles li.k-state-hover
-{
+.k-textarea:hover {
     border-color: @hover-border-color;
-}
-
-.k-tiles li.k-state-selected
-{
-    border-color: @selected-border-color;
 }
 
 // TreeMap
@@ -1716,6 +1676,8 @@ div.k-filebrowser-dropzone em
 }
 
 .k-textbox:focus,
+.k-textarea:focus,
+.k-textbox.k-state-focused,
 .k-autocomplete.k-state-focused,
 .k-dropdown-wrap.k-state-focused,
 .k-picker-wrap.k-state-focused,
@@ -1761,30 +1723,13 @@ div.k-filebrowser-dropzone em
 .k-dropdown-wrap.k-state-active,
 .k-picker-wrap.k-state-active,
 .k-multiselect.k-state-focused,
-.k-filebrowser .k-image,
-.k-tooltip
-{
+.k-filebrowser .k-image {
     .box-shadow(0 2px 2px 0 @shadow-color);
 }
 
 .k-treemap-tile.k-state-hover
 {
     .box-shadow(inset 0 0 0 3px @widget-border-color);
-}
-
-// Window
-
-.k-window
-{
-    .window-shadow(@shadow-color);
-    background-color: @widget-background-color;
-}
-
-.k-window.k-window-maximized,
-.k-window-maximized .k-window-titlebar,
-.k-window-maximized .k-window-content
-{
-    border-radius: 0;
 }
 
 .k-shadow
@@ -1807,6 +1752,10 @@ div.k-filebrowser-dropzone em
     &.k-state-active {
         border-color: @widget-border-color;
     }
+}
+.k-window-content.editorToolbarWindow {
+    color: @toolbar-text;
+    background-color: @toolbar-bg;
 }
 
 // Notification
@@ -1914,11 +1863,9 @@ div.k-filebrowser-dropzone em
 // Border radius
 .k-block,
 .k-textbox,
+.k-textarea,
 .k-drag-clue,
 .k-touch-scrollbar,
-.k-window,
-.k-window-titleless .k-window-content,
-.k-window-action,
 .k-inline-block,
 .k-grid .k-filter-options,
 .k-grouping-header .k-group-indicator,
@@ -1938,56 +1885,11 @@ div.k-filebrowser-dropzone em
 .k-calendar-container,
 .k-treeview .k-in,
 .k-editor-inline,
-.k-tooltip,
-.k-tile,
 .k-slider-track,
 .k-slider-selection,
 .k-upload,
-.k-split-button
 .k-gantt-views,
 .k-gantt-views > .k-current-view
-{
-    border-radius: @border-radius;
-}
-
-.k-tool {
-    text-align: center;
-    vertical-align: middle;
-}
-
-.k-tool.k-group-start,
-.k-toolbar .k-split-button .k-button,
-.k-toolbar .k-button-group .k-group-start
-{
-    border-radius: @border-radius 0 0 @border-radius;
-}
-
-.k-rtl .k-tool.k-group-start,
-.k-rtl .k-toolbar .k-split-button .k-button,
-.k-rtl .k-toolbar .k-button-group .k-group-start
-{
-    border-radius: 0 @border-radius @border-radius 0;
-}
-
-.k-toolbar .k-button-group > .k-group-end {
-    border-radius: @border-radius;
-}
-
-.k-tool.k-group-end,
-.k-toolbar .k-button-group .k-button + .k-group-end,
-.k-toolbar .k-split-button .k-split-button-arrow
-{
-    border-radius: 0 @border-radius @border-radius 0;
-}
-
-.k-rtl .k-tool.k-group-end,
-.k-rtl .k-toolbar .k-button-group .k-group-end,
-.k-rtl .k-toolbar .k-split-button .k-split-button-arrow
-{
-    border-radius: @border-radius 0 0 @border-radius;
-}
-
-.k-group-start.k-group-end.k-tool
 {
     border-radius: @border-radius;
 }
@@ -1999,7 +1901,6 @@ div.k-filebrowser-dropzone em
 .k-dropdown-wrap.k-state-border-up,
 .k-picker-wrap.k-state-border-up,
 .k-numeric-wrap.k-state-border-up,
-.k-window-content,
 .k-filter-menu
 {
     border-radius: 0 0 @border-radius @border-radius;
@@ -2019,7 +1920,6 @@ div.k-filebrowser-dropzone em
     border-radius: 0 0 @border-radius @border-radius;
 }
 
-.k-window-titlebar,
 .k-block > .k-header,
 .k-tabstrip-items .k-item,
 .k-panelbar .k-tabstrip-items .k-item,
@@ -2035,26 +1935,6 @@ div.k-filebrowser-dropzone em
 .k-gantt-views.k-state-expanded > .k-current-view
 {
     border-radius: @border-radius @border-radius 0 0;
-}
-
-.k-split-button.k-state-border-down > .k-button
-{
-    border-radius: @border-radius 0 0 0;
-}
-
-.k-split-button.k-state-border-up > .k-button
-{
-    border-radius: 0 0 0 @border-radius;
-}
-
-.k-split-button.k-state-border-down > .k-split-button-arrow
-{
-    border-radius: 0 @border-radius 0 0;
-}
-
-.k-split-button.k-state-border-up > .k-split-button-arrow
-{
-    border-radius: 0 0 @border-radius 0;
 }
 
 .k-dropdown-wrap .k-input,
@@ -2167,49 +2047,6 @@ div.k-filebrowser-dropzone em
     border-radius: @draghandle-border-radius;
 }
 
-.k-scheduler-toolbar > ul li:first-child,
-.k-scheduler-toolbar > ul li:first-child .k-link,
-.k-scheduler-toolbar > ul.k-scheduler-views li:first-child + li,
-.k-scheduler-toolbar > ul.k-scheduler-views li:first-child + li .k-link
-{
-    border-radius: @border-radius 0 0 @border-radius;
-}
-
-.k-rtl .k-scheduler-toolbar > ul li:first-child,
-.k-rtl .k-scheduler-toolbar > ul li:first-child .k-link,
-.k-rtl .k-scheduler-toolbar > ul.k-scheduler-views li:first-child + li,
-.k-rtl .k-scheduler-toolbar > ul.k-scheduler-views li:first-child + li .k-link {
-    border-radius: 0 @border-radius @border-radius 0;
-}
-
-.k-edit-field > .k-scheduler-navigation
-{
-    border-radius: @border-radius;
-}
-
-.k-scheduler-toolbar .k-nav-next,
-.k-scheduler-toolbar ul + ul li:last-child,
-.k-scheduler-toolbar .k-nav-next .k-link,
-.k-scheduler-toolbar ul + ul li:last-child .k-link
-{
-    border-top-right-radius: @border-radius;
-    border-bottom-right-radius: @border-radius;
-}
-
-.k-rtl .k-scheduler-toolbar .k-nav-next,
-.k-rtl .k-scheduler-toolbar ul + ul li:last-child,
-.k-rtl .k-scheduler-toolbar .k-nav-next .k-link,
-.k-rtl .k-scheduler-toolbar ul + ul li:last-child .k-link
-{
-    border-radius: @border-radius 0 0 @border-radius;
-}
-
-.k-scheduler div.k-scheduler-footer ul li,
-.k-scheduler div.k-scheduler-footer .k-link
-{
-    border-radius: @border-radius;
-}
-
 .k-more-events,
 .k-event,
 .k-task-single,
@@ -2261,8 +2098,8 @@ div.k-filebrowser-dropzone em
     color: @input-text;
 }
 
-input.k-textbox,
-textarea.k-textbox,
+.k-textbox,
+.k-textarea,
 .k-multiselect-wrap,
 .k-maskedtextbox.k-state-disabled > .k-textbox:hover,
 .k-dateinput.k-state-disabled > .k-textbox:hover
@@ -2382,45 +2219,9 @@ textarea.k-textbox,
 }
 
 .k-column-menu,
-.k-column-menu .k-item,
-.k-overflow-container .k-overflow-group
+.k-column-menu .k-item
 {
     border-color: @secondary-border-color;
-}
-
-// Toolbar
-.k-toolbar {
-
-    .k-button.k-state-disabled:focus {
-        border-color: @button-focused-border-color;
-        .box-shadow(@button-focused-shadow);
-    }
-}
-
-.k-overflow-container {
-
-    .k-button-group .k-button {
-        border-radius: @border-radius;
-    }
-
-    .k-overflow-group {
-        box-shadow: inset 0 1px 0 lighten(@secondary-border-color, 30%), 0 1px 0 lighten(@secondary-border-color, 30%);
-    }
-
-    .k-separator {
-        border-color: @secondary-border-color;
-    }
-}
-
-.k-toolbar-first-visible.k-overflow-group,
-.k-overflow-container .k-overflow-group + .k-overflow-group
-{
-    box-shadow: 0 1px 0 lighten(@secondary-border-color, 30%);
-}
-
-.k-toolbar-last-visible.k-overflow-group
-{
-    box-shadow: inset 0 1px 0 lighten(@secondary-border-color, 30%);
 }
 
 .k-column-menu .k-separator
@@ -2468,9 +2269,6 @@ textarea.k-textbox,
 .k-grid-header-wrap,
 .k-grid .k-grouping-header,
 .k-grid-header,
-.k-pager-wrap,
-.k-pager-wrap .k-textbox,
-.k-pager-wrap .k-link,
 .k-grouping-header .k-group-indicator,
 .k-gantt-toolbar .k-state-default
 {
@@ -2478,9 +2276,7 @@ textarea.k-textbox,
 }
 
 // Fix for responsive design
-.k-pager-numbers .k-link,
-.k-treeview .k-in
-{
+.k-treeview .k-in {
     border-color: transparent;
 }
 
@@ -2495,115 +2291,6 @@ textarea.k-textbox,
 .k-scheduler-table .k-state-hover .k-icon
 {
     background-color: transparent;
-}
-
-.k-editor .k-tool:focus
-{
-   outline: 0;
-   border-color: @button-focused-border-color;
-   .box-shadow(@button-focused-shadow);
-}
-
-// High contrast mode
-@media screen and (-ms-high-contrast: active) {
-    .k-editor-toolbar-wrap .k-dropdown-wrap.k-state-focused,
-    .k-editor-toolbar-wrap .k-button-group .k-tool:focus {
-        border-color: #fff;
-    }
-}
-
-// Responsive styles
-
-@media only screen and (max-width: 1024px) {
-    .k-webkit,
-    .k-ff,
-    .k-ie11,
-    .k-edge,
-    .k-safari {
-
-        .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view
-        {
-            .composite-background(@widget-gradient);
-            background-position: 50% 50%;
-            background-color: @drop-down-background;
-            border-color: @widget-border-color;
-        }
-
-        .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view
-        {
-            border-radius: @border-radius;
-        }
-
-        .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li {
-            border-radius: 0;
-        }
-
-        .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded > li.k-current-view
-        {
-            border-radius: @inner-border-radius @inner-border-radius 0 0;
-        }
-
-        .k-scheduler-toolbar > ul li:first-child, .k-scheduler-toolbar > ul li:first-child .k-link,
-        .k-scheduler-toolbar > ul.k-scheduler-views li,
-        .k-scheduler-toolbar > ul.k-scheduler-views li .k-link
-        {
-            border-radius: 0;
-        }
-
-        .k-scheduler-toolbar > ul.k-scheduler-views li:last-child,
-        .k-scheduler-toolbar > ul.k-scheduler-views li:last-child .k-link
-        {
-            border-radius: 0 0 @inner-border-radius @inner-border-radius;
-        }
-
-        .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover
-        {
-            border-color: @hover-border-color;
-            .composite-background(@hover-gradient);
-            background-color: @hover-background-color;
-        }
-
-        .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link
-        {
-            color: @widget-text-color;
-            min-width: 75px;
-        }
-
-        .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view:hover > .k-link
-        {
-            color: @hover-text-color;
-        }
-
-        .k-scheduler-views > li.k-state-selected > .k-link:after {
-            display: block;
-            content: "";
-            position: absolute;
-            top: 50%;
-            margin-top: -0.5em;
-            right: 0.333em;
-            width: 1.333em;
-            height: 1.333em;
-        }
-
-        .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded
-        {
-            border-width: 1px 1px 0 1px;
-            border-style: solid;
-            border-color: @secondary-border-color;
-            background-color: @header-background-color;
-            border-radius: @border-radius @border-radius 0 0;
-            .box-shadow(0 2px 2px 0 @shadow-color);
-        }
-
-        .k-scheduler-toolbar > ul.k-scheduler-views.k-state-expanded
-        {
-            border-width: 1px;
-            background-image: none;
-            border-radius: @border-radius;
-        }
-
-    }
-
 }
 
 .k-chart .k-mask {
@@ -2679,106 +2366,8 @@ textarea.k-textbox,
 
 @import "themes/spreadsheet.less";
 
-.k-spreadsheet {
-    .k-widget {
-        &[data-property='fontSize'] { width: 60px; }
-        &[data-property='format'] { width: 100px; }
-        &[data-property='fontFamily'] { width: 130px; }
-    }
-}
-
-.k-spreadsheet-toolbar .k-combobox {
-    .k-input {
-        color: @normal-text-color;
-    }
-
-    .k-state-hover,
-    .k-state-active,
-    .k-state-focused
-    {
-        .k-input {
-            color: @input-text;
-        }
-    }
-}
-
 @spreadsheet-page-orientation-gradient: @primary-gradient;
 
-// Dialog
-
-.k-dialog {
-    .k-content {
-        border-bottom-right-radius: @border-radius;
-        border-bottom-left-radius: @border-radius;
-    }
-    &.k-dialog-titleless .k-content {
-        border-top-right-radius: @border-radius;
-        border-top-left-radius: @border-radius;
-    }
-    .k-dialog-buttongroup {
-        &.k-dialog-button-layout-stretched {
-            .k-button {
-                padding: @dialog-button-stretched-padding-y @dialog-button-stretched-padding-x;
-            }
-        }
-        &.k-dialog-button-layout-normal {
-            border-top: solid 1px @widget-border-color;
-            background: @header-background-color;
-
-            .k-button {
-                border-radius: @border-radius;
-            }
-        }
-    }
-    &.k-window-sm {
-        .k-dialog-buttongroup {
-            &.k-dialog-button-layout-stretched {
-                flex-direction: column;
-
-                .k-button {
-                    flex: 0 0 auto;
-                    padding: (@dialog-button-stretched-padding-y / 2) (@dialog-button-stretched-padding-x / 2);
-                }
-            }
-        }
-    }
-    &.k-window-md {
-        .k-dialog-buttongroup {
-            &.k-dialog-button-layout-stretched {
-
-                .k-button {
-                    padding: (@dialog-button-stretched-padding-y * .7) (@dialog-button-stretched-padding-x * .7);
-                }
-            }
-        }
-    }
-}
-
-.k-rtl .k-dialog {
-    a.k-dialog-action.k-dialog-close {
-        left: .5em;
-    }
-    .k-dialog-buttongroup {
-        &.k-dialog-button-layout-stretched {
-            .k-button:first-child {
-                border-bottom-right-radius: @border-radius;
-            }
-            .k-button:last-child {
-                border-bottom-left-radius: @border-radius;
-            }
-        }
-        &.k-dialog-button-layout-normal {
-            text-align: left;
-            .k-button {
-                margin-left: 0;
-                margin-right: 0.5em;
-                &:first-child {
-                    margin-right: 0;
-                }
-            }
-        }
-    }
-}
 
 .k-numeric-wrap .k-i-warning {
     color: @input-validation-error;
@@ -2877,6 +2466,81 @@ textarea.k-textbox,
     }
 }
 
+// Timepicker infinite
+// Timepicker header
+.k-time-header {
+
+    .k-time-now {
+        color: @accent;
+        background: transparent;
+
+        &:hover,
+        &:focus {
+            color: @link-hovered-text;
+        }
+    }
+}
+
+// Timepicker content
+.k-time-list-wrapper {
+    background-color: @group-background-color;
+
+    .k-title {
+        .fill(
+            @disabled-text-color,
+            @header-background-color,
+            @widget-border-color,
+        );
+
+        .composite-background(@header-gradient);
+
+        background: @group-background-color;
+    }
+
+    &.k-state-focused {
+        .k-title {
+            color: @time-list-title-focus;
+            opacity: 1;
+        }
+
+        &::before,
+        &::after {
+            background-color: @time-list-focused-bg;
+        }
+    }
+}
+
+.k-time-list {
+    &::before,
+    &::after {
+        @shadow-size: 3em;
+        box-shadow: 0 0 @shadow-size (@shadow-size / 2) @group-background-color;
+    }
+
+    .k-item:hover {
+        color: @accent;
+    }
+}
+
+.k-time-container {
+    background: transparent;
+}
+
+.k-time-highlight {
+    background-color: @component-bg;
+    border-color: @time-list-highlight-color;
+}
+
+.k-datetime-container {
+    .k-date-tab {
+
+        .k-datetime-buttongroup,
+        .k-datetime-selector {
+            background-color: @component-bg;
+        }
+    }
+}
+
 .k-listbox {
     .k-list-scroller {
         padding: 2px;
@@ -2919,7 +2583,7 @@ textarea.k-textbox,
     background-color: @grid-bg;
 }
 .k-dropdowngrid-popup .k-header {
-    .linear-gradient(~"@{grid-header-gradient}");
+    .linear-gradient(@grid-header-gradient);
     border-color: @grid-header-border;
     color: @grid-header-text;
     background-color: @grid-header-bg;
@@ -2941,13 +2605,13 @@ textarea.k-textbox,
     background-color: @grid-header-bg;
 }
 .k-dropdowngrid-popup .k-item.k-state-hover {
-    .linear-gradient(~"@{grid-hover-gradient}");
+    .linear-gradient(@grid-hover-gradient);
     border-color: @grid-hover-border;
     color: @grid-hover-text;
     background-color: @grid-hover-bg;
 }
 .k-dropdowngrid-popup .k-item.k-state-selected {
-    .linear-gradient(~"@{grid-selected-gradient}");
+    .linear-gradient(@grid-selected-gradient);
     border-color: @grid-selected-border;
     color: @grid-selected-text;
     background-color: @grid-selected-bg;
@@ -2961,3 +2625,9 @@ textarea.k-textbox,
 .k-grid-list > .k-item.k-last > .k-spacer-cell {
     border-bottom-color: @grid-text;
 }
+
+
+
+
+// Themes
+@import "Default/tooltip/_theme.less";

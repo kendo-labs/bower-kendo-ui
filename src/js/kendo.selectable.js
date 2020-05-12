@@ -42,7 +42,7 @@
         var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECT = 'unselect', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up,label.k-checkbox-label.k-no-text,.k-icon.k-i-collapse,.k-icon.k-i-expand,span.k-numeric-wrap,.k-focusable', msie = kendo.support.browser.msie, supportEventDelegation = false;
         (function ($) {
             (function () {
-                $('<div class="parent"><span /></div>').on('click', '>*', function () {
+                $('<div class="parent"><span></span></div>').on('click', '>*', function () {
                     supportEventDelegation = true;
                 }).find('span').trigger('click').end().off();
             }());

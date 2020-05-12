@@ -33,7 +33,7 @@
         depends: ['mobile.pane']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.mobile.ui, Widget = ui.Widget, EXPANED_PANE_SHIM = '<div class=\'km-expanded-pane-shim\' />', View = ui.View;
+        var kendo = window.kendo, ui = kendo.mobile.ui, Widget = ui.Widget, EXPANED_PANE_SHIM = '<div class=\'km-expanded-pane-shim\'></div>', View = ui.View;
         var SplitView = View.extend({
             init: function (element, options) {
                 var that = this, pane, modalViews;

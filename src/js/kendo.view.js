@@ -172,7 +172,7 @@
                 }
             },
             _createElement: function () {
-                var that = this, wrapper = '<' + that.tagName + ' />', element, content;
+                var that = this, wrapper = '<' + that.tagName + '>', element, content;
                 try {
                     content = $(document.getElementById(that.content) || that.content);
                     if (content[0].tagName === SCRIPT) {

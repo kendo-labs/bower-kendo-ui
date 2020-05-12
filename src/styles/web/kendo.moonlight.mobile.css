@@ -5245,6 +5245,186 @@ body:before {
 .km-right .km-popup-arrow:before {
   border-width: 15px 15px 15px 0;
 }
+.k-messagebox-primary {
+  border-color: #fdefcd;
+  color: #7f5b02;
+  background-color: #fce9b8;
+}
+.k-messagebox-secondary {
+  border-color: #d3d4d6;
+  color: #11161b;
+  background-color: #c1c3c6;
+}
+.k-messagebox-tertiary {
+  border-color: #fff4ce;
+  color: #856904;
+  background-color: #fff0ba;
+}
+.k-messagebox-info {
+  border-color: #cee4eb;
+  color: #063e51;
+  background-color: #bbd9e3;
+}
+.k-messagebox-success {
+  border-color: #d5e7d8;
+  color: #16471f;
+  background-color: #c4dec8;
+}
+.k-messagebox-warning {
+  border-color: #fbebcd;
+  color: #7a5204;
+  background-color: #f9e4ba;
+}
+.k-messagebox-error {
+  border-color: #f2dcd7;
+  color: #632a1d;
+  background-color: #edcec7;
+}
+.k-messagebox-dark {
+  border-color: #cccccc;
+  color: #000000;
+  background-color: #b8b8b8;
+}
+.k-messagebox-light {
+  border-color: #ffffff;
+  color: #858585;
+  background-color: #ffffff;
+}
+.k-messagebox-inverse {
+  border-color: #ffffff;
+  color: #858585;
+  background-color: #ffffff;
+}
+.k-badge-primary {
+  border-color: #f4af03;
+  color: #000000;
+  background-color: #f4af03;
+}
+.k-badge-secondary {
+  border-color: #212a33;
+  color: #ffffff;
+  background-color: #212a33;
+}
+.k-badge-tertiary {
+  border-color: #ffca08;
+  color: #000000;
+  background-color: #ffca08;
+}
+.k-badge-info {
+  border-color: #0c779b;
+  color: #ffffff;
+  background-color: #0c779b;
+}
+.k-badge-success {
+  border-color: #2b893c;
+  color: #ffffff;
+  background-color: #2b893c;
+}
+.k-badge-warning {
+  border-color: #ea9d07;
+  color: #ffffff;
+  background-color: #ea9d07;
+}
+.k-badge-error {
+  border-color: #be5138;
+  color: #ffffff;
+  background-color: #be5138;
+}
+.k-badge-dark {
+  border-color: #000000;
+  color: #ffffff;
+  background-color: #000000;
+}
+.k-badge-light {
+  border-color: #ffffff;
+  color: #000000;
+  background-color: #ffffff;
+}
+.k-badge-inverse {
+  border-color: #ffffff;
+  color: #000000;
+  background-color: #ffffff;
+}
+.k-badge-outline-primary {
+  color: #f4af03;
+}
+.k-badge-outline-secondary {
+  color: #212a33;
+}
+.k-badge-outline-tertiary {
+  color: #ffca08;
+}
+.k-badge-outline-info {
+  color: #0c779b;
+}
+.k-badge-outline-success {
+  color: #2b893c;
+}
+.k-badge-outline-warning {
+  color: #ea9d07;
+}
+.k-badge-outline-error {
+  color: #be5138;
+}
+.k-badge-outline-dark {
+  color: #000000;
+}
+.k-badge-outline-light {
+  color: #ffffff;
+}
+.k-badge-outline-inverse {
+  color: #ffffff;
+}
+.k-tooltip-primary {
+  border-color: #f4af03;
+  color: #000000;
+  background-color: #f4af03;
+}
+.k-tooltip-secondary {
+  border-color: #212a33;
+  color: #ffffff;
+  background-color: #212a33;
+}
+.k-tooltip-tertiary {
+  border-color: #ffca08;
+  color: #000000;
+  background-color: #ffca08;
+}
+.k-tooltip-info {
+  border-color: #0c779b;
+  color: #ffffff;
+  background-color: #0c779b;
+}
+.k-tooltip-success {
+  border-color: #2b893c;
+  color: #ffffff;
+  background-color: #2b893c;
+}
+.k-tooltip-warning {
+  border-color: #ea9d07;
+  color: #ffffff;
+  background-color: #ea9d07;
+}
+.k-tooltip-error {
+  border-color: #be5138;
+  color: #ffffff;
+  background-color: #be5138;
+}
+.k-tooltip-dark {
+  border-color: #000000;
+  color: #ffffff;
+  background-color: #000000;
+}
+.k-tooltip-light {
+  border-color: #ffffff;
+  color: #000000;
+  background-color: #ffffff;
+}
+.k-tooltip-inverse {
+  border-color: #ffffff;
+  color: #000000;
+  background-color: #ffffff;
+}
 .km-buttongroup > *:first-child {
   border-radius: 3px 0 0 3px;
 }

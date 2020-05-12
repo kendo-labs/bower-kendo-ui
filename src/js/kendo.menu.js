@@ -187,7 +187,7 @@
             }
             if (!item.children(LINK_SELECTOR).length) {
                 item.contents().filter(function () {
-                    return !this.nodeName.match(excludedNodesRegExp) && !(this.nodeType == 3 && !$.trim(this.nodeValue));
+                    return !this.nodeName.match(excludedNodesRegExp) && !(this.nodeType == 3 && !kendo.trim(this.nodeValue));
                 }).wrapAll('<span class=\'' + LINK + '\'/>');
             }
             updateArrow(item);

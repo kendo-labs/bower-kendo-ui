@@ -223,6 +223,11 @@
                     if (options.anchor != BODY) {
                         that._showDirClass(animation);
                     }
+                    if (!element.is(':visible') && element.data('olddisplay') === undefined) {
+                        element.show();
+                        element.data('olddisplay', element.css('display'));
+                        element.hide();
+                    }
                     element.data(EFFECTS, animation.effects).kendoStop(true).kendoAnimate(animation).attr('aria-hidden', false);
                 }
             },
@@ -347,7 +352,7 @@
             _toggleResize: function (toggle) {
                 var method = toggle ? 'on' : 'off';
                 var eventNames = support.resize;
-                if (!(support.mobileOS.ios || support.mobileOS.android)) {
+                if (!(support.mobileOS.ios || support.mobileOS.android || support.browser.safari)) {
                     eventNames += ' ' + SCROLL;
                 }
                 if (toggle && !this.scrollableParents) {

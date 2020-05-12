@@ -134,8 +134,8 @@
                     options.visible = element.is(VISIBLE);
                 }
                 wrapper = that.wrapper = element.closest(KWINDOW);
-                if (!element.is('.k-content') || !wrapper[0]) {
-                    element.addClass('k-window-content k-content');
+                if (!element.is('.k-window-content') || !wrapper[0]) {
+                    element.addClass('k-window-content');
                     that._createWindow(element, options);
                     wrapper = that.wrapper = element.closest(KWINDOW);
                     that.title(that.options.title);
@@ -740,7 +740,7 @@
                     }
                     if (!wrapper.is(VISIBLE)) {
                         contentElement.css(OVERFLOW, HIDDEN);
-                        that.wrapper.find(TITLEBAR_BUTTONS).addClass('k-bare');
+                        that.wrapper.find(TITLEBAR_BUTTONS).addClass('k-flat');
                         wrapper.show().kendoStop().kendoAnimate({
                             effects: showOptions.effects,
                             duration: showOptions.duration,
@@ -808,7 +808,7 @@
                         }
                     });
                     this._removeOverlay();
-                    that.wrapper.find(TITLEBAR_BUTTONS).removeClass('k-bare');
+                    that.wrapper.find(TITLEBAR_BUTTONS).removeClass('k-flat');
                     wrapper.kendoStop().kendoAnimate({
                         effects: hideOptions.effects || showOptions.effects,
                         reverse: hideOptions.reverse === true,
@@ -1236,12 +1236,12 @@
                     contentHtml.css('overflow', 'hidden');
                 }
                 wrapper = $(templates.wrapper(options));
-                iframeSrcAttributes = contentHtml.find('iframe:not(.k-content)').map(function () {
+                iframeSrcAttributes = contentHtml.find('iframe:not(.k-content-frame)').map(function () {
                     var src = this.getAttribute('src');
                     this.src = '';
                     return src;
                 });
-                wrapper.toggleClass('k-rtl', isRtl).append(contentHtml).find('iframe:not(.k-content)').each(function (index) {
+                wrapper.toggleClass('k-rtl', isRtl).append(contentHtml).find('iframe:not(.k-content-frame)').each(function (index) {
                     this.src = iframeSrcAttributes[index];
                 });
                 if (this.containment) {
@@ -1261,10 +1261,10 @@
             }
         });
         templates = {
-            wrapper: template('<div class=\'k-widget k-window\' />'),
-            action: template('<a role=\'button\' href=\'\\#\' class=\'k-button k-bare k-button-icon k-window-action\' aria-label=\'#= name #\'>' + '<span class=\'k-icon k-i-#= name.toLowerCase() #\'></span>' + '</a>'),
-            titlebar: template('<div class=\'k-window-titlebar k-header\'>' + '<span class=\'k-window-title\'>#= title #</span>' + '<div class=\'k-window-actions\' />' + '</div>'),
-            overlay: '<div class=\'k-overlay\' />',
+            wrapper: template('<div class=\'k-widget k-window\'></div>'),
+            action: template('<a role=\'button\' href=\'\\#\' class=\'k-button k-flat k-button-icon k-window-action\' aria-label=\'#= name #\'>' + '<span class=\'k-icon k-i-#= name.toLowerCase() #\'></span>' + '</a>'),
+            titlebar: template('<div class=\'k-window-titlebar\'>' + '<span class=\'k-window-title\'>#= title #</span>' + '<div class=\'k-window-actions\'></div>' + '</div>'),
+            overlay: '<div class=\'k-overlay\'></div>',
             contentFrame: template('<iframe frameborder=\'0\' title=\'#= title #\' class=\'' + KCONTENTFRAME + '\' ' + 'src=\'#= content.url #\'>' + 'This page requires frames in order to show content' + '</iframe>'),
             resizeHandle: template('<div class=\'k-resize-handle k-resize-#= data #\'></div>')
         };

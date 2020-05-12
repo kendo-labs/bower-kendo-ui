@@ -85,7 +85,7 @@
         "justifyCenter": "Στοίχιση Κέντρο",
         "justifyLeft": "Στοίχιση Αριστερά",
         "justifyRight": "Στοίχιση Δεξιά",
-        "justifyFull": "Justify",
+        "justifyFull": "Ισάζω",
         "insertUnorderedList": "Τοποθετήστε μη διατεταγμένη λίστα",
         "insertOrderedList": "Τοποθετήστε διατεταγμένη λίστα",
         "indent": "Εσοχή",
@@ -870,7 +870,7 @@
           "justtifyLeft": "Ευθυγράμμιση Αριστερά",
           "justifyCenter": "Κέντρο",
           "justifyRight": "Ευθυγράμμιση Δεξιά",
-          "justifyFull": "Justify",
+          "justifyFull": "Ισάζω",
           "alignTop": "Ευθυγράμμιση Πάνω",
           "alignMiddle": "Ευθυγράμμιση Μέση",
           "alignBottom": "Ευθυγράμμιση Κάτω"

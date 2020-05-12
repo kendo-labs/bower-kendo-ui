@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.1.406'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.2.512'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2183,10 +2183,14 @@
                 that.angular('init', options);
                 Observable.fn.init.call(that);
                 var dataSource = options ? options.dataSource : null;
+                var props;
+                if (options) {
+                    props = (that.componentTypes || {})[(options || {}).componentType];
+                }
                 if (dataSource) {
                     options = extend({}, options, { dataSource: {} });
                 }
-                options = that.options = extend(true, {}, that.options, options);
+                options = that.options = extend(true, {}, that.options, that.defaults, props || {}, options);
                 if (dataSource) {
                     options.dataSource = dataSource;
                 }
@@ -2370,7 +2374,7 @@
                 return;
             }
             dataSource = parseOption(element, 'dataSource');
-            options = $.extend({}, parseOptions(element, widget.fn.options), options);
+            options = $.extend({}, parseOptions(element, $.extend({}, widget.fn.options, widget.fn.defaults)), options);
             if (dataSource) {
                 if (typeof dataSource === STRING) {
                     options.dataSource = kendo.getter(dataSource)(window);
@@ -2466,7 +2470,7 @@
                         leftRight = isRtl ? 'right' : 'left';
                         containerScrollLeft = container.scrollLeft();
                         webkitCorrection = browser.webkit ? !isRtl ? 0 : container[0].scrollWidth - container.width() - 2 * containerScrollLeft : 0;
-                        mask = $(kendo.format('<div class=\'{0}\'><span class=\'k-loading-text\'>{1}</span><div class=\'k-loading-image\'/><div class=\'k-loading-color\'/></div>', cssClass, kendo.ui.progress.messages.loading)).width(options.width).height(options.height).css('top', options.top).css(leftRight, Math.abs(containerScrollLeft) + webkitCorrection).prependTo(container);
+                        mask = $(kendo.format('<div class=\'{0}\'><span class=\'k-loading-text\'>{1}</span><div class=\'k-loading-image\'></div><div class=\'k-loading-color\'></div></div>', cssClass, kendo.ui.progress.messages.loading)).width(options.width).height(options.height).css('top', options.top).css(leftRight, Math.abs(containerScrollLeft) + webkitCorrection).prependTo(container);
                     }
                 } else if (mask) {
                     mask.remove();
@@ -2797,6 +2801,19 @@
             }
             return events;
         };
+        kendo.keyDownHandler = function (e, widget) {
+            var events = widget._events.kendoKeydown;
+            if (!events) {
+                return true;
+            }
+            events = events.slice();
+            e.sender = widget;
+            e.preventKendoKeydown = false;
+            for (var idx = 0, length = events.length; idx < length; idx++) {
+                events[idx].call(widget, e);
+            }
+            return !e.preventKendoKeydown;
+        };
         var on = $.fn.on;
         function kendoJQuery(selector, context) {
             return new kendoJQuery.fn.init(selector, context);
@@ -2838,6 +2855,18 @@
                         touchstart: MouseEventNormalizer.muteMouse,
                         touchend: MouseEventNormalizer.unMuteMouse
                     }, selector, { bustClick: bustClick });
+                }
+                if (arguments[0].indexOf('keydown') !== -1 && args[1] && args[1].options) {
+                    args[0] = events;
+                    var widget = args[1];
+                    var keyDownCallBack = args[args.length - 1];
+                    args[args.length - 1] = function (e) {
+                        if (kendo.keyDownHandler(e, widget)) {
+                            return keyDownCallBack.apply(this, [e]);
+                        }
+                    };
+                    on.apply(that, args);
+                    return that;
                 }
                 if (typeof callback === STRING) {
                     context = that.data('handler');
@@ -3442,6 +3471,42 @@
                 }
             }
         };
+        kendo.trim = function (value) {
+            if (!!value) {
+                return value.toString().trim();
+            } else {
+                return '';
+            }
+        };
+        kendo.getWidgetFocusableElement = function (element) {
+            var nextFocusable = element.closest(':kendoFocusable'), widgetInstance = kendo.widgetInstance(element), target;
+            if (nextFocusable.length) {
+                target = nextFocusable;
+            } else if (widgetInstance) {
+                target = widgetInstance instanceof kendo.ui.Editor ? $(widgetInstance.body) : widgetInstance.wrapper.find(':kendoFocusable').first();
+            } else {
+                target = element;
+            }
+            return target;
+        };
+        kendo.addAttribute = function (element, attribute, value) {
+            var current = element.attr(attribute) || '';
+            if (current.indexOf(value) < 0) {
+                element.attr(attribute, (current + ' ' + value).trim());
+            }
+        };
+        kendo.removeAttribute = function (element, attribute, value) {
+            var current = element.attr(attribute) || '';
+            element.attr(attribute, current.replace(value, '').trim());
+        };
+        kendo.toggleAttribute = function (element, attribute, value) {
+            var current = element.attr(attribute) || '';
+            if (current.indexOf(value) < 0) {
+                kendo.addAttribute(element, attribute, value);
+            } else {
+                kendo.removeAttribute(element, attribute, value);
+            }
+        };
         kendo.matchesMedia = function (mediaQuery) {
             var media = kendo._bootstrapToMedia(mediaQuery) || mediaQuery;
             return support.matchMedia && window.matchMedia(media).matches;
@@ -3633,6 +3698,9 @@
             var i = parseInt(Math.floor(Math.log(size) / Math.log(1024)), 10);
             return Math.round(size / Math.pow(1024, i), 2) + ' ' + sizes[i];
         };
+        kendo.selectorFromClasses = function (classes) {
+            return '.' + classes.split(' ').join('.');
+        };
         (function () {
             function postToProxy(dataURI, fileName, proxyURL, proxyTarget) {
                 var form = $('<form>').attr({
@@ -3712,6 +3780,25 @@
             });
             return observable;
         };
+        (function () {
+            kendo.defaults = kendo.defaults || {};
+            kendo.setDefaults = function (key, value) {
+                var path = key.split('.');
+                var curr = kendo.defaults;
+                key = path.pop();
+                path.forEach(function (part) {
+                    if (curr[part] === undefined) {
+                        curr[part] = {};
+                    }
+                    curr = curr[part];
+                });
+                if (value.constructor === Object) {
+                    curr[key] = deepExtend({}, curr[key], value);
+                } else {
+                    curr[key] = value;
+                }
+            };
+        }());
     }(jQuery, window));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {

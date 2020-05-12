@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.mobile.ui, Shim = ui.Shim, Widget = ui.Widget, BEFORE_OPEN = 'beforeOpen', OPEN = 'open', CLOSE = 'close', INIT = 'init', WRAP = '<div class="km-modalview-wrapper" />';
+        var kendo = window.kendo, ui = kendo.mobile.ui, Shim = ui.Shim, Widget = ui.Widget, BEFORE_OPEN = 'beforeOpen', OPEN = 'open', CLOSE = 'close', INIT = 'init', WRAP = '<div class="km-modalview-wrapper"></div>';
         var ModalView = ui.View.extend({
             init: function (element, options) {
                 var that = this;

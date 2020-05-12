@@ -740,7 +740,7 @@
                     tooltipTemplate = that.tooltipTemplate = kendo.template(tooltip.template);
                 }
                 $('.k-slider-tooltip').remove();
-                that.tooltipDiv = $('<div class=\'k-widget k-tooltip k-slider-tooltip\'><!-- --></div>').appendTo(document.body);
+                that.tooltipDiv = $('<div class=\'k-tooltip k-slider-tooltip\'><!-- --></div>').appendTo(document.body);
                 html = owner._getFormattedValue(that.val || owner.value(), that);
                 if (!that.type) {
                     colloutCssClass = 'k-callout-' + (owner._isHorizontal ? 's' : 'e');

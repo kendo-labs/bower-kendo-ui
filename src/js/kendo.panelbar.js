@@ -981,12 +981,12 @@
                     this._selected = item.attr(ARIA_SELECTED, true);
                 }
                 if (!item.children(LINKSELECTOR)[0]) {
-                    wrapElement = '<span class=\'' + LINK + '\'/>';
+                    wrapElement = '<span class=\'' + LINK + '\'></span>';
                     if (contentUrls && contentUrls[index] && item[0].parentNode == root) {
-                        wrapElement = '<a class="k-link k-header" href="' + contentUrls[index] + '"/>';
+                        wrapElement = '<a class="k-link k-header" href="' + contentUrls[index] + '"></a>';
                     }
                     item.contents().filter(function () {
-                        return !this.nodeName.match(excludedNodesRegExp) && !(this.nodeType == 3 && !$.trim(this.nodeValue));
+                        return !this.nodeName.match(excludedNodesRegExp) && !(this.nodeType == 3 && !kendo.trim(this.nodeValue.trim));
                     }).wrapAll(wrapElement);
                 }
                 if (item.parent('.k-panelbar')[0]) {

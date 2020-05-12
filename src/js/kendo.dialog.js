@@ -39,11 +39,11 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-content k-window-content k-dialog-content', KCONTENTSELECTOR = '.k-window-content', KCONTENT = '.k-content', KSCROLL = 'k-scroll', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = KDIALOGTITLE + 'bar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', TOUCHSTART = 'touchstart', TOUCHMOVE = 'touchmove', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', WIDTH = 'width', SIZE = {
+        var kendo = window.kendo, Widget = kendo.ui.Widget, TabKeyTrap = kendo.ui.Popup.TabKeyTrap, proxy = $.proxy, template = kendo.template, keys = kendo.keys, isFunction = $.isFunction, NS = 'kendoWindow', KDIALOG = '.k-dialog', KWINDOW = '.k-window', KICONCLOSE = '.k-dialog-close', KCONTENTCLASS = 'k-window-content k-dialog-content', KCONTENTSELECTOR = '.k-window-content', KSCROLL = 'k-scroll', KTITLELESS = 'k-dialog-titleless', KDIALOGTITLE = '.k-dialog-title', KDIALOGTITLEBAR = KDIALOGTITLE + 'bar', KBUTTONGROUP = '.k-dialog-buttongroup', KBUTTON = '.k-button', KALERT = 'k-alert', KCONFIRM = 'k-confirm', KPROMPT = 'k-prompt', KTEXTBOX = '.k-textbox', KOVERLAY = '.k-overlay', VISIBLE = ':visible', ZINDEX = 'zIndex', BODY = 'body', INITOPEN = 'initOpen', TOUCHSTART = 'touchstart', TOUCHMOVE = 'touchmove', OPEN = 'open', CLOSE = 'close', SHOW = 'show', HIDE = 'hide', SIZE = {
                 small: 'k-window-sm',
                 medium: 'k-window-md',
                 large: 'k-window-lg'
-            }, HIDDEN = 'hidden', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', DATAHTMLTAPYRULE = 'tap-y', HUNDREDPERCENT = 100, CSSFLEXBOX = kendo.support.cssFlexbox, messages = {
+            }, HIDDEN = 'hidden', OVERFLOW = 'overflow', DATADOCOVERFLOWRULE = 'original-overflow-rule', DATAHTMLTAPYRULE = 'tap-y', messages = {
                 okText: 'OK',
                 cancel: 'Cancel',
                 promptInput: 'Input'
@@ -285,34 +285,19 @@
                 var buttonLayout = isStretchedLayout ? 'stretched' : 'normal';
                 var actionbar = $(templates.actionbar({ buttonLayout: buttonLayout }));
                 this._addButtons(actionbar);
-                if (isStretchedLayout && !CSSFLEXBOX) {
-                    this._normalizeButtonSize(actionbar);
-                }
                 wrapper.append(actionbar);
             },
             _addButtons: function (actionbar) {
-                var that = this, o = that.options, actionClick = proxy(that._actionClick, that), actionKeyHandler = proxy(that._actionKeyHandler, that), actions = that.options.actions, length = actions.length, buttonSize = Math.round(HUNDREDPERCENT / length), action, text;
+                var that = this, actionClick = proxy(that._actionClick, that), actionKeyHandler = proxy(that._actionKeyHandler, that), actions = that.options.actions, length = actions.length, action, text;
                 for (var i = 0; i < length; i++) {
                     action = actions[i];
                     text = that._mergeTextWithOptions(action);
-                    var btn = $(templates.action(action)).autoApplyNS(NS).html(text).appendTo(actionbar).data('action', action.action).on('click', actionClick).on('keydown', actionKeyHandler);
-                    if (o.buttonLayout === 'stretched' && !CSSFLEXBOX) {
-                        if (i == length - 1) {
-                            buttonSize = HUNDREDPERCENT - i * buttonSize;
-                        }
-                        btn.css(WIDTH, buttonSize + '%');
-                    }
+                    $(templates.action(action)).autoApplyNS(NS).html(text).appendTo(actionbar).data('action', action.action).on('click', actionClick).on('keydown', actionKeyHandler);
                 }
             },
             _mergeTextWithOptions: function (action) {
                 var text = action.text;
                 return text ? template(text)(this.options) : '';
-            },
-            _normalizeButtonSize: function (actionbar) {
-                var that = this, options = that.options, lastButton = actionbar.children(KBUTTON + ':last'), currentSize = parseFloat(lastButton[0] ? lastButton[0].style[WIDTH] : 0), difference = HUNDREDPERCENT - options.actions.length * currentSize;
-                if (difference > 0) {
-                    lastButton.css(WIDTH, currentSize + difference + '%');
-                }
             },
             _tabindex: function (target) {
                 var that = this;
@@ -581,7 +566,7 @@
                 return zStack;
             },
             _object: function (element) {
-                var content = element.children(KCONTENT);
+                var content = element.children(KCONTENTSELECTOR);
                 var widget = kendo.widgetInstance(content);
                 if (widget) {
                     return widget;
@@ -623,7 +608,7 @@
                 return that;
             },
             content: function (html, data) {
-                var that = this, content = that.wrapper.children(KCONTENT);
+                var that = this, content = that.wrapper.children(KCONTENTSELECTOR);
                 if (!defined(html)) {
                     return content.html();
                 }
@@ -823,16 +808,16 @@
             return promptDialog.result;
         };
         templates = {
-            wrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'dialog\' />'),
+            wrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'dialog\'></div>'),
             action: template('<button type=\'button\' class=\'k-button# if (data.primary) { # k-primary# } role=\'button\' #\'></button>'),
-            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-header\'>' + '<span class=\'k-window-title k-dialog-title\'>#: title #</span>' + '<div class=\'k-window-actions k-dialog-actions\' />' + '</div>'),
-            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button k-bare k-button-icon k-window-action k-dialog-action k-dialog-close\' title=\'#: messages.close #\' aria-label=\'#: messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
-            actionbar: template('<div class=\'k-dialog-buttongroup k-dialog-button-layout-#: buttonLayout #\' role=\'toolbar\' />'),
-            overlay: '<div class=\'k-overlay\' />',
-            alertWrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'alertdialog\' />'),
-            alert: '<div />',
-            confirm: '<div />',
-            prompt: '<div />',
+            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar\'>' + '<span class=\'k-window-title k-dialog-title\'>#: title #</span>' + '<div class=\'k-window-actions k-dialog-actions\'></div>' + '</div>'),
+            close: template('<a role=\'button\' href=\'\\#\' class=\'k-button k-flat k-button-icon k-window-action k-dialog-action k-dialog-close\' title=\'#: messages.close #\' aria-label=\'#: messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
+            actionbar: template('<div class=\'k-dialog-buttongroup k-dialog-button-layout-#: buttonLayout #\' role=\'toolbar\'></div>'),
+            overlay: '<div class=\'k-overlay\'></div>',
+            alertWrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'alertdialog\'></div>'),
+            alert: '<div></div>',
+            confirm: '<div></div>',
+            prompt: '<div></div>',
             promptInputContainer: template('<div class=\'k-prompt-container\'><input type=\'text\' class=\'k-textbox\' title=\'#: messages.promptInput #\' aria-label=\'#: messages.promptInput #\' /></div>')
         };
         kendo.alert = kendoAlert;

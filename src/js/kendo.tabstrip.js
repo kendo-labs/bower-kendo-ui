@@ -39,7 +39,7 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, map = $.map, each = $.each, trim = $.trim, extend = $.extend, isFunction = kendo.isFunction, template = kendo.template, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, Widget = ui.Widget, excludedNodesRegExp = /^(a|div)$/i, NS = '.kendoTabStrip', IMG = 'img', HREF = 'href', PREV = 'prev', NEXT = 'next', SHOW = 'show', LINK = 'k-link', LAST = 'k-last', CLICK = 'click', ERROR = 'error', EMPTY = ':empty', IMAGE = 'k-image', FIRST = 'k-first', SELECT = 'select', ACTIVATE = 'activate', CONTENT = 'k-content', CONTENTURL = 'contentUrl', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', DISABLEDSTATE = 'k-state-disabled', DEFAULTSTATE = 'k-state-default', ACTIVESTATE = 'k-state-active', FOCUSEDSTATE = 'k-state-focused', HOVERSTATE = 'k-state-hover', TABONTOP = 'k-tab-on-top', NAVIGATABLEITEMS = '.k-item:not(.' + DISABLEDSTATE + ')', KEYBOARDNAVIGATABLEITEMS = '.k-item', HOVERABLEITEMS = '.k-tabstrip-items > ' + NAVIGATABLEITEMS + ':not(.' + ACTIVESTATE + ')', DEFAULTDISTANCE = 200, templates = {
+        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, map = $.map, each = $.each, trim = kendo.trim, extend = $.extend, isFunction = kendo.isFunction, template = kendo.template, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, Widget = ui.Widget, excludedNodesRegExp = /^(a|div)$/i, NS = '.kendoTabStrip', IMG = 'img', HREF = 'href', PREV = 'prev', NEXT = 'next', SHOW = 'show', LINK = 'k-link', LAST = 'k-last', CLICK = 'click', ERROR = 'error', EMPTY = ':empty', IMAGE = 'k-image', FIRST = 'k-first', SELECT = 'select', ACTIVATE = 'activate', CONTENT = 'k-content', CONTENTURL = 'contentUrl', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', DISABLEDSTATE = 'k-state-disabled', DEFAULTSTATE = 'k-state-default', ACTIVESTATE = 'k-state-active', FOCUSEDSTATE = 'k-state-focused', HOVERSTATE = 'k-state-hover', TABONTOP = 'k-tab-on-top', NAVIGATABLEITEMS = '.k-item:not(.' + DISABLEDSTATE + ')', KEYBOARDNAVIGATABLEITEMS = '.k-item', HOVERABLEITEMS = '.k-tabstrip-items > ' + NAVIGATABLEITEMS + ':not(.' + ACTIVESTATE + ')', DEFAULTDISTANCE = 200, templates = {
                 content: template('<div class=\'k-content\'#= contentAttributes(data) # role=\'tabpanel\'>#= content(item) #</div>'),
                 itemWrapper: template('<#= tag(item) # class=\'k-link\'#= contentUrl(item) ##= textAttributes(item) #>' + '#= image(item) ##= sprite(item) ##= text(item) #' + '</#= tag(item) #>'),
                 item: template('<li class=\'#= wrapperCssClass(group, item) #\' role=\'tab\' #=item.active ? "aria-selected=\'true\'" : \'\'#>' + '#= itemWrapper(data) #' + '</li>'),
@@ -106,7 +106,7 @@
             tabs.filter(':last-child').addClass(LAST);
         }
         function scrollButtonHtml(buttonClass, iconClass) {
-            return '<span class=\'k-button k-button-icon k-bare k-tabstrip-' + buttonClass + '\' unselectable=\'on\'><span class=\'k-icon ' + iconClass + '\'></span></span>';
+            return '<span class=\'k-button k-button-icon k-flat k-tabstrip-' + buttonClass + '\' unselectable=\'on\'><span class=\'k-icon ' + iconClass + '\'></span></span>';
         }
         var TabStrip = Widget.extend({
             init: function (element, options) {
@@ -344,7 +344,7 @@
                 if (value !== undefined) {
                     if (value != that.value()) {
                         that.tabGroup.children().each(function () {
-                            if ($.trim($(this).text()) == value) {
+                            if (kendo.trim($(this).text()) == value) {
                                 that.select(this);
                             }
                         });
@@ -767,8 +767,8 @@
                     if (tabGroupScrollWidth > wrapperOffsetWidth && !that._scrollableModeActive) {
                         that._nowScrollingTabs = false;
                         that._isRtl = kendo.support.isRtl(that.element);
-                        var mouseDown = kendo.support.mobileOS ? 'touchstart' : 'mousedown';
-                        var mouseUp = kendo.support.mobileOS ? 'touchend' : 'mouseup';
+                        var mouseDown = kendo.support.touch ? 'touchstart' : 'mousedown';
+                        var mouseUp = kendo.support.touch ? 'touchend' : 'mouseup';
                         var browser = kendo.support.browser;
                         var isRtlScrollDirection = that._isRtl && !browser.msie && !browser.edge;
                         that.wrapper.append(scrollButtonHtml('prev', 'k-i-arrow-60-left') + scrollButtonHtml('next', 'k-i-arrow-60-right'));

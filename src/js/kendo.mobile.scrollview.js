@@ -64,7 +64,7 @@
             _refresh: function (e) {
                 var pageHTML = '';
                 for (var idx = 0; idx < e.pageCount; idx++) {
-                    pageHTML += '<li/>';
+                    pageHTML += '<li></li>';
                 }
                 this.element.html(pageHTML);
                 this.items().eq(e.page).addClass(className(CURRENT_PAGE_CLASS));

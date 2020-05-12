@@ -34,7 +34,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.mobile.ui, Popup = kendo.ui.Popup, SHIM = '<div class="km-shim"/>', HIDE = 'hide', Widget = ui.Widget;
+        var kendo = window.kendo, ui = kendo.mobile.ui, Popup = kendo.ui.Popup, SHIM = '<div class="km-shim"></div>', HIDE = 'hide', Widget = ui.Widget;
         var Shim = Widget.extend({
             init: function (element, options) {
                 var that = this, app = kendo.mobile.application, os = kendo.support.mobileOS, osname = app ? app.os.name : os ? os.name : 'ios', ioswp = osname === 'ios' || osname === 'wp' || (app ? app.os.skin : false), bb = osname === 'blackberry', align = options.align || (ioswp ? 'bottom center' : bb ? 'center right' : 'center center'), position = options.position || (ioswp ? 'bottom center' : bb ? 'center right' : 'center center'), effect = options.effect || (ioswp ? 'slideIn:up' : bb ? 'slideIn:left' : 'fade:in'), shim = $(SHIM).handler(that).hide();

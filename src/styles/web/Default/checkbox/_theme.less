@@ -37,6 +37,13 @@
 }
 
 
+// Invalid
+.k-checkbox.k-invalid,
+.k-checkbox.k-state-invalid {
+    border-color: @checkbox-invalid-border;
+}
+
+
 // Hover state
 .k-checkbox:hover {
     .fill(
@@ -95,11 +102,4 @@
         @checkbox-disabled-checked-bg,
         @checkbox-disabled-checked-border
     );
-}
-
-
-// Invalid
-.k-checkbox.k-invalid,
-.k-checkbox.k-state-invalid {
-    border-color: @checkbox-invalid-border;
 }

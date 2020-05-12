@@ -23,14 +23,20 @@
 
 */
 (function (f, define) {
-    define('kendo.maskedtextbox', ['kendo.core'], f);
+    define('kendo.maskedtextbox', [
+        'kendo.core',
+        'kendo.floatinglabel'
+    ], f);
 }(function () {
     var __meta__ = {
         id: 'maskedtextbox',
         name: 'MaskedTextBox',
         category: 'web',
         description: 'The MaskedTextBox widget allows to specify a mask type on an input field.',
-        depends: ['core']
+        depends: [
+            'core',
+            'floatinglabel'
+        ]
     };
     (function ($, undefined) {
         var global = window;
@@ -41,8 +47,10 @@
         var ui = kendo.ui;
         var Widget = ui.Widget;
         var NS = '.kendoMaskedTextBox';
+        var isPlainObject = $.isPlainObject;
         var proxy = $.proxy;
         var setTimeout = window.setTimeout;
+        var LABELCLASSES = 'k-label k-input-label';
         var STATEDISABLED = 'k-state-disabled';
         var STATEINVALID = 'k-state-invalid';
         var DISABLED = 'disabled';
@@ -107,6 +115,7 @@
                 }
                 that.value(that.options.value || element.val());
                 that._validationIcon = $('<span class=\'k-icon k-i-warning\'></span>').insertAfter(element);
+                that._label();
                 kendo.notify(that);
             },
             options: {
@@ -117,7 +126,8 @@
                 culture: '',
                 rules: {},
                 value: '',
-                mask: ''
+                mask: '',
+                label: null
             },
             events: [CHANGE],
             rules: {
@@ -142,6 +152,9 @@
             },
             destroy: function () {
                 var that = this;
+                if (that.floatingLabel) {
+                    that.floatingLabel.destroy();
+                }
                 that.element.off(NS);
                 if (that._formElement) {
                     that._formElement.off('reset', that._resetHandler);
@@ -194,16 +207,24 @@
                 }
             },
             readonly: function (readonly) {
+                var that = this;
                 this._editable({
                     readonly: readonly === undefined ? true : readonly,
                     disable: false
                 });
+                if (that.floatingLabel) {
+                    that.floatingLabel.readonly(readonly === undefined ? true : readonly);
+                }
             },
             enable: function (enable) {
+                var that = this;
                 this._editable({
                     readonly: false,
                     disable: !(enable = enable === undefined ? true : enable)
                 });
+                if (that.floatingLabel) {
+                    that.floatingLabel.enable(enable = enable === undefined ? true : enable);
+                }
             },
             _bindInput: function () {
                 var that = this;
@@ -458,6 +479,33 @@
                 }
                 this._unmaskedValue = result;
                 return result;
+            },
+            _label: function () {
+                var that = this;
+                var element = that.element;
+                var options = that.options;
+                var id = element.attr('id');
+                var floating;
+                var labelText;
+                if (options.label !== null) {
+                    floating = isPlainObject(options.label) ? options.label.floating : false;
+                    labelText = isPlainObject(options.label) ? options.label.content : options.label;
+                    if (floating) {
+                        that._floatingLabelContainer = that.wrapper.wrap('<span></span>').parent();
+                        that.floatingLabel = new kendo.ui.FloatingLabel(that._floatingLabelContainer, { widget: that });
+                    }
+                    if (kendo.isFunction(labelText)) {
+                        labelText = labelText.call(that);
+                    }
+                    if (!labelText) {
+                        labelText = '';
+                    }
+                    if (!id) {
+                        id = options.name + '_' + kendo.guid();
+                        element.attr('id', id);
+                    }
+                    that._inputLabel = $('<label class=\'' + LABELCLASSES + '\' for=\'' + id + '\'>' + labelText + '</label>\'').insertBefore(that.wrapper);
+                }
             },
             _wrapper: function () {
                 var that = this;

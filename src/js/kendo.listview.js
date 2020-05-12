@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, CHANGE = 'change', CANCEL = 'cancel', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', Widget = kendo.ui.Widget, keys = kendo.keys, FOCUSSELECTOR = '>*:not(.k-loading-mask)', PROGRESS = 'progress', ERROR = 'error', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', KEDITITEM = 'k-edit-item', EDIT = 'edit', REMOVE = 'remove', SAVE = 'save', MOUSEDOWN = 'mousedown', CLICK = 'click', TOUCHSTART = 'touchstart', NS = '.kendoListView', proxy = $.proxy, activeElement = kendo._activeElement, progress = kendo.ui.progress, DataSource = kendo.data.DataSource;
+        var kendo = window.kendo, CHANGE = 'change', KENDO_KEYDOWN = 'kendoKeydown', CANCEL = 'cancel', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', Widget = kendo.ui.Widget, keys = kendo.keys, EMPTY_STRING = '', FOCUSSELECTOR = '.k-listview-content > *:not(.k-loading-mask)', PROGRESS = 'progress', ERROR = 'error', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', KEDITITEM = 'k-edit-item', EDIT = 'edit', REMOVE = 'remove', SAVE = 'save', MOUSEDOWN = 'mousedown', CLICK = 'click', TOUCHSTART = 'touchstart', NS = '.kendoListView', proxy = $.proxy, activeElement = kendo._activeElement, progress = kendo.ui.progress, DataSource = kendo.data.DataSource;
         var ListView = kendo.ui.DataBoundWidget.extend({
             init: function (element, options) {
                 var that = this;
@@ -63,6 +63,7 @@
                     that._itemId = element[0].id + '_lv_active';
                 }
                 that._element();
+                that._layout();
                 that._dataSource();
                 that._templates();
                 that._navigatable();
@@ -82,7 +83,8 @@
                 DATABOUND,
                 EDIT,
                 REMOVE,
-                SAVE
+                SAVE,
+                KENDO_KEYDOWN
             ],
             options: {
                 name: 'ListView',
@@ -90,12 +92,22 @@
                 selectable: false,
                 navigatable: false,
                 height: null,
-                template: '',
-                altTemplate: '',
-                editTemplate: ''
+                template: EMPTY_STRING,
+                altTemplate: EMPTY_STRING,
+                editTemplate: EMPTY_STRING,
+                contentTemplate: '<div data-content=\'true\' />',
+                bordered: true,
+                borders: '',
+                layout: '',
+                flex: {
+                    direction: 'row',
+                    wrap: 'nowrap'
+                },
+                grid: {}
             },
             setOptions: function (options) {
                 Widget.fn.setOptions.call(this, options);
+                this._layout();
                 this._templates();
                 if (this.selectable) {
                     this.selectable.destroy();
@@ -105,15 +117,15 @@
             },
             _templates: function () {
                 var options = this.options;
-                this.template = kendo.template(options.template || '');
+                this.template = kendo.template(options.template || EMPTY_STRING);
                 this.altTemplate = kendo.template(options.altTemplate || options.template);
-                this.editTemplate = kendo.template(options.editTemplate || '');
+                this.editTemplate = kendo.template(options.editTemplate || EMPTY_STRING);
             },
             _item: function (action) {
-                return this.element.children()[action]();
+                return this.content.children()[action]();
             },
             items: function () {
-                return this.element.children();
+                return this.content.children();
             },
             dataItem: function (element) {
                 var attr = kendo.attr('uid');
@@ -143,18 +155,77 @@
                 that.dataSource = DataSource.create(that.options.dataSource).bind(CHANGE, that._refreshHandler).bind(PROGRESS, that._progressHandler).bind(ERROR, that._errorHandler);
             },
             _progress: function (toggle) {
-                var element = this.element;
+                var element = this.content;
                 progress(element, toggle, { opacity: true });
             },
             _error: function () {
-                progress(this.element, false);
+                progress(this.content, false);
             },
             _element: function () {
-                var height = this.options.height;
+                var options = this.options;
+                var height = options.height;
                 this.element.addClass('k-widget k-listview').attr('role', 'listbox');
+                this.content = $('<div />').appendTo(this.element);
                 if (height) {
                     this.element.css('height', height);
                 }
+            },
+            _layout: function () {
+                var that = this;
+                var options = that.options;
+                var flex = options.flex;
+                var grid = options.grid;
+                var element = that.element;
+                var elementClassNames = [
+                    'k-widget',
+                    'k-listview'
+                ];
+                var content = that.content;
+                var contentClassNames = ['k-listview-content'];
+                element.add(content).removeClass(function (index, className) {
+                    if (className.indexOf('k-') >= 0) {
+                        return true;
+                    }
+                });
+                if (options.bordered === true) {
+                    elementClassNames.push('k-listview-bordered');
+                }
+                if (typeof options.borders === 'string' && options.borders !== EMPTY_STRING) {
+                    elementClassNames.push('k-listview-borders-' + options.borders);
+                }
+                if (typeof options.contentPadding === 'string' && options.contentPadding !== EMPTY_STRING) {
+                    contentClassNames.push('k-listview-content-padding-' + options.contentPadding);
+                }
+                if (typeof options.layout === 'string' && options.layout !== EMPTY_STRING) {
+                    contentClassNames.push('k-d-' + options.layout);
+                }
+                if (options.layout === 'flex' && typeof flex === 'object') {
+                    if (typeof flex.direction === 'string' && flex.direction !== '') {
+                        contentClassNames.push('k-flex-' + flex.direction);
+                    }
+                    if (typeof flex.wrap === 'string' && flex.wrap !== '') {
+                        contentClassNames.push('k-flex-' + flex.wrap);
+                    }
+                }
+                if (options.layout === 'grid' && typeof grid === 'object') {
+                    if (typeof grid.cols === 'number') {
+                        content.css('grid-template-columns', 'repeat(' + grid.cols + ', 1fr)');
+                    } else if (typeof grid.cols === 'string') {
+                        content.css('grid-template-columns', grid.cols);
+                    }
+                    if (typeof grid.rows === 'number') {
+                        content.css('grid-template-rows', 'repeat(' + grid.rows + ', ' + (grid.rowHeight !== undefined ? grid.rowHeight : '1fr') + ')');
+                    } else if (typeof grid.rows === 'string') {
+                        content.css('grid-template-rows', grid.rows);
+                    }
+                    if (typeof grid.gutter === 'number') {
+                        content.css('grid-gap', grid.gutter);
+                    } else if (typeof grid.gutter === 'string') {
+                        content.css('grid-gap', grid.gutter);
+                    }
+                }
+                that.element.addClass(elementClassNames.join(' '));
+                that.content.addClass(contentClassNames.join(' '));
             },
             refresh: function (e) {
                 var that = this, view = that.dataSource.view(), data, items, item, html = '', idx, length, template = that.template, altTemplate = that.altTemplate, active = activeElement(), endlessAppend = that._endlessFetchInProgress, index = endlessAppend ? that._skipRerenderItemsCount : 0, scrollable = that.options.scrollable;
@@ -204,15 +275,15 @@
                     }
                 }
                 if (endlessAppend) {
-                    that.element.append(html);
+                    that.content.append(html);
                 } else {
-                    that.element.html(html);
+                    that.content.html(html);
                 }
                 items = that.items().not('.k-loading-mask');
                 for (idx = index, length = view.length; idx < length; idx++) {
                     items.eq(idx).attr(kendo.attr('uid'), view[idx].uid).attr('role', 'option').attr('aria-selected', 'false');
                 }
-                if (that.element[0] === active && that.options.navigatable) {
+                if (that.content[0] === active && that.options.navigatable) {
                     if (that._focusNext) {
                         that.current(that.current().next());
                     } else {
@@ -282,14 +353,14 @@
                 var that = this;
                 var scrollable = that.options.scrollable;
                 if (scrollable) {
-                    that.element.css({
+                    that.content.css({
                         'overflow-y': 'scroll',
                         'position': 'relative',
                         '-webkit-overflow-scrolling': 'touch'
                     });
                     if (scrollable === 'endless') {
                         var originalPageSize = that._endlessPageSize = that.dataSource.options.pageSize;
-                        that.element.off('scroll' + NS).on('scroll' + NS, function () {
+                        that.content.off('scroll' + NS).on('scroll' + NS, function () {
                             if (this.scrollTop + this.clientHeight - this.scrollHeight >= -15 && !that._endlessFetchInProgress && that._endlessPageSize < that.dataSource.total()) {
                                 that._skipRerenderItemsCount = that._endlessPageSize;
                                 that._endlessPageSize = that._skipRerenderItemsCount + originalPageSize;
@@ -322,9 +393,9 @@
                 that._current = candidate;
             },
             _scrollTo: function (element) {
-                var that = this, container, UseJQueryoffset = false, SCROLL = 'scroll';
-                if (that.wrapper.css('overflow') == 'auto' || that.wrapper.css('overflow') == SCROLL || that.wrapper.css('overflow-y') == SCROLL) {
-                    container = that.wrapper[0];
+                var that = this, content = that.content, container, UseJQueryoffset = false, SCROLL = 'scroll';
+                if (content.css('overflow') === 'auto' || content.css('overflow') === SCROLL || content.css('overflow-y') === SCROLL) {
+                    container = content[0];
                 } else {
                     container = window;
                     UseJQueryoffset = true;
@@ -341,9 +412,9 @@
                 scrollDirectionFunc('Left', 'Width');
             },
             _navigatable: function () {
-                var that = this, navigatable = that.options.navigatable, element = that.element, clickCallback = function (e) {
+                var that = this, navigatable = that.options.navigatable, element = that.element, content = that.content, clickCallback = function (e) {
                         that.current($(e.currentTarget));
-                        if (!$(e.target).is(':button,a,:input,a>.k-icon,textarea')) {
+                        if (!$(e.target).is(':button, a, :input, a > .k-icon, textarea')) {
                             kendo.focusElement(element);
                         }
                     };
@@ -359,12 +430,12 @@
                         if (that._current) {
                             that._current.removeClass(FOCUSED);
                         }
-                    }).on('keydown' + NS, function (e) {
-                        var key = e.keyCode, current = that.current(), target = $(e.target), canHandle = !target.is(':button,textarea,a,a>.t-icon,input'), isTextBox = target.is(':text,:password'), preventDefault = kendo.preventDefault, editItem = element.find('.' + KEDITITEM), active = activeElement(), idx, scrollable = that.options.scrollable;
-                        if (!canHandle && !isTextBox && keys.ESC != key || isTextBox && keys.ESC != key && keys.ENTER != key) {
+                    }).on('keydown' + NS, that, function (e) {
+                        var key = e.keyCode, current = that.current(), target = $(e.target), canHandle = !target.is(':button, textarea, a, a > .t-icon, input'), isTextBox = target.is(':text, :password'), preventDefault = kendo.preventDefault, editItem = content.find('.' + KEDITITEM), active = activeElement(), idx, scrollable = that.options.scrollable;
+                        if (!canHandle && !isTextBox && key !== keys.ESC || isTextBox && key !== keys.ESC && key !== keys.ENTER) {
                             return;
                         }
-                        if (keys.UP === key || keys.LEFT === key) {
+                        if (key === keys.UP || key === keys.LEFT) {
                             if (current && current[0]) {
                                 current = current.prev();
                             }
@@ -374,10 +445,11 @@
                                 that.current(that._item('last'));
                             }
                             preventDefault(e);
-                        } else if (keys.DOWN === key || keys.RIGHT === key) {
+                        }
+                        if (key === keys.DOWN || key === keys.RIGHT) {
                             if (scrollable) {
                                 if (that.options.scrollable === 'endless' && !current.next().length) {
-                                    that.element[0].scrollTop = that.element[0].scrollHeight;
+                                    that.content[0].scrollTop = that.content[0].scrollHeight;
                                     that._focusNext = true;
                                 } else {
                                     current = current.next();
@@ -390,21 +462,26 @@
                                 that.current(!current || !current[0] ? that._item('first') : current);
                             }
                             preventDefault(e);
-                        } else if (keys.PAGEUP === key) {
+                        }
+                        if (key === keys.PAGEUP) {
                             that.current(null);
                             that.dataSource.page(that.dataSource.page() - 1);
                             preventDefault(e);
-                        } else if (keys.PAGEDOWN === key) {
+                        }
+                        if (key === keys.PAGEDOWN) {
                             that.current(null);
                             that.dataSource.page(that.dataSource.page() + 1);
                             preventDefault(e);
-                        } else if (keys.HOME === key) {
+                        }
+                        if (key === keys.HOME) {
                             that.current(that._item('first'));
                             preventDefault(e);
-                        } else if (keys.END === key) {
+                        }
+                        if (key === keys.END) {
                             that.current(that._item('last'));
                             preventDefault(e);
-                        } else if (keys.ENTER === key) {
+                        }
+                        if (key === keys.ENTER) {
                             if (editItem.length !== 0 && (canHandle || isTextBox)) {
                                 idx = that.items().index(editItem);
                                 if (active) {
@@ -419,8 +496,9 @@
                             } else if (that.options.editTemplate !== '') {
                                 that.edit(current);
                             }
-                        } else if (keys.ESC === key) {
-                            editItem = element.find('.' + KEDITITEM);
+                        }
+                        if (key === keys.ESC) {
+                            editItem = content.find('.' + KEDITITEM);
                             if (editItem.length === 0) {
                                 return;
                             }
@@ -563,25 +641,25 @@
             },
             _crudHandlers: function () {
                 var that = this, mousedownNs = MOUSEDOWN + NS, touchstartNs = TOUCHSTART + NS, clickNs = CLICK + NS;
-                that.element.on(mousedownNs + ' ' + touchstartNs, '.k-edit-button', function (e) {
+                that.content.on(mousedownNs + ' ' + touchstartNs, '.k-edit-button', function (e) {
                     e.preventDefault();
                     var item = $(this).closest('[' + kendo.attr('uid') + ']');
                     setTimeout(function () {
                         that.edit(item);
                     });
                 });
-                that.element.on(mousedownNs + ' ' + touchstartNs, '.k-delete-button', function (e) {
+                that.content.on(mousedownNs + ' ' + touchstartNs, '.k-delete-button', function (e) {
                     e.preventDefault();
                     var item = $(this).closest('[' + kendo.attr('uid') + ']');
                     setTimeout(function () {
                         that.remove(item);
                     });
                 });
-                that.element.on(clickNs, '.k-update-button', function (e) {
+                that.content.on(clickNs, '.k-update-button', function (e) {
                     that.save();
                     e.preventDefault();
                 });
-                that.element.on(clickNs, '.k-cancel-button', function (e) {
+                that.content.on(clickNs, '.k-cancel-button', function (e) {
                     that.cancel();
                     e.preventDefault();
                 });
@@ -592,6 +670,7 @@
                 that._unbindDataSource();
                 that._destroyEditable();
                 that.element.off(NS);
+                that.content.off(NS);
                 that._endlessFetchInProgress = that._endlessPageSize = that._skipRerenderItemsCount = that._focusNext = null;
                 if (that.pager) {
                     that.pager.destroy();

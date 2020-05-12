@@ -209,7 +209,8 @@ $.extend(true, kendo.ui.Grid.prototype.options.messages,{
     "pdf": "Exporter vers PDF",
     "select": "Sélectionner",
     "cancel": "Annuler les modifications",
-    "save": "Enregistrer les modifications"
+    "save": "Enregistrer les modifications",
+    "search": "Recherche"
   },
   "editable": {
     "confirmation": "Êtes-vous sûr de vouloir supprimer cet enregistrement?",
@@ -599,6 +600,16 @@ if (kendo.ui.ColorPicker) {
       "cancel": "Annuler",
       "noColor": "aucune couleur",
       "clearColor": "Supprimer la couleur"
+  });
+}
+
+/* Numeric text box messages */
+
+if (kendo.ui.NumericTextBox) {
+  kendo.ui.NumericTextBox.prototype.options =
+  $.extend(true, kendo.ui.NumericTextBox.prototype.options, {
+    "upArrowText": "Augmenter la valeur",
+    "downArrowText": "Diminuer la valeur"
   });
 }
 

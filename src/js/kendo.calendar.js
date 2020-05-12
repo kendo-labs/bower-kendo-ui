@@ -44,10 +44,12 @@
                 year: 1,
                 decade: 2,
                 century: 3
-            };
+            }, HEADERSELECTOR = '.k-header, .k-calendar-header', CLASSIC_HEADER_TEMPLATE = '<div class="k-header">' + '<a href="#" ' + kendo.attr('action') + '="prev" role="button" class="k-link k-nav-prev" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="#" ' + kendo.attr('action') + '="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" ' + kendo.attr('action') + '="next" role="button" class="k-link k-nav-next" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>', MODERN_HEADER_TEMPLATE = '<div class="k-calendar-header">' + '<a href="#" ' + kendo.attr('action') + '="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-button k-title"></a>' + '<span class="k-calendar-nav">' + '<a ' + kendo.attr('action') + '="prev" class="k-button k-button-icon k-prev-view">' + '<span class="k-icon k-i-arrow-60-left"></span>' + '</a>' + '<a ' + kendo.attr('action') + '="today" class="k-today">Today</a>' + '<a ' + kendo.attr('action') + '="next" class="k-button k-button-icon k-next-view">' + '<span class="k-icon k-i-arrow-60-right"></span>' + '</a>' + '</span>' + '</div>';
         var Calendar = Widget.extend({
             init: function (element, options) {
                 var that = this, value, id;
+                options = options || {};
+                options.componentType = options.componentType || 'classic';
                 Widget.fn.init.call(that, element, options);
                 element = that.wrapper = that.element;
                 options = that.options;
@@ -57,7 +59,9 @@
                 that._selectable();
                 that._header();
                 that._viewWrapper();
-                that._footer(that.footer);
+                if (that.options.footer) {
+                    that._footer(that.footer);
+                }
                 id = element.addClass('k-widget k-calendar ' + (options.weekNumber ? ' k-week-number' : '')).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK + ' touchend', CELLSELECTOR, function (e) {
                     var link = e.currentTarget.firstChild, value = toDateObject(link);
                     if (link.href.indexOf('#') != -1) {
@@ -141,6 +145,20 @@
                 CHANGE,
                 NAVIGATE
             ],
+            componentTypes: {
+                'classic': {
+                    header: { template: CLASSIC_HEADER_TEMPLATE },
+                    footer: true,
+                    linksSelector: '.k-link',
+                    contentClasses: 'k-content'
+                },
+                'modern': {
+                    header: { template: MODERN_HEADER_TEMPLATE },
+                    footer: false,
+                    linksSelector: '.k-button',
+                    contentClasses: 'k-content k-calendar-content'
+                }
+            },
             setOptions: function (options) {
                 var that = this;
                 normalize(options);
@@ -150,7 +168,11 @@
                 that._templates();
                 that._selectable();
                 that._viewWrapper();
-                that._footer(that.footer);
+                if (that.options.footer) {
+                    that._footer(that.footer);
+                } else {
+                    that.element.find('.k-footer').hide();
+                }
                 that._index = views[that.options.start];
                 that.navigate();
                 if (options.weekNumber) {
@@ -216,7 +238,7 @@
             },
             navigate: function (value, view) {
                 view = isNaN(view) ? views[view] : view;
-                var that = this, options = that.options, culture = options.culture, min = options.min, max = options.max, title = that._title, from = that._table, old = that._oldTable, currentValue = that._current, future = value && +value > +currentValue, vertical = view !== undefined && view !== that._index, to, currentView, compare, disabled;
+                var that = this, options = that.options, culture = options.culture, min = options.min, max = options.max, title = that._title, from = that._table, old = that._oldTable, currentValue = that._current, future = value && +value > +currentValue, vertical = view !== undefined && view !== that._index, to, currentView, compare, disabled, viewWrapper = that.element.children('.k-calendar-view');
                 if (!value) {
                     value = currentValue;
                 }
@@ -258,7 +280,8 @@
                         culture: culture,
                         disableDates: options.disableDates,
                         isWeekColumnVisible: options.weekNumber,
-                        messages: options.messages
+                        messages: options.messages,
+                        contentClasses: that.options.contentClasses
                     }, that[currentView.name])));
                     addClassToViewContainer(to, currentView.name);
                     makeUnselectable(to);
@@ -270,6 +293,10 @@
                         future: future,
                         replace: replace
                     });
+                    if (that.options.componentType === 'modern') {
+                        viewWrapper.removeClass('k-calendar-monthview k-calendar-yearview k-calendar-decadeview k-calendar-centuryview');
+                        viewWrapper.addClass('k-calendar-' + currentView.name + 'view');
+                    }
                     that.trigger(NAVIGATE);
                     that._focus(value);
                 }
@@ -769,7 +796,7 @@
                 var element = that.element;
                 var viewWrapper = element.children('.k-calendar-view');
                 if (!viewWrapper[0]) {
-                    viewWrapper = $('<div class=\'k-calendar-view\' />').insertAfter(element.find('.k-header'));
+                    viewWrapper = $('<div class=\'k-calendar-view\' />').insertAfter(element.find(HEADERSELECTOR));
                 }
             },
             _footer: function (template) {
@@ -786,25 +813,26 @@
                 that._toggle();
             },
             _header: function () {
-                var that = this, element = that.element, links;
-                if (!element.find('.k-header')[0]) {
-                    element.html('<div class="k-header">' + '<a href="#" role="button" class="k-link k-nav-prev" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="#" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" role="button" class="k-link k-nav-next" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>');
+                var that = this, element = that.element, linksSelector = that.options.linksSelector;
+                if (!element.find(HEADERSELECTOR)[0]) {
+                    element.html(that.options.header.template);
                 }
-                links = element.find('.k-link').on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on(CLICK + ' touchend' + ns, function () {
+                element.find(linksSelector).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on(CLICK + ' touchend' + ns, function () {
                     return false;
                 });
-                that._title = links.eq(1).on(CLICK + ' touchend' + ns, function () {
+                that._title = element.find('[' + kendo.attr('action') + '="nav-up"]').on(CLICK + ' touchend' + ns, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateUp();
                 });
-                that[PREVARROW] = links.eq(0).on(CLICK + ' touchend' + ns, function () {
+                that[PREVARROW] = element.find('[' + kendo.attr('action') + '="prev"]').on(CLICK + ' touchend' + ns, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateToPast();
                 });
-                that[NEXTARROW] = links.eq(2).on(CLICK + ' touchend' + ns, function () {
+                that[NEXTARROW] = element.find('[' + kendo.attr('action') + '="next"]').on(CLICK + ' touchend' + ns, function () {
                     that._active = that.options.focusOnNav !== false;
                     that.navigateToFuture();
                 });
+                element.find('[' + kendo.attr('action') + '="today"]').on(CLICK + ' touchend' + ns, proxy(that._todayClick, that));
             },
             _navigate: function (arrow, modifier) {
                 var that = this, index = that._index + 1, currentValue = new DATE(+that._current);
@@ -919,7 +947,7 @@
                         return getCalendarInfo(culture).months.names[date.getMonth()] + ' ' + date.getFullYear();
                     },
                     content: function (options) {
-                        var that = this, idx = 0, min = options.min, max = options.max, date = options.date, dates = options.dates, format = options.format, culture = options.culture, navigateUrl = options.url, showHeader = options.showHeader, otherMonth = options.otherMonth, isWeekColumnVisible = options.isWeekColumnVisible, hasUrl = navigateUrl && dates[0], currentCalendar = getCalendarInfo(culture), firstDayIdx = currentCalendar.firstDay, days = currentCalendar.days, names = shiftArray(days.names, firstDayIdx), shortNames = shiftArray(days.namesShort, firstDayIdx), start = calendar.firstVisibleDay(date, currentCalendar), firstDayOfMonth = that.first(date), lastDayOfMonth = that.last(date), toDateString = that.toDateString, today = getToday(), html = '<table tabindex="0" role="grid" class="k-content" cellspacing="0" data-start="' + toDateString(start) + '">';
+                        var that = this, idx = 0, min = options.min, max = options.max, date = options.date, dates = options.dates, format = options.format, culture = options.culture, navigateUrl = options.url, showHeader = options.showHeader, otherMonth = options.otherMonth, isWeekColumnVisible = options.isWeekColumnVisible, hasUrl = navigateUrl && dates[0], currentCalendar = getCalendarInfo(culture), firstDayIdx = currentCalendar.firstDay, days = currentCalendar.days, names = shiftArray(days.names, firstDayIdx), shortNames = shiftArray(days.namesShort, firstDayIdx), start = calendar.firstVisibleDay(date, currentCalendar), firstDayOfMonth = that.first(date), lastDayOfMonth = that.last(date), toDateString = that.toDateString, today = getToday(), contentClasses = options.contentClasses, html = '<table tabindex="0" role="grid" class="' + contentClasses + '" cellspacing="0" data-start="' + toDateString(start) + '">';
                         if (showHeader) {
                             html += '<caption class="k-month-header">' + this.title(date, min, max, culture) + '</caption><thead><tr role="row">';
                         } else {

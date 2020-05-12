@@ -1133,9 +1133,9 @@
                 var that = this;
                 var element = that.element;
                 var accessKey = element[0].accessKey;
-                var input = that._innerWrapper.children('input.k-input');
+                var input = that._inputWrapper.children('input.k-input');
                 if (!input[0]) {
-                    input = $('<input class="k-input" style="width: 25px" />').appendTo(that._innerWrapper);
+                    input = $('<input class="k-input" style="width: 25px" />').appendTo(that._inputWrapper);
                 }
                 element.removeAttr('accesskey');
                 that._focused = that.input = input.attr({
@@ -1149,9 +1149,9 @@
                 });
             },
             _tagList: function () {
-                var that = this, tagList = that._innerWrapper.children('ul');
+                var that = this, tagList = that._inputWrapper.children('ul');
                 if (!tagList[0]) {
-                    tagList = $('<ul unselectable="on" class="k-reset"/>').appendTo(that._innerWrapper);
+                    tagList = $('<ul unselectable="on" class="k-reset"/>').appendTo(that._inputWrapper);
                 }
                 that.tagList = tagList;
             },
@@ -1200,7 +1200,7 @@
                     $('<div class="k-multiselect-wrap k-floatwrap" role="listbox" unselectable="on" />').insertBefore(element);
                 }
                 that.wrapper = wrapper.addClass(element[0].className).removeClass('input-validation-error').css('display', '');
-                that._innerWrapper = $(wrapper[0].firstChild);
+                that._inputWrapper = $(wrapper[0].firstChild);
             },
             _ariaSetSize: function (value) {
                 var that = this;

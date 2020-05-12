@@ -39,7 +39,15 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, proxy = $.proxy, keys = kendo.keys, CLICK = 'click', MOUSEDOWN = kendo.support.mousedown, MOUSEUP = kendo.support.mouseup, MOUSEOUT = 'mouseout', KBUTTON = 'k-button', KBUTTONICON = 'k-button-icon', KBUTTONICONTEXT = 'k-button-icontext', NS = '.kendoButton', DISABLED = 'disabled', DISABLEDSTATE = 'k-state-disabled', FOCUSEDSTATE = 'k-state-focused', SELECTEDSTATE = 'k-state-active', OVERLAY = 'k-badge-overlay';
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, proxy = $.proxy, keys = kendo.keys, CLICK = 'click', MOUSEDOWN = kendo.support.mousedown, MOUSEUP = kendo.support.mouseup, MOUSEOUT = 'mouseout', KBUTTON = 'k-button', KBUTTONICON = 'k-button-icon', KBUTTONICONTEXT = 'k-button-icontext', NS = '.kendoButton', DISABLED = 'disabled', DISABLEDSTATE = 'k-state-disabled', FOCUSEDSTATE = 'k-state-focused', SELECTEDSTATE = 'k-state-active';
+        var BUTTON_DEFAULTS = {
+            icon: '',
+            iconClass: '',
+            spriteCssClass: '',
+            imageUrl: '',
+            badge: null
+        };
+        kendo.setDefaults('button', BUTTON_DEFAULTS);
         var Button = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -52,9 +60,7 @@
                 if (options.enable) {
                     that._tabindex();
                 }
-                if (options.badge) {
-                    that.createBadge(options.badge);
-                }
+                that._badge();
                 that.iconElement();
                 element.on(CLICK + NS, proxy(that._click, that)).on('focus' + NS, proxy(that._focus, that)).on('blur' + NS, proxy(that._blur, that)).on('keydown' + NS, proxy(that._keydown, that)).on('keyup' + NS, proxy(that._removeActive, that)).on(MOUSEDOWN + NS, proxy(that._addActive, that)).on(MOUSEUP + NS + ' ' + MOUSEOUT + NS, proxy(that._removeActive, that));
                 kendo.notify(that);
@@ -70,10 +76,6 @@
             events: [CLICK],
             options: {
                 name: 'Button',
-                icon: '',
-                iconClass: '',
-                spriteCssClass: '',
-                imageUrl: '',
                 enable: true,
                 enabled: true
             },
@@ -126,7 +128,7 @@
                     element.contents().filter(function () {
                         return !$(this).hasClass('k-sprite') && !$(this).hasClass('k-icon') && !$(this).hasClass('k-image');
                     }).each(function (idx, el) {
-                        if (el.nodeType == 1 || el.nodeType == 3 && $.trim(el.nodeValue).length > 0) {
+                        if (el.nodeType == 1 || el.nodeType == 3 && kendo.trim(el.nodeValue).length > 0) {
                             isEmpty = false;
                         }
                     });
@@ -172,21 +174,32 @@
                 } catch (err) {
                 }
             },
-            createBadge: function (badgeOptions) {
+            _badge: function () {
                 var that = this;
-                var span = $('<span />').appendTo(that.element);
-                if (badgeOptions.overlay !== false) {
-                    that.element.addClass(OVERLAY);
+                var badgeOptions = that.options.badge;
+                var badgeEelement;
+                if (badgeOptions === null || badgeOptions === undefined) {
+                    return;
                 }
-                if (typeof badgeOptions == 'string' || typeof badgeOptions == 'number') {
-                    that.badge = new ui.Badge(span, { value: badgeOptions });
-                } else if (typeof badgeOptions == 'boolean') {
-                    that.badge = new ui.Badge(span);
-                } else {
-                    that.badge = new ui.Badge(span, badgeOptions);
+                if (badgeOptions.constructor !== Object) {
+                    badgeOptions = { text: badgeOptions };
                 }
+                if (badgeOptions.position === undefined || badgeOptions.position === '') {
+                    badgeOptions.position = 'top end';
+                }
+                badgeOptions._classNames = ['k-button-badge'];
+                that.element.addClass('k-badge-container');
+                badgeEelement = $('<span />').appendTo(that.element);
+                that.badge = new ui.Badge(badgeEelement, badgeOptions);
             }
         });
+        if (Button.fn.hasOwnProperty('defaults') === false) {
+            Object.defineProperty(Button.fn, 'defaults', {
+                get: function () {
+                    return kendo.defaults.button;
+                }
+            });
+        }
         kendo.ui.plugin(Button);
     }(window.kendo.jQuery));
     return window.kendo;

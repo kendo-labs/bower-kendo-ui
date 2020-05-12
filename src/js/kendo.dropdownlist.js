@@ -156,7 +156,8 @@
                 'dataBinding',
                 'dataBound',
                 'cascade',
-                'set'
+                'set',
+                'kendoKeydown'
             ],
             setOptions: function (options) {
                 Select.fn.setOptions.call(this, options);
@@ -515,7 +516,7 @@
                 if (!readonly && !disable) {
                     element.removeAttr(DISABLED).removeAttr(READONLY);
                     dropDownWrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    wrapper.attr(TABINDEX, wrapper.data(TABINDEX)).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on(kendo.support.mousedown + ns, proxy(that._wrapperMousedown, that)).on('paste' + ns, proxy(that._filterPaste, that));
+                    wrapper.attr(TABINDEX, wrapper.data(TABINDEX)).attr(ARIA_DISABLED, false).on('keydown' + ns, that, proxy(that._keydown, that)).on(kendo.support.mousedown + ns, proxy(that._wrapperMousedown, that)).on('paste' + ns, proxy(that._filterPaste, that));
                     that.wrapper.on('click' + ns, proxy(that._wrapperClick, that));
                     if (!that.filterInput) {
                         wrapper.on('keypress' + ns, proxy(that._keypress, that));
@@ -814,21 +815,26 @@
                 this.listView.focusLast();
             },
             _nextItem: function () {
+                var focusIndex;
                 if (this.optionLabel.hasClass('k-state-focused')) {
                     this._resetOptionLabel();
                     this.listView.focusFirst();
+                    focusIndex = 1;
                 } else {
-                    this.listView.focusNext();
+                    focusIndex = this.listView.focusNext();
                 }
+                return focusIndex;
             },
             _prevItem: function () {
+                var focusIndex;
                 if (this.optionLabel.hasClass('k-state-focused')) {
                     return;
                 }
-                this.listView.focusPrev();
-                if (!this.listView.focus()) {
+                focusIndex = this.listView.focusPrev();
+                if (!this.listView.focus() && !this.options.virtual) {
                     this._focus(this.optionLabel);
                 }
+                return focusIndex;
             },
             _focusItem: function () {
                 var options = this.options;

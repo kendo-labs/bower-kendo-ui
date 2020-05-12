@@ -25,7 +25,8 @@
 (function (f, define) {
     define('kendo.numerictextbox', [
         'kendo.core',
-        'kendo.userevents'
+        'kendo.userevents',
+        'kendo.floatinglabel'
     ], f);
 }(function () {
     var __meta__ = {
@@ -35,11 +36,12 @@
         description: 'The NumericTextBox widget can format and display numeric, percentage or currency textbox.',
         depends: [
             'core',
-            'userevents'
+            'userevents',
+            'floatinglabel'
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', CLASS_ICON = 'k-icon', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', STATE_INVALID = 'k-state-invalid', ARIA_DISABLED = 'aria-disabled', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, extend = $.extend;
+        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', CLASS_ICON = 'k-icon', LABELCLASSES = 'k-label k-input-label', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', STATE_INVALID = 'k-state-invalid', ARIA_DISABLED = 'aria-disabled', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, isPlainObject = $.isPlainObject, extend = $.extend;
         var NumericTextBox = Widget.extend({
             init: function (element, options) {
                 var that = this, isStep = options && options.step !== undefined, min, max, step, value, disabled;
@@ -102,6 +104,7 @@
                 that.angular('compile', function () {
                     return { elements: that._text.get() };
                 });
+                that._label();
                 kendo.notify(that);
             },
             options: {
@@ -119,7 +122,8 @@
                 placeholder: '',
                 factor: 1,
                 upArrowText: 'Increase value',
-                downArrowText: 'Decrease value'
+                downArrowText: 'Decrease value',
+                label: null
             },
             events: [
                 CHANGE,
@@ -131,6 +135,9 @@
                 that._upArrowEventHandler.unbind('press');
                 that._downArrowEventHandler.unbind('press');
                 element.off('keydown' + ns).off('keyup' + ns).off('input' + ns).off('paste' + ns);
+                if (that._inputLabel) {
+                    that._inputLabel.off(ns);
+                }
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
                     text.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
@@ -145,22 +152,33 @@
                         that._downArrow.addClass(SELECTED);
                     });
                     that.element.on('keydown' + ns, proxy(that._keydown, that)).on('keyup' + ns, proxy(that._keyup, that)).on('paste' + ns, proxy(that._paste, that)).on('input' + ns, proxy(that._inputHandler, that));
+                    if (that._inputLabel) {
+                        that._inputLabel.on('click' + ns, proxy(that.focus, that));
+                    }
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     text.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
             },
             readonly: function (readonly) {
+                var that = this;
                 this._editable({
                     readonly: readonly === undefined ? true : readonly,
                     disable: false
                 });
+                if (that.floatingLabel) {
+                    that.floatingLabel.readonly(readonly === undefined ? true : readonly);
+                }
             },
             enable: function (enable) {
+                var that = this;
                 this._editable({
                     readonly: false,
                     disable: !(enable = enable === undefined ? true : enable)
                 });
+                if (that.floatingLabel) {
+                    that.floatingLabel.enable(enable = enable === undefined ? true : enable);
+                }
             },
             setOptions: function (options) {
                 var that = this;
@@ -180,6 +198,12 @@
             },
             destroy: function () {
                 var that = this;
+                if (that._inputLabel) {
+                    that._inputLabel.off(ns);
+                    if (that.floatingLabel) {
+                        that.floatingLabel.destroy();
+                    }
+                }
                 that.element.add(that._text).add(that._upArrow).add(that._downArrow).add(that._inputWrapper).off(ns);
                 that._upArrowEventHandler.destroy();
                 that._downArrowEventHandler.destroy();
@@ -325,7 +349,7 @@
                 var that = this, options = that.options, CLASSNAME = 'k-formatted-value', element = that.element.addClass(INPUT).show()[0], accessKey = element.accessKey, wrapper = that.wrapper, text;
                 text = wrapper.find(POINT + CLASSNAME);
                 if (!text[0]) {
-                    text = $('<input type="text"/>').insertBefore(element).addClass(CLASSNAME);
+                    text = $('<input type="text"/>').insertBefore(element).addClass(CLASSNAME).attr('aria-hidden', 'true');
                 }
                 try {
                     element.setAttribute('type', 'text');
@@ -528,6 +552,36 @@
                     input.val(this.options.placeholder);
                 }
                 input.attr('title', this.element.attr('title') || input.val());
+            },
+            _label: function () {
+                var that = this;
+                var element = that.element;
+                var options = that.options;
+                var id = element.attr('id');
+                var floating;
+                var labelText;
+                if (options.label !== null) {
+                    floating = isPlainObject(options.label) ? options.label.floating : false;
+                    labelText = isPlainObject(options.label) ? options.label.content : options.label;
+                    if (floating) {
+                        that._floatingLabelContainer = that.wrapper.wrap('<span></span>').parent();
+                        that.floatingLabel = new kendo.ui.FloatingLabel(that._floatingLabelContainer, { widget: that });
+                    }
+                    if (kendo.isFunction(labelText)) {
+                        labelText = labelText.call(that);
+                    }
+                    if (!labelText) {
+                        labelText = '';
+                    }
+                    if (!id) {
+                        id = options.name + '_' + kendo.guid();
+                        element.attr('id', id);
+                    }
+                    that._inputLabel = $('<label class=\'' + LABELCLASSES + '\' for=\'' + id + '\'>' + labelText + '</label>\'').insertBefore(that.wrapper);
+                    if (that.element.attr('disabled') === undefined && that.element.attr('readonly') === undefined) {
+                        that._inputLabel.on('click' + ns, proxy(that.focus, that));
+                    }
+                }
             },
             _wrapper: function () {
                 var that = this, element = that.element, DOMElement = element[0], wrapper;
