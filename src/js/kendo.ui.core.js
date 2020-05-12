@@ -16910,7 +16910,12 @@
             options: {
                 name: 'Button',
                 enable: true,
-                enabled: true
+                enabled: true,
+                icon: '',
+                iconClass: '',
+                spriteCssClass: '',
+                imageUrl: '',
+                badge: null
             },
             _isNativeButton: function () {
                 return this.element.prop('tagName').toLowerCase() == 'button';
@@ -22257,7 +22262,7 @@
                 that._selectable();
                 that._header();
                 that._viewWrapper();
-                if (that.options.footer) {
+                if (that.options.hasFooter) {
                     that._footer(that.footer);
                 }
                 id = element.addClass('k-widget k-calendar ' + (options.weekNumber ? ' k-week-number' : '')).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK + ' touchend', CELLSELECTOR, function (e) {
@@ -22346,13 +22351,13 @@
             componentTypes: {
                 'classic': {
                     header: { template: CLASSIC_HEADER_TEMPLATE },
-                    footer: true,
+                    hasFooter: true,
                     linksSelector: '.k-link',
                     contentClasses: 'k-content'
                 },
                 'modern': {
                     header: { template: MODERN_HEADER_TEMPLATE },
-                    footer: false,
+                    hasFooter: false,
                     linksSelector: '.k-button',
                     contentClasses: 'k-content k-calendar-content'
                 }
@@ -22366,7 +22371,7 @@
                 that._templates();
                 that._selectable();
                 that._viewWrapper();
-                if (that.options.footer) {
+                if (that.options.hasFooter) {
                     that._footer(that.footer);
                 } else {
                     that.element.find('.k-footer').hide();

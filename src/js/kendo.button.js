@@ -77,7 +77,12 @@
             options: {
                 name: 'Button',
                 enable: true,
-                enabled: true
+                enabled: true,
+                icon: '',
+                iconClass: '',
+                spriteCssClass: '',
+                imageUrl: '',
+                badge: null
             },
             _isNativeButton: function () {
                 return this.element.prop('tagName').toLowerCase() == 'button';
