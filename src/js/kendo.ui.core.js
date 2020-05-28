@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.2.513'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.2.528'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -19647,18 +19647,25 @@
             },
             show: function (candidate) {
                 var item = this._getItem(candidate);
+                var buttonGroupInstance;
                 if (item.toolbar) {
                     if (item.toolbar.options.type === 'button' && item.toolbar.options.isChild) {
+                        buttonGroupInstance = item.toolbar.getParentGroup();
                         item.toolbar.show();
-                        item.toolbar.getParentGroup().refresh();
+                        if (buttonGroupInstance) {
+                            buttonGroupInstance.refresh();
+                        }
                     } else if (item.toolbar.options.hidden) {
                         item.toolbar.show();
                     }
                 }
                 if (item.overflow) {
                     if (item.overflow.options.type === 'button' && item.overflow.options.isChild) {
+                        buttonGroupInstance = item.overflow.getParentGroup();
                         item.toolbar.show();
-                        item.overflow.getParentGroup().refresh();
+                        if (buttonGroupInstance) {
+                            buttonGroupInstance.refresh();
+                        }
                     } else if (item.overflow.options.hidden) {
                         item.overflow.show();
                     }
@@ -21812,10 +21819,13 @@
                             selectedIndex = selectedIndices[j];
                             if (selectedIndex === index) {
                                 $(children[selectedIndex]).removeClass('k-state-selected').attr('aria-selected', false);
+                                var dataItem = this._view[index].item;
+                                var position = this._dataItemPosition(dataItem, this._values);
                                 removed.push({
-                                    position: j + removedIndices,
-                                    dataItem: dataItems.splice(j, 1)[0]
+                                    position: position,
+                                    dataItem: dataItem
                                 });
+                                dataItems.splice(j, 1);
                                 selectedIndices.splice(j, 1);
                                 indices.splice(i, 1);
                                 values.splice(j, 1);
@@ -32432,6 +32442,7 @@
                 that._value = options.value = value;
                 var content = that.wrapper = $(that._template(options));
                 element.hide().after(content);
+                that._inputWrapper = $(that.wrapper[0].firstChild);
                 if (element.is('input')) {
                     element.appendTo(content);
                     var label = element.closest('label');
@@ -33431,11 +33442,11 @@
             },
             'string': function (container, options) {
                 var attr = createAttributes(options);
-                $('<input type="text" class="k-textbox"/>').attr(attr).appendTo(container);
+                $('<input type="text" />').attr(attr).addClass('k-textbox').appendTo(container);
             },
             'boolean': function (container, options) {
                 var attr = createAttributes(options);
-                $('<input type="checkbox" class="k-checkbox" />').attr(attr).appendTo(container);
+                $('<input type="checkbox" />').attr(attr).addClass('k-checkbox').appendTo(container);
             },
             'values': function (container, options) {
                 var attr = createAttributes(options);
@@ -43871,24 +43882,16 @@
                 }
             },
             _setElementMaxHeight: function () {
-                var that = this, element = that.element, maxHeight = that.options.maxHeight, paddingBox, elementMaxHeight;
+                var that = this, element = that.element, maxHeight = that.options.maxHeight, elementMaxHeight;
                 if (maxHeight != Infinity) {
-                    paddingBox = that._paddingBox(element);
-                    elementMaxHeight = parseFloat(maxHeight, 10) - that._uiHeight() - paddingBox.vertical;
+                    elementMaxHeight = parseFloat(maxHeight, 10) - that._uiHeight();
                     if (elementMaxHeight > 0) {
                         element.css({ maxHeight: ceil(elementMaxHeight) + 'px' });
                     }
                 }
             },
-            _paddingBox: function (element) {
-                var paddingTop = parseFloat(element.css('padding-top'), 10), paddingLeft = parseFloat(element.css('padding-left'), 10), paddingBottom = parseFloat(element.css('padding-bottom'), 10), paddingRight = parseFloat(element.css('padding-right'), 10);
-                return {
-                    vertical: paddingTop + paddingBottom,
-                    horizontal: paddingLeft + paddingRight
-                };
-            },
             _setElementHeight: function () {
-                var that = this, element = that.element, height = that.options.height, paddingBox = that._paddingBox(element), elementHeight = parseFloat(height, 10) - that._uiHeight() - paddingBox.vertical;
+                var that = this, element = that.element, height = that.wrapper.outerHeight(true), elementHeight = parseFloat(height, 10) - that._uiHeight();
                 if (elementHeight < 0) {
                     elementHeight = 0;
                 }
@@ -44010,7 +44013,7 @@
                 for (var i = 0; i < length; i++) {
                     action = actions[i];
                     text = that._mergeTextWithOptions(action);
-                    $(templates.action(action)).autoApplyNS(NS).html(text).appendTo(actionbar).data('action', action.action).on('click', actionClick).on('keydown', actionKeyHandler);
+                    $(templates.action(action)).autoApplyNS(NS).html(text).appendTo(actionbar).addClass(action.cssClass).data('action', action.action).on('click', actionClick).on('keydown', actionKeyHandler);
                 }
             },
             _mergeTextWithOptions: function (action) {
@@ -44295,6 +44298,7 @@
                 var that = this;
                 that._destroy();
                 Widget.fn.destroy.call(that);
+                kendo.destroy(that.wrapper);
                 that.wrapper.remove();
                 that.wrapper = that.element = $();
             },

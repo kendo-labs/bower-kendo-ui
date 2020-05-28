@@ -1737,10 +1737,13 @@
                             selectedIndex = selectedIndices[j];
                             if (selectedIndex === index) {
                                 $(children[selectedIndex]).removeClass('k-state-selected').attr('aria-selected', false);
+                                var dataItem = this._view[index].item;
+                                var position = this._dataItemPosition(dataItem, this._values);
                                 removed.push({
-                                    position: j + removedIndices,
-                                    dataItem: dataItems.splice(j, 1)[0]
+                                    position: position,
+                                    dataItem: dataItem
                                 });
+                                dataItems.splice(j, 1);
                                 selectedIndices.splice(j, 1);
                                 indices.splice(i, 1);
                                 values.splice(j, 1);

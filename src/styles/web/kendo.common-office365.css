@@ -16170,7 +16170,7 @@ a.k-badge:hover,
       flex-direction: column;
   -ms-flex-pack: justify;
       justify-content: space-between;
-  margin-left: 28px + 2 * 1px;
+  margin-left: 30px;
   padding: 20px 10px;
 }
 .k-rtl .k-stepper,
@@ -16556,7 +16556,7 @@ table.k-editor .k-editable-area {
 .k-editor-dialog.k-editor-table-wizard-dialog .k-tabstrip-wrapper .k-content {
   overflow: hidden;
   min-height: 440px;
-  height: 35em;
+  height: auto;
   margin: 0;
   padding: 1em 0.5em 0;
   border-width: 0;

@@ -65,6 +65,15 @@
 .ktb-var-selected-text-color {
   color: #333333;
 }
+.ktb-var-primary {
+  color: #cde6f7;
+}
+.ktb-var-secondary {
+  color: #0072c6;
+}
+.ktb-var-tertiary {
+  color: #008a17;
+}
 .ktb-var-error {
   color: #f44336;
 }
@@ -76,6 +85,15 @@
 }
 .ktb-var-info {
   color: #1976d2;
+}
+.ktb-var-dark {
+  color: #000000;
+}
+.ktb-var-light {
+  color: #ffffff;
+}
+.ktb-var-inverse {
+  color: #000000;
 }
 .ktb-var-series-a {
   color: #0072c6;
@@ -1357,11 +1375,77 @@
 .k-stepper .k-step-optional .k-step-label-optional {
   opacity: 0.35;
 }
+.k-widget.k-form {
+  background: none;
+}
 .k-form-error {
   color: #f44336;
 }
 .k-form-legend {
   border-color: #c9c9c9;
+}
+.k-tooltip {
+  border-radius: 0;
+  border-color: #c9c9c9;
+  color: #333333;
+  background-color: #fff;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.18);
+}
+.k-tooltip-primary {
+  border-color: #cde6f7;
+  color: #000000;
+  background-color: #cde6f7;
+}
+.k-tooltip-secondary {
+  border-color: #0072c6;
+  color: #ffffff;
+  background-color: #0072c6;
+}
+.k-tooltip-tertiary {
+  border-color: #008a17;
+  color: #ffffff;
+  background-color: #008a17;
+}
+.k-tooltip-info {
+  border-color: #1976d2;
+  color: #ffffff;
+  background-color: #1976d2;
+}
+.k-tooltip-success {
+  border-color: #43a047;
+  color: #ffffff;
+  background-color: #43a047;
+}
+.k-tooltip-warning {
+  border-color: #ffdb04;
+  color: #000000;
+  background-color: #ffdb04;
+}
+.k-tooltip-error {
+  border-color: #f44336;
+  color: #ffffff;
+  background-color: #f44336;
+}
+.k-tooltip-dark {
+  border-color: #000000;
+  color: #ffffff;
+  background-color: #000000;
+}
+.k-tooltip-light {
+  border-color: #ffffff;
+  color: #000000;
+  background-color: #ffffff;
+}
+.k-tooltip-inverse {
+  border-color: #000000;
+  color: #ffffff;
+  background-color: #000000;
+}
+.k-chart-tooltip {
+  color: white;
+}
+.k-chart-tooltip-inverse {
+  color: black;
 }
 .k-text-error {
   color: #f44336;
@@ -3267,67 +3351,4 @@ input.k-textbox:focus,
 .k-calendar .k-today .k-link {
   color: #0072c6;
   box-shadow: inset 0 0 0 1px #0072c6;
-}
-.k-tooltip {
-  border-radius: 0;
-  border-color: #c9c9c9;
-  color: #333333;
-  background-color: #fff;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.18);
-}
-.k-tooltip-primary {
-  border-color: #cde6f7;
-  color: #000000;
-  background-color: #cde6f7;
-}
-.k-tooltip-secondary {
-  border-color: #0072c6;
-  color: #ffffff;
-  background-color: #0072c6;
-}
-.k-tooltip-tertiary {
-  border-color: #008a17;
-  color: #ffffff;
-  background-color: #008a17;
-}
-.k-tooltip-info {
-  border-color: #1976d2;
-  color: #ffffff;
-  background-color: #1976d2;
-}
-.k-tooltip-success {
-  border-color: #43a047;
-  color: #ffffff;
-  background-color: #43a047;
-}
-.k-tooltip-warning {
-  border-color: #ffdb04;
-  color: #000000;
-  background-color: #ffdb04;
-}
-.k-tooltip-error {
-  border-color: #f44336;
-  color: #ffffff;
-  background-color: #f44336;
-}
-.k-tooltip-dark {
-  border-color: #000000;
-  color: #ffffff;
-  background-color: #000000;
-}
-.k-tooltip-light {
-  border-color: #ffffff;
-  color: #000000;
-  background-color: #ffffff;
-}
-.k-tooltip-inverse {
-  border-color: #000000;
-  color: #ffffff;
-  background-color: #000000;
-}
-.k-chart-tooltip {
-  color: white;
-}
-.k-chart-tooltip-inverse {
-  color: black;
 }

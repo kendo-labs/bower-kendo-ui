@@ -68,6 +68,15 @@
 .ktb-var-selected-text-color {
   color: #454545;
 }
+.ktb-var-primary {
+  color: #818181;
+}
+.ktb-var-secondary {
+  color: #fff;
+}
+.ktb-var-tertiary {
+  color: #527aa3;
+}
 .ktb-var-error {
   color: #f45835;
 }
@@ -79,6 +88,15 @@
 }
 .ktb-var-info {
   color: #3e6b99;
+}
+.ktb-var-dark {
+  color: #000000;
+}
+.ktb-var-light {
+  color: #ffffff;
+}
+.ktb-var-inverse {
+  color: #000000;
 }
 .ktb-var-series-a {
   color: #527aa3;
@@ -1406,11 +1424,77 @@
 .k-stepper .k-step-optional .k-step-label-optional {
   opacity: 0.35;
 }
+.k-widget.k-form {
+  background: none;
+}
 .k-form-error {
   color: #f45835;
 }
 .k-form-legend {
   border-color: #ebebeb;
+}
+.k-tooltip {
+  border-radius: 6px;
+  border-color: #dbdbdb;
+  color: #464646;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+.k-tooltip-primary {
+  border-color: #818181;
+  color: #ffffff;
+  background-color: #818181;
+}
+.k-tooltip-secondary {
+  border-color: #fff;
+  color: #000000;
+  background-color: #fff;
+}
+.k-tooltip-tertiary {
+  border-color: #527aa3;
+  color: #ffffff;
+  background-color: #527aa3;
+}
+.k-tooltip-info {
+  border-color: #3e6b99;
+  color: #ffffff;
+  background-color: #3e6b99;
+}
+.k-tooltip-success {
+  border-color: #52c664;
+  color: #000000;
+  background-color: #52c664;
+}
+.k-tooltip-warning {
+  border-color: #f4bc35;
+  color: #000000;
+  background-color: #f4bc35;
+}
+.k-tooltip-error {
+  border-color: #f45835;
+  color: #ffffff;
+  background-color: #f45835;
+}
+.k-tooltip-dark {
+  border-color: #000000;
+  color: #ffffff;
+  background-color: #000000;
+}
+.k-tooltip-light {
+  border-color: #ffffff;
+  color: #000000;
+  background-color: #ffffff;
+}
+.k-tooltip-inverse {
+  border-color: #000000;
+  color: #ffffff;
+  background-color: #000000;
+}
+.k-chart-tooltip {
+  color: white;
+}
+.k-chart-tooltip-inverse {
+  color: black;
 }
 .k-text-error {
   color: #f45835;
@@ -3028,67 +3112,4 @@ div.k-filebrowser-dropzone em {
 .k-grid-list > .k-item.k-last > .k-group-cell,
 .k-grid-list > .k-item.k-last > .k-spacer-cell {
   border-bottom-color: #676767;
-}
-.k-tooltip {
-  border-radius: 6px;
-  border-color: #dbdbdb;
-  color: #464646;
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-.k-tooltip-primary {
-  border-color: #818181;
-  color: #ffffff;
-  background-color: #818181;
-}
-.k-tooltip-secondary {
-  border-color: #fff;
-  color: #000000;
-  background-color: #fff;
-}
-.k-tooltip-tertiary {
-  border-color: #527aa3;
-  color: #ffffff;
-  background-color: #527aa3;
-}
-.k-tooltip-info {
-  border-color: #3e6b99;
-  color: #ffffff;
-  background-color: #3e6b99;
-}
-.k-tooltip-success {
-  border-color: #52c664;
-  color: #000000;
-  background-color: #52c664;
-}
-.k-tooltip-warning {
-  border-color: #f4bc35;
-  color: #000000;
-  background-color: #f4bc35;
-}
-.k-tooltip-error {
-  border-color: #f45835;
-  color: #ffffff;
-  background-color: #f45835;
-}
-.k-tooltip-dark {
-  border-color: #000000;
-  color: #ffffff;
-  background-color: #000000;
-}
-.k-tooltip-light {
-  border-color: #ffffff;
-  color: #000000;
-  background-color: #ffffff;
-}
-.k-tooltip-inverse {
-  border-color: #000000;
-  color: #ffffff;
-  background-color: #000000;
-}
-.k-chart-tooltip {
-  color: white;
-}
-.k-chart-tooltip-inverse {
-  color: black;
 }

@@ -547,6 +547,7 @@
                 that._value = options.value = value;
                 var content = that.wrapper = $(that._template(options));
                 element.hide().after(content);
+                that._inputWrapper = $(that.wrapper[0].firstChild);
                 if (element.is('input')) {
                     element.appendTo(content);
                     var label = element.closest('label');
