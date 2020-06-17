@@ -1172,7 +1172,7 @@
   border-color: #a3d0e4;
 }
 .k-checkbox:hover {
-  border-color: #8bc4dd;
+  border-color: #a3d0e4;
   color: #7bd2f6;
   background-color: #fff;
 }
@@ -1205,13 +1205,13 @@
   border-radius: 50%;
 }
 .k-radio:hover {
-  border-color: #8bc4dd;
+  border-color: #a3d0e4;
   color: #7bd2f6;
   background-color: #fff;
 }
 .k-radio:focus {
   box-shadow: 0 0 3px 0 #7bd2f6;
-  border-color: #8bc4dd;
+  border-color: #a3d0e4;
 }
 .k-radio:checked {
   border-color: #a3d0e4;
@@ -1433,7 +1433,9 @@
 .k-form-legend {
   border-color: #bbdceb;
 }
-.k-tooltip {
+.k-tooltip,
+.k-tooltip.k-widget,
+.k-tooltip.k-popup {
   border-radius: 4px;
   border-color: #a3d0e4;
   color: #00435e;
@@ -1495,6 +1497,11 @@
 }
 .k-chart-tooltip-inverse {
   color: black;
+}
+.k-wizard-step:focus,
+.k-wizard-step.k-state-focused {
+  box-shadow: inset 0 0 0 2px #bbdceb;
+  outline: none;
 }
 .k-text-error {
   color: #db4240;

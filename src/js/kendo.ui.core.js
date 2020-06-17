@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.2.603'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.2.617'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -3483,7 +3483,7 @@
             if (nextFocusable.length) {
                 target = nextFocusable;
             } else if (widgetInstance) {
-                target = widgetInstance instanceof kendo.ui.Editor ? $(widgetInstance.body) : widgetInstance.wrapper.find(':kendoFocusable').first();
+                target = widgetInstance.options.name === 'Editor' ? $(widgetInstance.body) : widgetInstance.wrapper.find(':kendoFocusable').first();
             } else {
                 target = element;
             }
@@ -9905,7 +9905,7 @@
                     transport.parameterMap = function (data, type) {
                         data[that.idField || 'id'] = that.id;
                         if (parameterMap) {
-                            data = parameterMap(data, type);
+                            data = parameterMap.call(that, data, type);
                         }
                         return data;
                     };
@@ -22257,7 +22257,7 @@
                 year: 1,
                 decade: 2,
                 century: 3
-            }, HEADERSELECTOR = '.k-header, .k-calendar-header', CLASSIC_HEADER_TEMPLATE = '<div class="k-header">' + '<a href="#" ' + kendo.attr('action') + '="prev" role="button" class="k-link k-nav-prev" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="#" ' + kendo.attr('action') + '="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="#" ' + kendo.attr('action') + '="next" role="button" class="k-link k-nav-next" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>', MODERN_HEADER_TEMPLATE = '<div class="k-calendar-header">' + '<a href="#" ' + kendo.attr('action') + '="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-button k-title"></a>' + '<span class="k-calendar-nav">' + '<a ' + kendo.attr('action') + '="prev" class="k-button k-button-icon k-prev-view">' + '<span class="k-icon k-i-arrow-60-left"></span>' + '</a>' + '<a ' + kendo.attr('action') + '="today" class="k-today">Today</a>' + '<a ' + kendo.attr('action') + '="next" class="k-button k-button-icon k-next-view">' + '<span class="k-icon k-i-arrow-60-right"></span>' + '</a>' + '</span>' + '</div>';
+            }, HEADERSELECTOR = '.k-header, .k-calendar-header', CLASSIC_HEADER_TEMPLATE = '<div class="k-header">' + '<a href="\\#" ' + kendo.attr('action') + '="prev" role="button" class="k-link k-nav-prev" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="\\#" ' + kendo.attr('action') + '="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="\\#" ' + kendo.attr('action') + '="next" role="button" class="k-link k-nav-next" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>', MODERN_HEADER_TEMPLATE = '<div class="k-calendar-header">' + '<a href="\\#" ' + kendo.attr('action') + '="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-button k-title"></a>' + '<span class="k-calendar-nav">' + '<a ' + kendo.attr('action') + '="prev" class="k-button k-button-icon k-prev-view">' + '<span class="k-icon k-i-arrow-60-left"></span>' + '</a>' + '<a ' + kendo.attr('action') + '="today" class="k-today">#=messages.today#</a>' + '<a ' + kendo.attr('action') + '="next" class="k-button k-button-icon k-next-view">' + '<span class="k-icon k-i-arrow-60-right"></span>' + '</a>' + '</span>' + '</div>';
         var Calendar = Widget.extend({
             init: function (element, options) {
                 var that = this, value, id;
@@ -22352,7 +22352,10 @@
                         duration: 400
                     }
                 },
-                messages: { weekColumnHeader: '' }
+                messages: {
+                    weekColumnHeader: '',
+                    today: 'Today'
+                }
             },
             events: [
                 CHANGE,
@@ -23028,7 +23031,7 @@
             _header: function () {
                 var that = this, element = that.element, linksSelector = that.options.linksSelector;
                 if (!element.find(HEADERSELECTOR)[0]) {
-                    element.html(that.options.header.template);
+                    element.html(kendo.template(that.options.header.template)(that.options));
                 }
                 element.find(linksSelector).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on(CLICK + ' touchend' + ns, function () {
                     return false;
@@ -33416,6 +33419,18 @@
             }
             return result;
         }
+        function getEditorTag(type, options) {
+            var tag;
+            if (!type.length) {
+                return;
+            }
+            if (type === 'DropDownTree' && options && options.checkboxes || type === 'MultiSelect') {
+                tag = '<select />';
+            } else {
+                tag = type === 'Editor' ? '<textarea />' : '<input />';
+            }
+            return tag;
+        }
         var kendoEditors = [
             'AutoComplete',
             'ColorPicker',
@@ -33467,9 +33482,9 @@
             'kendoEditor': function (container, options) {
                 var attr = createAttributes(options);
                 var type = options.editor;
-                var tag = type === 'Editor' ? '<textarea />' : '<input />';
                 var editor = 'kendo' + type;
                 var editorOptions = options.editorOptions;
+                var tag = getEditorTag(type, editorOptions);
                 $(tag).attr(attr).appendTo(container)[editor](editorOptions);
             }
         };
@@ -41265,7 +41280,7 @@
                     type: 'eras',
                     minLength: 0
                 }
-            }, TODAY = new DATE(), MODERN_RENDERING_TEMPLATE = '<div tabindex="0" class="k-timeselector">' + '<div class="k-time-header">' + '<span class="k-title"></span>' + '<button class="k-button k-flat k-time-now" title="Select now" aria-label="Select now">Now</button>' + '</div>' + '<div class="k-time-list-container">' + '<span class="k-time-highlight"></span>' + '</div>' + '</div>', NEW_RENDERING_FOOTER = '<div class="k-time-footer k-action-buttons">' + '<button class="k-button k-time-cancel" title="Cancel changes" aria-label="Cancel changes">Cancel</button>' + '<button class="k-time-accept k-button k-primary" title="Set time" aria-label="Set time">Set</button>' + '</div>', HIGHLIGHTCONTAINER = '<span class="k-time-highlight"></span>';
+            }, TODAY = new DATE(), MODERN_RENDERING_TEMPLATE = '<div tabindex="0" class="k-timeselector">' + '<div class="k-time-header">' + '<span class="k-title"></span>' + '<button class="k-button k-flat k-time-now" title="Select now" aria-label="Select now">#=messages.now#</button>' + '</div>' + '<div class="k-time-list-container">' + '<span class="k-time-highlight"></span>' + '</div>' + '</div>', NEW_RENDERING_FOOTER = '<div class="k-time-footer k-action-buttons">' + '<button class="k-button k-time-cancel" title="Cancel changes" aria-label="Cancel changes">#=messages.cancel#</button>' + '<button class="k-time-accept k-button k-primary" title="Set time" aria-label="Set time">#=messages.set#</button>' + '</div>', HIGHLIGHTCONTAINER = '<span class="k-time-highlight"></span>';
         TODAY = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate(), 0, 0, 0);
         var TimeView = function (options) {
             var that = this, id = options.id;
@@ -41289,9 +41304,9 @@
                 }
             },
             _createScrollList: function () {
-                this.list = $(MODERN_RENDERING_TEMPLATE).on(MOUSEDOWN, preventDefault);
+                this.list = $(kendo.template(MODERN_RENDERING_TEMPLATE)(this.options)).on(MOUSEDOWN, preventDefault);
                 if (!this.options.omitPopup) {
-                    this.list.append(NEW_RENDERING_FOOTER);
+                    this.list.append(kendo.template(NEW_RENDERING_FOOTER)(this.options));
                 }
                 this.ul = this.list.find('.k-time-list-container');
                 this.list.on('click' + ns, '.k-time-header button.k-time-now', proxy(this._nowClickHandler, this));
@@ -41384,9 +41399,11 @@
                 var designatorList = this.ul.find('[data-index="4"]');
                 var item;
                 if (is12hourFormat) {
-                    if (hours > 12) {
+                    if (hours >= 12) {
                         designator = 'PM';
-                        hours -= 12;
+                        if (hours > 12) {
+                            hours -= 12;
+                        }
                     } else {
                         designator = 'AM';
                     }
@@ -41599,22 +41616,22 @@
                 if (!this.options.specifiedRange) {
                     return;
                 }
-                if (!this._value) {
-                    this._value = new Date();
+                if (!this._currentlySelected) {
+                    this._currentlySelected = new Date();
                 }
                 var max = this.options.max;
                 var min = this.options.min;
                 this._selectedDesignator = this._selectedHour = this._selectedMinutes = this._selectedSeconds = null;
                 if (this.options.validateDate) {
-                    if (max.getFullYear() === this._value.getFullYear() && max.getMonth() === this._value.getMonth() && max.getDate() === this._value.getDate()) {
+                    if (max.getFullYear() === this._currentlySelected.getFullYear() && max.getMonth() === this._currentlySelected.getMonth() && max.getDate() === this._currentlySelected.getDate()) {
                         this._validateMax = true;
                     } else {
                         this._validateMax = false;
                     }
-                    if (min.getFullYear() === this._value.getFullYear() && min.getMonth() === this._value.getMonth() && min.getDate() === this._value.getDate()) {
+                    if (min.getFullYear() === this._currentlySelected.getFullYear() && min.getMonth() === this._currentlySelected.getMonth() && min.getDate() === this._currentlySelected.getDate()) {
                         this._validateMin = true;
                     } else {
-                        this._validateMax = true;
+                        this._validateMin = false;
                     }
                     if (!this._validateMax && !this._validateMin) {
                         return;
@@ -41674,17 +41691,23 @@
                 this.popup.close();
             },
             _listScrollHandler: function (e) {
+                var that = this;
                 var itemHeight = Math.floor($(e.currentTarget).find('.k-item:visible:eq(0)').outerHeight());
-                if (e.currentTarget.scrollTop % itemHeight !== 0) {
-                    if (e.currentTarget.scrollTop > this._scrollTop) {
-                        e.currentTarget.scrollTop = Math.ceil(e.currentTarget.scrollTop / itemHeight) * itemHeight;
-                    } else {
-                        e.currentTarget.scrollTop = Math.floor(e.currentTarget.scrollTop / itemHeight) * itemHeight;
-                    }
+                if (that._scrollingTimeout) {
+                    clearTimeout(that._scrollingTimeout);
                 }
-                this._scrollTop = e.currentTarget.scrollTop;
-                this._updateRanges();
-                this._updateCurrentlySelected();
+                that._scrollingTimeout = setTimeout(function () {
+                    if (e.currentTarget.scrollTop % itemHeight !== 0) {
+                        if (e.currentTarget.scrollTop > that._scrollTop) {
+                            e.currentTarget.scrollTop = Math.ceil(e.currentTarget.scrollTop / itemHeight) * itemHeight;
+                        } else {
+                            e.currentTarget.scrollTop = Math.floor(e.currentTarget.scrollTop / itemHeight) * itemHeight;
+                        }
+                    }
+                    that._scrollTop = e.currentTarget.scrollTop;
+                    that._updateRanges();
+                    that._updateCurrentlySelected();
+                }, 100);
             },
             _updateCurrentlySelected: function () {
                 var is12hourFormat = includes(this.options.format.toLowerCase(), 't');
@@ -41719,6 +41742,9 @@
                 if (is12hourFormat) {
                     if (selectedDesignator == 'PM') {
                         selectedHour += 12;
+                        if (selectedHour == 24) {
+                            selectedHour = 12;
+                        }
                     }
                     if (selectedDesignator === 'AM' && selectedHour === 12) {
                         selectedHour = 0;
@@ -41775,7 +41801,7 @@
                         result += this._literalTemplate(part);
                     } else {
                         values = this._getValues(part, true);
-                        result += this._itemTemplate(values.values, part, part.type, values.index);
+                        result += this._itemTemplate(values.values, part, this.options.messages[part.type], values.index);
                     }
                 }
                 return result;
@@ -41796,8 +41822,9 @@
                 var start = 0;
                 var end;
                 if (part.type === 'hour') {
+                    start = 1;
                     index = 1;
-                    end = part.hour12 ? 12 : 23;
+                    end = part.hour12 ? 12 : 24;
                 } else if (part.type === 'minute') {
                     index = 2;
                     end = 59;
@@ -42149,7 +42176,16 @@
                 interval: 30,
                 height: 200,
                 animation: {},
-                dateInput: false
+                dateInput: false,
+                messages: {
+                    set: 'Set',
+                    cancel: 'Cancel',
+                    hour: 'hour',
+                    minute: 'minute',
+                    second: 'second',
+                    millisecond: 'millisecond',
+                    now: 'Now'
+                }
             },
             events: [
                 OPEN,
@@ -42511,7 +42547,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, TimeView = kendo.TimeView, parse = kendo.parseDate, support = kendo.support, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, calendar = kendo.calendar, isInRange = calendar.isInRange, restrictValue = calendar.restrictValue, isEqualDatePart = calendar.isEqualDatePart, getMilliseconds = TimeView.getMilliseconds, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoDateTimePicker', CLICK = 'click' + ns, UP = support.mouseAndTouchPresent ? kendo.applyEventMap('up', ns.slice(1)) : CLICK, DISABLED = 'disabled', READONLY = 'readonly', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', STATEDISABLED = 'k-state-disabled', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MONTH = 'month', SPAN = '<span/>', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_OWNS = 'aria-owns', ARIA_DISABLED = 'aria-disabled', DATE = Date, MIN = new DATE(1800, 0, 1), MAX = new DATE(2099, 11, 31), dateViewParams = { view: 'date' }, timeViewParams = { view: 'time' }, extend = $.extend, SINGLE_POPUP_TEMPLATE = '<div class="k-date-tab k-datetime-wrap">' + '<div class="k-datetime-buttongroup">' + '<div class="k-button-group k-button-group-stretched">' + '<button class="k-button k-state-active k-group-start">Date</button>' + '<button class="k-button k-group-end">Time</button>' + '</div>' + '</div>' + '<div class="k-datetime-selector">' + '<div class="k-datetime-calendar-wrap">' + '</div>' + '<div class="k-datetime-time-wrap">' + '</div>' + '</div>' + '<div class="k-datetime-footer k-action-buttons">' + '<button class="k-button k-time-cancel" title="Cancel" aria-label="Cancel">Cancel</button>' + '<button class="k-time-accept k-button k-primary" title="Set" aria-label="Set">Set</button>' + '</div>' + '</div>', STATE_ACTIVE = 'k-state-active';
+        var kendo = window.kendo, TimeView = kendo.TimeView, parse = kendo.parseDate, support = kendo.support, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, calendar = kendo.calendar, isInRange = calendar.isInRange, restrictValue = calendar.restrictValue, isEqualDatePart = calendar.isEqualDatePart, getMilliseconds = TimeView.getMilliseconds, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoDateTimePicker', CLICK = 'click' + ns, UP = support.mouseAndTouchPresent ? kendo.applyEventMap('up', ns.slice(1)) : CLICK, DISABLED = 'disabled', READONLY = 'readonly', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', STATEDISABLED = 'k-state-disabled', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MONTH = 'month', SPAN = '<span/>', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_OWNS = 'aria-owns', ARIA_DISABLED = 'aria-disabled', DATE = Date, MIN = new DATE(1800, 0, 1), MAX = new DATE(2099, 11, 31), dateViewParams = { view: 'date' }, timeViewParams = { view: 'time' }, extend = $.extend, SINGLE_POPUP_TEMPLATE = '<div class="k-date-tab k-datetime-wrap">' + '<div class="k-datetime-buttongroup">' + '<div class="k-button-group k-button-group-stretched">' + '<button class="k-button k-state-active k-group-start">#=messages.date#</button>' + '<button class="k-button k-group-end">#=messages.time#</button>' + '</div>' + '</div>' + '<div class="k-datetime-selector">' + '<div class="k-datetime-calendar-wrap">' + '</div>' + '<div class="k-datetime-time-wrap">' + '</div>' + '</div>' + '<div class="k-datetime-footer k-action-buttons">' + '<button class="k-button k-time-cancel" title="Cancel" aria-label="Cancel">#=messages.cancel#</button>' + '<button class="k-time-accept k-button k-primary" title="Set" aria-label="Set">#=messages.set#</button>' + '</div>' + '</div>', STATE_ACTIVE = 'k-state-active';
         var DateTimePicker = Widget.extend({
             init: function (element, options) {
                 var that = this, disabled;
@@ -42580,7 +42616,19 @@
                 dateButtonText: 'Open the date view',
                 timeButtonText: 'Open the time view',
                 dateInput: false,
-                weekNumber: false
+                weekNumber: false,
+                messages: {
+                    set: 'Set',
+                    cancel: 'Cancel',
+                    hour: 'hour',
+                    minute: 'minute',
+                    second: 'second',
+                    millisecond: 'millisecond',
+                    now: 'Now',
+                    date: 'Date',
+                    time: 'Time',
+                    today: 'Today'
+                }
             },
             events: [
                 OPEN,
@@ -43053,7 +43101,8 @@
                     specifiedRange: that._specifiedRange,
                     omitPopup: omitPopup,
                     timeDiv: timeDiv,
-                    timeView: timeViewOptions
+                    timeView: timeViewOptions,
+                    messages: that.options.messages
                 });
                 ul = timeView.ul;
             },
@@ -43181,7 +43230,7 @@
                 var that = this;
                 var options = that.options;
                 var div = $('<div></div>').attr(ARIA_HIDDEN, 'true').addClass('k-datetime-container k-group k-reset').appendTo(document.body);
-                div.append(SINGLE_POPUP_TEMPLATE);
+                div.append(kendo.template(SINGLE_POPUP_TEMPLATE)(that.options));
                 that.popup = new ui.Popup(div, extend(options.popup, options, {
                     name: 'Popup',
                     isRtl: kendo.support.isRtl(that.wrapper),

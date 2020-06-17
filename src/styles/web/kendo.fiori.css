@@ -1386,7 +1386,9 @@
 .k-form-legend {
   border-color: #bfbfbf;
 }
-.k-tooltip {
+.k-tooltip,
+.k-tooltip.k-widget,
+.k-tooltip.k-popup {
   border-radius: 0;
   border-color: #bfbfbf;
   color: #333;
@@ -1448,6 +1450,11 @@
 }
 .k-chart-tooltip-inverse {
   color: black;
+}
+.k-wizard-step:focus,
+.k-wizard-step.k-state-focused {
+  box-shadow: inset 0 0 0 2px #bfbfbf;
+  outline: none;
 }
 .k-text-error {
   color: #ff3e3e;

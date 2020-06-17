@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.2.603'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.2.617'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -3483,7 +3483,7 @@
             if (nextFocusable.length) {
                 target = nextFocusable;
             } else if (widgetInstance) {
-                target = widgetInstance instanceof kendo.ui.Editor ? $(widgetInstance.body) : widgetInstance.wrapper.find(':kendoFocusable').first();
+                target = widgetInstance.options.name === 'Editor' ? $(widgetInstance.body) : widgetInstance.wrapper.find(':kendoFocusable').first();
             } else {
                 target = element;
             }

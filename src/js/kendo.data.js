@@ -4445,7 +4445,7 @@
                     transport.parameterMap = function (data, type) {
                         data[that.idField || 'id'] = that.id;
                         if (parameterMap) {
-                            data = parameterMap(data, type);
+                            data = parameterMap.call(that, data, type);
                         }
                         return data;
                     };

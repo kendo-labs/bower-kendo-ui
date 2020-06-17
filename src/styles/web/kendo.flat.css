@@ -1394,7 +1394,9 @@
 .k-overflow-container .k-split-button .k-button {
   border-radius: 3px;
 }
-.k-tooltip {
+.k-tooltip,
+.k-tooltip.k-widget,
+.k-tooltip.k-popup {
   border-radius: 3px;
   border-color: #363940;
   color: #fff;
@@ -1456,6 +1458,11 @@
 }
 .k-chart-tooltip-inverse {
   color: black;
+}
+.k-wizard-step:focus,
+.k-wizard-step.k-state-focused {
+  box-shadow: inset 0 0 0 2px #cccccc;
+  outline: none;
 }
 .k-text-error {
   color: #fe633f;

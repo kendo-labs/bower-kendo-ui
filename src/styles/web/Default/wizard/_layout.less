@@ -22,220 +22,113 @@
                                                                                                                                                                                                        
 
 */
-// Form
-.k-form {
-    border-width: 0;
-    box-sizing: border-box;
-    font-size: @form-font-size;
-    line-height: @form-line-height;
+// Wizard
+.k-wizard {
+    padding: @wizard-padding-y @wizard-padding-x;
+    border-width: @wizard-border-width;
+    font-size: @wizard-font-size;
+    line-height: @wizard-line-height;
+    position: relative;
+    color: inherit;
+    background: none;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+    background: none;
 }
 
-
-// Form fieldset
-.k-form-fieldset {
-    margin: @form-fieldset-margin;
-    padding: @form-fieldset-padding-y @form-fieldset-padding-x;
-    border-width: 0;
-    box-sizing: border-box;
-
-    > * {
-        &:first-child {
-            margin-top: 0;
+// Stepper
+.k-wizard .k-stepper {
+    .k-step-list-vertical {
+        .k-step {
+            flex: 1 0 auto;
         }
     }
-}
-.k-form-legend {
-    margin: @form-legend-margin;
-    padding: @form-legend-padding-y @form-legend-padding-x;
-    border-width: 0 0 2px;
-    border-style: solid;
-    width: 100%;
-    border-width: 0 0 2px;
-    box-sizing: border-box;
-    font-size: @form-legend-font-size;
-    line-height: @form-legend-line-height;
-    text-transform: uppercase;
-}
 
-
-// Form field
-.k-form-field {
-    margin: @form-field-margin;
-    box-sizing: border-box;
-    display: flex;
-    flex-flow: column nowrap;
-
-    &:first-child {
-        margin-top: 0;
-    }
-
-    // Labels inside forms
-    > .k-label,
-    > .k-form-label {
-        margin: @form-label-margin;
-        display: inline-flex;
-        flex-direction: row;
+    .k-step-indicator {
         flex-shrink: 0;
     }
-
-    .k-checkbox-label,
-    .k-radio-label {
-        display: inline-flex;
-    }
-
-    // Inputs inside form
-    .k-textbox,
-    .k-textarea,
-    .k-autocomplete,
-    .k-combobox,
-    .k-dropdown,
-    .k-dropdowntree,
-    .k-dateinput,
-    .k-datepicker,
-    .k-datetimepicker,
-    .k-daterangepicker-wrap,
-    .k-maskedtextbox,
-    .k-multiselect,
-    .k-numerictextbox,
-    .k-timepicker,
-    .k-textbox-container,
-    .k-floating-label-container {
-        width: 100%;
-        // display: flex;
-        // flex-flow: row nowrap;
-    }
 }
 
-
-// Form Hint/Error Messages
-.k-form-hint,
-.k-form-error {
-    padding: 4px 0 0;
-    margin: @form-hint-margin;
-    font-size: @form-hint-font-size;
+// Steps
+.k-wizard-steps {
     display: flex;
-    flex-flow: row nowrap;
+    overflow: hidden;
 }
 
-
-// Horizontal forms
-.k-form-horizontal {
-    .k-form-field {
-        display: flex;
-        flex-flow: row nowrap;
-
-        > .k-label,
-        > .k-form-label {
-            margin-right: @horizontal-form-label-margin-x;
-            padding-top: @horizontal-form-label-padding-top;
-            width: @horizontal-form-label-width;
-            flex-direction: column;
-            align-items: @horizontal-form-label-align;
-            justify-content: flex-end;
-        }
-        .k-label-optional {
-            margin: 0;
-            align-self: inherit;
-        }
-    }
-
-    .k-form-field-wrap {
-        flex: 1;
-    }
-}
-
-
-// Form Buttons
-.k-form-buttons {
-    margin: @form-buttons-margin;
-    padding: @form-buttons-padding-y @form-buttons-padding-x;
-    border-width: 0;
-    border-top-width: @form-buttons-border-width;
-    border-style: solid;
+.k-wizard-step {
+    padding: calc( (@wizard-content-padding-x / 4) + 2px );
+    width: 100%;
     display: flex;
-    flex-flow: row nowrap;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+}
 
-    > * {
-        margin-inline-start: @form-buttons-spacing;
+//  Content
+.k-wizard-content {
+    overflow-y: auto;
+}
+
+// Buttons
+.k-wizard-buttons {
+    margin-top: @wizard-content-padding-y;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+
+    .k-button {
+        margin-right: @wizard-buttons-margin-x;
     }
-    > :first-child {
-        margin-inline-start: 0;
-    }
 
-    &.k-buttons-end {
-        justify-content: flex-end;
-    }
-}
-
-
-
-
-
-// Legacy styles
-.k-edit-form
-{
-    margin: 0;
-    padding: 0;
-}
-
-.k-window > div.k-popup-edit-form
-{
-    padding: 1em 0;
-}
-
-.k-grid-edit-row .k-edit-form td
-{
-    border-bottom-width: 0;
-}
-
-.k-edit-form-container
-{
-    position: relative;
-    width: 400px;
-}
-
-.k-edit-label,
-.k-edit-form-container .editor-label
-{
-    float: left;
-    clear: both;
-    width: 30%;
-    padding: .4em 0 1em;
-    margin-left: 2%;
-    text-align: right;
-}
-
-.k-edit-field,
-.k-edit-form-container .editor-field
-{
-    float: right;
-    clear: right;
-    width: 60%;
-    margin-right: 2%;
-    padding: 0 0 .6em;
-
-    &.k-no-editor {
-        padding: .4em 0 1em;
+    .k-wizard-pager {
+        vertical-align: middle;
     }
 }
 
-.k-edit-form-container .k-button
-{
-    margin: 0 .16em;
+.k-wizard-buttons-right .k-button:last-of-type {
+    margin-right: 0;
 }
 
-.k-edit-field > .k-button:first-child {
+// Horizontal
+.k-wizard-horizontal {
+    flex-direction: column;
+
+    .k-wizard-steps {
+        margin-top: @wizard-content-padding-y;
+    }
+
+    .k-wizard-steps,
+    .k-wizard-content {
+        flex: 1 1 auto;
+    }
+
+}
+
+// Vertical
+.k-wizard-vertical {
+    .k-wizard-steps {
+        flex: 1 0 0%;
+    }
+
+    .k-wizard-content {
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: auto;
+    }
+
+    .k-wizard-steps {
+        margin-left: @wizard-content-padding-x;
+    }
+
+}
+
+.k-wizard-left {
+    flex-direction: row-reverse;
+}
+.k-wizard-left .k-wizard-steps {
+    margin-right: @wizard-content-padding-x;
     margin-left: 0;
 }
-
-.k-edit-form-container .k-edit-buttons
-{
-    clear: both;
-    text-align: right;
-    border-width: 1px 0 0;
-    border-style: solid;
-    position: relative;
-    bottom: -1em;
-    padding: .6em;
-}
-

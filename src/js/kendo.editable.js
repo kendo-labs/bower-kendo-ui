@@ -123,6 +123,18 @@
             }
             return result;
         }
+        function getEditorTag(type, options) {
+            var tag;
+            if (!type.length) {
+                return;
+            }
+            if (type === 'DropDownTree' && options && options.checkboxes || type === 'MultiSelect') {
+                tag = '<select />';
+            } else {
+                tag = type === 'Editor' ? '<textarea />' : '<input />';
+            }
+            return tag;
+        }
         var kendoEditors = [
             'AutoComplete',
             'ColorPicker',
@@ -174,9 +186,9 @@
             'kendoEditor': function (container, options) {
                 var attr = createAttributes(options);
                 var type = options.editor;
-                var tag = type === 'Editor' ? '<textarea />' : '<input />';
                 var editor = 'kendo' + type;
                 var editorOptions = options.editorOptions;
+                var tag = getEditorTag(type, editorOptions);
                 $(tag).attr(attr).appendTo(container)[editor](editorOptions);
             }
         };

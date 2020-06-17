@@ -1632,6 +1632,11 @@ input[type="reset"].k-button-expand {
   -ms-flex-negative: 0;
       flex-shrink: 0;
 }
+.k-form-field .k-checkbox-label,
+.k-form-field .k-radio-label {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
 .k-form-field .k-textbox,
 .k-form-field .k-textarea,
 .k-form-field .k-autocomplete,
@@ -15459,7 +15464,8 @@ a.k-badge:hover,
 .k-radio-label .k-ripple {
   display: none !important;
 }
-.k-radio + .k-radio-label {
+.k-radio + .k-radio-label,
+.k-radio-label + .k-radio {
   margin-left: 4px;
 }
 .k-radio-label > .k-radio {
@@ -15467,8 +15473,28 @@ a.k-badge:hover,
   -ms-flex-negative: 0;
       flex-shrink: 0;
 }
+.k-radio-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.k-radio-list .k-radio-item {
+  margin-top: 16px;
+}
+.k-radio-list .k-radio-item:first-child {
+  margin-top: 0;
+}
+.k-list-horizontal .k-radio-item {
+  display: inline-block;
+  margin: 0 32px 0 0;
+}
+.k-list-horizontal .k-radio-item:last-child {
+  margin-right: 0;
+}
 .k-rtl .k-radio + .k-radio-label,
-[dir="rtl"] .k-radio + .k-radio-label {
+[dir="rtl"] .k-radio + .k-radio-label,
+.k-rtl .k-radio-label + .k-radio,
+[dir="rtl"] .k-radio-label + .k-radio {
   margin-left: 0;
   margin-right: 4px;
 }
@@ -15476,6 +15502,15 @@ a.k-badge:hover,
 [dir="rtl"] .k-radio-label > .k-radio {
   margin-right: 0;
   margin-left: 4px;
+}
+.k-rtl .k-list-horizontal .k-radio-item,
+[dir="rtl"] .k-list-horizontal .k-radio-item {
+  margin-right: 0;
+  margin-left: 32px;
+}
+.k-rtl .k-list-horizontal .k-radio-item:last-child,
+[dir="rtl"] .k-list-horizontal .k-radio-item:last-child {
+  margin-left: 0;
 }
 .k-radio::-ms-check {
   border-width: 0;
@@ -16215,6 +16250,105 @@ a.k-badge:hover,
   left: auto;
   right: 17px;
 }
+.k-wizard {
+  padding: 32px 32px;
+  border-width: 0;
+  font-size: inherit;
+  line-height: 1.42857143;
+  position: relative;
+  color: inherit;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: stretch;
+      align-items: stretch;
+  overflow: hidden;
+  background: none;
+}
+.k-wizard .k-stepper .k-step-list-vertical .k-step {
+  -ms-flex: 1 0 auto;
+      flex: 1 0 auto;
+}
+.k-wizard .k-stepper .k-step-indicator {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+.k-wizard-steps {
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+}
+.k-wizard-step {
+  padding: 18px;
+  width: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-align: stretch;
+      align-items: stretch;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+}
+.k-wizard-content {
+  overflow-y: auto;
+}
+.k-wizard-buttons {
+  margin-top: 64px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  -ms-flex-align: center;
+      align-items: center;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+.k-wizard-buttons .k-button {
+  margin-right: 16px;
+}
+.k-wizard-buttons .k-wizard-pager {
+  vertical-align: middle;
+}
+.k-wizard-buttons-right .k-button:last-of-type {
+  margin-right: 0;
+}
+.k-wizard-horizontal {
+  -ms-flex-direction: column;
+      flex-direction: column;
+}
+.k-wizard-horizontal .k-wizard-steps {
+  margin-top: 64px;
+}
+.k-wizard-horizontal .k-wizard-steps,
+.k-wizard-horizontal .k-wizard-content {
+  -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+}
+.k-wizard-vertical .k-wizard-steps {
+  -ms-flex: 1 0 0%;
+      flex: 1 0 0%;
+}
+.k-wizard-vertical .k-wizard-content {
+  -ms-flex-positive: 1;
+      flex-grow: 1;
+  -ms-flex-negative: 1;
+      flex-shrink: 1;
+  -ms-flex-preferred-size: auto;
+      flex-basis: auto;
+}
+.k-wizard-vertical .k-wizard-steps {
+  margin-left: 64px;
+}
+.k-wizard-left {
+  -ms-flex-direction: row-reverse;
+      flex-direction: row-reverse;
+}
+.k-wizard-left .k-wizard-steps {
+  margin-right: 64px;
+  margin-left: 0;
+}
 .k-editor {
   border-style: solid;
   border-width: 1px;
@@ -16579,7 +16713,7 @@ table.k-editor .k-editable-area {
 .k-editor-dialog.k-editor-table-wizard-dialog .k-tabstrip-wrapper .k-content {
   overflow: hidden;
   min-height: 440px;
-  height: auto;
+  height: 35em;
   margin: 0;
   padding: 1em 0.5em 0;
   border-width: 0;
@@ -17268,7 +17402,7 @@ div.k-spreadsheet-window {
 }
 .k-editor-dialog.k-editor-table-wizard-dialog .k-tabstrip-wrapper .k-content {
   min-height: 510px;
-  height: auto;
+  height: 42em;
 }
 .k-edit-label,
 .k-edit-form-container .editor-label,
