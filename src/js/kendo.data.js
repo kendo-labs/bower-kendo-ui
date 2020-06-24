@@ -2012,6 +2012,7 @@
                 that._pageSize = options.pageSize;
                 that._page = options.page || (options.pageSize ? 1 : undefined);
                 that._sort = normalizeSort(options.sort);
+                that._sortFields = sortFields(options.sort);
                 that._filter = normalizeFilter(options.filter);
                 that._group = normalizeGroup(options.group);
                 that._aggregate = options.aggregate;

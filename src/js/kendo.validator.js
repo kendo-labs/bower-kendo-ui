@@ -361,12 +361,13 @@
                 }
             },
             reset: function () {
-                var that = this, inputs = that.element.find('.' + INVALIDINPUT);
+                var that = this, inputs = that.element.find('.' + INVALIDINPUT), labels = that.element.find('.' + INVALIDLABEL);
                 that._errors = [];
                 that.hideMessages();
                 that.hideValidationSummary();
                 inputs.removeAttr(ARIAINVALID);
                 inputs.removeClass(INVALIDINPUT);
+                labels.removeClass(INVALIDLABEL);
             },
             _findMessageContainer: function (fieldName) {
                 var locators = kendo.ui.validator.messageLocators, name, containers = $();

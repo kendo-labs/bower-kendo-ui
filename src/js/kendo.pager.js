@@ -177,7 +177,7 @@
                 }
                 that._resizeHandler = proxy(that.resize, that, true);
                 $(window).on('resize' + NS, that._resizeHandler);
-                sizeClassName = that._getWidthSizeClass(that.element.width());
+                sizeClassName = that._getWidthSizeClass(that.element.outerWidth());
                 if (sizeClassName) {
                     that.element.addClass(sizeClassName);
                 }

@@ -1497,9 +1497,6 @@
   box-shadow: inset 0 0 0 2px #674c63;
   outline: none;
 }
-.k-text-error {
-  color: #e33a13;
-}
 .k-in,
 .k-item {
   border-color: transparent;
@@ -1621,6 +1618,9 @@ td.k-group-cell,
 }
 .k-input-label {
   color: #fff;
+}
+.k-text-error {
+  color: #e33a13;
 }
 .k-input[readonly] {
   background-color: #1b141a;

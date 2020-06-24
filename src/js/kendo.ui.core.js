@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.2.617'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.2.624'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -7472,6 +7472,7 @@
                 that._pageSize = options.pageSize;
                 that._page = options.page || (options.pageSize ? 1 : undefined);
                 that._sort = normalizeSort(options.sort);
+                that._sortFields = sortFields(options.sort);
                 that._filter = normalizeFilter(options.filter);
                 that._group = normalizeGroup(options.group);
                 that._aggregate = options.aggregate;
@@ -14241,12 +14242,13 @@
                 }
             },
             reset: function () {
-                var that = this, inputs = that.element.find('.' + INVALIDINPUT);
+                var that = this, inputs = that.element.find('.' + INVALIDINPUT), labels = that.element.find('.' + INVALIDLABEL);
                 that._errors = [];
                 that.hideMessages();
                 that.hideValidationSummary();
                 inputs.removeAttr(ARIAINVALID);
                 inputs.removeClass(INVALIDINPUT);
+                labels.removeClass(INVALIDLABEL);
             },
             _findMessageContainer: function (fieldName) {
                 var locators = kendo.ui.validator.messageLocators, name, containers = $();
@@ -17199,7 +17201,7 @@
                 }
                 that._resizeHandler = proxy(that.resize, that, true);
                 $(window).on('resize' + NS, that._resizeHandler);
-                sizeClassName = that._getWidthSizeClass(that.element.width());
+                sizeClassName = that._getWidthSizeClass(that.element.outerWidth());
                 if (sizeClassName) {
                     that.element.addClass(sizeClassName);
                 }
@@ -33392,7 +33394,7 @@
             if (inArray(type, specialRules) >= 0) {
                 attr[DATATYPE] = type;
             }
-            attr[BINDING] = 'value:' + options.field;
+            attr[BINDING] = (type === 'boolean' ? 'checked:' : 'value:') + options.field;
             return attr;
         }
         function addIdAttribute(container, attr) {
@@ -33471,7 +33473,8 @@
             },
             'boolean': function (container, options) {
                 var attr = createAttributes(options);
-                $('<input type="checkbox" />').attr(attr).addClass('k-checkbox').appendTo(container);
+                var element = $('<input type="checkbox" />').attr(attr).addClass('k-checkbox').appendTo(container);
+                renderHiddenForМvcCheckbox(element, container, options);
             },
             'values': function (container, options) {
                 var attr = createAttributes(options);
@@ -33484,8 +33487,9 @@
                 var type = options.editor;
                 var editor = 'kendo' + type;
                 var editorOptions = options.editorOptions;
-                var tag = getEditorTag(type, editorOptions);
-                $(tag).attr(attr).appendTo(container)[editor](editorOptions);
+                var tagElement = getEditorTag(type, editorOptions);
+                var element = $(tagElement).attr(attr).appendTo(container)[editor](editorOptions);
+                renderHiddenForМvcCheckbox(element, container, options);
             }
         };
         var mobileEditors = {
@@ -33530,6 +33534,13 @@
                 if (isFunction(descriptor)) {
                     rules[rule] = descriptor;
                 }
+            }
+        }
+        function renderHiddenForМvcCheckbox(tag, container, field) {
+            var addHidden = field ? field.shouldRenderHidden || false : false;
+            if (addHidden) {
+                tag.val(true);
+                container.append($('<input type=\'hidden\' name=\'' + field.field + '\' value=\'false\' data-skip=\'true\' data-validate=\'false\'/>'));
             }
         }
         var Editable = Widget.extend({

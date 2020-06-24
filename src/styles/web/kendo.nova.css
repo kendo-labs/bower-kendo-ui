@@ -1447,9 +1447,6 @@
   box-shadow: inset 0 0 0 2px #e0e0e0;
   outline: none;
 }
-.k-text-error {
-  color: #ff2637;
-}
 .k-splitbar .k-resize-handle {
   background-color: #32364c;
 }
@@ -1560,6 +1557,9 @@
 }
 .k-input-label {
   color: #32364c;
+}
+.k-text-error {
+  color: #ff2637;
 }
 .k-state-selected {
   background-color: rgba(30, 162, 179, 0.25);
