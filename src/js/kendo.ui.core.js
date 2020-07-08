@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.2.701'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.2.708'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -37597,6 +37597,12 @@
             },
             _click: function (e) {
                 var that = this, openHandle, options = that.options, target = $(kendo.eventTarget(e)), targetElement = target[0], nodeName = target[0] ? target[0].nodeName.toUpperCase() : '', formNode = nodeName == 'INPUT' || nodeName == 'SELECT' || nodeName == 'BUTTON' || nodeName == 'LABEL', link = target.closest(LINK_SELECTOR), element = target.closest(allItemsSelector), itemElement = element[0], href = link.attr('href'), childGroup, childGroupVisible, targetHref = target.attr('href'), sampleHref = $('<a href=\'#\' />').attr('href'), isLink = !!href && href !== sampleHref, isLocalLink = isLink && !!href.match(/^#/), isTargetLink = !!targetHref && targetHref !== sampleHref, overflowWrapper = that._overflowWrapper(), shouldCloseTheRootItem;
+                if (targetElement && !targetElement.parentNode) {
+                    return;
+                }
+                if ($(target).hasClass('k-menu-expand-arrow')) {
+                    this._lastClickedElement = targetElement.parentElement;
+                }
                 while (targetElement && targetElement.parentNode != itemElement) {
                     targetElement = targetElement.parentNode;
                 }
@@ -37697,7 +37703,9 @@
             },
             _documentClick: function (e) {
                 var that = this;
-                if (contains((that._overflowWrapper() || that.element)[0], e.target)) {
+                var target = $(e.target).hasClass('k-menu-expand-arrow') ? that._lastClickedElement : e.target;
+                if (contains((that._overflowWrapper() || that.element)[0], target)) {
+                    that._lastClickedElement = undefined;
                     return;
                 }
                 that.clicked = false;
