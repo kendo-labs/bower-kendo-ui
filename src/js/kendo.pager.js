@@ -250,7 +250,7 @@
                 this.dataSource = kendo.data.DataSource.create(options.dataSource);
             },
             refresh: function (e) {
-                var that = this, idx, end, start = 1, reminder, page = that.page(), html = '', selectHtml = '', options = that.options, pageSize = that.pageSize(), collapsedTotal = that._collapsedTotal(), total = that.dataSource._isGroupPaged() ? that.dataSource.groupsTotal() : that.dataSource.total(), totalPages = that.totalPages(), linkTemplate = that.linkTemplate, numericSelectItemTemplate = that.numericSelectItemTemplate, buttonCount = options.buttonCount;
+                var that = this, idx, end, start = 1, reminder, page = that.page(), html = '', selectHtml = '', options = that.options, pageSize = that.pageSize(), collapsedTotal = that._collapsedTotal(), total = that.dataSource._isGroupPaged() ? that.dataSource.groupsTotal(true) : that.dataSource.total(), totalPages = that.totalPages(), linkTemplate = that.linkTemplate, numericSelectItemTemplate = that.numericSelectItemTemplate, buttonCount = options.buttonCount;
                 if (e && e.action == 'itemchange') {
                     return;
                 }
