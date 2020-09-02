@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.2.812'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.2.902'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -33709,7 +33709,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, CHANGE = 'change', KENDO_KEYDOWN = 'kendoKeydown', CANCEL = 'cancel', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', Widget = kendo.ui.Widget, keys = kendo.keys, EMPTY_STRING = '', FOCUSSELECTOR = '.k-listview-content > *:not(.k-loading-mask)', PROGRESS = 'progress', ERROR = 'error', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', KEDITITEM = 'k-edit-item', EDIT = 'edit', REMOVE = 'remove', SAVE = 'save', MOUSEDOWN = 'mousedown', CLICK = 'click', TOUCHSTART = 'touchstart', NS = '.kendoListView', proxy = $.proxy, activeElement = kendo._activeElement, progress = kendo.ui.progress, DataSource = kendo.data.DataSource;
+        var kendo = window.kendo, CHANGE = 'change', KENDO_KEYDOWN = 'kendoKeydown', CANCEL = 'cancel', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', Widget = kendo.ui.Widget, keys = kendo.keys, EMPTY_STRING = '', FOCUSSELECTOR = '> *:not(.k-loading-mask)', PROGRESS = 'progress', ERROR = 'error', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', KEDITITEM = 'k-edit-item', EDIT = 'edit', REMOVE = 'remove', SAVE = 'save', MOUSEDOWN = 'mousedown', CLICK = 'click', TOUCHSTART = 'touchstart', NS = '.kendoListView', proxy = $.proxy, activeElement = kendo._activeElement, progress = kendo.ui.progress, DataSource = kendo.data.DataSource;
         var ListView = kendo.ui.DataBoundWidget.extend({
             init: function (element, options) {
                 var that = this;
@@ -33754,6 +33754,7 @@
                 altTemplate: EMPTY_STRING,
                 editTemplate: EMPTY_STRING,
                 contentTemplate: '<div data-content=\'true\' />',
+                contentElement: 'div',
                 bordered: true,
                 borders: '',
                 layout: '',
@@ -33823,7 +33824,11 @@
                 var options = this.options;
                 var height = options.height;
                 this.element.addClass('k-widget k-listview').attr('role', 'listbox');
-                this.content = $('<div />').appendTo(this.element);
+                if (options.contentElement) {
+                    this.content = $(document.createElement(options.contentElement)).appendTo(this.element);
+                } else {
+                    this.content = this.element;
+                }
                 if (height) {
                     this.element.css('height', height);
                 }
@@ -33977,7 +33982,7 @@
                     that.selectable = new kendo.ui.Selectable(that.element, {
                         aria: true,
                         multiple: multi,
-                        filter: FOCUSSELECTOR,
+                        filter: that.options.contentElement ? '.k-listview-content ' + FOCUSSELECTOR : FOCUSSELECTOR,
                         change: function () {
                             that.trigger(CHANGE);
                         }
@@ -34166,7 +34171,7 @@
                             that.current(that.items().eq(idx));
                         }
                     });
-                    element.on(MOUSEDOWN + NS + ' ' + TOUCHSTART + NS, FOCUSSELECTOR, proxy(clickCallback, that));
+                    element.on(MOUSEDOWN + NS + ' ' + TOUCHSTART + NS, that.options.contentElement ? '.k-listview-content ' + FOCUSSELECTOR : FOCUSSELECTOR, proxy(clickCallback, that));
                 }
             },
             clearSelection: function () {
