@@ -36,13 +36,13 @@
         numberFormat: {
             pattern: ["-n"],
             decimals: 2,
-            ",": "'",
+            ",": "’",
             ".": ".",
             groupSize: [3],
             percent: {
                 pattern: ["-n%","n%"],
                 decimals: 2,
-                ",": "'",
+                ",": "’",
                 ".": ".",
                 groupSize: [3],
                 symbol: "%"
@@ -52,7 +52,7 @@
                 abbr: "CHF",
                 pattern: ["-$ n","$ n"],
                 decimals: 2,
-                ",": "'",
+                ",": "’",
                 ".": ".",
                 groupSize: [3],
                 symbol: "CHF"
@@ -69,8 +69,8 @@
                     names: ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],
                     namesAbbr: ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"]
                 },
-                AM: ["vorm.","vorm.","VORM."],
-                PM: ["nachm.","nachm.","NACHM."],
+                AM: ["AM","am","AM"],
+                PM: ["PM","pm","PM"],
                 patterns: {
                     d: "dd.MM.yyyy",
                     D: "dddd, d. MMMM yyyy",

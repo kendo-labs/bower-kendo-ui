@@ -51,7 +51,7 @@
                 name: "Tanzanian Shilling",
                 abbr: "TZS",
                 pattern: ["-n$","n$"],
-                decimals: 0,
+                decimals: 2,
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
@@ -69,8 +69,8 @@
                     names: ["pa mwedzi gwa hutala","pa mwedzi gwa wuvili","pa mwedzi gwa wudatu","pa mwedzi gwa wutai","pa mwedzi gwa wuhanu","pa mwedzi gwa sita","pa mwedzi gwa saba","pa mwedzi gwa nane","pa mwedzi gwa tisa","pa mwedzi gwa kumi","pa mwedzi gwa kumi na moja","pa mwedzi gwa kumi na mbili"],
                     namesAbbr: ["Hut","Vil","Dat","Tai","Han","Sit","Sab","Nan","Tis","Kum","Kmj","Kmb"]
                 },
-                AM: ["AM","am","AM"],
-                PM: ["PM","pm","PM"],
+                AM: ["pamilau","pamilau","PAMILAU"],
+                PM: ["pamunyi","pamunyi","PAMUNYI"],
                 patterns: {
                     d: "dd/MM/yyyy",
                     D: "dddd, d MMMM yyyy",

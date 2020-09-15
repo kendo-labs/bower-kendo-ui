@@ -498,6 +498,7 @@
         }
         return ret;
     }
+    var DARK_TRESHOLD = 180;
     var Color = Class.extend({
         init: function (value) {
             var this$1 = this;
@@ -559,6 +560,9 @@
         },
         percBrightness: function () {
             return Math.sqrt(0.241 * this.r * this.r + 0.691 * this.g * this.g + 0.068 * this.b * this.b);
+        },
+        isDark: function () {
+            return this.percBrightness() < DARK_TRESHOLD;
         }
     });
     Color.fromBytes = function (r, g, b, a) {
@@ -608,6 +612,7 @@
     Color.namedColors = namedColors;
     kendo.deepExtend(kendo, {
         parseColor: parseColor,
+        namedColors: namedColors,
         Color: Color
     });
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {

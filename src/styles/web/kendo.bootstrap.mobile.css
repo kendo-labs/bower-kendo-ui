@@ -5425,6 +5425,76 @@ body:before {
   color: #ffffff;
   background-color: #000000;
 }
+.k-appbar-primary {
+  color: #ffffff;
+  background-color: #428bca;
+}
+.k-appbar-secondary {
+  color: #000000;
+  background-color: #ebebeb;
+}
+.k-appbar-tertiary {
+  color: #ffffff;
+  background-color: #5cb85c;
+}
+.k-appbar-info {
+  color: #000000;
+  background-color: #5bc0de;
+}
+.k-appbar-success {
+  color: #ffffff;
+  background-color: #5cb85c;
+}
+.k-appbar-warning {
+  color: #000000;
+  background-color: #f0ad4e;
+}
+.k-appbar-error {
+  color: #ffffff;
+  background-color: #d9534f;
+}
+.k-appbar-dark {
+  color: #ffffff;
+  background-color: #000000;
+}
+.k-appbar-light {
+  color: #000000;
+  background-color: #ffffff;
+}
+.k-appbar-inverse {
+  color: #ffffff;
+  background-color: #000000;
+}
+.k-loader-primary .k-loader-segment::after {
+  background-color: #428bca;
+}
+.k-loader-secondary .k-loader-segment::after {
+  background-color: #ebebeb;
+}
+.k-loader-tertiary .k-loader-segment::after {
+  background-color: #5cb85c;
+}
+.k-loader-info .k-loader-segment::after {
+  background-color: #5bc0de;
+}
+.k-loader-success .k-loader-segment::after {
+  background-color: #5cb85c;
+}
+.k-loader-warning .k-loader-segment::after {
+  background-color: #f0ad4e;
+}
+.k-loader-error .k-loader-segment::after {
+  background-color: #d9534f;
+}
+.k-loader-dark .k-loader-segment::after {
+  background-color: #000000;
+}
+.k-loader-light .k-loader-segment::after {
+  background-color: #ffffff;
+}
+.k-loader-inverse .k-loader-segment::after {
+  background-color: #000000;
+}
 .km-buttongroup > *:first-child {
   border-radius: 3px 0 0 3px;
 }

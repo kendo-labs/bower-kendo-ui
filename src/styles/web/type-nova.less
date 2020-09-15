@@ -144,6 +144,11 @@
 @toolbar-shadow: null;
 
 
+// Avatar
+@avatar-bg: @accent;
+@avatar-text: contrast( @avatar-bg );
+
+
 // Cards
 @card-bg: @component-bg;
 @card-text: @component-text;
@@ -230,6 +235,9 @@
 @grid-selected-border: @grid-border;
 @grid-selected-gradient: null;
 
+@grid-sticky-border: darken(@grid-border, 30%);
+
+@grid-selected-hover-bg: lighten(@info, 17%);
 
 // Calendar
 @calendar-bg: @component-bg;
@@ -727,6 +735,82 @@
 @wizard-focused-shadow: inset 0 0 0 2px @widget-border-color;
 
 
+// Textarea
+@textarea-bg: @input-bg;
+@textarea-text: @input-text;
+@textarea-border: @input-border;
+@textarea-shadow: @input-shadow;
+
+@textarea-hovered-text: @input-hovered-text;
+@textarea-hovered-bg: @input-hovered-bg;
+@textarea-hovered-border: @input-hovered-border;
+@textarea-hovered-shadow: @input-hovered-shadow;
+
+@textarea-focused-text: @input-focused-text;
+@textarea-focused-bg: @input-focused-bg;
+@textarea-focused-border: @input-focused-border;
+@textarea-focused-shadow: @input-focused-shadow;
+
+@textarea-placeholder-text: rgba( @input-text, .5 );
+@textarea-placeholder-opacity: 1;
+
+@textarea-selected-text: contrast(@accent);
+@textarea-selected-bg: @accent;
+
+@textarea-invalid-border: rgba( @error, .5 );;
+@textarea-invalid-shadow: null;
+
+
+// Appbar
+@appbar-box-shadow: 0px 1px 1px rgba(0, 0, 0, .16);
+@appbar-bottom-box-shadow:  0px -1px 1px rgba(0, 0, 0, .16);
+
+
+//Gantt
+@event-text-color: @inversed-text-color;
+@gantt-task-selected-bg: lighten(@info, 4%);
+@gantt-task-completed-selected-bg: darken(@info, 21%);
+@gantt-summary-completed-selected-bg: lighten(@info, 22%);
+
+@gantt-delayed-advanced-text: #FFFFFF;
+
+@gantt-planned-bg: @primary;
+@gantt-planned-border: @gantt-planned-bg;
+@gantt-planned-tooltip-text: #FFFFFF;
+
+@gantt-delayed-bg: @error;
+@gantt-delayed-bg-lighter: tint(@gantt-delayed-bg, 20);
+@gantt-delayed-tooltip-text: #FFFFFF;
+
+@gantt-advanced-bg: @success;
+@gantt-advanced-bg-lighter: tint(@gantt-advanced-bg, 20);
+
+@gantt-task-offset-border: @gantt-delayed-bg;
+@gantt-task-offset-text: #000000;
+
+
+// ImageEditor
+@imageeditor-bg: @component-bg;
+@imageeditor-text: @component-text;
+@imageeditor-border: @component-border;
+
+@imageeditor-content-bg: darken(@component-bg, 22.5%);
+@imageeditor-content-text: false;
+@imageeditor-content-border: false;
+
+@imageeditor-action-pane-text: false;
+@imageeditor-action-pane-bg: @component-bg;
+@imageeditor-action-pane-border: @component-border;
+
+@imageeditor-crop-text: false;
+@imageeditor-crop-bg: false;
+@imageeditor-crop-border: white;
+
+@imageeditor-resize-handle-text: false;
+@imageeditor-resize-handle-bg: false;
+@imageeditor-resize-handle-border: white;
+
+
 // Kendo skin
 
 @theme-name: ~"nova";
@@ -736,6 +820,7 @@
 @import "mixins/border-radius.less";
 @import "themes/type.less";
 @import "themes/button.less";
+@import "Default/avatar/_theme.less";
 @import "Default/card/_theme.less";
 @import "Default/tilelayout/_theme.less";
 @import "Default/chat/_theme.less";
@@ -763,6 +848,12 @@
 @import "Default/forms/_theme.less";
 @import "Default/tooltip/_theme.less";
 @import "Default/wizard/_theme.less";
+@import "Default/textarea/_theme.less";
+@import "Default/appbar/_theme.less";
+@import "Default/loader/_theme.less";
+@import "Default/gantt/_theme.less";
+@import "Default/imageeditor/_theme.less";
+
 
 // Main colors
 .k-splitbar .k-resize-handle {
@@ -876,9 +967,7 @@
 
 .k-input,
 .k-textbox,
-.k-textarea,
 .k-textbox > input,
-.k-textarea > textarea,
 .k-multiselect-wrap {
     color: @normal-text-color;
     background-color: @background;
@@ -934,7 +1023,6 @@
 }
 
 .k-textbox,
-.k-textarea,
 .k-autocomplete,
 .k-autocomplete .k-input,
 .k-multiselect,
@@ -1132,7 +1220,6 @@
 }
 
 .k-textbox.k-state-disabled,
-.k-textarea.k-state-disabled,
 .k-state-disabled .k-picker-wrap,
 .k-autocomplete.k-state-disabled,
 .k-dropdown-wrap.k-state-disabled,
@@ -1497,7 +1584,7 @@ input.k-textbox:active {
 }
 
 .k-filter-menu .k-button,
-.k-edit-form-container .k-button {
+.k-edit-form-container :not(.k-button-group) > .k-button {
     color: @normal-text-color;
     background: transparent;
     border-color: transparent;
@@ -1508,7 +1595,7 @@ input.k-textbox:active {
 }
 
 .k-filter-menu .k-primary,
-.k-edit-form-container .k-primary {
+.k-edit-form-container :not(.k-button-group) > .k-primary {
     color: @accent;
 }
 
@@ -1533,7 +1620,7 @@ input.k-textbox:active {
 
 .k-grid td.k-state-selected:hover,
 .k-grid tr.k-state-selected:hover td {
-    background-color: lighten(@info, 17%);
+    background-color: @grid-selected-hover-bg;
 }
 
 .k-grid tr:hover .k-state-focused.k-state-selected,
@@ -1624,6 +1711,32 @@ input.k-textbox:active {
 
 }
 
+// Drop Hint
+.k-drop-hint-line {
+    background-color: @accent;
+}
+
+.k-drop-hint-h {
+    .k-drop-hint-start {
+        border-left-color: @accent;
+    }
+
+    .k-drop-hint-end {
+        border-right-color: @accent;
+    }
+}
+
+.k-drop-hint-v {
+    .k-drop-hint-start {
+        border-top-color: @accent;
+    }
+
+    .k-drop-hint-end {
+        border-bottom-color: @accent;
+    }
+}
+
+
 
 // Scheduler
 .k-scheduler th,
@@ -1693,36 +1806,6 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
     border-color: @secondary-widget-background-color;
 }
 
-.k-gantt-toolbar .k-button {
-    background-color: @accent;
-    border-color: @accent;
-}
-
-.k-gantt>.k-header li,
-.k-gantt>.k-header .k-link,
-.k-gantt-toolbar .k-button {
-    color: @inversed-text-color;
-}
-
-.k-gantt .k-gantt-toolbar .k-gantt-views li.k-state-hover,
-.k-gantt .k-gantt-toolbar .k-gantt-views li.k-state-hover .k-link,
-.k-gantt .k-gantt-toolbar .k-button:hover {
-    background-color: @accent-hover-background;
-    border-color: @accent-hover-background;
-}
-
-.k-gantt-toolbar>.k-gantt-views>li.k-state-selected,
-.k-gantt .k-gantt-toolbar .k-gantt-views li.k-state-selected.k-state-hover {
-    border-bottom-color: @widget-background-color;
-}
-
-.k-gantt-toolbar li:first-child,
-.k-gantt-toolbar li:first-child>.k-link,
-.k-gantt-toolbar li:last-child,
-.k-gantt-toolbar li:last-child>.k-link {
-    border-radius: 0;
-}
-
 .k-gantt .k-task-draghandle {
     border-color: darken(@info, 21%);
 }
@@ -1750,7 +1833,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
 }
 
 .k-state-selected.k-task-summary {
-    background: lighten(@info, 4%);;
+    background: lighten(@info, 4%);
 }
 
 .k-state-selected.k-task-milestone,
@@ -2456,4 +2539,62 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
 .k-window-content.editorToolbarWindow {
     color: @toolbar-text;
     background-color: @toolbar-bg;
+}
+
+// Grid Sticky columns
+.k-master-row {
+    .k-grid-content-sticky {
+        background-color: @grid-bg;
+    }
+
+    &.k-alt .k-grid-content-sticky {
+        background-color: @grid-alt-bg;
+    }
+
+    &.k-state-selected .k-grid-content-sticky {
+        .composite-background(@grid-selected-gradient);
+        background-color: @grid-selected-bg;
+        background-position: 50% 50%;
+    }
+
+    &:hover .k-grid-content-sticky,
+    &.k-state-hover .k-grid-content-sticky {
+        .composite-background(@grid-hover-gradient);
+        background-color: @grid-hover-bg;
+    }
+
+    &.k-state-selected:hover .k-grid-content-sticky,
+    &.k-state-selected.k-state-hover .k-grid-content-sticky {
+        background-color: @grid-selected-hover-bg;
+        .composite-background(none);
+    }
+}
+
+.k-grouping-row {
+    .k-grid-content-sticky {
+        background-color: @secondary-widget-background-color;
+    }
+
+    &:hover .k-grid-content-sticky,
+    &.k-state-hover .k-grid-content-sticky {
+        .composite-background(@grid-hover-gradient);
+        background-color: @grid-hover-bg;
+    }
+}
+
+.k-grid-header .k-grid-header-sticky,
+.k-master-row .k-grid-content-sticky,
+.k-grouping-row .k-grid-content-sticky,
+.k-footer-template .k-grid-footer-sticky {
+    border-left-color: @grid-sticky-border;
+    border-right-color: @grid-sticky-border;
+}
+
+// Locked columns
+.k-grid-header-locked,
+.k-grid-content-locked,
+.k-grid-header-locked .k-header,
+.k-grid-content-locked td {
+    border-left-color: @grid-sticky-border;
+    border-right-color: @grid-sticky-border;
 }

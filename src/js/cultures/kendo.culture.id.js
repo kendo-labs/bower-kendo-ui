@@ -51,7 +51,7 @@
                 name: "",
                 abbr: "",
                 pattern: ["-$n","$n"],
-                decimals: 0,
+                decimals: 2,
                 ",": ".",
                 ".": ",",
                 groupSize: [3],
@@ -67,7 +67,7 @@
                 },
                 months: {
                     names: ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"],
-                    namesAbbr: ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agt","Sep","Okt","Nov","Des"]
+                    namesAbbr: ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"]
                 },
                 AM: ["AM","am","AM"],
                 PM: ["PM","pm","PM"],

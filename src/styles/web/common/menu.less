@@ -102,6 +102,10 @@ ul.k-menu-vertical > .k-item
     .prohibit-selection;
 }
 
+.k-menu-vertical > .k-menu-item > .k-menu-link {
+    padding-right: @menu-vertical-link-padding;
+}
+
 .k-menu-scroll-wrapper .k-menu-group,
 .k-popups-wrapper .k-menu-group,
 .k-menu .k-menu-group
@@ -397,6 +401,11 @@ ul.k-menu-vertical .k-separator,
     .k-context-menu.k-menu-vertical > .k-item > .k-link,
     .k-menu .k-menu-group .k-item > .k-link {
         padding: .28em .9em .38em 1.8em;
+    }
+
+    .k-menu-vertical > .k-menu-item > .k-menu-link {
+        padding: @menu-link-padding;
+        padding-left: @menu-vertical-link-padding;
     }
 }
 // Context Menu

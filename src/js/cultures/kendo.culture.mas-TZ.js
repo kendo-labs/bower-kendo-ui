@@ -51,7 +51,7 @@
                 name: "Tanzanian Shilling",
                 abbr: "TZS",
                 pattern: ["-$n","$n"],
-                decimals: 0,
+                decimals: 2,
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
@@ -69,8 +69,8 @@
                     names: ["Oladalʉ́","Arát","Ɔɛnɨ́ɔɨŋɔk","Olodoyíóríê inkókúâ","Oloilépūnyīē inkókúâ","Kújúɔrɔk","Mórusásin","Ɔlɔ́ɨ́bɔ́rárɛ","Kúshîn","Olgísan","Pʉshʉ́ka","Ntʉ́ŋʉ́s"],
                     namesAbbr: ["Dal","Ará","Ɔɛn","Doy","Lép","Rok","Sás","Bɔ́r","Kús","Gís","Shʉ́","Ntʉ́"]
                 },
-                AM: ["AM","am","AM"],
-                PM: ["PM","pm","PM"],
+                AM: ["Ɛnkakɛnyá","ɛnkakɛnyá","ƐNKAKƐNYÁ"],
+                PM: ["Ɛndámâ","ɛndámâ","ƐNDÁMÂ"],
                 patterns: {
                     d: "dd/MM/yyyy",
                     D: "dddd, d MMMM yyyy",

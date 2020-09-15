@@ -55,7 +55,7 @@
                 ",": ",",
                 ".": ".",
                 groupSize: [3],
-                symbol: "IQD"
+                symbol: "د.ع.‏"
             }
         },
         calendars: {

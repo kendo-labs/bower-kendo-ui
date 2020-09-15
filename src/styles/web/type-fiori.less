@@ -232,6 +232,11 @@
 @toolbar-shadow: null;
 
 
+// Avatar
+@avatar-bg: @accent;
+@avatar-text: contrast( @avatar-bg );
+
+
 // Cards
 @card-bg: @component-bg;
 @card-text: @component-text;
@@ -318,6 +323,9 @@
 @grid-selected-border: @grid-border;
 @grid-selected-gradient: null;
 
+@grid-sticky-border: darken(@grid-border, 30%);
+
+@grid-selected-hover-bg: darken(@selected-secondary-background-color, 3%);
 
 // Calendar
 @calendar-bg: @component-bg;
@@ -806,6 +814,81 @@
 @wizard-focused-shadow: inset 0 0 0 2px @widget-border-color;
 
 
+// Textarea
+@textarea-bg: @input-bg;
+@textarea-text: @input-text;
+@textarea-border: @input-border;
+@textarea-shadow: @input-shadow;
+
+@textarea-hovered-text: @input-hovered-text;
+@textarea-hovered-bg: @input-hovered-bg;
+@textarea-hovered-border: @input-hovered-border;
+@textarea-hovered-shadow: @input-hovered-shadow;
+
+@textarea-focused-text: @input-focused-text;
+@textarea-focused-bg: @input-focused-bg;
+@textarea-focused-border: @input-focused-border;
+@textarea-focused-shadow: @input-focused-shadow;
+
+@textarea-placeholder-text: rgba( @input-text, .5 );
+@textarea-placeholder-opacity: 1;
+
+@textarea-selected-text: contrast(@accent);
+@textarea-selected-bg: @accent;
+
+@textarea-invalid-border: rgba( @error, .5 );;
+@textarea-invalid-shadow: null;
+
+
+// Appbar
+@appbar-box-shadow: 0px 1px 1px rgba(0, 0, 0, .16);
+@appbar-bottom-box-shadow:  0px -1px 1px rgba(0, 0, 0, .16);
+
+
+//Gantt
+@gantt-task-selected-bg: lighten(@event-background-color, 7%);
+@gantt-task-completed-selected-bg: @selected-background-color;
+@gantt-summary-completed-selected-bg: @primary-active-background-color;
+
+@gantt-delayed-advanced-text: #FFFFFF;
+
+@gantt-planned-bg: @primary;
+@gantt-planned-border: @gantt-planned-bg;
+@gantt-planned-tooltip-text: #FFFFFF;
+
+@gantt-delayed-bg: @error;
+@gantt-delayed-bg-lighter: tint(@gantt-delayed-bg, 20);
+@gantt-delayed-tooltip-text: #FFFFFF;
+
+@gantt-advanced-bg: @success;
+@gantt-advanced-bg-lighter: tint(@gantt-advanced-bg, 20);
+
+@gantt-task-offset-border: @gantt-delayed-bg;
+@gantt-task-offset-text: #000000;
+
+
+// ImageEditor
+@imageeditor-bg: @component-bg;
+@imageeditor-text: @component-text;
+@imageeditor-border: @component-border;
+
+@imageeditor-content-bg: darken(@component-bg, 22.5%);
+@imageeditor-content-text: false;
+@imageeditor-content-border: false;
+
+@imageeditor-action-pane-text: false;
+@imageeditor-action-pane-bg: @component-bg;
+@imageeditor-action-pane-border: @component-border;
+
+@imageeditor-crop-text: false;
+@imageeditor-crop-bg: false;
+@imageeditor-crop-border: white;
+
+@imageeditor-resize-handle-text: false;
+@imageeditor-resize-handle-bg: false;
+@imageeditor-resize-handle-border: white;
+
+
 // Kendo skin
 
 @theme-name: ~"fiori";
@@ -815,6 +898,7 @@
 @import "mixins/border-radius.less";
 @import "themes/type.less";
 @import "themes/button.less";
+@import "Default/avatar/_theme.less";
 @import "Default/card/_theme.less";
 @import "Default/tilelayout/_theme.less";
 @import "Default/chat/_theme.less";
@@ -842,6 +926,11 @@
 @import "Default/forms/_theme.less";
 @import "Default/tooltip/_theme.less";
 @import "Default/wizard/_theme.less";
+@import "Default/textarea/_theme.less";
+@import "Default/appbar/_theme.less";
+@import "Default/loader/_theme.less";
+@import "Default/gantt/_theme.less";
+@import "Default/imageeditor/_theme.less";
 
 
 .k-item
@@ -952,7 +1041,6 @@ td.k-group-cell,
 }
 
 .k-textbox,
-.k-textarea,
 .k-autocomplete.k-header,
 .k-dropdown-wrap.k-state-active,
 .k-picker-wrap.k-state-active,
@@ -976,9 +1064,7 @@ td.k-group-cell,
 
 .k-input,
 .k-textbox,
-.k-textarea,
 .k-textbox > input,
-.k-textarea > textarea,
 .k-multiselect-wrap {
     background-color: @input-bg;
     color: @input-text;
@@ -1104,6 +1190,32 @@ td.k-group-cell,
     background-color: @draghandle-hover-background-color;
     .box-shadow(@draghandle-hover-shadow);
 }
+
+// Drop Hint
+.k-drop-hint-line {
+    background-color: @accent;
+}
+
+.k-drop-hint-h {
+    .k-drop-hint-start {
+        border-left-color: @accent;
+    }
+
+    .k-drop-hint-end {
+        border-right-color: @accent;
+    }
+}
+
+.k-drop-hint-v {
+    .k-drop-hint-start {
+        border-top-color: @accent;
+    }
+
+    .k-drop-hint-end {
+        border-bottom-color: @accent;
+    }
+}
+
 
 // Scheduler
 
@@ -1686,8 +1798,7 @@ div.k-filebrowser-dropzone em
     border-color: @widget-border-color;
 }
 
-.k-textbox:hover,
-.k-textarea:hover {
+.k-textbox:hover {
     border-color: @hover-border-color;
 }
 
@@ -1710,7 +1821,6 @@ div.k-filebrowser-dropzone em
 }
 
 .k-textbox:focus,
-.k-textarea:focus,
 .k-textbox.k-state-focused,
 .k-autocomplete.k-state-focused,
 .k-dropdown-wrap.k-state-focused,
@@ -1861,7 +1971,6 @@ div.k-filebrowser-dropzone em
 // Border radius
 .k-block,
 .k-textbox,
-.k-textarea,
 .k-drag-clue,
 .k-touch-scrollbar,
 .k-inline-block,
@@ -2040,14 +2149,6 @@ div.k-filebrowser-dropzone em
     border-radius: @draghandle-border-radius;
 }
 
-.k-gantt-toolbar li:first-child + li {
-    border-radius: @border-radius 0 0 @border-radius;
-}
-
-.k-rtl .k-gantt-toolbar li:last-child {
-    border-radius: @border-radius 0 0 @border-radius;
-}
-
 .k-more-events,
 .k-event,
 .k-task-single,
@@ -2060,13 +2161,6 @@ div.k-filebrowser-dropzone em
 .k-scheduler-mobile .k-event
 {
     border-radius: (@inner-border-radius - 1);
-}
-
-// RTL Scheduler & Gantt
-
-.k-rtl .k-gantt-toolbar > ul.k-gantt-views > li {
-    border-width: 0 0 3px 0;
-    border-color: transparent;
 }
 
 // /Column Menu
@@ -2288,9 +2382,7 @@ div.k-filebrowser-dropzone em
 }
 
 .k-textbox:hover,
-.k-textarea:hover,
 .k-textbox:focus,
-.k-textarea:focus,
 .k-textbox.k-state-focused {
     border-color: @drop-down-hover-border-color;
 }
@@ -2390,7 +2482,7 @@ div.k-filebrowser-dropzone em
 
 .k-grid td.k-state-selected:hover,
 .k-grid tr.k-state-selected:hover td {
-    background-color: darken(@selected-secondary-background-color, 3%);
+    background-color: @grid-selected-hover-bg;
 }
 
 .k-grid .k-header .k-grid-search {
@@ -2414,21 +2506,6 @@ div.k-filebrowser-dropzone em
 .k-grid-toolbar
 {
     padding: 0.714em;
-}
-
-.k-gantt .k-gantt-views .k-state-selected
-{
-    background: none;
-}
-
-.k-gantt .k-gantt-views > li
-{
-    border-radius: 0;
-}
-
-.k-gantt .k-gantt-views .k-state-selected
-{
-    border-color: @selected-border-color;
 }
 
 .k-task-summary-complete
@@ -2460,36 +2537,9 @@ div.k-filebrowser-dropzone em
     background-color: #444;
 }
 
-.k-gantt-views .k-link:link,
-.k-gantt-views .k-link:visited,
 .k-group-indicator .k-link
 {
     color: @widget-text-color;
-}
-
-.k-gantt .k-gantt-views > .k-state-selected > .k-link
-{
-    color: @selected-border-color;
-}
-
-.k-gantt-toolbar .k-gantt-views > li > .k-link {
-    background: none;
-}
-
-.k-gantt .k-gantt-toolbar ul li.k-state-hover
-{
-    background: none;
-    border-color: transparent;
-}
-
-.k-gantt .k-gantt-toolbar ul li.k-state-selected
-{
-    border-color: @selected-border-color;
-}
-
-.k-gantt .k-gantt-toolbar .k-state-hover .k-link
-{
-    color: @selected-background-color;
 }
 
 .k-scheduler-table .k-other-month,
@@ -2913,3 +2963,48 @@ div.k-filebrowser-dropzone em
     }
 }
 
+// Grid Sticky columns
+.k-master-row {
+    .k-grid-content-sticky {
+        background-color: @grid-bg;
+    }
+
+    &.k-alt .k-grid-content-sticky {
+        background-color: @grid-bg;
+    }
+
+    &.k-state-selected .k-grid-content-sticky {
+        .composite-background(@grid-selected-gradient);
+        background-color: @grid-selected-bg;
+        background-position: 50% 50%;
+    }
+
+    &:hover .k-grid-content-sticky,
+    &.k-state-hover .k-grid-content-sticky {
+        .composite-background(@grid-hover-gradient);
+        background-color: @grid-hover-bg;
+    }
+
+    &.k-state-selected:hover .k-grid-content-sticky,
+    &.k-state-selected.k-state-hover .k-grid-content-sticky {
+        background-color: @grid-selected-hover-bg;
+        .composite-background(none);
+    }
+}
+
+.k-grid-header .k-grid-header-sticky,
+.k-master-row .k-grid-content-sticky,
+.k-grouping-row .k-grid-content-sticky,
+.k-footer-template .k-grid-footer-sticky {
+    border-left-color: @grid-sticky-border;
+    border-right-color: @grid-sticky-border;
+}
+
+// Locked columns
+.k-grid-header-locked,
+.k-grid-content-locked,
+.k-grid-header-locked .k-header,
+.k-grid-content-locked td {
+    border-left-color: @grid-sticky-border;
+    border-right-color: @grid-sticky-border;
+}

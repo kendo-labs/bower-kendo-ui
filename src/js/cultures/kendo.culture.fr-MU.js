@@ -51,7 +51,7 @@
                 name: "Mauritian Rupee",
                 abbr: "MUR",
                 pattern: ["-n $","n $"],
-                decimals: 0,
+                decimals: 2,
                 ",": " ",
                 ".": ",",
                 groupSize: [3],

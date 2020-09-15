@@ -49,9 +49,9 @@
             },
             currency: {
                 name: "São Tomé and Príncipe Dobra",
-                abbr: "STD",
+                abbr: "STN",
                 pattern: ["-n $","n $"],
-                decimals: 0,
+                decimals: 2,
                 ",": " ",
                 ".": ",",
                 groupSize: [3],

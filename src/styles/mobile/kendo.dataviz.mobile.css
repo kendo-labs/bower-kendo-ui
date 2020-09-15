@@ -14874,7 +14874,7 @@ span.k-sparkline,
   zoom: 1;
 }
 .k-chart-tooltip {
-  padding: 6px;
+  padding: 4px 8px;
   border-radius: 4px;
   color: #fff;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAWCAYAAADAQbwGAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADNJREFUeNpi/P//vwMDFQELEP8beQb+HTWQYgP/DHoD/466cAR4edRAyg38P6hLbIAAAwCnWhhVsxvdCAAAAABJRU5ErkJggg==);

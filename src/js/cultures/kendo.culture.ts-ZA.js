@@ -50,7 +50,7 @@
             currency: {
                 name: "South African Rand",
                 abbr: "ZAR",
-                pattern: ["-$n","$n"],
+                pattern: ["-$ n","$ n"],
                 decimals: 2,
                 ",": " ",
                 ".": ",",
@@ -61,7 +61,7 @@
         calendars: {
             standard: {
                 days: {
-                    names: ["Sonto","Musumbhunuku","Ravumbirhi","Ravunharhu","Ravumune","Ravuntlhanu","Mugqivela"],
+                    names: ["Sonta","Musumbhunuku","Ravumbirhi","Ravunharhu","Ravumune","Ravuntlhanu","Mugqivela"],
                     namesAbbr: ["Son","Mus","Bir","Har","Ne","Tlh","Mug"],
                     namesShort: ["Son","Mus","Bir","Har","Ne","Tlh","Mug"]
                 },

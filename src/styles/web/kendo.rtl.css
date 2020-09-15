@@ -70,9 +70,6 @@
 .k-rtl .k-dropdowntree > .k-dropdown-wrap > .k-i-close {
   right: auto;
 }
-.k-rtl .k-datetimepicker .k-picker-wrap .k-icon {
-  margin: 0 2px 0 0;
-}
 .k-rtl.k-popup > .k-static-header {
   text-align: left;
   padding-left: 22px;
@@ -96,14 +93,6 @@
 .k-rtl .k-list-filter > .k-textbox {
   padding-left: 20px;
   padding-right: 0;
-}
-.k-rtl .k-datetimepicker .k-select .k-link-date {
-  margin-right: -0.285em;
-  margin-left: auto;
-}
-.k-rtl .k-datetimepicker .k-select .k-link-time {
-  margin-right: 0.428em;
-  margin-left: -0.285em;
 }
 .k-rtl .k-widget.k-calendar .k-nav-prev {
   left: auto;
@@ -206,7 +195,8 @@
 }
 .k-rtl .k-grid-header-locked,
 .k-rtl .k-grid-content-locked {
-  border-width: 0;
+  border-right-width: 0;
+  border-left-width: 1px;
 }
 .k-rtl .k-grid-header th.k-with-icon .k-link {
   margin: -0.5em 0 -0.4em -0.6em;
