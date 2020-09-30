@@ -2365,7 +2365,6 @@ div.k-scrollview ::selection,
 }
 .k-sticky,
 .k-pos-sticky {
-  position: -webkit-sticky;
   position: sticky;
 }
 .k-top,
@@ -14714,7 +14713,6 @@ li.k-item.k-drag-clue {
 }
 .k-appbar-sticky {
   width: 100%;
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -18395,7 +18393,6 @@ kendo-card-footer {
   position: relative;
 }
 .k-grid .k-dirty-cell.k-grid-content-sticky {
-  position: -webkit-sticky;
   position: sticky;
 }
 .k-grid .k-dirty {
@@ -18975,7 +18972,6 @@ div.k-grid-footer {
 .k-grid-header .k-filter-row .k-grid-header-sticky,
 .k-grid-content-sticky,
 .k-grid-footer-sticky {
-  position: -webkit-sticky;
   position: sticky;
   z-index: 2;
 }
@@ -20864,12 +20860,10 @@ th.k-sorted {
   background-color: inherit;
 }
 .k-treelist-scrollable .k-grid-toolbar {
-  position: -webkit-sticky;
   position: sticky;
   z-index: 3;
 }
 .k-treelist-scrollable .k-grid-header th {
-  position: -webkit-sticky;
   position: sticky;
   z-index: 1;
 }
@@ -22070,7 +22064,6 @@ kendo-editor.k-readonly .k-editor-content {
   overflow: auto;
 }
 .k-gantt .k-treelist-scrollable .k-grid-header .k-header {
-  position: -webkit-sticky;
   position: sticky;
 }
 .k-gantt .k-treelist-scrollable .k-grid-header th,
@@ -22929,7 +22922,6 @@ kendo-scheduler.k-scheduler.k-readonly-scheduler .k-event-delete {
   overflow: auto;
 }
 .k-scheduler-layout-flex .k-scheduler-head {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 3;
@@ -23052,7 +23044,6 @@ kendo-scheduler.k-scheduler.k-readonly-scheduler .k-event-delete {
   flex-wrap: wrap;
   -ms-flex-preferred-size: 0;
   flex-basis: 0;
-  position: -webkit-sticky;
   position: sticky;
   left: 0;
   z-index: 3;

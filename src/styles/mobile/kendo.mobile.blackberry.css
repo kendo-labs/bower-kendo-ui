@@ -222,7 +222,6 @@ kendo-mobile-drawer {
 .km-tabstrip,
 .km-blackberry li.km-actionsheet-cancel > a {
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   background-origin: border-box;
   position: relative;
@@ -6052,7 +6051,6 @@ html .km-blackberry .k-overflow-container.km-actionsheet > li {
 .km-blackberry textarea {
   font-size: 1em;
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
   border-style: solid;
   padding: 0.4em;

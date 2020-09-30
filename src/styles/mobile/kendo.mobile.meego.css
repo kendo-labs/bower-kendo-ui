@@ -222,7 +222,6 @@ kendo-mobile-drawer {
 .km-tabstrip,
 .km-blackberry li.km-actionsheet-cancel > a {
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   background-origin: border-box;
   position: relative;
@@ -5515,7 +5514,6 @@ body:before {
 .km-meego textarea {
   font-size: 1em;
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
   border: 0;
   padding: 0.3em 0.4em;

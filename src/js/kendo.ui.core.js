@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.3.915'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.3.930'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -10651,7 +10651,7 @@
         });
         var TypedBinder = Binder.extend({
             dataType: function () {
-                var dataType = this.element.getAttribute('data-type') || this.element.type || 'text';
+                var dataType = this.element.getAttribute('data-' + kendo.ns + 'type') || this.element.type || 'text';
                 return dataType.toLowerCase();
             },
             parsedValue: function () {
@@ -10752,7 +10752,7 @@
         binders.text = Binder.extend({
             refresh: function () {
                 var text = this.bindings.text.get();
-                var dataFormat = this.element.getAttribute('data-format') || '';
+                var dataFormat = this.element.getAttribute('data-' + kendo.ns + 'format') || '';
                 if (text == null) {
                     text = '';
                 }
@@ -44439,6 +44439,7 @@
             },
             _actionKeyHandler: function (e) {
                 if (buttonKeyTrigger(e)) {
+                    e.preventDefault();
                     this._runActionBtn(e.currentTarget);
                 } else if (e.keyCode == keys.ESC) {
                     this.close(false);

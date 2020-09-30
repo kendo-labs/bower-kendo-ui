@@ -222,7 +222,6 @@ kendo-mobile-drawer {
 .km-tabstrip,
 .km-blackberry li.km-actionsheet-cancel > a {
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   background-origin: border-box;
   position: relative;
@@ -6279,7 +6278,6 @@ html .km-ios .k-overflow-container.km-actionsheet > li {
 .km-ios .km-list .k-dropdown-wrap,
 .km-ios .km-list textarea {
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
   font-size: 1.1rem;
   min-width: 6em;
@@ -7757,7 +7755,6 @@ html .km-ios7 .k-overflow-container.km-actionsheet > li {
 .km-ios7 .km-list .k-dropdown-wrap,
 .km-ios7 .km-list textarea {
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
   font-size: 1.1rem;
   min-width: 6em;
@@ -9470,7 +9467,6 @@ html .km-android .k-toolbar .km-state-active {
 .km-android .k-dropdown,
 .km-android textarea {
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
   padding: 0.4em;
   border-radius: 0;
@@ -11144,7 +11140,6 @@ html .km-blackberry .k-overflow-container.km-actionsheet > li {
 .km-blackberry textarea {
   font-size: 1em;
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
   border-style: solid;
   padding: 0.4em;
@@ -13894,7 +13889,6 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-flat .km-list .k-dropdown-wrap,
 .km-flat .km-list textarea {
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
   font-size: 1.1rem;
   min-width: 6em;
@@ -15717,7 +15711,6 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-material .km-list .k-dropdown-wrap,
 .km-material .km-list textarea {
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
   font-size: 1.1rem;
   min-width: 6em;
@@ -17947,7 +17940,6 @@ html .km-material .k-overflow-container.km-actionsheet > li {
 .km-nova .km-list .k-dropdown-wrap,
 .km-nova .km-list textarea {
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
   font-size: 1.2rem;
   min-width: 6em;

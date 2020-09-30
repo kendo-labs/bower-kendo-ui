@@ -222,7 +222,6 @@ kendo-mobile-drawer {
 .km-tabstrip,
 .km-blackberry li.km-actionsheet-cancel > a {
   -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   background-origin: border-box;
   position: relative;

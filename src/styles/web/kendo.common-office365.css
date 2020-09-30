@@ -3523,7 +3523,6 @@ html body .k-grid tbody .k-button-icon {
 .k-grid .k-grid-header .k-filter-row .k-grid-header-sticky,
 .k-grid .k-grid-content-sticky,
 .k-grid .k-grid-footer-sticky {
-  position: -webkit-sticky;
   position: sticky;
   z-index: 2;
 }
@@ -5264,7 +5263,7 @@ body .k-datetimepicker .k-select {
   padding-left: 100px;
   margin-left: -100px;
   margin-right: -100px;
-  margin-"left": -117px;
+  margin-left: -117px;
 }
 .k-time-list-container {
   display: -ms-flexbox;
@@ -17192,7 +17191,6 @@ table.k-editor .k-editable-area {
 }
 .k-appbar-sticky {
   width: 100%;
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1;
