@@ -11712,6 +11712,14 @@ span.k-sparkline,
   border-style: solid;
   cursor: default;
 }
+.k-spreadsheet .k-spreadsheet-cell-comment {
+  position: absolute;
+  white-space: pre-wrap;
+  text-align: left;
+  border-width: 1px;
+  border-style: solid;
+  max-width: 200px;
+}
 .k-spreadsheet .k-spreadsheet-pane {
   padding-right: 1px;
   position: absolute;
@@ -11744,13 +11752,6 @@ span.k-sparkline,
   right: 0;
   left: auto;
   border-width: 3px;
-  border-style: solid;
-}
-.k-spreadsheet .k-spreadsheet-pane .k-spreadsheet-cell-comment {
-  position: absolute;
-  white-space: pre-wrap;
-  text-align: left;
-  border-width: 1px;
   border-style: solid;
 }
 .k-spreadsheet .k-spreadsheet-vaxis,

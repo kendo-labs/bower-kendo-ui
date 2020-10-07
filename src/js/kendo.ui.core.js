@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.3.930'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.3.1007'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -5249,6 +5249,11 @@
                         if (type == 'read') {
                             result.$count = true;
                             delete result.$inlinecount;
+                        }
+                        if (result.$filter) {
+                            result.$filter = result.$filter.replace(/('[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')/gi, function (x) {
+                                return x.substring(1, x.length - 1);
+                            });
                         }
                         return result;
                     },
@@ -33756,7 +33761,8 @@
                     direction: 'row',
                     wrap: 'nowrap'
                 },
-                grid: {}
+                grid: {},
+                scrollable: false
             },
             setOptions: function (options) {
                 Widget.fn.setOptions.call(this, options);
@@ -33778,7 +33784,7 @@
                 return this.content.children()[action]();
             },
             items: function () {
-                return this.content.children();
+                return this.content.children(':not(.k-loading-mask)');
             },
             dataItem: function (element) {
                 var attr = kendo.attr('uid');
@@ -33790,6 +33796,9 @@
                 this._dataSource();
                 if (this.options.autoBind) {
                     dataSource.fetch();
+                }
+                if (this.options.scrollable === 'endless') {
+                    this._bindScrollable();
                 }
             },
             _unbindDataSource: function () {
@@ -34025,18 +34034,22 @@
                         '-webkit-overflow-scrolling': 'touch'
                     });
                     if (scrollable === 'endless') {
-                        var originalPageSize = that._endlessPageSize = that.dataSource.options.pageSize;
-                        that.content.off('scroll' + NS).on('scroll' + NS, function () {
-                            if (this.scrollTop + this.clientHeight - this.scrollHeight >= -15 && !that._endlessFetchInProgress && that._endlessPageSize < that.dataSource.total()) {
-                                that._skipRerenderItemsCount = that._endlessPageSize;
-                                that._endlessPageSize = that._skipRerenderItemsCount + originalPageSize;
-                                that.dataSource.options.endless = true;
-                                that._endlessFetchInProgress = true;
-                                that.dataSource.pageSize(that._endlessPageSize);
-                            }
-                        });
+                        that._bindScrollable();
                     }
                 }
+            },
+            _bindScrollable: function () {
+                var that = this;
+                var originalPageSize = that._endlessPageSize = that.dataSource.options.pageSize;
+                that.content.off('scroll' + NS).on('scroll' + NS, function () {
+                    if (this.scrollTop + this.clientHeight - this.scrollHeight >= -15 && !that._endlessFetchInProgress && that._endlessPageSize < that.dataSource.total()) {
+                        that._skipRerenderItemsCount = that._endlessPageSize;
+                        that._endlessPageSize = that._skipRerenderItemsCount + originalPageSize;
+                        that.dataSource.options.endless = true;
+                        that._endlessFetchInProgress = true;
+                        that.dataSource.pageSize(that._endlessPageSize);
+                    }
+                });
             },
             current: function (candidate) {
                 var that = this, element = that.element, current = that._current, id = that._itemId;
@@ -42127,6 +42140,9 @@
                     }
                     result.push(new Date(start));
                     start.setTime(start.getTime() + msInterval);
+                    if (!msMax && this.options.maxSet) {
+                        break;
+                    }
                 }
                 return result;
             },
@@ -42462,7 +42478,8 @@
                             element.attr(ARIA_ACTIVEDESCENDANT, timeView._optionID);
                         }
                     },
-                    specifiedRange: that._specifiedRange
+                    specifiedRange: that._specifiedRange,
+                    maxSet: +options.max != +TODAY
                 }));
                 ul = timeView.ul;
                 that._icon();
@@ -42609,6 +42626,11 @@
                 return this._option('min', value);
             },
             max: function (value) {
+                if (value && this.timeView) {
+                    this.timeView.options.maxSet = true;
+                } else if (this.timeView) {
+                    this.timeView.options.maxSet = false;
+                }
                 return this._option('max', value);
             },
             value: function (value) {
@@ -43191,6 +43213,7 @@
                     return options[option];
                 }
                 value = parse(value, options.parseFormats, options.culture);
+                timeViewOptions.maxSet = false;
                 if (!value) {
                     return;
                 }
@@ -43215,6 +43238,7 @@
                             return;
                         } else if (!minDateEqual) {
                             timeViewOptions.min = MIN;
+                            timeViewOptions.maxSet = true;
                         }
                     }
                 } else {
@@ -43255,6 +43279,7 @@
                 if (date) {
                     old = that._old;
                     timeViewOptions = timeView.options;
+                    timeViewOptions.maxSet = false;
                     if (dates[0]) {
                         dates = $.grep(dates, function (d) {
                             return isEqualDatePart(date, d);
@@ -43276,6 +43301,7 @@
                                 skip = true;
                             } else {
                                 timeViewOptions.max = max;
+                                timeViewOptions.maxSet = true;
                                 if (!rebind) {
                                     timeViewOptions.min = MIN;
                                 }

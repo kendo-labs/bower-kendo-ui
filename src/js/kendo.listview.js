@@ -104,7 +104,8 @@
                     direction: 'row',
                     wrap: 'nowrap'
                 },
-                grid: {}
+                grid: {},
+                scrollable: false
             },
             setOptions: function (options) {
                 Widget.fn.setOptions.call(this, options);
@@ -126,7 +127,7 @@
                 return this.content.children()[action]();
             },
             items: function () {
-                return this.content.children();
+                return this.content.children(':not(.k-loading-mask)');
             },
             dataItem: function (element) {
                 var attr = kendo.attr('uid');
@@ -138,6 +139,9 @@
                 this._dataSource();
                 if (this.options.autoBind) {
                     dataSource.fetch();
+                }
+                if (this.options.scrollable === 'endless') {
+                    this._bindScrollable();
                 }
             },
             _unbindDataSource: function () {
@@ -373,18 +377,22 @@
                         '-webkit-overflow-scrolling': 'touch'
                     });
                     if (scrollable === 'endless') {
-                        var originalPageSize = that._endlessPageSize = that.dataSource.options.pageSize;
-                        that.content.off('scroll' + NS).on('scroll' + NS, function () {
-                            if (this.scrollTop + this.clientHeight - this.scrollHeight >= -15 && !that._endlessFetchInProgress && that._endlessPageSize < that.dataSource.total()) {
-                                that._skipRerenderItemsCount = that._endlessPageSize;
-                                that._endlessPageSize = that._skipRerenderItemsCount + originalPageSize;
-                                that.dataSource.options.endless = true;
-                                that._endlessFetchInProgress = true;
-                                that.dataSource.pageSize(that._endlessPageSize);
-                            }
-                        });
+                        that._bindScrollable();
                     }
                 }
+            },
+            _bindScrollable: function () {
+                var that = this;
+                var originalPageSize = that._endlessPageSize = that.dataSource.options.pageSize;
+                that.content.off('scroll' + NS).on('scroll' + NS, function () {
+                    if (this.scrollTop + this.clientHeight - this.scrollHeight >= -15 && !that._endlessFetchInProgress && that._endlessPageSize < that.dataSource.total()) {
+                        that._skipRerenderItemsCount = that._endlessPageSize;
+                        that._endlessPageSize = that._skipRerenderItemsCount + originalPageSize;
+                        that.dataSource.options.endless = true;
+                        that._endlessFetchInProgress = true;
+                        that.dataSource.pageSize(that._endlessPageSize);
+                    }
+                });
             },
             current: function (candidate) {
                 var that = this, element = that.element, current = that._current, id = that._itemId;

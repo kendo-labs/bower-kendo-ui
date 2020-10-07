@@ -592,6 +592,9 @@
                     }
                     result.push(new Date(start));
                     start.setTime(start.getTime() + msInterval);
+                    if (!msMax && this.options.maxSet) {
+                        break;
+                    }
                 }
                 return result;
             },
@@ -927,7 +930,8 @@
                             element.attr(ARIA_ACTIVEDESCENDANT, timeView._optionID);
                         }
                     },
-                    specifiedRange: that._specifiedRange
+                    specifiedRange: that._specifiedRange,
+                    maxSet: +options.max != +TODAY
                 }));
                 ul = timeView.ul;
                 that._icon();
@@ -1074,6 +1078,11 @@
                 return this._option('min', value);
             },
             max: function (value) {
+                if (value && this.timeView) {
+                    this.timeView.options.maxSet = true;
+                } else if (this.timeView) {
+                    this.timeView.options.maxSet = false;
+                }
                 return this._option('max', value);
             },
             value: function (value) {
