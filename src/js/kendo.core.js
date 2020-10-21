@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.3.1007'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.3.1021'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1478,22 +1478,30 @@
         function scrollLeft(element, value) {
             var webkit = support.browser.webkit;
             var mozila = support.browser.mozilla;
-            var el = element instanceof $ ? element[0] : element;
-            var isRtl;
-            if (!element) {
+            var browserVersion = support.browser.version;
+            var el, isRtl;
+            if (element instanceof $ && value !== undefined) {
+                element.each(function (i, e) {
+                    scrollLeft(e, value);
+                });
+                return;
+            } else {
+                el = element instanceof $ ? element[0] : element;
+            }
+            if (!el) {
                 return;
             }
             isRtl = support.isRtl(element);
             if (value !== undefined) {
-                if (isRtl && webkit) {
+                if (isRtl && webkit && (browserVersion < 85 || support.browser.safari)) {
                     el.scrollLeft = el.scrollWidth - el.clientWidth - value;
-                } else if (isRtl && mozila) {
+                } else if (isRtl && (mozila || webkit) && value > 0) {
                     el.scrollLeft = -value;
                 } else {
                     el.scrollLeft = value;
                 }
             } else {
-                if (isRtl && webkit) {
+                if (isRtl && webkit && (browserVersion < 85 || support.browser.safari)) {
                     return el.scrollWidth - el.clientWidth - el.scrollLeft;
                 } else {
                     return Math.abs(el.scrollLeft);
@@ -2468,7 +2476,7 @@
                     if (!mask.length) {
                         isRtl = support.isRtl(container);
                         leftRight = isRtl ? 'right' : 'left';
-                        containerScrollLeft = container.scrollLeft();
+                        containerScrollLeft = kendo.scrollLeft(container);
                         webkitCorrection = browser.webkit ? !isRtl ? 0 : container[0].scrollWidth - container.width() - 2 * containerScrollLeft : 0;
                         mask = $(kendo.format('<div class=\'{0}\'><span class=\'k-loading-text\'>{1}</span><div class=\'k-loading-image\'></div><div class=\'k-loading-color\'></div></div>', cssClass, kendo.ui.progress.messages.loading)).width(options.width).height(options.height).css('top', options.top).css(leftRight, Math.abs(containerScrollLeft) + webkitCorrection).prependTo(container);
                     }
@@ -3700,6 +3708,32 @@
         };
         kendo.selectorFromClasses = function (classes) {
             return '.' + classes.split(' ').join('.');
+        };
+        kendo.whenAll = function (array) {
+            var resolveValues = arguments.length == 1 && $.isArray(array) ? array : Array.prototype.slice.call(arguments), length = resolveValues.length, remaining = length, deferred = $.Deferred(), i = 0, failed = 0, rejectContexts = Array(length), rejectValues = Array(length), resolveContexts = Array(length), value;
+            function updateFunc(index, contexts, values) {
+                return function () {
+                    if (values != resolveValues) {
+                        failed++;
+                    }
+                    deferred.notifyWith(contexts[index] = this, values[index] = Array.prototype.slice.call(arguments));
+                    if (!--remaining) {
+                        deferred[(!failed ? 'resolve' : 'reject') + 'With'](contexts, values);
+                    }
+                };
+            }
+            for (; i < length; i++) {
+                if ((value = resolveValues[i]) && $.isFunction(value.promise)) {
+                    value.promise().done(updateFunc(i, resolveContexts, resolveValues)).fail(updateFunc(i, rejectContexts, rejectValues));
+                } else {
+                    deferred.notifyWith(this, value);
+                    --remaining;
+                }
+            }
+            if (!remaining) {
+                deferred.resolveWith(resolveContexts, resolveValues);
+            }
+            return deferred.promise();
         };
         (function () {
             function postToProxy(dataURI, fileName, proxyURL, proxyTarget) {

@@ -815,7 +815,10 @@
                 return options.scrollable && !isNaN(options.scrollable.distance) && (options.tabPosition == 'top' || options.tabPosition == 'bottom');
             },
             _scrollTabsToItem: function (item) {
-                var that = this, tabGroup = that.tabGroup, currentScrollOffset = tabGroup.scrollLeft(), itemWidth = outerWidth(item), itemOffset = that._isRtl ? item.position().left : item.position().left - tabGroup.children().first().position().left, tabGroupWidth = tabGroup[0].offsetWidth, tabGroupPadding = Math.ceil(parseFloat(tabGroup.css('padding-left'))), itemPosition;
+                var that = this, tabGroup = that.tabGroup, currentScrollOffset = kendo.scrollLeft(tabGroup), itemWidth = outerWidth(item), itemOffset = that._isRtl ? item.position().left : item.position().left - tabGroup.children().first().position().left, tabGroupWidth = tabGroup[0].offsetWidth, tabGroupPadding = Math.ceil(parseFloat(tabGroup.css('padding-left'))), browser = kendo.support.browser, itemPosition;
+                if (that._isRtl && (browser.mozilla || browser.webkit && browser.version >= 85)) {
+                    currentScrollOffset = currentScrollOffset * -1;
+                }
                 if (that._isRtl) {
                     if (itemOffset < 0) {
                         itemPosition = currentScrollOffset + itemOffset - (tabGroupWidth - currentScrollOffset) - tabGroupPadding;
@@ -836,7 +839,11 @@
             _scrollTabsByDelta: function (delta) {
                 var that = this;
                 var tabGroup = that.tabGroup;
-                var scrLeft = tabGroup.scrollLeft();
+                var scrLeft = kendo.scrollLeft(tabGroup);
+                var browser = kendo.support.browser;
+                if (that._isRtl && (browser.mozilla || browser.webkit && browser.version >= 85)) {
+                    scrLeft = scrLeft * -1;
+                }
                 tabGroup.finish().animate({ 'scrollLeft': scrLeft + delta }, 'fast', 'linear', function () {
                     if (that._nowScrollingTabs && !jQuery.fx.off) {
                         that._scrollTabsByDelta(delta);

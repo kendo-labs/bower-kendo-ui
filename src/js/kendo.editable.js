@@ -176,7 +176,7 @@
             'boolean': function (container, options) {
                 var attr = createAttributes(options);
                 var element = $('<input type="checkbox" />').attr(attr).addClass('k-checkbox').appendTo(container);
-                renderHiddenForМvcCheckbox(element, container, options);
+                renderHiddenForMvcCheckbox(element, container, options);
             },
             'values': function (container, options) {
                 var attr = createAttributes(options);
@@ -191,7 +191,7 @@
                 var editorOptions = options.editorOptions;
                 var tagElement = getEditorTag(type, editorOptions);
                 var element = $(tagElement).attr(attr).appendTo(container)[editor](editorOptions);
-                renderHiddenForМvcCheckbox(element, container, options);
+                renderHiddenForMvcCheckbox(element, container, options);
             }
         };
         var mobileEditors = {
@@ -238,7 +238,7 @@
                 }
             }
         }
-        function renderHiddenForМvcCheckbox(tag, container, field) {
+        function renderHiddenForMvcCheckbox(tag, container, field) {
             var addHidden = field ? field.shouldRenderHidden || false : false;
             if (addHidden) {
                 tag.val(true);

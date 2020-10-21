@@ -571,7 +571,7 @@
                 });
             },
             _toggleScrollButtons: function (scrollElement, backwardBtn, forwardBtn, horizontal) {
-                var currentScroll = horizontal ? scrollElement.scrollLeft() : scrollElement.scrollTop();
+                var currentScroll = horizontal ? kendo.scrollLeft(scrollElement) : scrollElement.scrollTop();
                 var scrollSize = horizontal ? SCROLLWIDTH : SCROLLHEIGHT;
                 var offset = horizontal ? OFFSETWIDTH : OFFSETHEIGHT;
                 backwardBtn.toggle(currentScroll !== 0);

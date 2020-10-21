@@ -64,7 +64,7 @@
                 DESTROY
             ], identity = function (o) {
                 return o;
-            }, getter = kendo.getter, stringify = kendo.stringify, math = Math, push = [].push, join = [].join, pop = [].pop, splice = [].splice, shift = [].shift, slice = [].slice, unshift = [].unshift, toString = {}.toString, stableSort = kendo.support.stableSort, dateRegExp = /^\/Date\((.*?)\)\/$/;
+            }, getter = kendo.getter, stringify = kendo.stringify, math = Math, push = [].push, join = [].join, pop = [].pop, splice = [].splice, shift = [].shift, slice = [].slice, unshift = [].unshift, toString = {}.toString, stableSort = kendo.support.stableSort, dateRegExp = /^\/Date\((.*?)\)\/$/, objectKeys = [];
         var ObservableArray = Observable.extend({
             init: function (array, type) {
                 var that = this;
@@ -351,20 +351,34 @@
                 context.trigger(type, event);
             };
         }
+        function ownKeys(value, ignoreObjectKeys) {
+            var props = [];
+            value = value || {};
+            while (value) {
+                Object.getOwnPropertyNames(value).forEach(function (prop) {
+                    if (props.indexOf(prop) === -1 && (!ignoreObjectKeys || objectKeys.indexOf(prop) < 0)) {
+                        props.push(prop);
+                    }
+                });
+                value = Object.getPrototypeOf(value);
+            }
+            return props;
+        }
+        objectKeys = ownKeys({}, false);
         var ObservableObject = Observable.extend({
             init: function (value) {
-                var that = this, member, field, parent = function () {
+                var that = this, member, keys = ownKeys(value, true), parent = function () {
                         return that;
                     };
                 Observable.fn.init.call(this);
                 this._handlers = {};
-                for (field in value) {
+                keys.forEach(function (field) {
                     member = value[field];
                     if (typeof member === 'object' && member && !member.getTime && field.charAt(0) != '_') {
                         member = that.wrap(member, field, parent);
                     }
                     that[field] = member;
-                }
+                });
                 that.uid = kendo.guid();
             },
             shouldSerialize: function (field, serializeFunctions) {

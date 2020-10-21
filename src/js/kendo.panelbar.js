@@ -160,7 +160,7 @@
                     that._current(item[0] ? item : that._first());
                 }).on('blur' + NS, function () {
                     that._current(null);
-                }).attr('role', 'menu');
+                }).attr('role', 'tree');
                 content = element.find('li.' + ACTIVECLASS + ' > .' + CONTENT);
                 if (content[0]) {
                     that.expand(content.parent(), false);
@@ -251,10 +251,10 @@
                     options.template = template('# var text = ' + fieldAccessor('text') + '(data.item); #' + '# if (typeof data.item.encoded != \'undefined\' && data.item.encoded === false) {#' + '#= text #' + '# } else { #' + '#: text #' + '# } #');
                 }
                 that.templates = {
-                    content: template('<div role=\'region\' class=\'k-content\'#= contentAttributes(data) #>#= content(item) #</div>'),
+                    content: template('<div class=\'k-content\'#= contentAttributes(data) #>#= content(item) #</div>'),
                     group: template('<ul role=\'group\' aria-hidden=\'#= ariaHidden(group) #\' class=\'#= groupCssClass(group) #\'#= groupAttributes(group) #>' + '#= renderItems(data) #' + '</ul>'),
                     itemWrapper: template('# var url = ' + fieldAccessor('url') + '(item); #' + '# var imageUrl = ' + fieldAccessor('imageUrl') + '(item); #' + '# var spriteCssClass = ' + fieldAccessor('spriteCssClass') + '(item); #' + '# var contentUrl = contentUrl(item); #' + '# var tag = url||contentUrl ? \'a\' : \'span\'; #' + '<#= tag # class=\'#= textClass(item, group) #\' #= contentUrl ##= textAttributes(url) #>' + '# if (imageUrl) { #' + '<img class=\'k-image\' alt=\'\' src=\'#= imageUrl #\' />' + '# } #' + '# if (spriteCssClass) { #' + '<span class=\'k-sprite #= spriteCssClass #\'></span>' + '# } #' + '#= data.panelBar.options.template(data) #' + '#= arrow(data) #' + '</#= tag #>'),
-                    item: template('<li role=\'menuitem\' #=aria(item)#class=\'#= wrapperCssClass(group, item) #\'' + kendo.attr('uid') + '=\'#= item.uid #\'>' + '#= itemWrapper(data) #' + '# if (item.items && item.items.length > 0) { #' + '#= subGroup({ items: item.items, panelBar: panelBar, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
+                    item: template('<li role=\'treeitem\' #=aria(item)#class=\'#= wrapperCssClass(group, item) #\'' + kendo.attr('uid') + '=\'#= item.uid #\'>' + '#= itemWrapper(data) #' + '# if (item.items && item.items.length > 0) { #' + '#= subGroup({ items: item.items, panelBar: panelBar, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
                     loading: template('<div class=\'k-item\'><span class=\'k-icon k-i-loading\'></span> #: data.messages.loading #</div>'),
                     retry: template('#: data.messages.requestFailed # ' + '<button class=\'k-button k-request-retry\'>#: data.messages.retry #</button>'),
                     arrow: template('<span class=\'#= arrowClass(item) #\'></span>'),
@@ -959,7 +959,7 @@
             },
             _updateItemClasses: function (item, index) {
                 var selected = this._selected, contentUrls = this.options.contentUrls, url = contentUrls && contentUrls[index], root = this.element[0], wrapElement, link;
-                item = $(item).addClass('k-item').attr('role', 'menuitem');
+                item = $(item).addClass('k-item').attr('role', 'treeitem');
                 if (kendo.support.browser.msie) {
                     item.css('list-style-position', 'inside').css('list-style-position', '');
                 }
@@ -971,7 +971,7 @@
                 }
                 item.filter(':not([disabled]):not([class*=k-state])').addClass('k-state-default');
                 item.filter('li[disabled]').addClass('k-state-disabled').attr(ARIA_DISABLED, true).removeAttr('disabled');
-                item.children('div').addClass(CONTENT).attr('role', 'region').attr(ARIA_HIDDEN, true).hide().parent().attr(ARIA_EXPANDED, false);
+                item.children('div').addClass(CONTENT).attr(ARIA_HIDDEN, true).hide().parent().attr(ARIA_EXPANDED, false);
                 link = item.children(SELECTEDSELECTOR);
                 if (link[0]) {
                     if (selected) {

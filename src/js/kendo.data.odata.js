@@ -226,7 +226,7 @@
             return requestBody;
         }
         function createBatchRequest(transport, colections) {
-            var options = {};
+            var options = extend({}, transport.options.batch);
             var boundary = createBoundary('sf_batch_');
             var requestBody = '';
             var changeId = 0;
@@ -234,7 +234,7 @@
             var changeset = createBoundary('sf_changeset_');
             options.type = transport.options.batch.type;
             options.url = isFunction(batchURL) ? batchURL() : batchURL;
-            options.headers = { 'Content-Type': 'multipart/mixed; boundary=' + boundary };
+            options.headers = extend(options.headers || {}, { 'Content-Type': 'multipart/mixed; boundary=' + boundary });
             if (colections.updated.length) {
                 requestBody += processCollection(colections.updated, boundary, changeset, changeId, transport, 'update', false);
                 changeId += colections.updated.length;

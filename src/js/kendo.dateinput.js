@@ -618,6 +618,7 @@
                     return true;
                 }
                 var newValue = new Date(value && value.getTime ? value.getTime() : value);
+                var lastDateOfMonth = new Date(newValue.getFullYear(), newValue.getMonth() + 1, 0).getDate();
                 var newHours;
                 switch (symbol) {
                 case 'd':
@@ -625,7 +626,7 @@
                     if (isNaN(newDate)) {
                         return;
                     }
-                    while (newDate > 31) {
+                    while (newDate > lastDateOfMonth) {
                         newDate = parseInt(newDate.toString().slice(1), 10);
                     }
                     if (newDate < 1) {

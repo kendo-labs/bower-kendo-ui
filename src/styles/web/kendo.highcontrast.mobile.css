@@ -5293,84 +5293,84 @@ body:before {
   color: #858585;
   background-color: #ffffff;
 }
-.k-badge-primary {
+.k-badge-solid.k-badge-primary {
   border-color: #870074;
   color: #ffffff;
   background-color: #870074;
 }
-.k-badge-secondary {
+.k-badge-solid.k-badge-secondary {
   border-color: #2c232b;
   color: #ffffff;
   background-color: #2c232b;
 }
-.k-badge-tertiary {
+.k-badge-solid.k-badge-tertiary {
   border-color: #a7008f;
   color: #ffffff;
   background-color: #a7008f;
 }
-.k-badge-info {
+.k-badge-solid.k-badge-info {
   border-color: #007da7;
   color: #ffffff;
   background-color: #007da7;
 }
-.k-badge-success {
+.k-badge-solid.k-badge-success {
   border-color: #2b893c;
   color: #ffffff;
   background-color: #2b893c;
 }
-.k-badge-warning {
+.k-badge-solid.k-badge-warning {
   border-color: #e9a71d;
   color: #000000;
   background-color: #e9a71d;
 }
-.k-badge-error {
+.k-badge-solid.k-badge-error {
   border-color: #e33a13;
   color: #ffffff;
   background-color: #e33a13;
 }
-.k-badge-dark {
+.k-badge-solid.k-badge-dark {
   border-color: #000000;
   color: #ffffff;
   background-color: #000000;
 }
-.k-badge-light {
+.k-badge-solid.k-badge-light {
   border-color: #ffffff;
   color: #000000;
   background-color: #ffffff;
 }
-.k-badge-inverse {
+.k-badge-solid.k-badge-inverse {
   border-color: #ffffff;
   color: #000000;
   background-color: #ffffff;
 }
-.k-badge-outline-primary {
+.k-badge-outline.k-badge-primary {
   color: #870074;
 }
-.k-badge-outline-secondary {
+.k-badge-outline.k-badge-secondary {
   color: #2c232b;
 }
-.k-badge-outline-tertiary {
+.k-badge-outline.k-badge-tertiary {
   color: #a7008f;
 }
-.k-badge-outline-info {
+.k-badge-outline.k-badge-info {
   color: #007da7;
 }
-.k-badge-outline-success {
+.k-badge-outline.k-badge-success {
   color: #2b893c;
 }
-.k-badge-outline-warning {
+.k-badge-outline.k-badge-warning {
   color: #e9a71d;
 }
-.k-badge-outline-error {
+.k-badge-outline.k-badge-error {
   color: #e33a13;
 }
-.k-badge-outline-dark {
+.k-badge-outline.k-badge-dark {
   color: #000000;
 }
-.k-badge-outline-light {
+.k-badge-outline.k-badge-light {
   color: #ffffff;
 }
-.k-badge-outline-inverse {
+.k-badge-outline.k-badge-inverse {
   color: #ffffff;
 }
 .k-tooltip-primary {

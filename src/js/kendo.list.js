@@ -851,7 +851,7 @@
             if (value !== undefined && value !== '' && value !== null) {
                 if (type === 'boolean') {
                     if (typeof value !== 'boolean') {
-                        value = value.toLowerCase() === 'true';
+                        value = value.toString().toLowerCase() === 'true';
                     }
                     value = Boolean(value);
                 } else if (type === 'number') {

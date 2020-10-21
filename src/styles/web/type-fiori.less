@@ -888,6 +888,8 @@
 @imageeditor-resize-handle-bg: false;
 @imageeditor-resize-handle-border: white;
 
+@imageeditor-crop-overlay-bg: rgba(black, 0.3);
+
 
 // Kendo skin
 
@@ -986,6 +988,7 @@
 .k-splitbar,
 .k-dropzone-active,
 .k-upload-files,
+.k-upload .k-action-buttons,
 .k-popup.k-align .k-list .k-item:last-child,
 .k-editor-dialog .k-tabstrip-items,
 .k-maskedtextbox.k-state-disabled > .k-textbox:hover,
@@ -1792,10 +1795,6 @@ div.k-filebrowser-dropzone em
 .k-file-information,
 .k-file-validation-message {
     color: @disabled-text-color;
-}
-
-.k-upload .k-upload-selected {
-    border-color: @widget-border-color;
 }
 
 .k-textbox:hover {
