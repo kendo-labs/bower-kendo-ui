@@ -40,7 +40,7 @@
     };
     (function ($, undefined) {
         var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, map = $.map, each = $.each, trim = kendo.trim, extend = $.extend, isFunction = kendo.isFunction, template = kendo.template, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, Widget = ui.Widget, excludedNodesRegExp = /^(a|div)$/i, NS = '.kendoTabStrip', IMG = 'img', HREF = 'href', PREV = 'prev', NEXT = 'next', SHOW = 'show', LINK = 'k-link', LAST = 'k-last', CLICK = 'click', ERROR = 'error', EMPTY = ':empty', IMAGE = 'k-image', FIRST = 'k-first', SELECT = 'select', ACTIVATE = 'activate', CONTENT = 'k-content', CONTENTURL = 'contentUrl', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', DISABLEDSTATE = 'k-state-disabled', DEFAULTSTATE = 'k-state-default', ACTIVESTATE = 'k-state-active', FOCUSEDSTATE = 'k-state-focused', HOVERSTATE = 'k-state-hover', TABONTOP = 'k-tab-on-top', NAVIGATABLEITEMS = '.k-item:not(.' + DISABLEDSTATE + ')', KEYBOARDNAVIGATABLEITEMS = '.k-item', HOVERABLEITEMS = '.k-tabstrip-items > ' + NAVIGATABLEITEMS + ':not(.' + ACTIVESTATE + ')', DEFAULTDISTANCE = 200, templates = {
-                content: template('<div class=\'k-content\'#= contentAttributes(data) # role=\'tabpanel\'>#= content(item) #</div>'),
+                content: template('<div class=\'k-content\'#= contentAttributes(data) # role=\'tabpanel\' tabindex=\'0\'>#= content(item) #</div>'),
                 itemWrapper: template('<#= tag(item) # class=\'k-link\'#= contentUrl(item) ##= textAttributes(item) #>' + '#= image(item) ##= sprite(item) ##= text(item) #' + '</#= tag(item) #>'),
                 item: template('<li class=\'#= wrapperCssClass(group, item) #\' role=\'tab\' #=item.active ? "aria-selected=\'true\'" : \'\'#>' + '#= itemWrapper(data) #' + '</li>'),
                 image: template('<img class=\'k-image\' alt=\'\' src=\'#= imageUrl #\' />'),
@@ -168,9 +168,6 @@
                     that.activateTab(selectedItems.eq(0));
                 }
                 that.element.attr('role', 'tablist');
-                if (that.element[0].id) {
-                    that._ariaId = that.element[0].id + '_ts_active';
-                }
                 that.value(value);
                 kendo.notify(that);
             },
@@ -210,23 +207,19 @@
                 return item;
             },
             _current: function (candidate) {
-                var that = this, focused = that._focused, id = that._ariaId;
+                var that = this, focused = that._focused;
                 if (candidate === undefined) {
                     return focused;
                 }
                 if (focused) {
-                    that.tabGroup.children('#' + id).removeAttr('id');
                     focused.removeClass(FOCUSEDSTATE);
                 }
                 if (candidate) {
                     if (!candidate.hasClass(ACTIVESTATE)) {
                         candidate.addClass(FOCUSEDSTATE);
                     }
-                    that.element.removeAttr('aria-activedescendant');
-                    id = candidate[0].id || id;
-                    if (id) {
-                        candidate.attr('id', id);
-                        that.element.attr('aria-activedescendant', id);
+                    if (candidate[0].id) {
+                        that.element.attr('aria-activedescendant', candidate[0].id);
                     }
                 }
                 that._focused = candidate;
@@ -628,11 +621,14 @@
                     that._updateContentElements(true);
                 }
             },
-            _elementId: function (element, idx) {
+            _elementId: function (element, idx, tab) {
                 var elementId = element.attr('id');
-                var wrapperId = this.element.attr('id');
-                if (!elementId || elementId.indexOf(wrapperId + '-') > -1) {
-                    var tabStripID = (wrapperId || kendo.guid()) + '-';
+                var wrapperId = this.element.attr('id') || kendo.guid();
+                if (!elementId) {
+                    var tabStripID = wrapperId + '-';
+                    if (tab) {
+                        tabStripID += 'tab-';
+                    }
                     return tabStripID + (idx + 1);
                 }
                 return elementId;
@@ -641,30 +637,33 @@
                 var that = this, contentUrls = that._contentUrls, items = that.tabGroup.children('.k-item'), contentElements = that.wrapper.children('div'), _elementId = that._elementId.bind(that);
                 if (contentElements.length && items.length > contentElements.length) {
                     contentElements.each(function (idx) {
-                        var id = _elementId($(this), idx);
-                        var item = items.filter('[aria-controls=' + (this.id || 0) + ']')[0];
+                        var contentId = _elementId($(this), idx), item = items.filter('[aria-controls=' + (contentId || 0) + ']')[0], tabId;
                         if (!item && isInitialUpdate) {
                             item = items[idx];
                         }
                         if (item) {
-                            item.setAttribute('aria-controls', id);
+                            item.setAttribute('aria-controls', contentId);
+                            tabId = item.id = _elementId($(item), idx, true);
+                            this.setAttribute('aria-labelledby', tabId);
                         }
-                        this.setAttribute('id', id);
+                        this.setAttribute('id', contentId);
                     });
                 } else {
                     items.each(function (idx) {
-                        var currentContent = contentElements.eq(idx);
-                        var id = _elementId(currentContent, idx);
-                        this.setAttribute('aria-controls', id);
+                        var currentContent = contentElements.eq(idx), contentId = _elementId(currentContent, idx), tabId;
+                        this.setAttribute('aria-controls', contentId);
+                        tabId = this.id = _elementId($(this), idx, true);
                         if (!currentContent.length && contentUrls[idx]) {
-                            $('<div class=\'' + CONTENT + '\'/>').appendTo(that.wrapper).attr('id', id);
+                            $('<div class=\'' + CONTENT + '\'/>').appendTo(that.wrapper).attr('id', contentId);
                         } else {
-                            currentContent.attr('id', id);
+                            currentContent.attr('id', contentId);
                             if (!$(this).children('.k-loading')[0] && !contentUrls[idx]) {
                                 $('<span class=\'k-loading k-complete\'/>').prependTo(this);
                             }
                         }
                         currentContent.attr('role', 'tabpanel');
+                        currentContent.attr('tabindex', '0');
+                        currentContent.attr('aria-labelledby', tabId);
                         currentContent.filter(':not(.' + ACTIVESTATE + ')').attr('aria-hidden', true).attr('aria-expanded', false);
                         currentContent.filter('.' + ACTIVESTATE).attr('aria-expanded', true);
                     });

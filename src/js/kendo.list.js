@@ -593,6 +593,9 @@
                 that.close();
                 that._userTriggered = false;
             },
+            _isValueChanged: function (value) {
+                return value !== unifyType(this._old, typeof value);
+            },
             _change: function () {
                 var that = this;
                 var index = that.selectedIndex;
@@ -602,7 +605,7 @@
                 if (that._isSelect && !that.listView.bound() && optionValue) {
                     value = optionValue;
                 }
-                if (value !== unifyType(that._old, typeof value) && value !== unifyType(that._oldText, typeof value)) {
+                if (that._isValueChanged(value)) {
                     trigger = true;
                 } else if (that._valueBeforeCascade !== undefined && that._valueBeforeCascade !== unifyType(that._old, typeof that._valueBeforeCascade) && that._userTriggered) {
                     trigger = true;
@@ -620,7 +623,6 @@
                         }
                     }
                     that._oldIndex = index;
-                    that._oldText = that.text && that.text();
                     if (!that._typing) {
                         that.element.trigger(CHANGE);
                     }

@@ -160,6 +160,9 @@
                 that._clear.off(CLICK + ' ' + MOUSEDOWN);
                 Select.fn.destroy.call(that);
             },
+            _isValueChanged: function (value) {
+                return value !== List.unifyType(this._old, typeof value) && value !== List.unifyType(this._oldText, typeof value);
+            },
             _change: function () {
                 var that = this;
                 var text = that.text();
@@ -178,6 +181,7 @@
                     return;
                 }
                 Select.fn._change.call(that);
+                that._oldText = that.text && that.text();
                 that._toggleCloseVisibility();
             },
             _attachFocusEvents: function () {

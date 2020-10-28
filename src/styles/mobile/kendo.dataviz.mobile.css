@@ -834,6 +834,16 @@ button.km-button {
 .km-root .km-widget.k-toolbar {
   box-sizing: border-box;
 }
+.km-root .k-scheduler-toolbar.k-toolbar,
+.km-root .k-scheduler-footer.k-toolbar {
+  box-sizing: border-box;
+  padding: 0.8em;
+  display: -ms-flexbox;
+  display: flex;
+}
+.km-root .k-scheduler-toolbar [class^="k-"] {
+  box-sizing: border-box;
+}
 .km-root .k-toolbar span.km-icon {
   vertical-align: middle;
 }
@@ -12537,6 +12547,11 @@ html .km-flat .k-overflow-container.km-actionsheet > li {
 .km-nova .k-toolbar .km-button,
 .km-nova .k-toolbar .k-split-button {
   line-height: inherit;
+}
+.km-nova .k-scheduler-toolbar.k-toolbar,
+.km-nova .k-scheduler-footer.k-toolbar {
+  background: #ff4350;
+  color: #fff;
 }
 .km-nova .km-tabstrip {
   padding: 0;
