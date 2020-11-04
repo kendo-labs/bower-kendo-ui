@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.3.1028'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.3.1104'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -20451,7 +20451,7 @@
                 var removed = removeFiltersForField(expression, options.dataTextField);
                 this._clearFilterExpressions(expression);
                 if ((filter || removed) && that.trigger('filtering', { filter: filter })) {
-                    return;
+                    return $.Deferred().reject().promise();
                 }
                 var newExpression = {
                     filters: [],
@@ -26720,7 +26720,7 @@
                 var options = that.options;
                 var data = that.dataSource.flatView();
                 var length = data.length;
-                var groupsLength = that.dataSource._group.length;
+                var groupsLength = that.dataSource._group ? that.dataSource._group.length : 0;
                 var isActive = that.element[0] === activeElement();
                 var action;
                 that._renderFooter();
@@ -39100,8 +39100,8 @@
                     group: template('<ul role=\'group\' aria-hidden=\'#= ariaHidden(group) #\' class=\'#= groupCssClass(group) #\'#= groupAttributes(group) #>' + '#= renderItems(data) #' + '</ul>'),
                     itemWrapper: template('# var url = ' + fieldAccessor('url') + '(item); #' + '# var imageUrl = ' + fieldAccessor('imageUrl') + '(item); #' + '# var spriteCssClass = ' + fieldAccessor('spriteCssClass') + '(item); #' + '# var contentUrl = contentUrl(item); #' + '# var tag = url||contentUrl ? \'a\' : \'span\'; #' + '<#= tag # class=\'#= textClass(item, group) #\' #= contentUrl ##= textAttributes(url) #>' + '# if (imageUrl) { #' + '<img class=\'k-image\' alt=\'\' src=\'#= imageUrl #\' />' + '# } #' + '# if (spriteCssClass) { #' + '<span class=\'k-sprite #= spriteCssClass #\'></span>' + '# } #' + '#= data.panelBar.options.template(data) #' + '#= arrow(data) #' + '</#= tag #>'),
                     item: template('<li role=\'treeitem\' #=aria(item)#class=\'#= wrapperCssClass(group, item) #\'' + kendo.attr('uid') + '=\'#= item.uid #\'>' + '#= itemWrapper(data) #' + '# if (item.items && item.items.length > 0) { #' + '#= subGroup({ items: item.items, panelBar: panelBar, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
-                    loading: template('<div class=\'k-item\'><span class=\'k-icon k-i-loading\'></span> #: data.messages.loading #</div>'),
-                    retry: template('#: data.messages.requestFailed # ' + '<button class=\'k-button k-request-retry\'>#: data.messages.retry #</button>'),
+                    loading: template('<li class=\'k-item\'><span class=\'k-icon k-i-loading\'></span> #: data.messages.loading #</li>'),
+                    retry: template('<li class=\'k-item\'>' + '#: data.messages.requestFailed # ' + '<button class=\'k-button k-request-retry\'>#: data.messages.retry #</button>' + '</li>'),
                     arrow: template('<span class=\'#= arrowClass(item) #\'></span>'),
                     empty: template('')
                 };
@@ -46351,8 +46351,8 @@
                 that.initialPosition = kendo.getOffset(wrapper, 'position');
                 that.resizeDirection = e.currentTarget.prop('className').replace('k-resize-handle k-resize-', '');
                 that.initialSize = {
-                    width: wrapper.width(),
-                    height: wrapper.height()
+                    width: wrapper.outerWidth(),
+                    height: wrapper.outerHeight()
                 };
                 wnd._updateBoundaries();
                 that.containerOffset = wnd.containment ? wnd.containment.position : kendo.getOffset(wnd.appendTo, 'position');

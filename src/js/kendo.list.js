@@ -319,7 +319,7 @@
                 var removed = removeFiltersForField(expression, options.dataTextField);
                 this._clearFilterExpressions(expression);
                 if ((filter || removed) && that.trigger('filtering', { filter: filter })) {
-                    return;
+                    return $.Deferred().reject().promise();
                 }
                 var newExpression = {
                     filters: [],

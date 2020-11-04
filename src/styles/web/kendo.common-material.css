@@ -12047,6 +12047,9 @@ span.k-sparkline,
   border-top-style: solid;
   border-top-width: 1px;
 }
+.k-spreadsheet-list-popup {
+  margin-right: -1px;
+}
 .k-spreadsheet-names-popup .k-item {
   position: relative;
 }
@@ -15888,8 +15891,6 @@ a.k-badge:hover,
   height: 100%;
   -ms-flex: 1 1 0%;
       flex: 1 1 0%;
-}
-.k-filemanager-listview .k-listview-content {
   overflow: auto;
 }
 .k-filemanager-listview .k-listview-item {
