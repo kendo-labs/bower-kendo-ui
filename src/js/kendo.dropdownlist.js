@@ -89,6 +89,7 @@
                 that._initialIndex = options.index;
                 that.requireValueMapper(that.options);
                 that._initList();
+                that.listView.one('dataBound', proxy(that._attachAriaActiveDescendant, that));
                 that._cascade();
                 that.one('set', function (e) {
                     if (!e.sender.listView.bound() && that.hasOptionLabel()) {
@@ -190,6 +191,7 @@
             open: function () {
                 var that = this;
                 var isFiltered = that.dataSource.filter() ? that.dataSource.filter().filters.length > 0 : false;
+                var listView = this.listView;
                 if (that.popup.visible()) {
                     return;
                 }
@@ -203,6 +205,7 @@
                     if (that.filterInput && that.options.minLength !== 1 && !isFiltered) {
                         that.refresh();
                         that.popup.one('activate', that._focusInputHandler);
+                        that.wrapper.attr('aria-activedescendant', listView._optionID);
                         that.popup.open();
                         that._resizeFilterInput();
                     } else {
@@ -212,10 +215,19 @@
                     that._focusFilter = true;
                     that.popup.one('activate', that._focusInputHandler);
                     that.popup._hovered = true;
+                    that.wrapper.attr('aria-activedescendant', listView._optionID);
                     that.popup.open();
                     that._resizeFilterInput();
                     that._focusItem();
                 }
+            },
+            close: function () {
+                this._attachAriaActiveDescendant();
+                this.popup.close();
+            },
+            _attachAriaActiveDescendant: function () {
+                var wrapper = this.wrapper, inputId = wrapper.find('.k-input').attr('id');
+                wrapper.attr('aria-activedescendant', inputId);
             },
             _focusInput: function () {
                 this._focusElement(this.filterInput);
@@ -943,17 +955,17 @@
                         placeholder: this.element.attr('placeholder'),
                         title: this.element.attr('title'),
                         role: 'listbox',
-                        'aria-haspopup': true,
+                        'aria-haspopup': 'listbox',
                         'aria-expanded': false
                     });
                     this.list.prepend($('<span class="k-list-filter" />').append(this.filterInput.add(icon)));
                 }
             },
             _span: function () {
-                var that = this, wrapper = that.wrapper, SELECTOR = 'span.k-input', span;
+                var that = this, wrapper = that.wrapper, SELECTOR = 'span.k-input', id = kendo.guid(), span;
                 span = wrapper.find(SELECTOR);
                 if (!span[0]) {
-                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span unselectable="on" class="k-input">&nbsp;</span><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
+                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span id="' + id + '" unselectable="on" role="option" aria-selected="true" class="k-input">&nbsp;</span><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
                     span = wrapper.find(SELECTOR);
                 }
                 that.span = span;
@@ -973,7 +985,7 @@
                     accesskey: element.attr('accesskey'),
                     unselectable: 'on',
                     role: 'listbox',
-                    'aria-haspopup': true,
+                    'aria-haspopup': 'listbox',
                     'aria-expanded': false
                 });
                 element.hide().removeAttr('accesskey');
