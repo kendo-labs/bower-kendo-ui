@@ -2867,6 +2867,7 @@ ul.k-menu-vertical .k-separator,
   -ms-flex-line-pack: start;
       align-content: flex-start;
   position: relative;
+  overflow: auto;
 }
 .k-listview-content::after {
   height: 0;

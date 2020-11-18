@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.3.1111'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.3.1118'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -14052,6 +14052,21 @@
             }
             return containers;
         }
+        function isLabelFor(label, element) {
+            if (!label) {
+                return false;
+            }
+            if (typeof label.nodeName !== 'string' || label.nodeName !== 'LABEL') {
+                return false;
+            }
+            if (typeof label.getAttribute('for') !== 'string' || typeof element.getAttribute('id') !== 'string') {
+                return false;
+            }
+            if (label.getAttribute('for') !== element.getAttribute('id')) {
+                return false;
+            }
+            return true;
+        }
         var SUMMARYTEMPLATE = '<ul>' + '#for(var i = 0; i < errors.length; i += 1){#' + '<li><a data-field="#=errors[i].field#" href="\\#">#= errors[i].message #</a></li>' + '# } #' + '</ul>';
         var Validator = Widget.extend({
             init: function (element, options) {
@@ -14264,12 +14279,15 @@
                         var widgetInstance = kendo.widgetInstance(input);
                         var parentElement = input.parent().get(0);
                         var nextElement = input.next().get(0);
-                        if (parentElement && parentElement.nodeName === 'LABEL') {
-                            messageLabel.insertAfter(parentElement);
-                        } else if (nextElement && nextElement.nodeName === 'LABEL') {
-                            messageLabel.insertAfter(nextElement);
-                        } else if (widgetInstance && widgetInstance.wrapper) {
+                        var prevElement = input.prev().get(0);
+                        if (widgetInstance && widgetInstance.wrapper) {
                             messageLabel.insertAfter(widgetInstance.wrapper);
+                        } else if (parentElement && parentElement.nodeName === 'LABEL') {
+                            messageLabel.insertAfter(parentElement);
+                        } else if (nextElement && isLabelFor(nextElement, input[0])) {
+                            messageLabel.insertAfter(nextElement);
+                        } else if (prevElement && isLabelFor(prevElement, input[0])) {
+                            messageLabel.insertAfter(input);
                         } else {
                             messageLabel.insertAfter(input);
                         }
@@ -29427,26 +29445,33 @@
             _listBound: function () {
                 var that = this;
                 var data = that.dataSource.flatView();
-                var skip = that.listView.skip();
                 that._render(data);
                 that._renderFooter();
                 that._renderNoData();
                 that._toggleNoData(!data.length);
                 that._resizePopup();
+                that._updateItemFocus();
                 if (that._open) {
                     that._open = false;
                     that.toggle(that._allowOpening());
                 }
                 that.popup.position();
-                if (that.options.highlightFirst && (skip === undefined || skip === 0)) {
-                    that.listView.focusFirst();
-                }
                 if (that._touchScroller) {
                     that._touchScroller.reset();
                 }
                 that._hideBusy();
                 that._makeUnselectable();
                 that.trigger('dataBound');
+            },
+            _updateItemFocus: function () {
+                var that = this, data = that.dataSource.flatView(), skip = that.listView.skip(), isFirstPage = skip === undefined || skip === 0;
+                if (data.length && isFirstPage) {
+                    if (!that.options.highlightFirst) {
+                        that.listView.focus(-1);
+                    } else {
+                        that.listView.focusFirst();
+                    }
+                }
             },
             _inputValue: function () {
                 var that = this;
@@ -35131,6 +35156,7 @@
                 var that = this;
                 var dataSource = that.dataSource;
                 var dataItem = that.dataItem(item);
+                var transport = dataSource.transport;
                 if (!dataItem || !dataSource) {
                     return;
                 }
@@ -35145,6 +35171,9 @@
                     }
                 } else {
                     dataSource.remove(dataItem);
+                    if (transport && (transport.destroy || (transport.options || {}).destroy) && (!dataItem.isNew || !dataItem.isNew())) {
+                        dataSource._destroyed.push(dataItem);
+                    }
                 }
                 that._removeElement(item);
             },

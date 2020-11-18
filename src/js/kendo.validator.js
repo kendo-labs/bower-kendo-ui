@@ -94,6 +94,21 @@
             }
             return containers;
         }
+        function isLabelFor(label, element) {
+            if (!label) {
+                return false;
+            }
+            if (typeof label.nodeName !== 'string' || label.nodeName !== 'LABEL') {
+                return false;
+            }
+            if (typeof label.getAttribute('for') !== 'string' || typeof element.getAttribute('id') !== 'string') {
+                return false;
+            }
+            if (label.getAttribute('for') !== element.getAttribute('id')) {
+                return false;
+            }
+            return true;
+        }
         var SUMMARYTEMPLATE = '<ul>' + '#for(var i = 0; i < errors.length; i += 1){#' + '<li><a data-field="#=errors[i].field#" href="\\#">#= errors[i].message #</a></li>' + '# } #' + '</ul>';
         var Validator = Widget.extend({
             init: function (element, options) {
@@ -306,12 +321,15 @@
                         var widgetInstance = kendo.widgetInstance(input);
                         var parentElement = input.parent().get(0);
                         var nextElement = input.next().get(0);
-                        if (parentElement && parentElement.nodeName === 'LABEL') {
-                            messageLabel.insertAfter(parentElement);
-                        } else if (nextElement && nextElement.nodeName === 'LABEL') {
-                            messageLabel.insertAfter(nextElement);
-                        } else if (widgetInstance && widgetInstance.wrapper) {
+                        var prevElement = input.prev().get(0);
+                        if (widgetInstance && widgetInstance.wrapper) {
                             messageLabel.insertAfter(widgetInstance.wrapper);
+                        } else if (parentElement && parentElement.nodeName === 'LABEL') {
+                            messageLabel.insertAfter(parentElement);
+                        } else if (nextElement && isLabelFor(nextElement, input[0])) {
+                            messageLabel.insertAfter(nextElement);
+                        } else if (prevElement && isLabelFor(prevElement, input[0])) {
+                            messageLabel.insertAfter(input);
                         } else {
                             messageLabel.insertAfter(input);
                         }
