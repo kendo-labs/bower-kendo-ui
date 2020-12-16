@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.3.1118'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.3.1216'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -41183,10 +41183,9 @@
                 }
             },
             _elementId: function (element, idx, tab) {
-                var elementId = element.attr('id');
-                var wrapperId = this.element.attr('id') || kendo.guid();
-                if (!elementId) {
-                    var tabStripID = wrapperId + '-';
+                var elementId = element.attr('id'), wrapperId = this.element.attr('id'), guid = kendo.guid();
+                if (!elementId || elementId.indexOf(wrapperId + '-') > -1) {
+                    var tabStripID = (wrapperId || guid) + '-';
                     if (tab) {
                         tabStripID += 'tab-';
                     }
