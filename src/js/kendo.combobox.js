@@ -200,14 +200,17 @@
                 this._inputWrapper.addClass(FOCUSED);
                 this._placeholder(false);
             },
-            _inputFocusout: function () {
+            _inputFocusout: function (e) {
                 var that = this;
                 var value = that.value();
+                var isClearButton = !$(e.relatedTarget).closest('.k-clear-value').length;
                 that._userTriggered = true;
                 that._inputWrapper.removeClass(FOCUSED);
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = null;
-                that.text(that.text());
+                if (isClearButton) {
+                    that.text(that.text());
+                }
                 var item = that._focus();
                 var dataItem = this.listView.dataItemByIndex(this.listView.getElementIndex(item));
                 if (value !== that.value() && that.trigger('select', {
@@ -219,8 +222,10 @@
                 }
                 that._placeholder();
                 that._valueBeforeCascade = that._old;
-                that._blur();
-                that.element.blur();
+                if (isClearButton) {
+                    that._blur();
+                    that.element.blur();
+                }
             },
             _inputPaste: function () {
                 var that = this;
@@ -756,7 +761,7 @@
                 }
             },
             _keydown: function (e) {
-                var that = this, key = e.keyCode;
+                var that = this, key = e.keyCode, textField = that.options.dataTextField || 'text';
                 that._last = key;
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = null;
@@ -792,7 +797,9 @@
                         });
                     } else {
                         if (that._syncValueAndText() || that._isSelect) {
-                            that._accessor(that.input.val());
+                            if (!that.dataItem() || that.dataItem()[textField] !== that.input.val()) {
+                                that._accessor(that.input.val());
+                            }
                         }
                         if (that.options.highlightFirst) {
                             that.listView.value(that.input.val());

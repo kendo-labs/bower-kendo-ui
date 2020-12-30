@@ -17014,6 +17014,7 @@ table.k-editor .k-editable-area {
 .k-viewhtml-dialog .k-editor-textarea {
   margin: 1em;
   padding: 0.17857143em 0.17857143em;
+  width: calc(100% - 2em);
   height: 100%;
   border-width: 1px;
   border-style: solid;

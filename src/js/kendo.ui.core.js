@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.3.1216'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.3.1230'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -28306,14 +28306,17 @@
                 this._inputWrapper.addClass(FOCUSED);
                 this._placeholder(false);
             },
-            _inputFocusout: function () {
+            _inputFocusout: function (e) {
                 var that = this;
                 var value = that.value();
+                var isClearButton = !$(e.relatedTarget).closest('.k-clear-value').length;
                 that._userTriggered = true;
                 that._inputWrapper.removeClass(FOCUSED);
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = null;
-                that.text(that.text());
+                if (isClearButton) {
+                    that.text(that.text());
+                }
                 var item = that._focus();
                 var dataItem = this.listView.dataItemByIndex(this.listView.getElementIndex(item));
                 if (value !== that.value() && that.trigger('select', {
@@ -28325,8 +28328,10 @@
                 }
                 that._placeholder();
                 that._valueBeforeCascade = that._old;
-                that._blur();
-                that.element.blur();
+                if (isClearButton) {
+                    that._blur();
+                    that.element.blur();
+                }
             },
             _inputPaste: function () {
                 var that = this;
@@ -28862,7 +28867,7 @@
                 }
             },
             _keydown: function (e) {
-                var that = this, key = e.keyCode;
+                var that = this, key = e.keyCode, textField = that.options.dataTextField || 'text';
                 that._last = key;
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = null;
@@ -28898,7 +28903,9 @@
                         });
                     } else {
                         if (that._syncValueAndText() || that._isSelect) {
-                            that._accessor(that.input.val());
+                            if (!that.dataItem() || that.dataItem()[textField] !== that.input.val()) {
+                                that._accessor(that.input.val());
+                            }
                         }
                         if (that.options.highlightFirst) {
                             that.listView.value(that.input.val());
@@ -45948,7 +45955,7 @@
                 return this.options.autoFocus && !$(active).is(element) && !this._actionable(target) && (!element.find(active).length || !element.find(target).length);
             },
             toFront: function (e) {
-                var that = this, wrapper = that.wrapper, currentWindow = wrapper[0], containmentContext = that.containment && !that._isPinned, zIndex = +wrapper.css(ZINDEX), originalZIndex = zIndex, target = e && e.target || null;
+                var that = this, wrapper = that.wrapper, currentWindow = wrapper[0], containmentContext = that.containment && !that._isPinned, openAnimation = this._animationOptions('open'), zIndex = +wrapper.css(ZINDEX), originalZIndex = zIndex, target = e && e.target || null;
                 $(KWINDOW).each(function (i, element) {
                     var windowObject = $(element), zIndexNew = windowObject.css(ZINDEX), contentElement = windowObject.children(KWINDOWCONTENT);
                     if (!isNaN(zIndexNew)) {
@@ -45966,7 +45973,7 @@
                 if (that._shouldFocus(target)) {
                     setTimeout(function () {
                         that.wrapper.focus();
-                    });
+                    }, openAnimation ? openAnimation.duration : 0);
                     var scrollTop = containmentContext ? that.containment.scrollTop() : $(window).scrollTop(), windowTop = parseInt(wrapper.position().top, 10);
                     if (!that.options.pinned && windowTop > 0 && windowTop < scrollTop) {
                         if (scrollTop > 0) {
