@@ -1,5 +1,5 @@
 /** 
- * Copyright 2020 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.3.1230'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2020.3.1306'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
