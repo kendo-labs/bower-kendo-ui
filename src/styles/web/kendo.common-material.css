@@ -16063,7 +16063,10 @@ a.k-badge:hover,
   border-width: 0;
   border-style: solid;
   line-height: 1.42857143;
-  display: inline-block;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
   position: absolute;
   z-index: 10001;
 }
@@ -16099,12 +16102,27 @@ a.k-badge:hover,
   white-space: nowrap;
   min-height: 16px;
   position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+      flex-direction: row;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -ms-flex-align: center;
+      align-items: center;
 }
 .k-window-title {
   font-size: 1.2em;
   line-height: 1.25;
   font-weight: normal;
-  display: block;
+  -ms-flex: 1;
+      flex: 1;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+      flex-direction: row;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   cursor: default;
@@ -16114,12 +16132,14 @@ a.k-badge:hover,
   display: inline-block;
 }
 .k-window-titlebar .k-window-actions {
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translateY(-50%);
-      -ms-transform: translateY(-50%);
-          transform: translateY(-50%);
-  right: 8px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row nowrap;
+      flex-flow: row nowrap;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -ms-flex-align: center;
+      align-items: center;
 }
 .k-window-titlebar .k-window-action {
   padding: 2px;
@@ -16141,10 +16161,11 @@ a.k-badge:hover,
 .k-window-content,
 .k-prompt-container {
   padding: 16px 16px;
-  height: 100%;
   box-sizing: border-box;
   overflow: auto;
   position: relative;
+  -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
   outline: 0;
 }
 .k-window-content + .k-prompt-container {
@@ -16247,8 +16268,13 @@ a.k-badge:hover,
   border-width: 1px 0 0;
   border-style: solid;
 }
-.k-ie .k-window-content {
+.k-ie9 .k-window-content {
+  height: calc(100% - 1.25em - 16px);
   border-radius: 0;
+}
+.k-ie9 .k-window-titlebar .k-window-actions,
+.k-ie9 .k-window-title {
+  display: inline-block;
 }
 .k-rtl .k-window-titlebar .k-window-actions {
   right: auto;

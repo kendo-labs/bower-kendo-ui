@@ -275,7 +275,7 @@
                 }
             },
             _inputFocus: function () {
-                this._placeholder(false);
+                this._placeholder(false, true);
                 this.wrapper.addClass(FOCUSEDCLASS);
             },
             _inputFocusout: function () {
@@ -1025,7 +1025,6 @@
                         tagList.append(that.tagTemplate(addedItem.dataItem));
                         that._setOption(getter(addedItem.dataItem), true);
                     }
-                    that._updateTagListAria();
                 } else {
                     if (!that._maxTotal || that._maxTotal < total) {
                         that._maxTotal = total;
@@ -1055,12 +1054,6 @@
                         currentTotal: total
                     }));
                 }
-                that._updateTagListAria();
-            },
-            _updateTagListAria: function () {
-                var that = this;
-                var tagList = that.tagList;
-                tagList.attr('role', tagList.children().length ? 'listbox' : 'presentation');
             },
             _select: function (candidate) {
                 var resolved = $.Deferred().resolve();
@@ -1158,7 +1151,7 @@
                     'role': 'textbox',
                     'title': element[0].title,
                     'aria-expanded': false,
-                    'aria-haspopup': 'true',
+                    'aria-haspopup': 'listbox',
                     'aria-autocomplete': 'list'
                 });
             },
@@ -1184,7 +1177,7 @@
                 defaultTemplate = isMultiple ? kendo.template('#:' + kendo.expr(options.dataTextField, 'data') + '#', { useWithBlock: false }) : kendo.template('#:values.length# ' + singleTag);
                 that.tagTextTemplate = tagTemplate = tagTemplate ? kendo.template(tagTemplate) : defaultTemplate;
                 that.tagTemplate = function (data) {
-                    return '<li role="option" aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span>' + '<span aria-hidden="true" unselectable="on" aria-label="' + (isMultiple ? 'delete" title="' + that.options.messages.deleteTag + '" aria-label="' + that.options.messages.deleteTag : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
+                    return '<li aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span>' + '<span aria-hidden="true" unselectable="on" aria-label="' + (isMultiple ? 'delete" title="' + that.options.messages.deleteTag + '" aria-label="' + that.options.messages.deleteTag : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
                 };
             },
             _loader: function () {
@@ -1211,7 +1204,7 @@
                     wrapper = element.wrap('<div class="k-widget k-multiselect" unselectable="on" />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                     wrapper[0].title = element[0].title;
-                    $('<div class="k-multiselect-wrap k-floatwrap" unselectable="on" />').insertBefore(element);
+                    $('<div class="k-multiselect-wrap k-floatwrap" unselectable="on" role="listbox"/>').insertBefore(element);
                 }
                 that.wrapper = wrapper.addClass(element[0].className).removeClass('input-validation-error').css('display', '');
                 that._inputWrapper = $(wrapper[0].firstChild);

@@ -945,7 +945,7 @@
                 panelsParent = panels.parent();
                 dataItem = that.dataItem(panelsParent);
                 expanded = dataItem && dataItem.expanded || false;
-                panels.parent().attr(ARIA_EXPANDED, expanded).not('.' + ACTIVECLASS).children('ul').attr(ARIA_HIDDEN, !expanded).hide();
+                panels.parent().not('[' + ARIA_EXPANDED + ']').attr(ARIA_EXPANDED, expanded).not('.' + ACTIVECLASS).children('ul').attr(ARIA_HIDDEN, !expanded).hide();
                 items = that.element.add(panels).children();
                 that._updateItemsClasses(items);
                 that.updateArrow(items);
