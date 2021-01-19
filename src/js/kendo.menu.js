@@ -177,6 +177,10 @@
         }
         function updateItemClasses(item) {
             item = $(item);
+            var omitWrap = item.attr(kendo.attr('omit-wrap'));
+            if (omitWrap) {
+                return;
+            }
             item.addClass('k-item k-menu-item').children(IMG).addClass(IMAGE);
             item.children('a').addClass(LINK).children(IMG).addClass(IMAGE);
             item.filter(':not([disabled])').addClass(DEFAULTSTATE);
@@ -795,11 +799,7 @@
                                             overflow: 'auto'
                                         });
                                     };
-                                if (kendo.support.browser.msie && kendo.support.browser.version <= 7) {
-                                    setTimeout(setScrolling, 0);
-                                } else {
-                                    setScrolling();
-                                }
+                                setScrolling();
                             } else {
                                 ul.css({
                                     maxHeight: '',

@@ -234,6 +234,11 @@
 @card-text: @component-text;
 @card-border: @component-border;
 
+@card-focus-bg: null;
+@card-focus-text: null;
+@card-focus-border: rgba(black, .15);
+@card-focus-shadow: 0 3px 4px 0 contrast(@background, rgba(black, .06), rgba(white, .6), 0.5);
+
 @card-header-bg: @header-background-color;
 @card-header-text: @header-text-color;
 @card-header-border: @card-border;
@@ -267,12 +272,18 @@
 @card-info-text: mix(black, @card-info);
 @card-info-border: mix(white, @card-info);
 
+@card-focus-callout-box-shadow-n: 1px -1px 4px 0 contrast(@background, rgba(black, .06), rgba(white, .6), 0.5);
+@card-focus-callout-box-shadow-e: 2px -1px 4px 0 contrast(@background, rgba(black, .06), rgba(white, .6), 0.5);
+@card-focus-callout-box-shadow-s: 2px -2px 4px 0 contrast(@background, rgba(black, .06), rgba(white, .6), 0.5);
+@card-focus-callout-box-shadow-w: 2px -1px 4px 0 contrast(@background, rgba(black, .06), rgba(white, .6), 0.5);
+
 
 //TileLayout
 @tilelayout-bg: contrast(@base, lighten(@background, 4%), darken(@background, 4%), 0.5);
 
 @tilelayout-hint-bg: rgba(255, 255, 255, .2);
 @tilelayout-hint-border: @component-border;
+@tilelayout-card-focus-shadow: 0 0 4px 2px rgba(contrast(@tilelayout-bg), 0.3);
 
 
 // Chat
@@ -382,18 +393,27 @@
 // Dialog
 
 // ScrollView
+
+@scrollview-light-bg: rgba(255, 255, 255, .2);
+@scrollview-dark-bg: rgba(0, 0, 0, .2);
+
+@scrollview-bg: @component-bg;
+@scrollview-text: @component-text;
+@scrollview-border: @component-border;
+
 @scrollview-pagebutton-bg: @button-background-color;
 @scrollview-pagebutton-border: @button-border-color;
 @scrollview-pagebutton-primary-bg: @primary-background-color;
 @scrollview-pagebutton-primary-border: @primary-border-color;
-@scrollview-pagebutton-shadow: @button-shadow;
+@scrollview-pagebutton-shadow: 0 0 0 2px rgba(0, 0, 0, .13);
 
-@scrollview-navigation-color: @selected-text-color;
+@scrollview-navigation-color: white;
 @scrollview-navigation-icon-shadow: rgba(0, 0, 0, .3) 0 0 15px;
-@scrollview-navigation-background: rgba(0, 0, 0, 0);
+@scrollview-navigation-bg: rgba(0, 0, 0, 0);
 @scrollview-navigation-default-opacity: .7;
 @scrollview-navigation-hover-opacity: 1;
 @scrollview-navigation-hover-span-bg: transparent;
+@scrollview-arrow-tap-highlight-color: transparent;
 
 
 // Switch
@@ -563,6 +583,8 @@
 
 @timeline-track-bg: @button-background-color;
 @timeline-track-border-color: @button-border-color;
+
+@timeline-track-item-focus-shadow: 0 3px 4px 0 contrast(@background, rgba(black, .06), rgba(white, .6), 0.5);
 
 @timeline-flag-background: @accent;
 @timeline-flag-text: contrast(@accent);
@@ -827,7 +849,7 @@
 @textarea-selected-text: contrast(@accent);
 @textarea-selected-bg: @accent;
 
-@textarea-invalid-border: rgba( @error, .5 );;
+@textarea-invalid-border: rgba( @error, .5 );
 @textarea-invalid-shadow: null;
 
 
@@ -882,6 +904,46 @@
 @imageeditor-crop-overlay-bg: rgba(black, 0.3);
 
 
+// Expansion panel
+@expander-bg: @component-bg;
+@expander-text: @component-text;
+@expander-border: @component-border;
+
+@expander-header-bg: @expander-bg;
+@expander-header-text: @expander-text;
+@expander-header-border: @expander-text;
+
+@expander-header-sub-title-opacity: .65;
+
+@expander-header-focused-bg: null;
+@expander-header-focused-shadow: inset 0 0 0 2px contrast(@background, rgba(black, .13), rgba(white, .6), 0.5);
+
+
+// FloatingActionButton
+@fab-shadow: 0 4px 5px rgba(0, 0, 0, .14), 0 1px 10px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .2);
+@fab-focus-shadow: 0 1px 10px rgba(#000000, .22), 0 4px 5px rgba(#000000, .24), 0 2px 4px rgba(#000000, .2);
+@fab-disabled-shadow:  0 4px 5px rgba(0, 0, 0, .06), 0 1px 10px rgba(0, 0, 0, .06), 0 2px 4px rgba(0, 0, 0, .08);
+
+@fab-item-text: if(@is-dark-theme, @badge-secondary-text, @component-text);
+@fab-item-bg: if(@is-dark-theme, lighten(@badge-secondary-bg, 30%), @component-bg);
+@fab-item-border: if(@is-dark-theme, @badge-secondary-border, @component-border);
+
+
+@fab-item-icon-text: if(@is-dark-theme, @badge-secondary-text, contrast( #ebebeb ));
+@fab-item-icon-bg: if(@is-dark-theme, lighten(@badge-secondary-bg, 20%), #ebebeb);
+@fab-item-icon-border: if(@is-dark-theme, @badge-secondary-border, #ebebeb);
+
+@fab-item-shadow: if(@is-dark-theme, @focused-shadow, @fab-shadow);
+@fab-item-focus-shadow: if(@is-dark-theme, @button-focused-shadow, @fab-focus-shadow);
+@fab-item-disabled-shadow: @fab-disabled-shadow;
+
+
+// BottomNavigation
+@bottom-nav-flat-bg: @background;
+@bottom-nav-flat-text: @component-text;
+@bottom-nav-flat-border: @component-border;
+
+
 // Kendo skin
 
 @theme-name: ~"default";
@@ -924,6 +986,9 @@
 @import "Default/loader/_theme.less";
 @import "Default/gantt/_theme.less";
 @import "Default/imageeditor/_theme.less";
+@import "Default/expansion-panel/_theme.less";
+@import "Default/floatingactionbutton/_theme.less";
+@import "Default/bottom-navigation/_theme.less";
 
 .k-in,
 .k-item
@@ -1041,7 +1106,6 @@ td.k-group-cell,
 }
 
 .k-textbox,
-.k-autocomplete.k-header,
 .k-dropdown-wrap.k-state-active,
 .k-picker-wrap.k-state-active,
 .k-numeric-wrap.k-state-active
@@ -2333,8 +2397,9 @@ div.k-filebrowser-dropzone em
 }
 
 .k-column-menu,
-.k-column-menu .k-item
-{
+.k-column-menu .k-item,
+.k-grid-columnmenu-popup,
+.k-columnmenu-item-wrapper {
     border-color: @secondary-border-color;
 }
 
@@ -2342,6 +2407,11 @@ div.k-filebrowser-dropzone em
 {
     border-color: @secondary-border-color;
     background-color: transparent;
+}
+
+.k-column-menu-group-header-text {
+    color: @normal-text-color;
+    border-color: @normal-text-color;
 }
 
 .k-menu .k-group
@@ -2371,12 +2441,6 @@ div.k-filebrowser-dropzone em
 .k-grid td.k-state-focused
 {
     .box-shadow(@focused-item-shadow);
-}
-
-.k-grid .k-header .k-grid-search {
-    background: none;
-    background-color: @input-bg;
-    color: @input-text;
 }
 
 .k-header,

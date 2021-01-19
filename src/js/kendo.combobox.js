@@ -381,7 +381,6 @@
                 that._resizePopup();
                 that.popup.position();
                 that._buildOptions(data);
-                that._makeUnselectable();
                 that._updateSelection();
                 if (data.length && isFirstPage) {
                     that._updateItemFocus();

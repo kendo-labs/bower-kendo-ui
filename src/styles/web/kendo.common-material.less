@@ -22,6 +22,8 @@
                                                                                                                                                                                                        
 
 */
+@import "Material/_variables.less";
+
 @input-height: 2.07142857em;
 @input-default-width: 12.4em;
 @input-border-width: 1px;
@@ -158,7 +160,7 @@
 @grid-cell-padding-x: @grid-padding-x;
 @grid-cell-padding-y: @grid-padding-y;
 
-@grid-search-width: 15.7em;
+@grid-search-width: @input-default-width;
 
 // Calendar
 @calendar-padding-x: 0;
@@ -240,13 +242,18 @@
 
 
 // ScrollView
-@scrollview-pagebutton-size: 8px;
+@scrollview-border-width: 1px;
+@scrollview-font-family: inherit;
+@scrollview-font-size: inherit;
+@scrollview-line-height: @line-height;
+
+@scrollview-pagebutton-size: 10px;
 @scrollview-navigation-size: 4.5em;
 
-@scrollview-pager-offset: 20px;
+@scrollview-pager-offset: 0;
 @scrollview-pager-item-spacing: 20px;
 @scrollview-pager-item-border-width: 0;
-@scrollview-pager-height: calc(@scrollview-pagebutton-size + (2 * @scrollview-pager-item-border-width) + (@scrollview-pager-item-spacing / 2 ));
+@scrollview-pager-height: calc( @scrollview-pagebutton-size + (2 * @scrollview-pager-item-border-width) + (2 * @scrollview-pager-item-spacing) );
 
 // Switch
 @switch-size: 5.4em;
@@ -440,8 +447,10 @@
 @timeline-track-arrow-height: 30px;
 
 @timeline-track-size: 6px;
+@timeline-track-wrap-padding-bottom: 3px;
 @timeline-track-border-width: 1px;
 @timeline-track-margin-bottom: 16px;
+@timeline-track-bottom-calc: calc((@timeline-track-arrow-width / 2) + @timeline-track-wrap-padding-bottom);
 @timeline-track-start-calc: calc(@timeline-track-arrow-width - 2 * @timeline-track-border-width);
 @timeline-track-end-calc: calc(@timeline-track-arrow-width - 2 * @timeline-track-border-width);
 
@@ -563,6 +572,12 @@
 @checkbox-border-width: 1px;
 @checkbox-line-height: (@checkbox-size + @checkbox-border-width);
 
+@checkbox-list-margin: 0;
+@checkbox-list-padding: 0;
+@checkbox-list-item-margin-top: 16px;
+@checkbox-list-horizontal-item-margin-x: 32px;
+
+// Radio
 @radio-icon-size: 12px;
 @radio-size: @icon-size;
 @radio-radius: 50%;
@@ -794,6 +809,102 @@
 @imageeditor-resize-handle-size: 15px;
 
 
+// Expansion panel
+@expander-padding-y: 8px;
+@expander-font-family: inherit;
+@expander-font-size: inherit;
+@expander-line-height: @line-height;
+@expander-border-width: 0;
+
+@expander-header-padding-x: 0;
+@expander-header-padding-y: 8px;
+
+@expander-indicator-margin-x: 12px;
+
+@expander-header-border-width: 2px;
+
+@expander-content-padding-x: 20px;
+@expander-content-padding-y: 24px;
+
+
+// FloatingActionButton
+@fab-spacer: 16px;
+
+@fab-padding-x: @fab-spacer;
+@fab-padding-y: @fab-padding-x;
+@fab-border-width: 0;
+@fab-border-radius: 4px;
+@fab-font-family: inherit;
+@fab-font-size: inherit;
+@fab-line-height: @line-height;
+
+@fab-padding-x-sm: calc( @fab-padding-x / 2 );
+@fab-padding-y-sm: calc( @fab-padding-y / 2 );
+
+@fab-padding-x-lg: calc( @fab-padding-x * 1.5 );
+@fab-padding-y-lg: calc( @fab-padding-y * 1.5 );
+
+@fab-icon-width: 20px;
+@fab-icon-height: @fab-icon-width;
+@fab-icon-spacing: 8px;
+
+@fab-items-padding-x: 0;
+@fab-items-padding-y: @fab-spacer;
+
+@fab-item-spacer: 8px;
+@fab-item-text-padding-x: 4px;
+@fab-item-text-padding-y: @fab-item-text-padding-x;
+@fab-item-text-border-width: 1px;
+@fab-item-text-border-radius: 2px;
+@fab-item-text-font-size: 10px;
+@fab-item-text-line-height: 1;
+
+@fab-item-icon-padding-x: @fab-item-spacer;
+@fab-item-icon-padding-y: @fab-item-icon-padding-x;
+@fab-item-icon-border-width: 0;
+@fab-item-icon-border-radius: 50%;
+
+
+// BottomNavigation
+@bottom-nav-padding-x: 4px;
+@bottom-nav-padding-y: @bottom-nav-padding-x;
+@bottom-nav-gap: @bottom-nav-padding-x;
+@bottom-nav-border-width: 1px 0px 0px 0px;
+
+@bottom-nav-font-family: inherit;
+@bottom-nav-font-size: inherit;
+@bottom-nav-line-height: @line-height;
+@bottom-nav-letter-spacing: .2px;
+
+@bottom-nav-item-padding-x: 8px;
+@bottom-nav-item-padding-y: 0;
+@bottom-nav-item-min-width: 72px;
+@bottom-nav-item-min-height: calc( (@icon-size * 2.5) + (@bottom-nav-padding-y * 2) );
+@bottom-nav-item-gap: 0 8px;
+@bottom-nav-item-border-radius: 4px;
+
+@bottom-nav-item-icon-margin-y: 8px;
+@bottom-nav-item-icon-margin-x: @bottom-nav-item-icon-margin-y;
+@bottom-nav-item-icon-size: 24px;
+@bottom-nav-item-disabled-opacity: .5;
+
+@bottom-nav-shadow: 0px 0px 5px rgba(0, 0, 0, .12);
+
+
+// Grid column menu
+@grid-column-menu-popup-padding-x: 0;
+@grid-column-menu-popup-padding-y: @padding-y-lg;
+
+@grid-column-menu-item-padding-x: @padding-x;
+@grid-column-menu-item-padding-y: @padding-y-lg;
+
+@grid-column-menu-list-item-padding-x: @padding-x;
+@grid-column-menu-list-item-padding-y: 0;
+
+@grid-column-menu-filter-container-padding-x: @padding-x;
+@grid-column-menu-filter-container-padding-y: @padding-y;
+
+
 @import "common/all.less";
 
 @spreadsheet-first-tool-offset: 0;
@@ -920,28 +1031,7 @@
 }
 
 .k-filter-menu {
-    padding: .5em .5em 0;
-}
-
-.k-filter-menu .k-action-buttons .k-button {
-    margin: 0;
-    width: 50%;
-    border-radius: 0;
-}
-
-.k-filter-menu .k-primary {
-    float: right;
-}
-
-.k-filter-menu > div > div:last-child {
-    margin: .5em -.5em 0;
-    border-top-width: 1px;
-    border-top-style: solid;
-}
-
-.k-filter-menu .k-primary {
-   border-left-width: 1px;
-   border-left-style: solid;
+    padding: .5em;
 }
 
 .k-grouping-header .k-group-indicator
@@ -1000,7 +1090,7 @@
     border-left-width: 0;
 }
 
-.k-combobox > .k-dropdown-wrap > .k-i-close {
+.k-combobox > .k-dropdown-wrap > .k-clear-value {
     right: calc(@combobox-clear-icon-offset);
 }
 
@@ -1370,12 +1460,7 @@ div.editorToolbarWindow.k-window-content {
 }
 
 // Grid
-.k-header.k-grid-toolbar {
-    border-color: #3343a4;
-}
-
-.k-grouping-header,
-.k-grid-toolbar {
+.k-grouping-header {
     padding: 0.429em;
 }
 
@@ -1466,13 +1551,13 @@ form.k-filter-menu .k-textbox {
             padding-left: 2.5em;
         }
 
-        &.k-autocomplete > .k-i-close,
-        &.k-multiselect > .k-multiselect-wrap > .k-i-close {
+        &.k-autocomplete > .k-clear-value,
+        &.k-multiselect > .k-multiselect-wrap > .k-clear-value {
             right: initial;
             margin-right: 0;
         }
 
-        &.k-combobox > .k-dropdown-wrap > .k-i-close {
+        &.k-combobox > .k-dropdown-wrap > .k-clear-value {
             left: calc(@combobox-clear-icon-offset);
             right: initial;
         }

@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, support = kendo.support, caret = kendo.caret, activeElement = kendo._activeElement, placeholderSupported = support.placeholder, ui = kendo.ui, List = ui.List, keys = kendo.keys, DataSource = kendo.data.DataSource, ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CHANGE = 'change', DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', AUTOCOMPLETEVALUE = 'off', HOVER = 'k-state-hover', ns = '.kendoAutoComplete', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
+        var kendo = window.kendo, support = kendo.support, caret = kendo.caret, activeElement = kendo._activeElement, placeholderSupported = support.placeholder, ui = kendo.ui, List = ui.List, keys = kendo.keys, DataSource = kendo.data.DataSource, ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CHANGE = 'change', DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', HIDDENCLASS = 'k-hidden', STATEDISABLED = 'k-state-disabled', AUTOCOMPLETEVALUE = 'off', HOVER = 'k-state-hover', ns = '.kendoAutoComplete', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
         function indexOfWordAtCaret(caretIdx, text, separator) {
             return separator ? text.substring(0, caretIdx).split(separator).length - 1 : 0;
         }
@@ -352,7 +352,6 @@
                     that._touchScroller.reset();
                 }
                 that._hideBusy();
-                that._makeUnselectable();
                 that.trigger('dataBound');
             },
             _mute: function (callback) {
@@ -504,7 +503,7 @@
             _hideBusy: function () {
                 var that = this;
                 clearTimeout(that._busy);
-                that._loading.hide();
+                that._loading.addClass(HIDDENCLASS);
                 that.element.attr('aria-busy', false);
                 that._busy = null;
                 that._showClear();
@@ -516,7 +515,7 @@
                 }
                 that._busy = setTimeout(function () {
                     that.element.attr('aria-busy', true);
-                    that._loading.show();
+                    that._loading.removeClass(HIDDENCLASS);
                     that._hideClear();
                 }, 100);
             },
@@ -581,7 +580,7 @@
                 });
             },
             _loader: function () {
-                this._loading = $('<span class="k-icon k-i-loading" style="display:none"></span>').insertAfter(this.element);
+                this._loading = $('<span class="k-icon k-i-loading ' + HIDDENCLASS + '"></span>').insertAfter(this.element);
             },
             _clearButton: function () {
                 List.fn._clearButton.call(this);

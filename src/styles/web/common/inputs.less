@@ -48,43 +48,45 @@ span.k-dropdowntree {
 .k-multiselect,
 .k-textbox,
 .k-listbox {
+    width: @input-default-width;
+    border-width: 0;
     position: relative;
     display: inline-block;
-    width: @input-default-width;
-    overflow: visible;
-    border-width: 0;
     vertical-align: middle;
+    overflow: visible;
 }
 
-.k-autocomplete > .k-i-close,
-.k-dropdown-wrap > .k-i-close,
-.k-multiselect-wrap > .k-i-close {
+.k-autocomplete > .k-clear-value,
+.k-dropdown-wrap > .k-clear-value,
+.k-multiselect-wrap > .k-clear-value {
+    outline: 0;
     font-size: 100%;
-    display: none;
+    display: inline-block;
     position: absolute;
+    visibility: hidden;
     cursor: pointer;
 }
 
-.k-autocomplete > .k-i-close {
+.k-autocomplete > .k-clear-value {
     right: calc(@input-clear-icon-offset);
 }
 
-.k-multiselect-wrap > .k-i-close {
+.k-multiselect-wrap > .k-clear-value {
     right: calc(@input-clear-icon-offset + 1px);
 }
 
-.k-autocomplete > .k-i-close,
-.k-dropdown-wrap > .k-i-close {
+.k-autocomplete > .k-clear-value,
+.k-dropdown-wrap > .k-clear-value {
     top: 50%;
     transform: translateY(-50%);
 }
 
-.k-dropdown-wrap > .k-i-close {
+.k-dropdown-wrap > .k-clear-value {
     right: calc(@combobox-clear-icon-offset);
 }
 
-.k-multiselect-wrap > .k-i-close,
-.k-dropdowntree > .k-multiselect-wrap > .k-i-close  {
+.k-multiselect-wrap > .k-clear-value,
+.k-dropdowntree > .k-multiselect-wrap > .k-clear-value  {
     top: calc(@multiselect-clear-icon-top-offset);
 }
 
@@ -99,9 +101,8 @@ span.k-dropdowntree {
 .k-multiselect-wrap {
     &.k-state-hover,
     &.k-state-focused {
-        > .k-i-close {
-            display: inline-block;
-            outline: none;
+        > .k-clear-value {
+            visibility: visible;
         }
     }
 }
@@ -109,9 +110,8 @@ span.k-dropdowntree {
 .k-multiselect {
     &.k-state-hover,
     &.k-state-focused {
-        > .k-multiselect-wrap > .k-i-close {
-            display: inline-block;
-            outline: none;
+        > .k-multiselect-wrap > .k-clear-value {
+            visibility: visible;
         }
     }
 }
@@ -294,7 +294,8 @@ span.k-textbox:after {
 .k-picker-wrap .k-input,
 .k-numeric-wrap .k-input,
 .k-dropdown-wrap .k-input,
-.k-selectbox .k-input {
+.k-selectbox .k-input,
+.k-multiselect-wrap .k-input {
     font-family: inherit;
     border-width: 0;
     outline: 0;
@@ -925,11 +926,12 @@ textarea.k-textarea {
 
 // Input with icon
 .k-input-icon {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     width: @input-icon-width;
     position: relative;
+    flex-shrink: 0;
 
     .k-icon {
         position: static;
@@ -1184,15 +1186,15 @@ span.k-numerictextbox {
         padding-left: calc(@input-offset);
     }
 
-    .k-dropdown-wrap > .k-i-close {
+    .k-dropdown-wrap > .k-clear-value {
         left: calc(@combobox-clear-icon-offset);
     }
 
-    .k-autocomplete > .k-i-close {
+    .k-autocomplete > .k-clear-value {
         left: calc(@input-clear-icon-offset);
     }
 
-    .k-multiselect-wrap > .k-i-close {
+    .k-multiselect-wrap > .k-clear-value {
         left: calc(@input-clear-icon-offset + 1px);
     }
 

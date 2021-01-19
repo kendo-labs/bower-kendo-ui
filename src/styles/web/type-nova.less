@@ -154,6 +154,11 @@
 @card-text: @component-text;
 @card-border: @component-border;
 
+@card-focus-bg: null;
+@card-focus-text: null;
+@card-focus-border: null;
+@card-focus-shadow: 0 3px 4px 0 rgba(black, .06);
+
 @card-header-bg: @header-background-color;
 @card-header-text: contrast(@card-header-bg);
 @card-header-border: @card-border;
@@ -187,12 +192,18 @@
 @card-info-text: mix(black, @card-info);
 @card-info-border: mix(white, @card-info);
 
+@card-focus-callout-box-shadow-n: 1px -1px 4px 0 rgba(black, .06);
+@card-focus-callout-box-shadow-e: 2px -1px 4px 0 rgba(black, .06);
+@card-focus-callout-box-shadow-s: 2px -2px 4px 0 rgba(black, .06);
+@card-focus-callout-box-shadow-w: 2px -1px 4px 0 rgba(black, .06);
+
 
 //TileLayout
 @tilelayout-bg: darken(@background, 4%);
 
 @tilelayout-hint-bg: rgba(255, 255, 255, .2);
 @tilelayout-hint-border: @component-border;
+@tilelayout-card-focus-shadow: 0 0 4px 2px rgba(contrast(@tilelayout-bg), 0.3);
 
 
 // Chat
@@ -311,18 +322,27 @@
 
 
 // ScrollView
+
+@scrollview-bg: @component-bg;
+@scrollview-text: @component-text;
+@scrollview-border: @component-border;
+
 @scrollview-pagebutton-bg: @button-background-color;
 @scrollview-pagebutton-border: @button-border-color;
 @scrollview-pagebutton-primary-bg: @primary-background-color;
 @scrollview-pagebutton-primary-border: @primary-border-color;
-@scrollview-pagebutton-shadow: @button-shadow;
+@scrollview-pagebutton-shadow: 0 0 0 2px rgba(0, 0, 0, .13);
 
-@scrollview-navigation-color: @selected-text-color;
+@scrollview-navigation-color: white;
 @scrollview-navigation-icon-shadow: rgba(0, 0, 0, .3) 0 0 15px;
-@scrollview-navigation-background: rgba(0, 0, 0, 0);
+@scrollview-navigation-bg: rgba(0, 0, 0, 0);
 @scrollview-navigation-default-opacity: .7;
 @scrollview-navigation-hover-opacity: 1;
 @scrollview-navigation-hover-span-bg: transparent;
+@scrollview-arrow-tap-highlight-color: transparent;
+
+@scrollview-light-bg: rgba(255, 255, 255, .2);
+@scrollview-dark-bg: rgba(0, 0, 0, .2);
 
 
 // Switch
@@ -493,6 +513,8 @@
 
 @timeline-track-bg: @button-background-color;
 @timeline-track-border-color: @button-border-color;
+
+@timeline-track-item-focus-shadow: 0 3px 4px 0 rgba(@primary, .4);
 
 @timeline-flag-background: @accent;
 @timeline-flag-text: contrast(@accent);
@@ -757,7 +779,7 @@
 @textarea-selected-text: contrast(@accent);
 @textarea-selected-bg: @accent;
 
-@textarea-invalid-border: rgba( @error, .5 );;
+@textarea-invalid-border: rgba( @error, .5 );
 @textarea-invalid-shadow: null;
 
 
@@ -813,6 +835,45 @@
 @imageeditor-crop-overlay-bg: rgba(black, 0.3);
 
 
+// Expansion panel
+@expander-bg: @component-bg;
+@expander-text: @component-text;
+@expander-border: @component-border;
+
+@expander-header-bg: @expander-bg;
+@expander-header-text: @expander-text;
+@expander-header-border: @expander-text;
+
+@expander-header-sub-title-opacity: .65;
+
+@expander-header-focused-bg: null;
+@expander-header-focused-shadow: inset 0 0 0 2px rgba(0, 0, 0, .13);
+
+
+// FloatingActionButton
+@fab-shadow: 0 4px 5px rgba(0, 0, 0, .14), 0 1px 10px rgba(0, 0, 0, .12), 0 2px 4px rgba(0, 0, 0, .2);
+@fab-focus-shadow: 0 1px 10px rgba(#000000, .22), 0 4px 5px rgba(#000000, .24), 0 2px 4px rgba(#000000, .2);
+@fab-disabled-shadow:  0 4px 5px rgba(0, 0, 0, .06), 0 1px 10px rgba(0, 0, 0, .06), 0 2px 4px rgba(0, 0, 0, .08);
+
+@fab-item-text: @component-text;
+@fab-item-bg: @component-bg;
+@fab-item-border: @component-border;
+
+@fab-item-icon-text: contrast( #ebebeb );
+@fab-item-icon-bg: #ebebeb;
+@fab-item-icon-border: #ebebeb;
+
+@fab-item-shadow: @fab-shadow;
+@fab-item-focus-shadow: @fab-focus-shadow;
+@fab-item-disabled-shadow: @fab-disabled-shadow;
+
+
+// BottomNavigation
+@bottom-nav-flat-bg: @background;
+@bottom-nav-flat-text: @component-text;
+@bottom-nav-flat-border: @component-border;
+
+
 // Kendo skin
 
 @theme-name: ~"nova";
@@ -855,6 +916,9 @@
 @import "Default/loader/_theme.less";
 @import "Default/gantt/_theme.less";
 @import "Default/imageeditor/_theme.less";
+@import "Default/expansion-panel/_theme.less";
+@import "Default/floatingactionbutton/_theme.less";
+@import "Default/bottom-navigation/_theme.less";
 
 
 // Main colors
@@ -1538,10 +1602,6 @@ input.k-textbox:active {
     background-color: @background;
 }
 
-.k-grid-toolbar .k-button:hover {
-    border-color: @hover-background;
-}
-
 .k-grid .k-button-icontext {
     background-color: transparent;
 }
@@ -1558,15 +1618,6 @@ input.k-textbox:active {
     border-color: @selected-background;
 }
 
-.k-header.k-grid-toolbar {
-    background-color: @widget-background-color;
-    border-color: @widget-border-color;
-}
-
-.k-grid .k-grouping-header {
-    color: rgba(256, 256, 256, 0.5);
-}
-
 .k-grouping-header .k-group-indicator{
     color: @inversed-text-color;
     background-color: @accent-hover-background;
@@ -1575,6 +1626,14 @@ input.k-textbox:active {
 
 .k-group-indicator .k-link {
     color: @inversed-text-color;
+}
+
+.k-grid .k-grouping-header {
+    .fill(
+        @toolbar-text,
+        inherit,
+        inherit
+    );
 }
 
 .k-grouping-row {
@@ -1586,28 +1645,26 @@ input.k-textbox:active {
     background-color: @secondary-widget-background-color;
 }
 
-.k-filter-menu .k-button,
 .k-edit-form-container :not(.k-button-group) > .k-button {
     color: @normal-text-color;
     background: transparent;
     border-color: transparent;
 }
 
-.k-filter-menu .k-button:active {
-    color: @normal-text-color;
-}
-
-.k-filter-menu .k-primary,
 .k-edit-form-container :not(.k-button-group) > .k-primary {
     color: @accent;
 }
 
-.k-filter-menu .k-primary {
-    border-left-color: @widget-border-color;
+.k-column-menu,
+.k-column-menu .k-item,
+.k-grid-columnmenu-popup,
+.k-columnmenu-item-wrapper {
+    border-color: @secondary-border-color;
 }
 
-.k-filter-menu>div>div:last-child {
-    border-color: @widget-border-color;
+.k-column-menu-group-header-text {
+    color: @normal-text-color;
+    border-color: @normal-text-color;
 }
 
 .k-grid td.k-state-selected,
@@ -1633,12 +1690,6 @@ input.k-textbox:active {
 
 .k-grid .k-state-selected:hover .k-group-cell {
     background-color: @secondary-widget-background-color;
-}
-
-.k-grid .k-header .k-grid-search {
-    background: none;
-    background-color: @input-bg;
-    color: @input-text;
 }
 
 .k-marquee-color {

@@ -32,9 +32,9 @@
 
 .k-no-click { pointer-events: none; }
 
-.k-floatwrap:after,.k-slider-items:after,.k-grid-toolbar:after {content:"";display:block;clear:both;visibility:hidden;height:0;overflow:hidden;}
-.k-floatwrap,.k-slider-items,.k-grid-toolbar {display:inline-block;}
-.k-floatwrap,.k-slider-items,.k-grid-toolbar {display:block;}
+.k-floatwrap:after,.k-slider-items:after {content:"";display:block;clear:both;visibility:hidden;height:0;overflow:hidden;}
+.k-floatwrap,.k-slider-items {display:inline-block;}
+.k-floatwrap,.k-slider-items {display:block;}
 
 // main gradient
 
@@ -46,11 +46,9 @@
 .k-pager-wrap,
 .k-tabstrip-items .k-item,
 .k-link.k-state-hover,
-.k-autocomplete,
 .k-dropdown-wrap,
 .k-picker-wrap,
 .k-numeric-wrap,
-.k-autocomplete.k-state-hover,
 .k-dropdown-wrap.k-state-hover,
 .k-picker-wrap.k-state-hover,
 .k-numeric-wrap.k-state-hover,
@@ -59,8 +57,7 @@
     background-position: 0 center;
 }
 
-.k-link:hover
-{
+.k-link:hover {
     text-decoration: none;
 }
 
@@ -86,6 +83,12 @@
     border-style: solid;
     border-width: 1px;
     -webkit-appearance: none;
+}
+
+// Refactor after R1 2020; After unifying inputs features/rendering.
+.k-textbox > .k-input,
+.k-textarea > .k-input {
+    border: 0;
 }
 
 .k-widget,

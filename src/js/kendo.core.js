@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2020.3.1312'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.1.119'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1334,7 +1334,7 @@
             };
         }
         function wrap(element, autosize) {
-            var browser = support.browser, percentage, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, parent = element.parent(), windowOuterWidth = outerWidth(window);
+            var percentage, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, parent = element.parent(), windowOuterWidth = outerWidth(window);
             parent.removeClass('k-animation-container-sm');
             if (!parent.hasClass('k-animation-container')) {
                 var width = element[0].style.width, height = element[0].style.height, percentWidth = percentRegExp.test(width), percentHeight = percentRegExp.test(height), forceWidth = element.hasClass('k-tooltip') || element.is('.k-menu-horizontal.k-context-menu');
@@ -1365,10 +1365,6 @@
             if (windowOuterWidth < outerWidth(parent)) {
                 parent.addClass('k-animation-container-sm');
                 wrapResize(element, autosize);
-            }
-            if (browser.msie && math.floor(browser.version) <= 7) {
-                element.css({ zoom: 1 });
-                element.children('.k-menu').width(element.width());
             }
             return parent;
         }
@@ -1707,7 +1703,6 @@
                     return 1;
                 }
             };
-            support.cssBorderSpacing = typeof docStyle.borderSpacing != 'undefined' && !(support.browser.msie && support.browser.version < 8);
             (function (browser) {
                 var cssClass = '', docElement = $(document.documentElement), majorVersion = parseInt(browser.version, 10);
                 if (browser.msie) {
@@ -1792,8 +1787,7 @@
             };
             support.matchMedia = 'matchMedia' in window;
             support.pushState = window.history && window.history.pushState;
-            var documentMode = document.documentMode;
-            support.hashChange = 'onhashchange' in window && !(support.browser.msie && (!documentMode || documentMode <= 8));
+            support.hashChange = 'onhashchange' in window;
             support.customElements = 'registerElement' in window.document;
             var chrome = support.browser.chrome, mobileChrome = support.browser.crios, mozilla = support.browser.mozilla, safari = support.browser.safari;
             support.msPointers = !chrome && window.MSPointerEvent;
@@ -2144,8 +2138,9 @@
                 };
             },
             guid: function () {
-                var id = '', i, random;
-                for (i = 0; i < 32; i++) {
+                var id = '', i, random, chars = 'abcdefghijklmnopqrstuvwxyz';
+                id += chars[Math.floor(Math.random() * Math.floor(chars.length))];
+                for (i = 1; i < 32; i++) {
                     random = math.random() * 16 | 0;
                     if (i == 8 || i == 12 || i == 16 || i == 20) {
                         id += '-';
@@ -3709,6 +3704,103 @@
         kendo.selectorFromClasses = function (classes) {
             return '.' + classes.split(' ').join('.');
         };
+        var themeColorValues = [
+            'primary',
+            'secondary',
+            'tertiary',
+            'inherit',
+            'info',
+            'success',
+            'warning',
+            'error',
+            'dark',
+            'light',
+            'inverse'
+        ];
+        var fillValues = [
+            'solid',
+            'outline',
+            'flat'
+        ];
+        var postitionValues = [
+            'edge',
+            'outside',
+            'inside'
+        ];
+        var shapeValues = [
+            'circle',
+            'rectangle',
+            'rounded',
+            'dot',
+            'pill'
+        ];
+        var sizeValues = [
+            [
+                'small',
+                'sm'
+            ],
+            [
+                'medium',
+                'md'
+            ],
+            [
+                'large',
+                'lg'
+            ]
+        ];
+        var alignValues = [
+            [
+                'top start',
+                'top-start'
+            ],
+            [
+                'top end',
+                'top-end'
+            ],
+            [
+                'bottom start',
+                'bottom-start'
+            ],
+            [
+                'bottom end',
+                'bottom-end'
+            ]
+        ];
+        var positionModeValues = [
+            'fixed',
+            'static',
+            'sticky',
+            'absolute'
+        ];
+        kendo.propertyToCssClassMap = {};
+        kendo.registerCssClass = function (propName, value, shorthand) {
+            if (!kendo.propertyToCssClassMap[propName]) {
+                kendo.propertyToCssClassMap[propName] = {};
+            }
+            kendo.propertyToCssClassMap[propName][value] = shorthand || value;
+        };
+        kendo.registerCssClasses = function (propName, arr) {
+            for (var i = 0; i < arr.length; i++) {
+                if (isArray(arr[i])) {
+                    kendo.registerCssClass(propName, arr[i][0], arr[i][1]);
+                } else {
+                    kendo.registerCssClass(propName, arr[i]);
+                }
+            }
+        };
+        kendo.getValidCssClass = function (prefix, propName, value) {
+            var validValue = kendo.propertyToCssClassMap[propName][value];
+            if (validValue) {
+                return prefix + validValue;
+            }
+        };
+        kendo.registerCssClasses('themeColor', themeColorValues);
+        kendo.registerCssClasses('fill', fillValues);
+        kendo.registerCssClasses('postition', postitionValues);
+        kendo.registerCssClasses('shape', shapeValues);
+        kendo.registerCssClasses('size', sizeValues);
+        kendo.registerCssClasses('align', alignValues);
+        kendo.registerCssClasses('positionMode', positionModeValues);
         kendo.whenAll = function (array) {
             var resolveValues = arguments.length == 1 && $.isArray(array) ? array : Array.prototype.slice.call(arguments), length = resolveValues.length, remaining = length, deferred = $.Deferred(), i = 0, failed = 0, rejectContexts = Array(length), rejectValues = Array(length), resolveContexts = Array(length), value;
             function updateFunc(index, contexts, values) {

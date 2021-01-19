@@ -45,7 +45,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, extend = $.extend, oldIE = kendo.support.browser.msie && kendo.support.browser.version < 9, isFunction = kendo.isFunction, isPlainObject = $.isPlainObject, inArray = $.inArray, POINT = '.', AUTOCOMPLETEVALUE = 'off', nameSpecialCharRegExp = /("|\%|'|\[|\]|\$|\.|\,|\:|\;|\+|\*|\&|\!|\#|\(|\)|<|>|\=|\?|\@|\^|\{|\}|\~|\/|\||`)/g, ERRORTEMPLATE = '<div class="k-tooltip k-tooltip-error k-validator-tooltip">' + '<span class="k-tooltip-icon k-icon k-i-warning"></span>' + '<span class="k-tooltip-content">#= message #</span>' + '<span class="k-callout k-callout-n"></span>' + '</div>', CHANGE = 'change';
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, extend = $.extend, isFunction = kendo.isFunction, isPlainObject = $.isPlainObject, inArray = $.inArray, POINT = '.', AUTOCOMPLETEVALUE = 'off', nameSpecialCharRegExp = /("|\%|'|\[|\]|\$|\.|\,|\:|\;|\+|\*|\&|\!|\#|\(|\)|<|>|\=|\?|\@|\^|\{|\}|\~|\/|\||`)/g, ERRORTEMPLATE = '<div class="k-tooltip k-tooltip-error k-validator-tooltip">' + '<span class="k-tooltip-icon k-icon k-i-warning"></span>' + '<span class="k-tooltip-content">#= message #</span>' + '<span class="k-callout k-callout-n"></span>' + '</div>', CHANGE = 'change';
         var EQUAL_SET = 'equalSet';
         var specialRules = [
             'url',
@@ -59,7 +59,7 @@
             return field.type || $.type(field) || 'string';
         }
         function convertToValueBinding(container) {
-            container.find(':input:not(:button, .k-combobox .k-input, [' + kendo.attr('role') + '=listbox], [' + kendo.attr('role') + '=upload], [' + kendo.attr('skip') + '], [type=file])').each(function () {
+            container.find(':input:not(:button, .k-combobox .k-input, .k-checkbox-list .k-checkbox, .k-radio-list .k-radio, [' + kendo.attr('role') + '=listbox], [' + kendo.attr('role') + '=upload], [' + kendo.attr('skip') + '], [type=file])').each(function () {
                 var bindAttr = kendo.attr('bind'), binding = this.getAttribute(bindAttr) || '', bindingName = this.type === 'checkbox' || this.type === 'radio' ? 'checked:' : 'value:', fieldName = this.name;
                 if (binding.indexOf(bindingName) === -1 && fieldName) {
                     binding += (binding.length ? ',' : '') + bindingName + fieldName;
@@ -130,6 +130,8 @@
             }
             if (type === 'DropDownTree' && options && options.checkboxes || type === 'MultiSelect') {
                 tag = '<select />';
+            } else if (type === 'RadioGroup' || type === 'CheckBoxGroup') {
+                tag = '<ul />';
             } else {
                 tag = type === 'Editor' ? '<textarea />' : '<input />';
             }
@@ -137,6 +139,7 @@
         }
         var kendoEditors = [
             'AutoComplete',
+            'CheckBoxGroup',
             'ColorPicker',
             'ComboBox',
             'DateInput',
@@ -148,6 +151,7 @@
             'MultiColumnComboBox',
             'MultiSelect',
             'NumericTextBox',
+            'RadioGroup',
             'Rating',
             'Slider',
             'Switch',
@@ -369,10 +373,7 @@
                     rules: rules
                 });
                 if (!that.options.skipFocus) {
-                    var focusable = container.find(':kendoFocusable').eq(0).focus();
-                    if (oldIE) {
-                        focusable.focus();
-                    }
+                    container.find(':kendoFocusable').eq(0).focus();
                 }
             }
         });

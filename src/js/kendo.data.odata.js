@@ -420,7 +420,7 @@
                             result.$count = true;
                             delete result.$inlinecount;
                         }
-                        if (result.$filter) {
+                        if (result && result.$filter) {
                             result.$filter = result.$filter.replace(/('[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')/gi, function (x) {
                                 return x.substring(1, x.length - 1);
                             });

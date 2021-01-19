@@ -442,7 +442,6 @@
                 that._resizePopup(true);
                 that.popup.position();
                 that._buildOptions(data);
-                that._makeUnselectable();
                 if (!filtered) {
                     if (that._open) {
                         that.toggle(that._allowOpening());

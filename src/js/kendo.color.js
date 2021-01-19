@@ -35,7 +35,6 @@
     };
     window.kendo = window.kendo || {};
     var Class = kendo.Class;
-    var support = kendo.support;
     var namedColors = {
         aliceblue: 'f0f8ff',
         antiquewhite: 'faebd7',
@@ -185,7 +184,6 @@
         yellow: 'ffff00',
         yellowgreen: '9acd32'
     };
-    var browser = support.browser;
     var matchNamedColor = function (color) {
         var colorNames = Object.keys(namedColors);
         colorNames.push('transparent');
@@ -218,9 +216,6 @@
             return 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', ' + parseFloat(Number(this.a).toFixed(3)) + ')';
         },
         toDisplay: function () {
-            if (browser.msie && browser.version < 9) {
-                return this.toCss();
-            }
             return this.toCssRgba();
         },
         equals: function (c) {

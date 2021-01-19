@@ -476,7 +476,6 @@
                     that._touchScroller.reset();
                 }
                 that._hideBusy();
-                that._makeUnselectable();
                 that.trigger('dataBound');
             },
             _updateItemFocus: function () {
