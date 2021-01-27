@@ -841,7 +841,7 @@
                                     },
                                     open: proxy(that._popupOpen, that),
                                     close: function (e) {
-                                        that._closing = true;
+                                        that._closing = e.sender.element;
                                         var li = e.sender.wrapper.parent();
                                         if (overflowWrapper) {
                                             var popupId = e.sender.element.data(POPUP_ID_ATTR);
@@ -1083,10 +1083,14 @@
                 var hasChildren = that._itemHasChildren(element);
                 var popupId = element.data(POPUP_OPENER_ATTR) || element.parent().data(POPUP_ID_ATTR);
                 var pointerTouch = isPointerTouch(e);
+                var isParentClosing = false;
                 if (popupId) {
                     that._openedPopups[popupId.toString()] = true;
                 }
-                if (that._closing || e.delegateTarget != element.parents(menuSelector)[0] && e.delegateTarget != element.parents('.k-menu-scroll-wrapper,.k-popups-wrapper')[0]) {
+                if (that._closing) {
+                    isParentClosing = !!that._closing.find(element).length;
+                }
+                if (isParentClosing || e.delegateTarget != element.parents(menuSelector)[0] && e.delegateTarget != element.parents('.k-menu-scroll-wrapper,.k-popups-wrapper')[0]) {
                     return;
                 }
                 that._keyTriggered = false;

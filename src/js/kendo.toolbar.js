@@ -529,7 +529,7 @@
                         type: 'button',
                         splitContainerId: splitContainerId,
                         isChild: true
-                    }, items[i]), this.toolbar);
+                    }, items[i], { click: options.click }), this.toolbar);
                     item.element.appendTo(element);
                 }
                 this.addUidAttr();

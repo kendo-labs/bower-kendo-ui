@@ -326,7 +326,8 @@ $.extend(true, kendo.ui.FilterMultiCheck.prototype.options.messages,{
   "checkAll": "Choisir toutes",
   "clear": "Effacer filtre",
   "filter": "Filtrer",
-  "search": "Recherche"
+  "search": "Recherche",
+  "selectedItemsFormat": "{0} éléments(s) sélectionné(s)"
 });
 }
 
