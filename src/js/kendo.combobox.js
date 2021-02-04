@@ -729,7 +729,8 @@
                 }
                 input.addClass(element.className).css({
                     width: '',
-                    height: element.style.height
+                    height: element.style.height,
+                    position: ''
                 }).attr({
                     'role': 'combobox',
                     'aria-expanded': false

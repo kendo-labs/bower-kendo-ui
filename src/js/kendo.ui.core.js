@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.1.127'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.1.204'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -18463,7 +18463,7 @@
             }]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', KHIDING = 'k-hiding', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-popup k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-#=typeIcon#" title="#=typeIcon#"></span>' + '<div class="k-notification-content">#=content#</div>' + '<span class="k-icon k-i-close" title="Hide"></span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, extend = $.extend, setTimeout = window.setTimeout, CLICK = 'click', SHOW = 'show', HIDE = 'hide', KNOTIFICATION = 'k-notification', KICLOSE = '.k-notification-wrap .k-i-close', KHIDING = 'k-hiding', INFO = 'info', SUCCESS = 'success', WARNING = 'warning', ERROR = 'error', TOP = 'top', LEFT = 'left', BOTTOM = 'bottom', RIGHT = 'right', UP = 'up', NS = '.kendoNotification', WRAPPER = '<div class="k-widget k-popup k-notification"></div>', TEMPLATE = '<div class="k-notification-wrap">' + '<span class="k-icon k-i-#=typeIcon#" title="#=typeIcon#"></span>' + '<div class="k-notification-content">#=content#</div>' + '<span class="#: closeButton ? "" : "k-hidden"# k-icon k-i-close" title="Hide"></span>' + '</div>', SAFE_TEMPLATE = TEMPLATE.replace('#=content#', '#:content#');
         var Notification = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -18723,7 +18723,8 @@
                     }
                     defaultArgs = {
                         typeIcon: type,
-                        content: ''
+                        content: '',
+                        closeButton: options.button
                     };
                     if ($.isPlainObject(content)) {
                         args = extend(defaultArgs, content);
@@ -29198,7 +29199,8 @@
                 }
                 input.addClass(element.className).css({
                     width: '',
-                    height: element.style.height
+                    height: element.style.height,
+                    position: ''
                 }).attr({
                     'role': 'combobox',
                     'aria-expanded': false
