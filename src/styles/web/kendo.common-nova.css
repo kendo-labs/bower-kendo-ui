@@ -741,23 +741,23 @@
 }
 .k-static,
 .k-pos-static {
-  position: static;
+  position: static !important;
 }
 .k-relative,
 .k-pos-relative {
-  position: relative;
+  position: relative !important;
 }
 .k-absolute,
 .k-pos-absolute {
-  position: absolute;
+  position: absolute !important;
 }
 .k-fixed,
 .k-pos-fixed {
-  position: fixed;
+  position: fixed !important;
 }
 .k-sticky,
 .k-pos-sticky {
-  position: sticky;
+  position: sticky !important;
 }
 .k-top,
 .k-pos-top {
