@@ -140,7 +140,9 @@
                 }, 1);
             },
             close: function () {
-                this.popup.close();
+                if (this.popup) {
+                    this.popup.close();
+                }
             },
             min: function (value) {
                 this._option(MIN, value);

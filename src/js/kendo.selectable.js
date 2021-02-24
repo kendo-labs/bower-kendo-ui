@@ -39,7 +39,7 @@
         advanced: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECT = 'unselect', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up,label.k-checkbox-label.k-no-text,.k-icon.k-i-collapse,.k-icon.k-i-expand,span.k-numeric-wrap,.k-focusable', msie = kendo.support.browser.msie, supportEventDelegation = false;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, proxy = $.proxy, abs = Math.abs, ARIASELECTED = 'aria-selected', SELECTED = 'k-state-selected', ACTIVE = 'k-state-selecting', SELECTABLE = 'k-selectable', CHANGE = 'change', NS = '.kendoSelectable', UNSELECT = 'unselect', UNSELECTING = 'k-state-unselecting', INPUTSELECTOR = 'input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up,label.k-checkbox-label.k-no-text,.k-icon.k-i-collapse,.k-icon.k-i-expand,span.k-numeric-wrap,.k-focusable', msie = kendo.support.browser.msie, supportEventDelegation = false, extend = $.extend;
         (function ($) {
             (function () {
                 $('<div class="parent"><span></span></div>').on('click', '>*', function () {
@@ -79,7 +79,8 @@
                 filter: '>*',
                 inputSelectors: INPUTSELECTOR,
                 multiple: false,
-                relatedTarget: $.noop
+                relatedTarget: $.noop,
+                ignoreOverlapped: false
             },
             _isElement: function (target) {
                 var elements = this.element;
@@ -175,6 +176,7 @@
             },
             _invalidateSelectables: function (position, ctrlKey) {
                 var idx, length, target = this._downTarget[0], items = this._items, related, toSelect;
+                this._currentlyActive = [];
                 for (idx = 0, length = items.length; idx < length; idx++) {
                     toSelect = items.eq(idx);
                     related = toSelect.add(this.relatedTarget(toSelect));
@@ -183,9 +185,10 @@
                             if (ctrlKey && target !== toSelect[0]) {
                                 related.removeClass(SELECTED).addClass(UNSELECTING);
                             }
-                        } else if (!toSelect.hasClass(ACTIVE) && !toSelect.hasClass(UNSELECTING)) {
+                        } else if (!toSelect.hasClass(ACTIVE) && !toSelect.hasClass(UNSELECTING) && !this._collidesWithActiveElement(related, position)) {
                             related.addClass(ACTIVE);
                         }
+                        this._currentlyActive.push(related[0]);
                     } else {
                         if (toSelect.hasClass(ACTIVE)) {
                             related.removeClass(ACTIVE);
@@ -194,6 +197,32 @@
                         }
                     }
                 }
+            },
+            _collidesWithActiveElement: function (element, marqueeRect) {
+                if (!this.options.ignoreOverlapped) {
+                    return false;
+                }
+                var activeElements = this._currentlyActive;
+                var elemRect = element[0].getBoundingClientRect();
+                var activeElementRect;
+                var collision = false;
+                var isRtl = kendo.support.isRtl(element);
+                var leftRight = isRtl ? 'right' : 'left';
+                var tempRect = {};
+                marqueeRect.right = marqueeRect.left + marqueeRect.width;
+                marqueeRect.bottom = marqueeRect.top + marqueeRect.height;
+                for (var i = 0; i < activeElements.length; i++) {
+                    activeElementRect = activeElements[i].getBoundingClientRect();
+                    if (overlaps(elemRect, activeElementRect)) {
+                        tempRect[leftRight] = leftRight === 'left' ? activeElementRect.right : activeElementRect.left;
+                        elemRect = extend({}, elemRect, tempRect);
+                        if (elemRect.left > elemRect.right) {
+                            return true;
+                        }
+                        collision = !overlaps(elemRect, marqueeRect);
+                    }
+                }
+                return collision;
             },
             value: function (val, e) {
                 var that = this, selectElement = proxy(that._selectElement, that);
@@ -293,7 +322,8 @@
             }
         });
         Selectable.parseOptions = function (selectable) {
-            var asLowerString = typeof selectable === 'string' && selectable.toLowerCase();
+            var selectableMode = selectable.mode || selectable;
+            var asLowerString = typeof selectableMode === 'string' && selectableMode.toLowerCase();
             return {
                 multiple: asLowerString && asLowerString.indexOf('multiple') > -1,
                 cell: asLowerString && asLowerString.indexOf('cell') > -1
@@ -307,6 +337,9 @@
             elementPosition.right = elementPosition.left + kendo._outerWidth(element);
             elementPosition.bottom = elementPosition.top + kendo._outerHeight(element);
             return !(elementPosition.left > right || elementPosition.right < position.left || elementPosition.top > bottom || elementPosition.bottom < position.top);
+        }
+        function overlaps(firstRect, secondRect) {
+            return !(firstRect.right <= secondRect.left || firstRect.left >= secondRect.right || firstRect.bottom <= secondRect.top || firstRect.top >= secondRect.bottom);
         }
         kendo.ui.plugin(Selectable);
     }(window.kendo.jQuery));

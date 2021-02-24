@@ -1900,17 +1900,21 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
   color: #fff;
   background-color: #0e0e0e;
 }
-.k-expander .k-expander-header {
+.k-expander-header {
   border-color: #fff;
   color: #fff;
   background-color: #0e0e0e;
   outline: none;
 }
-.k-expander .k-expander-header .k-expander-sub-title {
-  opacity: 0.65;
-}
-.k-expander .k-expander-header.k-state-focused {
+.k-expander-header:focus,
+.k-expander-header.k-state-focused {
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+}
+.k-expander-title {
+  color: #22fffc;
+}
+.k-expander-sub-title {
+  opacity: 0.65;
 }
 .k-fab {
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.14), 0 1px 10px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.2);

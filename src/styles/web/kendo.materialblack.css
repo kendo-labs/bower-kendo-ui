@@ -1905,18 +1905,25 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
   color: #d5d5d5;
   background-color: #363636;
 }
-.k-expander .k-expander-header {
-  border-color: #d5d5d5;
+.k-expander-header {
   color: #d5d5d5;
   background-color: #363636;
   outline: none;
 }
-.k-expander .k-expander-header .k-expander-sub-title {
-  opacity: 0.65;
+.k-expander-header:hover,
+.k-expander-header.k-state-hover {
+  background-color: rgba(0, 0, 0, 0.04);
 }
-.k-expander .k-expander-header.k-state-focused {
+.k-expander-header:focus,
+.k-expander-header.k-state-focused {
   background-color: rgba(0, 0, 0, 0.12);
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+}
+.k-expander-title {
+  color: #abb4e2;
+}
+.k-expander-sub-title {
+  opacity: 0.62;
 }
 .k-fab {
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.14), 0 1px 10px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.2);

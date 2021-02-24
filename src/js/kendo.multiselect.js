@@ -1145,7 +1145,6 @@
                 }
                 element.removeAttr('accesskey');
                 that._focused = that.input = input.attr({
-                    'accesskey': accessKey,
                     'autocomplete': AUTOCOMPLETEVALUE,
                     'role': 'textbox',
                     'title': element[0].title,
@@ -1153,6 +1152,9 @@
                     'aria-haspopup': 'listbox',
                     'aria-autocomplete': 'list'
                 });
+                if (accessKey) {
+                    that._focused.attr('accesskey', accessKey);
+                }
             },
             _tagList: function () {
                 var that = this, tagList = that._inputWrapper.children('ul');

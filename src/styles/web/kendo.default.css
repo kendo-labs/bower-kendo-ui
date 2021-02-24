@@ -1952,17 +1952,24 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
   color: #2e2e2e;
   background-color: #fff;
 }
-.k-expander .k-expander-header {
-  border-color: #2e2e2e;
+.k-expander-header {
   color: #2e2e2e;
   background-color: #fff;
   outline: none;
 }
-.k-expander .k-expander-header .k-expander-sub-title {
-  opacity: 0.65;
+.k-expander-header:hover,
+.k-expander-header.k-state-hover {
+  background-color: #e6e6e6;
 }
-.k-expander .k-expander-header.k-state-focused {
+.k-expander-header:focus,
+.k-expander-header.k-state-focused {
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.13);
+}
+.k-expander-title {
+  color: #f35800;
+}
+.k-expander-sub-title {
+  opacity: 0.65;
 }
 .k-fab {
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.14), 0 1px 10px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.2);

@@ -5615,6 +5615,7 @@ html body .k-grid tbody .k-button-icon {
   font-weight: 400;
 }
 .k-column-menu .k-expander {
+  border: 0;
   background: inherit;
 }
 .k-column-menu .k-expander .k-columnmenu-item {
@@ -20210,26 +20211,30 @@ table.k-editor .k-editable-area {
       flex: 0 0 auto;
 }
 .k-expander {
-  border-width: 0;
+  border-width: 1px;
   border-style: solid;
   box-sizing: border-box;
   overflow: hidden;
   outline: 0;
   font-family: inherit;
-  font-size: inherit;
+  font-size: 14px;
   line-height: 1.42857143;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
       flex-direction: column;
-  background-clip: padding-box;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  background-clip: padding-box;
 }
-.k-expander .k-expander-header {
-  padding: 8px 0;
-  border-width: 0 0 2px;
-  border-style: solid;
+.k-rtl .k-expander .k-expander-indicator,
+.k-expander.k-rtl .k-expander-indicator,
+.k-expander[dir="rtl"] .k-expander-indicator {
+  margin-left: 0;
+  margin-right: 10.5px;
+}
+.k-expander-header {
+  padding: 16px 21px;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-pack: justify;
@@ -20238,25 +20243,27 @@ table.k-editor .k-editable-area {
       align-items: center;
   cursor: pointer;
 }
-.k-expander .k-expander-spacer {
+.k-expander-spacer {
   -ms-flex: 1 1 auto;
       flex: 1 1 auto;
 }
-.k-expander .k-expander-title {
-  font-weight: bold;
+.k-expander-title {
+  font-weight: 500;
   text-transform: uppercase;
 }
-.k-expander .k-expander-indicator {
-  margin-left: 12px;
+.k-expander-indicator {
+  margin-left: 10.5px;
 }
-.k-expander .k-expander-content {
+.k-expander-content {
   padding: 20px 20px;
   box-sizing: border-box;
 }
-.k-expander[dir="rtl"] .k-expander-indicator,
-.k-rtl .k-expander .k-expander-indicator {
-  margin-left: 0;
-  margin-right: 12px;
+.k-expander + .k-expander.k-expanded,
+.k-expander.k-expanded + .k-expander {
+  margin-top: 8px;
+}
+.k-expander:not(.k-expanded) + .k-expander:not(.k-expanded) {
+  border-top-width: 0;
 }
 .k-fab {
   padding: 0;

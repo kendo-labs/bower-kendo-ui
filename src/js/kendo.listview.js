@@ -65,6 +65,7 @@
                 that._element();
                 that._layout();
                 that._dataSource();
+                that._setContentHeight();
                 that._templates();
                 that._navigatable();
                 that._selectable();
@@ -241,6 +242,13 @@
                 that.element.addClass(elementClassNames.join(' '));
                 that.content.addClass(contentClassNames.join(' '));
             },
+            _setContentHeight: function () {
+                var that = this, options = that.options, height;
+                if (options.scrollable && that.wrapper.is(':visible')) {
+                    height = that.wrapper.innerHeight();
+                    that.content.height(height);
+                }
+            },
             refresh: function (e) {
                 var that = this, view = that.dataSource.view(), data, items, item, html = '', idx, length, template = that.template, altTemplate = that.altTemplate, options = that.options, role = options.selectable || options.navigatable ? 'option' : 'listitem', active = activeElement(), endlessAppend = that._endlessFetchInProgress, index = endlessAppend ? that._skipRerenderItemsCount : 0, scrollable = that.options.scrollable;
                 e = e || {};
@@ -310,6 +318,7 @@
                         }
                     }
                 }
+                that._setContentHeight();
                 that._angularItems('compile');
                 that._progress(false);
                 that._endlessFetchInProgress = null;

@@ -740,7 +740,13 @@
                             that.timeView._updateRanges();
                         }
                     },
-                    open: function () {
+                    open: function (e) {
+                        if (that.trigger(OPEN, {
+                                view: this.element.find('.k-date-tab').length ? 'date' : 'time',
+                                sender: that
+                            })) {
+                            e.preventDefault();
+                        }
                         that.timeView._updateTitle();
                     }
                 }));
@@ -764,6 +770,8 @@
                 this.popup.element.find('.k-datetime-wrap').removeClass('k-time-tab').addClass('k-date-tab');
             },
             _switchToTimeView: function () {
+                this.timeView.addTranslate();
+                this.timeView.applyValue(this._value);
                 this.timeView._updateRanges();
                 this.popup.element.find('.k-group-start, .k-group-end').removeClass(STATE_ACTIVE).eq(1).addClass(STATE_ACTIVE);
                 this.popup.element.find('.k-datetime-wrap').removeClass('k-date-tab').addClass('k-time-tab');
@@ -781,8 +789,9 @@
             },
             _setClickHandler: function () {
                 var value = this._applyDateValue();
-                var time = this.timeView._currentlySelected || new Date();
+                var time;
                 value = value || new Date();
+                time = this.timeView._currentlySelected || value;
                 this.timeView._updateCurrentlySelected();
                 value.setHours(time.getHours());
                 value.setMinutes(time.getMinutes());

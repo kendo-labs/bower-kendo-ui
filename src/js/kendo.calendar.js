@@ -61,6 +61,9 @@
                 that._viewWrapper();
                 if (that.options.hasFooter) {
                     that._footer(that.footer);
+                } else {
+                    that._today = that.element.find('a.k-today');
+                    that._toggle();
                 }
                 id = element.addClass('k-widget k-calendar ' + (options.weekNumber ? ' k-week-number' : '')).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK + ' touchend', CELLSELECTOR, function (e) {
                     var link = e.currentTarget.firstChild, value = toDateObject(link);
@@ -176,6 +179,7 @@
                     that._footer(that.footer);
                 } else {
                     that.element.find('.k-footer').hide();
+                    that._toggle();
                 }
                 that._index = views[that.options.start];
                 that.navigate();
@@ -882,18 +886,21 @@
                 that._toggle();
             },
             _toggle: function (toggle) {
-                var that = this, options = that.options, isTodayDisabled = that.options.disableDates(getToday()), link = that._today;
+                var that = this, options = that.options, isTodayDisabled = that.options.disableDates(getToday()), link = that._today, todayClass = that._todayClass();
                 if (toggle === undefined) {
                     toggle = isInRange(getToday(), options.min, options.max);
                 }
                 if (link) {
                     link.off(CLICK);
                     if (toggle && !isTodayDisabled) {
-                        link.addClass(TODAY).removeClass(DISABLED).on(CLICK, proxy(that._todayClick, that));
+                        link.addClass(todayClass).removeClass(DISABLED).on(CLICK, proxy(that._todayClick, that));
                     } else {
-                        link.removeClass(TODAY).addClass(DISABLED).on(CLICK, prevent);
+                        link.removeClass(todayClass).addClass(DISABLED).on(CLICK, prevent);
                     }
                 }
+            },
+            _todayClass: function () {
+                return this.options.componentType === 'modern' ? 'k-today' : TODAY;
             },
             _todayClick: function (e) {
                 var that = this, depth = views[that.options.depth], disabled = that.options.disableDates, today = getToday();

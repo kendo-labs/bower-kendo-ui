@@ -1484,7 +1484,7 @@
             }
             if (customGroupSort) {
                 query = query.group(group, data, options);
-                if (skip !== undefined && take !== undefined) {
+                if (skip !== undefined && take !== undefined && !options.groupPaging) {
                     query = new Query(flatGroups(query.toArray())).range(skip, take);
                     groupDescriptorsWithoutSort = map(groupDescriptorsWithoutCompare, function (groupDescriptor) {
                         return extend({}, groupDescriptor, { skipItemSorting: true });
@@ -1764,7 +1764,7 @@
                     currOriginal = originalGroup.items[i];
                     currentNew = newGroup.items[i];
                     if (currOriginal && currentNew) {
-                        if (currOriginal.hasSubgroups) {
+                        if (currOriginal.hasSubgroups && currOriginal.value == currentNew.value) {
                             fillLastGroup(currOriginal, currentNew);
                         } else if (currOriginal.field && currOriginal.value == currentNew.value) {
                             currOriginal.items.push.apply(currOriginal.items, currentNew.items);

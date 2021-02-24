@@ -199,10 +199,11 @@
                 var minutes = value.getMinutes();
                 var seconds = value.getSeconds();
                 var designator;
-                var hoursList = this.ul.find('[data-index="1"]');
-                var minutessList = this.ul.find('[data-index="2"]');
-                var secondsList = this.ul.find('[data-index="3"]');
-                var designatorList = this.ul.find('[data-index="4"]');
+                var indexAttr = kendo.attr('index');
+                var hoursList = this.ul.find('[' + indexAttr + '="1"]');
+                var minutessList = this.ul.find('[' + indexAttr + '="2"]');
+                var secondsList = this.ul.find('[' + indexAttr + '="3"]');
+                var designatorList = this.ul.find('[' + indexAttr + '="4"]');
                 if (is12hourFormat) {
                     if (hours >= 12) {
                         designator = 'PM';
@@ -216,6 +217,7 @@
                         }
                     }
                 }
+                this._internalScroll = true;
                 if (hoursList.length) {
                     this._scrollListToPosition(hoursList, hours);
                 }
@@ -228,6 +230,7 @@
                 if (designatorList.length) {
                     this._scrollListToPosition(designatorList, designator);
                 }
+                this._internalScroll = false;
             },
             _scrollListToPosition: function (list, value) {
                 var item = list.find('.k-item[data-value="' + pad(value) + '"]');
@@ -293,6 +296,16 @@
                 }
                 that._html(html);
             },
+            _showAllHiddenItems: function () {
+                var items = this.list.find('.k-time-container');
+                var length = items.length;
+                var item;
+                for (var i = 0; i < length; i++) {
+                    item = $(items[i]);
+                    item.find('.k-item:hidden').show();
+                    this._updateListBottomOffset(item);
+                }
+            },
             _updateListBottomOffset: function (list) {
                 var itemHeight = getItemHeight(list.find('.k-item:visible:eq(0)'));
                 var listHeight = list.outerHeight();
@@ -301,13 +314,14 @@
             },
             _updateHoursRange: function () {
                 var that = this;
-                var hoursList = this.ul.find('[data-index="1"]');
+                var indexAttr = kendo.attr('index');
+                var hoursList = this.ul.find('[' + indexAttr + '="1"]');
                 var minHours = this._minHours;
                 var maxHours = this._maxHours;
                 var is12hourFormat = includes(this.options.format.toLowerCase(), 't');
                 var useMax;
                 var useMin;
-                var selectedDesignator = this._findSelectedValue(this.ul.find('[data-index="4"]'));
+                var selectedDesignator = this._findSelectedValue(this.ul.find('[' + indexAttr + '="4"]'));
                 if (!hoursList.length) {
                     return;
                 }
@@ -353,14 +367,15 @@
             },
             _updateMinutesRange: function () {
                 var that = this;
-                var minutesList = this.ul.find('[data-index="2"]');
+                var indexAttr = kendo.attr('index');
+                var minutesList = this.ul.find('[' + indexAttr + '="2"]');
                 var minHours = this._minHours;
                 var maxHours = this._maxHours;
                 var minMinutes = this._minMinutes;
                 var maxMinutes = this._maxMinutes;
-                var selectedHour = +this._findSelectedValue(this.ul.find('[data-index="1"]'));
+                var selectedHour = +this._findSelectedValue(this.ul.find('[' + indexAttr + '="1"]'));
                 var is12hourFormat = includes(this.options.format.toLowerCase(), 't');
-                var selectedDesignator = this._findSelectedValue(this.ul.find('[data-index="4"]'));
+                var selectedDesignator = this._findSelectedValue(this.ul.find('[' + indexAttr + '="4"]'));
                 if (is12hourFormat && selectedDesignator === 'PM') {
                     selectedHour += 12;
                 }
@@ -380,12 +395,13 @@
             },
             _updateSecondsRange: function () {
                 var that = this;
-                var secondsList = this.ul.find('[data-index="3"]');
+                var indexAttr = kendo.attr('index');
+                var secondsList = this.ul.find('[' + indexAttr + '="3"]');
                 var minSeconds = this._minSeconds;
                 var maxSeconds = this._minSeconds;
                 var minMinutes = this._minMinutes;
                 var maxMinutes = this._maxMinutes;
-                var selectedMinutes = +this._findSelectedValue(this.ul.find('[data-index="2"]'));
+                var selectedMinutes = +this._findSelectedValue(this.ul.find('[' + indexAttr + '="2"]'));
                 if (!secondsList.length) {
                     return;
                 }
@@ -403,7 +419,8 @@
             _updateDesignatorRange: function () {
                 var minHours = this._minHours;
                 var maxHours = this._maxHours;
-                var designatorList = this.ul.find('[data-index="4"]');
+                var indexAttr = kendo.attr('index');
+                var designatorList = this.ul.find('[' + indexAttr + '="4"]');
                 if (!designatorList.length) {
                     return;
                 }
@@ -439,6 +456,7 @@
                         this._validateMin = false;
                     }
                     if (!this._validateMax && !this._validateMin) {
+                        this._showAllHiddenItems();
                         return;
                     }
                 } else {
@@ -497,6 +515,9 @@
             _listScrollHandler: function (e) {
                 var that = this;
                 var itemHeight = getItemHeight($(e.currentTarget).find('.k-item:visible:eq(0)'));
+                if (that._internalScroll) {
+                    return;
+                }
                 if (that._scrollingTimeout) {
                     clearTimeout(that._scrollingTimeout);
                 }
@@ -511,10 +532,11 @@
             },
             _updateCurrentlySelected: function () {
                 var is12hourFormat = includes(this.options.format.toLowerCase(), 't');
-                var hoursList = this.ul.find('[data-index="1"]');
-                var minutesList = this.ul.find('[data-index="2"]');
-                var secondsList = this.ul.find('[data-index="3"]');
-                var designatorList = this.ul.find('[data-index="4"]');
+                var indexAttr = kendo.attr('index');
+                var hoursList = this.ul.find('[' + indexAttr + '="1"]');
+                var minutesList = this.ul.find('[' + indexAttr + '="2"]');
+                var secondsList = this.ul.find('[' + indexAttr + '="3"]');
+                var designatorList = this.ul.find('[' + indexAttr + '="4"]');
                 var selectedHour;
                 var selectedMinutes;
                 var selectedSeconds;
@@ -614,7 +636,8 @@
             _itemTemplate: function (values, part, title, index) {
                 var result = '';
                 var length = values.length;
-                result += '<div class="k-time-list-wrapper" role="presentation">' + '<span class="k-title">' + (title || part.type) + '</span>' + '<div class="k-time-list">' + '<div class="k-time-container k-content k-scrollable" role="presentation" data-index="' + index + '">' + '<ul class="k-reset">';
+                var indexAttr = kendo.attr('index');
+                result += '<div class="k-time-list-wrapper" role="presentation">' + '<span class="k-title">' + (title || part.type) + '</span>' + '<div class="k-time-list">' + '<div class="k-time-container k-content k-scrollable" role="presentation" ' + indexAttr + '="' + index + '">' + '<ul class="k-reset">';
                 for (var i = 0; i < length; i++) {
                     result += '<li class="k-item" data-value="' + values[i] + '">' + '<span>' + values[i] + '</span>' + '</li>';
                 }
@@ -627,9 +650,9 @@
                 var start = 0;
                 var end;
                 if (part.type === 'hour') {
-                    start = 1;
+                    start = part.hour12 ? 1 : 0;
                     index = 1;
-                    end = part.hour12 ? 12 : 24;
+                    end = part.hour12 ? 12 : 23;
                 } else if (part.type === 'minute') {
                     index = 2;
                     end = 59;
@@ -680,13 +703,11 @@
                 if (!item) {
                     return;
                 }
-                var content = this.list[0], itemOffsetTop = item.offsetTop, itemOffsetHeight = item.offsetHeight, contentScrollTop = content.scrollTop, contentOffsetHeight = content.clientHeight, bottomDistance = itemOffsetTop + itemOffsetHeight;
-                if (contentScrollTop > itemOffsetTop) {
-                    contentScrollTop = itemOffsetTop;
-                } else if (bottomDistance > contentScrollTop + contentOffsetHeight) {
-                    contentScrollTop = bottomDistance - contentOffsetHeight;
+                if (item.scrollIntoViewIfNeeded) {
+                    item.scrollIntoViewIfNeeded();
+                } else {
+                    scrollIntoViewIfNeeded(item);
                 }
-                content.scrollTop = contentScrollTop;
             },
             select: function (li) {
                 var that = this, options = that.options, current = that._current, selection;
@@ -1012,6 +1033,9 @@
                 var value = that._value;
                 Widget.fn.setOptions.call(that, options);
                 options = that.options;
+                if (+options.max != +TODAY || +options.min != +TODAY) {
+                    this._specifiedRange = true;
+                }
                 normalize(options);
                 that.timeView.setOptions(options);
                 if (value) {
@@ -1076,10 +1100,14 @@
                 this.timeView.open();
             },
             min: function (value) {
+                if (value) {
+                    this._specifiedRange = true;
+                }
                 return this._option('min', value);
             },
             max: function (value) {
                 if (value && this.timeView) {
+                    this._specifiedRange = true;
                     this.timeView.options.maxSet = true;
                 } else if (this.timeView) {
                     this.timeView.options.maxSet = false;
@@ -1342,6 +1370,45 @@
         }
         function getItemHeight(item) {
             return item.length && item[0].getBoundingClientRect().height;
+        }
+        function scrollIntoViewIfNeeded(element, centerIfNeeded) {
+            function makeRange(start, length) {
+                return {
+                    start: start,
+                    length: length,
+                    end: start + length
+                };
+            }
+            function coverRange(inner, outer) {
+                if (false === centerIfNeeded || outer.start < inner.end && inner.start < outer.end) {
+                    return Math.min(inner.start, Math.max(outer.start, inner.end - outer.length));
+                }
+                return (inner.start + inner.end - outer.length) / 2;
+            }
+            function makePoint(x, y) {
+                return {
+                    x: x,
+                    y: y,
+                    translate: function translate(dX, dY) {
+                        return makePoint(x + dX, y + dY);
+                    }
+                };
+            }
+            function absolute(elem, pt) {
+                while (elem) {
+                    pt = pt.translate(elem.offsetLeft, elem.offsetTop);
+                    elem = elem.offsetParent;
+                }
+                return pt;
+            }
+            var target = absolute(element, makePoint(0, 0)), extent = makePoint(element.offsetWidth, element.offsetHeight), elem = element.parentNode, origin;
+            while (elem instanceof HTMLElement) {
+                origin = absolute(elem, makePoint(elem.clientLeft, elem.clientTop));
+                elem.scrollLeft = coverRange(makeRange(target.x - origin.x, extent.x), makeRange(elem.scrollLeft, elem.clientWidth));
+                elem.scrollTop = coverRange(makeRange(target.y - origin.y, extent.y), makeRange(elem.scrollTop, elem.clientHeight));
+                target = target.translate(-elem.scrollLeft, -elem.scrollTop);
+                elem = elem.parentNode;
+            }
         }
         ui.plugin(TimePicker);
     }(window.kendo.jQuery));
