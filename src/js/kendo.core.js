@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.1.224'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.1.302'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2138,7 +2138,7 @@
                 };
             },
             guid: function () {
-                var id = '', i, random, chars = 'abcdefghijklmnopqrstuvwxyz';
+                var id = '', i, random, chars = 'abcdef';
                 id += chars[Math.floor(Math.random() * Math.floor(chars.length))];
                 for (i = 1; i < 32; i++) {
                     random = math.random() * 16 | 0;
