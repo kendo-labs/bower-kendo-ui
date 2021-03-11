@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, isPlainObject = $.isPlainObject, NS = '.kendoTextArea', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', FOCUSED = 'k-state-focused', LABELCLASSES = 'k-label k-input-label', STATEDISABLED = 'k-state-disabled', NOCLICKCLASS = 'k-no-click', ARIA_DISABLED = 'aria-disabled', TEXTAREACONTAINER = 'k-textarea-container', proxy = $.proxy;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, isPlainObject = $.isPlainObject, NS = '.kendoTextArea', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', FOCUSED = 'k-state-focused', LABELCLASSES = 'k-label k-input-label', STATEDISABLED = 'k-state-disabled', STATEREADONLY = 'k-state-readonly', ARIA_DISABLED = 'aria-disabled', TEXTAREACONTAINER = 'k-textarea-container', proxy = $.proxy;
         var TextArea = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -140,12 +140,12 @@
                 element.off(NS);
                 if (!readonly && !disable) {
                     element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
-                    wrapper.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS);
+                    wrapper.removeClass(STATEDISABLED).removeClass(STATEREADONLY);
                     element.on('focusin' + NS, proxy(that._focusin, that));
                     element.on('focusout' + NS, proxy(that._focusout, that));
                 } else {
                     element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
-                    wrapper.toggleClass(STATEDISABLED, disable).toggleClass(NOCLICKCLASS, readonly);
+                    wrapper.toggleClass(STATEDISABLED, disable).toggleClass(STATEREADONLY, readonly);
                 }
             },
             _label: function () {
@@ -160,7 +160,10 @@
                     labelText = isPlainObject(options.label) ? options.label.content : options.label;
                     if (floating) {
                         that._floatingLabelContainer = that.wrapper.wrap('<span></span>').parent();
-                        that.floatingLabel = new kendo.ui.FloatingLabel(that._floatingLabelContainer, { widget: that });
+                        that.floatingLabel = new kendo.ui.FloatingLabel(that._floatingLabelContainer, {
+                            widget: that,
+                            useReadOnlyClass: true
+                        });
                         that._floatingLabelContainer.addClass(TEXTAREACONTAINER);
                     }
                     if (kendo.isFunction(labelText)) {

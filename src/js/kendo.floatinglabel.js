@@ -33,7 +33,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, NS = '.kendoFloatingLabel', FLOATINGLABELCONTAINER = 'k-floating-label-container', EMPTY = 'k-state-empty', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', NOCLICKCLASS = 'k-no-click', proxy = $.proxy;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, NS = '.kendoFloatingLabel', FLOATINGLABELCONTAINER = 'k-floating-label-container', EMPTY = 'k-state-empty', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', NOCLICKCLASS = 'k-no-click', STATEREADONLY = 'k-state-readonly', proxy = $.proxy;
         var FloatingLabel = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -49,7 +49,8 @@
             },
             options: {
                 name: 'FloatingLabel',
-                widget: null
+                widget: null,
+                useReadOnlyClass: false
             },
             readonly: function (readonly) {
                 this._editable({
@@ -86,11 +87,11 @@
                 var readonly = options.readonly;
                 element.off(NS);
                 if (!readonly && !disable) {
-                    element.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS);
+                    element.removeClass(STATEDISABLED).removeClass(that.options.useReadOnlyClass ? STATEREADONLY : NOCLICKCLASS);
                     element.on('focusin' + NS, proxy(that.refresh, that));
                     element.on('focusout' + NS, proxy(that.refresh, that));
                 } else {
-                    element.toggleClass(STATEDISABLED, disable).toggleClass(NOCLICKCLASS, readonly);
+                    element.toggleClass(STATEDISABLED, disable).toggleClass(that.options.useReadOnlyClass ? STATEREADONLY : NOCLICKCLASS, readonly);
                 }
             }
         });

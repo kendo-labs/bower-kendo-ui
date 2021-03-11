@@ -88,7 +88,7 @@
                     that.input.attr('aria-describedby', id);
                 }
                 that._initialOpen = true;
-                that._ariaLabel();
+                that._aria();
                 that._ariaSetLive();
                 that._dataSource();
                 that._ignoreCase();
@@ -171,7 +171,7 @@
                 List.fn.setOptions.call(this, options);
                 this.listView.setOptions(listOptions);
                 this._accessors();
-                this._aria(this.tagList.attr(ID));
+                this._aria();
                 this._tagTemplate();
                 this._placeholder();
                 this._clearButton();
@@ -206,6 +206,19 @@
                 that.input.off(ns);
                 that._clear.off(ns);
                 List.fn.destroy.call(that);
+            },
+            _aria: function () {
+                var that = this, element = that.wrapper.find('.k-multiselect-wrap'), id = that.ul[0].id;
+                element.attr({
+                    'aria-owns': id,
+                    'aria-controls': id
+                });
+                that.ul.attr({
+                    'aria-live': !that._isFilterEnabled() ? 'off' : 'polite',
+                    'aria-multiselectable': true
+                });
+                that.input.attr('aria-controls', id);
+                that._ariaLabel();
             },
             _activateItem: function () {
                 if (this.popup.visible()) {
@@ -1140,6 +1153,7 @@
                 var element = that.element;
                 var accessKey = element[0].accessKey;
                 var input = that._inputWrapper.children('input.k-input');
+                var autocomplete = this.options.filter === 'none' ? 'none' : 'list';
                 if (!input[0]) {
                     input = $('<input class="k-input" style="width: 25px" />').appendTo(that._inputWrapper);
                 }
@@ -1148,9 +1162,7 @@
                     'autocomplete': AUTOCOMPLETEVALUE,
                     'role': 'textbox',
                     'title': element[0].title,
-                    'aria-expanded': false,
-                    'aria-haspopup': 'listbox',
-                    'aria-autocomplete': 'list'
+                    'aria-autocomplete': autocomplete
                 });
                 if (accessKey) {
                     that._focused.attr('accesskey', accessKey);
@@ -1178,7 +1190,7 @@
                 defaultTemplate = isMultiple ? kendo.template('#:' + kendo.expr(options.dataTextField, 'data') + '#', { useWithBlock: false }) : kendo.template('#:values.length# ' + singleTag);
                 that.tagTextTemplate = tagTemplate = tagTemplate ? kendo.template(tagTemplate) : defaultTemplate;
                 that.tagTemplate = function (data) {
-                    return '<li aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span>' + '<span aria-hidden="true" unselectable="on" aria-label="' + (isMultiple ? 'delete" title="' + that.options.messages.deleteTag + '" aria-label="' + that.options.messages.deleteTag : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
+                    return '<li class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span>' + '<span aria-hidden="true" unselectable="on" aria-label="' + (isMultiple ? 'delete" title="' + that.options.messages.deleteTag + '" aria-label="' + that.options.messages.deleteTag : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
                 };
             },
             _loader: function () {
@@ -1205,7 +1217,7 @@
                     wrapper = element.wrap('<div class="k-widget k-multiselect" unselectable="on" />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                     wrapper[0].title = element[0].title;
-                    $('<div class="k-multiselect-wrap k-floatwrap" unselectable="on" role="listbox"/>').insertBefore(element);
+                    $('<div class="k-multiselect-wrap k-floatwrap" unselectable="on" role="combobox"/>').attr({ 'aria-expanded': false }).insertBefore(element);
                 }
                 that.wrapper = wrapper.addClass(element[0].className).removeClass('input-validation-error').css('display', '');
                 that._inputWrapper = $(wrapper[0].firstChild);
@@ -1220,6 +1232,23 @@
             _ariaSetLive: function () {
                 var that = this;
                 that.ul.attr('aria-live', !that._isFilterEnabled() ? 'off' : 'polite');
+            },
+            _closeHandler: function (e) {
+                if (this.trigger(CLOSE)) {
+                    e.preventDefault();
+                } else {
+                    this.wrapper.find('.k-multiselect-wrap').attr('aria-expanded', false);
+                    this.ul.attr('aria-hidden', true);
+                }
+            },
+            _openHandler: function (e) {
+                this._adjustListWidth();
+                if (this.trigger(OPEN)) {
+                    e.preventDefault();
+                } else {
+                    this.wrapper.find('.k-multiselect-wrap').attr('aria-expanded', true);
+                    this.ul.attr('aria-hidden', false);
+                }
             }
         });
         function compare(a, b) {

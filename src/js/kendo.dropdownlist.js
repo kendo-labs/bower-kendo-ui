@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, support = kendo.support, activeElement = kendo._activeElement, ObservableObject = kendo.data.ObservableObject, keys = kendo.keys, ns = '.kendoDropDownList', nsFocusEvent = ns + 'FocusEvent', DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', FOCUSED = 'k-state-focused', DEFAULT = 'k-state-default', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CLICKEVENTS = 'click' + ns + ' touchend' + ns, HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, TABINDEX = 'tabindex', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', MSG_INVALID_OPTION_LABEL = 'The `optionLabel` option is not valid due to missing fields. Define a custom optionLabel as shown here http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist#configuration-optionLabel', proxy = $.proxy;
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, support = kendo.support, activeElement = kendo._activeElement, ObservableObject = kendo.data.ObservableObject, keys = kendo.keys, ns = '.kendoDropDownList', nsFocusEvent = ns + 'FocusEvent', DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', FOCUSED = 'k-state-focused', DEFAULT = 'k-state-default', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CLICKEVENTS = 'click' + ns + ' touchend' + ns, HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, TABINDEX = 'tabindex', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', MSG_INVALID_OPTION_LABEL = 'The `optionLabel` option is not valid due to missing fields. Define a custom optionLabel as shown here http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist#configuration-optionLabel', proxy = $.proxy, OPEN = 'open', CLOSE = 'close';
         var DropDownList = Select.extend({
             init: function (element, options) {
                 var that = this;
@@ -146,7 +146,8 @@
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
                 autoWidth: false,
-                popup: null
+                popup: null,
+                filterTitle: null
             },
             events: [
                 'open',
@@ -952,10 +953,10 @@
                     icon = '<span class="k-icon k-i-zoom"></span>';
                     this.filterInput = $('<input class="k-textbox"/>').attr({
                         placeholder: this.element.attr('placeholder'),
-                        title: this.element.attr('title'),
-                        role: 'listbox',
+                        title: this.options.filterTitle || this.element.attr('title'),
+                        role: 'searchbox',
                         'aria-haspopup': 'listbox',
-                        'aria-expanded': false
+                        'aria-autocomplete': 'list'
                     });
                     this.list.prepend($('<span class="k-list-filter" />').append(this.filterInput.add(icon)));
                 }
@@ -991,6 +992,23 @@
             },
             _clearSelection: function (parent) {
                 this.select(parent.value() ? 0 : -1);
+            },
+            _openHandler: function (e) {
+                this._adjustListWidth();
+                if (this.trigger(OPEN)) {
+                    e.preventDefault();
+                } else {
+                    this.wrapper.attr('aria-expanded', true);
+                    this.ul.attr('aria-hidden', false);
+                }
+            },
+            _closeHandler: function (e) {
+                if (this.trigger(CLOSE)) {
+                    e.preventDefault();
+                } else {
+                    this.wrapper.attr('aria-expanded', false);
+                    this.ul.attr('aria-hidden', true);
+                }
             },
             _inputTemplate: function () {
                 var that = this, template = that.options.valueTemplate;

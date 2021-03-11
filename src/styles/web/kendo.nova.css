@@ -1577,6 +1577,10 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 }
 .k-wizard-step:focus,
 .k-wizard-step.k-state-focused {
+  outline-color: #656565;
+}
+.k-ie .k-wizard-step:focus,
+.k-ie .k-wizard-step.k-state-focused {
   box-shadow: inset 0 0 0 2px #e0e0e0;
   outline: none;
 }
@@ -2949,6 +2953,10 @@ input.k-textbox:active {
 }
 .k-tabstrip-bottom > .k-tabstrip-items > .k-item.k-state-active {
   border-top-color: #ff4350;
+}
+.k-tabstrip .k-content:focus,
+.k-tabstrip .k-content.k-state-focused {
+  outline-color: #656565;
 }
 .k-progressbar {
   background: #cccccc;

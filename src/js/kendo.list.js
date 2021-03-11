@@ -216,6 +216,13 @@
                 var virtual = currentOptions.virtual;
                 var changeEventOption = { change: proxy(that._listChange, that) };
                 var listBoundHandler = proxy(that._listBound, that);
+                var focusedElm = that._focused;
+                var inputId = that.element.attr('id');
+                var labelElm = $('label[for="' + that.element.attr('id') + '"]');
+                var labelledBy = focusedElm.attr('aria-labelledby');
+                if (!labelledBy && labelElm.length) {
+                    labelledBy = labelElm.attr('id') || that._generateLabelId(labelElm, inputId || kendo.guid());
+                }
                 virtual = typeof virtual === 'object' ? virtual : {};
                 options = $.extend({
                     autoBind: false,
@@ -234,7 +241,9 @@
                     dataTextField: currentOptions.dataTextField,
                     groupTemplate: currentOptions.groupTemplate,
                     fixedGroupTemplate: currentOptions.fixedGroupTemplate,
-                    template: currentOptions.template
+                    template: currentOptions.template,
+                    ariaLabel: focusedElm.attr('aria-label'),
+                    ariaLabelledBy: labelledBy
                 }, options, virtual, changeEventOption);
                 if (!options.template) {
                     options.template = '#:' + kendo.expr(options.dataTextField, 'data') + '#';
@@ -553,12 +562,31 @@
                 that._value = getter(options.dataValueField);
             },
             _aria: function (id) {
-                var that = this, options = that.options, element = that._focused.add(that.filterInput);
+                var that = this, options = that.options, element = that._focused, autocomplete;
                 if (options.suggest !== undefined) {
-                    element.attr('aria-autocomplete', options.suggest ? 'both' : 'list');
+                    if (options.filter === 'none') {
+                        if (options.suggest === true) {
+                            autocomplete = 'inline';
+                        } else {
+                            autocomplete = 'none';
+                        }
+                    } else {
+                        if (options.suggest === true) {
+                            autocomplete = 'both';
+                        } else {
+                            autocomplete = 'list';
+                        }
+                    }
+                    element.attr('aria-autocomplete', autocomplete);
                 }
                 id = id ? id + ' ' + that.ul[0].id : that.ul[0].id;
-                element.attr('aria-owns', id);
+                element.attr({
+                    'aria-owns': id,
+                    'aria-controls': id
+                });
+                if (that.filterInput && that.filterInput.length > 0) {
+                    that.filterInput.attr('aria-controls', id);
+                }
                 that.ul.attr('aria-live', !that._isFilterEnabled() ? 'off' : 'polite');
                 that._ariaLabel();
             },
@@ -1376,6 +1404,11 @@
                 }).on('mouseleave' + STATIC_LIST_NS, 'li', function () {
                     $(this).removeClass(HOVER);
                 });
+                if (options && options.ariaLabel) {
+                    this.element.attr('aria-label', options.ariaLabel);
+                } else if (options && options.ariaLabelledBy) {
+                    this.element.attr('aria-labelledby', options.ariaLabelledBy);
+                }
                 if (support.touch) {
                     this._touchHandlers();
                 }
@@ -1412,7 +1445,9 @@
                 selectable: true,
                 template: null,
                 groupTemplate: null,
-                fixedGroupTemplate: null
+                fixedGroupTemplate: null,
+                ariaLabel: null,
+                ariaLabelledBy: null
             },
             events: [
                 'click',

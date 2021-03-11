@@ -306,7 +306,7 @@
                 }
                 that.popup.one('deactivate', function () {
                     restoreTitle(target);
-                    target.removeAttr(DESCRIBEDBY);
+                    that._removeDescribedBy(target);
                     this.element.removeAttr('id').attr('aria-hidden', true);
                     DOCUMENT.off('keydown' + NS, that._documentKeyDownHandler);
                 });
@@ -330,9 +330,13 @@
                 that.popup = new Popup(wrapper, extend({
                     autosize: true,
                     activate: function () {
-                        var anchor = this.options.anchor, ariaId = anchor[0].id || that.element[0].id;
+                        var anchor = this.options.anchor, ariaId = anchor[0].id || that.element[0].id || kendo.guid(), describedBy = [];
+                        if (anchor.attr(DESCRIBEDBY)) {
+                            describedBy.push(anchor.attr(DESCRIBEDBY));
+                        }
                         if (ariaId) {
-                            anchor.attr(DESCRIBEDBY, ariaId + ARIAIDSUFFIX);
+                            describedBy.push(ariaId + ARIAIDSUFFIX);
+                            anchor.attr(DESCRIBEDBY, describedBy.join(' '));
                             this.element.attr('id', ariaId + ARIAIDSUFFIX);
                         }
                         if (options.callout) {
@@ -394,6 +398,20 @@
                 var that = this, position = that.options.position, dimensions = that.dimensions, offset = dimensions.offset, popup = that.popup, anchor = popup.options.anchor, anchorOffset = $(anchor).offset(), elementOffset = $(popup.element).offset(), cssClass = DIRCLASSES[popup.flipped ? REVERSE[position] : position], offsetAmount = anchorOffset[offset] - elementOffset[offset] + $(anchor)[dimensions.size]() / 2;
                 that._offset(position, that.options.offset);
                 that.arrow.removeClass('k-callout-n k-callout-s k-callout-w k-callout-e').addClass('k-callout-' + cssClass).css(offset, offsetAmount);
+            },
+            _removeDescribedBy: function (target) {
+                var tooltipId = this.popup.element.attr('id'), arrayAttr = target.attr(DESCRIBEDBY).split(' '), finalArray, finalDescribedbyAttr;
+                if (arrayAttr && arrayAttr.length > 0) {
+                    finalArray = arrayAttr.filter(function (val) {
+                        return val !== tooltipId;
+                    });
+                }
+                if (finalArray && finalArray.length > 0) {
+                    finalDescribedbyAttr = finalArray.join(' ');
+                    target.attr(DESCRIBEDBY, finalDescribedbyAttr);
+                } else {
+                    target.removeAttr(DESCRIBEDBY);
+                }
             },
             destroy: function () {
                 var popup = this.popup;

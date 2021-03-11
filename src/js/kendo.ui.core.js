@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.1.302'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.1.311'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -5948,10 +5948,15 @@
         }
         function ownKeys(value, ignoreObjectKeys) {
             var props = [];
+            var keys, filteredObjectKeys;
             value = value || {};
+            keys = Object.getOwnPropertyNames(value);
+            filteredObjectKeys = objectKeys.filter(function (key) {
+                return keys.indexOf(key) < 0;
+            });
             while (value) {
                 Object.getOwnPropertyNames(value).forEach(function (prop) {
-                    if (props.indexOf(prop) === -1 && (!ignoreObjectKeys || objectKeys.indexOf(prop) < 0)) {
+                    if (props.indexOf(prop) === -1 && (!ignoreObjectKeys || filteredObjectKeys.indexOf(prop) < 0)) {
                         props.push(prop);
                     }
                 });
@@ -13950,7 +13955,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, NS = '.kendoFloatingLabel', FLOATINGLABELCONTAINER = 'k-floating-label-container', EMPTY = 'k-state-empty', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', NOCLICKCLASS = 'k-no-click', proxy = $.proxy;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, NS = '.kendoFloatingLabel', FLOATINGLABELCONTAINER = 'k-floating-label-container', EMPTY = 'k-state-empty', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', NOCLICKCLASS = 'k-no-click', STATEREADONLY = 'k-state-readonly', proxy = $.proxy;
         var FloatingLabel = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -13966,7 +13971,8 @@
             },
             options: {
                 name: 'FloatingLabel',
-                widget: null
+                widget: null,
+                useReadOnlyClass: false
             },
             readonly: function (readonly) {
                 this._editable({
@@ -14003,11 +14009,11 @@
                 var readonly = options.readonly;
                 element.off(NS);
                 if (!readonly && !disable) {
-                    element.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS);
+                    element.removeClass(STATEDISABLED).removeClass(that.options.useReadOnlyClass ? STATEREADONLY : NOCLICKCLASS);
                     element.on('focusin' + NS, proxy(that.refresh, that));
                     element.on('focusout' + NS, proxy(that.refresh, that));
                 } else {
-                    element.toggleClass(STATEDISABLED, disable).toggleClass(NOCLICKCLASS, readonly);
+                    element.toggleClass(STATEDISABLED, disable).toggleClass(that.options.useReadOnlyClass ? STATEREADONLY : NOCLICKCLASS, readonly);
                 }
             }
         });
@@ -19128,7 +19134,7 @@
                 }
                 that.popup.one('deactivate', function () {
                     restoreTitle(target);
-                    target.removeAttr(DESCRIBEDBY);
+                    that._removeDescribedBy(target);
                     this.element.removeAttr('id').attr('aria-hidden', true);
                     DOCUMENT.off('keydown' + NS, that._documentKeyDownHandler);
                 });
@@ -19152,9 +19158,13 @@
                 that.popup = new Popup(wrapper, extend({
                     autosize: true,
                     activate: function () {
-                        var anchor = this.options.anchor, ariaId = anchor[0].id || that.element[0].id;
+                        var anchor = this.options.anchor, ariaId = anchor[0].id || that.element[0].id || kendo.guid(), describedBy = [];
+                        if (anchor.attr(DESCRIBEDBY)) {
+                            describedBy.push(anchor.attr(DESCRIBEDBY));
+                        }
                         if (ariaId) {
-                            anchor.attr(DESCRIBEDBY, ariaId + ARIAIDSUFFIX);
+                            describedBy.push(ariaId + ARIAIDSUFFIX);
+                            anchor.attr(DESCRIBEDBY, describedBy.join(' '));
                             this.element.attr('id', ariaId + ARIAIDSUFFIX);
                         }
                         if (options.callout) {
@@ -19216,6 +19226,20 @@
                 var that = this, position = that.options.position, dimensions = that.dimensions, offset = dimensions.offset, popup = that.popup, anchor = popup.options.anchor, anchorOffset = $(anchor).offset(), elementOffset = $(popup.element).offset(), cssClass = DIRCLASSES[popup.flipped ? REVERSE[position] : position], offsetAmount = anchorOffset[offset] - elementOffset[offset] + $(anchor)[dimensions.size]() / 2;
                 that._offset(position, that.options.offset);
                 that.arrow.removeClass('k-callout-n k-callout-s k-callout-w k-callout-e').addClass('k-callout-' + cssClass).css(offset, offsetAmount);
+            },
+            _removeDescribedBy: function (target) {
+                var tooltipId = this.popup.element.attr('id'), arrayAttr = target.attr(DESCRIBEDBY).split(' '), finalArray, finalDescribedbyAttr;
+                if (arrayAttr && arrayAttr.length > 0) {
+                    finalArray = arrayAttr.filter(function (val) {
+                        return val !== tooltipId;
+                    });
+                }
+                if (finalArray && finalArray.length > 0) {
+                    finalDescribedbyAttr = finalArray.join(' ');
+                    target.attr(DESCRIBEDBY, finalDescribedbyAttr);
+                } else {
+                    target.removeAttr(DESCRIBEDBY);
+                }
             },
             destroy: function () {
                 var popup = this.popup;
@@ -20789,6 +20813,13 @@
                 var virtual = currentOptions.virtual;
                 var changeEventOption = { change: proxy(that._listChange, that) };
                 var listBoundHandler = proxy(that._listBound, that);
+                var focusedElm = that._focused;
+                var inputId = that.element.attr('id');
+                var labelElm = $('label[for="' + that.element.attr('id') + '"]');
+                var labelledBy = focusedElm.attr('aria-labelledby');
+                if (!labelledBy && labelElm.length) {
+                    labelledBy = labelElm.attr('id') || that._generateLabelId(labelElm, inputId || kendo.guid());
+                }
                 virtual = typeof virtual === 'object' ? virtual : {};
                 options = $.extend({
                     autoBind: false,
@@ -20807,7 +20838,9 @@
                     dataTextField: currentOptions.dataTextField,
                     groupTemplate: currentOptions.groupTemplate,
                     fixedGroupTemplate: currentOptions.fixedGroupTemplate,
-                    template: currentOptions.template
+                    template: currentOptions.template,
+                    ariaLabel: focusedElm.attr('aria-label'),
+                    ariaLabelledBy: labelledBy
                 }, options, virtual, changeEventOption);
                 if (!options.template) {
                     options.template = '#:' + kendo.expr(options.dataTextField, 'data') + '#';
@@ -21126,12 +21159,31 @@
                 that._value = getter(options.dataValueField);
             },
             _aria: function (id) {
-                var that = this, options = that.options, element = that._focused.add(that.filterInput);
+                var that = this, options = that.options, element = that._focused, autocomplete;
                 if (options.suggest !== undefined) {
-                    element.attr('aria-autocomplete', options.suggest ? 'both' : 'list');
+                    if (options.filter === 'none') {
+                        if (options.suggest === true) {
+                            autocomplete = 'inline';
+                        } else {
+                            autocomplete = 'none';
+                        }
+                    } else {
+                        if (options.suggest === true) {
+                            autocomplete = 'both';
+                        } else {
+                            autocomplete = 'list';
+                        }
+                    }
+                    element.attr('aria-autocomplete', autocomplete);
                 }
                 id = id ? id + ' ' + that.ul[0].id : that.ul[0].id;
-                element.attr('aria-owns', id);
+                element.attr({
+                    'aria-owns': id,
+                    'aria-controls': id
+                });
+                if (that.filterInput && that.filterInput.length > 0) {
+                    that.filterInput.attr('aria-controls', id);
+                }
                 that.ul.attr('aria-live', !that._isFilterEnabled() ? 'off' : 'polite');
                 that._ariaLabel();
             },
@@ -21949,6 +22001,11 @@
                 }).on('mouseleave' + STATIC_LIST_NS, 'li', function () {
                     $(this).removeClass(HOVER);
                 });
+                if (options && options.ariaLabel) {
+                    this.element.attr('aria-label', options.ariaLabel);
+                } else if (options && options.ariaLabelledBy) {
+                    this.element.attr('aria-labelledby', options.ariaLabelledBy);
+                }
                 if (support.touch) {
                     this._touchHandlers();
                 }
@@ -21985,7 +22042,9 @@
                 selectable: true,
                 template: null,
                 groupTemplate: null,
-                fixedGroupTemplate: null
+                fixedGroupTemplate: null,
+                ariaLabel: null,
+                ariaLabelledBy: null
             },
             events: [
                 'click',
@@ -25724,6 +25783,11 @@
                 that.content = that.element.wrap('<div unselectable=\'on\' class=\'' + CONTENT + '\'></div>').parent();
                 that.wrapper = that.content.wrap('<div class=\'' + WRAPPER + '\'></div>').parent();
                 that.header = that.content.before('<div class=\'' + HEADER + '\'></div>').prev();
+                if (options.ariaLabel) {
+                    this.element.attr('aria-label', options.ariaLabel);
+                } else if (options.ariaLabelledBy) {
+                    this.element.attr('aria-labelledby', options.ariaLabelledBy);
+                }
                 if (options.columns && options.columns.length) {
                     that.element.removeClass(LIST);
                 }
@@ -25764,7 +25828,9 @@
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
                 mapValueTo: 'index',
-                valueMapper: null
+                valueMapper: null,
+                ariaLabel: null,
+                ariaLabelledBy: null
             },
             events: [
                 CHANGE,
@@ -26936,8 +27002,8 @@
                     wrapper.removeClass(FOCUSED);
                 }).attr({
                     autocomplete: AUTOCOMPLETEVALUE,
-                    role: 'textbox',
-                    'aria-haspopup': true
+                    role: 'combobox',
+                    'aria-expanded': false
                 });
                 that._clear.on('click' + ns + ' touchend' + ns, proxy(that._clearValue, that));
                 that._enable();
@@ -27038,6 +27104,7 @@
                     current.removeClass(SELECTED);
                 }
                 that.popup.close();
+                that._deactivateItem();
             },
             destroy: function () {
                 var that = this;
@@ -27444,7 +27511,6 @@
                     wrapper = element.wrap('<span />').parent();
                 }
                 wrapper.attr('tabindex', -1);
-                wrapper.attr('role', 'presentation');
                 wrapper[0].style.cssText = DOMelement.style.cssText;
                 element.css({
                     width: '',
@@ -27494,7 +27560,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, support = kendo.support, activeElement = kendo._activeElement, ObservableObject = kendo.data.ObservableObject, keys = kendo.keys, ns = '.kendoDropDownList', nsFocusEvent = ns + 'FocusEvent', DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', FOCUSED = 'k-state-focused', DEFAULT = 'k-state-default', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CLICKEVENTS = 'click' + ns + ' touchend' + ns, HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, TABINDEX = 'tabindex', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', MSG_INVALID_OPTION_LABEL = 'The `optionLabel` option is not valid due to missing fields. Define a custom optionLabel as shown here http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist#configuration-optionLabel', proxy = $.proxy;
+        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, support = kendo.support, activeElement = kendo._activeElement, ObservableObject = kendo.data.ObservableObject, keys = kendo.keys, ns = '.kendoDropDownList', nsFocusEvent = ns + 'FocusEvent', DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', FOCUSED = 'k-state-focused', DEFAULT = 'k-state-default', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CLICKEVENTS = 'click' + ns + ' touchend' + ns, HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, TABINDEX = 'tabindex', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', MSG_INVALID_OPTION_LABEL = 'The `optionLabel` option is not valid due to missing fields. Define a custom optionLabel as shown here http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist#configuration-optionLabel', proxy = $.proxy, OPEN = 'open', CLOSE = 'close';
         var DropDownList = Select.extend({
             init: function (element, options) {
                 var that = this;
@@ -27589,7 +27655,8 @@
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
                 autoWidth: false,
-                popup: null
+                popup: null,
+                filterTitle: null
             },
             events: [
                 'open',
@@ -28395,10 +28462,10 @@
                     icon = '<span class="k-icon k-i-zoom"></span>';
                     this.filterInput = $('<input class="k-textbox"/>').attr({
                         placeholder: this.element.attr('placeholder'),
-                        title: this.element.attr('title'),
-                        role: 'listbox',
+                        title: this.options.filterTitle || this.element.attr('title'),
+                        role: 'searchbox',
                         'aria-haspopup': 'listbox',
-                        'aria-expanded': false
+                        'aria-autocomplete': 'list'
                     });
                     this.list.prepend($('<span class="k-list-filter" />').append(this.filterInput.add(icon)));
                 }
@@ -28434,6 +28501,23 @@
             },
             _clearSelection: function (parent) {
                 this.select(parent.value() ? 0 : -1);
+            },
+            _openHandler: function (e) {
+                this._adjustListWidth();
+                if (this.trigger(OPEN)) {
+                    e.preventDefault();
+                } else {
+                    this.wrapper.attr('aria-expanded', true);
+                    this.ul.attr('aria-hidden', false);
+                }
+            },
+            _closeHandler: function (e) {
+                if (this.trigger(CLOSE)) {
+                    e.preventDefault();
+                } else {
+                    this.wrapper.attr('aria-expanded', false);
+                    this.ul.attr('aria-hidden', true);
+                }
             },
             _inputTemplate: function () {
                 var that = this, template = that.options.valueTemplate;
@@ -29512,7 +29596,7 @@
                     that.input.attr('aria-describedby', id);
                 }
                 that._initialOpen = true;
-                that._ariaLabel();
+                that._aria();
                 that._ariaSetLive();
                 that._dataSource();
                 that._ignoreCase();
@@ -29595,7 +29679,7 @@
                 List.fn.setOptions.call(this, options);
                 this.listView.setOptions(listOptions);
                 this._accessors();
-                this._aria(this.tagList.attr(ID));
+                this._aria();
                 this._tagTemplate();
                 this._placeholder();
                 this._clearButton();
@@ -29630,6 +29714,19 @@
                 that.input.off(ns);
                 that._clear.off(ns);
                 List.fn.destroy.call(that);
+            },
+            _aria: function () {
+                var that = this, element = that.wrapper.find('.k-multiselect-wrap'), id = that.ul[0].id;
+                element.attr({
+                    'aria-owns': id,
+                    'aria-controls': id
+                });
+                that.ul.attr({
+                    'aria-live': !that._isFilterEnabled() ? 'off' : 'polite',
+                    'aria-multiselectable': true
+                });
+                that.input.attr('aria-controls', id);
+                that._ariaLabel();
             },
             _activateItem: function () {
                 if (this.popup.visible()) {
@@ -30564,6 +30661,7 @@
                 var element = that.element;
                 var accessKey = element[0].accessKey;
                 var input = that._inputWrapper.children('input.k-input');
+                var autocomplete = this.options.filter === 'none' ? 'none' : 'list';
                 if (!input[0]) {
                     input = $('<input class="k-input" style="width: 25px" />').appendTo(that._inputWrapper);
                 }
@@ -30572,9 +30670,7 @@
                     'autocomplete': AUTOCOMPLETEVALUE,
                     'role': 'textbox',
                     'title': element[0].title,
-                    'aria-expanded': false,
-                    'aria-haspopup': 'listbox',
-                    'aria-autocomplete': 'list'
+                    'aria-autocomplete': autocomplete
                 });
                 if (accessKey) {
                     that._focused.attr('accesskey', accessKey);
@@ -30602,7 +30698,7 @@
                 defaultTemplate = isMultiple ? kendo.template('#:' + kendo.expr(options.dataTextField, 'data') + '#', { useWithBlock: false }) : kendo.template('#:values.length# ' + singleTag);
                 that.tagTextTemplate = tagTemplate = tagTemplate ? kendo.template(tagTemplate) : defaultTemplate;
                 that.tagTemplate = function (data) {
-                    return '<li aria-selected="true" class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span>' + '<span aria-hidden="true" unselectable="on" aria-label="' + (isMultiple ? 'delete" title="' + that.options.messages.deleteTag + '" aria-label="' + that.options.messages.deleteTag : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
+                    return '<li class="k-button" unselectable="on"><span unselectable="on">' + tagTemplate(data) + '</span>' + '<span aria-hidden="true" unselectable="on" aria-label="' + (isMultiple ? 'delete" title="' + that.options.messages.deleteTag + '" aria-label="' + that.options.messages.deleteTag : 'open') + '" class="k-select"><span class="k-icon ' + (isMultiple ? 'k-i-close' : 'k-i-arrow-60-down') + '">' + '</span></span></li>';
                 };
             },
             _loader: function () {
@@ -30629,7 +30725,7 @@
                     wrapper = element.wrap('<div class="k-widget k-multiselect" unselectable="on" />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                     wrapper[0].title = element[0].title;
-                    $('<div class="k-multiselect-wrap k-floatwrap" unselectable="on" role="listbox"/>').insertBefore(element);
+                    $('<div class="k-multiselect-wrap k-floatwrap" unselectable="on" role="combobox"/>').attr({ 'aria-expanded': false }).insertBefore(element);
                 }
                 that.wrapper = wrapper.addClass(element[0].className).removeClass('input-validation-error').css('display', '');
                 that._inputWrapper = $(wrapper[0].firstChild);
@@ -30644,6 +30740,23 @@
             _ariaSetLive: function () {
                 var that = this;
                 that.ul.attr('aria-live', !that._isFilterEnabled() ? 'off' : 'polite');
+            },
+            _closeHandler: function (e) {
+                if (this.trigger(CLOSE)) {
+                    e.preventDefault();
+                } else {
+                    this.wrapper.find('.k-multiselect-wrap').attr('aria-expanded', false);
+                    this.ul.attr('aria-hidden', true);
+                }
+            },
+            _openHandler: function (e) {
+                this._adjustListWidth();
+                if (this.trigger(OPEN)) {
+                    e.preventDefault();
+                } else {
+                    this.wrapper.find('.k-multiselect-wrap').attr('aria-expanded', true);
+                    this.ul.attr('aria-hidden', false);
+                }
             }
         });
         function compare(a, b) {
@@ -36574,7 +36687,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, isPlainObject = $.isPlainObject, NS = '.kendoTextArea', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', FOCUSED = 'k-state-focused', LABELCLASSES = 'k-label k-input-label', STATEDISABLED = 'k-state-disabled', NOCLICKCLASS = 'k-no-click', ARIA_DISABLED = 'aria-disabled', TEXTAREACONTAINER = 'k-textarea-container', proxy = $.proxy;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, isPlainObject = $.isPlainObject, NS = '.kendoTextArea', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', FOCUSED = 'k-state-focused', LABELCLASSES = 'k-label k-input-label', STATEDISABLED = 'k-state-disabled', STATEREADONLY = 'k-state-readonly', ARIA_DISABLED = 'aria-disabled', TEXTAREACONTAINER = 'k-textarea-container', proxy = $.proxy;
         var TextArea = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -36675,12 +36788,12 @@
                 element.off(NS);
                 if (!readonly && !disable) {
                     element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
-                    wrapper.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS);
+                    wrapper.removeClass(STATEDISABLED).removeClass(STATEREADONLY);
                     element.on('focusin' + NS, proxy(that._focusin, that));
                     element.on('focusout' + NS, proxy(that._focusout, that));
                 } else {
                     element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
-                    wrapper.toggleClass(STATEDISABLED, disable).toggleClass(NOCLICKCLASS, readonly);
+                    wrapper.toggleClass(STATEDISABLED, disable).toggleClass(STATEREADONLY, readonly);
                 }
             },
             _label: function () {
@@ -36695,7 +36808,10 @@
                     labelText = isPlainObject(options.label) ? options.label.content : options.label;
                     if (floating) {
                         that._floatingLabelContainer = that.wrapper.wrap('<span></span>').parent();
-                        that.floatingLabel = new kendo.ui.FloatingLabel(that._floatingLabelContainer, { widget: that });
+                        that.floatingLabel = new kendo.ui.FloatingLabel(that._floatingLabelContainer, {
+                            widget: that,
+                            useReadOnlyClass: true
+                        });
                         that._floatingLabelContainer.addClass(TEXTAREACONTAINER);
                     }
                     if (kendo.isFunction(labelText)) {
@@ -41036,7 +41152,7 @@
     };
     (function ($, undefined) {
         var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, map = $.map, each = $.each, trim = kendo.trim, extend = $.extend, isFunction = kendo.isFunction, template = kendo.template, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, Widget = ui.Widget, excludedNodesRegExp = /^(a|div)$/i, NS = '.kendoTabStrip', IMG = 'img', HREF = 'href', PREV = 'prev', NEXT = 'next', SHOW = 'show', LINK = 'k-link', LAST = 'k-last', CLICK = 'click', ERROR = 'error', EMPTY = ':empty', IMAGE = 'k-image', FIRST = 'k-first', SELECT = 'select', ACTIVATE = 'activate', CONTENT = 'k-content', CONTENTURL = 'contentUrl', MOUSEENTER = 'mouseenter', MOUSELEAVE = 'mouseleave', CONTENTLOAD = 'contentLoad', DISABLEDSTATE = 'k-state-disabled', DEFAULTSTATE = 'k-state-default', ACTIVESTATE = 'k-state-active', FOCUSEDSTATE = 'k-state-focused', HOVERSTATE = 'k-state-hover', TABONTOP = 'k-tab-on-top', NAVIGATABLEITEMS = '.k-item:not(.' + DISABLEDSTATE + ')', KEYBOARDNAVIGATABLEITEMS = '.k-item', HOVERABLEITEMS = '.k-tabstrip-items > ' + NAVIGATABLEITEMS + ':not(.' + ACTIVESTATE + ')', DEFAULTDISTANCE = 200, templates = {
-                content: template('<div class=\'k-content\'#= contentAttributes(data) # role=\'tabpanel\' tabindex=\'0\'>#= content(item) #</div>'),
+                content: template('<div class=\'k-content\'#= contentAttributes(data) # tabindex=\'0\'>#= content(item) #</div>'),
                 itemWrapper: template('<#= tag(item) # class=\'k-link\'#= contentUrl(item) ##= textAttributes(item) #>' + '#= image(item) ##= sprite(item) ##= text(item) #' + '</#= tag(item) #>'),
                 item: template('<li class=\'#= wrapperCssClass(group, item) #\' role=\'tab\' #=item.active ? "aria-selected=\'true\'" : \'\'#>' + '#= itemWrapper(data) #' + '</li>'),
                 image: template('<img class=\'k-image\' alt=\'\' src=\'#= imageUrl #\' />'),
@@ -41116,248 +41232,20 @@
                 that._tabindex();
                 that._updateClasses();
                 that._dataSource();
+                that.tabGroup.attr('role', 'tablist');
                 if (options.dataSource) {
                     that.dataSource.fetch();
                 }
                 that._tabPosition();
                 that._scrollable();
-                if (that._contentUrls.length) {
-                    that.wrapper.find('.k-tabstrip-items > .k-item').each(function (index, item) {
-                        var url = that._contentUrls[index];
-                        if (typeof url === 'string') {
-                            $(item).find('>.' + LINK).data(CONTENTURL, url);
-                        }
-                    });
-                } else {
-                    that._contentUrls.length = that.tabGroup.find('li.k-item').length;
-                }
-                that.wrapper.on(MOUSEENTER + NS + ' ' + MOUSELEAVE + NS, HOVERABLEITEMS, that._toggleHover).on('focus' + NS, $.proxy(that._active, that)).on('blur' + NS, function () {
-                    that._current(null);
-                });
-                that._keyDownProxy = $.proxy(that._keydown, that);
-                if (options.navigatable) {
-                    that.wrapper.on('keydown' + NS, that._keyDownProxy);
-                }
+                that._processContentUrls();
+                that._attachEvents();
                 if (that.options.value) {
                     value = that.options.value;
                 }
-                that.wrapper.children('.k-tabstrip-items').on(CLICK + NS, '.k-state-disabled .k-link', false).on(CLICK + NS, ' > ' + NAVIGATABLEITEMS, function (e) {
-                    var wr = that.wrapper[0];
-                    if (wr !== document.activeElement) {
-                        var msie = kendo.support.browser.msie;
-                        if (msie) {
-                            try {
-                                wr.setActive();
-                            } catch (j) {
-                                wr.focus();
-                            }
-                        } else {
-                            wr.focus();
-                        }
-                    }
-                    if (that._click($(e.currentTarget))) {
-                        e.preventDefault();
-                    }
-                });
-                var selectedItems = that.tabGroup.children('li.' + ACTIVESTATE), content = that.contentHolder(selectedItems.index());
-                if (selectedItems[0] && content.length > 0 && content[0].childNodes.length === 0) {
-                    that.activateTab(selectedItems.eq(0));
-                }
-                that.element.attr('role', 'tablist');
+                that._initialActivate();
                 that.value(value);
                 kendo.notify(that);
-            },
-            _active: function () {
-                var item = this.tabGroup.children().filter('.' + ACTIVESTATE);
-                item = item[0] ? item : this._endItem('first');
-                if (item[0]) {
-                    this._current(item);
-                }
-            },
-            _endItem: function (action) {
-                return this.tabGroup.children(NAVIGATABLEITEMS)[action]();
-            },
-            _getItem: function (action) {
-                return this.tabGroup.children(KEYBOARDNAVIGATABLEITEMS)[action]();
-            },
-            _item: function (item, action) {
-                var endItem;
-                if (action === PREV) {
-                    endItem = 'last';
-                } else {
-                    endItem = 'first';
-                }
-                if (!item) {
-                    return this._endItem(endItem);
-                }
-                item = item[action]();
-                if (!item[0]) {
-                    item = this.tabGroup.children(KEYBOARDNAVIGATABLEITEMS)[endItem]();
-                }
-                if (item.hasClass(DISABLEDSTATE)) {
-                    item.addClass(FOCUSEDSTATE);
-                }
-                if (item.hasClass(DISABLEDSTATE) || item.hasClass(ACTIVESTATE)) {
-                    this._focused = item;
-                }
-                return item;
-            },
-            _current: function (candidate) {
-                var that = this, focused = that._focused;
-                if (candidate === undefined) {
-                    return focused;
-                }
-                if (focused) {
-                    focused.removeClass(FOCUSEDSTATE);
-                }
-                if (candidate) {
-                    if (!candidate.hasClass(ACTIVESTATE)) {
-                        candidate.addClass(FOCUSEDSTATE);
-                    }
-                    if (candidate[0].id) {
-                        that.element.attr('aria-activedescendant', candidate[0].id);
-                    }
-                }
-                that._focused = candidate;
-            },
-            _keydown: function (e) {
-                var that = this, key = e.keyCode, current = that._current(), rtl = that._isRtl, isHorizontal = /top|bottom/.test(that.options.tabPosition), action;
-                if (e.target != e.currentTarget || !current) {
-                    return;
-                }
-                if (key === keys.DOWN && !isHorizontal) {
-                    action = NEXT;
-                } else if (key === keys.UP && !isHorizontal) {
-                    action = PREV;
-                } else if (key === keys.RIGHT && isHorizontal) {
-                    action = rtl ? PREV : NEXT;
-                } else if (key === keys.LEFT && isHorizontal) {
-                    action = rtl ? NEXT : PREV;
-                } else if (key == keys.ENTER || key == keys.SPACEBAR) {
-                    that._click(current);
-                    e.preventDefault();
-                } else if (key == keys.HOME) {
-                    that._click(that._getItem('first'));
-                    e.preventDefault();
-                    return;
-                } else if (key == keys.END) {
-                    that._click(that._getItem('last'));
-                    e.preventDefault();
-                    return;
-                }
-                if (action) {
-                    that._click(that._item(current, action));
-                    e.preventDefault();
-                }
-            },
-            _dataSource: function () {
-                var that = this;
-                if (that.dataSource && that._refreshHandler) {
-                    that.dataSource.unbind('change', that._refreshHandler);
-                } else {
-                    that._refreshHandler = $.proxy(that.refresh, that);
-                }
-                that.dataSource = kendo.data.DataSource.create(that.options.dataSource).bind('change', that._refreshHandler);
-            },
-            setDataSource: function (dataSource) {
-                var that = this;
-                that.options.dataSource = dataSource;
-                that._dataSource();
-                that.dataSource.fetch();
-            },
-            _animations: function (options) {
-                if (options && 'animation' in options && !options.animation) {
-                    options.animation = {
-                        open: { effects: {} },
-                        close: { effects: {} }
-                    };
-                }
-            },
-            refresh: function (e) {
-                var that = this, options = that.options, encoded = kendo.getter(options.dataEncodedField), text = kendo.getter(options.dataTextField), content = kendo.getter(options.dataContentField), contentUrl = kendo.getter(options.dataContentUrlField), image = kendo.getter(options.dataImageUrlField), url = kendo.getter(options.dataUrlField), sprite = kendo.getter(options.dataSpriteCssClass), idx, tabs = [], tab, action, view = that.dataSource.view(), length;
-                e = e || {};
-                action = e.action;
-                if (action) {
-                    view = e.items;
-                }
-                for (idx = 0, length = view.length; idx < length; idx++) {
-                    tab = { text: text(view[idx]) };
-                    if (options.dataEncodedField) {
-                        tab.encoded = encoded(view[idx]);
-                    }
-                    if (options.dataContentField) {
-                        tab.content = content(view[idx]);
-                    }
-                    if (options.dataContentUrlField) {
-                        tab.contentUrl = contentUrl(view[idx]);
-                    }
-                    if (options.dataUrlField) {
-                        tab.url = url(view[idx]);
-                    }
-                    if (options.dataImageUrlField) {
-                        tab.imageUrl = image(view[idx]);
-                    }
-                    if (options.dataSpriteCssClass) {
-                        tab.spriteCssClass = sprite(view[idx]);
-                    }
-                    tabs[idx] = tab;
-                }
-                if (e.action == 'add') {
-                    if (e.index < that.tabGroup.children().length) {
-                        that.insertBefore(tabs, that.tabGroup.children().eq(e.index));
-                    } else {
-                        that.append(tabs);
-                    }
-                } else if (e.action == 'remove') {
-                    for (idx = 0; idx < view.length; idx++) {
-                        that.remove(e.index);
-                    }
-                } else if (e.action == 'itemchange') {
-                    idx = that.dataSource.view().indexOf(view[0]);
-                    if (e.field === options.dataTextField) {
-                        that.tabGroup.children().eq(idx).find('.k-link').text(view[0].get(e.field));
-                    }
-                    if (e.field === options.dataUrlField) {
-                        that._contentUrls[idx] = view[0].get(e.field);
-                    }
-                } else {
-                    that.trigger('dataBinding');
-                    that.remove('li');
-                    that._contentUrls = [];
-                    that.append(tabs);
-                    that.trigger('dataBound');
-                }
-            },
-            value: function (value) {
-                var that = this;
-                if (value !== undefined) {
-                    if (value != that.value()) {
-                        that.tabGroup.children().each(function () {
-                            if (kendo.trim($(this).text()) == value) {
-                                that.select(this);
-                            }
-                        });
-                    }
-                } else {
-                    return that.select().text();
-                }
-            },
-            items: function () {
-                return this.tabGroup[0].children;
-            },
-            setOptions: function (options) {
-                var that = this, animation = that.options.animation;
-                that._animations(options);
-                if (options.contentUrls) {
-                    that._contentUrls = options.contentUrls;
-                }
-                options.animation = extend(true, animation, options.animation);
-                if (options.navigatable) {
-                    that.wrapper.on('keydown' + NS, that._keyDownProxy);
-                } else {
-                    that.wrapper.off('keydown' + NS, that._keyDownProxy);
-                }
-                Widget.fn.setOptions.call(that, options);
             },
             events: [
                 SELECT,
@@ -41391,479 +41279,25 @@
                 contentUrls: false,
                 scrollable: { distance: DEFAULTDISTANCE }
             },
-            destroy: function () {
-                var that = this, scrollWrap = that.scrollWrap;
-                Widget.fn.destroy.call(that);
-                if (that._refreshHandler) {
-                    that.dataSource.unbind('change', that._refreshHandler);
-                }
-                that.wrapper.off(NS);
-                that.wrapper.children('.k-tabstrip-items').off(NS);
-                if (that._scrollableModeActive) {
-                    that._scrollPrevButton.off().remove();
-                    that._scrollNextButton.off().remove();
-                }
-                kendo.destroy(that.wrapper);
-                scrollWrap.children('.k-tabstrip').unwrap();
-            },
-            select: function (element) {
+            setDataSource: function (dataSource) {
                 var that = this;
-                if (arguments.length === 0) {
-                    return that.tabGroup.children('li.' + ACTIVESTATE);
+                that.options.dataSource = dataSource;
+                that._dataSource();
+                that.dataSource.fetch();
+            },
+            setOptions: function (options) {
+                var that = this, animation = that.options.animation;
+                that._animations(options);
+                if (options.contentUrls) {
+                    that._contentUrls = options.contentUrls;
                 }
-                if (!isNaN(element)) {
-                    element = that.tabGroup.children().get(element);
-                }
-                element = that.tabGroup.find(element);
-                $(element).each(function (index, item) {
-                    item = $(item);
-                    if (!item.hasClass(ACTIVESTATE) && !that.trigger(SELECT, {
-                            item: item[0],
-                            contentElement: that.contentHolder(item.index())[0]
-                        })) {
-                        that.activateTab(item);
-                    }
-                });
-                return that;
-            },
-            enable: function (element, state) {
-                this._toggleDisabled(element, state !== false);
-                return this;
-            },
-            disable: function (element) {
-                this._toggleDisabled(element, false);
-                return this;
-            },
-            reload: function (element) {
-                element = this.tabGroup.find(element);
-                var that = this;
-                var contentUrls = that._contentUrls;
-                element.each(function () {
-                    var item = $(this), contentUrl = item.find('.' + LINK).data(CONTENTURL) || contentUrls[item.index()], content = that.contentHolder(item.index());
-                    if (contentUrl) {
-                        that.ajaxRequest(item, content, null, contentUrl);
-                    }
-                });
-                return that;
-            },
-            append: function (tab) {
-                var that = this, inserted = that._create(tab);
-                each(inserted.tabs, function (idx) {
-                    var contents = inserted.contents[idx];
-                    that.tabGroup.append(this);
-                    if (that.options.tabPosition == 'bottom') {
-                        that.tabGroup.before(contents);
-                    } else if (that._scrollableModeActive) {
-                        that._scrollPrevButton.before(contents);
-                    } else {
-                        that.wrapper.append(contents);
-                    }
-                    that.angular('compile', function () {
-                        return { elements: [contents] };
-                    });
-                });
-                updateFirstLast(that.tabGroup);
-                that._updateContentElements();
-                that.resize(true);
-                return that;
-            },
-            _appendUrlItem: function (url) {
-                this._contentUrls.push(url);
-            },
-            _moveUrlItem: function (from, to) {
-                this._contentUrls.splice(to, 0, this._contentUrls.splice(from, 1)[0]);
-            },
-            _removeUrlItem: function (index) {
-                this._contentUrls.splice(index, 1);
-            },
-            insertBefore: function (tab, referenceTab) {
-                if ($(tab).is($(referenceTab))) {
-                    referenceTab = this.tabGroup.find(referenceTab).next();
+                options.animation = extend(true, animation, options.animation);
+                if (options.navigatable) {
+                    that.wrapper.on('keydown' + NS, that._keyDownProxy);
                 } else {
-                    referenceTab = this.tabGroup.find(referenceTab);
+                    that.wrapper.off('keydown' + NS, that._keyDownProxy);
                 }
-                var that = this, inserted = that._create(tab), referenceContent = that.element.find('[id=\'' + referenceTab.attr('aria-controls') + '\']');
-                each(inserted.tabs, function (idx) {
-                    var contents = inserted.contents[idx];
-                    var fromIndex = inserted.newTabsCreated ? that._contentUrls.length - (inserted.tabs.length - idx) : $(contents).index() - 1;
-                    referenceTab.before(this);
-                    referenceContent.before(contents);
-                    that._moveUrlItem(fromIndex, $(this).index());
-                    that.angular('compile', function () {
-                        return { elements: [contents] };
-                    });
-                });
-                updateFirstLast(that.tabGroup);
-                that._updateContentElements(inserted.newTabsCreated);
-                that.resize(true);
-                return that;
-            },
-            insertAfter: function (tab, referenceTab) {
-                if ($(tab).is($(referenceTab))) {
-                    referenceTab = this.tabGroup.find(referenceTab).prev();
-                } else {
-                    referenceTab = this.tabGroup.find(referenceTab);
-                }
-                var that = this, inserted = that._create(tab), referenceContent = that.element.find('[id=\'' + referenceTab.attr('aria-controls') + '\']');
-                each(inserted.tabs, function (idx) {
-                    var contents = inserted.contents[idx];
-                    var fromIndex = inserted.newTabsCreated ? that._contentUrls.length - (inserted.tabs.length - idx) : $(contents).index() - 1;
-                    referenceTab.after(this);
-                    referenceContent.after(contents);
-                    that._moveUrlItem(fromIndex, $(this).index());
-                    that.angular('compile', function () {
-                        return { elements: [contents] };
-                    });
-                });
-                updateFirstLast(that.tabGroup);
-                that._updateContentElements(inserted.newTabsCreated);
-                that.resize(true);
-                return that;
-            },
-            remove: function (elements) {
-                var that = this;
-                var type = typeof elements;
-                var contents;
-                if (type === 'string') {
-                    elements = that.tabGroup.find(elements);
-                } else if (type === 'number') {
-                    elements = that.tabGroup.children().eq(elements);
-                }
-                contents = elements.map(function () {
-                    var idx = $(this).index();
-                    var content = that.contentElement(idx);
-                    kendo.destroy(content);
-                    that._removeUrlItem(idx);
-                    return content;
-                });
-                elements.remove();
-                contents.empty();
-                contents.remove();
-                that._updateContentElements();
-                that.resize(true);
-                return that;
-            },
-            _create: function (tab) {
-                var that = this, tabs, contents, content, newTabsCreated = false;
-                tab = tab instanceof kendo.data.ObservableArray ? tab.toJSON() : tab;
-                if ($.isPlainObject(tab) || $.isArray(tab)) {
-                    tab = $.isArray(tab) ? tab : [tab];
-                    newTabsCreated = true;
-                    tabs = map(tab, function (value, idx) {
-                        that._appendUrlItem(tab[idx].contentUrl || null);
-                        return $(TabStrip.renderItem({
-                            group: that.tabGroup,
-                            item: extend(value, { index: idx })
-                        }));
-                    });
-                    contents = map(tab, function (value, idx) {
-                        if (typeof value.content == 'string' || value.contentUrl) {
-                            return $(TabStrip.renderContent({ item: extend(value, { index: idx }) }));
-                        }
-                    });
-                } else {
-                    if (typeof tab == 'string' && tab[0] != '<') {
-                        tabs = that.element.find(tab);
-                    } else {
-                        tabs = $(tab);
-                    }
-                    contents = $();
-                    tabs.each(function () {
-                        if (/k-tabstrip-items/.test(this.parentNode.className)) {
-                            var element = that.element.find('[id=\'' + this.getAttribute('aria-controls') + '\']');
-                            content = element;
-                        } else {
-                            content = $('<div class=\'' + CONTENT + '\'/>');
-                        }
-                        contents = contents.add(content);
-                    });
-                    updateTabClasses(tabs);
-                }
-                return {
-                    tabs: tabs,
-                    contents: contents,
-                    newTabsCreated: newTabsCreated
-                };
-            },
-            _toggleDisabled: function (element, enable) {
-                element = this.tabGroup.find(element);
-                element.each(function () {
-                    $(this).toggleClass(DEFAULTSTATE, enable).toggleClass(DISABLEDSTATE, !enable).attr('aria-disabled', !enable);
-                });
-            },
-            _updateClasses: function () {
-                var that = this, tabs, activeItem, activeTab;
-                that.wrapper.addClass('k-widget k-header k-tabstrip');
-                that.tabGroup = that.wrapper.children('ul').addClass('k-tabstrip-items k-reset');
-                if (!that.tabGroup[0]) {
-                    that.tabGroup = $('<ul class=\'k-tabstrip-items k-reset\'/>').appendTo(that.wrapper);
-                }
-                tabs = that.tabGroup.find('li').addClass('k-item');
-                if (tabs.length) {
-                    activeItem = tabs.filter('.' + ACTIVESTATE).index();
-                    activeTab = activeItem >= 0 ? activeItem : undefined;
-                    that.tabGroup.contents().filter(function () {
-                        return this.nodeType == 3 && !trim(this.nodeValue);
-                    }).remove();
-                }
-                if (activeItem >= 0) {
-                    tabs.eq(activeItem).addClass(TABONTOP);
-                }
-                that.contentElements = that.wrapper.children('div');
-                that.contentElements.addClass(CONTENT).eq(activeTab).addClass(ACTIVESTATE).css({ display: 'block' });
-                if (tabs.length) {
-                    updateTabClasses(tabs);
-                    updateFirstLast(that.tabGroup);
-                    that._updateContentElements(true);
-                }
-            },
-            _elementId: function (element, idx, tab) {
-                var elementId = element.attr('id'), wrapperId = this.element.attr('id'), guid = kendo.guid();
-                if (!elementId || elementId.indexOf(wrapperId + '-') > -1) {
-                    var tabStripID = (wrapperId || guid) + '-';
-                    if (tab) {
-                        tabStripID += 'tab-';
-                    }
-                    return tabStripID + (idx + 1);
-                }
-                return elementId;
-            },
-            _updateContentElements: function (isInitialUpdate) {
-                var that = this, contentUrls = that._contentUrls, items = that.tabGroup.children('.k-item'), contentElements = that.wrapper.children('div'), _elementId = that._elementId.bind(that);
-                if (contentElements.length && items.length > contentElements.length) {
-                    contentElements.each(function (idx) {
-                        var contentId = _elementId($(this), idx), item = items.filter('[aria-controls=' + (contentId || 0) + ']')[0], tabId;
-                        if (!item && isInitialUpdate) {
-                            item = items[idx];
-                        }
-                        if (item) {
-                            item.setAttribute('aria-controls', contentId);
-                            tabId = item.id = _elementId($(item), idx, true);
-                            this.setAttribute('aria-labelledby', tabId);
-                        }
-                        this.setAttribute('id', contentId);
-                    });
-                } else {
-                    items.each(function (idx) {
-                        var currentContent = contentElements.eq(idx), contentId = _elementId(currentContent, idx), tabId;
-                        this.setAttribute('aria-controls', contentId);
-                        tabId = this.id = _elementId($(this), idx, true);
-                        if (!currentContent.length && contentUrls[idx]) {
-                            $('<div class=\'' + CONTENT + '\'/>').appendTo(that.wrapper).attr('id', contentId);
-                        } else {
-                            currentContent.attr('id', contentId);
-                            if (!$(this).children('.k-loading')[0] && !contentUrls[idx]) {
-                                $('<span class=\'k-loading k-complete\'/>').prependTo(this);
-                            }
-                        }
-                        currentContent.attr('role', 'tabpanel');
-                        currentContent.attr('tabindex', '0');
-                        currentContent.attr('aria-labelledby', tabId);
-                        currentContent.filter(':not(.' + ACTIVESTATE + ')').attr('aria-hidden', true).attr('aria-expanded', false);
-                        currentContent.filter('.' + ACTIVESTATE).attr('aria-expanded', true);
-                    });
-                }
-                that.contentElements = that.contentAnimators = that.wrapper.children('div');
-                that.tabsHeight = outerHeight(that.tabGroup) + parseInt(that.wrapper.css('border-top-width'), 10) + parseInt(that.wrapper.css('border-bottom-width'), 10);
-                if (kendo.kineticScrollNeeded && kendo.mobile.ui.Scroller) {
-                    kendo.touchScroller(that.contentElements);
-                    that.contentElements = that.contentElements.children('.km-scroll-container');
-                }
-            },
-            _wrapper: function () {
-                var that = this;
-                if (that.element.is('ul')) {
-                    that.wrapper = that.element.wrapAll('<div />').parent();
-                } else {
-                    that.wrapper = that.element;
-                }
-                that.scrollWrap = that.wrapper.parent('.k-tabstrip-wrapper');
-                if (!that.scrollWrap[0]) {
-                    that.scrollWrap = that.wrapper.wrapAll('<div class=\'k-tabstrip-wrapper\' />').parent();
-                }
-            },
-            _tabPosition: function () {
-                var that = this, tabPosition = that.options.tabPosition;
-                that.wrapper.addClass('k-floatwrap k-tabstrip-' + tabPosition);
-                if (tabPosition == 'bottom') {
-                    that.tabGroup.appendTo(that.wrapper);
-                }
-                that.resize(true);
-            },
-            _setContentElementsDimensions: function () {
-                var that = this, tabPosition = that.options.tabPosition;
-                if (tabPosition == 'left' || tabPosition == 'right') {
-                    var contentDivs = that.wrapper.children('.k-content'), activeDiv = contentDivs.filter(':visible'), marginStyleProperty = 'margin-' + tabPosition, tabGroup = that.tabGroup, margin = outerWidth(tabGroup);
-                    var minHeight = Math.ceil(tabGroup.height()) - parseInt(activeDiv.css('padding-top'), 10) - parseInt(activeDiv.css('padding-bottom'), 10) - parseInt(activeDiv.css('border-top-width'), 10) - parseInt(activeDiv.css('border-bottom-width'), 10);
-                    setTimeout(function () {
-                        contentDivs.css(marginStyleProperty, margin).css('min-height', minHeight);
-                    });
-                }
-            },
-            _resize: function () {
-                this._setContentElementsDimensions();
-                this._scrollable();
-            },
-            _sizeScrollWrap: function (element) {
-                if (element.is(':visible')) {
-                    var tabPosition = this.options.tabPosition;
-                    var h = Math.floor(outerHeight(element, true)) + (tabPosition === 'left' || tabPosition === 'right' ? 2 : this.tabsHeight);
-                    this.scrollWrap.css('height', h).css('height');
-                }
-            },
-            _toggleHover: function (e) {
-                $(e.currentTarget).toggleClass(HOVERSTATE, e.type == MOUSEENTER);
-            },
-            _click: function (item) {
-                var that = this, link = item.find('.' + LINK), href = link.attr(HREF), collapse = that.options.collapsible, index = item.index(), contentHolder = that.contentHolder(index), prevent, isAnchor, neighbours = item.parent().children(), oldFocusedTab = neighbours.filter('.' + FOCUSEDSTATE);
-                if (item.closest('.k-widget')[0] != that.wrapper[0]) {
-                    return;
-                }
-                if (item.is('.' + DISABLEDSTATE + (!collapse ? ',.' + ACTIVESTATE : ''))) {
-                    oldFocusedTab.removeClass(FOCUSEDSTATE);
-                    that._focused = item;
-                    item.addClass(FOCUSEDSTATE);
-                    that._current(item);
-                    if (that._scrollableModeActive) {
-                        that._scrollTabsToItem(item);
-                    }
-                    return true;
-                }
-                isAnchor = link.data(CONTENTURL) || that._contentUrls[index] || href && (href.charAt(href.length - 1) == '#' || href.indexOf('#' + that.element[0].id + '-') != -1);
-                prevent = !href || isAnchor;
-                if (that.tabGroup.children('[data-animating]').length) {
-                    return prevent;
-                }
-                if (that.trigger(SELECT, {
-                        item: item[0],
-                        contentElement: contentHolder[0]
-                    })) {
-                    return true;
-                }
-                if (prevent === false) {
-                    return;
-                }
-                if (collapse && item.is('.' + ACTIVESTATE)) {
-                    that.deactivateTab(item);
-                    return true;
-                }
-                if (that.activateTab(item)) {
-                    prevent = true;
-                }
-                return prevent;
-            },
-            _scrollable: function () {
-                var that = this, options = that.options, wrapperOffsetWidth, tabGroupScrollWidth, scrollPrevButton, scrollNextButton;
-                if (that._scrollableAllowed()) {
-                    that.wrapper.addClass('k-tabstrip-scrollable');
-                    wrapperOffsetWidth = that.wrapper[0].offsetWidth;
-                    tabGroupScrollWidth = that.tabGroup[0].scrollWidth;
-                    if (tabGroupScrollWidth > wrapperOffsetWidth && !that._scrollableModeActive) {
-                        that._nowScrollingTabs = false;
-                        that._isRtl = kendo.support.isRtl(that.element);
-                        var mouseDown = kendo.support.touch ? 'touchstart' : 'mousedown';
-                        var mouseUp = kendo.support.touch ? 'touchend' : 'mouseup';
-                        var browser = kendo.support.browser;
-                        var isRtlScrollDirection = that._isRtl && !browser.msie && !browser.edge;
-                        that.wrapper.append(scrollButtonHtml('prev', 'k-i-arrow-60-left') + scrollButtonHtml('next', 'k-i-arrow-60-right'));
-                        scrollPrevButton = that._scrollPrevButton = that.wrapper.children('.k-tabstrip-prev');
-                        scrollNextButton = that._scrollNextButton = that.wrapper.children('.k-tabstrip-next');
-                        that.tabGroup.css({
-                            marginLeft: outerWidth(scrollPrevButton) + 9,
-                            marginRight: outerWidth(scrollNextButton) + 12
-                        });
-                        scrollPrevButton.on(mouseDown + NS, function () {
-                            that._nowScrollingTabs = true;
-                            that._scrollTabsByDelta(options.scrollable.distance * (isRtlScrollDirection ? 1 : -1));
-                        });
-                        scrollNextButton.on(mouseDown + NS, function () {
-                            that._nowScrollingTabs = true;
-                            that._scrollTabsByDelta(options.scrollable.distance * (isRtlScrollDirection ? -1 : 1));
-                        });
-                        scrollPrevButton.add(scrollNextButton).on(mouseUp + NS, function () {
-                            that._nowScrollingTabs = false;
-                        });
-                        that._scrollableModeActive = true;
-                        that._toggleScrollButtons();
-                    } else if (that._scrollableModeActive && tabGroupScrollWidth <= wrapperOffsetWidth) {
-                        that._scrollableModeActive = false;
-                        that.wrapper.removeClass('k-tabstrip-scrollable');
-                        that._scrollPrevButton.off().remove();
-                        that._scrollNextButton.off().remove();
-                        that.tabGroup.css({
-                            marginLeft: '',
-                            marginRight: ''
-                        });
-                    } else if (!that._scrollableModeActive) {
-                        that.wrapper.removeClass('k-tabstrip-scrollable');
-                    } else {
-                        that._toggleScrollButtons();
-                    }
-                }
-            },
-            _scrollableAllowed: function () {
-                var options = this.options;
-                if (options.scrollable && !options.scrollable.distance) {
-                    options.scrollable = { distance: DEFAULTDISTANCE };
-                }
-                return options.scrollable && !isNaN(options.scrollable.distance) && (options.tabPosition == 'top' || options.tabPosition == 'bottom');
-            },
-            _scrollTabsToItem: function (item) {
-                var that = this, tabGroup = that.tabGroup, currentScrollOffset = kendo.scrollLeft(tabGroup), itemWidth = outerWidth(item), itemOffset = that._isRtl ? item.position().left : item.position().left - tabGroup.children().first().position().left, tabGroupWidth = tabGroup[0].offsetWidth, tabGroupPadding = Math.ceil(parseFloat(tabGroup.css('padding-left'))), browser = kendo.support.browser, itemPosition;
-                if (that._isRtl && (browser.mozilla || browser.webkit && browser.version >= 85)) {
-                    currentScrollOffset = currentScrollOffset * -1;
-                }
-                if (that._isRtl) {
-                    if (itemOffset < 0) {
-                        itemPosition = currentScrollOffset + itemOffset - (tabGroupWidth - currentScrollOffset) - tabGroupPadding;
-                    } else if (itemOffset + itemWidth > tabGroupWidth) {
-                        itemPosition = currentScrollOffset + itemOffset - itemWidth + tabGroupPadding * 2;
-                    }
-                } else {
-                    if (currentScrollOffset + tabGroupWidth < itemOffset + itemWidth) {
-                        itemPosition = itemOffset + itemWidth - tabGroupWidth + tabGroupPadding * 2;
-                    } else if (currentScrollOffset > itemOffset) {
-                        itemPosition = itemOffset - tabGroupPadding;
-                    }
-                }
-                tabGroup.finish().animate({ 'scrollLeft': itemPosition }, 'fast', 'linear', function () {
-                    that._toggleScrollButtons();
-                });
-            },
-            _scrollTabsByDelta: function (delta) {
-                var that = this;
-                var tabGroup = that.tabGroup;
-                var scrLeft = kendo.scrollLeft(tabGroup);
-                var browser = kendo.support.browser;
-                if (that._isRtl && (browser.mozilla || browser.webkit && browser.version >= 85)) {
-                    scrLeft = scrLeft * -1;
-                }
-                tabGroup.finish().animate({ 'scrollLeft': scrLeft + delta }, 'fast', 'linear', function () {
-                    if (that._nowScrollingTabs && !jQuery.fx.off) {
-                        that._scrollTabsByDelta(delta);
-                    } else {
-                        that._toggleScrollButtons();
-                    }
-                });
-            },
-            _toggleScrollButtons: function () {
-                var that = this, ul = that.tabGroup, scrollLeft = kendo.scrollLeft(ul);
-                that._scrollPrevButton.toggle(scrollLeft !== 0);
-                that._scrollNextButton.toggle(scrollLeft < ul[0].scrollWidth - ul[0].offsetWidth - 1);
-            },
-            deactivateTab: function (item) {
-                var that = this, animationSettings = that.options.animation, animation = animationSettings.open, close = extend({}, animationSettings.close), hasCloseAnimation = close && 'effects' in close;
-                item = that.tabGroup.find(item);
-                close = extend(hasCloseAnimation ? close : extend({ reverse: true }, animation), { hide: true });
-                if (kendo.size(animation.effects)) {
-                    item.kendoAddClass(DEFAULTSTATE, { duration: animation.duration });
-                    item.kendoRemoveClass(ACTIVESTATE, { duration: animation.duration });
-                } else {
-                    item.addClass(DEFAULTSTATE);
-                    item.removeClass(ACTIVESTATE);
-                }
-                item.removeAttr('aria-selected');
-                that.contentAnimators.filter('.' + ACTIVESTATE).kendoStop(true, true).kendoAnimate(close).removeClass(ACTIVESTATE).attr('aria-hidden', true);
+                Widget.fn.setOptions.call(that, options);
             },
             activateTab: function (item) {
                 if (this.tabGroup.children('[data-animating]').length) {
@@ -41966,25 +41400,6 @@
                     showContent();
                 }
                 return true;
-            },
-            contentElement: function (itemIndex) {
-                if (isNaN(itemIndex - 0)) {
-                    return undefined;
-                }
-                var contentElements = this.contentElements && this.contentElements[0] && !kendo.kineticScrollNeeded ? this.contentElements : this.contentAnimators;
-                var id = $(this.tabGroup.children()[itemIndex]).attr('aria-controls');
-                if (contentElements) {
-                    for (var i = 0, len = contentElements.length; i < len; i++) {
-                        if (contentElements.eq(i).closest('.k-content')[0].id == id) {
-                            return contentElements[i];
-                        }
-                    }
-                }
-                return undefined;
-            },
-            contentHolder: function (itemIndex) {
-                var contentElement = $(this.contentElement(itemIndex)), scrollContainer = contentElement.children('.km-scroll-container');
-                return kendo.support.touch && scrollContainer[0] ? scrollContainer : contentElement;
             },
             ajaxRequest: function (element, content, complete, url) {
                 element = this.tabGroup.find(element);
@@ -42104,6 +41519,722 @@
                     }
                 }
                 that.xhr = $.ajax(ajaxOptions);
+            },
+            append: function (tab) {
+                var that = this, inserted = that._create(tab);
+                each(inserted.tabs, function (idx) {
+                    var contents = inserted.contents[idx];
+                    that.tabGroup.append(this);
+                    if (that.options.tabPosition == 'bottom') {
+                        that.tabGroup.before(contents);
+                    } else if (that._scrollableModeActive) {
+                        that._scrollPrevButton.before(contents);
+                    } else {
+                        that.wrapper.append(contents);
+                    }
+                    that.angular('compile', function () {
+                        return { elements: [contents] };
+                    });
+                });
+                updateFirstLast(that.tabGroup);
+                that._updateContentElements();
+                that.resize(true);
+                return that;
+            },
+            contentElement: function (itemIndex) {
+                if (isNaN(itemIndex - 0)) {
+                    return undefined;
+                }
+                var contentElements = this.contentElements && this.contentElements[0] && !kendo.kineticScrollNeeded ? this.contentElements : this.contentAnimators;
+                var id = $(this.tabGroup.children()[itemIndex]).attr('aria-controls');
+                if (contentElements) {
+                    for (var i = 0, len = contentElements.length; i < len; i++) {
+                        if (contentElements.eq(i).closest('.k-content')[0].id == id) {
+                            return contentElements[i];
+                        }
+                    }
+                }
+                return undefined;
+            },
+            contentHolder: function (itemIndex) {
+                var contentElement = $(this.contentElement(itemIndex)), scrollContainer = contentElement.children('.km-scroll-container');
+                return kendo.support.touch && scrollContainer[0] ? scrollContainer : contentElement;
+            },
+            deactivateTab: function (item) {
+                var that = this, animationSettings = that.options.animation, animation = animationSettings.open, close = extend({}, animationSettings.close), hasCloseAnimation = close && 'effects' in close;
+                item = that.tabGroup.find(item);
+                close = extend(hasCloseAnimation ? close : extend({ reverse: true }, animation), { hide: true });
+                if (kendo.size(animation.effects)) {
+                    item.kendoAddClass(DEFAULTSTATE, { duration: animation.duration });
+                    item.kendoRemoveClass(ACTIVESTATE, { duration: animation.duration });
+                } else {
+                    item.addClass(DEFAULTSTATE);
+                    item.removeClass(ACTIVESTATE);
+                }
+                item.removeAttr('aria-selected');
+                that.contentAnimators.filter('.' + ACTIVESTATE).kendoStop(true, true).kendoAnimate(close).removeClass(ACTIVESTATE).attr('aria-hidden', true);
+            },
+            destroy: function () {
+                var that = this, scrollWrap = that.scrollWrap;
+                Widget.fn.destroy.call(that);
+                if (that._refreshHandler) {
+                    that.dataSource.unbind('change', that._refreshHandler);
+                }
+                that.wrapper.off(NS);
+                that.wrapper.children('.k-tabstrip-items').off(NS);
+                if (that._scrollableModeActive) {
+                    that._scrollPrevButton.off().remove();
+                    that._scrollNextButton.off().remove();
+                }
+                kendo.destroy(that.wrapper);
+                scrollWrap.children('.k-tabstrip').unwrap();
+            },
+            disable: function (element) {
+                this._toggleDisabled(element, false);
+                return this;
+            },
+            enable: function (element, state) {
+                this._toggleDisabled(element, state !== false);
+                return this;
+            },
+            insertAfter: function (tab, referenceTab) {
+                if ($(tab).is($(referenceTab))) {
+                    referenceTab = this.tabGroup.find(referenceTab).prev();
+                } else {
+                    referenceTab = this.tabGroup.find(referenceTab);
+                }
+                var that = this, inserted = that._create(tab), referenceContent = that.element.find('[id=\'' + referenceTab.attr('aria-controls') + '\']');
+                each(inserted.tabs, function (idx) {
+                    var contents = inserted.contents[idx];
+                    var fromIndex = inserted.newTabsCreated ? that._contentUrls.length - (inserted.tabs.length - idx) : $(contents).index() - 1;
+                    referenceTab.after(this);
+                    referenceContent.after(contents);
+                    that._moveUrlItem(fromIndex, $(this).index());
+                    that.angular('compile', function () {
+                        return { elements: [contents] };
+                    });
+                });
+                updateFirstLast(that.tabGroup);
+                that._updateContentElements(inserted.newTabsCreated);
+                that.resize(true);
+                return that;
+            },
+            insertBefore: function (tab, referenceTab) {
+                if ($(tab).is($(referenceTab))) {
+                    referenceTab = this.tabGroup.find(referenceTab).next();
+                } else {
+                    referenceTab = this.tabGroup.find(referenceTab);
+                }
+                var that = this, inserted = that._create(tab), referenceContent = that.element.find('[id=\'' + referenceTab.attr('aria-controls') + '\']');
+                each(inserted.tabs, function (idx) {
+                    var contents = inserted.contents[idx];
+                    var fromIndex = inserted.newTabsCreated ? that._contentUrls.length - (inserted.tabs.length - idx) : $(contents).index() - 1;
+                    referenceTab.before(this);
+                    referenceContent.before(contents);
+                    that._moveUrlItem(fromIndex, $(this).index());
+                    that.angular('compile', function () {
+                        return { elements: [contents] };
+                    });
+                });
+                updateFirstLast(that.tabGroup);
+                that._updateContentElements(inserted.newTabsCreated);
+                that.resize(true);
+                return that;
+            },
+            items: function () {
+                return this.tabGroup[0].children;
+            },
+            refresh: function (e) {
+                var that = this, options = that.options, encoded = kendo.getter(options.dataEncodedField), text = kendo.getter(options.dataTextField), content = kendo.getter(options.dataContentField), contentUrl = kendo.getter(options.dataContentUrlField), image = kendo.getter(options.dataImageUrlField), url = kendo.getter(options.dataUrlField), sprite = kendo.getter(options.dataSpriteCssClass), idx, tabs = [], tab, action, view = that.dataSource.view(), length;
+                e = e || {};
+                action = e.action;
+                if (action) {
+                    view = e.items;
+                }
+                for (idx = 0, length = view.length; idx < length; idx++) {
+                    tab = { text: text(view[idx]) };
+                    if (options.dataEncodedField) {
+                        tab.encoded = encoded(view[idx]);
+                    }
+                    if (options.dataContentField) {
+                        tab.content = content(view[idx]);
+                    }
+                    if (options.dataContentUrlField) {
+                        tab.contentUrl = contentUrl(view[idx]);
+                    }
+                    if (options.dataUrlField) {
+                        tab.url = url(view[idx]);
+                    }
+                    if (options.dataImageUrlField) {
+                        tab.imageUrl = image(view[idx]);
+                    }
+                    if (options.dataSpriteCssClass) {
+                        tab.spriteCssClass = sprite(view[idx]);
+                    }
+                    tabs[idx] = tab;
+                }
+                if (e.action == 'add') {
+                    if (e.index < that.tabGroup.children().length) {
+                        that.insertBefore(tabs, that.tabGroup.children().eq(e.index));
+                    } else {
+                        that.append(tabs);
+                    }
+                } else if (e.action == 'remove') {
+                    for (idx = 0; idx < view.length; idx++) {
+                        that.remove(e.index);
+                    }
+                } else if (e.action == 'itemchange') {
+                    idx = that.dataSource.view().indexOf(view[0]);
+                    if (e.field === options.dataTextField) {
+                        that.tabGroup.children().eq(idx).find('.k-link').text(view[0].get(e.field));
+                    }
+                    if (e.field === options.dataUrlField) {
+                        that._contentUrls[idx] = view[0].get(e.field);
+                    }
+                } else {
+                    that.trigger('dataBinding');
+                    that.remove('li');
+                    that._contentUrls = [];
+                    that.append(tabs);
+                    that.trigger('dataBound');
+                }
+            },
+            reload: function (element) {
+                element = this.tabGroup.find(element);
+                var that = this;
+                var contentUrls = that._contentUrls;
+                element.each(function () {
+                    var item = $(this), contentUrl = item.find('.' + LINK).data(CONTENTURL) || contentUrls[item.index()], content = that.contentHolder(item.index());
+                    if (contentUrl) {
+                        that.ajaxRequest(item, content, null, contentUrl);
+                    }
+                });
+                return that;
+            },
+            remove: function (elements) {
+                var that = this;
+                var type = typeof elements;
+                var contents;
+                if (type === 'string') {
+                    elements = that.tabGroup.find(elements);
+                } else if (type === 'number') {
+                    elements = that.tabGroup.children().eq(elements);
+                }
+                contents = elements.map(function () {
+                    var idx = $(this).index();
+                    var content = that.contentElement(idx);
+                    kendo.destroy(content);
+                    that._removeUrlItem(idx);
+                    return content;
+                });
+                elements.remove();
+                contents.empty();
+                contents.remove();
+                that._updateContentElements();
+                that.resize(true);
+                return that;
+            },
+            select: function (element) {
+                var that = this;
+                if (arguments.length === 0) {
+                    return that.tabGroup.children('li.' + ACTIVESTATE);
+                }
+                if (!isNaN(element)) {
+                    element = that.tabGroup.children().get(element);
+                }
+                element = that.tabGroup.find(element);
+                $(element).each(function (index, item) {
+                    item = $(item);
+                    if (!item.hasClass(ACTIVESTATE) && !that.trigger(SELECT, {
+                            item: item[0],
+                            contentElement: that.contentHolder(item.index())[0]
+                        })) {
+                        that.activateTab(item);
+                    }
+                });
+                return that;
+            },
+            value: function (value) {
+                var that = this;
+                if (value !== undefined) {
+                    if (value != that.value()) {
+                        that.tabGroup.children().each(function () {
+                            if (kendo.trim($(this).text()) == value) {
+                                that.select(this);
+                            }
+                        });
+                    }
+                } else {
+                    return that.select().text();
+                }
+            },
+            _active: function () {
+                var item = this.tabGroup.children().filter('.' + ACTIVESTATE);
+                item = item[0] ? item : this._endItem('first');
+                if (item[0]) {
+                    this._current(item);
+                }
+            },
+            _animations: function (options) {
+                if (options && 'animation' in options && !options.animation) {
+                    options.animation = {
+                        open: { effects: {} },
+                        close: { effects: {} }
+                    };
+                }
+            },
+            _appendUrlItem: function (url) {
+                this._contentUrls.push(url);
+            },
+            _attachEvents: function () {
+                var that = this, options = that.options;
+                that.wrapper.on(MOUSEENTER + NS + ' ' + MOUSELEAVE + NS, HOVERABLEITEMS, that._toggleHover).on('focus' + NS, $.proxy(that._active, that)).on('blur' + NS, function () {
+                    that._current(null);
+                });
+                that._keyDownProxy = $.proxy(that._keydown, that);
+                if (options.navigatable) {
+                    that.wrapper.on('keydown' + NS, that._keyDownProxy);
+                }
+                that.wrapper.children('.k-tabstrip-items').on(CLICK + NS, '.k-state-disabled .k-link', false).on(CLICK + NS, ' > ' + NAVIGATABLEITEMS, $.proxy(that._itemClick, that));
+            },
+            _click: function (item) {
+                var that = this, link = item.find('.' + LINK), href = link.attr(HREF), collapse = that.options.collapsible, index = item.index(), contentHolder = that.contentHolder(index), prevent, isAnchor, neighbours = item.parent().children(), oldFocusedTab = neighbours.filter('.' + FOCUSEDSTATE);
+                if (item.closest('.k-widget')[0] != that.wrapper[0]) {
+                    return;
+                }
+                if (item.is('.' + DISABLEDSTATE + (!collapse ? ',.' + ACTIVESTATE : ''))) {
+                    oldFocusedTab.removeClass(FOCUSEDSTATE);
+                    that._focused = item;
+                    item.addClass(FOCUSEDSTATE);
+                    that._current(item);
+                    if (that._scrollableModeActive) {
+                        that._scrollTabsToItem(item);
+                    }
+                    return true;
+                }
+                isAnchor = link.data(CONTENTURL) || that._contentUrls[index] || href && (href.charAt(href.length - 1) == '#' || href.indexOf('#' + that.element[0].id + '-') != -1);
+                prevent = !href || isAnchor;
+                if (that.tabGroup.children('[data-animating]').length) {
+                    return prevent;
+                }
+                if (that.trigger(SELECT, {
+                        item: item[0],
+                        contentElement: contentHolder[0]
+                    })) {
+                    return true;
+                }
+                if (prevent === false) {
+                    return;
+                }
+                if (collapse && item.is('.' + ACTIVESTATE)) {
+                    that.deactivateTab(item);
+                    return true;
+                }
+                if (that.activateTab(item)) {
+                    prevent = true;
+                }
+                return prevent;
+            },
+            _create: function (tab) {
+                var that = this, tabs, contents, content, newTabsCreated = false;
+                tab = tab instanceof kendo.data.ObservableArray ? tab.toJSON() : tab;
+                if ($.isPlainObject(tab) || $.isArray(tab)) {
+                    tab = $.isArray(tab) ? tab : [tab];
+                    newTabsCreated = true;
+                    tabs = map(tab, function (value, idx) {
+                        that._appendUrlItem(tab[idx].contentUrl || null);
+                        return $(TabStrip.renderItem({
+                            group: that.tabGroup,
+                            item: extend(value, { index: idx })
+                        }));
+                    });
+                    contents = map(tab, function (value, idx) {
+                        if (typeof value.content == 'string' || value.contentUrl) {
+                            return $(TabStrip.renderContent({ item: extend(value, { index: idx }) }));
+                        }
+                    });
+                } else {
+                    if (typeof tab == 'string' && tab[0] != '<') {
+                        tabs = that.element.find(tab);
+                    } else {
+                        tabs = $(tab);
+                    }
+                    contents = $();
+                    tabs.each(function () {
+                        if (/k-tabstrip-items/.test(this.parentNode.className)) {
+                            var element = that.element.find('[id=\'' + this.getAttribute('aria-controls') + '\']');
+                            content = element;
+                        } else {
+                            content = $('<div class=\'' + CONTENT + '\'/>');
+                        }
+                        contents = contents.add(content);
+                    });
+                    updateTabClasses(tabs);
+                }
+                return {
+                    tabs: tabs,
+                    contents: contents,
+                    newTabsCreated: newTabsCreated
+                };
+            },
+            _current: function (candidate) {
+                var that = this, focused = that._focused;
+                if (candidate === undefined) {
+                    return focused;
+                }
+                if (focused) {
+                    focused.removeClass(FOCUSEDSTATE);
+                }
+                if (candidate) {
+                    if (!candidate.hasClass(ACTIVESTATE)) {
+                        candidate.addClass(FOCUSEDSTATE);
+                    }
+                    if (candidate[0].id) {
+                        that.element.attr('aria-activedescendant', candidate[0].id);
+                    }
+                }
+                that._focused = candidate;
+            },
+            _dataSource: function () {
+                var that = this;
+                if (that.dataSource && that._refreshHandler) {
+                    that.dataSource.unbind('change', that._refreshHandler);
+                } else {
+                    that._refreshHandler = $.proxy(that.refresh, that);
+                }
+                that.dataSource = kendo.data.DataSource.create(that.options.dataSource).bind('change', that._refreshHandler);
+            },
+            _elementId: function (element, idx, tab) {
+                var elementId = element.attr('id'), wrapperId = this.element.attr('id'), guid = kendo.guid();
+                if (!elementId || elementId.indexOf(wrapperId + '-') > -1) {
+                    var tabStripID = (wrapperId || guid) + '-';
+                    if (tab) {
+                        tabStripID += 'tab-';
+                    }
+                    return tabStripID + (idx + 1);
+                }
+                return elementId;
+            },
+            _endItem: function (action) {
+                return this.tabGroup.children(NAVIGATABLEITEMS)[action]();
+            },
+            _getItem: function (action) {
+                return this.tabGroup.children(KEYBOARDNAVIGATABLEITEMS)[action]();
+            },
+            _initialActivate: function () {
+                var that = this, selectedItems = that.tabGroup.children('li.' + ACTIVESTATE), content = that.contentHolder(selectedItems.index());
+                if (selectedItems[0] && content.length > 0 && content[0].childNodes.length === 0) {
+                    that.activateTab(selectedItems.eq(0));
+                }
+            },
+            _item: function (item, action) {
+                var endItem;
+                if (action === PREV) {
+                    endItem = 'last';
+                } else {
+                    endItem = 'first';
+                }
+                if (!item) {
+                    return this._endItem(endItem);
+                }
+                item = item[action]();
+                if (!item[0]) {
+                    item = this.tabGroup.children(KEYBOARDNAVIGATABLEITEMS)[endItem]();
+                }
+                if (item.hasClass(DISABLEDSTATE)) {
+                    item.addClass(FOCUSEDSTATE);
+                }
+                if (item.hasClass(DISABLEDSTATE) || item.hasClass(ACTIVESTATE)) {
+                    this._focused = item;
+                }
+                return item;
+            },
+            _itemClick: function (e) {
+                var that = this, wr = that.wrapper[0];
+                if (wr !== document.activeElement) {
+                    var msie = kendo.support.browser.msie;
+                    if (msie) {
+                        try {
+                            wr.setActive();
+                        } catch (j) {
+                            wr.focus();
+                        }
+                    } else {
+                        wr.focus();
+                    }
+                }
+                if (that._click($(e.currentTarget))) {
+                    e.preventDefault();
+                }
+            },
+            _keydown: function (e) {
+                var that = this, key = e.keyCode, current = that._current(), rtl = that._isRtl, isHorizontal = /top|bottom/.test(that.options.tabPosition), action;
+                if (e.target != e.currentTarget || !current) {
+                    return;
+                }
+                if (key === keys.DOWN && !isHorizontal) {
+                    action = NEXT;
+                } else if (key === keys.UP && !isHorizontal) {
+                    action = PREV;
+                } else if (key === keys.RIGHT && isHorizontal) {
+                    action = rtl ? PREV : NEXT;
+                } else if (key === keys.LEFT && isHorizontal) {
+                    action = rtl ? NEXT : PREV;
+                } else if (key == keys.ENTER || key == keys.SPACEBAR) {
+                    that._click(current);
+                    e.preventDefault();
+                } else if (key == keys.HOME) {
+                    that._click(that._getItem('first'));
+                    e.preventDefault();
+                    return;
+                } else if (key == keys.END) {
+                    that._click(that._getItem('last'));
+                    e.preventDefault();
+                    return;
+                }
+                if (action) {
+                    that._click(that._item(current, action));
+                    e.preventDefault();
+                }
+            },
+            _moveUrlItem: function (from, to) {
+                this._contentUrls.splice(to, 0, this._contentUrls.splice(from, 1)[0]);
+            },
+            _processContentUrls: function () {
+                var that = this;
+                if (that._contentUrls.length) {
+                    that.wrapper.find('.k-tabstrip-items > .k-item').each(function (index, item) {
+                        var url = that._contentUrls[index];
+                        if (typeof url === 'string') {
+                            $(item).find('>.' + LINK).data(CONTENTURL, url);
+                        }
+                    });
+                } else {
+                    that._contentUrls.length = that.tabGroup.find('li.k-item').length;
+                }
+            },
+            _removeUrlItem: function (index) {
+                this._contentUrls.splice(index, 1);
+            },
+            _resize: function () {
+                this._setContentElementsDimensions();
+                this._scrollable();
+            },
+            _scrollable: function () {
+                var that = this, options = that.options, wrapperOffsetWidth, tabGroupScrollWidth, scrollPrevButton, scrollNextButton;
+                if (that._scrollableAllowed()) {
+                    that.wrapper.addClass('k-tabstrip-scrollable');
+                    wrapperOffsetWidth = that.wrapper[0].offsetWidth;
+                    tabGroupScrollWidth = that.tabGroup[0].scrollWidth;
+                    if (tabGroupScrollWidth > wrapperOffsetWidth && !that._scrollableModeActive) {
+                        that._nowScrollingTabs = false;
+                        that._isRtl = kendo.support.isRtl(that.element);
+                        var mouseDown = kendo.support.touch ? 'touchstart' : 'mousedown';
+                        var mouseUp = kendo.support.touch ? 'touchend' : 'mouseup';
+                        var browser = kendo.support.browser;
+                        var isRtlScrollDirection = that._isRtl && !browser.msie && !browser.edge;
+                        that.wrapper.append(scrollButtonHtml('prev', 'k-i-arrow-60-left') + scrollButtonHtml('next', 'k-i-arrow-60-right'));
+                        scrollPrevButton = that._scrollPrevButton = that.wrapper.children('.k-tabstrip-prev');
+                        scrollNextButton = that._scrollNextButton = that.wrapper.children('.k-tabstrip-next');
+                        that.tabGroup.css({
+                            marginLeft: outerWidth(scrollPrevButton) + 9,
+                            marginRight: outerWidth(scrollNextButton) + 12
+                        });
+                        scrollPrevButton.on(mouseDown + NS, function () {
+                            that._nowScrollingTabs = true;
+                            that._scrollTabsByDelta(options.scrollable.distance * (isRtlScrollDirection ? 1 : -1));
+                        });
+                        scrollNextButton.on(mouseDown + NS, function () {
+                            that._nowScrollingTabs = true;
+                            that._scrollTabsByDelta(options.scrollable.distance * (isRtlScrollDirection ? -1 : 1));
+                        });
+                        scrollPrevButton.add(scrollNextButton).on(mouseUp + NS, function () {
+                            that._nowScrollingTabs = false;
+                        });
+                        that._scrollableModeActive = true;
+                        that._toggleScrollButtons();
+                    } else if (that._scrollableModeActive && tabGroupScrollWidth <= wrapperOffsetWidth) {
+                        that._scrollableModeActive = false;
+                        that.wrapper.removeClass('k-tabstrip-scrollable');
+                        that._scrollPrevButton.off().remove();
+                        that._scrollNextButton.off().remove();
+                        that.tabGroup.css({
+                            marginLeft: '',
+                            marginRight: ''
+                        });
+                    } else if (!that._scrollableModeActive) {
+                        that.wrapper.removeClass('k-tabstrip-scrollable');
+                    } else {
+                        that._toggleScrollButtons();
+                    }
+                }
+            },
+            _scrollableAllowed: function () {
+                var options = this.options;
+                if (options.scrollable && !options.scrollable.distance) {
+                    options.scrollable = { distance: DEFAULTDISTANCE };
+                }
+                return options.scrollable && !isNaN(options.scrollable.distance) && (options.tabPosition == 'top' || options.tabPosition == 'bottom');
+            },
+            _scrollTabsToItem: function (item) {
+                var that = this, tabGroup = that.tabGroup, currentScrollOffset = kendo.scrollLeft(tabGroup), itemWidth = outerWidth(item), itemOffset = that._isRtl ? item.position().left : item.position().left - tabGroup.children().first().position().left, tabGroupWidth = tabGroup[0].offsetWidth, tabGroupPadding = Math.ceil(parseFloat(tabGroup.css('padding-left'))), browser = kendo.support.browser, itemPosition;
+                if (that._isRtl && (browser.mozilla || browser.webkit && browser.version >= 85)) {
+                    currentScrollOffset = currentScrollOffset * -1;
+                }
+                if (that._isRtl) {
+                    if (itemOffset < 0) {
+                        itemPosition = currentScrollOffset + itemOffset - (tabGroupWidth - currentScrollOffset) - tabGroupPadding;
+                    } else if (itemOffset + itemWidth > tabGroupWidth) {
+                        itemPosition = currentScrollOffset + itemOffset - itemWidth + tabGroupPadding * 2;
+                    }
+                } else {
+                    if (currentScrollOffset + tabGroupWidth < itemOffset + itemWidth) {
+                        itemPosition = itemOffset + itemWidth - tabGroupWidth + tabGroupPadding * 2;
+                    } else if (currentScrollOffset > itemOffset) {
+                        itemPosition = itemOffset - tabGroupPadding;
+                    }
+                }
+                tabGroup.finish().animate({ 'scrollLeft': itemPosition }, 'fast', 'linear', function () {
+                    that._toggleScrollButtons();
+                });
+            },
+            _scrollTabsByDelta: function (delta) {
+                var that = this;
+                var tabGroup = that.tabGroup;
+                var scrLeft = kendo.scrollLeft(tabGroup);
+                var browser = kendo.support.browser;
+                if (that._isRtl && (browser.mozilla || browser.webkit && browser.version >= 85)) {
+                    scrLeft = scrLeft * -1;
+                }
+                tabGroup.finish().animate({ 'scrollLeft': scrLeft + delta }, 'fast', 'linear', function () {
+                    if (that._nowScrollingTabs && !jQuery.fx.off) {
+                        that._scrollTabsByDelta(delta);
+                    } else {
+                        that._toggleScrollButtons();
+                    }
+                });
+            },
+            _setContentElementsDimensions: function () {
+                var that = this, tabPosition = that.options.tabPosition;
+                if (tabPosition == 'left' || tabPosition == 'right') {
+                    var contentDivs = that.wrapper.children('.k-content'), activeDiv = contentDivs.filter(':visible'), marginStyleProperty = 'margin-' + tabPosition, tabGroup = that.tabGroup, margin = outerWidth(tabGroup);
+                    var minHeight = Math.ceil(tabGroup.height()) - parseInt(activeDiv.css('padding-top'), 10) - parseInt(activeDiv.css('padding-bottom'), 10) - parseInt(activeDiv.css('border-top-width'), 10) - parseInt(activeDiv.css('border-bottom-width'), 10);
+                    setTimeout(function () {
+                        contentDivs.css(marginStyleProperty, margin).css('min-height', minHeight);
+                    });
+                }
+            },
+            _sizeScrollWrap: function (element) {
+                if (element.is(':visible')) {
+                    var tabPosition = this.options.tabPosition;
+                    var h = Math.floor(outerHeight(element, true)) + (tabPosition === 'left' || tabPosition === 'right' ? 2 : this.tabsHeight);
+                    this.scrollWrap.css('height', h).css('height');
+                }
+            },
+            _tabPosition: function () {
+                var that = this, tabPosition = that.options.tabPosition;
+                that.wrapper.addClass('k-floatwrap k-tabstrip-' + tabPosition);
+                if (tabPosition == 'bottom') {
+                    that.tabGroup.appendTo(that.wrapper);
+                }
+                if (tabPosition === 'left' || tabPosition === 'right') {
+                    that.tabGroup.attr('aria-orientation', 'vertical');
+                }
+                that.resize(true);
+            },
+            _toggleHover: function (e) {
+                $(e.currentTarget).toggleClass(HOVERSTATE, e.type == MOUSEENTER);
+            },
+            _toggleDisabled: function (element, enable) {
+                element = this.tabGroup.find(element);
+                element.each(function () {
+                    $(this).toggleClass(DEFAULTSTATE, enable).toggleClass(DISABLEDSTATE, !enable).attr('aria-disabled', !enable);
+                });
+            },
+            _toggleScrollButtons: function () {
+                var that = this, ul = that.tabGroup, scrollLeft = kendo.scrollLeft(ul);
+                that._scrollPrevButton.toggle(scrollLeft !== 0);
+                that._scrollNextButton.toggle(scrollLeft < ul[0].scrollWidth - ul[0].offsetWidth - 1);
+            },
+            _updateClasses: function () {
+                var that = this, tabs, activeItem, activeTab;
+                that.wrapper.addClass('k-widget k-header k-tabstrip');
+                that.tabGroup = that.wrapper.children('ul').addClass('k-tabstrip-items k-reset');
+                if (!that.tabGroup[0]) {
+                    that.tabGroup = $('<ul class=\'k-tabstrip-items k-reset\'/>').appendTo(that.wrapper);
+                }
+                tabs = that.tabGroup.find('li').addClass('k-item');
+                if (tabs.length) {
+                    activeItem = tabs.filter('.' + ACTIVESTATE).index();
+                    activeTab = activeItem >= 0 ? activeItem : undefined;
+                    that.tabGroup.contents().filter(function () {
+                        return this.nodeType == 3 && !trim(this.nodeValue);
+                    }).remove();
+                }
+                if (activeItem >= 0) {
+                    tabs.eq(activeItem).addClass(TABONTOP);
+                }
+                that.contentElements = that.wrapper.children('div');
+                that.contentElements.addClass(CONTENT).eq(activeTab).addClass(ACTIVESTATE).css({ display: 'block' });
+                if (tabs.length) {
+                    updateTabClasses(tabs);
+                    updateFirstLast(that.tabGroup);
+                    that._updateContentElements(true);
+                }
+            },
+            _updateContentElements: function (isInitialUpdate) {
+                var that = this, contentUrls = that._contentUrls, items = that.tabGroup.children('.k-item'), contentElements = that.wrapper.children('div'), _elementId = that._elementId.bind(that);
+                if (contentElements.length && items.length > contentElements.length) {
+                    contentElements.each(function (idx) {
+                        var contentId = _elementId($(this), idx), item = items.filter('[aria-controls=' + (contentId || 0) + ']')[0], tabId;
+                        if (!item && isInitialUpdate) {
+                            item = items[idx];
+                        }
+                        if (item) {
+                            item.setAttribute('aria-controls', contentId);
+                            tabId = item.id = _elementId($(item), idx, true);
+                            this.setAttribute('aria-labelledby', tabId);
+                        }
+                        this.setAttribute('id', contentId);
+                    });
+                } else {
+                    items.each(function (idx) {
+                        var currentContent = contentElements.eq(idx), contentId = _elementId(currentContent, idx), tabId;
+                        this.setAttribute('aria-controls', contentId);
+                        tabId = this.id = _elementId($(this), idx, true);
+                        if (!currentContent.length && contentUrls[idx]) {
+                            $('<div class=\'' + CONTENT + '\'/>').appendTo(that.wrapper).attr('id', contentId);
+                        } else {
+                            currentContent.attr('id', contentId);
+                            if (!$(this).children('.k-loading')[0] && !contentUrls[idx]) {
+                                $('<span class=\'k-loading k-complete\'/>').prependTo(this);
+                            }
+                        }
+                        currentContent.attr('role', 'tabpanel');
+                        currentContent.attr('tabindex', '0');
+                        currentContent.attr('aria-labelledby', tabId);
+                        currentContent.filter(':not(.' + ACTIVESTATE + ')').attr('aria-hidden', true).attr('aria-expanded', false);
+                        currentContent.filter('.' + ACTIVESTATE).attr('aria-expanded', true);
+                    });
+                }
+                that.contentElements = that.contentAnimators = that.wrapper.children('div');
+                that.tabsHeight = outerHeight(that.tabGroup) + parseInt(that.wrapper.css('border-top-width'), 10) + parseInt(that.wrapper.css('border-bottom-width'), 10);
+                if (kendo.kineticScrollNeeded && kendo.mobile.ui.Scroller) {
+                    kendo.touchScroller(that.contentElements);
+                    that.contentElements = that.contentElements.children('.km-scroll-container');
+                }
+            },
+            _wrapper: function () {
+                var that = this;
+                if (that.element.is('ul')) {
+                    that.wrapper = that.element.wrapAll('<div />').parent();
+                } else {
+                    that.wrapper = that.element;
+                }
+                that.scrollWrap = that.wrapper.parent('.k-tabstrip-wrapper');
+                if (!that.scrollWrap[0]) {
+                    that.scrollWrap = that.wrapper.wrapAll('<div class=\'k-tabstrip-wrapper\' />').parent();
+                }
             }
         });
         extend(TabStrip, {

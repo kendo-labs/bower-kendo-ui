@@ -234,6 +234,11 @@
                 that.content = that.element.wrap('<div unselectable=\'on\' class=\'' + CONTENT + '\'></div>').parent();
                 that.wrapper = that.content.wrap('<div class=\'' + WRAPPER + '\'></div>').parent();
                 that.header = that.content.before('<div class=\'' + HEADER + '\'></div>').prev();
+                if (options.ariaLabel) {
+                    this.element.attr('aria-label', options.ariaLabel);
+                } else if (options.ariaLabelledBy) {
+                    this.element.attr('aria-labelledby', options.ariaLabelledBy);
+                }
                 if (options.columns && options.columns.length) {
                     that.element.removeClass(LIST);
                 }
@@ -274,7 +279,9 @@
                 groupTemplate: '#:data#',
                 fixedGroupTemplate: '#:data#',
                 mapValueTo: 'index',
-                valueMapper: null
+                valueMapper: null,
+                ariaLabel: null,
+                ariaLabelledBy: null
             },
             events: [
                 CHANGE,

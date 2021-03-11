@@ -98,8 +98,8 @@
                     wrapper.removeClass(FOCUSED);
                 }).attr({
                     autocomplete: AUTOCOMPLETEVALUE,
-                    role: 'textbox',
-                    'aria-haspopup': true
+                    role: 'combobox',
+                    'aria-expanded': false
                 });
                 that._clear.on('click' + ns + ' touchend' + ns, proxy(that._clearValue, that));
                 that._enable();
@@ -200,6 +200,7 @@
                     current.removeClass(SELECTED);
                 }
                 that.popup.close();
+                that._deactivateItem();
             },
             destroy: function () {
                 var that = this;
@@ -606,7 +607,6 @@
                     wrapper = element.wrap('<span />').parent();
                 }
                 wrapper.attr('tabindex', -1);
-                wrapper.attr('role', 'presentation');
                 wrapper[0].style.cssText = DOMelement.style.cssText;
                 element.css({
                     width: '',
