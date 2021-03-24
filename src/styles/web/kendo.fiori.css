@@ -4270,6 +4270,9 @@ div.k-filebrowser-dropzone em {
   border-left-color: #737373;
   border-right-color: #737373;
 }
+.k-grid-header .k-filter-row .k-grid-header-sticky {
+  background-color: #f2f2f2;
+}
 .k-grid-header-locked,
 .k-grid-content-locked,
 .k-grid-header-locked .k-header,

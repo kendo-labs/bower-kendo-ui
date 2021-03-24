@@ -4457,6 +4457,9 @@ td.k-state-focused.k-state-selected,
   border-left-color: #808080;
   border-right-color: #808080;
 }
+.k-grid-header .k-filter-row .k-grid-header-sticky {
+  background-color: #f5f5f5;
+}
 .k-grid-header-locked,
 .k-grid-content-locked,
 .k-grid-header-locked .k-header,

@@ -403,7 +403,12 @@
                 that.persistTagList = persistTagList;
             },
             _focusHandler: function () {
-                this.input.focus();
+                var input = this.input;
+                var active = activeElement();
+                var isActive = input[0] === active;
+                if (!isActive) {
+                    this.input.focus();
+                }
             },
             _editable: function (options) {
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), tagList = that.tagList.off(ns), input = that.element.add(that.input.off(ns));

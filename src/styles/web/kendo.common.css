@@ -3157,6 +3157,9 @@ html .k-error-colored {
 .k-text-justify {
   text-align: justify;
 }
+script {
+  display: none !important;
+}
 .k-button {
   margin: 0;
   padding: 4px 8px;

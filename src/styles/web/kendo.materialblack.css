@@ -4737,6 +4737,9 @@ table.k-editor {
   border-left-color: #999999;
   border-right-color: #999999;
 }
+.k-grid-header .k-filter-row .k-grid-header-sticky {
+  background-color: #5a5a5a;
+}
 .k-grid-header-locked,
 .k-grid-content-locked,
 .k-grid-header-locked .k-header,

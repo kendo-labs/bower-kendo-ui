@@ -122,6 +122,7 @@
                 format: 'n',
                 spinners: true,
                 placeholder: '',
+                selectOnFocus: false,
                 factor: 1,
                 upArrowText: 'Increase value',
                 downArrowText: 'Decrease value',

@@ -4396,6 +4396,9 @@ input.k-textbox:focus,
   border-left-color: #7d7d7d;
   border-right-color: #7d7d7d;
 }
+.k-grid-header .k-filter-row .k-grid-header-sticky {
+  background-color: #fff;
+}
 .k-grid-header-locked,
 .k-grid-content-locked,
 .k-grid-header-locked .k-header,

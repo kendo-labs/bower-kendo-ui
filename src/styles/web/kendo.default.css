@@ -4175,6 +4175,12 @@ div.k-filebrowser-dropzone em {
   border-left-color: #888888;
   border-right-color: #888888;
 }
+.k-grid-header .k-filter-row .k-grid-header-sticky {
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.25) 0%, rgba(255,255,255,.0) 100%);
+  background-position: 50% 53%;
+  background-color: #eae8e8;
+}
 .k-grid-header-locked,
 .k-grid-content-locked,
 .k-grid-header-locked .k-header,

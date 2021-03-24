@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.1.317'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.1.324'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -29911,7 +29911,12 @@
                 that.persistTagList = persistTagList;
             },
             _focusHandler: function () {
-                this.input.focus();
+                var input = this.input;
+                var active = activeElement();
+                var isActive = input[0] === active;
+                if (!isActive) {
+                    this.input.focus();
+                }
             },
             _editable: function (options) {
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), tagList = that.tagList.off(ns), input = that.element.add(that.input.off(ns));
@@ -33449,6 +33454,7 @@
                 format: 'n',
                 spinners: true,
                 placeholder: '',
+                selectOnFocus: false,
                 factor: 1,
                 upArrowText: 'Increase value',
                 downArrowText: 'Decrease value',

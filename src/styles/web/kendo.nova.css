@@ -4102,6 +4102,9 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
   border-left-color: #949494;
   border-right-color: #949494;
 }
+.k-grid-header .k-filter-row .k-grid-header-sticky {
+  background-color: #fafafa;
+}
 .k-grid-header-locked,
 .k-grid-content-locked,
 .k-grid-header-locked .k-header,
