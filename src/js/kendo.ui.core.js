@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.1.324'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.1.330'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -23690,6 +23690,26 @@
                     footerTemplate = footer;
                 }
                 that.footer = footer !== false ? template(footerTemplate, { useWithBlock: false }) : null;
+            },
+            _updateAria: function (ariaTemplate, date) {
+                var that = this;
+                var cell = that._cell;
+                var valueType = that.view().valueType();
+                var current = date || that.current();
+                var text;
+                if (valueType === 'month') {
+                    text = kendo.toString(current, 'MMMM');
+                } else if (valueType === 'date') {
+                    text = kendo.toString(current, 'D');
+                } else {
+                    text = cell.text();
+                }
+                cell.attr('aria-label', ariaTemplate({
+                    current: current,
+                    valueType: valueType,
+                    text: text
+                }));
+                return cell.attr('id');
             }
         });
         ui.plugin(Calendar);
@@ -23816,6 +23836,9 @@
                     },
                     toDateString: function (date) {
                         return date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate();
+                    },
+                    valueType: function () {
+                        return 'date';
                     }
                 },
                 {
@@ -23877,6 +23900,9 @@
                     },
                     toDateString: function (date) {
                         return date.getFullYear() + '/' + date.getMonth() + '/1';
+                    },
+                    valueType: function () {
+                        return 'month';
                     }
                 },
                 {
@@ -23924,6 +23950,9 @@
                     },
                     toDateString: function (date) {
                         return date.getFullYear() + '/0/1';
+                    },
+                    valueType: function () {
+                        return 'year';
                     }
                 },
                 {
@@ -23984,6 +24013,9 @@
                     toDateString: function (date) {
                         var year = date.getFullYear();
                         return year - year % 10 + '/0/1';
+                    },
+                    valueType: function () {
+                        return 'decade';
                     }
                 }
             ]
@@ -25297,7 +25329,7 @@
                 month: {},
                 dates: [],
                 disableDates: null,
-                ARIATemplate: 'Current focused date is #=kendo.toString(data.current, "D")#',
+                ARIATemplate: 'Current focused #=data.valueType# is #=data.text#',
                 dateInput: false,
                 weekNumber: false,
                 componentType: 'classic'
@@ -25535,7 +25567,7 @@
                 }
             },
             _template: function () {
-                this._ariaTemplate = template(this.options.ARIATemplate);
+                this._ariaTemplate = proxy(template(this.options.ARIATemplate), this);
             },
             _createDateInput: function (options) {
                 if (this._dateInput) {
@@ -25552,16 +25584,13 @@
                 }
             },
             _updateARIA: function (date) {
-                var cell;
                 var that = this;
                 var calendar = that.dateView.calendar;
                 if (that.element && that.element.length) {
                     that.element[0].removeAttribute('aria-activedescendant');
                 }
                 if (calendar) {
-                    cell = calendar._cell;
-                    cell.attr('aria-label', that._ariaTemplate({ current: date || calendar.current() }));
-                    that.element.attr('aria-activedescendant', cell.attr('id'));
+                    that.element.attr('aria-activedescendant', calendar._updateAria(that._ariaTemplate, date));
                 }
             }
         });
@@ -43745,7 +43774,7 @@
                 depth: MONTH,
                 animation: {},
                 month: {},
-                ARIATemplate: 'Current focused date is #=kendo.toString(data.current, "d")#',
+                ARIATemplate: 'Current focused #=data.valueType# is #=data.text#',
                 dateButtonText: 'Open the date view',
                 timeButtonText: 'Open the time view',
                 dateInput: false,
@@ -44332,7 +44361,7 @@
                 }
             },
             _template: function () {
-                this._ariaTemplate = kendo.template(this.options.ARIATemplate);
+                this._ariaTemplate = $.proxy(kendo.template(this.options.ARIATemplate), this);
             },
             _createDateInput: function (options) {
                 if (this._dateInput) {
@@ -44353,16 +44382,13 @@
                 return getMilliseconds(min) + getMilliseconds(max) === 0;
             },
             _updateARIA: function (date) {
-                var cell;
                 var that = this;
                 var calendar = that.dateView.calendar;
                 if (that.element && that.element.length) {
                     that.element[0].removeAttribute(ARIA_ACTIVEDESCENDANT);
                 }
                 if (calendar) {
-                    cell = calendar._cell;
-                    cell.attr('aria-label', that._ariaTemplate({ current: date || calendar.current() }));
-                    that.element.attr(ARIA_ACTIVEDESCENDANT, cell.attr('id'));
+                    that.element.attr(ARIA_ACTIVEDESCENDANT, calendar._updateAria(that._ariaTemplate, date));
                 }
             },
             _popup: function () {
