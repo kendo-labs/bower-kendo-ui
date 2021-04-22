@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.1.407'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.1.422'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -19228,7 +19228,11 @@
                 that.arrow.removeClass('k-callout-n k-callout-s k-callout-w k-callout-e').addClass('k-callout-' + cssClass).css(offset, offsetAmount);
             },
             _removeDescribedBy: function (target) {
-                var tooltipId = this.popup.element.attr('id'), arrayAttr = target.attr(DESCRIBEDBY).split(' '), finalArray, finalDescribedbyAttr;
+                var tooltipId = this.popup.element.attr('id'), currentDescribedBy = target.attr(DESCRIBEDBY), arrayAttr, finalArray, finalDescribedbyAttr;
+                if (!currentDescribedBy) {
+                    return;
+                }
+                arrayAttr = currentDescribedBy.split(' ');
                 if (arrayAttr && arrayAttr.length > 0) {
                     finalArray = arrayAttr.filter(function (val) {
                         return val !== tooltipId;
