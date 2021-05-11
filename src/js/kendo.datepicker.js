@@ -265,6 +265,7 @@
                 element.addClass('k-input').attr({
                     role: 'combobox',
                     'aria-expanded': false,
+                    'aria-haspopup': 'grid',
                     'aria-owns': that.dateView._dateViewID,
                     'autocomplete': 'off'
                 });

@@ -148,7 +148,8 @@
                         duration: 100,
                         hide: true
                     }
-                }
+                },
+                omitOriginOffsets: false
             },
             _animationClose: function () {
                 var that = this;
@@ -483,7 +484,7 @@
                 return location.left != flipPos.left || location.top != flipPos.top;
             },
             _align: function (origin, position) {
-                var that = this, element = that.wrapper, anchor = $(that.options.anchor), verticalOrigin = origin[0], horizontalOrigin = origin[1], verticalPosition = position[0], horizontalPosition = position[1], anchorOffset = getOffset(anchor), appendTo = $(that.options.appendTo), appendToOffset, width = outerWidth(element), height = outerHeight(element) || outerHeight(element.children().first()), anchorWidth = outerWidth(anchor), anchorHeight = outerHeight(anchor), top = anchorOffset.top, left = anchorOffset.left, round = Math.round;
+                var that = this, element = that.wrapper, anchor = $(that.options.anchor), verticalOrigin = origin[0], horizontalOrigin = origin[1], verticalPosition = position[0], horizontalPosition = position[1], anchorOffset = getOffset(anchor), appendTo = $(that.options.appendTo), appendToOffset, width = outerWidth(element), height = outerHeight(element) || outerHeight(element.children().first()), anchorWidth = outerWidth(anchor), anchorHeight = outerHeight(anchor), top = that.options.omitOriginOffsets ? 0 : anchorOffset.top, left = that.options.omitOriginOffsets ? 0 : anchorOffset.left, round = Math.round;
                 if (appendTo[0] != document.body) {
                     appendToOffset = getOffset(appendTo);
                     top -= appendToOffset.top;

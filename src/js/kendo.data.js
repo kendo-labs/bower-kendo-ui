@@ -1766,7 +1766,7 @@
             var currentNew;
             if (newGroup.items && newGroup.items.length) {
                 for (var i = 0; i < newGroup.items.length; i++) {
-                    currOriginal = originalGroup.items[i];
+                    currOriginal = originalGroup.items[originalGroup.items.length - 1];
                     currentNew = newGroup.items[i];
                     if (currOriginal && currentNew) {
                         if (currOriginal.hasSubgroups && currOriginal.value == currentNew.value) {

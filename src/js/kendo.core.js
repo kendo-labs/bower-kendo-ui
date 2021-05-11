@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.1.422'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.2.511'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1469,7 +1469,7 @@
                 return true;
             }
             var overflow = getComputedStyles(element, ['overflow']).overflow;
-            return overflow == 'auto' || overflow == 'scroll';
+            return overflow.indexOf('auto') > -1 || overflow.indexOf('scroll') > -1;
         }
         function scrollLeft(element, value) {
             var webkit = support.browser.webkit;
@@ -3112,6 +3112,12 @@
                 }
                 return last;
             }
+            function firstDayOfYear(date) {
+                return new Date(date.getFullYear(), 0, 1);
+            }
+            function lastDayOfYear(date) {
+                return new Date(date.getFullYear(), 11, 31);
+            }
             function moveDateToWeekStart(date, weekStartDay) {
                 if (weekStartDay !== 1) {
                     return addDays(dayOfWeek(date, weekStartDay, -1), 4);
@@ -3210,6 +3216,10 @@
                 }
                 return staticDate;
             }
+            function addYear(date, offset) {
+                var currentDate = new Date(date);
+                return new Date(currentDate.setFullYear(currentDate.getFullYear() + offset));
+            }
             return {
                 adjustDST: adjustDST,
                 dayOfWeek: dayOfWeek,
@@ -3236,7 +3246,15 @@
                 firstDayOfMonth: firstDayOfMonth,
                 lastDayOfMonth: lastDayOfMonth,
                 weekInYear: weekInYear,
-                getMilliseconds: getMilliseconds
+                getMilliseconds: getMilliseconds,
+                firstDayOfYear: firstDayOfYear,
+                lastDayOfYear: lastDayOfYear,
+                nextYear: function (date) {
+                    return addYear(date, 1);
+                },
+                previousYear: function (date) {
+                    return addYear(date, -1);
+                }
             };
         }();
         kendo.stripWhitespace = function (element) {

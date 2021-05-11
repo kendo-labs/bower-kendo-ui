@@ -957,10 +957,110 @@
 @fab-item-disabled-shadow: @fab-disabled-shadow;
 
 
+// ActionSheet
+@actionsheet-padding-x: null;
+@actionsheet-padding-y: null;
+@actionsheet-bg: @component-bg;
+@actionsheet-text: @component-text;
+@actionsheet-border: @component-border;
+@actionsheet-shadow: 0 8px 10px -5px rgba(0, 0, 0, .2), 0 16px 24px 2px rgba(0, 0, 0, .14), 0 6px 30px 5px rgba(0, 0, 0, .12);
+
+@actionsheet-border-width: 0px;
+@actionsheet-border-radius: 0px;
+
+// Action sheet header
+@actionsheet-header-bg: null;
+@actionsheet-header-text: null;
+@actionsheet-header-border: null;
+@actionsheet-header-gradient: null;
+@actionsheet-header-shadow: null;
+
+// Action sheet item
+@actionsheet-item-hover-bg: @hover-background;
+@actionsheet-item-hover-text: null;
+@actionsheet-item-hover-border: null;
+@actionsheet-item-hover-gradient: null;
+@actionsheet-item-hover-shadow: null;
+
+@actionsheet-item-focus-bg: null;
+@actionsheet-item-focus-text: null;
+@actionsheet-item-focus-border: null;
+@actionsheet-item-focus-gradient: null;
+@actionsheet-item-focus-shadow: @focused-shadow;
+
+@actionsheet-item-disabled-bg: null;
+@actionsheet-item-disabled-text: null;
+@actionsheet-item-disabled-border: null;
+@actionsheet-item-disabled-gradient: null;
+@actionsheet-item-disabled-shadow: null;
+
+
 // BottomNavigation
 @bottom-nav-flat-bg: @background;
 @bottom-nav-flat-text: @component-text;
 @bottom-nav-flat-border: @component-border;
+
+
+// TaskBoard
+@taskboard-bg: null;
+@taskboard-text: null;
+@taskboard-border: null;
+
+@taskboard-toolbar-bg: null;
+@taskboard-toolbar-text: null;
+@taskboard-toolbar-border: null;
+
+@taskboard-column-bg: darken(@background, 3%);
+@taskboard-column-text: null;
+@taskboard-column-border: transparent;
+
+@taskboard-column-focus-bg: null;
+@taskboard-column-focus-text: null;
+@taskboard-column-focus-border: shade( @component-border, 20% );
+
+@taskboard-column-header-text: @component-text;
+
+@taskboard-pane-bg: @component-bg;
+@taskboard-pane-text: @component-text;
+@taskboard-pane-border: @component-border;
+
+@taskboard-card-bg: @card-bg;
+@taskboard-card-text: @card-text;
+@taskboard-card-border: @card-border;
+
+@taskboard-card-header-bg: @taskboard-card-bg;
+@taskboard-card-header-text: null;
+@taskboard-card-header-border: null;
+
+@taskboard-card-title-text: @card-primary-text;
+@taskboard-card-title-focus-text: darken( @card-primary-text, 13% );
+@taskboard-card-title-hover-text: lighten( @card-primary-text, 13% );
+
+@taskboard-card-footer-bg: @taskboard-card-bg;
+@taskboard-card-footer-text: null;
+@taskboard-card-footer-border: null;
+
+@taskboard-card-focus-border: shade( @taskboard-card-border, 18% );
+@taskboard-card-hover-border: shade( @taskboard-card-border, 10% );
+
+@taskboard-card-selected-text: darken( @taskboard-card-text, 15% );
+@taskboard-card-selected-bg: @taskboard-card-bg;
+@taskboard-card-selected-border: darken( @card-primary-text, 15% );
+
+@taskboard-drag-placeholder-bg: rgba(255, 255, 255, .2);
+@taskboard-drag-placeholder-border: @component-border;
+
+
+// Scheduler
+@scheduler-yearview-calendar-bg: @scheduler-background-color;
+
+@scheduler-yearview-month-header-text: @component-text;
+
+@scheduler-yearview-indicator-bg: @selected-text-color;
+@scheduler-yearview-indicator-selected-bg: contrast(@selected-text-color);
+
+@scheduler-tooltip-bg: null;
+@scheduler-tooltip-day-text: @link-text-color;
 
 
 // Kendo skin
@@ -1007,7 +1107,12 @@
 @import "Default/imageeditor/_theme.less";
 @import "Default/expansion-panel/_theme.less";
 @import "Default/floatingactionbutton/_theme.less";
+@import "Default/action-sheet/_theme.less";
 @import "Default/bottom-navigation/_theme.less";
+@import "Default/searchbox/_theme.less";
+@import "Default/skeleton/_theme.less";
+@import "Default/taskboard/_theme.less";
+@import "Default/scheduler/_theme.less";
 
 
 .k-in,
@@ -2822,7 +2927,6 @@ input.k-textbox:focus,
 
 .k-chart .k-mask {
     background-color: #fff;
-    filter: alpha(opacity=68);
     opacity: 0.68;
 }
 
@@ -3266,4 +3370,9 @@ input.k-textbox:focus,
 .k-grid-content-locked td {
     border-left-color: @grid-sticky-border;
     border-right-color: @grid-sticky-border;
+}
+
+// Grid Multi Filter Select All Checkbox
+.k-check-all-wrap {
+    border-color: @widget-border-color;
 }

@@ -454,10 +454,12 @@
                     var initialCssWidth = that.element[0].style.width;
                     initialCssWidth = initialCssWidth === 'auto' ? '' : initialCssWidth;
                     if (isHorizontal) {
-                        $(window).on(RESIZE, kendo.throttle(function () {
-                            that._setOverflowWrapperWidth(initialWidth, initialCssWidth);
-                            that._toggleScrollButtons(that.element, backwardBtn, forwardBtn, isHorizontal);
-                        }, 100));
+                        $(window).on(RESIZE, function () {
+                            setTimeout(function () {
+                                that._setOverflowWrapperWidth(initialWidth, initialCssWidth);
+                                that._toggleScrollButtons(that.element, backwardBtn, forwardBtn, isHorizontal);
+                            }, 300);
+                        });
                     }
                     that._setOverflowWrapperWidth(initialWidth, initialCssWidth);
                     that._toggleScrollButtons(that.element, backwardBtn, forwardBtn, isHorizontal);

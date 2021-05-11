@@ -106,6 +106,7 @@
                     return { elements: that._text.get() };
                 });
                 that._label();
+                that._ariaLabel();
                 kendo.notify(that);
             },
             options: {
@@ -358,7 +359,7 @@
                 var that = this, options = that.options, CLASSNAME = 'k-formatted-value', element = that.element.addClass(INPUT).show()[0], accessKey = element.accessKey, wrapper = that.wrapper, text;
                 text = wrapper.find(POINT + CLASSNAME);
                 if (!text[0]) {
-                    text = $('<input type="text"/>').insertBefore(element).addClass(CLASSNAME).attr('aria-hidden', 'true');
+                    text = $('<input type="text"/>').insertBefore(element).addClass(CLASSNAME);
                 }
                 try {
                     element.setAttribute('type', 'text');
@@ -496,6 +497,30 @@
                 element.add(that._text).attr('aria-value' + option, value);
                 element.attr(option, value);
             },
+            _ariaLabel: function () {
+                var that = this;
+                var text = that._text;
+                var inputElm = that.element;
+                var id = inputElm.attr('id');
+                var labelElm = $('label[for=\'' + id + '\']');
+                var ariaLabel = inputElm.attr('aria-label');
+                var ariaLabelledBy = inputElm.attr('aria-labelledby');
+                var labelId;
+                if (ariaLabel) {
+                    text.attr('aria-label', ariaLabel);
+                } else if (ariaLabelledBy) {
+                    text.attr('aria-labelledby', ariaLabelledBy);
+                } else if (labelElm.length) {
+                    labelId = labelElm.attr('id');
+                    if (labelId) {
+                        text.attr('aria-labelledby', labelId);
+                    } else {
+                        labelId = kendo.guid();
+                        labelElm.attr('id', labelId);
+                        text.attr('aria-labelledby', labelId);
+                    }
+                }
+            },
             _spin: function (step, timeout) {
                 var that = this;
                 timeout = timeout || 500;
@@ -527,6 +552,11 @@
             _toggleText: function (toggle) {
                 var that = this;
                 that._text.toggle(toggle);
+                if (toggle) {
+                    that._text.removeAttr('aria-hidden');
+                } else {
+                    that._text.attr('aria-hidden', 'true');
+                }
                 that.element.toggle(!toggle);
             },
             _parse: function (value, culture) {
