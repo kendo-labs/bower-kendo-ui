@@ -246,9 +246,6 @@
   left: auto;
   right: 0;
 }
-.k-webkit .k-rtl .k-dirty {
-  margin: -0.4em 0.7em 0 0;
-}
 .k-rtl .k-gantt .k-grid-header .k-header {
   text-align: center;
 }

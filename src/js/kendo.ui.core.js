@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.2.511'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.2.519'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -33488,12 +33488,10 @@
                     that._text.on(TOUCHEND + ns + ' ' + FOCUS + ns, function () {
                         if (kendo.support.browser.edge) {
                             that._text.one(FOCUS + ns, function () {
-                                that._toggleText(false);
-                                element.focus();
+                                that._focusin();
                             });
                         } else {
-                            that._toggleText(false);
-                            element.focus();
+                            that._focusin();
                         }
                         that.selectValue();
                     });
@@ -33723,7 +33721,7 @@
                     this.element[0].select();
                 }
             },
-            _change: function (value) {
+            _getFactorValue: function (value) {
                 var that = this, factor = that.options.factor;
                 if (factor && factor !== 1) {
                     value = kendo.parseFloat(value);
@@ -33731,6 +33729,11 @@
                         value = value / factor;
                     }
                 }
+                return value;
+            },
+            _change: function (value) {
+                var that = this;
+                value = that._getFactorValue(value);
                 that._update(value);
                 value = that._value;
                 if (that._old != value) {
@@ -33829,6 +33832,9 @@
                     this.element.val(value);
                     this._numPadDot = false;
                 }
+                if (this._isPasted) {
+                    value = this._parse(value).toString().replace(POINT, numberFormat[POINT]);
+                }
                 if (this._numericRegex(numberFormat).test(value) && !minInvalid) {
                     this._oldText = value;
                 } else {
@@ -33839,6 +33845,7 @@
                         this._cachedCaret = null;
                     }
                 }
+                this._isPasted = false;
             },
             _blinkInvalidState: function () {
                 var that = this;
@@ -33885,6 +33892,7 @@
                 var element = e.target;
                 var value = element.value;
                 var numberFormat = that._format(that.options.format);
+                that._isPasted = true;
                 setTimeout(function () {
                     var result = that._parse(element.value);
                     if (result === NULL) {
@@ -33892,6 +33900,7 @@
                     } else {
                         element.value = result.toString().replace(POINT, numberFormat[POINT]);
                         if (that._adjust(result) !== result || !that._numericRegex(numberFormat).test(element.value)) {
+                            value = that._getFactorValue(element.value);
                             that._update(value);
                         }
                     }
