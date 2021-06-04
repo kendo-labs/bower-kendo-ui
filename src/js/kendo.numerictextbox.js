@@ -41,7 +41,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', CLASS_ICON = 'k-icon', LABELCLASSES = 'k-label k-input-label', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', STATE_INVALID = 'k-state-invalid', ARIA_DISABLED = 'aria-disabled', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, isPlainObject = $.isPlainObject, extend = $.extend;
+        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', SYMBOL = 'symbol', CLASS_ICON = 'k-icon', LABELCLASSES = 'k-label k-input-label', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', STATE_INVALID = 'k-state-invalid', ARIA_DISABLED = 'aria-disabled', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, isPlainObject = $.isPlainObject, extend = $.extend;
         var NumericTextBox = Widget.extend({
             init: function (element, options) {
                 var that = this, isStep = options && options.step !== undefined, min, max, step, value, disabled;
@@ -287,7 +287,7 @@
                     var input = e.target, idx = caret(input)[0], value = input.value.substring(0, idx), format = that._format(that.options.format), group = format[','], result, groupRegExp, extractRegExp, caretPosition = 0;
                     if (group) {
                         groupRegExp = new RegExp('\\' + group, 'g');
-                        extractRegExp = new RegExp('(^(-)$)|(^(-)?([\\d\\' + group + ']+)(\\' + format[POINT] + ')?(\\d+)?)');
+                        extractRegExp = new RegExp('(-)?(' + format[SYMBOL] + ')?([\\d\\' + group + ']+)(\\' + format[POINT] + ')?(\\d+)?');
                     }
                     if (extractRegExp) {
                         result = extractRegExp.exec(value);
@@ -669,7 +669,7 @@
         });
         function buttonHtml(direction, text) {
             var className = 'k-i-arrow-' + (direction === 'increase' ? '60-up' : '60-down');
-            return '<span unselectable="on" class="k-link k-link-' + direction + '" aria-label="' + text + '" title="' + text + '">' + '<span unselectable="on" class="' + CLASS_ICON + ' ' + className + '"></span>' + '</span>';
+            return '<span role="button" unselectable="on" class="k-link k-link-' + direction + '" aria-label="' + text + '" title="' + text + '">' + '<span unselectable="on" class="' + CLASS_ICON + ' ' + className + '"></span>' + '</span>';
         }
         function truncate(value, precision) {
             var parts = parseFloat(value, 10).toString().split(POINT);

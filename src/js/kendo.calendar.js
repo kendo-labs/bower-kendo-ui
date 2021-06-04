@@ -79,15 +79,12 @@
                 }).on('mouseup' + ns, 'table.k-content, .k-footer', function () {
                     that._focusView(that.options.focusOnNav !== false);
                 }).attr(ID);
-                if (id) {
-                    that._cellID = id + '_cell_selected';
-                }
                 if (that._isMultipleSelection() && that.options.weekNumber) {
                     element.on(CLICK, WEEKCOLUMNSELECTOR, function (e) {
                         var first = $(e.currentTarget).closest('tr').find(CELLSELECTORVALID).first(), last = that.selectable._lastActive = $(e.currentTarget).closest('tr').find(CELLSELECTORVALID).last();
                         that.selectable.selectRange(first, last, { event: e });
                         that._current = that._value = toDateObject(last.find('a'));
-                        that._class(FOCUSED, that._current);
+                        that._setCurrent(that._current);
                     });
                 }
                 normalize(options);
@@ -105,7 +102,9 @@
                 };
                 that._removeClassProxy = function () {
                     that._active = false;
-                    that._cell.removeClass(FOCUSED);
+                    if (that._cell) {
+                        that._cell.removeClass(FOCUSED);
+                    }
                 };
                 that.value(value);
                 if (that._isMultipleSelection() && options.selectDates.length > 0) {
@@ -312,10 +311,10 @@
                 }
                 if (that.options.selectable === 'single') {
                     if (view === views[options.depth] && that._value && !that.options.disableDates(that._value)) {
-                        that._class('k-state-selected', that._value);
+                        that._selectCell(that._value);
                     }
                 }
-                that._class(FOCUSED, value);
+                that._setCurrent(value);
                 if (!from && that._cell) {
                     that._cell.removeClass(FOCUSED);
                 }
@@ -419,7 +418,7 @@
                 var that = this;
                 if (that.selectable.options.multiple && target.is(CELLSELECTORVALID)) {
                     that._current = toDateObject(target.find('a'));
-                    that._class(FOCUSED, toDateObject(target.find('a')));
+                    that._setCurrent(that._current);
                 }
             },
             _onSelect: function (e) {
@@ -559,7 +558,7 @@
                     } else if ((key == keys.ENTER || key == keys.SPACEBAR) && that._isMultipleSelection()) {
                         that._keyboardToggleSelection(e);
                         var focusedDate = toDateObject($(that._cell[0]).find('a'));
-                        that._class(FOCUSED, focusedDate);
+                        that._setCurrent(focusedDate);
                     }
                 } else if (e.shiftKey) {
                     if (value !== undefined || method) {
@@ -612,7 +611,7 @@
                                 that.navigate(currentValue);
                             } else {
                                 that._current = currentValue;
-                                that._class(FOCUSED, currentValue);
+                                that._setCurrent(currentValue);
                             }
                         } else {
                             that._focus(currentValue);
@@ -638,7 +637,7 @@
                     return;
                 }
                 that.selectable.options.filter = that.wrapper.find('table').length > 1 && +currentValue > +that._current ? 'table.k-month:eq(1) ' + CELLSELECTORVALID : 'table.k-month:eq(0) ' + CELLSELECTORVALID;
-                that._class(FOCUSED, currentValue);
+                that._setCurrent(currentValue);
                 that._current = currentValue;
                 that._rangeSelection(that._cellByDate(that._view.toDateString(currentValue), CELLSELECTORVALID), currentValue);
                 that.trigger(CHANGE);
@@ -747,27 +746,27 @@
                     return $(this.firstChild).attr(kendo.attr(VALUE)) === value;
                 });
             },
-            _class: function (className, date) {
-                var that = this, id = that._cellID, cell = that._cell, value = that._view.toDateString(date), disabledDate;
-                if (cell && cell.length) {
+            _selectCell: function (date) {
+                var that = this, cell = that._selectedCell, value = that._view.toDateString(date);
+                if (cell && cell[0]) {
                     cell[0].removeAttribute(ARIA_SELECTED);
+                    cell.removeClass(SELECTED);
+                }
+                cell = that._cellByDate(value, that.options.selectable == 'multiple' ? CELLSELECTOR : 'td:not(.' + OTHERMONTH + ')');
+                that._selectedCell = cell;
+                cell.addClass(SELECTED).attr(ARIA_SELECTED, true);
+            },
+            _setCurrent: function (date) {
+                var that = this, id = kendo.guid(), cell = that._cell, value = that._view.toDateString(date);
+                if (cell && cell[0]) {
+                    cell.removeClass(FOCUSED);
                     cell[0].removeAttribute(ARIA_LABEL);
                     cell[0].removeAttribute(ID);
                 }
-                if (date && that._view.name == 'month') {
-                    disabledDate = that.options.disableDates(date);
-                }
-                that._cellsBySelector(that._isMultipleSelection() ? CELLSELECTOR : 'td:not(.' + OTHERMONTH + ')').removeClass(className);
-                cell = that._cellByDate(value, that.options.selectable == 'multiple' ? CELLSELECTOR : 'td:not(.' + OTHERMONTH + ')').attr(ARIA_SELECTED, true);
-                if (className === FOCUSED && !that._active && that.options.focusOnNav !== false || disabledDate) {
-                    className = '';
-                }
-                cell.addClass(className);
-                if (cell[0]) {
-                    that._cell = cell;
-                }
-                if (id) {
-                    cell.attr(ID, id);
+                cell = that._cellByDate(value, that.options.selectable == 'multiple' ? CELLSELECTOR : 'td:not(.' + OTHERMONTH + ')');
+                that._cell = cell;
+                cell.attr(ID, id).addClass(FOCUSED);
+                if (that._table[0]) {
                     that._table[0].removeAttribute('aria-activedescendant');
                     that._table.attr('aria-activedescendant', id);
                 }
@@ -790,7 +789,7 @@
                     that.navigate(value);
                 } else {
                     that._current = value;
-                    that._class(FOCUSED, value);
+                    that._setCurrent(value);
                 }
             },
             _focusView: function (active, table) {

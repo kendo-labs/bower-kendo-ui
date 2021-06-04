@@ -8137,7 +8137,7 @@ div.k-dropdowngrid-popup .k-group-header {
       align-items: center;
   -ms-flex-negative: 0;
       flex-shrink: 0;
-  height: 1.4285714285714286 * 1em + (4px * 2);
+  height: calc(1.4285714286em + 8px);
 }
 .k-input-prefix > *,
 .k-input-suffix > * {

@@ -89,6 +89,7 @@
         var TRANSFER_ALL_FROM = 'transferAllFrom';
         var DRAGGEDCLASS = 'k-ghost';
         var UNIQUE_ID = 'uid';
+        var ID = 'id';
         var TABINDEX = 'tabindex';
         var COMMAND = 'command';
         var MOVE_UP_OFFSET = -1;
@@ -127,6 +128,7 @@
                 Widget.fn.init.call(that, element, options);
                 that._wrapper();
                 that._list();
+                that._ariaLabel();
                 element = that.element.attr('multiple', 'multiple').hide();
                 if (element[0] && !that.options.dataSource) {
                     that.options.dataTextField = that.options.dataTextField || 'text';
@@ -219,11 +221,12 @@
             },
             _addItem: function (dataItem, list) {
                 var that = this;
-                var item = that.templates.itemTemplate({
+                var item = $(that.templates.itemTemplate({
                     item: dataItem,
                     r: that.templates.itemContent
-                });
-                $(item).attr(kendoAttr(UNIQUE_ID), dataItem.uid).appendTo(list);
+                }));
+                that._setItemId(item, dataItem.uid);
+                item.appendTo(list);
                 if (typeof dataItem === typeof '') {
                     that.dataSource._data.push(dataItem);
                 } else {
@@ -232,16 +235,17 @@
             },
             _addItemAt: function (dataItem, index) {
                 var that = this;
-                var item = that.templates.itemTemplate({
+                var item = $(that.templates.itemTemplate({
                     item: dataItem,
                     r: that.templates.itemContent
-                });
+                }));
                 that._unbindDataSource();
                 if (typeof dataItem === typeof '') {
                     that._insertElementAt(item, index);
                     that.dataSource._data.push(dataItem);
                 } else {
-                    that._insertElementAt($(item).attr(kendoAttr(UNIQUE_ID), dataItem.uid), index);
+                    that._setItemId(item, dataItem.uid);
+                    that._insertElementAt(item, index);
                     that.dataSource.add(dataItem);
                 }
                 that._bindDataSource();
@@ -291,7 +295,7 @@
                 }
                 that._target = target;
                 target.addClass(FOCUSED_CLASS);
-                that._getList().attr('aria-activedescendant', target.attr('id'));
+                that._getList().attr('aria-activedescendant', target.attr(ID));
                 if (that._getList()[0] !== kendo._activeElement() && !isInput) {
                     that.focus();
                 }
@@ -383,7 +387,7 @@
                     if (that._target) {
                         that._target.addClass(FOCUSED_CLASS);
                         that._scrollIntoView(that._target);
-                        that._getList().attr('aria-activedescendant', that._target.attr('id'));
+                        that._getList().attr('aria-activedescendant', that._target.attr(ID));
                     } else {
                         that._getList().removeAttr('aria-activedescendant');
                     }
@@ -859,6 +863,30 @@
                     that._getList().attr(TABINDEX, that._getTabIndex());
                 }
             },
+            _ariaLabel: function () {
+                var that = this;
+                var inputElm = that.element;
+                var ul = that._getList();
+                var id = inputElm.attr('id');
+                var labelElm = $('label[for=\'' + id + '\']');
+                var ariaLabel = inputElm.attr('aria-label');
+                var ariaLabelledBy = inputElm.attr('aria-labelledby');
+                var labelId;
+                if (ariaLabel) {
+                    ul.attr('aria-label', ariaLabel);
+                } else if (ariaLabelledBy) {
+                    ul.attr('aria-labelledby', ariaLabelledBy);
+                } else if (labelElm.length) {
+                    labelId = labelElm.attr('id');
+                    if (labelId) {
+                        ul.attr('aria-labelledby', labelId);
+                    } else {
+                        labelId = kendo.guid();
+                        labelElm.attr('id', labelId);
+                        ul.attr('aria-labelledby', labelId);
+                    }
+                }
+            },
             _templates: function () {
                 var that = this;
                 var options = this.options;
@@ -918,6 +946,12 @@
                 }
                 return option += '</option>';
             },
+            _setItemId: function (item, id) {
+                if (!item.length) {
+                    return;
+                }
+                item.attr(kendoAttr(UNIQUE_ID), id).attr(ID, id);
+            },
             _setItemIds: function () {
                 var that = this;
                 var items = that.items();
@@ -925,7 +959,7 @@
                 var viewLength = view.length;
                 var i;
                 for (i = 0; i < viewLength; i++) {
-                    items.eq(i).attr(kendoAttr(UNIQUE_ID), view[i].uid).attr('id', view[i].uid);
+                    that._setItemId(items.eq(i), view[i].uid);
                 }
             },
             _selectable: function () {

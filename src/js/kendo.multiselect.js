@@ -450,7 +450,7 @@
             open: function () {
                 var that = this, filterValue = that.input.val().toLowerCase(), listViewFilter = that.listView.dataSource.filter(), listViewFilterValue;
                 if (listViewFilter && listViewFilter.filters.length > 0) {
-                    listViewFilterValue = listViewFilter.filters[0].value.toLowerCase();
+                    listViewFilterValue = listViewFilter.filters[0].value.toString().toLowerCase();
                 }
                 if (that._request) {
                     that._retrieveData = false;

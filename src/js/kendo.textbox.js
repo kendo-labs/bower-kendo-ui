@@ -106,7 +106,21 @@
                     that.floatingLabel.destroy();
                 }
                 that.element.off(NS);
+                that.element[0].style.width = '';
+                that.element.removeClass(INPUT);
                 Widget.fn.destroy.call(that);
+            },
+            setOptions: function (options) {
+                this.destroy();
+                this.element.unwrap();
+                if (this._floatingLabelContainer) {
+                    this._inputLabel.remove();
+                    this._inputLabel = null;
+                    this.element.unwrap();
+                    this._floatingLabelContainer = null;
+                }
+                kendo.deepExtend(this.options, options);
+                this.init(this.element, this.options);
             },
             _editable: function (options) {
                 var that = this;
@@ -161,6 +175,9 @@
                 var value = that._value;
                 var newValue = that.element.val();
                 that.wrapper.removeClass(FOCUSED);
+                if (value === null) {
+                    value = '';
+                }
                 if (value !== newValue) {
                     that._value = newValue;
                     that.trigger(CHANGE);

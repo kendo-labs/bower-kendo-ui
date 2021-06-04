@@ -43,7 +43,7 @@
         var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, isArray = $.isArray, HierarchicalDataSource = kendo.data.HierarchicalDataSource, MOUSEDOWN = 'mousedown', CLICK = 'click', DELAY = 30, SCROLLSPEED = 50, extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link k-menu-link', LINK_SELECTOR = '.k-link', ICON_SELECTOR = '.k-menu-expand-arrow', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, CHANGE = 'change', ERROR = 'error', TOUCHSTART = kendo.support.touch ? 'touchstart' : '', MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', MOUSEWHEEL = 'DOMMouseScroll' + NS + ' mousewheel' + NS, RESIZE = kendo.support.resize + NS, SCROLLWIDTH = 'scrollWidth', SCROLLHEIGHT = 'scrollHeight', OFFSETWIDTH = 'offsetWidth', OFFSETHEIGHT = 'offsetHeight', POPUP_ID_ATTR = 'group', POPUP_OPENER_ATTR = 'groupparent', DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', animationContainerSelector = '.k-animation-container', popupSelector = groupSelector + ',' + animationContainerSelector, allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item', availableItemsSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = itemSelector + exclusionSelector + ':eq(0)', lastSelector = itemSelector + exclusionSelector + ':last', templateSelector = 'div:not(.k-animation-container,.k-list-container)', scrollButtonSelector = '.k-menu-scroll-button', touchPointerTypes = {
                 '2': 1,
                 'touch': 1
-            }, STRING = 'string', DATABOUND = 'dataBound', bindings = {
+            }, STRING = 'string', DATABOUND = 'dataBound', ARIA_EXPANDED = 'aria-expanded', bindings = {
                 text: 'dataTextField',
                 url: 'dataUrlField',
                 spriteCssClass: 'dataSpriteCssClassField',
@@ -877,6 +877,7 @@
                                 popup.options.animation.open.effects = openEffects;
                             }
                             ul.removeAttr('aria-hidden');
+                            li.attr(ARIA_EXPANDED, true);
                             that._configurePopupOverflow(popup, li);
                             popup._hovered = true;
                             popup.open();
@@ -995,6 +996,7 @@
                 };
                 items.each(function () {
                     var li = $(this);
+                    li.attr(ARIA_EXPANDED, false);
                     if (!dontClearClose && that._isRootItem(li)) {
                         that.clicked = false;
                     }
@@ -1070,9 +1072,15 @@
                 var element = this.element, nonContentGroupsSelector = '.k-menu-init div ul', items;
                 element.removeClass('k-menu-horizontal k-menu-vertical');
                 element.addClass('k-widget k-reset k-header k-menu-init ' + MENU).addClass(MENU + '-' + this.options.orientation);
+                if (this.options.orientation === 'vertical') {
+                    element.attr('aria-orientation', 'vertical');
+                } else {
+                    element.attr('aria-orientation', 'horizontal');
+                }
                 element.find('li > ul').filter(function () {
                     return !kendo.support.matchesSelector.call(this, nonContentGroupsSelector);
                 }).addClass('k-group k-menu-group').attr('role', 'menu').attr('aria-hidden', element.is(':visible')).parent('li').attr('aria-haspopup', 'true').end().find('li > div').addClass('k-content').attr('tabindex', '-1');
+                element.find('li[aria-haspopup]').attr(ARIA_EXPANDED, false);
                 items = element.find('> li,.k-menu-group > li');
                 element.removeClass('k-menu-init');
                 items.each(function () {
@@ -1381,7 +1389,7 @@
                             that.open(hoverItem);
                             that._moveHover(hoverItem, that._childPopupElement(hoverItem).children().first());
                         } else {
-                            that._moveHover(hoverItem, that._findRootParent(hoverItem));
+                            that._moveHoverToRoot(hoverItem, that._findRootParent(hoverItem));
                         }
                     }
                 } else if (key == keys.TAB) {
@@ -1430,6 +1438,9 @@
                     }
                     that._scrollToItem(nextItem);
                 }
+            },
+            _moveHoverToRoot: function (item, nextItem) {
+                this._moveHover(item, nextItem);
             },
             _findRootParent: function (item) {
                 if (this._isRootItem(item)) {
@@ -1747,7 +1758,7 @@
                     content: template('#var contentHtml = ' + fieldAccessor('content') + '(item);#' + '<div #= contentCssAttributes(item.toJSON ? item.toJSON() : item) # tabindex=\'-1\'>#= contentHtml || \'\' #</div>'),
                     group: template('<ul class=\'#= groupCssClass(group) #\'#= groupAttributes(group) # role=\'menu\' aria-hidden=\'true\'>' + '#= renderItems(data) #' + '</ul>'),
                     itemWrapper: template('# var url = ' + fieldAccessor('url') + '(item); #' + '# var imageUrl = ' + fieldAccessor('imageUrl') + '(item); #' + '# var imgAttributes = ' + fieldAccessor('imageAttr') + '(item);#' + '# var tag = url ? \'a\' : \'span\' #' + '<#= tag # class=\'#= textClass(item) #\' #if(url){#href=\'#= url #\'#}#>' + '# if (imageUrl) { #' + '<img #= imageCssAttributes(imgAttributes) #  alt=\'\' src=\'#= imageUrl #\' />' + '# } #' + '#= sprite(item) ##= data.menu.options.template(data) #' + '#= arrow(data) #' + '</#= tag #>'),
-                    item: template('#var contentHtml = ' + fieldAccessor('content') + '(item);#' + '<li class=\'#= wrapperCssClass(group, item) #\' #= itemCssAttributes(item.toJSON ? item.toJSON() : item) # role=\'menuitem\'  #=item.items ? "aria-haspopup=\'true\'": ""#' + '#=item.enabled === false ? "aria-disabled=\'true\'" : \'\'#' + kendo.attr('uid') + '=\'#= item.uid #\' >' + '#= itemWrapper(data) #' + '#if (item.hasChildren || item.items) { #' + '#= subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl || contentHtml) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
+                    item: template('#var contentHtml = ' + fieldAccessor('content') + '(item);#' + '<li class=\'#= wrapperCssClass(group, item) #\' #= itemCssAttributes(item.toJSON ? item.toJSON() : item) # role=\'menuitem\'  #=item.items ? "aria-haspopup=\'true\'": ""#' + '#=item.enabled === false ? "aria-disabled=\'true\'" : \'\'#' + kendo.attr('uid') + '=\'#= item.uid #\' >' + '#= itemWrapper(data) #' + '#if (item.hasChildren || item.items) { #' + '#= subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl || contentHtml) { #' + '#= renderContent(data) #' + '# } #' + '# if(item.items && item.items.length > 0) { # ' + '# if(item.expanded) { # ' + ' aria-expanded=\'true\'' + '# } else { #' + ' aria-expanded=\'false\'' + '# } #' + '# } #' + '</li>'),
                     scrollButton: template('<span class=\'k-button k-button-icon k-menu-scroll-button k-scroll-#= direction #\' unselectable=\'on\'>' + '<span class=\'k-icon k-i-arrow-60-#= direction #\'></span></span>'),
                     arrow: template('<span class=\'#= arrowClass(item, group) #\'></span>'),
                     sprite: template('# var spriteCssClass = ' + fieldAccessor('spriteCssClass') + '(data); if(spriteCssClass) {#<span class=\'k-sprite #= spriteCssClass #\'></span>#}#'),
@@ -1793,6 +1804,7 @@
             init: function (element, options) {
                 var that = this;
                 Menu.fn.init.call(that, element, options);
+                that.element.attr('role', 'menu');
                 that._marker = kendo.guid().substring(0, 8);
                 that.target = $(that.options.target);
                 that._popup();
@@ -1885,6 +1897,7 @@
                         }
                         DOCUMENT_ELEMENT.off(that.popup.downEvent, that.popup._mousedownProxy);
                         DOCUMENT_ELEMENT.on(kendo.support.mousedown + NS + that._marker, that._closeProxy);
+                        that.element.focus();
                     }
                 }
                 return that;
@@ -1955,9 +1968,12 @@
                                 item: that.element,
                                 type: CLOSE
                             }) === false) {
+                            that._removeHoverItem();
+                            that.element.find('#' + that._ariaId).removeAttr('id');
                             that.popup.close();
                             DOCUMENT_ELEMENT.off(kendo.support.mousedown + NS + that._marker, that._closeProxy);
                             that.unbind(SELECT, that._closeTimeoutProxy);
+                            that.target.focus();
                         }
                     }
                 }
@@ -2060,6 +2076,17 @@
                     }
                 }).data(KENDOPOPUP);
                 that._targetChild = contains(that.target[0], that.popup.element[0]);
+            },
+            _moveHoverToRoot: function (item, nextItem) {
+                this._moveHover(item, nextItem);
+                this.close();
+            },
+            _focus: function (e) {
+                var hoverItem = this._oldHoverItem = this._hoverItem() || [];
+                Menu.fn._focus.call(this, e);
+                if (activeElement() === e.currentTarget) {
+                    this._moveHover(hoverItem, this.wrapper.children().first());
+                }
             }
         });
         ui.plugin(Menu);

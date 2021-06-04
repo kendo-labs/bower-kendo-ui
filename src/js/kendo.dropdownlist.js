@@ -965,7 +965,7 @@
                 var that = this, wrapper = that.wrapper, SELECTOR = 'span.k-input', id = kendo.guid(), span;
                 span = wrapper.find(SELECTOR);
                 if (!span[0]) {
-                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span id="' + id + '" unselectable="on" role="option" aria-selected="true" class="k-input">&nbsp;</span><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
+                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span id="' + id + '" unselectable="on" role="option" aria-selected="true" class="k-input">&nbsp;</span><span role="button" unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
                     span = wrapper.find(SELECTOR);
                 }
                 that.span = span;
