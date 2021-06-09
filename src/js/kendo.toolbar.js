@@ -743,7 +743,7 @@
                         that._shrink(that.element.innerWidth());
                     }
                 }
-                that.userEvents = new kendo.UserEvents(document, {
+                that.userEvents = new kendo.UserEvents(document.documentElement, {
                     threshold: 5,
                     allowSelection: true,
                     filter: '[' + KENDO_UID_ATTR + '=' + this.uid + '] a.' + BUTTON + ', ' + '[' + KENDO_UID_ATTR + '=' + this.uid + '] .' + OVERFLOW_BUTTON,

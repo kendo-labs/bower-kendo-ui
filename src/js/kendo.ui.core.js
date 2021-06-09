@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.2.604'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.2.609'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -20048,7 +20048,7 @@
                         that._shrink(that.element.innerWidth());
                     }
                 }
-                that.userEvents = new kendo.UserEvents(document, {
+                that.userEvents = new kendo.UserEvents(document.documentElement, {
                     threshold: 5,
                     allowSelection: true,
                     filter: '[' + KENDO_UID_ATTR + '=' + this.uid + '] a.' + BUTTON + ', ' + '[' + KENDO_UID_ATTR + '=' + this.uid + '] .' + OVERFLOW_BUTTON,
