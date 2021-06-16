@@ -332,7 +332,7 @@
                         element[0].removeAttribute(DISABLED);
                         element[0].removeAttribute(READONLY);
                     }
-                    element.attr(ARIA_DISABLED, false).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
+                    element.attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     });
                     icon.on(UP, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);

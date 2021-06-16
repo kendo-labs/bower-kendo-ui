@@ -2665,7 +2665,6 @@
 .k-slider,
 .k-splitter,
 .k-treeview,
-.k-treeview > .k-group,
 .k-panelbar,
 .k-content,
 .k-header-column-menu {
@@ -2677,7 +2676,6 @@
 .k-splitbar,
 .k-calendar,
 .k-treeview,
-.k-treeview > .k-group,
 .k-pager-wrap,
 .k-grid-header .k-i-link-horizontal,
 .k-header-column-menu {
@@ -7064,12 +7062,6 @@ span.k-dropdowntree {
 .k-space-right .k-icon {
   right: 3px;
 }
-span.k-textbox:after {
-  content: "\a0";
-  display: block;
-  height: 0.4px;
-  overflow: hidden;
-}
 .k-autocomplete,
 .k-dropdown-wrap,
 .k-picker-wrap,
@@ -7139,6 +7131,7 @@ span.k-datetimepicker .k-select + .k-select {
   text-overflow: ellipsis;
 }
 .k-textbox > input,
+.k-textbox > .k-input,
 .k-autocomplete .k-input,
 .k-multiselect-wrap .k-input,
 .k-picker-wrap .k-input,
@@ -15029,7 +15022,8 @@ div.k-spreadsheet-window {
 .k-card-header h3,
 .k-card-header h4,
 .k-card-header h5,
-.k-card-header h6 {
+.k-card-header h6,
+.k-card-header > div {
   margin: 0;
 }
 .k-card-header .k-card-title + .k-card-subtitle {
@@ -21064,7 +21058,7 @@ table.k-editor .k-editable-area {
   margin-left: 16px;
 }
 .k-ie .k-taskboard-column-cards-container {
-  margin-bottom: 3 * 8px;
+  margin-bottom: 24px;
 }
 .k-ie .k-taskboard-column-cards > .k-taskboard-card:not(:last-child) {
   margin-bottom: 8px;

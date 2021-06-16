@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.2.609'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.2.616'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -25423,7 +25423,7 @@
                         element[0].removeAttribute(DISABLED);
                         element[0].removeAttribute(READONLY);
                     }
-                    element.attr(ARIA_DISABLED, false).attr(ARIA_DISABLED, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
+                    element.attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
                         that._inputWrapper.addClass(FOCUSED);
                     });
                     icon.on(UP, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);
@@ -26049,12 +26049,20 @@
                 that._fetching = false;
             },
             removeAt: function (position) {
-                this._selectedIndexes.splice(position, 1);
-                this._values.splice(position, 1);
+                var value = this._values.splice(position, 1)[0];
                 return {
                     position: position,
-                    dataItem: this._selectedDataItems.splice(position, 1)[0]
+                    dataItem: this._removeSelectedDataItem(value)
                 };
+            },
+            _removeSelectedDataItem: function (value) {
+                var that = this, valueGetter = that._valueGetter;
+                for (var idx in that._selectedDataItems) {
+                    if (valueGetter(that._selectedDataItems[idx]) === value) {
+                        that._selectedIndexes.splice(idx, 1);
+                        return that._selectedDataItems.splice(idx, 1)[0];
+                    }
+                }
             },
             setValue: function (value) {
                 this._values = toArray(value);
@@ -29945,6 +29953,9 @@
                         option.selected = false;
                     }
                     listView.removeAt(position);
+                    if (listView._removedAddedIndexes) {
+                        listView._removedAddedIndexes.splice(position, 1);
+                    }
                     listViewChild = listViewChildren[customIndex];
                     if (listViewChild) {
                         listViewChildren[customIndex].classList.remove('k-state-selected');
@@ -30088,12 +30099,12 @@
                 that._renderNoData();
                 that._toggleNoData(!data.length);
                 that._resizePopup();
-                that._updateItemFocus();
                 if (that._open) {
                     that._open = false;
                     that.toggle(that._allowOpening());
                 }
                 that.popup.position();
+                that._updateItemFocus();
                 if (that._touchScroller) {
                     that._touchScroller.reset();
                 }

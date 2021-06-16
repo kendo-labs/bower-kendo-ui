@@ -344,6 +344,9 @@
                         option.selected = false;
                     }
                     listView.removeAt(position);
+                    if (listView._removedAddedIndexes) {
+                        listView._removedAddedIndexes.splice(position, 1);
+                    }
                     listViewChild = listViewChildren[customIndex];
                     if (listViewChild) {
                         listViewChildren[customIndex].classList.remove('k-state-selected');
@@ -487,12 +490,12 @@
                 that._renderNoData();
                 that._toggleNoData(!data.length);
                 that._resizePopup();
-                that._updateItemFocus();
                 if (that._open) {
                     that._open = false;
                     that.toggle(that._allowOpening());
                 }
                 that.popup.position();
+                that._updateItemFocus();
                 if (that._touchScroller) {
                     that._touchScroller.reset();
                 }
