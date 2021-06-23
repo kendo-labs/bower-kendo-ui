@@ -777,14 +777,16 @@
                 this._dateIcon.toggle();
                 this._timeIcon.toggle();
             },
-            _cancelClickHandler: function () {
+            _cancelClickHandler: function (e) {
+                preventDefault(e);
                 if (this._value) {
                     this.value(this._value);
                     this.dateView.value(this._value);
                 }
                 this.popup.close();
             },
-            _setClickHandler: function () {
+            _setClickHandler: function (e) {
+                preventDefault(e);
                 var value = this._applyDateValue();
                 var time;
                 value = value || new Date();

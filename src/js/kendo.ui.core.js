@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.2.616'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.2.623'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -42968,16 +42968,19 @@
                     list.off(ns).on('click' + ns, '.k-item', proxy(this._itemClickHandler, this)).on('scroll' + ns, proxy(this._listScrollHandler, this));
                 }
             },
-            _nowClickHandler: function () {
+            _nowClickHandler: function (e) {
+                e.preventDefault();
                 var now = new Date();
                 this.value(now);
                 this.options.change(kendo.toString(now, this.options.format, this.options.culture));
             },
-            _cancelClickHandler: function () {
+            _cancelClickHandler: function (e) {
+                e.preventDefault();
                 this.value(this._value);
                 this.popup.close();
             },
-            _setClickHandler: function () {
+            _setClickHandler: function (e) {
+                e.preventDefault();
                 this._value = new Date(this._currentlySelected);
                 this.options.change(kendo.toString(this._currentlySelected, this.options.format, this.options.culture), true);
                 this.popup.close();
@@ -44641,14 +44644,16 @@
                 this._dateIcon.toggle();
                 this._timeIcon.toggle();
             },
-            _cancelClickHandler: function () {
+            _cancelClickHandler: function (e) {
+                preventDefault(e);
                 if (this._value) {
                     this.value(this._value);
                     this.dateView.value(this._value);
                 }
                 this.popup.close();
             },
-            _setClickHandler: function () {
+            _setClickHandler: function (e) {
+                preventDefault(e);
                 var value = this._applyDateValue();
                 var time;
                 value = value || new Date();

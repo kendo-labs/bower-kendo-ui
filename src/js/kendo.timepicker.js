@@ -498,16 +498,19 @@
                     list.off(ns).on('click' + ns, '.k-item', proxy(this._itemClickHandler, this)).on('scroll' + ns, proxy(this._listScrollHandler, this));
                 }
             },
-            _nowClickHandler: function () {
+            _nowClickHandler: function (e) {
+                e.preventDefault();
                 var now = new Date();
                 this.value(now);
                 this.options.change(kendo.toString(now, this.options.format, this.options.culture));
             },
-            _cancelClickHandler: function () {
+            _cancelClickHandler: function (e) {
+                e.preventDefault();
                 this.value(this._value);
                 this.popup.close();
             },
-            _setClickHandler: function () {
+            _setClickHandler: function (e) {
+                e.preventDefault();
                 this._value = new Date(this._currentlySelected);
                 this.options.change(kendo.toString(this._currentlySelected, this.options.format, this.options.culture), true);
                 this.popup.close();
