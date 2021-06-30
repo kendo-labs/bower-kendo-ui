@@ -4854,7 +4854,7 @@ table.k-editor {
 .k-calendar .k-footer {
   text-transform: uppercase;
 }
-.k-dialog-button-group .k-button {
+.k-actions .k-button {
   box-shadow: none;
 }
 .k-button:focus,

@@ -10449,14 +10449,6 @@ html .k-upload {
 .k-mediaplayer-toolbar > * + * {
   margin-left: 5px;
 }
-.k-mediaplayer-toolbar .k-toolbar-spacer {
-  margin-top: 0;
-  margin-bottom: 0;
-  border-width: 0;
-  -ms-flex: 1;
-      flex: 1;
-  opacity: 0;
-}
 .k-mediaplayer-toolbar .k-align-right > * + * {
   margin-left: 5px;
 }
@@ -18582,10 +18574,6 @@ a.k-badge:hover,
   white-space: nowrap;
   min-height: 16px;
   position: relative;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: row;
-      flex-direction: row;
   -ms-flex-negative: 0;
       flex-shrink: 0;
   -ms-flex-align: center;
@@ -18615,10 +18603,6 @@ a.k-badge:hover,
   margin: 0 -6px;
   -webkit-margin-end: -6px;
           margin-inline-end: -6px;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-flow: row nowrap;
-      flex-flow: row nowrap;
   -ms-flex-negative: 0;
       flex-shrink: 0;
   -ms-flex-align: center;
@@ -18795,12 +18779,6 @@ a.k-badge:hover,
   border-width: 1px 0 0;
   border-style: solid;
   box-sizing: border-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: row;
-      flex-direction: row;
-  -ms-flex-pack: end;
-      justify-content: flex-end;
 }
 .k-dialog-buttongroup .k-button {
   -ms-flex-negative: 0;
@@ -18809,35 +18787,10 @@ a.k-badge:hover,
   text-overflow: ellipsis;
   box-sizing: border-box;
 }
-.k-dialog-buttongroup .k-button + .k-button {
-  margin-left: 6px;
-}
-.k-dialog-button-layout-stretched .k-button {
-  -ms-flex: 1 0 0px;
-      flex: 1 0 0;
-  white-space: nowrap;
-}
-.k-dialog.k-window-sm .k-dialog-button-group {
-  -ms-flex-direction: column;
-      flex-direction: column;
-}
-.k-dialog.k-window-sm .k-dialog-button-group .k-button + .k-button {
-  margin: 6px 0 0;
-}
 .k-rtl.k-dialog-titleless .k-dialog-close,
 .k-rtl .k-dialog-titleless .k-dialog-close {
   right: auto;
   left: 4px;
-}
-.k-rtl .k-dialog-buttongroup .k-button + .k-button {
-  margin-left: 0;
-  margin-right: 6px;
-}
-.k-no-flexbox .k-dialog-button-layout-stretched {
-  text-align: right;
-}
-.k-no-flexbox .k-rtl .k-dialog-button-layout-stretched {
-  text-align: left;
 }
 .k-stepper {
   margin: 0 0;

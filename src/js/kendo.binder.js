@@ -892,6 +892,15 @@
                     this.widget.wrapper[0].style.display = invisible ? 'none' : '';
                 }
             }),
+            floatingLabel: Binder.extend({
+                init: function (widget, bindings, options) {
+                    Binder.fn.init.call(this, widget.element[0], bindings, options);
+                    if (!widget.floatingLabel) {
+                        return;
+                    }
+                    widget.floatingLabel.refresh();
+                }
+            }),
             enabled: Binder.extend({
                 init: function (widget, bindings, options) {
                     Binder.fn.init.call(this, widget.element[0], bindings, options);
@@ -1343,6 +1352,9 @@
                 }
                 if (hasCss && !widgetBinding) {
                     this.applyBinding(CSS, bindings, specificBinders);
+                }
+                if (widgetBinding && this.target && this.target.floatingLabel) {
+                    this.applyBinding('floatingLabel', bindings, specificBinders);
                 }
             },
             binders: function () {
