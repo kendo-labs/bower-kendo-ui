@@ -173,10 +173,6 @@
 @calendar-header-padding-x: 6px;
 @calendar-header-padding-y: 6px;
 @calendar-header-border-width: 0;
-@calendar-header-button-padding-x: 8px;
-@calendar-header-button-padding-y: 8px;
-@calendar-header-button-border-width: 0;
-@calendar-header-button-border-radius: 0;
 
 @calendar-content-padding-x: 0;
 @calendar-content-padding-y: 0;
@@ -1062,7 +1058,7 @@ input.k-textbox,
     height: 2.857em;
 }
 
-.k-button-icon {
+.k-button.k-button-icon {
     height: ~"calc(1.72em + (2*@{button-padding-y}) + 2px)"; // ensure inline-flex height
     width: ~"calc(1.72em + (2*@{button-padding-y}) + 2px)";
 }
@@ -1225,7 +1221,7 @@ input.k-textbox,
 
 .k-filter-row {
   .k-dropdown-operator,
-  .k-button-icon {
+  .k-button.k-button-icon {
     width: @filter-icon-size;
     right: calc(@filter-icon-size + 2px); // width of the button + 2px
     height: 100%;
@@ -1697,7 +1693,7 @@ input.k-textbox,
             }
 
             .k-dropdown-operator,
-            .k-button-icon {
+            .k-button.k-button-icon {
                 left: calc(@filter-icon-size + 2px); // width of the button + 2px
                 right: auto;
             }

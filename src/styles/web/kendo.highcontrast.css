@@ -562,13 +562,13 @@
   box-shadow: inset 0 0 3px 1px #fff;
 }
 .k-calendar .k-footer .k-nav-today,
-.k-calendar .k-calendar-header .k-today {
+.k-calendar .k-calendar-header .k-nav-today {
   color: #870074;
 }
 .k-calendar .k-footer .k-nav-today:hover,
-.k-calendar .k-calendar-header .k-today:hover,
+.k-calendar .k-calendar-header .k-nav-today:hover,
 .k-calendar .k-footer .k-nav-today:focus,
-.k-calendar .k-calendar-header .k-today:focus {
+.k-calendar .k-calendar-header .k-nav-today:focus {
   color: #9b0086;
 }
 .k-calendar-range {

@@ -3375,15 +3375,6 @@ script {
   margin-left: -2px;
   margin-left: -0.125em;
 }
-.k-button-icon {
-  width: calc(1.4285714286em + 16px);
-  height: calc(1.4285714286em + 16px);
-  padding: 8px;
-}
-.k-button-icon .k-text,
-.k-button-icon .k-button-text {
-  display: none;
-}
 .k-button[disabled],
 .k-state-disabled .k-button,
 .k-button.k-state-disabled {
@@ -3391,6 +3382,19 @@ script {
   outline: 0;
   box-shadow: none;
   opacity: 0.6;
+  pointer-events: none;
+}
+.k-icon-button,
+.k-button.k-button-icon {
+  width: calc(1.4285714286em + 16px);
+  height: calc(1.4285714286em + 16px);
+  padding: 8px;
+}
+.k-icon-button .k-text,
+.k-button.k-button-icon .k-text,
+.k-icon-button .k-button-text,
+.k-button.k-button-icon .k-button-text {
+  display: none;
 }
 a.k-button-expand {
   display: block;
@@ -5547,7 +5551,7 @@ form.k-filter-menu .k-textbox {
 .k-grid tbody button.k-button {
   min-width: 78px;
 }
-html body .k-grid tbody .k-button-icon {
+.k-grid tbody .k-button.k-button-icon {
   width: auto;
   min-width: 0;
 }
@@ -6266,18 +6270,18 @@ html body .k-grid tbody .k-button-icon {
   margin-left: -0.2em;
 }
 .k-gantt .k-gantt-treelist .k-button,
-.k-gantt .k-gantt-tasks .k-button-icon {
+.k-gantt .k-gantt-tasks .k-button.k-button-icon {
   padding-top: 0;
   padding-bottom: 0;
 }
-.k-gantt .k-gantt-tasks .k-button-icon {
+.k-gantt .k-gantt-tasks .k-button.k-button-icon {
   margin-top: 4px;
 }
 .k-gantt .k-gantt-treelist .k-button {
   margin-top: -4px;
   margin-bottom: -2px;
 }
-.k-gantt .k-gantt-tasks .k-button-icon {
+.k-gantt .k-gantt-tasks .k-button.k-button-icon {
   padding-left: 2px;
   padding-right: 2px;
 }
@@ -16014,49 +16018,13 @@ div.k-spreadsheet-window {
   position: relative;
   z-index: 1;
 }
-.k-calendar .k-header .k-link {
-  padding: 8px 8px;
-  border-width: 0;
-  border-style: solid;
-  border-radius: 100px;
-  display: inline-block;
-}
-.k-calendar .k-nav-prev,
-.k-calendar .k-nav-next {
-  width: 1.42857143em;
-  height: 1.42857143em;
-  box-sizing: content-box;
-  position: absolute;
-  top: 4px;
-}
-.k-calendar .k-nav-prev .k-icon,
-.k-calendar .k-nav-next .k-icon {
-  vertical-align: text-top;
-}
-.k-calendar .k-nav-prev {
-  left: 4px;
-}
-.k-calendar .k-nav-next {
-  right: 4px;
-}
-.k-calendar .k-nav-fast {
-  margin: auto;
-  width: 75%;
-  box-sizing: border-box;
-}
 .k-calendar .k-footer {
+  padding: 0.5em;
   text-align: center;
   position: relative;
   clear: both;
 }
-.k-calendar .k-nav-today,
-.k-calendar .k-footer > .k-state-disabled {
-  padding: 0.5em;
-  border-width: 0;
-  border-radius: 0;
-  display: block;
-}
-.k-calendar .k-nav-today:hover {
+.k-calendar .k-footer .k-nav-today:hover {
   text-decoration: underline;
 }
 .k-calendar .k-calendar-view {
@@ -16134,37 +16102,12 @@ div.k-spreadsheet-window {
 }
 .k-calendar .k-calendar-header .k-button {
   white-space: nowrap;
-  border-color: transparent !important;
-  color: inherit;
-  background: none !important;
-  box-shadow: none !important;
-  transition: color 0.2s ease-in-out;
 }
-.k-calendar .k-calendar-header .k-button:hover,
-.k-calendar .k-calendar-header .k-button.k-state-hover,
-.k-calendar .k-calendar-header .k-button:active,
-.k-calendar .k-calendar-header .k-button.k-state-active,
-.k-calendar .k-calendar-header .k-button:hover:active,
-.k-calendar .k-calendar-header .k-button:hover.k-state-active {
-  color: inherit;
+.k-calendar .k-calendar-nav {
+  -ms-flex-align: center;
+      align-items: center;
 }
-.k-calendar .k-calendar-header .k-button::before {
-  display: block;
-}
-.k-calendar .k-calendar-header .k-button::after {
-  display: block;
-}
-.k-calendar .k-calendar-header .k-button:focus::after,
-.k-calendar .k-calendar-header .k-button.k-state-focused::after {
-  box-shadow: inset 0 0 0 2px currentColor;
-  opacity: 0.12;
-}
-.k-calendar .k-calendar-header .k-button[disabled],
-.k-state-disabled .k-calendar .k-calendar-header .k-button,
-.k-calendar .k-calendar-header .k-button.k-state-disabled {
-  pointer-events: none;
-}
-.k-calendar .k-calendar-header .k-today {
+.k-calendar .k-nav-today {
   cursor: pointer;
 }
 .k-calendar .k-calendar-monthview,

@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.2.630'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.2.714'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -13496,6 +13496,7 @@
                 that.model = options.model;
                 that._wrap = options.wrap !== false;
                 this._evalTemplate = options.evalTemplate || false;
+                this._useWithBlock = options.useWithBlock;
                 that._fragments = {};
                 that.bind([
                     INIT,
@@ -13605,7 +13606,7 @@
                 if (typeof content === 'string') {
                     content = content.replace(/^\s+|\s+$/g, '');
                     if (that._evalTemplate) {
-                        content = kendo.template(content)(that.model || {});
+                        content = kendo.template(content, { useWithBlock: that._useWithBlock })(that.model || {});
                     }
                     element = $(wrapper).append(content);
                     if (!that._wrap) {
@@ -13614,7 +13615,7 @@
                 } else {
                     element = content;
                     if (that._evalTemplate) {
-                        var result = $(kendo.template($('<div />').append(element.clone(true)).html())(that.model || {}));
+                        var result = $(kendo.template($('<div />').append(element.clone(true)).html(), { useWithBlock: that._useWithBlock })(that.model || {}));
                         if ($.contains(document, element[0])) {
                             element.replaceWith(result);
                         }
@@ -22880,7 +22881,7 @@
                 year: 1,
                 decade: 2,
                 century: 3
-            }, HEADERSELECTOR = '.k-header, .k-calendar-header', CLASSIC_HEADER_TEMPLATE = '<div class="k-header">' + '<a href="\\#" #=actionAttr#="prev" role="button" class="k-link k-nav-prev" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="\\#" #=actionAttr#="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-link k-nav-fast"></a>' + '<a href="\\#" #=actionAttr#="next" role="button" class="k-link k-nav-next" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>', MODERN_HEADER_TEMPLATE = '<div class="k-calendar-header">' + '<a href="\\#" #=actionAttr#="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-button k-title"></a>' + '<span class="k-calendar-nav">' + '<a #=actionAttr#="prev" class="k-button k-button-icon k-prev-view">' + '<span class="k-icon k-i-arrow-60-left"></span>' + '</a>' + '<a #=actionAttr#="today" class="k-today">#=messages.today#</a>' + '<a #=actionAttr#="next" class="k-button k-button-icon k-next-view">' + '<span class="k-icon k-i-arrow-60-right"></span>' + '</a>' + '</span>' + '</div>';
+            }, HEADERSELECTOR = '.k-header, .k-calendar-header', CLASSIC_HEADER_TEMPLATE = '<div class="k-header k-hstack">' + '<a href="\\#" #=actionAttr#="prev" role="button" class="k-nav-prev k-button k-flat k-icon-button" ' + ARIA_LABEL + '="Previous"><span class="k-icon k-i-arrow-60-left"></span></a>' + '<a href="\\#" #=actionAttr#="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-nav-fast k-button k-flat k-flex"></a>' + '<a href="\\#" #=actionAttr#="next" role="button" class="k-nav-next k-button k-flat k-icon-button" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' + '</div>', MODERN_HEADER_TEMPLATE = '<div class="k-calendar-header k-hstack">' + '<a href="\\#" #=actionAttr#="nav-up" role="button" aria-live="assertive" aria-atomic="true" class="k-calendar-title k-button k-flat"></a>' + '<span class="k-spacer"></span>' + '<span class="k-calendar-nav k-hstack">' + '<a #=actionAttr#="prev" class="k-button k-flat k-button-icon k-prev-view">' + '<span class="k-icon k-i-arrow-60-left"></span>' + '</a>' + '<a #=actionAttr#="today" class="k-nav-today">#=messages.today#</a>' + '<a #=actionAttr#="next" class="k-button k-flat k-button-icon k-next-view">' + '<span class="k-icon k-i-arrow-60-right"></span>' + '</a>' + '</span>' + '</div>';
         var Calendar = Widget.extend({
             init: function (element, options) {
                 var that = this, value, id;
@@ -22898,7 +22899,7 @@
                 if (that.options.hasFooter) {
                     that._footer(that.footer);
                 } else {
-                    that._today = that.element.find('a.k-today');
+                    that._today = that.element.find('a.k-nav-today');
                     that._toggle();
                 }
                 id = element.addClass('k-widget k-calendar ' + (options.weekNumber ? ' k-week-number' : '')).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE, CELLSELECTOR, mousetoggle).on(KEYDOWN_NS, 'table.k-content', proxy(that._move, that)).on(CLICK + ' touchend', CELLSELECTOR, function (e) {
@@ -22991,7 +22992,7 @@
                 'classic': {
                     header: { template: CLASSIC_HEADER_TEMPLATE },
                     hasFooter: true,
-                    linksSelector: '.k-link',
+                    linksSelector: '.k-button',
                     contentClasses: 'k-content'
                 },
                 'modern': {
@@ -23097,14 +23098,8 @@
                 title.toggleClass(DISABLED, disabled).attr(ARIA_DISABLED, disabled);
                 disabled = compare(value, min) < 1;
                 that[PREVARROW].toggleClass(DISABLED, disabled).attr(ARIA_DISABLED, disabled);
-                if (that[PREVARROW].hasClass(DISABLED)) {
-                    that[PREVARROW].removeClass(HOVER);
-                }
                 disabled = compare(value, max) > -1;
                 that[NEXTARROW].toggleClass(DISABLED, disabled).attr(ARIA_DISABLED, disabled);
-                if (that[NEXTARROW].hasClass(DISABLED)) {
-                    that[NEXTARROW].removeClass(HOVER);
-                }
                 if (from && old && old.data('animating')) {
                     old.kendoStop(true, true);
                     from.kendoStop(true, true);
@@ -23659,7 +23654,7 @@
                 if (!element.find(HEADERSELECTOR)[0]) {
                     element.html(kendo.template(that.options.header.template)($.extend(true, {}, that.options, { actionAttr: kendo.attr('action') })));
                 }
-                element.find(linksSelector).on(MOUSEENTER_WITH_NS + ' ' + MOUSELEAVE + ' ' + FOCUS_WITH_NS + ' ' + BLUR, mousetoggle).on(CLICK + ' touchend' + ns, function () {
+                element.find(linksSelector).on(CLICK + ' touchend' + ns, function () {
                     return false;
                 });
                 that._title = element.find('[' + kendo.attr('action') + '="nav-up"]').on(CLICK + ' touchend' + ns, function () {
@@ -23735,7 +23730,7 @@
                 }
             },
             _todayClass: function () {
-                return this.options.componentType === 'modern' ? 'k-today' : TODAY;
+                return TODAY;
             },
             _todayClick: function (e) {
                 var that = this, depth = views[that.options.depth], disabled = that.options.disableDates, today = getToday();
@@ -25497,8 +25492,12 @@
                     return that._value;
                 }
                 that._old = that._update(value);
-                if (that._old === null && !that._dateInput) {
-                    that.element.val('');
+                if (that._old === null) {
+                    if (that._dateInput) {
+                        that._dateInput.value(that._old);
+                    } else {
+                        that.element.val('');
+                    }
                 }
                 that._oldText = that.element.val();
             },
@@ -44189,7 +44188,11 @@
                 }
                 that._old = that._update(value);
                 if (that._old === null) {
-                    that.element.val('');
+                    if (that._dateInput) {
+                        that._dateInput.value(that._old);
+                    } else {
+                        that.element.val('');
+                    }
                 }
                 that._oldText = that.element.val();
             },
@@ -44325,8 +44328,10 @@
                         timeView.bind();
                     }
                 }
-                if (that._dateInput && date) {
-                    that._dateInput.value(date || value);
+                if (that._dateInput) {
+                    if (date) {
+                        that._dateInput.value(date);
+                    }
                 } else {
                     that.element.val(kendo.toString(date || value, options.format, options.culture));
                 }

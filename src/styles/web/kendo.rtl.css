@@ -94,14 +94,6 @@
   padding-left: 20px;
   padding-right: 0;
 }
-.k-rtl .k-widget.k-calendar .k-nav-prev {
-  left: auto;
-  right: 1%;
-}
-.k-rtl .k-widget.k-calendar .k-nav-next {
-  right: auto;
-  left: 1%;
-}
 .k-rtl .k-calendar .k-i-arrow-60-right,
 .k-rtl .k-calendar .k-i-arrow-60-left {
   -webkit-transform: scaleX(-1);
