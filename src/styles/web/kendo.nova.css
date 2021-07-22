@@ -3735,7 +3735,7 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
 .k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-name-editor {
   border-color: #cccccc;
 }
-.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar::before {
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar > .k-i-formula-fx {
   border-color: #cccccc;
 }
 .k-spreadsheet .k-spreadsheet-formula-input {

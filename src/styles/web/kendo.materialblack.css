@@ -4376,7 +4376,7 @@ div.k-scheduler-marquee:after {
 .k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-name-editor {
   border-color: #030303;
 }
-.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar::before {
+.k-spreadsheet .k-spreadsheet-action-bar .k-spreadsheet-formula-bar > .k-i-formula-fx {
   border-color: #030303;
 }
 .k-spreadsheet .k-spreadsheet-formula-input {
