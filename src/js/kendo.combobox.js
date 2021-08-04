@@ -436,6 +436,9 @@
                         candidate = -1;
                     }
                 }
+                if (!this.dataSource.total() && !candidate) {
+                    candidate = -1;
+                }
                 return candidate;
             },
             _select: function (candidate, keepState) {

@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.2.729'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.2.804'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -14277,7 +14277,7 @@
                 },
                 rules: {
                     required: function (input) {
-                        var noNameCheckbox = !input.attr('name') && !input.is(':checked'), namedCheckbox = input.attr('name') && !this.element.find('input[name=\'' + input.attr('name') + '\']:checked').length, checkbox = input.filter('[type=checkbox]').length && (noNameCheckbox || namedCheckbox), radio = input.filter('[type=radio]').length && !this.element.find('input[name=\'' + input.attr('name') + '\']:checked').length, value = input.val();
+                        var noNameCheckbox = !input.attr('name') && !input.is(':checked'), namedCheckbox = input.attr('name') && !this.element.find('input[name="' + input.attr('name') + '"]:checked').length, checkbox = input.filter('[type=checkbox]').length && (noNameCheckbox || namedCheckbox), radio = input.filter('[type=radio]').length && !this.element.find('input[name="' + input.attr('name') + '"]:checked').length, value = input.val();
                         return !(hasAttribute(input, 'required') && (!value || value === '' || value.length === 0 || checkbox || radio));
                     },
                     pattern: function (input) {
@@ -29161,6 +29161,9 @@
                         candidate = -1;
                     }
                 }
+                if (!this.dataSource.total() && !candidate) {
+                    candidate = -1;
+                }
                 return candidate;
             },
             _select: function (candidate, keepState) {
@@ -39585,7 +39588,7 @@
                             that.popup.close();
                             DOCUMENT_ELEMENT.off(kendo.support.mousedown + NS + that._marker, that._closeProxy);
                             that.unbind(SELECT, that._closeTimeoutProxy);
-                            that.target.focus();
+                            that.popup.options.anchor.focus();
                         }
                     }
                 }
