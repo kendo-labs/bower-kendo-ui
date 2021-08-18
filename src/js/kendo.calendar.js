@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, support = kendo.support, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, parse = kendo.parseDate, adjustDST = kendo.date.adjustDST, weekInYear = kendo.date.weekInYear, Selectable = kendo.ui.Selectable, extractFormat = kendo._extractFormat, template = kendo.template, getCulture = kendo.getCulture, transitions = kendo.support.transitions, transitionOrigin = transitions ? transitions.css + 'transform-origin' : '', cellTemplate = template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#">#=data.value#</a></td>', { useWithBlock: false }), emptyCellTemplate = template('<td role="gridcell" class="k-calendar-td k-out-of-range"><a class="k-link"></a></td>', { useWithBlock: false }), otherMonthCellTemplate = template('<td role="gridcell" class="k-calendar-td k-out-of-range">&nbsp;</td>', { useWithBlock: false }), weekNumberTemplate = template('<td class="k-calendar-td k-alt">#= data.weekNumber #</td>', { useWithBlock: false }), outerWidth = kendo._outerWidth, ns = '.kendoCalendar', CLICK = 'click' + ns, KEYDOWN_NS = 'keydown' + ns, ID = 'id', MIN = 'min', LEFT = 'left', SLIDE = 'slideIn', MONTH = 'month', CENTURY = 'century', CHANGE = 'change', NAVIGATE = 'navigate', VALUE = 'value', HOVER = 'k-state-hover', DISABLED = 'k-state-disabled', FOCUSED = 'k-state-focused', OTHERMONTH = 'k-other-month', OTHERMONTHCLASS = ' class="' + OTHERMONTH + '"', OUTOFRANGE = 'k-out-of-range', TODAY = 'k-nav-today', CELLSELECTOR = 'td:has(.k-link)', CELLSELECTORVALID = 'td:has(.k-link):not(.' + DISABLED + '):not(.' + OUTOFRANGE + ')', WEEKCOLUMNSELECTOR = 'td:not(:has(.k-link))', SELECTED = 'k-state-selected', BLUR = 'blur' + ns, FOCUS = 'focus', FOCUS_WITH_NS = FOCUS + ns, MOUSEENTER = support.touch ? 'touchstart' : 'mouseenter', MOUSEENTER_WITH_NS = support.touch ? 'touchstart' + ns : 'mouseenter' + ns, MOUSELEAVE = support.touch ? 'touchend' + ns + ' touchmove' + ns : 'mouseleave' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, PREVARROW = '_prevArrow', NEXTARROW = '_nextArrow', ARIA_DISABLED = 'aria-disabled', ARIA_SELECTED = 'aria-selected', ARIA_LABEL = 'aria-label', proxy = $.proxy, extend = $.extend, DATE = Date, views = {
+        var kendo = window.kendo, support = kendo.support, ui = kendo.ui, Widget = ui.Widget, keys = kendo.keys, parse = kendo.parseDate, adjustDST = kendo.date.adjustDST, weekInYear = kendo.date.weekInYear, Selectable = kendo.ui.Selectable, extractFormat = kendo._extractFormat, template = kendo.template, getCulture = kendo.getCulture, transitions = kendo.support.transitions, transitionOrigin = transitions ? transitions.css + 'transform-origin' : '', cellTemplate = template('<td class="#=data.cssClass#" role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#">#=data.value#</a></td>', { useWithBlock: false }), emptyCellTemplate = template('<td role="gridcell" class="k-calendar-td k-out-of-range"><a class="k-link"></a></td>', { useWithBlock: false }), otherMonthCellTemplate = template('<td role="gridcell" class="k-calendar-td k-out-of-range">&nbsp;</td>', { useWithBlock: false }), weekNumberTemplate = template('<td class="k-calendar-td k-alt">#= data.weekNumber #</td>', { useWithBlock: false }), outerWidth = kendo._outerWidth, ns = '.kendoCalendar', CLICK = 'click' + ns, KEYDOWN_NS = 'keydown' + ns, ID = 'id', MIN = 'min', LEFT = 'left', SLIDE = 'slideIn', MONTH = 'month', CENTURY = 'century', CHANGE = 'change', NAVIGATE = 'navigate', VALUE = 'value', HOVER = 'k-state-hover', DISABLED = 'k-state-disabled', FOCUSED = 'k-state-focused', OTHERMONTH = 'k-other-month', OUTOFRANGE = 'k-out-of-range', TODAY = 'k-nav-today', CELLSELECTOR = 'td:has(.k-link)', CELLSELECTORVALID = 'td:has(.k-link):not(.' + DISABLED + '):not(.' + OUTOFRANGE + ')', WEEKCOLUMNSELECTOR = 'td:not(:has(.k-link))', SELECTED = 'k-state-selected', BLUR = 'blur' + ns, FOCUS = 'focus', FOCUS_WITH_NS = FOCUS + ns, MOUSEENTER = support.touch ? 'touchstart' : 'mouseenter', MOUSEENTER_WITH_NS = support.touch ? 'touchstart' + ns : 'mouseenter' + ns, MOUSELEAVE = support.touch ? 'touchend' + ns + ' touchmove' + ns : 'mouseleave' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, PREVARROW = '_prevArrow', NEXTARROW = '_nextArrow', ARIA_DISABLED = 'aria-disabled', ARIA_SELECTED = 'aria-selected', ARIA_LABEL = 'aria-label', proxy = $.proxy, extend = $.extend, DATE = Date, views = {
                 month: 0,
                 year: 1,
                 decade: 2,
@@ -913,7 +913,7 @@
             _templates: function () {
                 var that = this, options = that.options, footer = options.footer, month = options.month, content = month.content, weekNumber = month.weekNumber, empty = month.empty, footerTemplate = '#= kendo.toString(data,"D","' + options.culture + '") #';
                 that.month = {
-                    content: template('<td#=data.cssClass# role="gridcell"><a tabindex="-1" class="k-link#=data.linkClass#" href="#=data.url#" ' + kendo.attr(VALUE) + '="#=data.dateString#" title="#=data.title#">' + (content || '#=data.value#') + '</a></td>', { useWithBlock: !!content }),
+                    content: template('<td class="#=data.cssClass#" role="gridcell"><a tabindex="-1" class="k-link#=data.linkClass#" href="#=data.url#" ' + kendo.attr(VALUE) + '="#=data.dateString#" title="#=data.title#">' + (content || '#=data.value#') + '</a></td>', { useWithBlock: !!content }),
                     empty: template('<td role="gridcell">' + (empty || '&nbsp;') + '</td>', { useWithBlock: !!empty }),
                     weekNumber: template('<td class="k-alt">' + (weekNumber || '#= data.weekNumber #') + '</td>', { useWithBlock: !!weekNumber })
                 };
@@ -1021,7 +1021,7 @@
                                     title: kendo.toString(date, 'D', culture),
                                     value: date.getDate(),
                                     dateString: toDateString(date),
-                                    cssClass: cssClass[0] ? ' class="' + cssClass.join(' ') + '"' : '',
+                                    cssClass: cssClass.join(' '),
                                     linkClass: linkClass,
                                     url: url
                                 };
@@ -1093,11 +1093,12 @@
                             html: html,
                             setter: this.setDate,
                             build: function (date) {
+                                var cssClass = ['k-calendar-td'];
                                 return {
                                     value: namesAbbr[date.getMonth()],
                                     ns: kendo.ns,
                                     dateString: toDateString(date),
-                                    cssClass: ''
+                                    cssClass: cssClass.join(' ')
                                 };
                             }
                         });
@@ -1161,11 +1162,15 @@
                             html: html,
                             setter: this.setDate,
                             build: function (date, idx) {
+                                var cssClass = ['k-calendar-td'];
+                                if (idx === 0 || idx === 11) {
+                                    cssClass.push(OTHERMONTH);
+                                }
                                 return {
                                     value: date.getFullYear(),
                                     ns: kendo.ns,
                                     dateString: toDateString(date),
-                                    cssClass: idx === 0 || idx == 11 ? OTHERMONTHCLASS : ''
+                                    cssClass: cssClass.join(' ')
                                 };
                             }
                         });
@@ -1219,7 +1224,11 @@
                             html: html,
                             setter: this.setDate,
                             build: function (date, idx) {
+                                var cssClass = ['k-calendar-td'];
                                 var start = date.getFullYear(), end = start + 9;
+                                if (idx === 0 || idx === 11) {
+                                    cssClass.push(OTHERMONTH);
+                                }
                                 if (start < min) {
                                     start = min;
                                 }
@@ -1230,7 +1239,7 @@
                                     ns: kendo.ns,
                                     value: start + ' - ' + end,
                                     dateString: toDateString(date),
-                                    cssClass: idx === 0 || idx == 11 ? OTHERMONTHCLASS : ''
+                                    cssClass: cssClass.join(' ')
                                 };
                             }
                         });
