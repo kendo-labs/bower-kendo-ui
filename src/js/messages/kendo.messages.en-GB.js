@@ -76,7 +76,8 @@ $.extend(true, kendo.ui.ColumnMenu.prototype.options.messages,{
   "unstick": "Unstick Column",
   "setColumnPosition": "Set Column Position",
   "apply": "Apply",
-  "reset": "Reset"
+  "reset": "Reset",
+  "buttonTitle": "{0} edit column settings"
 });
 }
 
@@ -380,7 +381,8 @@ $.extend(true, kendo.ui.FilterMenu.prototype.options.messages,{
   "value": "Value",
   "cancel": "Cancel",
   "done": "Done",
-  "into": "in"
+  "into": "in",
+  "buttonTitle": "{0} filter column settings"
 });
 }
 
@@ -1353,7 +1355,8 @@ if (kendo.ui.MultiSelect) {
         "singleTag": "item(s) selected",
         "clear": "clear",
         "deleteTag": "delete",
-        "noData": "No data found."
+        "noData": "No data found.",
+        "downArrow": "select"
     });
 }
 
@@ -1447,6 +1450,42 @@ if (kendo.ui.PDFViewer) {
                 of: "of"
             }
         }
+    });
+}
+
+/* Captcha messages */
+
+if (kendo.ui.Captcha) {
+    kendo.ui.Captcha.prototype.options.messages =
+    $.extend(true, kendo.ui.Captcha.prototype.options.messages,{
+        "reset": "Reset captcha",
+        "audio": "Speak captcha",
+        "imageAlt": "Type the Captcha code from the image",
+        "success": "Verification successful"
+    });
+}
+
+/* OrgChart messages */
+
+if (kendo.ui.OrgChart) {
+    kendo.ui.OrgChart.prototype.options.messages =
+    $.extend(true, kendo.ui.OrgChart.prototype.options.messages,{
+        label: "Org Chart",
+        edit: "Edit",
+        create: "Create",
+        destroy: "Delete",
+        destroyContent: "Are you sure you want to delete this item and all its children?",
+        destroyTitle: "Delete item",
+        cancel: "Cancel",
+        save: "Save",
+        menuLabel: "Edit menu",
+        uploadAvatar: "Upload new avatar",
+        parent: "Parent",
+        name: "Name",
+        title: "Title",
+        none: "--None--",
+        expand: "expand",
+        collapse: "collapse"
     });
 }
 

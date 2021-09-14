@@ -60,8 +60,8 @@
         }
         function convertToValueBinding(container) {
             container.find(':input:not(:button, .k-combobox .k-input, .k-checkbox-list .k-checkbox, .k-radio-list .k-radio, [' + kendo.attr('role') + '=listbox], [' + kendo.attr('role') + '=upload], [' + kendo.attr('skip') + '], [type=file])').each(function () {
-                var bindAttr = kendo.attr('bind'), binding = this.getAttribute(bindAttr) || '', bindingName = this.type === 'checkbox' || this.type === 'radio' ? 'checked:' : 'value:', fieldName = this.name;
-                if (binding.indexOf(bindingName) === -1 && fieldName) {
+                var bindAttr = kendo.attr('bind'), binding = this.getAttribute(bindAttr) || '', bindingName = this.type === 'checkbox' || this.type === 'radio' ? 'checked:' : 'value:', isAntiForgeryToken = this.getAttribute('name') === Editable.antiForgeryTokenName, fieldName = this.name;
+                if (binding.indexOf(bindingName) === -1 && fieldName && !isAntiForgeryToken) {
                     binding += (binding.length ? ',' : '') + bindingName + fieldName;
                     $(this).attr(bindAttr, binding);
                 }
@@ -133,7 +133,7 @@
             } else if (type === 'RadioGroup' || type === 'CheckBoxGroup') {
                 tag = '<ul />';
             } else {
-                tag = type === 'Editor' ? '<textarea />' : '<input />';
+                tag = type === 'Editor' || type === 'TextArea' ? '<textarea />' : '<input />';
             }
             return tag;
         }
@@ -156,9 +156,16 @@
             'Slider',
             'Switch',
             'TimePicker',
-            'DropDownList'
+            'DropDownList',
+            'TextBox',
+            'TextArea',
+            'Captcha'
         ];
         var editors = {
+            'hidden': function (container, options) {
+                var attr = createAttributes(options);
+                $('<input type="hidden"/>').attr(attr).appendTo(container);
+            },
             'number': function (container, options) {
                 var attr = createAttributes(options);
                 $('<input type="text"/>').attr(attr).appendTo(container).kendoNumericTextBox({ format: options.format });
@@ -274,7 +281,7 @@
                 skipFocus: false
             },
             editor: function (field, modelField) {
-                var that = this, editors = that._isMobile ? mobileEditors : that.options.editors, isObject = isPlainObject(field), fieldName = isObject ? field.field : field, model = that.options.model || {}, isValuesEditor = isObject && field.values, type = isValuesEditor ? 'values' : fieldType(modelField), isCustomEditor = isObject && field.editor, isKendoEditor = isObject && $.inArray(field.editor, kendoEditors) !== -1, editor = isCustomEditor ? field.editor : editors[type], container = that.element.find('[' + kendo.attr('container-for') + '=' + fieldName.replace(nameSpecialCharRegExp, '\\$1') + ']');
+                var that = this, editors = that._isMobile ? mobileEditors : that.options.editors, isObject = isPlainObject(field), fieldName = isObject ? field.field : field, model = that.options.model || {}, isValuesEditor = isObject && field.values, type = isValuesEditor ? 'values' : fieldType(modelField), isHidden = isObject && typeof field.editor === 'string' && field.editor === 'hidden', isCustomEditor = isObject && !isHidden && field.editor, isKendoEditor = isObject && $.inArray(field.editor, kendoEditors) !== -1, editor = isCustomEditor ? field.editor : editors[isHidden ? 'hidden' : type], container = that.element.find('[' + kendo.attr('container-for') + '=' + fieldName.replace(nameSpecialCharRegExp, '\\$1') + ']');
                 editor = editor ? editor : editors.string;
                 if (isKendoEditor) {
                     editor = editors.kendoEditor;
@@ -377,6 +384,7 @@
                 }
             }
         });
+        Editable.antiForgeryTokenName = '__RequestVerificationToken';
         ui.plugin(Editable);
     }(window.kendo.jQuery));
     return window.kendo;

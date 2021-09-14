@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.2.901'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.3.914'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -3923,6 +3923,18 @@
                 });
             });
             return observable;
+        };
+        kendo.getSeriesColors = function () {
+            var seriesColorsTemplate = '<div class="k-var--series-a"></div>' + '<div class="k-var--series-b"></div>' + '<div class="k-var--series-c"></div>' + '<div class="k-var--series-d"></div>' + '<div class="k-var--series-e"></div>' + '<div class="k-var--series-f"></div>', series = $(seriesColorsTemplate), colors = [];
+            series.appendTo($('body'));
+            series.each(function (i, item) {
+                colors.push($(item).css('background-color'));
+            });
+            series.remove();
+            return colors;
+        };
+        kendo.isElement = function (element) {
+            return element instanceof Element || element instanceof HTMLDocument;
         };
         (function () {
             kendo.defaults = kendo.defaults || {};

@@ -148,7 +148,8 @@
                     email: '{0} is not valid email',
                     url: '{0} is not valid URL',
                     date: '{0} is not valid date',
-                    dateCompare: 'End date should be greater than or equal to the start date'
+                    dateCompare: 'End date should be greater than or equal to the start date',
+                    captcha: 'The text you entered doesn\'t match the image.'
                 },
                 rules: {
                     required: function (input) {
@@ -197,6 +198,31 @@
                             return kendo.parseDate(input.val(), input.attr(kendo.attr('format'))) !== null;
                         }
                         return true;
+                    },
+                    captcha: function (input) {
+                        if (input.filter('[' + kendo.attr('role') + '=captcha]').length) {
+                            var that = this, captcha = kendo.widgetInstance(input), isValidated = function (isValid) {
+                                    return typeof isValid !== 'undefined' && isValid !== null;
+                                };
+                            if (!input.data('captcha_validating') && !isValidated(captcha.isValid()) && !!captcha.getCaptchaId()) {
+                                input.data('captcha_validating', true);
+                                that._validating = true;
+                                captcha.validate().done(function () {
+                                    that._validating = false;
+                                    that._checkElement(input);
+                                }).fail(function (data) {
+                                    that._validating = false;
+                                    if (data.error && data.error === 'handler_not_defined') {
+                                        window.console.warn('Captcha\'s validationHandler is not defined! You should either define a proper validation endpoint or declare a callback function to ensure the required behavior.');
+                                    }
+                                });
+                            }
+                            if (isValidated(captcha.isValid())) {
+                                input.removeData('captcha_validating');
+                                return captcha.isValid();
+                            }
+                        }
+                        return true;
                     }
                 },
                 validateOnBlur: true,
@@ -223,7 +249,7 @@
                 return this.errors().length === 0;
             },
             _submit: function (e) {
-                if (!this.validate() && !this._allowSubmit()) {
+                if (!this.validate() && !this._allowSubmit() || this._validating) {
                     e.stopPropagation();
                     e.stopImmediatePropagation();
                     e.preventDefault();
@@ -308,7 +334,7 @@
                         field: fieldName
                     })) : '', wasValid = !input.attr(ARIAINVALID);
                 input.removeAttr(ARIAINVALID);
-                if (!valid) {
+                if (!valid && !input.data('captcha_validating')) {
                     that._errors[fieldName] = messageText;
                     var lblId = lbl.attr('id');
                     that._decorateMessageContainer(messageLabel, fieldName);

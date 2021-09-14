@@ -114,7 +114,7 @@
                     that.readonly(element.is('[readonly]'));
                 }
                 that.value(that.options.value || element.val());
-                that._validationIcon = $('<span class=\'k-icon k-i-warning\'></span>').insertAfter(element);
+                that._validationIcon = $('<span class=\'k-icon k-i-warning k-hidden\'></span>').insertAfter(element);
                 that._label();
                 kendo.notify(that);
             },
@@ -518,13 +518,19 @@
             },
             _blinkInvalidState: function () {
                 var that = this;
-                that.wrapper.addClass(STATEINVALID);
+                that._addInvalidState();
                 clearTimeout(that._invalidStateTimeout);
                 that._invalidStateTimeout = setTimeout(proxy(that._removeInvalidState, that), 100);
+            },
+            _addInvalidState: function () {
+                var that = this;
+                that.wrapper.addClass(STATEINVALID);
+                that._validationIcon.removeClass('k-hidden');
             },
             _removeInvalidState: function () {
                 var that = this;
                 that.wrapper.removeClass(STATEINVALID);
+                that._validationIcon.addClass('k-hidden');
                 that._invalidStateTimeout = null;
             },
             _tokenize: function () {

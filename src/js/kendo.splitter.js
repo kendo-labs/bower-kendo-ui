@@ -33,7 +33,7 @@
         depends: ['resizable']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, extend = $.extend, proxy = $.proxy, Widget = ui.Widget, pxUnitsRegex = /^\d+(\.\d+)?px$/i, percentageUnitsRegex = /^\d+(\.\d+)?%$/i, NS = '.kendoSplitter', EXPAND = 'expand', COLLAPSE = 'collapse', CONTENTLOAD = 'contentLoad', ERROR = 'error', RESIZE = 'resize', LAYOUTCHANGE = 'layoutChange', HORIZONTAL = 'horizontal', VERTICAL = 'vertical', MOUSEENTER = 'mouseenter', CLICK = 'click', PANE = 'pane', MOUSELEAVE = 'mouseleave', FOCUSED = 'k-state-focused', KPANE = 'k-' + PANE, PANECLASS = '.' + KPANE;
+        var kendo = window.kendo, ui = kendo.ui, keys = kendo.keys, extend = $.extend, proxy = $.proxy, Widget = ui.Widget, pxUnitsRegex = /^\d+(\.\d+)?px$/i, percentageUnitsRegex = /^\d+(\.\d+)?%$/i, NS = '.kendoSplitter', EXPAND = 'expand', COLLAPSE = 'collapse', CONTENTLOAD = 'contentLoad', ERROR = 'error', RESIZE = 'resize', LAYOUTCHANGE = 'layoutChange', HORIZONTAL = 'horizontal', VERTICAL = 'vertical', MOUSEENTER = 'mouseenter', CLICK = 'click', PANE = 'pane', MOUSELEAVE = 'mouseleave', FOCUSED = 'k-state-focused', KPANE = 'k-' + PANE, PANECLASS = '.' + KPANE, TABINDEX = 'tabindex', ARIA_VALUEMIN = 'aria-valuemin', ARIA_VALUEMAX = 'aria-valuemax', ARIA_VALUENOW = 'aria-valuenow', ARIA_CONTROLS = 'aria-controls', ARIA_LABEL = 'aria-label', ARIA_LABELLEDBY = 'aria-labelledby', ARIA_ORIENTATION = 'aria-orientation';
         function isPercentageSize(size) {
             return percentageUnitsRegex.test(size);
         }
@@ -154,10 +154,12 @@
                     }
                     e.preventDefault();
                 } else if (key === keys.HOME) {
-                    resizing.move(-resizing._maxPosition, target);
+                    pane = target.prev();
+                    that.collapse(pane);
                     e.preventDefault();
                 } else if (key === keys.END) {
-                    resizing.move(resizing._maxPosition, target);
+                    pane = target.prev();
+                    that.expand(pane);
                     e.preventDefault();
                 } else if (key === keys.ENTER && resizing) {
                     resizing.end();
@@ -254,23 +256,35 @@
                     that._triggerAction(arrowType, pane);
                 };
             },
-            _updateSplitBar: function (splitbar, previousPane, nextPane) {
+            _updateSplitBar: function (splitbar, previousPane, nextPane, previousPaneEl) {
                 var catIconIf = function (iconType, condition) {
                         return condition ? '<div class=\'k-icon ' + iconType + '\'></div>' : '';
-                    }, orientation = this.orientation, draggable = previousPane.resizable !== false && nextPane.resizable !== false, prevCollapsible = previousPane.collapsible, prevCollapsed = previousPane.collapsed, nextCollapsible = nextPane.collapsible, nextCollapsed = nextPane.collapsed;
-                splitbar.addClass('k-splitbar k-state-default k-splitbar-' + orientation).attr('role', 'separator').attr('aria-expanded', !(prevCollapsed || nextCollapsed)).removeClass('k-splitbar-' + orientation + '-hover').toggleClass('k-splitbar-draggable-' + orientation, draggable && !prevCollapsed && !nextCollapsed).toggleClass('k-splitbar-static-' + orientation, !draggable && !prevCollapsible && !nextCollapsible).html(catIconIf('k-collapse-prev k-i-arrow-60-up', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-prev k-i-arrow-60-left', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-prev k-i-arrow-60-down', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-expand-prev k-i-arrow-60-right', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-resize-handle k-i-hbar', draggable && orientation == VERTICAL) + catIconIf('k-resize-handle k-i-vbar', draggable && orientation == HORIZONTAL) + catIconIf('k-collapse-next k-i-arrow-60-down', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-next k-i-arrow-60-right', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-next k-i-arrow-60-up', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-expand-next k-i-arrow-60-left', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == HORIZONTAL));
+                    }, orientation = this.orientation, draggable = previousPane.resizable !== false && nextPane.resizable !== false, prevCollapsible = previousPane.collapsible, prevCollapsed = previousPane.collapsed, nextCollapsible = nextPane.collapsible, nextCollapsed = nextPane.collapsed, previousPaneId = previousPaneEl.attr('id');
+                if (!previousPaneId) {
+                    previousPaneId = kendo.guid();
+                    previousPaneEl.attr('id', previousPaneId);
+                }
+                splitbar.addClass('k-splitbar k-state-default k-splitbar-' + orientation).attr('role', 'separator').attr(ARIA_VALUEMIN, '0').attr(ARIA_VALUEMAX, '100').attr(ARIA_CONTROLS, previousPaneId).removeClass('k-splitbar-' + orientation + '-hover').toggleClass('k-splitbar-draggable-' + orientation, draggable && !prevCollapsed && !nextCollapsed).toggleClass('k-splitbar-static-' + orientation, !draggable && !prevCollapsible && !nextCollapsible).html(catIconIf('k-collapse-prev k-i-arrow-60-up', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-prev k-i-arrow-60-left', prevCollapsible && !prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-prev k-i-arrow-60-down', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == VERTICAL) + catIconIf('k-expand-prev k-i-arrow-60-right', prevCollapsible && prevCollapsed && !nextCollapsed && orientation == HORIZONTAL) + catIconIf('k-resize-handle k-i-hbar', draggable && orientation == VERTICAL) + catIconIf('k-resize-handle k-i-vbar', draggable && orientation == HORIZONTAL) + catIconIf('k-collapse-next k-i-arrow-60-down', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-collapse-next k-i-arrow-60-right', nextCollapsible && !nextCollapsed && !prevCollapsed && orientation == HORIZONTAL) + catIconIf('k-expand-next k-i-arrow-60-up', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == VERTICAL) + catIconIf('k-expand-next k-i-arrow-60-left', nextCollapsible && nextCollapsed && !prevCollapsed && orientation == HORIZONTAL));
+                if (previousPane.labelId) {
+                    splitbar.attr(ARIA_LABELLEDBY, previousPane.labelId);
+                } else if (previousPane.label) {
+                    splitbar.attr(ARIA_LABEL, previousPane.label);
+                }
+                if (orientation == HORIZONTAL) {
+                    splitbar.attr(ARIA_ORIENTATION, VERTICAL);
+                }
                 if (!draggable && !prevCollapsible && !nextCollapsible) {
-                    splitbar.removeAttr('tabindex');
+                    splitbar.removeAttr(TABINDEX);
                 }
             },
             _updateSplitBars: function () {
                 var that = this;
                 this.element.children('.k-splitbar').each(function () {
-                    var splitbar = $(this), previousPane = splitbar.prevAll(PANECLASS).first().data(PANE), nextPane = splitbar.nextAll(PANECLASS).first().data(PANE);
+                    var splitbar = $(this), previousPaneEl = splitbar.prevAll(PANECLASS).first(), previousPane = previousPaneEl.data(PANE), nextPane = splitbar.nextAll(PANECLASS).first().data(PANE);
                     if (!nextPane) {
                         return;
                     }
-                    that._updateSplitBar(splitbar, previousPane, nextPane);
+                    that._updateSplitBar(splitbar, previousPane, nextPane, previousPaneEl);
                 });
             },
             _removeSplitBars: function () {
@@ -282,8 +296,17 @@
                 }
                 return this.element.children(PANECLASS);
             },
+            _resetAriaValueNow: function (splitBars, panesSizes) {
+                var i, splitbar, valueNow, joinDimension;
+                for (i = 0; i < splitBars.length; i++) {
+                    joinDimension = panesSizes[i] + panesSizes[i + 1] || 1;
+                    valueNow = Math.round(panesSizes[i] / joinDimension * 100);
+                    splitbar = splitBars[i];
+                    splitbar.setAttribute(ARIA_VALUENOW, valueNow);
+                }
+            },
             _resize: function () {
-                var that = this, element = that.element, panes = element.children(PANECLASS), isHorizontal = that.orientation == HORIZONTAL, splitBars = element.children('.k-splitbar'), splitBarsCount = splitBars.length, sizingProperty = isHorizontal ? 'width' : 'height', totalSize = element[sizingProperty]();
+                var that = this, element = that.element, panes = element.children(PANECLASS), isHorizontal = that.orientation == HORIZONTAL, splitBars = element.children('.k-splitbar'), splitBarsCount = splitBars.length, sizingProperty = isHorizontal ? 'width' : 'height', totalSize = element[sizingProperty](), panesSizes = [];
                 that.wrapper.addClass('k-splitter-resizing');
                 if (splitBarsCount === 0) {
                     splitBarsCount = panes.length - 1;
@@ -308,17 +331,25 @@
                         element.css('overflow', 'hidden').addClass('k-state-collapsed');
                     } else if (isFluid(config.size)) {
                         freeSizedPanes = freeSizedPanes.add(this);
+                        panesSizes.push(false);
                         return;
                     } else {
                         size = calculateSize(config.size, totalSize);
                     }
                     sizedPanesCount++;
                     sizedPanesWidth += size;
+                    panesSizes.push(size);
                     return size;
                 });
                 totalSize -= sizedPanesWidth;
                 var freeSizePanesCount = freeSizedPanes.length, freeSizePaneWidth = Math.floor(totalSize / freeSizePanesCount);
                 freeSizedPanes.slice(0, freeSizePanesCount - 1).css(sizingProperty, freeSizePaneWidth).end().eq(freeSizePanesCount - 1).css(sizingProperty, totalSize - (freeSizePanesCount - 1) * freeSizePaneWidth);
+                panesSizes.forEach(function (size, i) {
+                    if (size === false) {
+                        panesSizes[i] = freeSizePaneWidth;
+                    }
+                });
+                that._resetAriaValueNow(splitBars, panesSizes);
                 var sum = 0, alternateSizingProperty = isHorizontal ? 'height' : 'width', positioningProperty = isHorizontal ? 'left' : 'top', sizingDomProperty = isHorizontal ? 'offsetWidth' : 'offsetHeight';
                 if (freeSizePanesCount === 0) {
                     var lastNonCollapsedPane = panes.filter(function () {

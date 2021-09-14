@@ -70,7 +70,6 @@
         var DROP_HINT_CLASS = 'k-drop-hint';
         var LIST_CLASS = 'k-reset k-list';
         var LIST_SELECTOR = '.k-reset.k-list';
-        var RESET = 'k-reset';
         var CLICK = 'click' + NS;
         var KEYDOWN = 'keydown' + NS;
         var BLUR = 'blur' + NS;
@@ -117,7 +116,7 @@
             return typeof value === 'undefined';
         }
         function defaultHint(element) {
-            return element.clone().removeClass(DRAGGEDCLASS).removeClass(FOCUSED_CLASS).addClass(kendo.format('{0} {1} {2}', SELECTED_STATE_CLASS, RESET, DRAG_CLUE_CLASS)).width(element.width());
+            return element.clone().attr('class', '').addClass(DRAG_CLUE_CLASS);
         }
         function defaultPlaceholder() {
             return $('<li>').addClass(DROP_HINT_CLASS);

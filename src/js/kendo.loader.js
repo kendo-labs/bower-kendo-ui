@@ -33,7 +33,7 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, HIDDEN = 'k-hidden', ARIA_LABEL = 'aria-label', ARIA_HIDDEN = 'aria-hidden';
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, HIDDEN = 'k-hidden', ROLE = 'role', ARIA_LABEL = 'aria-label', ARIA_HIDDEN = 'aria-hidden', ARIA_LIVE = 'aria-live';
         var loaderClasses = {
             loader: 'k-widget k-loader',
             canvas: 'k-loader-canvas',
@@ -81,7 +81,7 @@
             },
             _render: function () {
                 var that = this, wrapper = that.element, type = that.options.type, typeData = loaderTypes[type] === undefined ? type : loaderTypes[type], segments = [];
-                wrapper.empty().attr(ARIA_LABEL, that.options.messages.loading);
+                wrapper.empty().attr(ARIA_LABEL, that.options.messages.loading).attr(ROLE, 'alert').attr(ARIA_LIVE, 'polite');
                 if (typeData.segments) {
                     for (var i = 0; i < typeData.segments; i += 1) {
                         segments.push($('<span/>').addClass(loaderClasses.segment));

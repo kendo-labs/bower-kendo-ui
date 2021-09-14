@@ -37,7 +37,10 @@
                 VALUE: 'value',
                 PERCENT: 'percent',
                 CHUNK: 'chunk'
-            }, CHANGE = 'change', COMPLETE = 'complete', BOOLEAN = 'boolean', math = Math, extend = $.extend, proxy = $.proxy, HUNDREDPERCENT = 100, DEFAULTANIMATIONDURATION = 400, PRECISION = 3, templates = { progressStatus: '<span class=\'k-progress-status-wrap ' + LABEL_POSITION_END + '\'><span class=\'k-progress-status\'></span></span>' };
+            }, CHANGE = 'change', COMPLETE = 'complete', BOOLEAN = 'boolean', math = Math, extend = $.extend, proxy = $.proxy, HUNDREDPERCENT = 100, DEFAULTANIMATIONDURATION = 400, PRECISION = 3, templates = {
+                progressStatus: '<span class=\'k-progress-status-wrap ' + LABEL_POSITION_END + '\'><span class=\'k-progress-status\'></span></span>',
+                announceElement: '<span aria-live="polite" class="k-sr-only k-progress-announce"></span>'
+            };
         var ProgressBar = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -48,19 +51,25 @@
                 options.value = that._validateValue(options.value);
                 that._validateType(options.type);
                 that._wrapper();
+                if (options.ariaRole) {
+                    that._aria();
+                }
                 that._progressAnimation();
                 if (options.value !== options.min && options.value !== false) {
                     that._updateProgress();
                 }
             },
             setOptions: function (options) {
-                var that = this;
+                var that = this, wrapper = that.wrapper;
                 Widget.fn.setOptions.call(that, options);
                 if (options.hasOwnProperty('reverse')) {
-                    that.wrapper.toggleClass('k-progressbar-reverse', options.reverse);
+                    wrapper.toggleClass('k-progressbar-reverse', options.reverse);
                 }
                 if (options.hasOwnProperty('enable')) {
                     that.enable(options.enable);
+                }
+                if (options.ariaRole) {
+                    that._aria();
                 }
                 that._progressAnimation();
                 that._validateValue();
@@ -81,7 +90,29 @@
                 type: PROGRESSTYPE.VALUE,
                 chunkCount: DEFAULTCHUNKCOUNT,
                 showStatus: true,
-                animation: {}
+                animation: {},
+                label: null,
+                labelId: null,
+                ariaRole: false
+            },
+            _aria: function () {
+                var that = this, options = that.options, wrapper = that.wrapper;
+                wrapper.attr({
+                    'role': 'progressbar',
+                    'aria-valuemin': options.min,
+                    'aria-valuemax': options.max
+                });
+                if (!!options.labelId) {
+                    wrapper.attr('aria-labelledby', options.labelId);
+                } else if (!!options.label) {
+                    wrapper.attr('aria-label', options.label);
+                }
+                that.announce = $(templates.announceElement);
+                that.announce.appendTo($('body'));
+                if (options.value !== false) {
+                    wrapper.attr('aria-valuenow', options.value);
+                    that.announce.text(that._calculatePercentage().toFixed() + '%');
+                }
             },
             _fields: function () {
                 var that = this;
@@ -105,7 +136,7 @@
                 var container = that.wrapper = that.element;
                 var options = that.options;
                 var orientation = options.orientation;
-                var initialStatusValue;
+                var initialValue = options.value !== false ? options.value : options.min;
                 container.addClass('k-widget ' + KPROGRESSBAR);
                 container.addClass(KPROGRESSBAR + '-' + (orientation === HORIZONTAL ? HORIZONTAL : VERTICAL));
                 if (options.enable === false) {
@@ -122,11 +153,10 @@
                 } else {
                     if (options.showStatus) {
                         that.progressStatus = that.wrapper.prepend(templates.progressStatus).find('.' + KPROGRESSSTATUS);
-                        initialStatusValue = options.value !== false ? options.value : options.min;
                         if (options.type === PROGRESSTYPE.VALUE) {
-                            that.progressStatus.text(initialStatusValue);
+                            that.progressStatus.text(initialValue);
                         } else {
-                            that.progressStatus.text(that._calculatePercentage(initialStatusValue).toFixed() + '%');
+                            that.progressStatus.text(that._calculatePercentage(initialValue).toFixed() + '%');
                         }
                     }
                 }
@@ -154,7 +184,11 @@
                         }
                     } else if (!value) {
                         that.wrapper.addClass(KPROGRESSBARINDETERMINATE);
+                        that.wrapper.removeAttr('aria-valuenow');
                         options.value = false;
+                        if (that.announce) {
+                            that.announce.text('');
+                        }
                     }
                 }
             },
@@ -189,6 +223,12 @@
                     that._onProgressUpdateAlways(options.value);
                 } else {
                     that._updateProgressWrapper(percentage);
+                }
+                if (options.ariaRole) {
+                    that.wrapper.attr('aria-valuenow', that.options.value);
+                    if (that.announce) {
+                        that.announce.text(percentage.toFixed() + '%');
+                    }
                 }
             },
             _updateChunks: function (percentage) {
@@ -281,6 +321,9 @@
             },
             destroy: function () {
                 var that = this;
+                if (that.announce) {
+                    that.announce.remove();
+                }
                 Widget.fn.destroy.call(that);
             },
             _addChunkProgressWrapper: function () {

@@ -74,6 +74,7 @@
                 that._textContainer();
                 that._loader();
                 that._clearButton();
+                that._arrowButton();
                 that._tabindex(that.input);
                 element = that.element.attr('multiple', 'multiple').hide();
                 options = that.options;
@@ -128,7 +129,8 @@
                     'singleTag': 'item(s) selected',
                     'clear': 'clear',
                     'deleteTag': 'delete',
-                    'noData': 'No data found.'
+                    'noData': 'No data found.',
+                    'downArrow': 'select'
                 },
                 enforceMinLength: false,
                 delay: 100,
@@ -175,6 +177,7 @@
                 this._tagTemplate();
                 this._placeholder();
                 this._clearButton();
+                this._arrowButton();
             },
             currentTag: function (candidate) {
                 var that = this;
@@ -271,19 +274,24 @@
                 var that = this;
                 var notInput = e.target.nodeName.toLowerCase() !== 'input';
                 var target = $(e.target);
-                var closeButton = target.hasClass('k-select') || target.hasClass('k-icon');
+                var closeButton = target.hasClass('k-select') || target.hasClass('k-icon'), removeButton;
                 if (closeButton) {
-                    closeButton = !target.closest('.k-select').children('.k-i-arrow-60-down').length;
+                    closeButton = target.closest('.k-select').children('.k-i-arrow-60-down').length;
+                    removeButton = !target.closest('.k-select').children('.k-i-arrow-60-down').length;
                 }
-                if (notInput && !(closeButton && kendo.support.mobileOS) && e.cancelable) {
+                if (notInput && !(removeButton && kendo.support.mobileOS) && e.cancelable) {
                     e.preventDefault();
                 }
-                if (!closeButton) {
-                    if (that.input[0] !== activeElement() && notInput) {
-                        that.input.focus();
-                    }
-                    if (that.options.minLength === 1 && !that.popup.visible()) {
-                        that.open();
+                if (!removeButton) {
+                    if (closeButton && that.popup.visible()) {
+                        that.toggle(false);
+                    } else {
+                        if (that.input[0] !== activeElement() && notInput) {
+                            that.input.focus();
+                        }
+                        if (that.options.minLength === 1 && !that.popup.visible()) {
+                            that.open();
+                        }
                     }
                 }
             },
@@ -689,7 +697,7 @@
                         if (!listView.focus()) {
                             listView.focusLast();
                         } else {
-                            if (e.shiftKey) {
+                            if (e.shiftKey && !that.options.virtual) {
                                 this._multipleSelection = true;
                                 that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus().first()) + dir);
                             }
@@ -708,7 +716,7 @@
                         if (!listView.focus()) {
                             that.close();
                         } else {
-                            if (e.shiftKey) {
+                            if (e.shiftKey && !that.options.virtual) {
                                 this._multipleSelection = true;
                                 that._selectRange(activeItemIdx, listView.getElementIndex(listView.focus().first()) + dir);
                             }
@@ -762,7 +770,7 @@
                         that._change();
                     });
                     e.preventDefault();
-                } else if (key === keys.SPACEBAR && e.shiftKey && visible) {
+                } else if (key === keys.SPACEBAR && e.shiftKey && visible && !that.options.virtual) {
                     var activeIndex = listView.getElementIndex(that._getActiveItem());
                     var currentIndex = listView.getElementIndex(listView.focus());
                     if (activeIndex !== undefined && currentIndex !== undefined) {
@@ -1212,6 +1220,24 @@
                 if (this.options.clearButton) {
                     this._clear.insertAfter(this.input);
                     this.wrapper.addClass('k-multiselect-clearable');
+                }
+            },
+            _arrowButton: function () {
+                var element = this.element, arrowTitle = this.options.messages.downArrow, arrow = $('<span unselectable="on" class="k-select" title="' + arrowTitle + '"><span class="k-icon k-i-arrow-60-down"></span></span></span>');
+                if (this.options.downArrow) {
+                    this._arrow = arrow.attr({
+                        'role': 'button',
+                        'tabIndex': -1
+                    });
+                    if (element.id) {
+                        this._arrow.attr('aria-controls', this.ul[0].id);
+                    }
+                    this._arrow.insertAfter(this.input);
+                    this.wrapper.find('.k-multiselect-wrap').addClass('k-multiselect-wrap-arrow');
+                } else if (this._arrow) {
+                    this._arrow.remove();
+                    this._arrow = null;
+                    this.wrapper.find('.k-multiselect-wrap').removeClass('k-multiselect-wrap-arrow');
                 }
             },
             _textContainer: function () {

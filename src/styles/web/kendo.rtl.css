@@ -544,15 +544,11 @@
   margin: -3px -6px 0 3px;
 }
 .k-rtl .k-tabstrip-prev {
-  left: auto;
-  right: 0.4em;
   -webkit-transform: scaleX(-1);
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
 }
 .k-rtl .k-tabstrip-next {
-  right: auto;
-  left: 0.4em;
   -webkit-transform: scaleX(-1);
       -ms-transform: scaleX(-1);
           transform: scaleX(-1);
