@@ -774,7 +774,7 @@
         };
         var pendingPatches = [];
         function defadvice(klass, methodName, func) {
-            if ($.isArray(klass)) {
+            if (Array.isArray(klass)) {
                 return angular.forEach(klass, function (klass) {
                     defadvice(klass, methodName, func);
                 });
@@ -944,7 +944,7 @@
         });
         defadvice('ui.Widget', '$angular_init', function (element, options) {
             var self = this.self;
-            if (options && !$.isArray(options)) {
+            if (options && !Array.isArray(options)) {
                 var scope = self.$angular_scope;
                 for (var i = self.events.length; --i >= 0;) {
                     var event = self.events[i];

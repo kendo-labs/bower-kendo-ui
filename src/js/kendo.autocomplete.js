@@ -70,7 +70,7 @@
             init: function (element, options) {
                 var that = this, wrapper, disabled;
                 that.ns = ns;
-                options = $.isArray(options) ? { dataSource: options } : options;
+                options = Array.isArray(options) ? { dataSource: options } : options;
                 List.fn.init.call(that, element, options);
                 element = that.element;
                 options = that.options;
@@ -187,7 +187,7 @@
                 var that = this, element = that.element, wrapper = that.wrapper.off(ns), readonly = options.readonly, disable = options.disable;
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false);
+                    element.prop(DISABLED, false).prop(READONLY, false).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false);
                 } else {
                     wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
                     element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);

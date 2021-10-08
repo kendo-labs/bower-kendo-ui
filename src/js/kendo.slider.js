@@ -33,7 +33,7 @@
         depends: ['draganddrop']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, extend = $.extend, format = kendo.format, parse = kendo.parseFloat, proxy = $.proxy, isArray = $.isArray, math = Math, support = kendo.support, pointers = support.pointers, msPointers = support.msPointers, CHANGE = 'change', SLIDE = 'slide', NS = '.slider', MOUSE_DOWN = 'touchstart' + NS + ' mousedown' + NS, TRACK_MOUSE_DOWN = pointers ? 'pointerdown' + NS : msPointers ? 'MSPointerDown' + NS : MOUSE_DOWN, MOUSE_UP = 'touchend' + NS + ' mouseup' + NS, TRACK_MOUSE_UP = pointers ? 'pointerup' : msPointers ? 'MSPointerUp' + NS : MOUSE_UP, MOVE_SELECTION = 'moveSelection', KEY_DOWN = 'keydown' + NS, CLICK = 'click' + NS, MOUSE_OVER = 'mouseover' + NS, FOCUS = 'focus' + NS, BLUR = 'blur' + NS, DRAG_HANDLE = '.k-draghandle', TRACK_SELECTOR = '.k-slider-track', TICK_SELECTOR = '.k-tick', STATE_SELECTED = 'k-state-selected', STATE_FOCUSED = 'k-state-focused', STATE_DEFAULT = 'k-state-default', STATE_DISABLED = 'k-state-disabled', DISABLED = 'disabled', UNDEFINED = 'undefined', TABINDEX = 'tabindex', getTouches = kendo.getTouches;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, extend = $.extend, format = kendo.format, parse = kendo.parseFloat, proxy = $.proxy, isArray = Array.isArray, math = Math, support = kendo.support, pointers = support.pointers, msPointers = support.msPointers, CHANGE = 'change', SLIDE = 'slide', NS = '.slider', MOUSE_DOWN = 'touchstart' + NS + ' mousedown' + NS, TRACK_MOUSE_DOWN = pointers ? 'pointerdown' + NS : msPointers ? 'MSPointerDown' + NS : MOUSE_DOWN, MOUSE_UP = 'touchend' + NS + ' mouseup' + NS, TRACK_MOUSE_UP = pointers ? 'pointerup' : msPointers ? 'MSPointerUp' + NS : MOUSE_UP, MOVE_SELECTION = 'moveSelection', KEY_DOWN = 'keydown' + NS, CLICK = 'click' + NS, MOUSE_OVER = 'mouseover' + NS, FOCUS = 'focus' + NS, BLUR = 'blur' + NS, DRAG_HANDLE = '.k-draghandle', TRACK_SELECTOR = '.k-slider-track', TICK_SELECTOR = '.k-tick', STATE_SELECTED = 'k-state-selected', STATE_FOCUSED = 'k-state-focused', STATE_DEFAULT = 'k-state-default', STATE_DISABLED = 'k-state-disabled', DISABLED = 'disabled', UNDEFINED = 'undefined', TABINDEX = 'tabindex', getTouches = kendo.getTouches;
         var SliderBase = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -511,7 +511,7 @@
                     return;
                 }
                 that.wrapper.removeClass(STATE_DISABLED).addClass(STATE_DEFAULT);
-                that.wrapper.find('input').removeAttr(DISABLED);
+                that.wrapper.find('input').prop(DISABLED, false);
                 clickHandler = function (e) {
                     var touch = getTouches(e)[0];
                     if (!touch) {
@@ -567,7 +567,7 @@
                         mouseDownHandler(e, 1);
                     }, that)).click(false).end().eq(1).on(MOUSE_DOWN, proxy(function (e) {
                         mouseDownHandler(e, -1);
-                    }, that)).click(kendo.preventDefault);
+                    }, that)).on('click', kendo.preventDefault);
                 }
                 that.wrapper.find(DRAG_HANDLE).off(KEY_DOWN, false).on(KEY_DOWN, proxy(this._keydown, that));
                 options.enabled = true;
@@ -985,7 +985,7 @@
                     return;
                 }
                 that.wrapper.removeClass(STATE_DISABLED).addClass(STATE_DEFAULT);
-                that.wrapper.find('input').removeAttr(DISABLED);
+                that.wrapper.find('input').prop(DISABLED, false);
                 clickHandler = function (e) {
                     var touch = getTouches(e)[0];
                     if (!touch) {

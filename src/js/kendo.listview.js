@@ -26,7 +26,8 @@
     define('kendo.listview', [
         'kendo.data',
         'kendo.editable',
-        'kendo.selectable'
+        'kendo.selectable',
+        'kendo.pager'
     ], f);
 }(function () {
     var __meta__ = {
@@ -47,15 +48,21 @@
                 name: 'Selection',
                 description: 'Support for selection',
                 depends: ['selectable']
+            },
+            {
+                id: 'listview-paging',
+                name: 'Paging',
+                description: 'Support for paging',
+                depends: ['pager']
             }
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, CHANGE = 'change', KENDO_KEYDOWN = 'kendoKeydown', CANCEL = 'cancel', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', Widget = kendo.ui.Widget, keys = kendo.keys, EMPTY_STRING = '', FOCUSSELECTOR = '> *:not(.k-loading-mask)', PROGRESS = 'progress', ERROR = 'error', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', KEDITITEM = 'k-edit-item', EDIT = 'edit', REMOVE = 'remove', SAVE = 'save', MOUSEDOWN = 'mousedown', CLICK = 'click', TOUCHSTART = 'touchstart', NS = '.kendoListView', proxy = $.proxy, activeElement = kendo._activeElement, progress = kendo.ui.progress, DataSource = kendo.data.DataSource;
+        var kendo = window.kendo, CHANGE = 'change', KENDO_KEYDOWN = 'kendoKeydown', CANCEL = 'cancel', DATABOUND = 'dataBound', DATABINDING = 'dataBinding', Widget = kendo.ui.Widget, keys = kendo.keys, EMPTY_STRING = '', DOT = '.', FOCUSSELECTOR = '> *:not(.k-loading-mask)', PROGRESS = 'progress', ERROR = 'error', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', KEDITITEM = 'k-edit-item', PAGER_CLASS = 'k-listview-pager', ITEM_CLASS = 'k-listview-item', TABINDEX = 'tabindex', ARIA_SETSIZE = 'aria-setsize', ARIA_POSINSET = 'aria-posinset', ARIA_ROLE = 'role', ARIA_LABEL = 'aria-label', EDIT = 'edit', REMOVE = 'remove', SAVE = 'save', MOUSEDOWN = 'mousedown', CLICK = 'click', TOUCHSTART = 'touchstart', NS = '.kendoListView', proxy = $.proxy, activeElement = kendo._activeElement, progress = kendo.ui.progress, DataSource = kendo.data.DataSource;
         var ListView = kendo.ui.DataBoundWidget.extend({
             init: function (element, options) {
                 var that = this;
-                options = $.isArray(options) ? { dataSource: options } : options;
+                options = Array.isArray(options) ? { dataSource: options } : options;
                 Widget.fn.init.call(that, element, options);
                 options = that.options;
                 that.wrapper = element = that.element;
@@ -92,6 +99,7 @@
                 autoBind: true,
                 selectable: false,
                 navigatable: false,
+                pageable: false,
                 height: null,
                 template: EMPTY_STRING,
                 altTemplate: EMPTY_STRING,
@@ -150,7 +158,10 @@
                 that.dataSource.unbind(CHANGE, that._refreshHandler).unbind(PROGRESS, that._progressHandler).unbind(ERROR, that._errorHandler);
             },
             _dataSource: function () {
-                var that = this;
+                var that = this, pageable = that.options.pageable, dataSource = that.options.dataSource;
+                if ($.isPlainObject(pageable) && pageable.pageSize !== undefined) {
+                    dataSource.pageSize = pageable.pageSize;
+                }
                 if (that.dataSource && that._refreshHandler) {
                     that._unbindDataSource();
                 } else {
@@ -158,7 +169,7 @@
                     that._progressHandler = proxy(that._progress, that);
                     that._errorHandler = proxy(that._error, that);
                 }
-                that.dataSource = DataSource.create(that.options.dataSource).bind(CHANGE, that._refreshHandler).bind(PROGRESS, that._progressHandler).bind(ERROR, that._errorHandler);
+                that.dataSource = DataSource.create(dataSource).bind(CHANGE, that._refreshHandler).bind(PROGRESS, that._progressHandler).bind(ERROR, that._errorHandler);
             },
             _progress: function (toggle) {
                 var element = this.content;
@@ -172,15 +183,16 @@
                 var height = options.height;
                 this.element.addClass('k-widget k-listview');
                 if (options.navigatable || options.selectable) {
-                    this.element.attr('role', 'listbox');
+                    this.element.attr(ARIA_ROLE, 'listbox');
                 } else {
-                    this.element.attr('role', 'list');
+                    this.element.attr(ARIA_ROLE, 'list');
                 }
                 if (options.contentElement) {
                     this.content = $(document.createElement(options.contentElement)).appendTo(this.element);
                 } else {
                     this.content = this.element;
                 }
+                this.content.attr(TABINDEX, -1);
                 if (height) {
                     this.element.css('height', height);
                 }
@@ -302,11 +314,20 @@
                     that.content.html(html);
                 }
                 items = that.items().not('.k-loading-mask');
+                if (!view.length) {
+                    that.element.removeAttr(ARIA_ROLE);
+                    that.element.removeAttr(ARIA_LABEL);
+                }
                 for (idx = index, length = view.length; idx < length; idx++) {
                     item = items.eq(idx);
+                    item.addClass(ITEM_CLASS);
                     item.attr(kendo.attr('uid'), view[idx].uid).attr('role', role);
                     if (that.options.selectable) {
                         item.attr('aria-selected', 'false');
+                    }
+                    if (that.options.pageable) {
+                        item.attr(ARIA_SETSIZE, that.dataSource.total());
+                        item.attr(ARIA_POSINSET, that.dataSource.indexOf(that.dataItem(item)) + 1);
                     }
                 }
                 if (that.content[0] === active && that.options.navigatable) {
@@ -329,14 +350,32 @@
                 });
             },
             _pageable: function () {
-                var that = this, pageable = that.options.pageable, settings, pagerId;
-                if ($.isPlainObject(pageable)) {
-                    pagerId = pageable.pagerId;
+                var that = this, pageable = that.options.pageable, navigatable = that.options.navigatable, pagerWrap, settings;
+                if (!pageable) {
+                    return;
+                }
+                pagerWrap = that.wrapper.find(DOT + PAGER_CLASS);
+                if (!pagerWrap.length) {
+                    pagerWrap = $('<div />').addClass(PAGER_CLASS);
+                }
+                if (pageable.position === 'top') {
+                    pagerWrap.addClass(kendo.format('{0}-{1}', PAGER_CLASS, pageable.position)).prependTo(that.wrapper);
+                } else {
+                    pagerWrap.appendTo(that.wrapper);
+                }
+                if (that.pager) {
+                    that.pager.destroy();
+                }
+                if (typeof pageable === 'object' && pageable instanceof kendo.ui.Pager) {
+                    that.pager = pageable;
+                } else {
+                    pagerWrap = pageable.pagerId ? $('#' + pageable.pagerId) : pagerWrap;
                     settings = $.extend({}, pageable, {
                         dataSource: that.dataSource,
+                        navigatable: navigatable,
                         pagerId: null
                     });
-                    that.pager = new kendo.ui.Pager($('#' + pagerId), settings);
+                    that.pager = new kendo.ui.Pager(pagerWrap, settings);
                 }
             },
             _selectable: function () {
@@ -353,6 +392,9 @@
                     });
                     if (navigatable) {
                         that.element.on('keydown' + NS, function (e) {
+                            if (!$(e.target).is(that.element)) {
+                                return;
+                            }
                             if (e.keyCode === keys.SPACEBAR) {
                                 current = that.current();
                                 if (e.target == e.currentTarget) {
@@ -364,6 +406,7 @@
                                     } else {
                                         if (current && current.hasClass(SELECTED)) {
                                             current.removeClass(SELECTED);
+                                            that.trigger(CHANGE);
                                             return;
                                         }
                                     }
@@ -463,7 +506,7 @@
                         }
                     }).on('keydown' + NS, that, function (e) {
                         var key = e.keyCode, current = that.current(), target = $(e.target), canHandle = !target.is(':button, textarea, a, a > .t-icon, input'), isTextBox = target.is(':text, :password'), preventDefault = kendo.preventDefault, editItem = content.find('.' + KEDITITEM), active = activeElement(), idx, scrollable = that.options.scrollable;
-                        if (!canHandle && !isTextBox && key !== keys.ESC || isTextBox && key !== keys.ESC && key !== keys.ENTER) {
+                        if (!target.is(that.element) || !canHandle && !isTextBox && key !== keys.ESC || isTextBox && key !== keys.ESC && key !== keys.ENTER) {
                             return;
                         }
                         if (key === keys.UP || key === keys.LEFT) {

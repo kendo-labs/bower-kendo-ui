@@ -36,7 +36,7 @@
         depends: ['popup']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, keys = kendo.keys, parse = kendo.parseDate, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, support = kendo.support, browser = support.browser, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoTimePicker', CLICK = 'click' + ns, DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', LI = 'li', SPAN = '<span></span>', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_SELECTED = 'aria-selected', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ID = 'id', isArray = $.isArray, extend = $.extend, proxy = $.proxy, DATE = Date, dateFormatRegExp = /d{1,2}|E{1,6}|e{1,6}|c{3,6}|c{1}|M{1,5}|L{1,5}|y{1,4}|H{1,2}|h{1,2}|k{1,2}|K{1,2}|m{1,2}|a{1,5}|s{1,2}|S{1,3}|z{1,4}|Z{1,5}|x{1,5}|X{1,5}|G{1,5}|q{1,5}|Q{1,5}|"[^"]*"|'[^']*'/g, LITERAL = 'literal', MONTH = 'month', HOUR = 'hour', ZONE = 'zone', WEEKDAY = 'weekday', QUARTER = 'quarter', DATE_FIELD_MAP = {
+        var kendo = window.kendo, keys = kendo.keys, parse = kendo.parseDate, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, support = kendo.support, browser = support.browser, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoTimePicker', CLICK = 'click' + ns, DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', LI = 'li', SPAN = '<span></span>', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_SELECTED = 'aria-selected', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ID = 'id', isArray = Array.isArray, extend = $.extend, proxy = $.proxy, DATE = Date, dateFormatRegExp = /d{1,2}|E{1,6}|e{1,6}|c{3,6}|c{1}|M{1,5}|L{1,5}|y{1,4}|H{1,2}|h{1,2}|k{1,2}|K{1,2}|m{1,2}|a{1,5}|s{1,2}|S{1,3}|z{1,4}|Z{1,5}|x{1,5}|X{1,5}|G{1,5}|q{1,5}|Q{1,5}|"[^"]*"|'[^']*'/g, LITERAL = 'literal', MONTH = 'month', HOUR = 'hour', ZONE = 'zone', WEEKDAY = 'weekday', QUARTER = 'quarter', DATE_FIELD_MAP = {
                 'G': 'era',
                 'y': 'year',
                 'q': QUARTER,
@@ -147,7 +147,7 @@
                 }
             },
             _scrollerKeyDownHandler: function (e) {
-                var that = this, key = e.keyCode, list = $(e.currentTarget).find('.k-time-list-wrapper.k-state-focused'), lists = that.list.find('.k-time-list-wrapper'), length = lists.length, index = lists.index(list), isRtl = kendo.support.isRtl(that.wrapper), itemHeight = getItemHeight(list.find('.k-item:visible:eq(0)')), container = list.find('.k-time-container.k-content.k-scrollable');
+                var that = this, key = e.keyCode, list = $(e.currentTarget).find('.k-time-list-wrapper.k-state-focused'), lists = that.list.find('.k-time-list-wrapper'), length = lists.length, index = lists.index(list), isRtl = kendo.support.isRtl(that.wrapper), itemHeight = getItemHeight(list.find('.k-item:visible').eq(0)), container = list.find('.k-time-container.k-content.k-scrollable');
                 if (!list.length) {
                     return;
                 }
@@ -177,7 +177,7 @@
             _focusList: function (list) {
                 this.list.find('.k-time-list-wrapper').removeClass(FOCUSED);
                 list.addClass(FOCUSED);
-                this.list.focus();
+                this.list.trigger('focus');
                 this._scrollTop = list.find('.k-scrollable').scrollTop();
             },
             _createClassicRenderingList: function () {
@@ -332,7 +332,7 @@
                 }
             },
             _updateListBottomOffset: function (list) {
-                var itemHeight = getItemHeight(list.find('.k-item:visible:eq(0)'));
+                var itemHeight = getItemHeight(list.find('.k-item:visible').eq(0));
                 var listHeight = list.outerHeight();
                 var bottomOffset = listHeight - itemHeight;
                 list.find('.k-scrollable-placeholder').css({ height: list.find('ul').height() + bottomOffset });
@@ -510,7 +510,7 @@
                 var bottomOffset;
                 for (var i = 0; i < length; i++) {
                     list = lists.eq(i);
-                    itemHeight = getItemHeight(list.find('.k-item:visible:eq(0)'));
+                    itemHeight = getItemHeight(list.find('.k-item:visible').eq(0));
                     listHeight = list.outerHeight();
                     topOffset = (listHeight - itemHeight) / 2;
                     translate = 'translateY(' + topOffset + 'px)';
@@ -542,7 +542,7 @@
             },
             _listScrollHandler: function (e) {
                 var that = this;
-                var itemHeight = getItemHeight($(e.currentTarget).find('.k-item:visible:eq(0)'));
+                var itemHeight = getItemHeight($(e.currentTarget).find('.k-item:visible').eq(0));
                 if (that._internalScroll) {
                     return;
                 }
@@ -609,13 +609,13 @@
                 }
             },
             _findSelectedValue: function (list) {
-                var firstOccurence = firstItemIndex(list.scrollTop(), getItemHeight(list.find('.k-item:visible:eq(0)')));
+                var firstOccurence = firstItemIndex(list.scrollTop(), getItemHeight(list.find('.k-item:visible').eq(0)));
                 return list.find('.k-item:visible').eq(firstOccurence).attr('data-value');
             },
             _itemClickHandler: function (e) {
                 var list = $(e.originalEvent.currentTarget);
                 var index = list.find('.k-item:visible').index($(e.currentTarget));
-                var itemHeight = getItemHeight(list.find('.k-item:visible:eq(0)'));
+                var itemHeight = getItemHeight(list.find('.k-item:visible').eq(0));
                 list.scrollTop(index * itemHeight);
             },
             getDatesInRange: function (msStart, msMax, startDate, max, msInterval, start) {
@@ -860,7 +860,7 @@
                                     that._updateCurrentlySelected();
                                 }
                                 that._updateRanges();
-                                that._focusList(that.list.find('.k-time-list-wrapper:eq(0)'));
+                                that._focusList(that.list.find('.k-time-list-wrapper').eq(0));
                             }
                         }
                     }));

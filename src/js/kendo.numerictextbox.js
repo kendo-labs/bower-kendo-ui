@@ -142,7 +142,7 @@
                 }
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    text.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
+                    text.prop(DISABLED, false).prop(READONLY, false).attr(ARIA_DISABLED, false);
                     that._upArrowEventHandler.bind('press', function (e) {
                         e.preventDefault();
                         that._spin(1);

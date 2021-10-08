@@ -71,7 +71,7 @@
             init: function (element, options) {
                 var that = this, text, disabled;
                 that.ns = ns;
-                options = $.isArray(options) ? { dataSource: options } : options;
+                options = Array.isArray(options) ? { dataSource: options } : options;
                 Select.fn.init.call(that, element, options);
                 options = that.options;
                 element = that.element.on('focus' + ns, proxy(that._focusHandler, that));
@@ -205,7 +205,7 @@
             },
             _focusHandler: function (e) {
                 if (e.target === this.element[0]) {
-                    this.input.focus();
+                    this.input.trigger('focus');
                 }
             },
             _arrowClick: function () {
@@ -239,7 +239,7 @@
                 that._valueBeforeCascade = that._old;
                 if (isClearButton) {
                     that._blur();
-                    that.element.blur();
+                    that.element.trigger('blur');
                 }
             },
             _inputPaste: function () {
@@ -254,7 +254,7 @@
                 var that = this, disable = options.disable, readonly = options.readonly, wrapper = that._inputWrapper.off(ns), input = that.element.add(that.input.off(ns)), arrow = that._arrow.off(CLICK + ' ' + MOUSEDOWN), clear = that._clear;
                 if (!readonly && !disable) {
                     wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
-                    input.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false);
+                    input.prop(DISABLED, false).prop(READONLY, false).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false);
                     arrow.on(CLICK, proxy(that._arrowClick, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
                     });
@@ -917,7 +917,7 @@
             },
             _clearValue: function () {
                 Select.fn._clearValue.call(this);
-                this.input.focus();
+                this.input.trigger('focus');
             }
         });
         ui.plugin(ComboBox);

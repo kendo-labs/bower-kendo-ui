@@ -2516,6 +2516,7 @@ hr.k-separator {
 
 .k-sticky,
 .k-pos-sticky {
+    position: -webkit-sticky !important;
     position: sticky !important;
 }
 
@@ -21282,6 +21283,7 @@ select.k-dropdown:focus, select.k-dropdowntree:focus {
 
 .k-appbar-sticky {
     width: 100%;
+    position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -26095,6 +26097,7 @@ kendo-scheduler .k-scheduler-footer li .k-rtl .k-grid .k-group-indicator .k-link
 }
 
 .k-grid .k-dirty-cell.k-grid-content-sticky {
+    position: -webkit-sticky;
     position: sticky;
 }
 
@@ -26761,6 +26764,7 @@ div.k-grid-footer {
 .k-grid-content-sticky,
 .k-grid-row-sticky,
 .k-grid-footer-sticky {
+    position: -webkit-sticky;
     position: sticky;
     z-index: 2;
 }
@@ -26783,6 +26787,7 @@ kendo-grid tr.k-grid-row-sticky {
 kendo-grid .k-grid-row-sticky td {
     border-bottom-width: 1px;
     border-top-width: 1px;
+    position: -webkit-sticky;
     position: sticky;
     top: inherit;
     bottom: inherit;
@@ -30360,6 +30365,7 @@ thead.k-grid-header > tr:not(:only-child) > th {
 }
 
 .k-treelist-scrollable .k-grid-toolbar {
+    position: -webkit-sticky;
     position: sticky;
     z-index: 3;
     top: 0;
@@ -30367,6 +30373,7 @@ thead.k-grid-header > tr:not(:only-child) > th {
 }
 
 .k-treelist-scrollable .k-grid-header th {
+    position: -webkit-sticky;
     position: sticky;
     z-index: 1;
 }
@@ -32057,6 +32064,7 @@ kendo-editor.k-readonly .k-editor-content.k-state-focused {
 }
 
 .k-gantt .k-treelist-scrollable .k-grid-header .k-header {
+    position: -webkit-sticky;
     position: sticky;
 }
 
@@ -33064,6 +33072,7 @@ kendo-scheduler.k-scheduler.k-readonly-scheduler .k-event-delete {
 }
 
 .k-scheduler-layout-flex .k-scheduler-head {
+    position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 3;
@@ -33178,6 +33187,7 @@ kendo-scheduler.k-scheduler.k-readonly-scheduler .k-event-delete {
     display: flex;
     flex-wrap: wrap;
     flex-basis: 0;
+    position: -webkit-sticky;
     position: sticky;
     left: 0;
     z-index: 3;

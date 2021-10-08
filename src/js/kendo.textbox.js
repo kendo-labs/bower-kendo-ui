@@ -130,7 +130,7 @@
                 var readonly = options.readonly;
                 element.off(NS);
                 if (!readonly && !disable) {
-                    element.removeAttr(DISABLED).removeAttr(READONLY).attr(ARIA_DISABLED, false);
+                    element.prop(DISABLED, false).prop(READONLY, false).attr(ARIA_DISABLED, false);
                     wrapper.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS);
                     element.on('focusin' + NS, proxy(that._focusin, that));
                     element.on('focusout' + NS, proxy(that._focusout, that));

@@ -491,7 +491,7 @@
                 }
             },
             _dateInView: function (date) {
-                var that = this, firstDateInView = toDateObject(that._cellsBySelector(CELLSELECTORVALID + ':first').find('a')), lastDateInView = toDateObject(that._cellsBySelector(CELLSELECTORVALID + ':last').find('a'));
+                var that = this, firstDateInView = toDateObject(that._cellsBySelector(CELLSELECTORVALID).first().find('a')), lastDateInView = toDateObject(that._cellsBySelector(CELLSELECTORVALID).last().find('a'));
                 return +date <= +lastDateInView && +date >= +firstDateInView;
             },
             _isNavigatable: function (currentValue, cellIndex) {
@@ -503,7 +503,7 @@
                     return !isDisabled(currentValue);
                 } else {
                     index = that.wrapper.find('.' + FOCUSED).index();
-                    cell = that.wrapper.find('.k-content td:eq(' + (index + cellIndex) + ')');
+                    cell = that.wrapper.find('.k-content td').eq(index + cellIndex);
                     return cell.is(CELLSELECTORVALID) || !isDisabled(currentValue);
                 }
             },
@@ -1416,7 +1416,7 @@
             if (kendo.isFunction(option)) {
                 return option;
             }
-            if ($.isArray(option)) {
+            if (Array.isArray(option)) {
                 return createDisabledExpr(option);
             }
             return $.noop;

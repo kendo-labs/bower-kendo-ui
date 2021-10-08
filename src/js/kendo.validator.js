@@ -542,7 +542,7 @@
                 }
                 nextFocusable = kendo.getWidgetFocusableElement(target);
                 if (nextFocusable) {
-                    nextFocusable.focus();
+                    nextFocusable.trigger('focus');
                 }
             },
             showValidationSummary: function () {

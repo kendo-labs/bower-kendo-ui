@@ -109,7 +109,7 @@
                     } else if (operator === 'isempty' || operator === 'isnotempty') {
                         filter = kendo.format('{0} {1} \'\'', field, filter);
                     } else if (filter && value !== undefined) {
-                        type = $.type(value);
+                        type = kendo.type(value);
                         if (type === 'string') {
                             format = '\'{1}\'';
                             value = value.replace(/'/g, '\'\'');
@@ -371,7 +371,7 @@
                 'odata-v4': {
                     type: 'json',
                     data: function (data) {
-                        if ($.isArray(data)) {
+                        if (Array.isArray(data)) {
                             for (var i = 0; i < data.length; i++) {
                                 stripMetadata(data[i]);
                             }

@@ -313,7 +313,7 @@
                 var that = this;
                 var dataSource = source || {};
                 var value;
-                dataSource = $.isArray(dataSource) ? { data: dataSource } : dataSource;
+                dataSource = Array.isArray(dataSource) ? { data: dataSource } : dataSource;
                 dataSource = kendo.data.DataSource.create(dataSource);
                 if (that.dataSource) {
                     that.dataSource.unbind(CHANGE, that._refreshHandler);

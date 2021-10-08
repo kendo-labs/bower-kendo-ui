@@ -40,7 +40,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, isArray = $.isArray, HierarchicalDataSource = kendo.data.HierarchicalDataSource, MOUSEDOWN = 'mousedown', CLICK = 'click', DELAY = 30, SCROLLSPEED = 50, extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link k-menu-link', LINK_SELECTOR = '.k-link', ICON_SELECTOR = '.k-menu-expand-arrow', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, CHANGE = 'change', ERROR = 'error', TOUCHSTART = kendo.support.touch ? 'touchstart' : '', MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', MOUSEWHEEL = 'DOMMouseScroll' + NS + ' mousewheel' + NS, RESIZE = kendo.support.resize + NS, SCROLLWIDTH = 'scrollWidth', SCROLLHEIGHT = 'scrollHeight', OFFSETWIDTH = 'offsetWidth', OFFSETHEIGHT = 'offsetHeight', POPUP_ID_ATTR = 'group', POPUP_OPENER_ATTR = 'groupparent', DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', animationContainerSelector = '.k-animation-container', popupSelector = groupSelector + ',' + animationContainerSelector, allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item', availableItemsSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', nextSelector = itemSelector + exclusionSelector + ':eq(0)', lastSelector = itemSelector + exclusionSelector + ':last', templateSelector = 'div:not(.k-animation-container,.k-list-container)', scrollButtonSelector = '.k-menu-scroll-button', touchPointerTypes = {
+        var kendo = window.kendo, ui = kendo.ui, activeElement = kendo._activeElement, touch = kendo.support.touch && kendo.support.mobileOS, isArray = Array.isArray, HierarchicalDataSource = kendo.data.HierarchicalDataSource, MOUSEDOWN = 'mousedown', CLICK = 'click', DELAY = 30, SCROLLSPEED = 50, extend = $.extend, proxy = $.proxy, each = $.each, template = kendo.template, keys = kendo.keys, Widget = ui.Widget, excludedNodesRegExp = /^(ul|a|div)$/i, NS = '.kendoMenu', IMG = 'img', OPEN = 'open', MENU = 'k-menu', LINK = 'k-link k-menu-link', LINK_SELECTOR = '.k-link', ICON_SELECTOR = '.k-menu-expand-arrow', LAST = 'k-last', CLOSE = 'close', TIMER = 'timer', FIRST = 'k-first', IMAGE = 'k-image', SELECT = 'select', ZINDEX = 'zIndex', ACTIVATE = 'activate', DEACTIVATE = 'deactivate', POINTERDOWN = 'touchstart' + NS + ' MSPointerDown' + NS + ' pointerdown' + NS, pointers = kendo.support.pointers, msPointers = kendo.support.msPointers, allPointers = msPointers || pointers, CHANGE = 'change', ERROR = 'error', TOUCHSTART = kendo.support.touch ? 'touchstart' : '', MOUSEENTER = pointers ? 'pointerover' : msPointers ? 'MSPointerOver' : 'mouseenter', MOUSELEAVE = pointers ? 'pointerout' : msPointers ? 'MSPointerOut' : 'mouseleave', MOUSEWHEEL = 'DOMMouseScroll' + NS + ' mousewheel' + NS, RESIZE = kendo.support.resize + NS, SCROLLWIDTH = 'scrollWidth', SCROLLHEIGHT = 'scrollHeight', OFFSETWIDTH = 'offsetWidth', OFFSETHEIGHT = 'offsetHeight', POPUP_ID_ATTR = 'group', POPUP_OPENER_ATTR = 'groupparent', DOCUMENT_ELEMENT = $(document.documentElement), KENDOPOPUP = 'kendoPopup', DEFAULTSTATE = 'k-state-default', HOVERSTATE = 'k-state-hover', FOCUSEDSTATE = 'k-state-focused', DISABLEDSTATE = 'k-state-disabled', SELECTEDSTATE = 'k-state-selected', menuSelector = '.k-menu', groupSelector = '.k-menu-group', animationContainerSelector = '.k-animation-container', popupSelector = groupSelector + ',' + animationContainerSelector, allItemsSelector = ':not(.k-list) > .k-item', disabledSelector = '.k-item.k-state-disabled', itemSelector = '.k-item', availableItemsSelector = '.k-item:not(.k-state-disabled)', linkSelector = '.k-item:not(.k-state-disabled) > .k-link', exclusionSelector = ':not(.k-item.k-separator)', templateSelector = 'div:not(.k-animation-container,.k-list-container)', scrollButtonSelector = '.k-menu-scroll-button', touchPointerTypes = {
                 '2': 1,
                 'touch': 1
             }, STRING = 'string', DATABOUND = 'dataBound', ARIA_EXPANDED = 'aria-expanded', bindings = {
@@ -185,7 +185,7 @@
             item.children('a').addClass(LINK).children(IMG).addClass(IMAGE);
             item.filter(':not([disabled])').addClass(DEFAULTSTATE);
             item.filter('.k-separator').removeClass('k-menu-item').addClass('k-menu-separator').empty().append('&nbsp;');
-            item.filter('li[disabled]').addClass(DISABLEDSTATE).removeAttr('disabled').attr('aria-disabled', true);
+            item.filter('li[disabled]').addClass(DISABLEDSTATE).prop('disabled', false).attr('aria-disabled', true);
             if (!item.filter('[role]').length) {
                 item.attr('role', 'menuitem');
             }
@@ -422,7 +422,7 @@
                 }
                 if (options.openOnClick) {
                     that._documentClickHandler = proxy(that._documentClick, that);
-                    $(document).click(that._documentClickHandler);
+                    $(document).on('click', that._documentClickHandler);
                 }
             },
             _detachMenuEventsHandlers: function () {
@@ -433,7 +433,7 @@
                 }
                 that.element.off(NS);
                 if (that._documentClickHandler) {
-                    $(document).unbind('click', that._documentClickHandler);
+                    $(document).off('click', that._documentClickHandler);
                 }
             },
             _initOverflow: function (options) {
@@ -517,7 +517,7 @@
             _initScrolling: function (scrollElement, backwardBtn, forwardBtn, isHorizontal) {
                 var that = this;
                 var scrollable = that.options.scrollable;
-                var distance = $.isNumeric(scrollable.distance) ? scrollable.distance : SCROLLSPEED;
+                var distance = that.isNumeric(scrollable.distance) ? scrollable.distance : SCROLLSPEED;
                 var mouseWheelDistance = distance / 2;
                 var backward = '-=' + distance;
                 var forward = '+=' + distance;
@@ -575,6 +575,9 @@
                         e.preventDefault();
                     }
                 });
+            },
+            isNumeric: function (n) {
+                return !isNaN(parseFloat(n)) && isFinite(n);
             },
             _toggleScrollButtons: function (scrollElement, backwardBtn, forwardBtn, horizontal) {
                 var currentScroll = horizontal ? kendo.scrollLeft(scrollElement) : scrollElement.scrollTop();
@@ -780,7 +783,7 @@
                     var li = $(this);
                     clearTimeout(li.data(TIMER));
                     li.data(TIMER, setTimeout(function () {
-                        var ul = li.find('.k-menu-group:first:hidden');
+                        var ul = li.find('.k-menu-group:hidden').first();
                         var popup;
                         var overflowPopup;
                         if (!ul[0] && overflowWrapper) {
@@ -1021,7 +1024,7 @@
             },
             _getPopup: function (li) {
                 var that = this;
-                var popup = li.find('.k-menu-group:not(.k-list-container):not(.k-calendar-container):first:visible').data(KENDOPOPUP);
+                var popup = li.find('.k-menu-group:not(.k-list-container):not(.k-calendar-container):visible').first().data(KENDOPOPUP);
                 var overflowWrapper = that._overflowWrapper();
                 if (!popup && overflowWrapper) {
                     var groupId = li.data(POPUP_OPENER_ATTR);
@@ -1338,7 +1341,7 @@
                 if (target != that.wrapper[0] && !$(target).is(':kendoFocusable')) {
                     e.stopPropagation();
                     $(target).closest('.k-content').closest('.k-menu-group').closest('.k-item').addClass(FOCUSEDSTATE);
-                    that.wrapper.focus();
+                    that.wrapper.trigger('focus');
                     return;
                 }
                 if (active === e.currentTarget) {
@@ -1455,9 +1458,9 @@
             _itemRight: function (item, belongsToVertical, hasChildren) {
                 var that = this, nextItem, parentItem, overflowWrapper;
                 if (!belongsToVertical) {
-                    nextItem = item.nextAll(nextSelector);
+                    nextItem = item.nextAll(itemSelector + exclusionSelector).eq(0);
                     if (!nextItem.length) {
-                        nextItem = item.prevAll(lastSelector);
+                        nextItem = item.prevAll(itemSelector + exclusionSelector).last();
                     }
                     that.close(item);
                 } else if (hasChildren && !item.hasClass(DISABLEDSTATE)) {
@@ -1471,7 +1474,7 @@
                         that._closeChildPopups(rootPopup);
                     }
                     that.close(parentItem);
-                    nextItem = parentItem.nextAll(nextSelector);
+                    nextItem = parentItem.nextAll(itemSelector + exclusionSelector).eq(0);
                 }
                 if (nextItem && !nextItem.length) {
                     nextItem = that.wrapper.children('.k-item').first();
@@ -1484,9 +1487,9 @@
             _itemLeft: function (item, belongsToVertical) {
                 var that = this, nextItem, overflowWrapper;
                 if (!belongsToVertical) {
-                    nextItem = item.prevAll(nextSelector);
+                    nextItem = item.prevAll(itemSelector + exclusionSelector).eq(0);
                     if (!nextItem.length) {
-                        nextItem = item.nextAll(lastSelector);
+                        nextItem = item.nextAll(itemSelector + exclusionSelector).last();
                     }
                     that.close(item);
                 } else {
@@ -1497,7 +1500,7 @@
                     }
                     that.close(nextItem);
                     if (that._isRootItem(nextItem) && that.options.orientation == 'horizontal') {
-                        nextItem = nextItem.prevAll(nextSelector);
+                        nextItem = nextItem.prevAll(itemSelector + exclusionSelector).eq(0);
                     }
                 }
                 if (!nextItem.length) {
@@ -1516,7 +1519,7 @@
                         nextItem = that._childPopupElement(item).children().first();
                     }
                 } else {
-                    nextItem = item.nextAll(nextSelector);
+                    nextItem = item.nextAll(itemSelector + exclusionSelector).eq(0);
                 }
                 if (!nextItem.length && item.length) {
                     nextItem = item.parent().children().first();
@@ -1531,7 +1534,7 @@
                 if (!belongsToVertical) {
                     return;
                 } else {
-                    nextItem = item.prevAll(nextSelector);
+                    nextItem = item.prevAll(itemSelector + exclusionSelector).eq(0);
                 }
                 if (!nextItem.length && item.length) {
                     nextItem = item.parent().children().last();
@@ -1897,7 +1900,7 @@
                         }
                         DOCUMENT_ELEMENT.off(that.popup.downEvent, that.popup._mousedownProxy);
                         DOCUMENT_ELEMENT.on(kendo.support.mousedown + NS + that._marker, that._closeProxy);
-                        that.element.focus();
+                        that.element.trigger('focus');
                     }
                 }
                 return that;

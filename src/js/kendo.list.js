@@ -39,7 +39,7 @@
         hidden: true
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, outerHeight = kendo._outerHeight, percentageUnitsRegex = /^\d+(\.\d+)?%$/i, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', GROUPHEADER = '.k-group-header', ITEMSELECTOR = '.k-item', LABELIDPART = '_label', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', BLUR = 'blur', FOCUS = 'focus', FOCUSOUT = 'focusout', extend = $.extend, proxy = $.proxy, isArray = $.isArray, browser = support.browser, HIDDENCLASS = 'k-hidden', WIDTH = 'width', isIE = browser.msie, quotRegExp = /"/g, alternativeNames = {
+        var kendo = window.kendo, ui = kendo.ui, outerHeight = kendo._outerHeight, percentageUnitsRegex = /^\d+(\.\d+)?%$/i, Widget = ui.Widget, keys = kendo.keys, support = kendo.support, htmlEncode = kendo.htmlEncode, activeElement = kendo._activeElement, outerWidth = kendo._outerWidth, ObservableArray = kendo.data.ObservableArray, ID = 'id', CHANGE = 'change', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', LOADING = 'k-i-loading', GROUPHEADER = '.k-group-header', ITEMSELECTOR = '.k-item', LABELIDPART = '_label', OPEN = 'open', CLOSE = 'close', CASCADE = 'cascade', SELECT = 'select', SELECTED = 'selected', REQUESTSTART = 'requestStart', REQUESTEND = 'requestEnd', BLUR = 'blur', FOCUS = 'focus', FOCUSOUT = 'focusout', extend = $.extend, proxy = $.proxy, isArray = Array.isArray, browser = support.browser, HIDDENCLASS = 'k-hidden', WIDTH = 'width', isIE = browser.msie, quotRegExp = /"/g, alternativeNames = {
                 'ComboBox': [
                     'DropDownList',
                     'MultiColumnComboBox'
@@ -112,7 +112,7 @@
                 this._renderNoData();
             },
             focus: function () {
-                this._focused.focus();
+                this._focused.trigger('focus');
             },
             readonly: function (readonly) {
                 this._editable({
@@ -393,7 +393,7 @@
                     return;
                 }
                 this._angularElement(noData, 'cleanup');
-                noData.children(':first').html(list.noDataTemplate({ instance: list }));
+                noData.children().first().html(list.noDataTemplate({ instance: list }));
                 this._angularElement(noData, 'compile');
             },
             _toggleNoData: function (show) {
@@ -770,7 +770,7 @@
                 }
             },
             _calculateGroupPadding: function (height) {
-                var li = this.ul.children('.k-first:first');
+                var li = this.ul.children('.k-first').first();
                 var groupHeader = this.listView.content.prev(GROUPHEADER);
                 var padding = 0;
                 var direction = 'right';
@@ -843,7 +843,7 @@
                 open = open !== undefined ? open : !that.popup.visible();
                 if (!preventFocus && !touchEnabled && that._focused[0] !== activeElement()) {
                     that._prevent = true;
-                    that._focused.focus();
+                    that._focused.trigger('focus');
                     that._prevent = false;
                 }
                 that[open ? OPEN : CLOSE]();
@@ -1021,7 +1021,7 @@
             },
             _dataSource: function () {
                 var that = this, element = that.element, options = that.options, dataSource = options.dataSource || {}, idx;
-                dataSource = $.isArray(dataSource) ? { data: dataSource } : dataSource;
+                dataSource = Array.isArray(dataSource) ? { data: dataSource } : dataSource;
                 if (that._isSelect) {
                     idx = element[0].selectedIndex;
                     if (idx > -1) {
@@ -1300,7 +1300,7 @@
                         parent.one('dataBound', function () {
                             that._toggleCascadeOnFocus();
                             if (parent.popup.visible()) {
-                                parent._focused.focus();
+                                parent._focused.trigger('focus');
                             }
                         });
                         if (!parent.value()) {
@@ -1313,11 +1313,11 @@
                 var that = this;
                 var parent = that._parentWidget();
                 var focusout = isIE && parent instanceof ui.DropDownList ? BLUR : FOCUSOUT;
-                parent._focused.add(parent.filterInput).bind(FOCUS, function () {
+                parent._focused.add(parent.filterInput).on(FOCUS, function () {
                     parent.unbind(CASCADE, that._cascadeHandlerProxy);
                     parent.first(CHANGE, that._cascadeHandlerProxy);
                 });
-                parent._focused.add(parent.filterInput).bind(focusout, function () {
+                parent._focused.add(parent.filterInput).on(focusout, function () {
                     parent.unbind(CHANGE, that._cascadeHandlerProxy);
                     parent.first(CASCADE, that._cascadeHandlerProxy);
                 });
@@ -1425,7 +1425,7 @@
                 this._values = [];
                 var value = this.options.value;
                 if (value) {
-                    this._values = $.isArray(value) ? value.slice(0) : [value];
+                    this._values = Array.isArray(value) ? value.slice(0) : [value];
                 }
                 this._getter();
                 this._templates();
@@ -1462,7 +1462,7 @@
                 var that = this;
                 var dataSource = source || {};
                 var value;
-                dataSource = $.isArray(dataSource) ? { data: dataSource } : dataSource;
+                dataSource = Array.isArray(dataSource) ? { data: dataSource } : dataSource;
                 dataSource = kendo.data.DataSource.create(dataSource);
                 if (that.dataSource) {
                     that.dataSource.unbind(CHANGE, that._refreshHandler);
@@ -1665,7 +1665,7 @@
                 };
             },
             setValue: function (value) {
-                value = $.isArray(value) || value instanceof ObservableArray ? value.slice(0) : [value];
+                value = Array.isArray(value) || value instanceof ObservableArray ? value.slice(0) : [value];
                 this._values = value;
                 this._valueComparer = null;
             },

@@ -117,7 +117,14 @@
                             visibility: HIDDEN,
                             display: ''
                         });
-                        offset = element.offset();
+                        if (document.body.contains(element[0])) {
+                            offset = element.offset();
+                        } else {
+                            offset = {
+                                top: 0,
+                                left: 0
+                            };
+                        }
                         element.css({
                             visibility: visibility,
                             display: display
@@ -148,7 +155,7 @@
                     that.refresh(content);
                 }
                 if (options.visible) {
-                    that.toFront();
+                    that.toFront(null, !options.modal);
                 }
                 windowContent = wrapper.children(KWINDOWCONTENT);
                 if (options.visible && options.modal) {
@@ -494,15 +501,15 @@
                 if (e.altKey && keyCode == keys.UP) {
                     if (isMinimized) {
                         that.restore();
-                        that.wrapper.focus();
+                        that.wrapper.trigger('focus');
                     } else if (!isMaximized) {
                         that.maximize();
-                        that.wrapper.focus();
+                        that.wrapper.trigger('focus');
                     }
                 } else if (e.altKey && keyCode == keys.DOWN) {
                     if (!isMinimized && !isMaximized) {
                         that.minimize();
-                        that.wrapper.focus();
+                        that.wrapper.trigger('focus');
                     } else if (isMaximized) {
                         that.restore();
                     }
@@ -715,7 +722,7 @@
                     that._closing = false;
                     that.toFront();
                     if (options.autoFocus) {
-                        that.wrapper.focus();
+                        that.wrapper.trigger('focus');
                     }
                     options.visible = true;
                     if (options.modal) {
@@ -733,7 +740,7 @@
                         overlay.show();
                         $(window).on('focus' + MODAL_NS, function () {
                             if (wrapper.data('isFront') && !$(document.activeElement).closest(wrapper).length) {
-                                that.wrapper.focus();
+                                that.wrapper.trigger('focus');
                             }
                         });
                     }
@@ -760,7 +767,7 @@
             _activate: function () {
                 var scrollable = this.options.scrollable !== false;
                 if (this.options.autoFocus) {
-                    this.wrapper.focus();
+                    this.wrapper.trigger('focus');
                 }
                 this.element.css(OVERFLOW, scrollable ? '' : 'hidden');
                 kendo.resize(this.element.children());
@@ -825,7 +832,7 @@
                     }
                 }
                 if (that.options.iframe) {
-                    that.wrapper.blur();
+                    that.wrapper.trigger('blur');
                 }
             },
             _deactivate: function () {
@@ -850,7 +857,7 @@
                 var active = activeElement(), element = this.wrapper;
                 return this.options.autoFocus && !$(active).is(element) && !this._actionable(target) && (!element.find(active).length || !element.find(target).length);
             },
-            toFront: function (e) {
+            toFront: function (e, avoidFocus) {
                 var that = this, wrapper = that.wrapper, currentWindow = wrapper[0], containmentContext = that.containment && !that._isPinned, openAnimation = this._animationOptions('open'), zIndex = +wrapper.css(ZINDEX), originalZIndex = zIndex, target = e && e.target || null;
                 $(KWINDOW).each(function (i, element) {
                     var windowObject = $(element), zIndexNew = windowObject.css(ZINDEX), contentElement = windowObject.children(KWINDOWCONTENT);
@@ -867,9 +874,11 @@
                 }
                 that.element.find('> .k-overlay').remove();
                 if (that._shouldFocus(target)) {
-                    setTimeout(function () {
-                        that.wrapper.focus();
-                    }, openAnimation ? openAnimation.duration : 0);
+                    if (!avoidFocus) {
+                        setTimeout(function () {
+                            that.wrapper.focus();
+                        }, openAnimation ? openAnimation.duration : 0);
+                    }
                     var scrollTop = containmentContext ? that.containment.scrollTop() : $(window).scrollTop(), windowTop = parseInt(wrapper.position().top, 10);
                     if (!that.options.pinned && windowTop > 0 && windowTop < scrollTop) {
                         if (scrollTop > 0) {
@@ -920,9 +929,9 @@
                     height: restoreOptions.height
                 }).removeClass(MAXIMIZEDSTATE).find('.k-window-content,.k-resize-handle').show().end().find('.k-window-titlebar .k-i-window-restore').parent().remove().end().end().find(MINIMIZE_MAXIMIZE).parent().show().end().end().find(PIN_UNPIN).parent().show();
                 if (options.isMaximized) {
-                    that.wrapper.find('.k-i-window-maximize').parent().focus();
+                    that.wrapper.find('.k-i-window-maximize').parent().trigger('focus');
                 } else if (options.isMinimized) {
-                    that.wrapper.find('.k-i-window-minimize').parent().focus();
+                    that.wrapper.find('.k-i-window-minimize').parent().trigger('focus');
                 }
                 that.options.width = restoreOptions.width;
                 that.options.height = restoreOptions.height;
@@ -954,7 +963,7 @@
                 callback.call(that);
                 that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().toggle(actionId !== 'maximize');
                 that.trigger(actionId);
-                wrapper.find('.k-i-window-restore').parent().focus();
+                wrapper.find('.k-i-window-restore').parent().trigger('focus');
                 return that;
             },
             maximize: function () {
@@ -1153,7 +1162,7 @@
                         } else {
                             element.html(templates.contentFrame(extend({}, initOptions, { content: options })));
                         }
-                        element.find('.' + KCONTENTFRAME).unbind('load' + NS).on('load' + NS, proxy(this._triggerRefresh, this));
+                        element.find('.' + KCONTENTFRAME).off('load' + NS).on('load' + NS, proxy(this._triggerRefresh, this));
                     }
                 } else {
                     if (options.template) {

@@ -21444,7 +21444,7 @@ table.k-editor .k-editable-area {
   gap: 24px;
 }
 .k-orgchart-node-group-container {
-  @include border-radius(4px);
+  border-radius: 4px;
   padding: 24px 24px;
   border-width: 1px;
   border-style: solid;
@@ -21723,8 +21723,8 @@ table.k-editor .k-editable-area {
   gap: 8px;
 }
 .k-pivotgrid-configurator-content .k-select-all .k-checkbox {
-  -webkit-margin-end: map-get(, 1);
-          margin-inline-end: map-get(, 1);
+  -webkit-margin-end: 4px;
+          margin-inline-end: 4px;
 }
 .k-pivotgrid-configurator-content .k-fields-list-wrapper {
   max-height: 200px;
@@ -21740,8 +21740,8 @@ table.k-editor .k-editable-area {
   text-align: center;
 }
 .k-pivotgrid-configurator-content .k-chip-content {
-  -webkit-padding-end: map-get(, 1);
-          padding-inline-end: map-get(, 1);
+  -webkit-padding-end: 4px;
+          padding-inline-end: 4px;
 }
 .k-pivotgrid-configurator-content .k-treeview {
   padding: 0px 8px;

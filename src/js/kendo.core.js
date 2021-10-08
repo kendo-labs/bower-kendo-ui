@@ -32,14 +32,14 @@
         description: 'The core of the Kendo framework.'
     };
     (function ($, window, undefined) {
-        var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = $.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice, noDepricateExtend = function () {
+        var kendo = window.kendo = window.kendo || { cultures: {} }, extend = $.extend, each = $.each, isArray = Array.isArray, proxy = $.proxy, noop = $.noop, math = Math, Template, JSON = window.JSON || {}, support = {}, percentRegExp = /%/, formatRegExp = /\{(\d+)(:[^\}]+)?\}/g, boxShadowRegExp = /(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+(?:\.?)\d*)px\s*(\d+)?/i, numberRegExp = /^(\+|-?)\d+(\.?)\d*$/, FUNCTION = 'function', STRING = 'string', NUMBER = 'number', OBJECT = 'object', NULL = 'null', BOOLEAN = 'boolean', UNDEFINED = 'undefined', getterCache = {}, setterCache = {}, slice = [].slice, noDepricateExtend = function () {
                 var src, copyIsArray, copy, name, options, clone, target = arguments[0] || {}, i = 1, length = arguments.length, deep = false;
                 if (typeof target === 'boolean') {
                     deep = target;
                     target = arguments[i] || {};
                     i++;
                 }
-                if (typeof target !== 'object' && !jQuery.isFunction(target)) {
+                if (typeof target !== 'object' && typeof target !== 'function') {
                     target = {};
                 }
                 if (i === length) {
@@ -57,10 +57,10 @@
                             if (target === copy) {
                                 continue;
                             }
-                            if (deep && copy && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
+                            if (deep && copy && (jQuery.isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))) {
                                 if (copyIsArray) {
                                     copyIsArray = false;
-                                    clone = src && jQuery.isArray(src) ? src : [];
+                                    clone = src && Array.isArray(src) ? src : [];
                                 } else {
                                     clone = src && jQuery.isPlainObject(src) ? src : {};
                                 }
@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.3.914'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.3.1008'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -1977,7 +1977,7 @@
                 'tap'
             ], function (m, value) {
                 $.fn[value] = function (callback) {
-                    return this.bind(value, callback);
+                    return this.on(value, callback);
                 };
             });
         }
@@ -3448,7 +3448,7 @@
                 if (widget && widget.focus) {
                     widget.focus();
                 } else {
-                    el.focus();
+                    el.trigger('focus');
                 }
             }
             lastElement.on('keydown', function (e) {
@@ -3820,7 +3820,7 @@
         kendo.registerCssClasses('align', alignValues);
         kendo.registerCssClasses('positionMode', positionModeValues);
         kendo.whenAll = function (array) {
-            var resolveValues = arguments.length == 1 && $.isArray(array) ? array : Array.prototype.slice.call(arguments), length = resolveValues.length, remaining = length, deferred = $.Deferred(), i = 0, failed = 0, rejectContexts = Array(length), rejectValues = Array(length), resolveContexts = Array(length), value;
+            var resolveValues = arguments.length == 1 && Array.isArray(array) ? array : Array.prototype.slice.call(arguments), length = resolveValues.length, remaining = length, deferred = $.Deferred(), i = 0, failed = 0, rejectContexts = Array(length), rejectValues = Array(length), resolveContexts = Array(length), value;
             function updateFunc(index, contexts, values) {
                 return function () {
                     if (values != resolveValues) {
@@ -3833,7 +3833,7 @@
                 };
             }
             for (; i < length; i++) {
-                if ((value = resolveValues[i]) && $.isFunction(value.promise)) {
+                if ((value = resolveValues[i]) && kendo.isFunction(value.promise)) {
                     value.promise().done(updateFunc(i, resolveContexts, resolveValues)).fail(updateFunc(i, rejectContexts, rejectValues));
                 } else {
                     deferred.notifyWith(this, value);
@@ -3953,6 +3953,18 @@
                 } else {
                     curr[key] = value;
                 }
+            };
+        }());
+        (function () {
+            kendo.class2type = {};
+            jQuery.each('Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' '), function (_i, name) {
+                kendo.class2type['[object ' + name + ']'] = name.toLowerCase();
+            });
+            kendo.type = function (obj) {
+                if (obj == null) {
+                    return obj + '';
+                }
+                return typeof obj === 'object' || typeof obj === 'function' ? kendo.class2type[Object.prototype.toString.call(obj)] || 'object' : typeof obj;
             };
         }());
     }(jQuery, window));

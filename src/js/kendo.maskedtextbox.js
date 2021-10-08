@@ -265,7 +265,7 @@
                 var readonly = options.readonly;
                 that._unbindInput();
                 if (!readonly && !disable) {
-                    element.removeAttr(DISABLED).removeAttr(READONLY);
+                    element.prop(DISABLED, false).prop(READONLY, false);
                     wrapper.removeClass(STATEDISABLED);
                     that._bindInput();
                 } else {
@@ -461,7 +461,7 @@
                         chrIdx += 1;
                         tokenIdx += 1;
                     } else if (typeof token !== 'string') {
-                        if (token && token.test && token.test(chr) || $.isFunction(token) && token(chr)) {
+                        if (token && token.test && token.test(chr) || kendo.isFunction(token) && token(chr)) {
                             result += chr;
                             tokenIdx += 1;
                         } else {

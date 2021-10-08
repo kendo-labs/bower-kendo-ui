@@ -44,7 +44,7 @@
         function normalize(options) {
             var parseFormats = options.parseFormats, format = options.format;
             calendar.normalize(options);
-            parseFormats = $.isArray(parseFormats) ? parseFormats : [parseFormats];
+            parseFormats = Array.isArray(parseFormats) ? parseFormats : [parseFormats];
             if (!parseFormats.length) {
                 parseFormats.push('yyyy-MM-dd');
             }

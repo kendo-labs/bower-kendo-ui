@@ -56,7 +56,7 @@
         ];
         function fieldType(field) {
             field = field != null ? field : '';
-            return field.type || $.type(field) || 'string';
+            return field.type || kendo.type(field) || 'string';
         }
         function convertToValueBinding(container) {
             container.find(':input:not(:button, .k-combobox .k-input, .k-checkbox-list .k-checkbox, .k-radio-list .k-radio, [' + kendo.attr('role') + '=listbox], [' + kendo.attr('role') + '=upload], [' + kendo.attr('skip') + '], [type=file])').each(function () {
@@ -337,7 +337,7 @@
             },
             refresh: function () {
                 var that = this, idx, length, fields = that.options.fields || [], container = that.options.clearContainer ? that.element.empty() : that.element, model = that.options.model || {}, rules = {}, field, isObject, fieldName, modelField, modelFields;
-                if (!$.isArray(fields)) {
+                if (!Array.isArray(fields)) {
                     fields = [fields];
                 }
                 for (idx = 0, length = fields.length; idx < length; idx++) {
@@ -380,7 +380,7 @@
                     rules: rules
                 });
                 if (!that.options.skipFocus) {
-                    container.find(':kendoFocusable').eq(0).focus();
+                    container.find(':kendoFocusable').eq(0).trigger('focus');
                 }
             }
         });

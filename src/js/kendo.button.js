@@ -175,7 +175,7 @@
                     that._tabindex();
                 }
                 try {
-                    element.blur();
+                    element.trigger('blur');
                 } catch (err) {
                 }
             },
