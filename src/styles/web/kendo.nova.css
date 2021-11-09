@@ -2739,6 +2739,9 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 .k-flex-col-reverse .k-pivotgrid-configurator-overlay {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
 }
+.k-pivotgrid-column-menu .k-actions {
+  border-color: #e0e0e0;
+}
 .k-selection-multiple .k-chip-has-icon.k-selected .k-selected-icon-wrapper {
   color: #ffffff;
   background-color: rgba(0, 0, 0, 0.44);
@@ -2910,6 +2913,200 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 .k-chip-error.k-focus {
   box-shadow: 0 0 0 2px rgba(255, 38, 55, 0.16);
 }
+.k-panelbar {
+  border-color: #e0e0e0;
+  color: #32364c;
+  background-color: #fff;
+}
+.k-panelbar > .k-item > .k-link,
+.k-panelbar > .k-panelbar-header > .k-link {
+  color: #32364c;
+  background-color: #fff;
+}
+.k-panelbar > .k-item > .k-link .k-icon,
+.k-panelbar > .k-panelbar-header > .k-link .k-icon,
+.k-panelbar > .k-item > .k-link .k-panelbar-item-icon,
+.k-panelbar > .k-panelbar-header > .k-link .k-panelbar-item-icon {
+  color: #32364c;
+}
+.k-panelbar > .k-item > .k-link:hover,
+.k-panelbar > .k-panelbar-header > .k-link:hover,
+.k-panelbar > .k-item > .k-link.k-state-hover,
+.k-panelbar > .k-panelbar-header > .k-link.k-state-hover {
+  background-color: #f2f2f2;
+}
+.k-panelbar > .k-item > .k-link:focus,
+.k-panelbar > .k-panelbar-header > .k-link:focus,
+.k-panelbar > .k-item > .k-link.k-state-focus,
+.k-panelbar > .k-panelbar-header > .k-link.k-state-focus,
+.k-panelbar > .k-item > .k-link.k-state-focused,
+.k-panelbar > .k-panelbar-header > .k-link.k-state-focused {
+  box-shadow: inset 0 0 0 1px #ff4350;
+}
+.k-panelbar > .k-item > .k-link.k-state-selected,
+.k-panelbar > .k-panelbar-header > .k-link.k-state-selected {
+  color: #ff4350;
+  background-color: #fff;
+}
+.k-panelbar > .k-item > .k-link.k-state-selected .k-icon,
+.k-panelbar > .k-panelbar-header > .k-link.k-state-selected .k-icon,
+.k-panelbar > .k-item > .k-link.k-state-selected .k-panelbar-item-icon,
+.k-panelbar > .k-panelbar-header > .k-link.k-state-selected .k-panelbar-item-icon {
+  color: inherit;
+}
+.k-panelbar > .k-item > .k-link.k-state-selected:hover,
+.k-panelbar > .k-panelbar-header > .k-link.k-state-selected:hover,
+.k-panelbar > .k-item > .k-link.k-state-selected.k-state-hover,
+.k-panelbar > .k-panelbar-header > .k-link.k-state-selected.k-state-hover {
+  background-color: #e6e6e6;
+}
+.k-panelbar .k-panelbar-content {
+  color: #32364c;
+  background-color: #fff;
+}
+.k-panelbar .k-group > .k-item > .k-link:hover,
+.k-panelbar .k-panelbar-group > .k-item > .k-link:hover,
+.k-panelbar .k-group > .k-item > .k-link.k-state-hover,
+.k-panelbar .k-panelbar-group > .k-item > .k-link.k-state-hover,
+.k-panelbar .k-group > .k-panelbar-item > .k-link:hover,
+.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link:hover,
+.k-panelbar .k-group > .k-panelbar-item > .k-link.k-state-hover,
+.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link.k-state-hover {
+  background-color: #f2f2f2;
+}
+.k-panelbar .k-group > .k-item > .k-link:focus,
+.k-panelbar .k-panelbar-group > .k-item > .k-link:focus,
+.k-panelbar .k-group > .k-item > .k-link.k-state-focus,
+.k-panelbar .k-panelbar-group > .k-item > .k-link.k-state-focus,
+.k-panelbar .k-group > .k-item > .k-link.k-state-focused,
+.k-panelbar .k-panelbar-group > .k-item > .k-link.k-state-focused,
+.k-panelbar .k-group > .k-panelbar-item > .k-link:focus,
+.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link:focus,
+.k-panelbar .k-group > .k-panelbar-item > .k-link.k-state-focus,
+.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link.k-state-focus,
+.k-panelbar .k-group > .k-panelbar-item > .k-link.k-state-focused,
+.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link.k-state-focused {
+  box-shadow: inset 0 0 0 1px #ff4350;
+}
+.k-panelbar .k-group > .k-item > .k-link.k-state-selected,
+.k-panelbar .k-panelbar-group > .k-item > .k-link.k-state-selected,
+.k-panelbar .k-group > .k-panelbar-item > .k-link.k-state-selected,
+.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link.k-state-selected {
+  color: #32364c;
+  background-color: rgba(30, 162, 179, 0.25);
+  background-image: none;
+}
+.k-panelbar .k-group > .k-item > .k-link.k-state-selected:hover,
+.k-panelbar .k-panelbar-group > .k-item > .k-link.k-state-selected:hover,
+.k-panelbar .k-group > .k-item > .k-link.k-state-selected.k-state-hover,
+.k-panelbar .k-panelbar-group > .k-item > .k-link.k-state-selected.k-state-hover,
+.k-panelbar .k-group > .k-panelbar-item > .k-link.k-state-selected:hover,
+.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link.k-state-selected:hover,
+.k-panelbar .k-group > .k-panelbar-item > .k-link.k-state-selected.k-state-hover,
+.k-panelbar .k-panelbar-group > .k-panelbar-item > .k-link.k-state-selected.k-state-hover {
+  background-color: rgba(17, 91, 101, 0.325);
+}
+.k-colorpalette-tile:focus,
+.k-colorpalette-tile.k-state-focus,
+.k-colorpalette-tile.k-focus {
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+.k-colorpalette-tile:hover,
+.k-colorpalette-tile.k-state-hover,
+.k-colorpalette-tile.k-hover {
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+.k-colorpalette-tile.k-state-selected,
+.k-colorpalette-tile.k-state-selected:hover {
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.3), inset 0 0 0 1px #ffffff;
+}
+.k-colorgradient {
+  border-color: #e0e0e0;
+  color: #32364c;
+  background-color: #fff;
+}
+.k-colorgradient:focus,
+.k-colorgradient.k-state-focus,
+.k-colorgradient.k-focus {
+  box-shadow: 1px 1px 7px 1px rgba(0, 0, 0, 0.3);
+}
+.k-colorgradient-canvas .k-hsv-gradient {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), black), linear-gradient(to right, white, rgba(255, 255, 255, 0));
+}
+.k-colorgradient .k-draghandle {
+  border-color: rgba(255, 255, 255, 0.8);
+  background-color: transparent;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+.k-colorgradient .k-draghandle:focus,
+.k-colorgradient .k-draghandle.k-state-focus,
+.k-colorgradient .k-draghandle.k-focus {
+  border-color: white;
+  background-color: transparent;
+  box-shadow: 0 1px 4px black;
+}
+.k-colorgradient .k-draghandle:active,
+.k-colorgradient .k-draghandle:hover,
+.k-colorgradient .k-draghandle.k-state-hover,
+.k-colorgradient .k-draghandle.k-hover {
+  border-color: white;
+  background-color: transparent;
+  box-shadow: 0 1px 4px black;
+}
+.k-colorgradient .k-draghandle.k-state-selected:hover {
+  border-color: white;
+  color: inherit;
+  background-color: transparent;
+}
+.k-colorgradient .k-draghandle.k-state-focused.k-state-selected {
+  border-color: white;
+  color: inherit;
+  background-color: transparent;
+  box-shadow: 0 1px 4px black;
+}
+.k-colorgradient-slider.k-hue-slider.k-slider-horizontal .k-slider-track {
+  background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+}
+.k-colorgradient-slider.k-hue-slider.k-slider-vertical .k-slider-track {
+  background: linear-gradient(to top, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+}
+.k-colorgradient-slider.k-alpha-slider .k-slider-track::before {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAuSURBVHgBxYyxDQAwDMJIL+YT+DjtzFRliUfLcklqBCRT4eCTxbD6kdL2/LgYXqpvCbs3kBv/AAAAAElFTkSuQmCC") center repeat;
+}
+.k-colorgradient-input-label {
+  color: #c4c4c4;
+}
+.k-colorgradient .k-text-success {
+  color: #479b4a;
+}
+.k-color-preview {
+  border-color: #e0e0e0;
+}
+.k-color-preview::before {
+  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAuSURBVHgBxYyxDQAwDMJIL+YT+DjtzFRliUfLcklqBCRT4eCTxbD6kdL2/LgYXqpvCbs3kBv/AAAAAElFTkSuQmCC");
+  background-size: contain;
+  background-position: 0;
+}
+.k-color-preview:hover,
+.k-color-preview.k-state-hover,
+.k-color-preview.k-hover {
+  border-color: #f5f6f6;
+}
+.k-no-color::after {
+  background-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2220%22%20height%3D%2220%22%20version%3D%221.1%22%3E%3Cline%20x1%3D%220%22%20x2%3D%2220%22%20y1%3D%220%22%20y2%3D%2220%22%20stroke%3D%22%23ff2637%22%20stroke-width%3D%221%22/%3E%3C/svg%3E');
+  background-color: white;
+  background-size: 100% 100%;
+}
+.k-coloreditor {
+  border-color: #e0e0e0;
+  color: #32364c;
+  background-color: #fff;
+}
+.k-coloreditor:focus,
+.k-coloreditor.k-state-focus,
+.k-coloreditor.k-focus {
+  box-shadow: 1px 1px 7px 1px rgba(0, 0, 0, 0.3);
+}
 .k-splitbar .k-resize-handle {
   background-color: #32364c;
 }
@@ -2947,10 +3144,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 .k-grid-footer-wrap,
 .k-grouping-header,
 .k-grouping-header .k-group-indicator,
-.k-panelbar > .k-item > .k-link,
 .k-panel > .k-item > .k-link,
-.k-panelbar .k-panel,
-.k-panelbar .k-content,
 .k-treemap-tile,
 .k-slider-track,
 .k-splitbar,
@@ -2982,8 +3176,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 .k-drag-clue,
 .k-grid-header,
 .k-grouping-header,
-.k-state-highlight,
-.k-panelbar .k-tabstrip-items .k-item {
+.k-state-highlight:not(.k-panelbar-item) {
   color: #ffffff;
   background-color: #ff4350;
   border-color: #ff4350;
@@ -3003,7 +3196,6 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
   box-shadow: 0 0px 6px 1px rgba(0, 0, 0, 0.2);
 }
 .k-content,
-.k-panelbar > li.k-item,
 .k-panel > li.k-item {
   background-color: #fff;
 }
@@ -3091,9 +3283,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 .k-rtl .k-numeric-wrap .k-input {
   border-radius: 0 3px 3px 0;
 }
-.k-button .k-image,
-.k-panelbar > .k-state-active > .k-header > .k-icon,
-.k-panelbar > .k-state-active > .k-header .k-state-default .k-icon {
+.k-button .k-image {
   opacity: 0.4;
 }
 .k-primary .k-icon,
@@ -3106,8 +3296,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 .k-pivot-toolbar .k-icon,
 .k-grid-content .k-button:active .k-icon,
 .k-splitbar.k-state-focused .k-icon,
-.k-gantt-toolbar .k-icon,
-.k-panelbar > .k-state-active > .k-header .k-state-active .k-icon {
+.k-gantt-toolbar .k-icon {
   opacity: 1;
 }
 .k-state-disabled .k-icon,
@@ -3178,7 +3367,8 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 .k-autocomplete,
 .k-picker-wrap.k-state-default,
 .k-numeric-wrap.k-state-default,
-.k-dropdown-wrap.k-state-default {
+.k-dropdown-wrap.k-state-default,
+.k-colorpicker .k-picker-wrap {
   background-color: #fff;
   border-color: #e0e0e0;
 }
@@ -3364,23 +3554,12 @@ input.k-textbox:active {
   background-color: #ff4350;
   border-color: #ff4350;
 }
-.k-panelbar {
-  color: #32364c;
-  background-color: #fff;
-  border-color: #e0e0e0;
-}
-.k-panelbar > .k-item .k-panel > .k-item > .k-link,
-.k-panelbar > .k-item .k-panel > .k-item .k-panel > .k-item > .k-link,
-.k-panelbar .k-panel > .k-item .k-panel .k-item > .k-link {
+.k-panelbar > .k-item > .k-link,
+.k-panelbar > .k-item {
   color: #32364c;
 }
-.k-panelbar .k-item > .k-link.k-header {
+.k-panelbar > .k-panelbar-header > .k-link {
   color: #ff4350;
-  background-color: #fff;
-}
-.k-panelbar > .k-item > .k-link.k-state-hover,
-.k-panelbar > .k-item .k-panel > .k-item > .k-link.k-state-hover {
-  background-color: #f5f6f6;
 }
 .k-tabstrip {
   background-color: #fff;
@@ -3820,20 +3999,6 @@ table:not(.k-scheduler-dayview) .k-scheduler-header-wrap .k-today {
 }
 .k-draghandle:hover {
   background-color: #f5f6f6;
-}
-.k-flatcolorpicker .k-hue-slider .k-draghandle {
-  background-color: #fff;
-  border-color: #fff;
-  box-shadow: 0 0px 6px 1px rgba(0, 0, 0, 0.2);
-  border-radius: 50%;
-}
-.k-flatcolorpicker .k-hue-slider .k-draghandle:hover,
-.k-flatcolorpicker .k-transparency-slider .k-draghandle:hover,
-.k-flatcolorpicker .k-hue-slider .k-draghandle:focus,
-.k-flatcolorpicker .k-transparency-slider .k-draghandle:focus {
-  background-color: #f5f6f6;
-  border-color: #f5f6f6;
-  box-shadow: 0 0px 6px 1px rgba(0, 0, 0, 0.2);
 }
 .k-rating.k-state-focused {
   box-shadow: none;

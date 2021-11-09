@@ -390,6 +390,9 @@
                             that.trigger(CHANGE);
                         }
                     });
+                    if (multi) {
+                        that.element.attr('aria-multiselectable', true);
+                    }
                     if (navigatable) {
                         that.element.on('keydown' + NS, function (e) {
                             if (!$(e.target).is(that.element)) {

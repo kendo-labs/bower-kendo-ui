@@ -802,7 +802,7 @@
         templates = {
             wrapper: template('<div class=\'k-widget k-window k-dialog\' role=\'dialog\'></div>'),
             action: template('<button type=\'button\' class=\'k-button # if (data.primary) { # k-primary # } #\' role=\'button\'></button>'),
-            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-hstack\'>' + '<span class=\'k-window-title k-dialog-title\'>#: title #</span>' + '<span class=\'k-spacer\'></span>' + '<div class=\'k-window-actions k-dialog-actions k-hstack\'></div>' + '</div>'),
+            titlebar: template('<div class=\'k-window-titlebar k-dialog-titlebar k-hstack\'>' + '<span class=\'k-window-title k-dialog-title\'>#: title #</span>' + '<div class=\'k-window-actions k-dialog-actions k-hstack\'></div>' + '</div>'),
             close: template('<a role=\'button\' href=\'\\#\' class=\'k-button k-flat k-button-icon k-window-action k-dialog-action k-dialog-close\' title=\'#: messages.close #\' aria-label=\'#: messages.close #\' tabindex=\'-1\'><span class=\'k-icon k-i-close\'></span></a>'),
             actionbar: template('<div class=\'k-dialog-buttongroup k-actions k-hstack k-justify-content-#: buttonLayout #\' role=\'toolbar\'></div>'),
             overlay: '<div class=\'k-overlay\'></div>',

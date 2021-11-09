@@ -31,6 +31,23 @@
     }
 }(function(){
 (function ($, undefined) {
+/* ColorGradient messages */
+
+if (kendo.ui.ColorGradient) {
+    kendo.ui.ColorGradient.prototype.options.messages =
+    $.extend(true, kendo.ui.ColorGradient.prototype.options.messages,{
+        "contrastRatio": "Contrast ratio:",
+        "fail": "Fail",
+        "pass": "Pass",
+        "hex": "HEX",
+        "toggleFormat": "Toggle format",
+        "red": "Red",
+        "green": "Green",
+        "blue": "Blue",
+        "alpha": "Alpha"
+    });
+}
+
 /* FlatColorPicker messages */
 
 if (kendo.ui.FlatColorPicker) {
@@ -611,7 +628,9 @@ $.extend(true, kendo.ui.MediaPlayer.prototype.options.messages,{
   "mute": "Mute",
   "unmute": "Unmute",
   "quality": "Quality",
-  "fullscreen": "Full Screen"
+  "fullscreen": "Full Screen",
+  "volume": "volume",
+  "time": "time"
 });
 }
 
@@ -1568,6 +1587,15 @@ if (kendo.ui.OrgChart) {
         none: "--None--",
         expand: "expand",
         collapse: "collapse"
+    });
+}
+
+/* Map messages */
+
+if (kendo.dataviz.ui.Map) {
+    kendo.dataviz.ui.Map.prototype.options.messages =
+    $.extend(true, kendo.dataviz.ui.Map.prototype.optionss.messages, {
+        "tileTitle": "Map title"
     });
 }
 

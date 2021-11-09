@@ -47,6 +47,10 @@
                 this._closeHandler = proxy(this._close, this);
                 $(document.documentElement).on(ACTIVATE_EVENTS, this.options.toggleButton, this._toggleHandler);
                 this._registerBreakpoint();
+                if (this.options.content) {
+                    kendo.destroy(this.element.children());
+                    this.element.html(this.options.content);
+                }
                 this.element.addClass('k-rpanel k-rpanel-' + this.options.orientation + ' ' + this._guid);
                 this._resizeHandler = proxy(this.resize, this, true);
                 $(window).on('resize' + NS, this._resizeHandler);
@@ -72,6 +76,7 @@
             },
             options: {
                 name: 'ResponsivePanel',
+                content: '',
                 orientation: 'left',
                 toggleButton: '.k-rpanel-toggle',
                 breakpoint: 640,

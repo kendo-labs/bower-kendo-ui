@@ -650,17 +650,3 @@
   left: 0;
   right: auto;
 }
-.k-rtl .k-flatcolorpicker .k-selected-color {
-  text-align: left;
-}
-.k-rtl .k-flatcolorpicker .k-selected-color .k-color-value {
-  direction: initial;
-  text-align: right;
-  border-left: 0;
-}
-.k-rtl .k-flatcolorpicker .k-transparency-slider .k-slider-track {
-  background-image: url("textures/transparency-reversed.png");
-}
-.k-rtl .k-flatcolorpicker .k-hue-slider .k-slider-track {
-  background: linear-gradient(to left, #ff0000 0%, #ffff00 16%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 84%, #ff0004 100%);
-}

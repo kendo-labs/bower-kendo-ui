@@ -56,9 +56,6 @@
                 that.element.addClass(SELECTABLE);
                 that.relatedTarget = that.options.relatedTarget;
                 multiple = that.options.multiple;
-                if (this.options.aria && multiple) {
-                    that.element.attr('aria-multiselectable', true);
-                }
                 that.userEvents = new kendo.UserEvents(that.element, {
                     global: true,
                     allowSelection: true,
