@@ -513,6 +513,9 @@
   background-image: url('textures/highlight.png');
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.4) 0%, rgba(255,255,255,.0) 100%);
 }
+.k-calendar > .k-header .k-button {
+  color: inherit;
+}
 .k-calendar th {
   border-color: #bbdceb;
   color: #003f59;

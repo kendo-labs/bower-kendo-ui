@@ -73,7 +73,7 @@
                 }
                 return target;
             };
-        kendo.version = '2021.3.1109'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2021.3.1207'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -2473,7 +2473,7 @@
                         leftRight = isRtl ? 'right' : 'left';
                         containerScrollLeft = kendo.scrollLeft(container);
                         webkitCorrection = browser.webkit ? !isRtl ? 0 : container[0].scrollWidth - container.width() - 2 * containerScrollLeft : 0;
-                        mask = $(kendo.format('<div class=\'{0}\'><span class=\'k-loading-text\'>{1}</span><div class=\'k-loading-image\'></div><div class=\'k-loading-color\'></div></div>', cssClass, kendo.ui.progress.messages.loading)).width(options.width).height(options.height).css('top', options.top).css(leftRight, Math.abs(containerScrollLeft) + webkitCorrection).prependTo(container);
+                        mask = $(kendo.format('<div class=\'{0}\'><span role=\'alert\' aria-live=\'polite\' class=\'k-loading-text\'>{1}</span><div class=\'k-loading-image\'></div><div class=\'k-loading-color\'></div></div>', cssClass, kendo.ui.progress.messages.loading)).width(options.width).height(options.height).css('top', options.top).css(leftRight, Math.abs(containerScrollLeft) + webkitCorrection).prependTo(container);
                     }
                 } else if (mask) {
                     mask.remove();
@@ -7133,7 +7133,7 @@
                 if (skip !== undefined && take !== undefined) {
                     query = query.range(skip, take);
                 }
-                if (group) {
+                if (group && (!isEmptyObject(group) || group.length !== 0)) {
                     query = query.group(group, data, options);
                 }
             }
@@ -8005,6 +8005,43 @@
                     this.options.autoSync = autoSync;
                 }
                 return destroyed;
+            },
+            pushMove: function (index, items) {
+                var pushed = this._moveItems(index, items);
+                if (pushed.length) {
+                    this.trigger('push', {
+                        type: 'update',
+                        items: pushed
+                    });
+                }
+            },
+            _moveItems: function (index, items) {
+                if (!isArray(items)) {
+                    items = [items];
+                }
+                var moved = [];
+                var autoSync = this.options.autoSync;
+                this.options.autoSync = false;
+                try {
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        var model = this._createNewModel(item);
+                        this._eachItem(this._data, function (dataItems) {
+                            for (var idx = 0; idx < dataItems.length; idx++) {
+                                var dataItem = dataItems.at(idx);
+                                if (dataItem.id === model.id) {
+                                    moved.push(dataItem);
+                                    dataItems.splice(index >= idx ? --index : index, 0, dataItems.splice(idx, 1)[0]);
+                                    index++;
+                                    break;
+                                }
+                            }
+                        });
+                    }
+                } finally {
+                    this.options.autoSync = autoSync;
+                }
+                return moved;
             },
             remove: function (model) {
                 var result, that = this, hasGroups = that._isServerGrouped();
@@ -9328,6 +9365,9 @@
                 var that = this;
                 var options = { group: val };
                 if (that._groupPaging) {
+                    if (val !== undefined && (!val || !val.length)) {
+                        that._ranges = [];
+                    }
                     options.page = 1;
                 }
                 if (val !== undefined) {
@@ -15743,7 +15783,10 @@
         });
         var ScrollBar = Class.extend({
             init: function (options) {
-                var that = this, horizontal = options.axis === 'x', element = $('<div class="km-touch-scrollbar km-' + (horizontal ? 'horizontal' : 'vertical') + '-scrollbar" />');
+                var that = this, horizontal = options.axis === 'x', element = $('<div role="scrollbar" aria-controls="' + options.controlsId + '" class="km-touch-scrollbar km-' + (horizontal ? 'horizontal' : 'vertical') + '-scrollbar" />');
+                if (horizontal) {
+                    element.attr('aria-orientation', 'horizontal');
+                }
                 extend(that, options, {
                     element: element,
                     elementSize: 0,
@@ -15775,6 +15818,7 @@
                     that.element.css(that.size, size + 'px');
                     that.elementSize = size;
                 }
+                that._ariaValue(position, dimension.size - that.elementSize);
                 that.movable.moveAxis(axis, position);
             },
             show: function () {
@@ -15787,6 +15831,14 @@
                 if (!this.alwaysVisible) {
                     this.element.css({ opacity: 0 });
                 }
+            },
+            _ariaValue: function (current, total) {
+                var element = this.element;
+                if (current > total) {
+                    current = total;
+                }
+                element.attr('aria-valuemax', total);
+                element.attr('aria-valuenow', current);
             }
         });
         var Scroller = Widget.extend({
@@ -16063,13 +16115,19 @@
                 }
             },
             _initAxis: function (axis) {
-                var that = this, movable = that.movable, dimension = that.dimensions[axis], tapCapture = that.tapCapture, paneAxis = that.pane[axis], scrollBar = new ScrollBar({
-                        axis: axis,
-                        movable: movable,
-                        dimension: dimension,
-                        container: that.element,
-                        alwaysVisible: that.options.visibleScrollHints
-                    });
+                var that = this, elementId = that.element.attr('id'), movable = that.movable, dimension = that.dimensions[axis], tapCapture = that.tapCapture, paneAxis = that.pane[axis], scrollBar;
+                if (!elementId) {
+                    elementId = kendo.guid();
+                    that.element.attr('id', elementId);
+                }
+                scrollBar = new ScrollBar({
+                    axis: axis,
+                    movable: movable,
+                    dimension: dimension,
+                    container: that.element,
+                    alwaysVisible: that.options.visibleScrollHints,
+                    controlsId: elementId
+                });
                 dimension.bind(CHANGE, function () {
                     scrollBar.refresh();
                 });
@@ -31835,7 +31893,7 @@
         depends: ['draganddrop']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, extend = $.extend, format = kendo.format, parse = kendo.parseFloat, proxy = $.proxy, isArray = Array.isArray, math = Math, support = kendo.support, pointers = support.pointers, msPointers = support.msPointers, CHANGE = 'change', SLIDE = 'slide', NS = '.slider', MOUSE_DOWN = 'touchstart' + NS + ' mousedown' + NS, TRACK_MOUSE_DOWN = pointers ? 'pointerdown' + NS : msPointers ? 'MSPointerDown' + NS : MOUSE_DOWN, MOUSE_UP = 'touchend' + NS + ' mouseup' + NS, TRACK_MOUSE_UP = pointers ? 'pointerup' : msPointers ? 'MSPointerUp' + NS : MOUSE_UP, MOVE_SELECTION = 'moveSelection', KEY_DOWN = 'keydown' + NS, CLICK = 'click' + NS, MOUSE_OVER = 'mouseover' + NS, FOCUS = 'focus' + NS, BLUR = 'blur' + NS, DRAG_HANDLE = '.k-draghandle', TRACK_SELECTOR = '.k-slider-track', TICK_SELECTOR = '.k-tick', STATE_SELECTED = 'k-state-selected', STATE_FOCUSED = 'k-state-focused', STATE_DEFAULT = 'k-state-default', STATE_DISABLED = 'k-state-disabled', DISABLED = 'disabled', UNDEFINED = 'undefined', TABINDEX = 'tabindex', getTouches = kendo.getTouches;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, extend = $.extend, format = kendo.format, parse = kendo.parseFloat, proxy = $.proxy, isArray = Array.isArray, math = Math, support = kendo.support, pointers = support.pointers, msPointers = support.msPointers, CHANGE = 'change', SLIDE = 'slide', NS = '.slider', MOUSE_DOWN = 'touchstart' + NS + ' mousedown' + NS, TRACK_MOUSE_DOWN = pointers ? 'pointerdown' + NS : msPointers ? 'MSPointerDown' + NS : MOUSE_DOWN, MOUSE_UP = 'touchend' + NS + ' mouseup' + NS, TRACK_MOUSE_UP = pointers ? 'pointerup' : msPointers ? 'MSPointerUp' + NS : MOUSE_UP, MOVE_SELECTION = 'moveSelection', KEY_DOWN = 'keydown' + NS, CLICK = 'click' + NS, MOUSE_OVER = 'mouseover' + NS, FOCUS = 'focus' + NS, BLUR = 'blur' + NS, DRAG_HANDLE = '.k-draghandle', TRACK_SELECTOR = '.k-slider-track', TICK_SELECTOR = '.k-tick', STATE_SELECTED = 'k-state-selected', STATE_FOCUSED = 'k-state-focused', STATE_DEFAULT = 'k-state-default', STATE_DISABLED = 'k-state-disabled', DISABLED = 'disabled', UNDEFINED = 'undefined', TABINDEX = 'tabindex', getTouches = kendo.getTouches, ARIA_VALUETEXT = 'aria-valuetext', ARIA_VALUENOW = 'aria-valuenow';
         var SliderBase = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -32104,7 +32162,7 @@
                 if (options.showButtons) {
                     element.before(createButton(options, 'increase', that._isHorizontal, that._isRtl)).before(createButton(options, 'decrease', that._isHorizontal, that._isRtl));
                 }
-                element.before(createTrack(options, element));
+                element.before(createTrack(options, element, that._isHorizontal));
             },
             _focus: function (e) {
                 var that = this, target = e.target, val = that.value(), drag = that._drag;
@@ -32215,19 +32273,41 @@
                     buttonCssClass = 'k-i-arrow-60-down';
                 }
             }
-            return '<a class=\'k-button k-button-' + type + '\' ' + 'title=\'' + options[type + 'ButtonTitle'] + '\' ' + 'aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
+            return '<a role=\'button\' class=\'k-button k-button-' + type + '\' ' + 'title=\'' + options[type + 'ButtonTitle'] + '\' ' + 'aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
         }
         function createSliderItems(options, distance) {
-            var result = '<ul class=\'k-reset k-slider-items\'>', count = math.floor(round(distance / options.smallStep)) + 1, i;
+            var result = '<ul class=\'k-reset k-slider-items\' role=\'presentation\'>', count = math.floor(round(distance / options.smallStep)) + 1, i;
             for (i = 0; i < count; i++) {
-                result += '<li class=\'k-tick\' role=\'presentation\'>&nbsp;</li>';
+                result += '<li class=\'k-tick\'>&nbsp;</li>';
             }
             result += '</ul>';
             return result;
         }
-        function createTrack(options, element) {
-            var dragHandleCount = element.is('input') ? 1 : 2, firstDragHandleTitle = dragHandleCount == 2 ? options.leftDragHandleTitle : options.dragHandleTitle;
-            return '<div class=\'k-slider-track\'><div class=\'k-slider-selection\'><!-- --></div>' + '<a href=\'#\' class=\'k-draghandle\' title=\'' + firstDragHandleTitle + '\' role=\'slider\' aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (dragHandleCount > 1 ? options.selectionStart || options.min : options.value || options.min) + '\'></a>' + (dragHandleCount > 1 ? '<a href=\'#\' class=\'k-draghandle\' title=\'' + options.rightDragHandleTitle + '\'role=\'slider\' aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (options.selectionEnd || options.max) + '\'></a>' : '') + '</div>';
+        function createTrack(options, element, isHorizontal) {
+            var dragHandleCount = element.is('input') ? 1 : 2, firstDragHandleTitle = dragHandleCount == 2 ? options.leftDragHandleTitle : options.dragHandleTitle, value = options.value, min = options.selectionStart, max = options.selectionEnd, elementValue, minElementValue, maxElementValue;
+            if (dragHandleCount === 1) {
+                elementValue = element.val();
+                if (elementValue !== null && elementValue !== undefined && elementValue !== 'null') {
+                    if (value === null || value === undefined) {
+                        value = elementValue;
+                    }
+                }
+            } else {
+                minElementValue = element.find('input').eq(0).val();
+                maxElementValue = element.find('input').eq(1).val();
+                if (minElementValue !== null && minElementValue !== undefined && minElementValue !== 'null') {
+                    if (min === null || min === undefined) {
+                        min = minElementValue;
+                    }
+                }
+                if (maxElementValue !== null && maxElementValue !== undefined && maxElementValue !== 'null') {
+                    if (max === null || max === undefined) {
+                        max = maxElementValue;
+                    }
+                }
+            }
+            var result = '<div class=\'k-slider-track\'><div class=\'k-slider-selection\'><!-- --></div>' + '<span tabindex=\'0\' class=\'k-draghandle\' title=\'' + firstDragHandleTitle + '\' role=\'slider\' ' + (isHorizontal === false ? 'aria-orientation=\'vertical\' ' : '') + 'aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (dragHandleCount > 1 ? min || options.min : value || options.min) + '\'></span>' + (dragHandleCount > 1 ? '<span tabindex=\'0\' class=\'k-draghandle\' title=\'' + options.rightDragHandleTitle + '\'role=\'slider\' ' + (isHorizontal === false ? 'aria-orientation=\'vertical\' ' : '') + 'aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (max || options.max) + '\'></span>' : '') + '</div>';
+            return result;
         }
         function step(stepValue) {
             return function (value) {
@@ -32294,8 +32374,9 @@
                 }
                 options.value = math.max(math.min(options.value, options.max), options.min);
                 dragHandle = that.wrapper.find(DRAG_HANDLE);
-                this._selection = new Slider.Selection(dragHandle, that, options);
+                that._selection = new Slider.Selection(dragHandle, that, options);
                 that._drag = new Slider.Drag(dragHandle, '', that, options);
+                that._refreshAriaAttr(options.value);
             },
             options: {
                 name: 'Slider',
@@ -32421,7 +32502,7 @@
                 } else {
                     formattedValue = that._getFormattedValue(value, null);
                 }
-                this.wrapper.find(DRAG_HANDLE).attr('aria-valuenow', value).attr('aria-valuetext', formattedValue);
+                this.wrapper.find(DRAG_HANDLE).attr(ARIA_VALUENOW, value).attr(ARIA_VALUETEXT, formattedValue);
             },
             _clearTimer: function () {
                 clearTimeout(this.timeout);
@@ -32771,6 +32852,7 @@
                 this._selection = new RangeSlider.Selection(dragHandles, that, options);
                 that._firstHandleDrag = new Slider.Drag(dragHandles.eq(0), 'firstHandle', that, options);
                 that._lastHandleDrag = new Slider.Drag(dragHandles.eq(1), 'lastHandle', that, options);
+                that._refreshAriaAttr(options.selectionStart, options.selectionEnd);
             },
             options: {
                 name: 'RangeSlider',
@@ -32953,9 +33035,9 @@
                     start,
                     end
                 ], drag);
-                dragHandles.eq(0).attr('aria-valuenow', start);
-                dragHandles.eq(1).attr('aria-valuenow', end);
-                dragHandles.attr('aria-valuetext', formattedValue);
+                dragHandles.eq(0).attr(ARIA_VALUENOW, start);
+                dragHandles.eq(1).attr(ARIA_VALUENOW, end);
+                dragHandles.attr(ARIA_VALUETEXT, formattedValue);
             },
             _setValueInRange: function (selectionStart, selectionEnd) {
                 var options = this.options;
@@ -33134,6 +33216,7 @@
                     wrapper.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS);
                     element.on('focusin' + NS, proxy(that._focusin, that));
                     element.on('focusout' + NS, proxy(that._focusout, that));
+                    element.on('change' + NS, proxy(that._change, that));
                 } else {
                     element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                     wrapper.toggleClass(STATEDISABLED, disable).toggleClass(NOCLICKCLASS, readonly);
@@ -33172,16 +33255,16 @@
             },
             _focusout: function () {
                 var that = this;
-                var value = that._value;
-                var newValue = that.element.val();
                 that.wrapper.removeClass(FOCUSED);
-                if (value === null) {
-                    value = '';
-                }
-                if (value !== newValue) {
-                    that._value = newValue;
-                    that.trigger(CHANGE);
-                }
+            },
+            _change: function (e) {
+                var that = this;
+                var newValue = that.element.val();
+                that._value = newValue;
+                that.trigger(CHANGE, {
+                    value: newValue,
+                    originalEvent: e
+                });
             },
             _wrapper: function () {
                 var that = this;
@@ -34233,9 +34316,9 @@
             },
             keydown: function (ev) {
                 var that = this, textbox = $(ev.target).data('kendoTextBox');
-                if (ev.keyCode === KEYS.ENTER) {
-                    if (textbox && textbox._focusout) {
-                        textbox._focusout();
+                if (ev.keyCode === KEYS.ENTER && $(ev.target).is('input')) {
+                    if (textbox && textbox._change) {
+                        textbox._change();
                     }
                     that.trigger('change', { value: that._color });
                     that.trigger('select', { value: that._color });
@@ -34721,7 +34804,10 @@
     (a3 || a2)();
 }));
 (function (f, define) {
-    define('colorpicker/flatcolorpicker', ['kendo.core'], f);
+    define('colorpicker/flatcolorpicker', [
+        'colorpicker/colorgradient',
+        'colorpicker/colorpalette'
+    ], f);
 }(function () {
     (function ($, undefined) {
         var kendo = window.kendo, ui = kendo.ui, Color = kendo.Color, BACKGROUNDCOLOR = 'background-color', MESSAGES = {
@@ -34949,8 +35035,6 @@
         'kendo.textbox',
         'kendo.numerictextbox',
         'colorpicker/colorselector',
-        'colorpicker/colorgradient',
-        'colorpicker/colorpalette',
         'colorpicker/flatcolorpicker'
     ], f);
 }(function () {
@@ -35272,7 +35356,7 @@
             };
         }
         ui.plugin(ColorPicker);
-    }(jQuery));
+    }(window.kendo.jQuery));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
     (a3 || a2)();
@@ -37176,6 +37260,7 @@
                 that.dataSource = DataSource.create(dataSource);
                 that._bindDataSource();
                 if (that.options.autoBind) {
+                    that.wrapper.attr('aria-busy', true);
                     that.dataSource.fetch();
                 }
             },
@@ -37287,6 +37372,7 @@
                 that._updateToolbar();
                 that._updateAllToolbars();
                 that.trigger(DATABOUND);
+                that.wrapper.attr('aria-busy', false);
             },
             _syncElement: function () {
                 var options = '';
@@ -38071,6 +38157,9 @@
                 var value = that._value;
                 var newValue = that.element.val();
                 that.wrapper.removeClass(FOCUSED);
+                if (value === null) {
+                    value = '';
+                }
                 if (value !== newValue) {
                     that._value = newValue;
                     that.trigger(CHANGE);
@@ -42569,7 +42658,8 @@
                 that._tabindex();
                 that._updateClasses();
                 that._dataSource();
-                that.tabGroup.attr('role', 'tablist');
+                that.tabGroup.attr('role', 'none');
+                that.wrapper.attr('role', 'tablist');
                 if (options.dataSource) {
                     that.dataSource.fetch();
                 }
@@ -43444,7 +43534,7 @@
                     that.tabWrapper.appendTo(that.wrapper);
                 }
                 if (tabPosition === 'left' || tabPosition === 'right') {
-                    that.tabGroup.attr('aria-orientation', 'vertical');
+                    that.wrapper.attr('aria-orientation', 'vertical');
                 }
                 that.resize(true);
             },

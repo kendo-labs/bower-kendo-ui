@@ -221,7 +221,9 @@ $.extend(true, kendo.ui.Editor.prototype.options.messages,{
   "associateIds": "Associate using Ids",
   "copyFormat": "Copy format",
   "applyFormat": "Apply format",
-  "borderNone": "None"
+  "borderNone": "None",
+  "undo": "Undo",
+  "redo": "Redo"
 });
 }
 
@@ -1594,7 +1596,7 @@ if (kendo.ui.OrgChart) {
 
 if (kendo.dataviz.ui.Map) {
     kendo.dataviz.ui.Map.prototype.options.messages =
-    $.extend(true, kendo.dataviz.ui.Map.prototype.optionss.messages, {
+    $.extend(true, kendo.dataviz.ui.Map.prototype.options.messages, {
         "tileTitle": "Map title"
     });
 }

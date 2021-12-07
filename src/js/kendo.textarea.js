@@ -188,6 +188,9 @@
                 var value = that._value;
                 var newValue = that.element.val();
                 that.wrapper.removeClass(FOCUSED);
+                if (value === null) {
+                    value = '';
+                }
                 if (value !== newValue) {
                     that._value = newValue;
                     that.trigger(CHANGE);

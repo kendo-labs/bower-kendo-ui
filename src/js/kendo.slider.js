@@ -33,7 +33,7 @@
         depends: ['draganddrop']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, extend = $.extend, format = kendo.format, parse = kendo.parseFloat, proxy = $.proxy, isArray = Array.isArray, math = Math, support = kendo.support, pointers = support.pointers, msPointers = support.msPointers, CHANGE = 'change', SLIDE = 'slide', NS = '.slider', MOUSE_DOWN = 'touchstart' + NS + ' mousedown' + NS, TRACK_MOUSE_DOWN = pointers ? 'pointerdown' + NS : msPointers ? 'MSPointerDown' + NS : MOUSE_DOWN, MOUSE_UP = 'touchend' + NS + ' mouseup' + NS, TRACK_MOUSE_UP = pointers ? 'pointerup' : msPointers ? 'MSPointerUp' + NS : MOUSE_UP, MOVE_SELECTION = 'moveSelection', KEY_DOWN = 'keydown' + NS, CLICK = 'click' + NS, MOUSE_OVER = 'mouseover' + NS, FOCUS = 'focus' + NS, BLUR = 'blur' + NS, DRAG_HANDLE = '.k-draghandle', TRACK_SELECTOR = '.k-slider-track', TICK_SELECTOR = '.k-tick', STATE_SELECTED = 'k-state-selected', STATE_FOCUSED = 'k-state-focused', STATE_DEFAULT = 'k-state-default', STATE_DISABLED = 'k-state-disabled', DISABLED = 'disabled', UNDEFINED = 'undefined', TABINDEX = 'tabindex', getTouches = kendo.getTouches;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, Draggable = kendo.ui.Draggable, outerWidth = kendo._outerWidth, outerHeight = kendo._outerHeight, extend = $.extend, format = kendo.format, parse = kendo.parseFloat, proxy = $.proxy, isArray = Array.isArray, math = Math, support = kendo.support, pointers = support.pointers, msPointers = support.msPointers, CHANGE = 'change', SLIDE = 'slide', NS = '.slider', MOUSE_DOWN = 'touchstart' + NS + ' mousedown' + NS, TRACK_MOUSE_DOWN = pointers ? 'pointerdown' + NS : msPointers ? 'MSPointerDown' + NS : MOUSE_DOWN, MOUSE_UP = 'touchend' + NS + ' mouseup' + NS, TRACK_MOUSE_UP = pointers ? 'pointerup' : msPointers ? 'MSPointerUp' + NS : MOUSE_UP, MOVE_SELECTION = 'moveSelection', KEY_DOWN = 'keydown' + NS, CLICK = 'click' + NS, MOUSE_OVER = 'mouseover' + NS, FOCUS = 'focus' + NS, BLUR = 'blur' + NS, DRAG_HANDLE = '.k-draghandle', TRACK_SELECTOR = '.k-slider-track', TICK_SELECTOR = '.k-tick', STATE_SELECTED = 'k-state-selected', STATE_FOCUSED = 'k-state-focused', STATE_DEFAULT = 'k-state-default', STATE_DISABLED = 'k-state-disabled', DISABLED = 'disabled', UNDEFINED = 'undefined', TABINDEX = 'tabindex', getTouches = kendo.getTouches, ARIA_VALUETEXT = 'aria-valuetext', ARIA_VALUENOW = 'aria-valuenow';
         var SliderBase = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -302,7 +302,7 @@
                 if (options.showButtons) {
                     element.before(createButton(options, 'increase', that._isHorizontal, that._isRtl)).before(createButton(options, 'decrease', that._isHorizontal, that._isRtl));
                 }
-                element.before(createTrack(options, element));
+                element.before(createTrack(options, element, that._isHorizontal));
             },
             _focus: function (e) {
                 var that = this, target = e.target, val = that.value(), drag = that._drag;
@@ -413,19 +413,41 @@
                     buttonCssClass = 'k-i-arrow-60-down';
                 }
             }
-            return '<a class=\'k-button k-button-' + type + '\' ' + 'title=\'' + options[type + 'ButtonTitle'] + '\' ' + 'aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
+            return '<a role=\'button\' class=\'k-button k-button-' + type + '\' ' + 'title=\'' + options[type + 'ButtonTitle'] + '\' ' + 'aria-label=\'' + options[type + 'ButtonTitle'] + '\'>' + '<span class=\'k-icon ' + buttonCssClass + '\'></span></a>';
         }
         function createSliderItems(options, distance) {
-            var result = '<ul class=\'k-reset k-slider-items\'>', count = math.floor(round(distance / options.smallStep)) + 1, i;
+            var result = '<ul class=\'k-reset k-slider-items\' role=\'presentation\'>', count = math.floor(round(distance / options.smallStep)) + 1, i;
             for (i = 0; i < count; i++) {
-                result += '<li class=\'k-tick\' role=\'presentation\'>&nbsp;</li>';
+                result += '<li class=\'k-tick\'>&nbsp;</li>';
             }
             result += '</ul>';
             return result;
         }
-        function createTrack(options, element) {
-            var dragHandleCount = element.is('input') ? 1 : 2, firstDragHandleTitle = dragHandleCount == 2 ? options.leftDragHandleTitle : options.dragHandleTitle;
-            return '<div class=\'k-slider-track\'><div class=\'k-slider-selection\'><!-- --></div>' + '<a href=\'#\' class=\'k-draghandle\' title=\'' + firstDragHandleTitle + '\' role=\'slider\' aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (dragHandleCount > 1 ? options.selectionStart || options.min : options.value || options.min) + '\'></a>' + (dragHandleCount > 1 ? '<a href=\'#\' class=\'k-draghandle\' title=\'' + options.rightDragHandleTitle + '\'role=\'slider\' aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (options.selectionEnd || options.max) + '\'></a>' : '') + '</div>';
+        function createTrack(options, element, isHorizontal) {
+            var dragHandleCount = element.is('input') ? 1 : 2, firstDragHandleTitle = dragHandleCount == 2 ? options.leftDragHandleTitle : options.dragHandleTitle, value = options.value, min = options.selectionStart, max = options.selectionEnd, elementValue, minElementValue, maxElementValue;
+            if (dragHandleCount === 1) {
+                elementValue = element.val();
+                if (elementValue !== null && elementValue !== undefined && elementValue !== 'null') {
+                    if (value === null || value === undefined) {
+                        value = elementValue;
+                    }
+                }
+            } else {
+                minElementValue = element.find('input').eq(0).val();
+                maxElementValue = element.find('input').eq(1).val();
+                if (minElementValue !== null && minElementValue !== undefined && minElementValue !== 'null') {
+                    if (min === null || min === undefined) {
+                        min = minElementValue;
+                    }
+                }
+                if (maxElementValue !== null && maxElementValue !== undefined && maxElementValue !== 'null') {
+                    if (max === null || max === undefined) {
+                        max = maxElementValue;
+                    }
+                }
+            }
+            var result = '<div class=\'k-slider-track\'><div class=\'k-slider-selection\'><!-- --></div>' + '<span tabindex=\'0\' class=\'k-draghandle\' title=\'' + firstDragHandleTitle + '\' role=\'slider\' ' + (isHorizontal === false ? 'aria-orientation=\'vertical\' ' : '') + 'aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (dragHandleCount > 1 ? min || options.min : value || options.min) + '\'></span>' + (dragHandleCount > 1 ? '<span tabindex=\'0\' class=\'k-draghandle\' title=\'' + options.rightDragHandleTitle + '\'role=\'slider\' ' + (isHorizontal === false ? 'aria-orientation=\'vertical\' ' : '') + 'aria-valuemin=\'' + options.min + '\' aria-valuemax=\'' + options.max + '\' aria-valuenow=\'' + (max || options.max) + '\'></span>' : '') + '</div>';
+            return result;
         }
         function step(stepValue) {
             return function (value) {
@@ -492,8 +514,9 @@
                 }
                 options.value = math.max(math.min(options.value, options.max), options.min);
                 dragHandle = that.wrapper.find(DRAG_HANDLE);
-                this._selection = new Slider.Selection(dragHandle, that, options);
+                that._selection = new Slider.Selection(dragHandle, that, options);
                 that._drag = new Slider.Drag(dragHandle, '', that, options);
+                that._refreshAriaAttr(options.value);
             },
             options: {
                 name: 'Slider',
@@ -619,7 +642,7 @@
                 } else {
                     formattedValue = that._getFormattedValue(value, null);
                 }
-                this.wrapper.find(DRAG_HANDLE).attr('aria-valuenow', value).attr('aria-valuetext', formattedValue);
+                this.wrapper.find(DRAG_HANDLE).attr(ARIA_VALUENOW, value).attr(ARIA_VALUETEXT, formattedValue);
             },
             _clearTimer: function () {
                 clearTimeout(this.timeout);
@@ -969,6 +992,7 @@
                 this._selection = new RangeSlider.Selection(dragHandles, that, options);
                 that._firstHandleDrag = new Slider.Drag(dragHandles.eq(0), 'firstHandle', that, options);
                 that._lastHandleDrag = new Slider.Drag(dragHandles.eq(1), 'lastHandle', that, options);
+                that._refreshAriaAttr(options.selectionStart, options.selectionEnd);
             },
             options: {
                 name: 'RangeSlider',
@@ -1151,9 +1175,9 @@
                     start,
                     end
                 ], drag);
-                dragHandles.eq(0).attr('aria-valuenow', start);
-                dragHandles.eq(1).attr('aria-valuenow', end);
-                dragHandles.attr('aria-valuetext', formattedValue);
+                dragHandles.eq(0).attr(ARIA_VALUENOW, start);
+                dragHandles.eq(1).attr(ARIA_VALUENOW, end);
+                dragHandles.attr(ARIA_VALUETEXT, formattedValue);
             },
             _setValueInRange: function (selectionStart, selectionEnd) {
                 var options = this.options;

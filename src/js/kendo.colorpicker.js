@@ -393,9 +393,9 @@
             },
             keydown: function (ev) {
                 var that = this, textbox = $(ev.target).data('kendoTextBox');
-                if (ev.keyCode === KEYS.ENTER) {
-                    if (textbox && textbox._focusout) {
-                        textbox._focusout();
+                if (ev.keyCode === KEYS.ENTER && $(ev.target).is('input')) {
+                    if (textbox && textbox._change) {
+                        textbox._change();
                     }
                     that.trigger('change', { value: that._color });
                     that.trigger('select', { value: that._color });
@@ -881,7 +881,10 @@
     (a3 || a2)();
 }));
 (function (f, define) {
-    define('colorpicker/flatcolorpicker', ['kendo.core'], f);
+    define('colorpicker/flatcolorpicker', [
+        'colorpicker/colorgradient',
+        'colorpicker/colorpalette'
+    ], f);
 }(function () {
     (function ($, undefined) {
         var kendo = window.kendo, ui = kendo.ui, Color = kendo.Color, BACKGROUNDCOLOR = 'background-color', MESSAGES = {
@@ -1109,8 +1112,6 @@
         'kendo.textbox',
         'kendo.numerictextbox',
         'colorpicker/colorselector',
-        'colorpicker/colorgradient',
-        'colorpicker/colorpalette',
         'colorpicker/flatcolorpicker'
     ], f);
 }(function () {
@@ -1432,7 +1433,7 @@
             };
         }
         ui.plugin(ColorPicker);
-    }(jQuery));
+    }(window.kendo.jQuery));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
     (a3 || a2)();

@@ -813,6 +813,7 @@
                 that.dataSource = DataSource.create(dataSource);
                 that._bindDataSource();
                 if (that.options.autoBind) {
+                    that.wrapper.attr('aria-busy', true);
                     that.dataSource.fetch();
                 }
             },
@@ -924,6 +925,7 @@
                 that._updateToolbar();
                 that._updateAllToolbars();
                 that.trigger(DATABOUND);
+                that.wrapper.attr('aria-busy', false);
             },
             _syncElement: function () {
                 var options = '';

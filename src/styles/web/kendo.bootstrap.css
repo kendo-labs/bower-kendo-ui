@@ -489,6 +489,9 @@
   background-color: #f5f5f5;
   background-image: none;
 }
+.k-calendar > .k-header .k-button {
+  color: inherit;
+}
 .k-calendar th {
   border-color: #cccccc;
   color: #333333;

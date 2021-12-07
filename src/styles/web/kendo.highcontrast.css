@@ -497,6 +497,9 @@
   background-color: #2c232b;
   background-image: url(textures/glass-lighter.png);
 }
+.k-calendar > .k-header .k-button {
+  color: inherit;
+}
 .k-calendar th {
   border-color: #674c63;
   color: #fff;

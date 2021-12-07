@@ -196,7 +196,10 @@
         });
         var ScrollBar = Class.extend({
             init: function (options) {
-                var that = this, horizontal = options.axis === 'x', element = $('<div class="km-touch-scrollbar km-' + (horizontal ? 'horizontal' : 'vertical') + '-scrollbar" />');
+                var that = this, horizontal = options.axis === 'x', element = $('<div role="scrollbar" aria-controls="' + options.controlsId + '" class="km-touch-scrollbar km-' + (horizontal ? 'horizontal' : 'vertical') + '-scrollbar" />');
+                if (horizontal) {
+                    element.attr('aria-orientation', 'horizontal');
+                }
                 extend(that, options, {
                     element: element,
                     elementSize: 0,
@@ -228,6 +231,7 @@
                     that.element.css(that.size, size + 'px');
                     that.elementSize = size;
                 }
+                that._ariaValue(position, dimension.size - that.elementSize);
                 that.movable.moveAxis(axis, position);
             },
             show: function () {
@@ -240,6 +244,14 @@
                 if (!this.alwaysVisible) {
                     this.element.css({ opacity: 0 });
                 }
+            },
+            _ariaValue: function (current, total) {
+                var element = this.element;
+                if (current > total) {
+                    current = total;
+                }
+                element.attr('aria-valuemax', total);
+                element.attr('aria-valuenow', current);
             }
         });
         var Scroller = Widget.extend({
@@ -516,13 +528,19 @@
                 }
             },
             _initAxis: function (axis) {
-                var that = this, movable = that.movable, dimension = that.dimensions[axis], tapCapture = that.tapCapture, paneAxis = that.pane[axis], scrollBar = new ScrollBar({
-                        axis: axis,
-                        movable: movable,
-                        dimension: dimension,
-                        container: that.element,
-                        alwaysVisible: that.options.visibleScrollHints
-                    });
+                var that = this, elementId = that.element.attr('id'), movable = that.movable, dimension = that.dimensions[axis], tapCapture = that.tapCapture, paneAxis = that.pane[axis], scrollBar;
+                if (!elementId) {
+                    elementId = kendo.guid();
+                    that.element.attr('id', elementId);
+                }
+                scrollBar = new ScrollBar({
+                    axis: axis,
+                    movable: movable,
+                    dimension: dimension,
+                    container: that.element,
+                    alwaysVisible: that.options.visibleScrollHints,
+                    controlsId: elementId
+                });
                 dimension.bind(CHANGE, function () {
                     scrollBar.refresh();
                 });

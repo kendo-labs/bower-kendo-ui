@@ -123,7 +123,8 @@
                 that._tabindex();
                 that._updateClasses();
                 that._dataSource();
-                that.tabGroup.attr('role', 'tablist');
+                that.tabGroup.attr('role', 'none');
+                that.wrapper.attr('role', 'tablist');
                 if (options.dataSource) {
                     that.dataSource.fetch();
                 }
@@ -998,7 +999,7 @@
                     that.tabWrapper.appendTo(that.wrapper);
                 }
                 if (tabPosition === 'left' || tabPosition === 'right') {
-                    that.tabGroup.attr('aria-orientation', 'vertical');
+                    that.wrapper.attr('aria-orientation', 'vertical');
                 }
                 that.resize(true);
             },

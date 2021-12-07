@@ -134,6 +134,7 @@
                     wrapper.removeClass(STATEDISABLED).removeClass(NOCLICKCLASS);
                     element.on('focusin' + NS, proxy(that._focusin, that));
                     element.on('focusout' + NS, proxy(that._focusout, that));
+                    element.on('change' + NS, proxy(that._change, that));
                 } else {
                     element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                     wrapper.toggleClass(STATEDISABLED, disable).toggleClass(NOCLICKCLASS, readonly);
@@ -172,16 +173,16 @@
             },
             _focusout: function () {
                 var that = this;
-                var value = that._value;
-                var newValue = that.element.val();
                 that.wrapper.removeClass(FOCUSED);
-                if (value === null) {
-                    value = '';
-                }
-                if (value !== newValue) {
-                    that._value = newValue;
-                    that.trigger(CHANGE);
-                }
+            },
+            _change: function (e) {
+                var that = this;
+                var newValue = that.element.val();
+                that._value = newValue;
+                that.trigger(CHANGE, {
+                    value: newValue,
+                    originalEvent: e
+                });
             },
             _wrapper: function () {
                 var that = this;

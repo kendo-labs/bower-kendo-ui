@@ -1500,7 +1500,7 @@
                 if (skip !== undefined && take !== undefined) {
                     query = query.range(skip, take);
                 }
-                if (group) {
+                if (group && (!isEmptyObject(group) || group.length !== 0)) {
                     query = query.group(group, data, options);
                 }
             }
@@ -2372,6 +2372,43 @@
                     this.options.autoSync = autoSync;
                 }
                 return destroyed;
+            },
+            pushMove: function (index, items) {
+                var pushed = this._moveItems(index, items);
+                if (pushed.length) {
+                    this.trigger('push', {
+                        type: 'update',
+                        items: pushed
+                    });
+                }
+            },
+            _moveItems: function (index, items) {
+                if (!isArray(items)) {
+                    items = [items];
+                }
+                var moved = [];
+                var autoSync = this.options.autoSync;
+                this.options.autoSync = false;
+                try {
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        var model = this._createNewModel(item);
+                        this._eachItem(this._data, function (dataItems) {
+                            for (var idx = 0; idx < dataItems.length; idx++) {
+                                var dataItem = dataItems.at(idx);
+                                if (dataItem.id === model.id) {
+                                    moved.push(dataItem);
+                                    dataItems.splice(index >= idx ? --index : index, 0, dataItems.splice(idx, 1)[0]);
+                                    index++;
+                                    break;
+                                }
+                            }
+                        });
+                    }
+                } finally {
+                    this.options.autoSync = autoSync;
+                }
+                return moved;
             },
             remove: function (model) {
                 var result, that = this, hasGroups = that._isServerGrouped();
@@ -3695,6 +3732,9 @@
                 var that = this;
                 var options = { group: val };
                 if (that._groupPaging) {
+                    if (val !== undefined && (!val || !val.length)) {
+                        that._ranges = [];
+                    }
                     options.page = 1;
                 }
                 if (val !== undefined) {
