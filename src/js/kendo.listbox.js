@@ -288,14 +288,14 @@
                 var that = this;
                 var target = $(e.currentTarget);
                 var oldTarget = that._target;
-                var isInput = isInputElement(e.target);
+                var activeEl = kendo._activeElement();
                 if (oldTarget) {
                     oldTarget.removeClass(FOCUSED_CLASS);
                 }
                 that._target = target;
                 target.addClass(FOCUSED_CLASS);
                 that._getList().attr('aria-activedescendant', target.attr(ID));
-                if (that._getList()[0] !== kendo._activeElement() && !isInput) {
+                if (that._getList()[0] !== kendo._activeElement() && !isInputElement(activeEl)) {
                     that.focus();
                 }
             },

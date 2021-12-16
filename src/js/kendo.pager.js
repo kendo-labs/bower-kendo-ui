@@ -496,6 +496,7 @@
                 }
                 if (handled) {
                     e.preventDefault();
+                    e.stopPropagation();
                 }
             },
             _numericSelectChange: function (e) {

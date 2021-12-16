@@ -527,7 +527,7 @@
                 e.preventDefault();
                 var now = new Date();
                 this.value(now);
-                this.options.change(kendo.toString(now, this.options.format, this.options.culture));
+                this.options.change(kendo.toString(now, this.options.format, this.options.culture), true);
             },
             _cancelClickHandler: function (e) {
                 e.preventDefault();
