@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -15094,11 +15094,17 @@ span.k-sparkline,
 .k-navigator > .k-button {
   margin: 0;
   padding: 0;
+  width: auto;
+  height: auto;
   border-color: transparent;
   border-radius: 16px;
-  line-height: 10px;
+  line-height: 1;
   background: none;
   position: absolute;
+}
+.k-navigator > .k-button .k-icon {
+  min-width: 0;
+  min-height: 0;
 }
 .k-navigator .k-navigator-n,
 .k-navigator .k-navigator-up {

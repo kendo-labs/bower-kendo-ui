@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -51,7 +51,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, support = kendo.support, caret = kendo.caret, activeElement = kendo._activeElement, placeholderSupported = support.placeholder, ui = kendo.ui, List = ui.List, keys = kendo.keys, DataSource = kendo.data.DataSource, ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CHANGE = 'change', DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', FOCUSED = 'k-state-focused', SELECTED = 'k-state-selected', HIDDENCLASS = 'k-hidden', STATEDISABLED = 'k-state-disabled', AUTOCOMPLETEVALUE = 'off', HOVER = 'k-state-hover', ns = '.kendoAutoComplete', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
+        var kendo = window.kendo, support = kendo.support, caret = kendo.caret, activeElement = kendo._activeElement, placeholderSupported = support.placeholder, ui = kendo.ui, List = ui.List, keys = kendo.keys, DataSource = kendo.data.DataSource, ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', FOCUSED = 'k-focus', SELECTED = 'k-selected', HIDDENCLASS = 'k-hidden', STATEDISABLED = 'k-disabled', AUTOCOMPLETEVALUE = 'off', HOVER = 'k-hover', ns = '.kendoAutoComplete', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy;
         function indexOfWordAtCaret(caretIdx, text, separator) {
             return separator ? text.substring(0, caretIdx).split(separator).length - 1 : 0;
         }
@@ -86,7 +86,7 @@
                 element[0].type = 'text';
                 wrapper = that.wrapper;
                 that._popup();
-                element.addClass('k-input').on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._search, that)).on('focus' + ns, function () {
+                element.addClass('k-input-inner').on('keydown' + ns, proxy(that._keydown, that)).on('keypress' + ns, proxy(that._keypress, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._search, that)).on('focus' + ns, function () {
                     that._prev = that._accessor();
                     that._oldText = that._prev;
                     that._placeholder(false);
@@ -120,6 +120,7 @@
                 that._resetFocusItemHandler = $.proxy(that._resetFocusItem, that);
                 kendo.notify(that);
                 that._toggleCloseVisibility();
+                that._applyCssClasses();
             },
             options: {
                 name: 'AutoComplete',
@@ -143,7 +144,10 @@
                 value: null,
                 clearButton: true,
                 autoWidth: false,
-                popup: null
+                popup: null,
+                size: 'medium',
+                fillMode: 'solid',
+                rounded: 'medium'
             },
             _dataSource: function () {
                 var that = this;
@@ -186,10 +190,10 @@
             _editable: function (options) {
                 var that = this, element = that.element, wrapper = that.wrapper.off(ns), readonly = options.readonly, disable = options.disable;
                 if (!readonly && !disable) {
-                    wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
+                    wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
                     element.prop(DISABLED, false).prop(READONLY, false).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false);
                 } else {
-                    wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
+                    wrapper.addClass(disable ? STATEDISABLED : '').removeClass(disable ? '' : STATEDISABLED);
                     element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
                 }
             },
@@ -603,7 +607,7 @@
             _wrapper: function () {
                 var that = this, element = that.element, DOMelement = element[0], wrapper;
                 wrapper = element.parent();
-                if (!wrapper.is('span.k-widget')) {
+                if (!wrapper.is('span.k-autocomplete')) {
                     wrapper = element.wrap('<span />').parent();
                 }
                 wrapper.attr('tabindex', -1);
@@ -613,8 +617,7 @@
                     height: DOMelement.style.height
                 });
                 that._focused = that.element;
-                that.wrapper = wrapper.addClass('k-widget k-autocomplete').addClass(DOMelement.className).removeClass('input-validation-error');
-                that._inputWrapper = $(wrapper[0]);
+                that.wrapper = wrapper.addClass('k-autocomplete k-input').addClass(DOMelement.className).removeClass('input-validation-error');
             },
             _clearValue: function () {
                 List.fn._clearValue.call(this);
@@ -622,6 +625,14 @@
             }
         });
         ui.plugin(AutoComplete);
+        kendo.cssProperties.registerPrefix('AutoComplete', 'k-input-');
+        kendo.cssProperties.registerValues('AutoComplete', [{
+                prop: 'rounded',
+                values: kendo.cssProperties.roundedValues.concat([[
+                        'full',
+                        'full'
+                    ]])
+            }]);
     }(window.kendo.jQuery));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {

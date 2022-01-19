@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -26,7 +26,8 @@
     define('kendo.dropdownlist', [
         'kendo.list',
         'kendo.mobile.scroller',
-        'kendo.virtuallist'
+        'kendo.virtuallist',
+        'html/button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -51,7 +52,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, support = kendo.support, activeElement = kendo._activeElement, ObservableObject = kendo.data.ObservableObject, keys = kendo.keys, ns = '.kendoDropDownList', nsFocusEvent = ns + 'FocusEvent', DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', FOCUSED = 'k-state-focused', DEFAULT = 'k-state-default', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CLICKEVENTS = 'click' + ns + ' touchend' + ns, HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, TABINDEX = 'tabindex', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', MSG_INVALID_OPTION_LABEL = 'The `optionLabel` option is not valid due to missing fields. Define a custom optionLabel as shown here http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist#configuration-optionLabel', proxy = $.proxy, OPEN = 'open', CLOSE = 'close';
+        var kendo = window.kendo, ui = kendo.ui, html = kendo.html, List = ui.List, Select = ui.Select, support = kendo.support, activeElement = kendo._activeElement, ObservableObject = kendo.data.ObservableObject, keys = kendo.keys, ns = '.kendoDropDownList', nsFocusEvent = ns + 'FocusEvent', DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', FOCUSED = 'k-focus', STATEDISABLED = 'k-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', CLICKEVENTS = 'click' + ns + ' touchend' + ns, HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, TABINDEX = 'tabindex', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', MSG_INVALID_OPTION_LABEL = 'The `optionLabel` option is not valid due to missing fields. Define a custom optionLabel as shown here http://docs.telerik.com/kendo-ui/api/javascript/ui/dropdownlist#configuration-optionLabel', proxy = $.proxy, OPEN = 'open', CLOSE = 'close';
         var DropDownList = Select.extend({
             init: function (element, options) {
                 var that = this;
@@ -118,6 +119,7 @@
                     e.preventDefault();
                 });
                 kendo.notify(that);
+                that._applyCssClasses();
             },
             options: {
                 name: 'DropDownList',
@@ -147,7 +149,10 @@
                 fixedGroupTemplate: '#:data#',
                 autoWidth: false,
                 popup: null,
-                filterTitle: null
+                filterTitle: null,
+                size: 'medium',
+                fillMode: 'solid',
+                rounded: 'medium'
             },
             events: [
                 'open',
@@ -180,7 +185,6 @@
                 that.wrapper.off(ns);
                 that.wrapper.off(nsFocusEvent);
                 that.element.off(ns);
-                that._inputWrapper.off(ns);
                 that._arrow.off();
                 that._arrow = null;
                 that._arrowIcon = null;
@@ -227,7 +231,7 @@
                 this.popup.close();
             },
             _attachAriaActiveDescendant: function () {
-                var wrapper = this.wrapper, inputId = wrapper.find('.k-input').attr('id');
+                var wrapper = this.wrapper, inputId = wrapper.find('.k-input-inner').attr('id');
                 wrapper.attr('aria-activedescendant', inputId);
             },
             _focusInput: function () {
@@ -242,7 +246,9 @@
                 var isInputActive = this.filterInput[0] === activeElement();
                 var caret = kendo.caret(this.filterInput[0])[0];
                 this._prevent = true;
-                filterInput.css('display', 'none').css('width', this.popup.element.css('width')).css('display', 'inline-block');
+                filterInput.addClass('k-hidden');
+                filterInput.closest('.k-list-filter').css('width', this.popup.element.css('width'));
+                filterInput.removeClass('k-hidden');
                 if (isInputActive) {
                     filterInput.trigger('focus');
                     kendo.caret(filterInput[0], caret);
@@ -489,7 +495,7 @@
                 this.wrapper.trigger('focus');
             },
             _focusinHandler: function () {
-                this._inputWrapper.addClass(FOCUSED);
+                this.wrapper.addClass(FOCUSED);
                 this._prevent = false;
             },
             _focusoutHandler: function () {
@@ -502,7 +508,7 @@
                     } else {
                         that._blur();
                     }
-                    that._inputWrapper.removeClass(FOCUSED);
+                    that.wrapper.removeClass(FOCUSED);
                     that._prevent = true;
                     that._open = false;
                     that.element.trigger('blur');
@@ -524,10 +530,10 @@
                 var disable = options.disable;
                 var readonly = options.readonly;
                 var wrapper = that.wrapper.add(that.filterInput).off(ns);
-                var dropDownWrapper = that._inputWrapper.off(HOVEREVENTS);
+                var dropDownWrapper = that.wrapper.off(HOVEREVENTS);
                 if (!readonly && !disable) {
                     element.prop(DISABLED, false).prop(READONLY, false);
-                    dropDownWrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
+                    dropDownWrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
                     wrapper.attr(TABINDEX, wrapper.data(TABINDEX)).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false).on('keydown' + ns, that, proxy(that._keydown, that)).on(kendo.support.mousedown + ns, proxy(that._wrapperMousedown, that)).on('paste' + ns, proxy(that._filterPaste, that));
                     that.wrapper.on('click' + ns, proxy(that._wrapperClick, that));
                     if (!that.filterInput) {
@@ -537,9 +543,9 @@
                     }
                 } else if (disable) {
                     wrapper.removeAttr(TABINDEX);
-                    dropDownWrapper.addClass(STATEDISABLED).removeClass(DEFAULT);
+                    dropDownWrapper.addClass(STATEDISABLED);
                 } else {
-                    dropDownWrapper.addClass(DEFAULT).removeClass(STATEDISABLED);
+                    dropDownWrapper.removeClass(STATEDISABLED);
                 }
                 element.attr(DISABLED, disable).attr(READONLY, readonly);
                 wrapper.attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
@@ -828,7 +834,7 @@
             },
             _nextItem: function () {
                 var focusIndex;
-                if (this.optionLabel.hasClass('k-state-focused')) {
+                if (this.optionLabel.hasClass('k-focus')) {
                     this._resetOptionLabel();
                     this.listView.focusFirst();
                     focusIndex = 1;
@@ -839,7 +845,7 @@
             },
             _prevItem: function () {
                 var focusIndex;
-                if (this.optionLabel.hasClass('k-state-focused')) {
+                if (this.optionLabel.hasClass('k-focus')) {
                     return;
                 }
                 focusIndex = this.listView.focusPrev();
@@ -870,14 +876,14 @@
                 }
             },
             _resetOptionLabel: function (additionalClass) {
-                this.optionLabel.removeClass('k-state-focused' + (additionalClass || '')).removeAttr('id');
+                this.optionLabel.removeClass('k-focus' + (additionalClass || '')).removeAttr('id');
             },
             _focus: function (candidate) {
                 var listView = this.listView;
                 var optionLabel = this.optionLabel;
                 if (candidate === undefined) {
                     candidate = listView.focus();
-                    if (!candidate && optionLabel.hasClass('k-state-focused')) {
+                    if (!candidate && optionLabel.hasClass('k-focus')) {
                         candidate = optionLabel;
                     }
                     return candidate;
@@ -886,7 +892,7 @@
                 candidate = this._get(candidate);
                 listView.focus(candidate);
                 if (candidate === -1) {
-                    optionLabel.addClass('k-state-focused').attr('id', listView._optionID);
+                    optionLabel.addClass('k-focus').attr('id', listView._optionID);
                     this._focused.add(this.filterInput).removeAttr('aria-activedescendant').attr('aria-activedescendant', listView._optionID);
                 }
             },
@@ -912,7 +918,7 @@
                 if (idx === undefined) {
                     idx = -1;
                 }
-                this._resetOptionLabel(' k-state-selected');
+                this._resetOptionLabel(' k-selected');
                 if (dataItem || dataItem === 0) {
                     text = dataItem;
                     value = that._dataValue(dataItem);
@@ -920,7 +926,7 @@
                         idx += 1;
                     }
                 } else if (optionLabel) {
-                    that._focus(that.optionLabel.addClass('k-state-selected'));
+                    that._focus(that.optionLabel.addClass('k-selected'));
                     text = that._optionLabelText();
                     if (typeof optionLabel === 'string') {
                         value = '';
@@ -944,44 +950,49 @@
                 }
             },
             _filterHeader: function () {
-                var icon;
+                var filterTemplate = '<div class="k-list-filter">' + '<span class="k-searchbox k-input k-input-md k-rounded-md k-input-solid" type="text" autocomplete="off">' + '<span class="k-input-icon k-icon k-i-search"></span>' + '</span>' + '</div>';
                 if (this.filterInput) {
                     this.filterInput.off(ns).parent().remove();
                     this.filterInput = null;
                 }
                 if (this._isFilterEnabled()) {
-                    icon = '<span class="k-icon k-i-zoom"></span>';
-                    this.filterInput = $('<input class="k-textbox"/>').attr({
+                    this.filterInput = $('<input class="k-input-inner" type="text" />').attr({
                         placeholder: this.element.attr('placeholder'),
                         title: this.options.filterTitle || this.element.attr('title'),
                         role: 'searchbox',
                         'aria-haspopup': 'listbox',
                         'aria-autocomplete': 'list'
                     });
-                    this.list.prepend($('<span class="k-list-filter" />').append(this.filterInput.add(icon)));
+                    this.list.prepend($(filterTemplate)).find('.k-searchbox').append(this.filterInput);
                 }
             },
             _span: function () {
-                var that = this, wrapper = that.wrapper, SELECTOR = 'span.k-input', id = kendo.guid(), span;
+                var that = this, wrapper = that.wrapper, SELECTOR = 'span.k-input-value-text', id = kendo.guid(), options = that.options, span, arrowBtn;
                 span = wrapper.find(SELECTOR);
                 if (!span[0]) {
-                    wrapper.append('<span unselectable="on" class="k-dropdown-wrap k-state-default"><span id="' + id + '" unselectable="on" role="option" aria-selected="true" class="k-input">&nbsp;</span><span role="button" unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
+                    arrowBtn = html.renderButton('<button type="button" tabindex="-1" unselectable="on" class="k-select k-input-button" aria-label="select"></button>', {
+                        icon: 'arrow-s',
+                        size: options.size,
+                        fillMode: options.fillMode,
+                        shape: null,
+                        rounded: null
+                    });
+                    wrapper.append('<span id="' + id + '" unselectable="on" role="option" aria-selected="true" class="k-input-inner">' + '<span class="k-input-value-text"></span>' + '</span>').append(arrowBtn).append(that.element);
                     span = wrapper.find(SELECTOR);
                 }
                 that.span = span;
-                that._inputWrapper = $(wrapper[0].firstChild);
                 that._arrow = wrapper.find('.k-select');
                 that._arrowIcon = that._arrow.find('.k-icon');
             },
             _wrapper: function () {
                 var that = this, element = that.element, DOMelement = element[0], wrapper;
                 wrapper = element.parent();
-                if (!wrapper.is('span.k-widget')) {
+                if (!wrapper.is('span.k-picker')) {
                     wrapper = element.wrap('<span />').parent();
                     wrapper[0].style.cssText = DOMelement.style.cssText;
                     wrapper[0].title = DOMelement.title;
                 }
-                that._focused = that.wrapper = wrapper.addClass('k-widget k-dropdown').addClass(DOMelement.className).removeClass('input-validation-error').css('display', '').attr({
+                that._focused = that.wrapper = wrapper.addClass('k-picker k-dropdown k-widget').addClass(DOMelement.className).removeClass('input-validation-error').css('display', '').attr({
                     accesskey: element.attr('accesskey'),
                     unselectable: 'on',
                     role: 'listbox',
@@ -1115,6 +1126,14 @@
             return true;
         }
         ui.plugin(DropDownList);
+        kendo.cssProperties.registerPrefix('DropDownList', 'k-picker-');
+        kendo.cssProperties.registerValues('DropDownList', [{
+                prop: 'rounded',
+                values: kendo.cssProperties.roundedValues.concat([[
+                        'full',
+                        'full'
+                    ]])
+            }]);
     }(window.kendo.jQuery));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {

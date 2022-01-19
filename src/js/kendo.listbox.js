@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -59,17 +59,17 @@
         var HASH = '#';
         var KENDO_LISTBOX = 'kendoListBox';
         var NS = DOT + KENDO_LISTBOX;
-        var DISABLED_STATE_CLASS = 'k-state-disabled';
-        var SELECTED_STATE_CLASS = 'k-state-selected';
-        var ENABLED_ITEM_SELECTOR = '.k-item:not(.k-state-disabled)';
-        var ENABLED_ITEMS_SELECTOR = '.k-list:not(.k-state-disabled) >' + ENABLED_ITEM_SELECTOR;
+        var DISABLED_STATE_CLASS = 'k-disabled';
+        var SELECTED_STATE_CLASS = 'k-selected';
+        var ENABLED_ITEM_SELECTOR = '.k-list-item:not(.k-disabled)';
+        var ENABLED_ITEMS_SELECTOR = '.k-list-ul:not(.k-disabled) >' + ENABLED_ITEM_SELECTOR;
         var TOOLBAR_CLASS = 'k-listbox-toolbar';
-        var TOOL_SELECTOR = 'li > a.k-button:not(.k-state-disabled)';
-        var FOCUSED_CLASS = 'k-state-focused';
+        var TOOL_SELECTOR = 'li > a.k-button:not(.k-disabled)';
+        var FOCUSED_CLASS = 'k-focus';
         var DRAG_CLUE_CLASS = 'k-drag-clue';
         var DROP_HINT_CLASS = 'k-drop-hint';
-        var LIST_CLASS = 'k-reset k-list';
-        var LIST_SELECTOR = '.k-reset.k-list';
+        var LIST_CLASS = 'k-list-ul';
+        var LIST_SELECTOR = '.k-list-ul';
         var CLICK = 'click' + NS;
         var KEYDOWN = 'keydown' + NS;
         var BLUR = 'blur' + NS;
@@ -97,7 +97,7 @@
         var DRAG = 'drag';
         var DROP = 'drop';
         var DRAGEND = 'dragend';
-        var DEFAULT_FILTER = 'ul.k-reset.k-list>li.k-item';
+        var DEFAULT_FILTER = 'ul.k-list-ul>li.k-list-item';
         var RIGHT = 'right';
         var BOTTOM = 'bottom';
         var TOOLBAR_POSITION_CLASS_NAMES = [
@@ -363,7 +363,7 @@
                             that.clearSelection();
                             that._shiftSelecting = true;
                         }
-                        if (that._target && current.hasClass('k-state-selected')) {
+                        if (that._target && current.hasClass('k-selected')) {
                             that._target.removeClass(SELECTED_STATE_CLASS);
                             that.trigger(CHANGE);
                         } else if (that.options.selectable == 'single') {
@@ -851,7 +851,7 @@
                     wrapper = element.wrap('<div class="k-widget k-listbox" unselectable="on" />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                     wrapper[0].title = element[0].title;
-                    $('<div class="k-list-scroller" />').insertBefore(element);
+                    $('<div class="k-list-scroller"><div class="k-list k-list-md"><div class="k-list-content"></div></div></div>').insertBefore(element);
                 }
                 that.wrapper = wrapper.addClass(element[0].className).css('display', '');
                 that._innerWrapper = $(wrapper[0].firstChild);
@@ -861,7 +861,7 @@
                 if (selectableOptions.multiple) {
                     list.attr('aria-multiselectable', 'true');
                 }
-                list.appendTo(that._innerWrapper);
+                list.appendTo(that.wrapper.find('.k-list-content'));
                 if (that.options.navigatable) {
                     that._getList().attr(TABINDEX, that._getTabIndex());
                 }
@@ -902,7 +902,7 @@
                     template = options.template;
                 }
                 that.templates = {
-                    itemTemplate: kendo.template('# var item = data.item, r = data.r; # <li class=\'k-item\' role=\'option\' aria-selected=\'false\'>#=r(item)#</li>', { useWithBlock: false }),
+                    itemTemplate: kendo.template('# var item = data.item, r = data.r; # <li class=\'k-list-item\' role=\'option\' aria-selected=\'false\'><span class=\'k-list-item-text\'>#=r(item)#</span></li>', { useWithBlock: false }),
                     itemContent: template,
                     toolbar: '<div class=\'' + TOOLBAR_CLASS + '\'></div>'
                 };
@@ -972,6 +972,7 @@
                 var selectableOptions = Selectable.parseOptions(selectable);
                 that.selectable = new Selectable(that._innerWrapper, {
                     aria: true,
+                    selectedClass: 'k-selected',
                     multiple: selectableOptions.multiple,
                     filter: ENABLED_ITEM_SELECTOR,
                     change: proxy(that._onSelect, that)
@@ -1314,7 +1315,7 @@
                 tools: []
             },
             _initTemplates: function () {
-                this.templates = { tool: kendoTemplate('<li>' + '<a href=\'\\\\#\' class=\'k-button k-button-icon\' data-command=\'#= command #\' title=\'#= text #\' aria-label=\'#= text #\' role=\'button\'>' + '<span class=\'k-icon #= iconClass #\'></span>' + '</a>' + '</li>') };
+                this.templates = { tool: kendoTemplate('<li>' + '<a href=\'\\\\#\' class=\'k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-icon-button\' data-command=\'#= command #\' title=\'#= text #\' aria-label=\'#= text #\' role=\'button\'>' + '<span class=\'k-button-icon k-icon #= iconClass #\'></span>' + '</a>' + '</li>') };
             },
             _createTools: function () {
                 var that = this;

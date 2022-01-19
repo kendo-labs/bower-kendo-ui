@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -93,14 +93,14 @@
                 return result;
             },
             _tap: function (e) {
-                var target = $(e.target), that = this, ctrlKey = e.event.ctrlKey || e.event.metaKey, multiple = that.options.multiple, shiftKey = multiple && e.event.shiftKey, selected, whichCode = e.event.which, buttonCode = e.event.button;
+                var target = $(e.target), that = this, ctrlKey = e.event.ctrlKey || e.event.metaKey, multiple = that.options.multiple, shiftKey = multiple && e.event.shiftKey, selectedClass = that.options.selectedClass || SELECTED, selected, whichCode = e.event.which, buttonCode = e.event.button;
                 if (!that._isElement(target.closest('.' + SELECTABLE)) || whichCode && whichCode == 3 || buttonCode && buttonCode == 2) {
                     return;
                 }
                 if (!this._allowSelection(e.event.target)) {
                     return;
                 }
-                selected = target.hasClass(SELECTED);
+                selected = target.hasClass(selectedClass);
                 if (!multiple || !ctrlKey) {
                     that.clear();
                 }
@@ -118,7 +118,7 @@
                 }
             },
             _start: function (e) {
-                var that = this, target = $(e.target), selected = target.hasClass(SELECTED), currentElement, ctrlKey = e.event.ctrlKey || e.event.metaKey;
+                var that = this, target = $(e.target), selectedClass = that.options.selectedClass || SELECTED, selected = target.hasClass(selectedClass), currentElement, ctrlKey = e.event.ctrlKey || e.event.metaKey;
                 if (!this._allowSelection(e.event.target)) {
                     return;
                 }
@@ -178,15 +178,15 @@
                 that._items = null;
             },
             _invalidateSelectables: function (position, ctrlKey) {
-                var idx, length, target = this._downTarget[0], items = this._items, related, toSelect;
+                var idx, length, target = this._downTarget[0], items = this._items, selectedClass = this.options.selectedClass || SELECTED, related, toSelect;
                 this._currentlyActive = [];
                 for (idx = 0, length = items.length; idx < length; idx++) {
                     toSelect = items.eq(idx);
                     related = toSelect.add(this.relatedTarget(toSelect));
                     if (collision(toSelect, position)) {
-                        if (toSelect.hasClass(SELECTED)) {
+                        if (toSelect.hasClass(selectedClass)) {
                             if (ctrlKey && target !== toSelect[0]) {
-                                related.removeClass(SELECTED).addClass(UNSELECTING);
+                                related.removeClass(selectedClass).addClass(UNSELECTING);
                             }
                         } else if (!toSelect.hasClass(ACTIVE) && !toSelect.hasClass(UNSELECTING) && !this._collidesWithActiveElement(related, position)) {
                             related.addClass(ACTIVE);
@@ -196,7 +196,7 @@
                         if (toSelect.hasClass(ACTIVE)) {
                             related.removeClass(ACTIVE);
                         } else if (ctrlKey && toSelect.hasClass(UNSELECTING)) {
-                            related.removeClass(UNSELECTING).addClass(SELECTED);
+                            related.removeClass(UNSELECTING).addClass(selectedClass);
                         }
                     }
                 }
@@ -236,7 +236,7 @@
                     that._notify(CHANGE, e);
                     return;
                 }
-                return that.element.find(that.options.filter + '.' + SELECTED);
+                return that.element.find(that.options.filter + '.' + (that.options.selectedClass || SELECTED));
             },
             selectedRanges: function () {
                 var that = this;
@@ -255,7 +255,7 @@
             selectedSingleItems: function () {
                 var that = this;
                 var rangeSelectedAttr = kendo.attr('range-selected');
-                return that.element.find(that.options.filter + '.' + SELECTED + ':not([' + rangeSelectedAttr + '])').toArray().map(function (elem) {
+                return that.element.find(that.options.filter + '.' + (that.options.selectedClass || SELECTED) + ':not([' + rangeSelectedAttr + '])').toArray().map(function (elem) {
                     return $(elem);
                 });
             },
@@ -268,10 +268,10 @@
                 return selected.length > 0 ? selected[0] : that.element.find(that.options.filter)[0];
             },
             _selectElement: function (element, preventNotify) {
-                var toSelect = $(element), isPrevented = !preventNotify && this._notify('select', { element: element });
+                var toSelect = $(element), selectedClass = this.options.selectedClass || SELECTED, isPrevented = !preventNotify && this._notify('select', { element: element });
                 toSelect.removeClass(ACTIVE);
                 if (!isPrevented) {
-                    toSelect.addClass(SELECTED);
+                    toSelect.addClass(selectedClass);
                     if (this.options.aria) {
                         toSelect.attr(ARIASELECTED, true);
                     }
@@ -286,7 +286,7 @@
                     return;
                 }
                 var rangeSelectedAttr = kendo.attr('range-selected');
-                element.removeClass(SELECTED).removeAttr(rangeSelectedAttr);
+                element.removeClass(this.options.selectedClass || SELECTED).removeAttr(rangeSelectedAttr);
                 if (this.options.aria) {
                     element.attr(ARIASELECTED, false);
                 }
@@ -311,7 +311,7 @@
                 this.userEvents.cancel();
             },
             clear: function () {
-                var items = this.element.find(this.options.filter + '.' + SELECTED);
+                var items = this.element.find(this.options.filter + '.' + (this.options.selectedClass || SELECTED));
                 this._unselect(items);
             },
             selectRange: function (start, end, e) {

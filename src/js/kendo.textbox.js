@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, isPlainObject = $.isPlainObject, NS = '.kendoTextBox', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', FOCUSED = 'k-state-focused', LABELCLASSES = 'k-label k-input-label', STATEDISABLED = 'k-state-disabled', NOCLICKCLASS = 'k-no-click', ARIA_DISABLED = 'aria-disabled', proxy = $.proxy;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, isPlainObject = $.isPlainObject, NS = '.kendoTextBox', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input-inner', FOCUSED = 'k-focus', LABELCLASSES = 'k-label k-input-label', STATEDISABLED = 'k-disabled', NOCLICKCLASS = 'k-no-click', ARIA_DISABLED = 'aria-disabled', proxy = $.proxy;
         var TextBox = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -58,6 +58,7 @@
                 });
                 that.element.addClass(INPUT).attr('placeholder', that.options.placeholder).attr('autocomplete', 'off');
                 kendo.notify(that);
+                that._applyCssClasses();
             },
             events: [CHANGE],
             options: {
@@ -66,7 +67,10 @@
                 readonly: false,
                 enable: true,
                 placeholder: '',
-                label: null
+                label: null,
+                rounded: 'medium',
+                size: 'medium',
+                fillMode: 'solid'
             },
             value: function (value) {
                 var that = this;
@@ -189,12 +193,20 @@
                 var element = that.element;
                 var DOMElement = element[0];
                 var wrapper;
-                wrapper = element.wrap('<span class=\'k-widget k-textbox\'></span>').parent();
+                wrapper = element.wrap('<span class=\'k-input k-textbox\'></span>').parent();
                 wrapper[0].style.cssText = DOMElement.style.cssText;
                 DOMElement.style.width = '100%';
-                that._inputWrapper = that.wrapper = wrapper.addClass(DOMElement.className).removeClass('input-validation-error');
+                that.wrapper = wrapper.addClass(DOMElement.className).removeClass('input-validation-error');
             }
         });
+        kendo.cssProperties.registerPrefix('TextBox', 'k-input-');
+        kendo.cssProperties.registerValues('TextBox', [{
+                prop: 'rounded',
+                values: kendo.cssProperties.roundedValues.concat([[
+                        'full',
+                        'full'
+                    ]])
+            }]);
         ui.plugin(TextBox);
     }(window.kendo.jQuery));
     return window.kendo;

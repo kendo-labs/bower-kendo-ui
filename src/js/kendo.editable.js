@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -24,6 +24,7 @@
 */
 (function (f, define) {
     define('kendo.editable', [
+        'kendo.checkbox',
         'kendo.dropdownlist',
         'kendo.datepicker',
         'kendo.numerictextbox',
@@ -36,6 +37,7 @@
         name: 'Editable',
         category: 'framework',
         depends: [
+            'checkbox',
             'dropdownlist',
             'datepicker',
             'numerictextbox',
@@ -139,6 +141,7 @@
         }
         var kendoEditors = [
             'AutoComplete',
+            'CheckBox',
             'CheckBoxGroup',
             'ColorPicker',
             'ComboBox',
@@ -182,11 +185,11 @@
             },
             'string': function (container, options) {
                 var attr = createAttributes(options);
-                $('<input type="text" />').attr(attr).addClass('k-textbox').appendTo(container);
+                $('<input type="text"/>').attr(attr).appendTo(container).kendoTextBox();
             },
             'boolean': function (container, options) {
                 var attr = createAttributes(options);
-                var element = $('<input type="checkbox" />').attr(attr).addClass('k-checkbox').appendTo(container);
+                var element = $('<input type="checkbox" />').attr(attr).kendoCheckBox().appendTo(container);
                 renderHiddenForMvcCheckbox(element, container, options);
             },
             'values': function (container, options) {

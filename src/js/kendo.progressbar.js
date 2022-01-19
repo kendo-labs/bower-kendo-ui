@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -33,7 +33,7 @@
         depends: ['core']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, HORIZONTAL = 'horizontal', VERTICAL = 'vertical', DEFAULTMIN = 0, DEFAULTMAX = 100, DEFAULTVALUE = 0, DEFAULTCHUNKCOUNT = 5, KPROGRESSBAR = 'k-progressbar', KPROGRESSBARREVERSE = 'k-progressbar-reverse', KPROGRESSBARINDETERMINATE = 'k-progressbar-indeterminate', KPROGRESSBARCOMPLETE = 'k-complete', KPROGRESSWRAPPER = 'k-state-selected', KPROGRESSSTATUS = 'k-progress-status', LABEL_POSITION_END = 'k-progress-end', KCOMPLETEDCHUNK = 'k-state-selected', KUPCOMINGCHUNK = 'k-state-default', STATEDISABLED = 'k-state-disabled', PROGRESSTYPE = {
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, HORIZONTAL = 'horizontal', VERTICAL = 'vertical', DEFAULTMIN = 0, DEFAULTMAX = 100, DEFAULTVALUE = 0, DEFAULTCHUNKCOUNT = 5, KPROGRESSBAR = 'k-progressbar', KPROGRESSBARREVERSE = 'k-progressbar-reverse', KPROGRESSBARINDETERMINATE = 'k-progressbar-indeterminate', KPROGRESSBARCOMPLETE = 'k-complete', KPROGRESSWRAPPER = 'k-state-selected', KPROGRESSSTATUS = 'k-progress-status', LABEL_POSITION_END = 'k-progress-end', KCOMPLETEDCHUNK = 'k-state-selected', STATEDISABLED = 'k-state-disabled', PROGRESSTYPE = {
                 VALUE: 'value',
                 PERCENT: 'percent',
                 CHUNK: 'chunk'
@@ -246,8 +246,8 @@
                 } else {
                     completedChunks = that.wrapper.find('li.k-item').slice(completedChunksCount * -1);
                 }
-                that.wrapper.find('.' + KCOMPLETEDCHUNK).removeClass(KCOMPLETEDCHUNK).addClass(KUPCOMINGCHUNK);
-                completedChunks.removeClass(KUPCOMINGCHUNK).addClass(KCOMPLETEDCHUNK);
+                that.wrapper.find('.' + KCOMPLETEDCHUNK).removeClass(KCOMPLETEDCHUNK);
+                completedChunks.addClass(KCOMPLETEDCHUNK);
             },
             _updateProgressWrapper: function (percentage) {
                 var that = this;
@@ -339,7 +339,7 @@
                 }
                 html += '<ul class=\'k-reset\'>';
                 for (var i = options.chunkCount - 1; i >= 0; i--) {
-                    html += '<li class=\'k-item k-state-default\'></li>';
+                    html += '<li class=\'k-item\'></li>';
                 }
                 html += '</ul>';
                 container.append(html).find('.k-item').css(that._progressProperty, chunkSize + '%').first().addClass('k-first').end().last().addClass('k-last');

@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -36,7 +36,7 @@
         depends: ['popup']
     };
     (function ($, undefined) {
-        var kendo = window.kendo, keys = kendo.keys, parse = kendo.parseDate, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, support = kendo.support, browser = support.browser, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoTimePicker', CLICK = 'click' + ns, DEFAULT = 'k-state-default', DISABLED = 'disabled', READONLY = 'readonly', LI = 'li', SPAN = '<span></span>', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', ARIA_SELECTED = 'aria-selected', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ID = 'id', isArray = Array.isArray, extend = $.extend, proxy = $.proxy, DATE = Date, dateFormatRegExp = /d{1,2}|E{1,6}|e{1,6}|c{3,6}|c{1}|M{1,5}|L{1,5}|y{1,4}|H{1,2}|h{1,2}|k{1,2}|K{1,2}|m{1,2}|a{1,5}|s{1,2}|S{1,3}|z{1,4}|Z{1,5}|x{1,5}|X{1,5}|G{1,5}|q{1,5}|Q{1,5}|"[^"]*"|'[^']*'/g, LITERAL = 'literal', MONTH = 'month', HOUR = 'hour', ZONE = 'zone', WEEKDAY = 'weekday', QUARTER = 'quarter', DATE_FIELD_MAP = {
+        var kendo = window.kendo, keys = kendo.keys, html = kendo.html, parse = kendo.parseDate, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, support = kendo.support, browser = support.browser, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoTimePicker', CLICK = 'click' + ns, DISABLED = 'disabled', READONLY = 'readonly', LI = 'li', SPAN = '<span></span>', FOCUSED = 'k-focus', HOVER = 'k-hover', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MS_PER_MINUTE = 60000, MS_PER_DAY = 86400000, SELECTED = 'k-selected', STATEDISABLED = 'k-disabled', ARIA_SELECTED = 'aria-selected', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ID = 'id', isArray = Array.isArray, extend = $.extend, proxy = $.proxy, DATE = Date, dateFormatRegExp = /d{1,2}|E{1,6}|e{1,6}|c{3,6}|c{1}|M{1,5}|L{1,5}|y{1,4}|H{1,2}|h{1,2}|k{1,2}|K{1,2}|m{1,2}|a{1,5}|s{1,2}|S{1,3}|z{1,4}|Z{1,5}|x{1,5}|X{1,5}|G{1,5}|q{1,5}|Q{1,5}|"[^"]*"|'[^']*'/g, LITERAL = 'literal', MONTH = 'month', HOUR = 'hour', ZONE = 'zone', WEEKDAY = 'weekday', QUARTER = 'quarter', DATE_FIELD_MAP = {
                 'G': 'era',
                 'y': 'year',
                 'q': QUARTER,
@@ -86,7 +86,7 @@
                     type: 'eras',
                     minLength: 0
                 }
-            }, TODAY = new DATE(), MODERN_RENDERING_TEMPLATE = '<div tabindex="0" class="k-timeselector">' + '<div class="k-time-header">' + '<span class="k-title"></span>' + '<button class="k-button k-flat k-time-now" title="Select now" aria-label="Select now">#=messages.now#</button>' + '</div>' + '<div class="k-time-list-container">' + '<span class="k-time-highlight"></span>' + '</div>' + '</div>', NEW_RENDERING_FOOTER = '<div class="k-time-footer k-action-buttons">' + '<button class="k-button k-time-cancel" title="Cancel changes" aria-label="Cancel changes">#=messages.cancel#</button>' + '<button class="k-time-accept k-button k-primary" title="Set time" aria-label="Set time">#=messages.set#</button>' + '</div>', HIGHLIGHTCONTAINER = '<span class="k-time-highlight"></span>';
+            }, TODAY = new DATE(), MODERN_RENDERING_TEMPLATE = '<div tabindex="0" class="k-timeselector #=mainSize#">' + '<div class="k-time-header">' + '<span class="k-title"></span>' + '<button class="k-button #=buttonSize# k-rounded-md k-button-flat k-button-flat-base k-time-now" title="Select now" aria-label="Select now"><span class="k-button-text">#=messages.now#</span></button>' + '</div>' + '<div class="k-time-list-container">' + '<span class="k-time-highlight"></span>' + '</div>' + '</div>', NEW_RENDERING_FOOTER = '<div class="k-time-footer k-action-buttons">' + '<button class="k-button #=buttonSize# k-rounded-md k-button-solid k-button-solid-base k-time-cancel" title="Cancel changes" aria-label="Cancel changes"><span class="k-button-text">#=messages.cancel#</span></button>' + '<button class="k-time-accept k-button #=buttonSize# k-rounded-md k-button-solid k-button-solid-primary" title="Set time" aria-label="Set time"><span class="k-button-text">#=messages.set#</span></button>' + '</div>', HIGHLIGHTCONTAINER = '<span class="k-time-highlight"></span>';
         TODAY = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate(), 0, 0, 0);
         var TimeView = function (options) {
             var that = this, id = options.id;
@@ -111,9 +111,13 @@
                 }
             },
             _createScrollList: function () {
-                this.list = $(kendo.template(MODERN_RENDERING_TEMPLATE)(this.options)).on(MOUSEDOWN, preventDefault);
+                var templateOptions = $.extend({}, this.options, {
+                    mainSize: kendo.getValidCssClass('k-timeselector-', 'size', this.options.size || 'medium'),
+                    buttonSize: kendo.getValidCssClass('k-button-', 'size', this.options.size || 'medium')
+                });
+                this.list = $(kendo.template(MODERN_RENDERING_TEMPLATE)(templateOptions)).on(MOUSEDOWN, preventDefault);
                 if (!this.options.omitPopup) {
-                    this.list.append(kendo.template(NEW_RENDERING_FOOTER)(this.options));
+                    this.list.append(kendo.template(NEW_RENDERING_FOOTER)(templateOptions));
                 }
                 this.ul = this.list.find('.k-time-list-container');
                 this.list.on('click' + ns, '.k-time-header button.k-time-now', proxy(this._nowClickHandler, this));
@@ -147,7 +151,7 @@
                 }
             },
             _scrollerKeyDownHandler: function (e) {
-                var that = this, key = e.keyCode, list = $(e.currentTarget).find('.k-time-list-wrapper.k-state-focused'), lists = that.list.find('.k-time-list-wrapper'), length = lists.length, index = lists.index(list), isRtl = kendo.support.isRtl(that.wrapper), itemHeight = getItemHeight(list.find('.k-item:visible').eq(0)), container = list.find('.k-time-container.k-content.k-scrollable');
+                var that = this, key = e.keyCode, list = $(e.currentTarget).find('.k-time-list-wrapper.k-focus'), lists = that.list.find('.k-time-list-wrapper'), length = lists.length, index = lists.index(list), isRtl = kendo.support.isRtl(that.wrapper), itemHeight = getItemHeight(list.find('.k-item:visible').eq(0)), container = list.find('.k-time-container.k-content.k-scrollable');
                 if (!list.length) {
                     return;
                 }
@@ -182,13 +186,14 @@
             },
             _createClassicRenderingList: function () {
                 var that = this;
-                that.ul = $('<ul tabindex="-1" role="listbox" aria-hidden="true" unselectable="on" class="k-list k-reset"/>').css({ overflow: support.kineticScrollNeeded ? '' : 'auto' }).on(CLICK, LI, proxy(that._click, that)).on('mouseenter' + ns, LI, function () {
+                var listParent = $('<div class="k-list ' + kendo.getValidCssClass('k-list-', 'size', that.options.size) + '"><ul tabindex="-1" role="listbox" aria-hidden="true" unselectable="on" class="k-list-ul"/></div>');
+                that.ul = listParent.find('ul').css({ overflow: support.kineticScrollNeeded ? '' : 'auto' }).on(CLICK, LI, proxy(that._click, that)).on('mouseenter' + ns, LI, function () {
                     $(this).addClass(HOVER);
                 }).on('mouseleave' + ns, LI, function () {
                     $(this).removeClass(HOVER);
                 });
-                that.list = $('<div class=\'k-list-container k-list-scroller\' unselectable=\'on\'/>').append(that.ul).on(MOUSEDOWN, preventDefault);
-                that.template = kendo.template('<li tabindex="-1" role="option" class="k-item" unselectable="on">#=data#</li>', { useWithBlock: false });
+                that.list = $('<div class=\'k-list-container k-list-scroller\' unselectable=\'on\'/>').append(listParent).on(MOUSEDOWN, preventDefault);
+                that.template = kendo.template('<li tabindex="-1" role="option" class="k-list-item" unselectable="on"><span class="k-list-item-text">#=data#</span></li>', { useWithBlock: false });
             },
             current: function (candidate) {
                 var that = this, active = that.options.active;
@@ -991,7 +996,7 @@
                 } catch (e) {
                     element[0].type = 'text';
                 }
-                element.addClass('k-input').attr({
+                element.addClass('k-input-inner').attr({
                     'role': 'combobox',
                     'aria-expanded': false,
                     'aria-owns': timeView._timeViewID,
@@ -1017,11 +1022,15 @@
                         min: min,
                         max: max,
                         value: options.value,
-                        interval: options.interval
+                        interval: options.interval,
+                        size: options.size,
+                        fillMode: options.fillMode,
+                        rounded: options.rounded
                     });
                 }
                 that._old = that._update(options.value || that.element.val());
                 that._oldText = element.val();
+                that._applyCssClasses();
                 kendo.notify(that);
             },
             options: {
@@ -1045,7 +1054,10 @@
                     millisecond: 'millisecond',
                     now: 'Now'
                 },
-                componentType: 'classic'
+                componentType: 'classic',
+                size: 'medium',
+                fillMode: 'solid',
+                rounded: 'medium'
             },
             events: [
                 OPEN,
@@ -1064,8 +1076,12 @@
                 if (+options.max != +TODAY || +options.min != +TODAY) {
                     this._specifiedRange = true;
                 }
+                that._arrow.off(ns);
+                that._arrow.remove();
                 normalize(options);
                 that.timeView.setOptions(options);
+                that._icon();
+                that._editable(options);
                 if (value) {
                     that.element.val(kendo.toString(value, options.format, options.culture));
                 }
@@ -1076,25 +1092,25 @@
                 }
             },
             _editable: function (options) {
-                var that = this, disable = options.disable, readonly = options.readonly, arrow = that._arrow.off(ns), element = that.element.off(ns), wrapper = that._inputWrapper.off(ns);
+                var that = this, disable = options.disable, readonly = options.readonly, arrow = that._arrow.off(ns), element = that.element.off(ns), wrapper = that.wrapper.off(ns);
                 if (that._dateInput) {
                     that._dateInput._unbindInput();
                 }
                 if (!readonly && !disable) {
-                    wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
+                    wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
                     if (element && element.length) {
                         element[0].removeAttribute(DISABLED);
                         element[0].removeAttribute(READONLY);
                     }
                     element.attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false).on('keydown' + ns, proxy(that._keydown, that)).on('focusout' + ns, proxy(that._blur, that)).on('focus' + ns, function () {
-                        that._inputWrapper.addClass(FOCUSED);
+                        that.wrapper.addClass(FOCUSED);
                     });
                     if (that._dateInput) {
                         that._dateInput._bindInput();
                     }
                     arrow.on(CLICK, proxy(that._click, that)).on(MOUSEDOWN, preventDefault);
                 } else {
-                    wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
+                    wrapper.addClass(disable ? STATEDISABLED : '').removeClass(disable ? '' : STATEDISABLED);
                     element.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
                 }
             },
@@ -1116,7 +1132,7 @@
                 that.timeView.destroy();
                 that.element.off(ns);
                 that._arrow.off(ns);
-                that._inputWrapper.off(ns);
+                that.wrapper.off(ns);
                 if (that._form) {
                     that._form.off('reset', that._resetHandler);
                 }
@@ -1161,7 +1177,7 @@
                 if (value !== that._oldText) {
                     that._change(value);
                 }
-                that._inputWrapper.removeClass(FOCUSED);
+                that.wrapper.removeClass(FOCUSED);
             },
             _click: function () {
                 var that = this, element = that.element;
@@ -1187,10 +1203,16 @@
                 that._typing = false;
             },
             _icon: function () {
-                var that = this, element = that.element, arrow;
-                arrow = element.next('span.k-select');
+                var that = this, element = that.element, options = that.options, arrow;
+                arrow = element.next('button.k-input-button');
                 if (!arrow[0]) {
-                    arrow = $('<span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-clock"></span></span>').insertAfter(element);
+                    arrow = $(html.renderButton('<button unselectable="on" tabindex="-1" class="k-input-button" aria-label="select"></button>', {
+                        icon: 'clock',
+                        size: options.size,
+                        fillMode: options.fillMode,
+                        shape: null,
+                        rounded: null
+                    })).insertAfter(element);
                 }
                 that._arrow = arrow.attr({
                     'role': 'button',
@@ -1246,16 +1268,11 @@
                 var that = this, element = that.element, wrapper;
                 wrapper = element.parents('.k-timepicker');
                 if (!wrapper[0]) {
-                    wrapper = element.wrap(SPAN).parent().addClass('k-picker-wrap k-state-default');
-                    wrapper = wrapper.wrap(SPAN).parent();
+                    wrapper = element.wrap(SPAN).parent();
                 }
                 wrapper[0].style.cssText = element[0].style.cssText;
-                that.wrapper = wrapper.addClass('k-widget k-timepicker').addClass(element[0].className);
-                element.css({
-                    width: '100%',
-                    height: element[0].style.height
-                });
-                that._inputWrapper = $(wrapper[0].firstChild);
+                that.wrapper = wrapper.addClass('k-timepicker k-input').addClass(element[0].className);
+                element.css({ height: element[0].style.height });
             },
             _reset: function () {
                 var that = this, element = that.element, formId = element.attr('form'), form = formId ? $('#' + formId) : element.closest('form');
@@ -1438,6 +1455,14 @@
                 elem = elem.parentNode;
             }
         }
+        kendo.cssProperties.registerPrefix('TimePicker', 'k-input-');
+        kendo.cssProperties.registerValues('TimePicker', [{
+                prop: 'rounded',
+                values: kendo.cssProperties.roundedValues.concat([[
+                        'full',
+                        'full'
+                    ]])
+            }]);
         ui.plugin(TimePicker);
     }(window.kendo.jQuery));
     return window.kendo;

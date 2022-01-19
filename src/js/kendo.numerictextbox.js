@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -41,7 +41,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', HOVER = 'k-state-hover', FOCUS = 'focus', POINT = '.', SYMBOL = 'symbol', CLASS_ICON = 'k-icon', LABELCLASSES = 'k-label k-input-label', SELECTED = 'k-state-selected', STATEDISABLED = 'k-state-disabled', STATEINVALID = 'k-state-invalid', ARIA_DISABLED = 'aria-disabled', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, isPlainObject = $.isPlainObject, extend = $.extend;
+        var kendo = window.kendo, caret = kendo.caret, keys = kendo.keys, html = kendo.html, ui = kendo.ui, Widget = ui.Widget, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, parse = kendo.parseFloat, placeholderSupported = kendo.support.placeholder, getCulture = kendo.getCulture, CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input-inner', SPIN = 'spin', ns = '.kendoNumericTextBox', TOUCHEND = 'touchend', MOUSELEAVE = 'mouseleave' + ns, HOVEREVENTS = 'mouseenter' + ns + ' ' + MOUSELEAVE, FOCUSED = 'k-focus', HOVER = 'k-hover', FOCUS = 'focus', POINT = '.', SYMBOL = 'symbol', CLASS_ICON = 'k-icon', LABELCLASSES = 'k-label k-input-label', SELECTED = 'k-selected', STATEDISABLED = 'k-disabled', STATEINVALID = 'k-invalid', ARIA_DISABLED = 'aria-disabled', INTEGER_REGEXP = /^(-)?(\d*)$/, NULL = null, proxy = $.proxy, isPlainObject = $.isPlainObject, extend = $.extend;
         var NumericTextBox = Widget.extend({
             init: function (element, options) {
                 var that = this, isStep = options && options.step !== undefined, min, max, step, value, disabled;
@@ -105,6 +105,7 @@
                 });
                 that._label();
                 that._ariaLabel();
+                that._applyCssClasses();
                 kendo.notify(that);
             },
             options: {
@@ -125,14 +126,17 @@
                 factor: 1,
                 upArrowText: 'Increase value',
                 downArrowText: 'Decrease value',
-                label: null
+                label: null,
+                size: 'medium',
+                fillMode: 'solid',
+                rounded: 'medium'
             },
             events: [
                 CHANGE,
                 SPIN
             ],
             _editable: function (options) {
-                var that = this, element = that.element, disable = options.disable, readonly = options.readonly, text = that._text.add(element), wrapper = that._inputWrapper.off(HOVEREVENTS);
+                var that = this, element = that.element, disable = options.disable, readonly = options.readonly, text = that._text.add(element), wrapper = that.wrapper.off(HOVEREVENTS);
                 that._toggleText(true);
                 that._upArrowEventHandler.unbind('press');
                 that._downArrowEventHandler.unbind('press');
@@ -141,7 +145,7 @@
                     that._inputLabel.off(ns);
                 }
                 if (!readonly && !disable) {
-                    wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
+                    wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
                     text.prop(DISABLED, false).prop(READONLY, false).attr(ARIA_DISABLED, false);
                     that._upArrowEventHandler.bind('press', function (e) {
                         e.preventDefault();
@@ -158,7 +162,7 @@
                         that._inputLabel.on('click' + ns, proxy(that.focus, that));
                     }
                 } else {
-                    wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
+                    wrapper.addClass(disable ? STATEDISABLED : '').removeClass(disable ? '' : STATEDISABLED);
                     text.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable);
                 }
             },
@@ -186,7 +190,7 @@
                 var that = this;
                 Widget.fn.setOptions.call(that, options);
                 that._arrowsWrap.toggle(that.options.spinners);
-                that._inputWrapper.toggleClass('k-expand-padding', !that.options.spinners);
+                that.wrapper.toggleClass('k-expand-padding', !that.options.spinners);
                 that._text.prop('placeholder', that.options.placeholder);
                 that._placeholder(that.options.placeholder);
                 that.element.attr({
@@ -194,6 +198,7 @@
                     'aria-valuemax': that.options.max !== NULL ? that.options.max * that.options.factor : that.options.max
                 });
                 that.options.format = extractFormat(that.options.format);
+                that._applyCssClasses();
                 if (options.value !== undefined) {
                     that.value(options.value);
                 }
@@ -206,7 +211,7 @@
                         that.floatingLabel.destroy();
                     }
                 }
-                that.element.add(that._text).add(that._upArrow).add(that._downArrow).add(that._inputWrapper).off(ns);
+                that.element.add(that._text).add(that._upArrow).add(that._downArrow).off(ns);
                 that._upArrowEventHandler.destroy();
                 that._downArrowEventHandler.destroy();
                 if (that._form) {
@@ -259,11 +264,11 @@
                 arrows = element.siblings('.' + CLASS_ICON);
                 if (!arrows[0]) {
                     arrows = $(buttonHtml('increase', options.upArrowText) + buttonHtml('decrease', options.downArrowText)).insertAfter(element);
-                    that._arrowsWrap = arrows.wrapAll('<span class="k-select"/>').parent();
+                    that._arrowsWrap = arrows.wrapAll('<span class="k-input-spinner k-spin-button"/>').parent();
                 }
                 if (!spinners) {
                     arrows.parent().toggle(spinners);
-                    that._inputWrapper.addClass('k-expand-padding');
+                    that.wrapper.addClass('k-expand-padding');
                 }
                 that._upArrow = arrows.eq(0);
                 that._upArrowEventHandler = new kendo.UserEvents(that._upArrow, { release: _release });
@@ -273,7 +278,7 @@
             _validation: function () {
                 var that = this;
                 var element = that.element;
-                that._validationIcon = $('<span class=\'' + CLASS_ICON + ' k-i-warning k-hidden\'></span>').insertAfter(element);
+                that._validationIcon = $('<span class=\'k-input-validation-icon ' + CLASS_ICON + ' k-i-warning k-hidden\'></span>').insertAfter(element);
             },
             _blur: function () {
                 var that = this;
@@ -337,14 +342,14 @@
             },
             _focusin: function () {
                 var that = this;
-                that._inputWrapper.addClass(FOCUSED);
+                that.wrapper.addClass(FOCUSED);
                 that._toggleText(false);
                 that.element[0].focus();
             },
             _focusout: function () {
                 var that = this;
                 clearTimeout(that._focusing);
-                that._inputWrapper.removeClass(FOCUSED).removeClass(HOVER);
+                that.wrapper.removeClass(FOCUSED).removeClass(HOVER);
                 that._blur();
                 that._removeInvalidState();
             },
@@ -359,10 +364,10 @@
                 return numberFormat;
             },
             _input: function () {
-                var that = this, options = that.options, CLASSNAME = 'k-formatted-value', element = that.element.addClass(INPUT).show()[0], accessKey = element.accessKey, wrapper = that.wrapper, text;
-                text = wrapper.find(POINT + CLASSNAME);
-                if (!text[0]) {
-                    text = $('<input type="text"/>').insertBefore(element).addClass(CLASSNAME);
+                var that = this, options = that.options, element = that.element.addClass(INPUT).show()[0], accessKey = element.accessKey, wrapper = that.wrapper, inputs = wrapper.find(POINT + INPUT), text;
+                text = inputs.first();
+                if (text.length < 2) {
+                    text = $('<input type="text"/>').insertBefore(element);
                 }
                 try {
                     element.setAttribute('type', 'text');
@@ -442,12 +447,12 @@
             },
             _addInvalidState: function () {
                 var that = this;
-                that._inputWrapper.addClass(STATEINVALID);
+                that.wrapper.addClass(STATEINVALID);
                 that._validationIcon.removeClass('k-hidden');
             },
             _removeInvalidState: function () {
                 var that = this;
-                that._inputWrapper.removeClass(STATEINVALID);
+                that.wrapper.removeClass(STATEINVALID);
                 that._validationIcon.addClass('k-hidden');
                 that._invalidStateTimeout = null;
             },
@@ -645,13 +650,11 @@
                 var that = this, element = that.element, DOMElement = element[0], wrapper;
                 wrapper = element.parents('.k-numerictextbox');
                 if (!wrapper.is('span.k-numerictextbox')) {
-                    wrapper = element.hide().wrap('<span class="k-numeric-wrap k-state-default" />').parent();
-                    wrapper = wrapper.wrap('<span/>').parent();
+                    wrapper = element.hide().wrap('<span/>').parent();
                 }
                 wrapper[0].style.cssText = DOMElement.style.cssText;
                 DOMElement.style.width = '';
-                that.wrapper = wrapper.addClass('k-widget k-numerictextbox').addClass(DOMElement.className).removeClass('input-validation-error').css('display', '');
-                that._inputWrapper = $(wrapper[0].firstChild);
+                that.wrapper = wrapper.addClass('k-numerictextbox k-input').addClass(DOMElement.className).removeClass('input-validation-error').css('display', '');
             },
             _reset: function () {
                 var that = this, element = that.element, formId = element.attr('form'), form = formId ? $('#' + formId) : element.closest('form');
@@ -667,9 +670,22 @@
                 }
             }
         });
+        kendo.cssProperties.registerPrefix('NumericTextBox', 'k-input-');
+        kendo.cssProperties.registerValues('NumericTextBox', [{
+                prop: 'rounded',
+                values: kendo.cssProperties.roundedValues.concat([[
+                        'full',
+                        'full'
+                    ]])
+            }]);
         function buttonHtml(direction, text) {
-            var className = 'k-i-arrow-' + (direction === 'increase' ? '60-up' : '60-down');
-            return '<span role="button" unselectable="on" class="k-link k-link-' + direction + '" aria-label="' + text + '" title="' + text + '">' + '<span unselectable="on" class="' + CLASS_ICON + ' ' + className + '"></span>' + '</span>';
+            var className = direction === 'increase' ? 'arrow-n' : 'arrow-s';
+            var dir = direction === 'increase' ? 'increase' : 'decrease';
+            return html.renderButton('<button role="button" tabindex="-1" unselectable="on" class="k-spinner-' + dir + '" aria-label="' + text + '" title="' + text + '"></button>', extend({}, this.options, {
+                icon: className,
+                shape: null,
+                rounded: null
+            }));
         }
         function truncate(value, precision) {
             var parts = parseFloat(value, 10).toString().split(POINT);

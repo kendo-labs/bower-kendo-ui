@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -26,7 +26,7 @@
     define('colorpicker/colorselector', ['kendo.core'], f);
 }(function () {
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, parseColor = kendo.parseColor, extend = $.extend, NS = '.kendoColorTools', DISABLED = 'k-state-disabled';
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, parseColor = kendo.parseColor, extend = $.extend, NS = '.kendoColorTools', DISABLED = 'k-disabled';
         var ColorSelector = Widget.extend({
             init: function (element, options) {
                 var that = this, ariaId;
@@ -329,7 +329,7 @@
                 that.element.on(KEYDOWN_NS, that.keydown.bind(that));
                 Observable.fn.init.call(that);
             },
-            _template: kendo.template('# if (options.formats && options.formats.length > 1) { #' + '<div class="k-vstack">' + '<button class="k-colorgradient-toggle-mode k-button k-icon-button k-flat" data-#:ns#bind="click: switchMode" title="#: options.messages.toggleFormat #">' + '<span class="k-button-icon k-icon k-i-arrows-kpi"></span>' + '</button>' + '</div>' + '# } #' + '# if (options.formats && options.formats.indexOf("hex") >= 0) { #' + '<div class="k-vstack k-flex-1" data-#:ns#bind="visible: mode(\'hex\')">' + '<input type="text" data-#:ns#bind="value: hex" data-#:ns#role="textbox" tabindex="#:options.tabindex#"  aria-label="#: options.messages.hex #"/>' + '<label class="k-colorgradient-input-label">HEX</label>' + '</div>' + '# } #' + '# if (options.formats && options.formats.indexOf("rgb") >= 0) { #' + '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' + '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.r" data-#:ns#role="numerictextbox" data-#:ns#max="255" data-#:ns#min="0" data-#:ns#decimals="0" data-#:ns#spinners="false" data-#:ns#format="n0"  aria-label="#: options.messages.red #" />' + '<label class="k-colorgradient-input-label">R</label>' + '</div>' + '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' + '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.g" data-#:ns#role="numerictextbox" data-#:ns#max="255" data-#:ns#min="0" data-#:ns#decimals="0" data-#:ns#spinners="false" data-#:ns#format="n0"  aria-label="#: options.messages.green #" />' + '<label class="k-colorgradient-input-label">G</label>' + '</div>' + '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' + '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.b" data-#:ns#role="numerictextbox" data-#:ns#max="255" data-#:ns#min="0" data-#:ns#decimals="0" data-#:ns#spinners="false" data-#:ns#format="n0"  aria-label="#: options.messages.blue #"/>' + '<label class="k-colorgradient-input-label">B</label>' + '</div>' + '#if(options.opacity){#' + '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' + '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.a" data-#:ns#role="numerictextbox" data-#:ns#step="0.1" data-#:ns#max="1" data-#:ns#min="0" data-#:ns#decimals="1" data-#:ns#spinners="false" data-#:ns#format="n1"  aria-label="#: options.messages.alpha #" />' + '<label class="k-colorgradient-input-label">A</label>' + '</div>' + '# } #' + '# } #'),
+            _template: kendo.template('# if (options.formats && options.formats.length > 1) { #' + '<div class="k-vstack">' + '<button class="k-colorgradient-toggle-mode" data-#:ns#role="button" data-#:ns#icon="arrows-kpi" data data-#:ns#bind="click: switchMode" data-#:ns#fill-mode="flat" data-#:ns#size="#: options.size #" title="#: options.messages.toggleFormat #">' + '</button>' + '</div>' + '# } #' + '# if (options.formats && options.formats.indexOf("hex") >= 0) { #' + '<div class="k-vstack k-flex-1" data-#:ns#bind="visible: mode(\'hex\')">' + '<input type="text" data-#:ns#bind="value: hex" data-#:ns#role="textbox" data-#:ns#size="#: options.size #" tabindex="#:options.tabindex#"  aria-label="#: options.messages.hex #"/>' + '<label class="k-colorgradient-input-label">HEX</label>' + '</div>' + '# } #' + '# if (options.formats && options.formats.indexOf("rgb") >= 0) { #' + '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' + '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.r" data-#:ns#role="numerictextbox" data-#:ns#size="#: options.size #" data-#:ns#max="255" data-#:ns#min="0" data-#:ns#decimals="0" data-#:ns#spinners="false" data-#:ns#format="n0"  aria-label="#: options.messages.red #" />' + '<label class="k-colorgradient-input-label">R</label>' + '</div>' + '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' + '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.g" data-#:ns#role="numerictextbox" data-#:ns#size="#: options.size #" data-#:ns#max="255" data-#:ns#min="0" data-#:ns#decimals="0" data-#:ns#spinners="false" data-#:ns#format="n0"  aria-label="#: options.messages.green #" />' + '<label class="k-colorgradient-input-label">G</label>' + '</div>' + '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' + '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.b" data-#:ns#role="numerictextbox" data-#:ns#size="#: options.size #" data-#:ns#max="255" data-#:ns#min="0" data-#:ns#decimals="0" data-#:ns#spinners="false" data-#:ns#format="n0"  aria-label="#: options.messages.blue #"/>' + '<label class="k-colorgradient-input-label">B</label>' + '</div>' + '#if(options.opacity){#' + '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' + '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.a" data-#:ns#role="numerictextbox" data-#:ns#size="#: options.size #" data-#:ns#step="0.1" data-#:ns#max="1" data-#:ns#min="0" data-#:ns#decimals="1" data-#:ns#spinners="false" data-#:ns#format="n1"  aria-label="#: options.messages.alpha #" />' + '<label class="k-colorgradient-input-label">A</label>' + '</div>' + '# } #' + '# } #'),
             destroy: function () {
                 var that = this;
                 that._viewModel.unbind('change', that._changeHandler);
@@ -442,6 +442,7 @@
                     'hex'
                 ],
                 contrastTool: false,
+                size: 'medium',
                 messages: {
                     contrastRatio: 'Contrast ratio:',
                     fail: 'Fail',
@@ -883,11 +884,12 @@
 (function (f, define) {
     define('colorpicker/flatcolorpicker', [
         'colorpicker/colorgradient',
-        'colorpicker/colorpalette'
+        'colorpicker/colorpalette',
+        'html/button'
     ], f);
 }(function () {
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Color = kendo.Color, BACKGROUNDCOLOR = 'background-color', MESSAGES = {
+        var kendo = window.kendo, ui = kendo.ui, html = kendo.html, Color = kendo.Color, extend = $.extend, BACKGROUNDCOLOR = 'background-color', MESSAGES = {
                 apply: 'Apply',
                 cancel: 'Cancel',
                 noColor: 'no color',
@@ -904,7 +906,7 @@
                 alpha: 'Alpha',
                 gradient: 'Gradient view',
                 palette: 'Palette view'
-            }, NS = '.kendoColorTools', CLICK_NS = 'click' + NS, KEYDOWN_NS = 'keydown' + NS, ColorSelector = ui.colorpicker.ColorSelector, KEYS = kendo.keys, NO_COLOR = 'k-no-color', SELECTED = 'k-state-selected', VIEWS = {
+            }, NS = '.kendoColorTools', CLICK_NS = 'click' + NS, KEYDOWN_NS = 'keydown' + NS, ColorSelector = ui.colorpicker.ColorSelector, KEYS = kendo.keys, NO_COLOR = 'k-no-color', SELECTED = 'k-selected', PREVIEW_MASK = '.k-color-preview-mask', VIEWS = {
                 'gradient': ui.ColorGradient,
                 'palette': ui.ColorPalette
             };
@@ -922,7 +924,7 @@
                 ColorSelector.fn.init.call(that, element, options);
                 options = that.options = kendo.deepExtend({}, that.options, options);
                 element = that.element;
-                that.wrapper = element.addClass('k-flatcolorpicker k-coloreditor').append(that._template(options));
+                that.wrapper = element.addClass('k-flatcolorpicker k-coloreditor').append(that._template());
                 that._selectedColor = $('.k-coloreditor-preview-color', element);
                 that._previousColor = $('.k-coloreditor-current-color', element);
                 that._viewsContainer = $('.k-coloreditor-views', element);
@@ -932,8 +934,8 @@
                 that._setViewSize();
                 if (value) {
                     that._updateUI(value);
-                    that._previousColor.css(BACKGROUNDCOLOR, value.toDisplay());
-                    that._selectedColor.css(BACKGROUNDCOLOR, value.toDisplay());
+                    that._previousColor.children(PREVIEW_MASK).css(BACKGROUNDCOLOR, value.toDisplay());
+                    that._selectedColor.children(PREVIEW_MASK).css(BACKGROUNDCOLOR, value.toDisplay());
                 } else {
                     that._selectedColor.addClass(NO_COLOR);
                     that._previousColor.addClass(NO_COLOR);
@@ -994,7 +996,8 @@
                 backgroundColor: null,
                 columns: 10,
                 tileSize: 24,
-                messages: MESSAGES
+                messages: MESSAGES,
+                size: 'medium'
             },
             setBackgroundColor: function (color) {
                 var that = this;
@@ -1011,10 +1014,10 @@
                 var that = this;
                 if (value) {
                     that._previousColor.removeClass(NO_COLOR);
-                    that._previousColor.css(BACKGROUNDCOLOR, value.toDisplay());
+                    that._previousColor.children(PREVIEW_MASK).css(BACKGROUNDCOLOR, value.toDisplay());
                 } else {
                     that._previousColor.addClass(NO_COLOR);
-                    that._previousColor.css(BACKGROUNDCOLOR, '');
+                    that._previousColor.children(PREVIEW_MASK).css(BACKGROUNDCOLOR, '');
                 }
             },
             _changeView: function (mode) {
@@ -1068,10 +1071,10 @@
                 var that = this;
                 if (color && color.toDisplay) {
                     that._selectedColor.removeClass(NO_COLOR);
-                    that._selectedColor.css(BACKGROUNDCOLOR, color.toDisplay());
+                    that._selectedColor.children(PREVIEW_MASK).css(BACKGROUNDCOLOR, color.toDisplay());
                 } else {
                     that._selectedColor.addClass(NO_COLOR);
-                    that._selectedColor.css(BACKGROUNDCOLOR, '');
+                    that._selectedColor.children(PREVIEW_MASK).css(BACKGROUNDCOLOR, '');
                 }
                 that._triggerSelect(color);
                 if (that.options.autoupdate) {
@@ -1092,7 +1095,17 @@
                     this._cancel();
                 }
             },
-            _template: kendo.template('<div class="k-coloreditor-header k-hstack">' + '# if (views && views.length > 1) { #' + '<div class="k-coloreditor-header-actions k-hstack">' + '<div class="k-button-group k-button-group-flat">' + '<button class="k-button k-icon-button k-flat" data-view="gradient" title="#:messages.gradient#">' + '<span class="k-button-icon k-icon k-i-color-canvas"></span>' + '</button>' + '<button class="k-button k-icon-button k-flat" data-view="palette" title="#:messages.palette#">' + '<span class="k-button-icon k-icon k-i-palette"></span>' + '</button>' + '</div>' + '</div>' + '# } #' + '<div class="k-spacer"></div>' + '<div class="k-coloreditor-header-actions k-hstack">' + '# if (clearButton) { #' + '<button class="k-coloreditor-reset k-button k-icon-button k-flat" title="#:messages.clearColor#">' + '<span class="k-button-icon k-icon k-i-reset-color"></span>' + '</button>' + '# } #' + '# if (preview) { #' + '<div class="k-coloreditor-preview k-vstack">' + '<span class="k-coloreditor-preview-color k-color-preview"></span>' + '<span class="k-coloreditor-current-color k-color-preview"></span>' + '</div>' + '# } #' + '</div>' + '</div>' + '<div class="k-coloreditor-views k-vstack"></div>' + '# if (buttons) { #' + '<div class="k-coloreditor-footer k-actions k-hstack k-justify-content-end">' + '<button class="k-coloreditor-cancel k-button" title="#:messages.cancel#">#: messages.cancel #</button>' + '<button class="k-coloreditor-apply k-button k-primary" title="#:messages.apply#">#: messages.apply #</button>' + '</div>' + '# } #')
+            _template: function () {
+                var that = this, options = that.options, buttonOptions = extend({}, options, {
+                        fillMode: 'flat',
+                        themeColor: 'base',
+                        rounded: 'medium'
+                    });
+                return kendo.template('<div class="k-coloreditor-header k-hstack">' + '# if (views && views.length > 1) { #' + '<div class="k-coloreditor-header-actions k-hstack">' + '<div class="k-button-group k-button-group-flat">' + html.renderButton('<button  data-view="gradient" title="#:messages.gradient#"></button>', extend({ icon: 'color-canvas' }, buttonOptions)) + html.renderButton('<button  data-view="palette" title="#:messages.palette#"></button>', extend({ icon: 'palette' }, buttonOptions)) + '</div>' + '</div>' + '# } #' + '<div class="k-spacer"></div>' + '<div class="k-coloreditor-header-actions k-hstack">' + '# if (clearButton) { #' + html.renderButton('<button class="k-coloreditor-reset" title="#:messages.clearColor#"></button>', extend({ icon: 'reset-color' }, buttonOptions)) + '# } #' + '# if (preview) { #' + '<div class="k-coloreditor-preview k-vstack">' + '<span class="k-coloreditor-preview-color k-color-preview">' + '<span class="k-color-preview-mask"></span>' + '</span>' + '<span class="k-coloreditor-current-color k-color-preview">' + '<span class="k-color-preview-mask"></span>' + '</span>' + '</div>' + '# } #' + '</div>' + '</div>' + '<div class="k-coloreditor-views k-vstack"></div>' + '# if (buttons) { #' + '<div class="k-coloreditor-footer k-actions k-hstack k-justify-content-end">' + html.renderButton('<button class="k-coloreditor-cancel" title="#:messages.cancel#">#: messages.cancel #</button>', extend({}, buttonOptions, { fillMode: 'solid' })) + html.renderButton('<button class="k-coloreditor-apply" title="#:messages.apply#">#: messages.apply #</button>', extend({}, buttonOptions, {
+                    fillMode: 'solid',
+                    themeColor: 'primary'
+                })) + '</div>' + '# } #')(options);
+            }
         });
         ui.plugin(FlatColorPicker);
     }(window.kendo.jQuery));
@@ -1111,6 +1124,7 @@
         'kendo.binder',
         'kendo.textbox',
         'kendo.numerictextbox',
+        'html/button',
         'colorpicker/colorselector',
         'colorpicker/flatcolorpicker'
     ], f);
@@ -1133,7 +1147,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, Color = kendo.Color, parseColor = kendo.parseColor, KEYS = kendo.keys, BACKGROUNDCOLOR = 'background-color', WHITE = '#ffffff', MESSAGES = {
+        var kendo = window.kendo, ui = kendo.ui, Widget = ui.Widget, Color = kendo.Color, parseColor = kendo.parseColor, KEYS = kendo.keys, BACKGROUNDCOLOR = 'background-color', MESSAGES = {
                 apply: 'Apply',
                 cancel: 'Cancel',
                 noColor: 'no color',
@@ -1167,9 +1181,9 @@
                     value = parseColor(options.value, true);
                 }
                 that._value = options.value = value;
-                var content = that.wrapper = $(that._template(options));
+                var content = that._inputWrapper = that.wrapper = $(that._template(options));
+                that._applyCssClasses();
                 element.hide().after(content);
-                that._inputWrapper = $(that.wrapper[0].firstChild);
                 if (element.is('input')) {
                     element.appendTo(content);
                     var label = element.closest('label');
@@ -1206,31 +1220,31 @@
                 Widget.fn.destroy.call(this);
             },
             enable: function (enable) {
-                var that = this, wrapper = that.wrapper, innerWrapper = wrapper.children('.k-picker-wrap'), arrow = innerWrapper.find('.k-select');
+                var that = this, wrapper = that.wrapper, arrow = wrapper.find('.k-input-button');
                 if (arguments.length === 0) {
                     enable = true;
                 }
                 that.element.attr('disabled', !enable);
                 wrapper.attr('aria-disabled', !enable);
                 arrow.off(NS).on('mousedown' + NS, preventDefault);
-                wrapper.addClass('k-state-disabled').removeAttr('tabIndex').add('*', wrapper).off(NS);
+                wrapper.addClass('k-disabled').removeAttr('tabIndex').add('*', wrapper).off(NS);
                 if (enable) {
-                    wrapper.removeClass('k-state-disabled').attr('tabIndex', that._tabIndex).on('mouseenter' + NS, function () {
-                        innerWrapper.addClass('k-state-hover');
+                    wrapper.removeClass('k-disabled').attr('tabIndex', that._tabIndex).on('mouseenter' + NS, function () {
+                        wrapper.addClass('k-hover');
                     }).on('mouseleave' + NS, function () {
-                        innerWrapper.removeClass('k-state-hover');
+                        wrapper.removeClass('k-hover');
                     }).on('focus' + NS, function () {
-                        innerWrapper.addClass('k-state-focused');
+                        wrapper.addClass('k-focus');
                     }).on('blur' + NS, function () {
-                        innerWrapper.removeClass('k-state-focused');
-                    }).on(KEYDOWN_NS, bind(that._keydown, that)).on(CLICK_NS, '.k-select', bind(that.toggle, that)).on(CLICK_NS, that.options.toolIcon ? '.k-tool-icon' : '.k-selected-color', function () {
+                        wrapper.removeClass('k-focus');
+                    }).on(KEYDOWN_NS, bind(that._keydown, that)).on(CLICK_NS, '.k-input-button', bind(that.toggle, that)).on(CLICK_NS, '.k-input-inner', function () {
                         that.trigger('activate');
                     });
                 } else {
                     that.close();
                 }
             },
-            _template: kendo.template('<div role="textbox" aria-haspopup="true" class="k-colorpicker">' + '<span  class="k-picker-wrap">' + '# if (toolIcon) { #' + '<span class="k-icon k-tool-icon #= toolIcon #">' + '<span class="k-selected-color"></span>' + '</span>' + '# } else { #' + '<span class="k-selected-color"></span>' + '# } #' + '<span role="button" class="k-select" unselectable="on" aria-label="select">' + '<span class="k-icon k-i-arrow-s"></span>' + '</span>' + '</span >' + '</div>'),
+            _template: kendo.template('<span role="textbox" aria-haspopup="true" class="k-colorpicker k-picker k-icon-picker">' + '<span  class="k-input-inner">' + '<span class="k-value-icon k-color-preview #: toolIcon ? "k-icon-color-preview" : "" #">' + '# if (toolIcon) { #' + '<span class="k-color-preview-icon k-icon #= toolIcon #"></span>' + '# } #' + '<span class="k-color-preview-mask"></span>' + '</span>' + '</span >' + kendo.html.renderButton('<button class="k-select k-button-rectangle k-input-button" unselectable="on" aria-label="select" tabindex="-1"></button>', $.extend({}, this.options, { icon: 'arrow-s' })) + '</span>'),
             options: {
                 name: 'ColorPicker',
                 closeOnSelect: false,
@@ -1256,7 +1270,10 @@
                     'palette'
                 ],
                 backgroundColor: null,
-                ARIATemplate: 'Current selected color is #=data || ""#'
+                ARIATemplate: 'Current selected color is #=data || ""#',
+                size: 'medium',
+                rounded: 'medium',
+                fillMode: 'solid'
             },
             events: [
                 'activate',
@@ -1294,7 +1311,7 @@
                 }
             },
             _noColorIcon: function () {
-                return this.wrapper.find('.k-picker-wrap > .k-selected-color');
+                return this.wrapper.find('.k-color-preview');
             },
             color: ColorSelector.fn.color,
             value: ColorSelector.fn.value,
@@ -1319,7 +1336,7 @@
                 }
                 this.wrapper.attr('aria-label', this._ariaTemplate(formattedValue));
                 this._triggerSelect(value);
-                this.wrapper.find('.k-selected-color').css(BACKGROUNDCOLOR, value ? value.toDisplay() : WHITE);
+                this.wrapper.find('.k-color-preview-mask').css(BACKGROUNDCOLOR, value ? value.toDisplay() : '');
                 this._noColorIcon().toggleClass('k-no-color', !formattedValue);
                 if (this._selector && !dontChangeSelector) {
                     this._selector.value(value);
@@ -1384,7 +1401,7 @@
                                 ev.preventDefault();
                                 return;
                             }
-                            that.wrapper.children('.k-picker-wrap').removeClass('k-state-focused');
+                            that.wrapper.removeClass('k-focus');
                             var color = selector.color();
                             if (!that.options.buttons) {
                                 that._select(color);
@@ -1405,7 +1422,7 @@
                             if (that.trigger('open')) {
                                 ev.preventDefault();
                             } else {
-                                that.wrapper.children('.k-picker-wrap').addClass('k-state-focused');
+                                that.wrapper.addClass('k-focus');
                             }
                         },
                         activate: function () {
@@ -1417,7 +1434,7 @@
                             }
                             selector.value(selectedColor);
                             selector.focus();
-                            that.wrapper.children('.k-picker-wrap').addClass('k-state-focused');
+                            that.wrapper.addClass('k-focus');
                         }
                     });
                 }
@@ -1433,6 +1450,14 @@
             };
         }
         ui.plugin(ColorPicker);
+        kendo.cssProperties.registerPrefix('ColorPicker', 'k-picker-');
+        kendo.cssProperties.registerValues('ColorPicker', [{
+                prop: 'rounded',
+                values: kendo.cssProperties.roundedValues.concat([[
+                        'full',
+                        'full'
+                    ]])
+            }]);
     }(window.kendo.jQuery));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {

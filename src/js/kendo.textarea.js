@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -39,7 +39,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, isPlainObject = $.isPlainObject, NS = '.kendoTextArea', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input', FOCUSED = 'k-state-focused', LABELCLASSES = 'k-label k-input-label', STATEDISABLED = 'k-state-disabled', STATEREADONLY = 'k-state-readonly', ARIA_DISABLED = 'aria-disabled', TEXTAREACONTAINER = 'k-textarea-container', proxy = $.proxy;
+        var kendo = window.kendo, Widget = kendo.ui.Widget, ui = kendo.ui, isPlainObject = $.isPlainObject, NS = '.kendoTextArea', CHANGE = 'change', DISABLED = 'disabled', READONLY = 'readonly', INPUT = 'k-input-inner', FOCUSED = 'k-focus', LABELCLASSES = 'k-label k-input-label', STATEDISABLED = 'k-disabled', STATEREADONLY = 'k-readonly', ARIA_DISABLED = 'aria-disabled', TEXTAREACONTAINER = 'k-textarea-container', proxy = $.proxy;
         var TextArea = Widget.extend({
             init: function (element, options) {
                 var that = this;
@@ -61,6 +61,7 @@
                     disable: !that.options.enable
                 });
                 that._applyAttributes();
+                that._applyCssClasses();
                 that.element.addClass(INPUT).css('resize', that.options.resizable).attr('autocomplete', 'off');
                 kendo.notify(that);
             },
@@ -80,7 +81,27 @@
                 resizable: 'none',
                 maxLength: null,
                 cols: 20,
-                rows: 1
+                rows: 1,
+                rounded: 'medium',
+                size: 'medium',
+                fillMode: 'solid',
+                resize: 'none',
+                overflow: 'auto'
+            },
+            _applyCssClasses: function (action) {
+                var that = this, options = that.options, resize = kendo.cssProperties.getValidClass({
+                        widget: options.name,
+                        propName: 'resize',
+                        value: options.resize
+                    }), overflow = kendo.cssProperties.getValidClass({
+                        widget: options.name,
+                        propName: 'overflow',
+                        value: options.overflow
+                    });
+                Widget.fn._applyCssClasses.call(that);
+                action = action || 'addClass';
+                that.wrapper[action](resize);
+                that.element[action](overflow);
             },
             _applyAttributes: function () {
                 var that = this;
@@ -130,6 +151,11 @@
                 }
                 that.element.off(NS);
                 Widget.fn.destroy.call(that);
+            },
+            setOptions: function (options) {
+                var that = this;
+                that._applyCssClasses('removeClass');
+                Widget.fn.setOptions.call(that, options);
             },
             _editable: function (options) {
                 var that = this;
@@ -201,12 +227,20 @@
                 var element = that.element;
                 var DOMElement = element[0];
                 var wrapper;
-                wrapper = element.wrap('<span class=\'k-widget k-textarea\'></span>').parent();
+                wrapper = element.wrap('<span class=\'k-input k-textarea\'></span>').parent();
                 wrapper[0].style.cssText = DOMElement.style.cssText;
                 DOMElement.style.width = '100%';
-                that._inputWrapper = that.wrapper = wrapper.addClass(DOMElement.className).removeClass('input-validation-error');
+                that.wrapper = wrapper.addClass(DOMElement.className).removeClass('input-validation-error');
             }
         });
+        kendo.cssProperties.registerPrefix('TextArea', 'k-input-');
+        kendo.cssProperties.registerValues('TextArea', [{
+                prop: 'rounded',
+                values: kendo.cssProperties.roundedValues.concat([[
+                        'full',
+                        'full'
+                    ]])
+            }]);
         ui.plugin(TextArea);
     }(window.kendo.jQuery));
     return window.kendo;

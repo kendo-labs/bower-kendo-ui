@@ -146,22 +146,6 @@
                 width: 9.5em;
                 border-radius: 0;
                 border-color: transparent;
-
-                .k-dropdown-wrap {
-                    border-radius: 0;
-                    border-color: transparent;
-                    background-image: none;
-                    box-shadow: none;
-                    border-width: 0;
-
-                    .k-input {
-                        border-radius: 0;
-                    }
-
-                    .k-select {
-                        border-radius: 0;
-                    }
-                }
             }
         }
 
@@ -195,13 +179,9 @@
 
         .k-spreadsheet-formula-input {
             overflow: hidden;
-            text-indent: @input-indent;
+            text-indent: @padding-x;
             border: 0;
             margin: 0;
-        }
-
-        .k-state-border-down {
-            padding-bottom: 0;
         }
     }
 
@@ -557,26 +537,8 @@ div.k-spreadsheet-window {
         }
     }
 
-    .k-list-wrapper {
-        padding: .15em 0;
-        height: 190px;
-    }
-
-    .k-list {
-        .k-item {
-            border-radius: 0;
-            padding: .5em .6em .4em .6em;
-            cursor: pointer;
-            line-height: 1.1em;
-        }
-    }
-
     .k-format-filter {
         width: 100%;
-
-        + .k-group-header + .k-list-wrapper {
-            margin-top: 1em;
-        }
     }
 
     .k-action-buttons {
@@ -694,19 +656,6 @@ div.k-spreadsheet-window {
 .k-spreadsheet-filter-menu {
     width: 280px;
 
-    > .k-menu {
-        border-width: 0;
-
-        .k-link {
-            padding-left: 26px;
-        }
-
-        .k-link .k-icon {
-            margin-left: -26px;
-            width: 26px;
-        }
-    }
-
     .k-spreadsheet-value-treeview-wrapper {
         height: 200px;
         overflow-y: scroll;
@@ -716,7 +665,6 @@ div.k-spreadsheet-window {
 
         .k-treeview {
             overflow: visible;
-            padding: 6px 7px;
         }
     }
 

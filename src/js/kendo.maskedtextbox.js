@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -51,8 +51,9 @@
         var proxy = $.proxy;
         var setTimeout = window.setTimeout;
         var LABELCLASSES = 'k-label k-input-label';
-        var STATEDISABLED = 'k-state-disabled';
-        var STATEINVALID = 'k-state-invalid';
+        var STATEDISABLED = 'k-disabled';
+        var STATEINVALID = 'k-invalid';
+        var FOCUSED = 'k-focus';
         var DISABLED = 'disabled';
         var READONLY = 'readonly';
         var CHANGE = 'change';
@@ -86,7 +87,7 @@
                 that._wrapper();
                 that._tokenize();
                 that._form();
-                that.element.addClass('k-textbox').attr('autocomplete', 'off').on('focus' + NS, function () {
+                that.element.addClass('k-input-inner').attr('autocomplete', 'off').on('focus' + NS, function () {
                     var value = DOMElement.value;
                     if (!value) {
                         DOMElement.value = that._old = that._emptyMask;
@@ -94,6 +95,7 @@
                         that._togglePrompt(true);
                     }
                     that._oldValue = value;
+                    that.wrapper.addClass(FOCUSED);
                     that._timeoutId = setTimeout(function () {
                         caret(element, 0, value ? that._maskLength : 0);
                     });
@@ -104,6 +106,7 @@
                     if (value !== that._emptyMask) {
                         DOMElement.value = that._old = value;
                     }
+                    that.wrapper.removeClass(FOCUSED);
                     that._change();
                     that._togglePrompt();
                 });
@@ -114,8 +117,9 @@
                     that.readonly(element.is('[readonly]'));
                 }
                 that.value(that.options.value || element.val());
-                that._validationIcon = $('<span class=\'k-icon k-i-warning k-hidden\'></span>').insertAfter(element);
+                that._validationIcon = $('<span class=\'k-input-validation-icon k-icon k-i-warning k-hidden\'></span>').insertAfter(element);
                 that._label();
+                that._applyCssClasses();
                 kendo.notify(that);
             },
             options: {
@@ -127,7 +131,10 @@
                 rules: {},
                 value: '',
                 mask: '',
-                label: null
+                label: null,
+                size: 'medium',
+                fillMode: 'solid',
+                rounded: 'medium'
             },
             events: [CHANGE],
             rules: {
@@ -511,7 +518,7 @@
                 var that = this;
                 var element = that.element;
                 var DOMElement = element[0];
-                var wrapper = element.wrap('<span class=\'k-widget k-maskedtextbox\'></span>').parent();
+                var wrapper = element.wrap('<span class=\'k-input k-maskedtextbox\'></span>').parent();
                 wrapper[0].style.cssText = DOMElement.style.cssText;
                 DOMElement.style.width = '100%';
                 that.wrapper = wrapper.addClass(DOMElement.className).removeClass('input-validation-error');
@@ -578,6 +585,14 @@
         function escapeRegExp(text) {
             return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
         }
+        kendo.cssProperties.registerPrefix('MaskedTextBox', 'k-input-');
+        kendo.cssProperties.registerValues('MaskedTextBox', [{
+                prop: 'rounded',
+                values: kendo.cssProperties.roundedValues.concat([[
+                        'full',
+                        'full'
+                    ]])
+            }]);
         ui.plugin(MaskedTextBox);
     }(window.kendo.jQuery));
     return window.kendo;

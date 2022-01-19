@@ -1,5 +1,5 @@
 /** 
- * Copyright 2021 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
  *                                                                                                                                                                                                      
  * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
  * you may not use this file except in compliance with the License.                                                                                                                                     
@@ -26,7 +26,8 @@
     define('kendo.combobox', [
         'kendo.list',
         'kendo.mobile.scroller',
-        'kendo.virtuallist'
+        'kendo.virtuallist',
+        'html/button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -51,7 +52,7 @@
         ]
     };
     (function ($, undefined) {
-        var kendo = window.kendo, ui = kendo.ui, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', nsFocusEvent = ns + 'FocusEvent', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', LOADING = 'k-i-loading', DEFAULT = 'k-state-default', FOCUSED = 'k-state-focused', STATEDISABLED = 'k-state-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', AUTOCOMPLETEVALUE = 'off', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy, newLineRegEx = /(\r\n|\n|\r)/gm, NON_PRINTABLE_KEYS = [
+        var kendo = window.kendo, ui = kendo.ui, html = kendo.html, List = ui.List, Select = ui.Select, caret = kendo.caret, support = kendo.support, placeholderSupported = support.placeholder, activeElement = kendo._activeElement, keys = kendo.keys, ns = '.kendoComboBox', nsFocusEvent = ns + 'FocusEvent', CLICK = 'click' + ns, MOUSEDOWN = 'mousedown' + ns, DISABLED = 'disabled', READONLY = 'readonly', CHANGE = 'change', LOADING = 'k-i-loading', FOCUSED = 'k-focus', STATEDISABLED = 'k-disabled', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', AUTOCOMPLETEVALUE = 'off', STATE_FILTER = 'filter', STATE_ACCEPT = 'accept', STATE_REBIND = 'rebind', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, proxy = $.proxy, newLineRegEx = /(\r\n|\n|\r)/gm, NON_PRINTABLE_KEYS = [
                 16,
                 17,
                 18,
@@ -112,6 +113,7 @@
                 }
                 kendo.notify(that);
                 that._toggleCloseVisibility();
+                that._applyCssClasses();
             },
             options: {
                 name: 'ComboBox',
@@ -142,7 +144,10 @@
                 clearButton: true,
                 syncValueAndText: true,
                 autoWidth: false,
-                popup: null
+                popup: null,
+                size: 'medium',
+                fillMode: 'solid',
+                rounded: 'medium'
             },
             events: [
                 'open',
@@ -169,7 +174,6 @@
                 that.input.off(nsFocusEvent);
                 that.element.off(ns);
                 that.wrapper.off(ns);
-                that._inputWrapper.off(ns);
                 clearTimeout(that._pasteTimeout);
                 that._arrow.off(CLICK + ' ' + MOUSEDOWN);
                 that._clear.off(CLICK + ' ' + MOUSEDOWN);
@@ -212,7 +216,7 @@
                 this._toggle();
             },
             _inputFocus: function () {
-                this._inputWrapper.addClass(FOCUSED);
+                this.wrapper.addClass(FOCUSED);
                 this._placeholder(false);
             },
             _inputFocusout: function (e) {
@@ -220,7 +224,7 @@
                 var value = that.value();
                 var isClearButton = !$(e.relatedTarget).closest('.k-clear-value').length;
                 that._userTriggered = true;
-                that._inputWrapper.removeClass(FOCUSED);
+                that.wrapper.removeClass(FOCUSED);
                 clearTimeout(that._typingTimeout);
                 that._typingTimeout = null;
                 if (isClearButton) {
@@ -251,9 +255,9 @@
                 });
             },
             _editable: function (options) {
-                var that = this, disable = options.disable, readonly = options.readonly, wrapper = that._inputWrapper.off(ns), input = that.element.add(that.input.off(ns)), arrow = that._arrow.off(CLICK + ' ' + MOUSEDOWN), clear = that._clear;
+                var that = this, disable = options.disable, readonly = options.readonly, wrapper = that.wrapper.off(ns), input = that.element.add(that.input.off(ns)), arrow = that._arrow.off(CLICK + ' ' + MOUSEDOWN), clear = that._clear;
                 if (!readonly && !disable) {
-                    wrapper.addClass(DEFAULT).removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
+                    wrapper.removeClass(STATEDISABLED).on(HOVEREVENTS, that._toggleHover);
                     input.prop(DISABLED, false).prop(READONLY, false).attr(ARIA_DISABLED, false).attr(ARIA_READONLY, false);
                     arrow.on(CLICK, proxy(that._arrowClick, that)).on(MOUSEDOWN, function (e) {
                         e.preventDefault();
@@ -262,7 +266,7 @@
                     that.input.on('keydown' + ns, proxy(that._keydown, that)).on('input' + ns, proxy(that._search, that)).on('paste' + ns, proxy(that._inputPaste, that));
                     that.wrapper.on(CLICK + ns, proxy(that._focusHandler, that));
                 } else {
-                    wrapper.addClass(disable ? STATEDISABLED : DEFAULT).removeClass(disable ? DEFAULT : STATEDISABLED);
+                    wrapper.addClass(disable ? STATEDISABLED : '').removeClass(disable ? '' : STATEDISABLED);
                     input.attr(DISABLED, disable).attr(READONLY, readonly).attr(ARIA_DISABLED, disable).attr(ARIA_READONLY, readonly);
                 }
                 that._toggleCloseVisibility();
@@ -345,7 +349,7 @@
                 var hasInitialIndex = initialIndex !== null && initialIndex > -1;
                 var filtered = that._state === STATE_FILTER;
                 if (filtered) {
-                    $(listView.focus()).removeClass('k-state-selected');
+                    $(listView.focus()).removeClass('k-selected');
                     return;
                 }
                 if (that._fetch) {
@@ -730,13 +734,20 @@
                 }
             },
             _input: function () {
-                var that = this, element = that.element.removeClass('k-input')[0], accessKey = element.accessKey, wrapper = that.wrapper, SELECTOR = 'input.k-input', name = element.name || '', input, maxLength;
+                var that = this, element = that.element.removeClass('k-input-inner')[0], accessKey = element.accessKey, wrapper = that.wrapper, SELECTOR = 'input.k-input-inner', name = element.name || '', options = that.options, input, maxLength, arrowBtn;
                 if (name) {
                     name = 'name="' + name + '_input" ';
                 }
                 input = wrapper.find(SELECTOR);
                 if (!input[0]) {
-                    wrapper.append('<span tabindex="-1" unselectable="on" class="k-dropdown-wrap k-state-default"><input ' + name + 'class="k-input" type="text" autocomplete="' + AUTOCOMPLETEVALUE + '"/><span unselectable="on" class="k-select" aria-label="select"><span class="k-icon k-i-arrow-60-down"></span></span></span>').append(that.element);
+                    arrowBtn = html.renderButton('<button type="button" class="k-select k-input-button" aria-label="expand combobox"></button>', {
+                        icon: 'arrow-s',
+                        size: options.size,
+                        fillMode: options.fillMode,
+                        shape: null,
+                        rounded: null
+                    });
+                    wrapper.append('<input ' + name + 'class="k-input-inner" type="text" autocomplete="' + AUTOCOMPLETEVALUE + '"/>').append(arrowBtn).append(that.element);
                     input = wrapper.find(SELECTOR);
                 }
                 input[0].style.cssText = element.style.cssText;
@@ -761,7 +772,6 @@
                     input[0].accessKey = accessKey;
                 }
                 that._focused = that.input = input;
-                that._inputWrapper = $(wrapper[0].firstChild);
                 that._arrow = wrapper.find('.k-select').attr({
                     'role': 'button',
                     'tabIndex': -1
@@ -882,11 +892,11 @@
             },
             _wrapper: function () {
                 var that = this, element = that.element, wrapper = element.parent();
-                if (!wrapper.is('span.k-widget')) {
+                if (!wrapper.is('span.k-input')) {
                     wrapper = element.hide().wrap('<span />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                 }
-                that.wrapper = wrapper.addClass('k-widget k-combobox').addClass(element[0].className).removeClass('input-validation-error').css('display', '');
+                that.wrapper = wrapper.addClass('k-input k-combobox k-widget').addClass(element[0].className).removeClass('input-validation-error').css('display', '');
             },
             _clearSelection: function (parent, isFiltered) {
                 var that = this;
@@ -921,6 +931,14 @@
             }
         });
         ui.plugin(ComboBox);
+        kendo.cssProperties.registerPrefix('ComboBox', 'k-input-');
+        kendo.cssProperties.registerValues('ComboBox', [{
+                prop: 'rounded',
+                values: kendo.cssProperties.roundedValues.concat([[
+                        'full',
+                        'full'
+                    ]])
+            }]);
     }(window.kendo.jQuery));
     return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) {
