@@ -52,7 +52,7 @@
                     'ComboBox',
                     'DropDownList'
                 ]
-            }, UL_EL = '<ul unselectable="on"/>', LIST_EL = '<div class=\'k-list\'/>', LIST_HEADER_EL = '<div class="k-list-header">', NO_DATA_EL = '<div class="k-no-data" style="display: none;"></div>', LIST_FOOTER_EL = '<div class="k-list-footer"></div>', MOUSEDOWN = 'mousedown', LIST_SUFFIX = '-list', LISTBOX_SUFFIX = '_listbox', ARIA_LABELLEDBY = 'aria-labelledby', ARIA_LABEL = 'aria-label', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ARIA_AUTOCOMPLETE = 'aria-autocomplete', ARIA_CONTROLS = 'aria-controls', ARIA_LIVE = 'aria-live', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_BUSY = 'aria-busy', ARIA_MULTISELECTABLE = 'aria-multiselectable', ARIA_SELECTED = 'aria-selected', GROUP_ROW_SEL = '.k-table-group-row', DOT = '.';
+            }, UL_EL = '<ul unselectable="on"/>', LIST_EL = '<div class=\'k-list\'/>', LIST_HEADER_EL = '<div class="k-list-header">', NO_DATA_EL = '<div class="k-no-data" style="display: none;"></div>', LIST_FOOTER_EL = '<div class="k-list-footer"></div>', MOUSEDOWN = 'mousedown', LIST_SUFFIX = '-list', LISTBOX_SUFFIX = '_listbox', ARIA_LABELLEDBY = 'aria-labelledby', ARIA_LABEL = 'aria-label', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ARIA_AUTOCOMPLETE = 'aria-autocomplete', ARIA_CONTROLS = 'aria-controls', ARIA_LIVE = 'aria-live', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_BUSY = 'aria-busy', ARIA_MULTISELECTABLE = 'aria-multiselectable', ARIA_SELECTED = 'aria-selected', GROUP_ROW_SEL = '.k-table-group-row';
         var List = kendo.ui.DataBoundWidget.extend({
             init: function (element, options) {
                 var that = this, ns = that.ns, id;
@@ -272,8 +272,8 @@
                     that.listView = new kendo.ui.StaticList(that.ul, listOptions);
                 } else {
                     that.listView = new kendo.ui.VirtualList(that.ul, listOptions);
-                    that.list.find(DOT + LIST).addClass('k-virtual-list');
-                    that.list.find(DOT + DATA_TABLE).addClass('k-virtual-table');
+                    that.list.addClass('k-virtual-list');
+                    that.list.addClass('k-virtual-table');
                 }
                 that.listView.bind('listBound', proxy(that._listBound, that));
                 that._setListValue();
@@ -710,8 +710,8 @@
                 var popups;
                 var footerHeight;
                 if (length || that.options.noDataTemplate) {
-                    popups = list.add(list.parent('.k-animation-container')).show();
-                    if (!list.is(':visible')) {
+                    popups = list.parent().add(list.closest('.k-animation-container')).show();
+                    if (!list.parent().is(':visible')) {
                         popups.hide();
                         return;
                     }
@@ -739,7 +739,7 @@
                 }
             },
             _adjustListWidth: function () {
-                var that = this, list = that.list, width = list[0].style.width, wrapper = that.wrapper, computedStyle, computedWidth;
+                var that = this, list = that.list.parent(), width = list[0].style.width, wrapper = that.wrapper, computedStyle, computedWidth;
                 if (!list.data(WIDTH) && width) {
                     return;
                 }
@@ -838,8 +838,8 @@
             },
             _popup: function () {
                 var list = this;
-                list.list = list.list.wrap('<div>').parent();
-                list.popup = new ui.Popup(list.list, extend({}, list.options.popup, {
+                list.list.wrap('<div>');
+                list.popup = new ui.Popup(list.list.parent(), extend({}, list.options.popup, {
                     anchor: list.wrapper,
                     open: proxy(list._openHandler, list),
                     close: proxy(list._closeHandler, list),
@@ -1329,10 +1329,12 @@
                 var focusout = isIE && parent instanceof ui.DropDownList ? BLUR : FOCUSOUT;
                 parent._focused.add(parent.filterInput).on(FOCUS, function () {
                     parent.unbind(CASCADE, that._cascadeHandlerProxy);
+                    parent.unbind(CHANGE, that._cascadeHandlerProxy);
                     parent.first(CHANGE, that._cascadeHandlerProxy);
                 });
                 parent._focused.add(parent.filterInput).on(focusout, function () {
                     parent.unbind(CHANGE, that._cascadeHandlerProxy);
+                    parent.unbind(CASCADE, that._cascadeHandlerProxy);
                     parent.first(CASCADE, that._cascadeHandlerProxy);
                 });
             },

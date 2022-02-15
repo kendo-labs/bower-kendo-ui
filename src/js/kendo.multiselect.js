@@ -27,9 +27,9 @@
         'kendo.list',
         'kendo.mobile.scroller',
         'kendo.virtuallist',
-        'html/chip',
-        'html/chiplist',
-        'html/button'
+        'kendo.html.chip',
+        'kendo.html.chiplist',
+        'kendo.html.button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -37,7 +37,12 @@
         name: 'MultiSelect',
         category: 'web',
         description: 'The MultiSelect widget allows the selection from pre-defined values.',
-        depends: ['list'],
+        depends: [
+            'list',
+            'html.chip',
+            'html.chiplist',
+            'html.button'
+        ],
         features: [
             {
                 id: 'mobile-scroller',

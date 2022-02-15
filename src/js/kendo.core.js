@@ -80,7 +80,7 @@
                 }
                 return target;
             };
-        kendo.version = '2022.1.119'.replace(/^\s+|\s+$/g, '');
+        kendo.version = '2022.1.215'.replace(/^\s+|\s+$/g, '');
         function Class() {
         }
         Class.extend = function (proto) {
@@ -898,7 +898,7 @@
             kendo.toString = toString;
         }());
         (function () {
-            var nonBreakingSpaceRegExp = /\u00A0/g, exponentRegExp = /[eE][\-+]?[0-9]+/, shortTimeZoneRegExp = /[+|\-]\d{1,2}/, longTimeZoneRegExp = /[+|\-]\d{1,2}:?\d{2}/, dateRegExp = /^\/Date\((.*?)\)\/$/, offsetRegExp = /[+-]\d*/, FORMATS_SEQUENCE = [
+            var nonBreakingSpaceRegExp = /\u00A0/g, spaceRegExp = /\s/g, exponentRegExp = /[eE][\-+]?[0-9]+/, shortTimeZoneRegExp = /[+|\-]\d{1,2}/, longTimeZoneRegExp = /[+|\-]\d{1,2}:?\d{2}/, dateRegExp = /^\/Date\((.*?)\)\/$/, offsetRegExp = /[+-]\d*/, FORMATS_SEQUENCE = [
                     [],
                     [
                         'G',
@@ -1307,7 +1307,7 @@
                     number = percent;
                     symbol = percentSymbol;
                 }
-                value = value.replace('-', '').replace(symbol, '').replace(nonBreakingSpaceRegExp, ' ').split(number[','].replace(nonBreakingSpaceRegExp, ' ')).join('').replace(number['.'], '.');
+                value = value.replace('-', '').replace(symbol, '').replace(nonBreakingSpaceRegExp, ' ').split(number[','].replace(nonBreakingSpaceRegExp, ' ')).join('').replace(spaceRegExp, '').replace(number['.'], '.');
                 value = parseFloat(value);
                 if (isNaN(value)) {
                     value = null;
@@ -1658,7 +1658,7 @@
             };
             support.mouseAndTouchPresent = support.touch && !(support.mobileOS.ios || support.mobileOS.android);
             support.detectBrowser = function (ua) {
-                var browser = false, match = [], browserRxs = {
+                var browser = false, match = [], chromiumEdgeMatch = [], browserRxs = {
                         edge: /(edge)[ \/]([\w.]+)/i,
                         webkit: /(chrome|crios)[ \/]([\w.]+)/i,
                         safari: /(webkit)[ \/]([\w.]+)/i,
@@ -1674,6 +1674,12 @@
                             browser[agent] = true;
                             browser[match[1].toLowerCase().split(' ')[0].split('/')[0]] = true;
                             browser.version = parseInt(document.documentMode || match[2], 10);
+                            if (browser.chrome) {
+                                chromiumEdgeMatch = ua.match(/(edg)[ \/]([\w.]+)/i);
+                                if (chromiumEdgeMatch) {
+                                    browser.chromiumEdge = true;
+                                }
+                            }
                             break;
                         }
                     }
@@ -1681,6 +1687,13 @@
                 return browser;
             };
             support.browser = support.detectBrowser(navigator.userAgent);
+            if (!mobileOS && support.touch && support.browser.safari) {
+                mobileOS = support.mobileOS = {
+                    ios: true,
+                    tablet: 'tablet',
+                    device: 'ipad'
+                };
+            }
             support.detectClipboardAccess = function () {
                 var commands = {
                     copy: document.queryCommandSupported ? document.queryCommandSupported('copy') : false,

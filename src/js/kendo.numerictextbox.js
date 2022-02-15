@@ -26,7 +26,8 @@
     define('kendo.numerictextbox', [
         'kendo.core',
         'kendo.userevents',
-        'kendo.floatinglabel'
+        'kendo.floatinglabel',
+        'kendo.html.button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -37,7 +38,8 @@
         depends: [
             'core',
             'userevents',
-            'floatinglabel'
+            'floatinglabel',
+            'html.button'
         ]
     };
     (function ($, undefined) {
@@ -581,7 +583,7 @@
                 return rounder(value, precision);
             },
             _update: function (value) {
-                var that = this, options = that.options, factor = options.factor, format = options.format, decimals = options.decimals, culture = that._culture(), numberFormat = that._format(format, culture), isNotNull;
+                var that = this, options = that.options, factor = options.factor, format = options.format, decimals = options.decimals, culture = that._culture(), numberFormat = that._format(format, culture), originalValue, isNotNull;
                 if (decimals === NULL) {
                     decimals = numberFormat.decimals;
                 }
@@ -600,13 +602,15 @@
                     if (value.indexOf('e') !== -1) {
                         value = that._round(+value, decimals);
                     }
+                    originalValue = value;
                     value = value.replace(POINT, numberFormat[POINT]);
                 } else {
                     value = null;
+                    originalValue = null;
                 }
                 that.element.val(value);
                 that._oldText = value;
-                that.element.add(that._text).attr('aria-valuenow', value);
+                that.element.add(that._text).attr('aria-valuenow', originalValue);
             },
             _placeholder: function (value) {
                 var input = this._text;

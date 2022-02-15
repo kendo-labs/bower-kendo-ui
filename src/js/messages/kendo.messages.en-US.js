@@ -513,6 +513,7 @@ $.extend(true, kendo.ui.Gantt.prototype.options.messages,{
     "days": "days"
   },
   "save": "Save",
+  "selectView": "Select view",
   "views": {
     "day": "Day",
     "end": "End",

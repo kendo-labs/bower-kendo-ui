@@ -458,6 +458,7 @@ $.extend(true, kendo.ui.Gantt.prototype.options.messages,{
     "days": "дни"
   },
   "save": "Запази",
+  "selectView": "Избери изглед",
   "views": {
     "day": "Ден",
     "end": "Край",

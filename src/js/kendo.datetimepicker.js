@@ -25,7 +25,8 @@
 (function (f, define) {
     define('kendo.datetimepicker', [
         'kendo.datepicker',
-        'kendo.timepicker'
+        'kendo.timepicker',
+        'kendo.html.button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -42,7 +43,7 @@
         var kendo = window.kendo, TimeView = kendo.TimeView, html = kendo.html, parse = kendo.parseDate, support = kendo.support, activeElement = kendo._activeElement, extractFormat = kendo._extractFormat, calendar = kendo.calendar, isInRange = calendar.isInRange, restrictValue = calendar.restrictValue, isEqualDatePart = calendar.isEqualDatePart, getMilliseconds = TimeView.getMilliseconds, ui = kendo.ui, Widget = ui.Widget, OPEN = 'open', CLOSE = 'close', CHANGE = 'change', ns = '.kendoDateTimePicker', CLICK = 'click' + ns, UP = support.mouseAndTouchPresent ? kendo.applyEventMap('up', ns.slice(1)) : CLICK, DISABLED = 'disabled', READONLY = 'readonly', FOCUSED = 'k-focus', HOVER = 'k-hover', STATEDISABLED = 'k-disabled', HOVEREVENTS = 'mouseenter' + ns + ' mouseleave' + ns, MOUSEDOWN = 'mousedown' + ns, MONTH = 'month', SPAN = '<span/>', ARIA_ACTIVEDESCENDANT = 'aria-activedescendant', ARIA_EXPANDED = 'aria-expanded', ARIA_HIDDEN = 'aria-hidden', ARIA_OWNS = 'aria-owns', ARIA_DISABLED = 'aria-disabled', ARIA_READONLY = 'aria-readonly', DATE = Date, MIN = new DATE(1800, 0, 1), MAX = new DATE(2099, 11, 31), dateViewParams = { view: 'date' }, timeViewParams = { view: 'time' }, extend = $.extend, SINGLE_POPUP_TEMPLATE = '<div class="k-date-tab k-datetime-wrap">' + '<div class="k-datetime-buttongroup">' + '<div class="k-button-group k-button-group-stretched">' + '<button class="k-button #=buttonSize# k-rounded-md k-button-solid k-button-solid-base k-selected k-group-start">' + '<span class="k-button-text">#=messages.date#</span>' + '</button>' + '<button class="k-button #=buttonSize# k-rounded-md k-button-solid k-button-solid-base k-group-end">' + '<span class="k-button-text">#=messages.time#</span>' + '</button>' + '</div>' + '</div>' + '<div class="k-datetime-selector">' + '<div class="k-datetime-calendar-wrap">' + '</div>' + '<div class="k-datetime-time-wrap">' + '</div>' + '</div>' + '<div class="k-datetime-footer k-action-buttons">' + '<button class="k-button #=buttonSize# k-rounded-md k-button-solid k-button-solid-base k-time-cancel" title="Cancel" aria-label="Cancel">' + '<span class="k-button-text">#=messages.cancel#</span>' + '</button>' + '<button class="k-time-accept k-button #=buttonSize# k-rounded-md k-button-solid k-button-solid-primary" title="Set" aria-label="Set">' + '<span class="k-button-text">#=messages.set#</span>' + '</button>' + '</div>' + '</div>', STATE_SELECTED = 'k-selected';
         var DateTimePicker = Widget.extend({
             init: function (element, options) {
-                var that = this, disabled;
+                var that = this, disabled, initialValue;
                 options = options || {};
                 options.componentType = options.componentType || 'classic';
                 Widget.fn.init.call(that, element, options);
@@ -81,8 +82,9 @@
                 } else {
                     that.readonly(element.is('[readonly]'));
                 }
+                initialValue = parse(options.value || that.element.val(), options.parseFormats, options.culture);
                 that._createDateInput(options);
-                that._old = that._update(options.value || that.element.val());
+                that._old = that._update(initialValue || that.element.val());
                 that._oldText = element.val();
                 that._applyCssClasses();
                 kendo.notify(that);

@@ -189,8 +189,10 @@
             }
             if (!item.children(LINK_SELECTOR).length) {
                 item.contents().filter(function () {
-                    return !this.nodeName.match(excludedNodesRegExp) && !(this.nodeType == 3 && !kendo.trim(this.nodeValue));
-                }).wrapAll('<span class=\'' + LINK + '\'><span class=\'k-menu-link-text\'></span></span>');
+                    return !this.nodeName.match(excludedNodesRegExp) && !(this.nodeType === 3 && !kendo.trim(this.nodeValue));
+                }).wrapAll('<span class=\'' + LINK + '\'></span>').filter(function (idx, elm) {
+                    return elm.nodeType === 3;
+                }).wrap('<span class=\'k-menu-link-text\'></span>');
             }
             updateArrow(item);
             updateFirstLast(item);
@@ -209,7 +211,7 @@
                 arrowCssClass = 'k-i-arrow-s';
             } else {
                 if (isRtl) {
-                    arrowCssClass = 'k-i-arrow-n';
+                    arrowCssClass = 'k-i-arrow-w';
                 } else {
                     arrowCssClass = 'k-i-arrow-e';
                 }
@@ -782,7 +784,7 @@
                     var li = $(this);
                     clearTimeout(li.data(TIMER));
                     li.data(TIMER, setTimeout(function () {
-                        var ul = li.find('.k-menu-group:hidden').first();
+                        var ul = li.find('> .k-menu-group, > .k-animation-container > .k-menu-group').filter(':hidden').first();
                         var popup;
                         var overflowPopup;
                         if (!ul[0] && overflowWrapper) {
@@ -1222,11 +1224,11 @@
             },
             _click: function (e) {
                 var that = this, openHandle, options = that.options, target = $(kendo.eventTarget(e)), targetElement = target[0], nodeName = target[0] ? target[0].nodeName.toUpperCase() : '', formNode = nodeName == 'INPUT' || nodeName == 'SELECT' || nodeName == 'BUTTON' || nodeName == 'LABEL', link = target.closest(LINK_SELECTOR), element = target.closest(allItemsSelector), itemElement = element[0], href = link.attr('href'), childGroup, childGroupVisible, targetHref = target.attr('href'), sampleHref = $('<a href=\'#\' />').attr('href'), isLink = !!href && href !== sampleHref, isLocalLink = isLink && !!href.match(/^#/), isTargetLink = !!targetHref && targetHref !== sampleHref, overflowWrapper = that._overflowWrapper(), shouldCloseTheRootItem;
-                if (targetElement && !targetElement.parentNode) {
+                if (targetElement && (!targetElement.parentNode || !itemElement)) {
                     return;
                 }
                 if ($(target).hasClass('k-menu-expand-arrow-icon')) {
-                    this._lastClickedElement = targetElement.parentElement;
+                    this._lastClickedElement = itemElement;
                 }
                 while (targetElement && targetElement.parentNode != itemElement) {
                     targetElement = targetElement.parentNode;
@@ -1754,12 +1756,12 @@
                 if (options.template && typeof options.template == STRING) {
                     options.template = template(options.template);
                 } else if (!options.template) {
-                    options.template = template('# var text = ' + fieldAccessor('text') + '(data.item); #' + '# if (typeof data.item.encoded != \'undefined\' && data.item.encoded === false) {#' + '#= text #' + '# } else { #' + '#: text #' + '# } #');
+                    options.template = template('<span class=\'k-menu-link-text\'>' + '# var text = ' + fieldAccessor('text') + '(data.item); #' + '# if (typeof data.item.encoded != \'undefined\' && data.item.encoded === false) {#' + '#= text #' + '# } else { #' + '#: text #' + '# } #</span>');
                 }
                 that.templates = {
                     content: template('#var contentHtml = ' + fieldAccessor('content') + '(item);#' + '<div #= contentCssAttributes(item.toJSON ? item.toJSON() : item) # tabindex=\'-1\'>#= contentHtml || \'\' #</div>'),
                     group: template('<ul class=\'#= groupCssClass(group) #\'#= groupAttributes(group) # role=\'menu\' aria-hidden=\'true\'>' + '#= renderItems(data) #' + '</ul>'),
-                    itemWrapper: template('# var url = ' + fieldAccessor('url') + '(item); #' + '# var imageUrl = ' + fieldAccessor('imageUrl') + '(item); #' + '# var imgAttributes = ' + fieldAccessor('imageAttr') + '(item);#' + '# var tag = url ? \'a\' : \'span\' #' + '<#= tag # class=\'#= textClass(item) #\' #if(url){#href=\'#= url #\'#}#>' + '# if (imageUrl) { #' + '<img #= imageCssAttributes(imgAttributes) #  alt=\'\' src=\'#= imageUrl #\' />' + '# } #' + '#= sprite(item) #' + '<span class=\'k-menu-link-text\'>#= data.menu.options.template(data) #</span>' + '#= arrow(data) #' + '</#= tag #>'),
+                    itemWrapper: template('# var url = ' + fieldAccessor('url') + '(item); #' + '# var imageUrl = ' + fieldAccessor('imageUrl') + '(item); #' + '# var imgAttributes = ' + fieldAccessor('imageAttr') + '(item);#' + '# var tag = url ? \'a\' : \'span\' #' + '<#= tag # class=\'#= textClass(item) #\' #if(url){#href=\'#= url #\'#}#>' + '# if (imageUrl) { #' + '<img #= imageCssAttributes(imgAttributes) #  alt=\'\' src=\'#= imageUrl #\' />' + '# } #' + '#= sprite(item) #' + '#= data.menu.options.template(data) #' + '#= arrow(data) #' + '</#= tag #>'),
                     item: template('#var contentHtml = ' + fieldAccessor('content') + '(item);#' + '<li class=\'#= wrapperCssClass(group, item) #\' #= itemCssAttributes(item.toJSON ? item.toJSON() : item) # role=\'menuitem\'  #=item.items ? "aria-haspopup=\'true\'": ""#' + '#=item.enabled === false ? "aria-disabled=\'true\'" : \'\'#' + kendo.attr('uid') + '=\'#= item.uid #\' ' + '# if(item.items && item.items.length > 0) { # ' + '# if(item.expanded) { # ' + ' aria-expanded=\'true\'' + '# } else { #' + ' aria-expanded=\'false\'' + '# } #' + '# } #' + '>' + '#= itemWrapper(data) #' + '#if (item.hasChildren || item.items) { #' + '#= subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded } }) #' + '# } else if (item.content || item.contentUrl || contentHtml) { #' + '#= renderContent(data) #' + '# } #' + '</li>'),
                     scrollButton: template('<span class=\'k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-icon-button k-menu-scroll-button k-scroll-#= direction #\' unselectable=\'on\'>' + '<span class=\'k-button-icon k-icon k-i-arrow-60-#= direction #\'></span>' + '</span>'),
                     arrow: template('<span class=\'k-menu-expand-arrow\'><span class=\'#= arrowClass(item, group) #\'></span></span>'),

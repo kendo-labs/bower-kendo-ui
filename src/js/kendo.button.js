@@ -26,7 +26,7 @@
     define('kendo.button', [
         'kendo.core',
         'kendo.badge',
-        'html/button'
+        'kendo.html.button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -36,7 +36,8 @@
         description: 'The Button widget displays styled buttons.',
         depends: [
             'core',
-            'badge'
+            'badge',
+            'html.button'
         ]
     };
     (function ($, undefined) {

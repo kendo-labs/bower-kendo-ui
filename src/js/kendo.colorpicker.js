@@ -885,7 +885,7 @@
     define('colorpicker/flatcolorpicker', [
         'colorpicker/colorgradient',
         'colorpicker/colorpalette',
-        'html/button'
+        'kendo.html.button'
     ], f);
 }(function () {
     (function ($, undefined) {
@@ -1124,7 +1124,7 @@
         'kendo.binder',
         'kendo.textbox',
         'kendo.numerictextbox',
-        'html/button',
+        'kendo.html.button',
         'colorpicker/colorselector',
         'colorpicker/flatcolorpicker'
     ], f);
@@ -1143,7 +1143,8 @@
             'button',
             'binder',
             'textbox',
-            'numerictextbox'
+            'numerictextbox',
+            'html.button'
         ]
     };
     (function ($, undefined) {

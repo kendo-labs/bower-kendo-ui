@@ -26,7 +26,8 @@
     define('kendo.datepicker', [
         'kendo.calendar',
         'kendo.popup',
-        'kendo.dateinput'
+        'kendo.dateinput',
+        'kendo.html.button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -36,7 +37,8 @@
         description: 'The DatePicker widget allows the user to select a date from a calendar or by direct input.',
         depends: [
             'calendar',
-            'popup'
+            'popup',
+            'html.button'
         ]
     };
     (function ($, undefined) {
@@ -219,7 +221,7 @@
         kendo.DateView = DateView;
         var DatePicker = Widget.extend({
             init: function (element, options) {
-                var that = this, disabled, div;
+                var that = this, initialValue, disabled, div;
                 Widget.fn.init.call(that, element, options);
                 element = that.element;
                 options = that.options;
@@ -281,8 +283,9 @@
                 } else {
                     that.readonly(element.is('[readonly]'));
                 }
+                initialValue = parse(options.value || that.element.val(), options.parseFormats, options.culture);
                 that._createDateInput(options);
-                that._old = that._update(options.value || that.element.val());
+                that._old = that._update(initialValue || that.element.val());
                 that._oldText = element.val();
                 that._applyCssClasses();
                 kendo.notify(that);

@@ -27,7 +27,7 @@
         'kendo.list',
         'kendo.mobile.scroller',
         'kendo.virtuallist',
-        'html/button'
+        'kendo.html.button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -35,7 +35,10 @@
         name: 'DropDownList',
         category: 'web',
         description: 'The DropDownList widget displays a list of values and allows the selection of a single value from the list.',
-        depends: ['list'],
+        depends: [
+            'list',
+            'html.button'
+        ],
         features: [
             {
                 id: 'mobile-scroller',
@@ -963,7 +966,7 @@
                         'aria-haspopup': 'listbox',
                         'aria-autocomplete': 'list'
                     });
-                    this.list.prepend($(filterTemplate)).find('.k-searchbox').append(this.filterInput);
+                    this.list.parent().prepend($(filterTemplate)).find('.k-searchbox').append(this.filterInput);
                 }
             },
             _span: function () {

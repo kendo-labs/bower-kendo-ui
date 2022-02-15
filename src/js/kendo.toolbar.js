@@ -27,7 +27,7 @@
         'kendo.core',
         'kendo.userevents',
         'kendo.popup',
-        'html/button'
+        'kendo.html.button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -35,7 +35,10 @@
         name: 'ToolBar',
         category: 'web',
         description: 'The ToolBar widget displays one or more command buttons divided into groups.',
-        depends: ['core']
+        depends: [
+            'core',
+            'html.button'
+        ]
     };
     (function ($, undefined) {
         var kendo = window.kendo, Class = kendo.Class, Widget = kendo.ui.Widget, proxy = $.proxy, isFunction = kendo.isFunction, keys = kendo.keys, outerWidth = kendo._outerWidth, ns = '.kendoToolBar', TOOLBAR = 'k-toolbar', KBUTTON = 'k-button', BUTTON_DEFAULTS = 'k-button-md k-rounded-md k-button-solid k-button-solid-base', OVERFLOW_BUTTON = 'k-overflow-button', TOGGLE_BUTTON = 'k-toggle-button', BUTTON_GROUP = 'k-button-group', SPLIT_BUTTON = 'k-split-button', SPLIT_BUTTON_ARROW = 'k-split-button-arrow', LIST_CONTAINER = 'k-list-container k-split-container', ICON_BUTTON = 'k-icon-button', KSEPARATOR = 'k-separator', SPACER_CLASS = 'k-spacer', POPUP = 'k-popup', RESIZABLE_TOOLBAR = 'k-toolbar-resizable', STATE_ACTIVE = 'k-active', STATE_DISABLED = 'k-disabled', STATE_HIDDEN = 'k-state-hidden', HIDDEN = 'k-hidden', GROUP_START = 'k-group-start', GROUP_END = 'k-group-end', MENU_LINK = 'k-menu-link', OVERFLOW_GROUP = 'k-overflow-group', OVERFLOW_HIDDEN = 'k-overflow-hidden', OVERFLOW_ANCHOR = 'k-overflow-anchor', OVERFLOW_CONTAINER = 'k-overflow-container', OVERFLOW_WRAPPER = 'k-overflow-wrapper', FIRST_TOOLBAR_VISIBLE = 'k-toolbar-first-visible', LAST_TOOLBAR_VISIBLE = 'k-toolbar-last-visible', BUTTON_ROUNDED_MD = 'k-rounded-md', MENU_GROUP = 'k-group k-menu-group k-reset k-menu-group-md', ARIA_DISABLED = 'aria-disabled', ARIA_PRESSED = 'aria-pressed', CLICK = 'click', TOGGLE = 'toggle', OPEN = 'open', CLOSE = 'close', FOCUS = 'focus', FOCUSIN = 'focusin', KEYDOWN = 'keydown', TAP = 'tap', SPACER = 'spacer', BOTH = 'both', PRIMARY = 'primary', HREF = 'href', ROLE = 'role', BUTTON = 'button', SEPARATOR = 'separator', OVERFLOW = 'overflow', NEXT = 'next', PREV = 'prev', TABINDEX = 'tabindex', TEMPLATE = 'template', OVERFLOW_OPEN = 'overflowOpen', OVERFLOW_CLOSE = 'overflowClose', OVERFLOW_NEVER = 'never', OVERFLOW_AUTO = 'auto', OVERFLOW_ALWAYS = 'always', OPTION_LIST_SUFFIX = '_optionlist', KENDO_UID_ATTR = kendo.attr('uid'), POPUP_ITEM_TEMPLATE = '<li class="k-menu-item k-item">', MENU_LINK_SPAN = '<span tabindex="0" class="k-link k-menu-link">' + '<span class="k-menu-link-text">#:text#</span>' + '</span>', MENU_LINK_A = '<a href="#:href#" class="k-link k-menu-link">' + '<span class="k-menu-link-text">#:text#</span>' + '</a>', EMPTY = ' ', NOTHING = '', DOT = '.', COMMA = ',', ID = 'id';
@@ -68,8 +71,15 @@
                 }
             },
             attributes: function () {
-                if (this.options.attributes) {
-                    this.element.attr(this.options.attributes);
+                var attributes = this.options.attributes, classes;
+                if (attributes) {
+                    if (attributes.class) {
+                        classes = attributes.class;
+                        this.element.addClass(classes);
+                        delete attributes.class;
+                    }
+                    this.element.attr(attributes);
+                    attributes.class = classes;
                 }
             },
             show: function () {
@@ -177,6 +187,8 @@
                     } else {
                         element.html(options.text);
                     }
+                } else if (!!options.text) {
+                    element.attr('aria-label', options.text);
                 }
                 if (options.icon || options.spriteCssClass || options.imageUrl) {
                     if (options.showIcon !== 'toolbar' && options.showIcon !== BOTH) {
@@ -221,6 +233,8 @@
                     } else {
                         element.html(options.text);
                     }
+                } else if (!!options.text) {
+                    element.attr('aria-label', options.text);
                 }
                 if (options.icon || options.spriteCssClass || options.imageUrl) {
                     if (options.showIcon !== OVERFLOW && options.showIcon !== BOTH) {

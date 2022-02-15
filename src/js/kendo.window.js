@@ -282,6 +282,12 @@
                     position.top = constrain(containmentTop, this.minTop, this.maxTop);
                     position.left = constrain(containmentLeft, this.minLeft, this.maxLeft);
                 }
+                if (position.top && position.top.toString().indexOf('px') > 0) {
+                    position.top = Number(position.top.replace('px', ''));
+                }
+                if (position.left && position.left.toString().indexOf('px') > 0) {
+                    position.left = Number(position.left.replace('px', ''));
+                }
                 if (position.top === 0) {
                     position.top = position.top.toString();
                 }
@@ -617,7 +623,7 @@
                 var that = this, windowElements = $(KWINDOW + VISIBLE), windowInstance, modals = [];
                 for (var i = 0; i < windowElements.length; i += 1) {
                     windowInstance = that._object($(windowElements[i]));
-                    if (windowInstance && windowInstance.options && windowInstance.options.modal && windowInstance.options.visible && windowInstance.options.appendTo === that.options.appendTo && !windowInstance.containment) {
+                    if (windowInstance && windowInstance.options && windowInstance.options.modal && windowInstance.options.visible && windowInstance.options.appendTo === that.options.appendTo && (!windowInstance.containment || that.containment && windowInstance.containment[0] === that.containment[0])) {
                         modals.push(windowInstance.wrapper[0]);
                     }
                 }

@@ -27,7 +27,7 @@
         'kendo.list',
         'kendo.mobile.scroller',
         'kendo.virtuallist',
-        'html/button'
+        'kendo.html.button'
     ], f);
 }(function () {
     var __meta__ = {
@@ -35,7 +35,10 @@
         name: 'ComboBox',
         category: 'web',
         description: 'The ComboBox widget allows the selection from pre-defined values or entering a new value.',
-        depends: ['list'],
+        depends: [
+            'list',
+            'html.button'
+        ],
         features: [
             {
                 id: 'mobile-scroller',

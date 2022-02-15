@@ -25,7 +25,7 @@
 (function (f, define) {
     define('kendo.checkbox', [
         'kendo.toggleinputbase',
-        'html/input'
+        'kendo.html.input'
     ], f);
 }(function () {
     var __meta__ = {
@@ -33,7 +33,10 @@
         name: 'CheckBox',
         category: 'web',
         description: 'The CheckBox widget is used to display boolean value input.',
-        depends: ['toggleinputbase']
+        depends: [
+            'toggleinputbase',
+            'html.input'
+        ]
     };
     (function ($, undefined) {
         var kendo = window.kendo, ui = kendo.ui, ToggleInputBase = ui.ToggleInputBase;
