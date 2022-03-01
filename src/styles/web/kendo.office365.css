@@ -2489,6 +2489,9 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
   background: none;
   color: #333333;
 }
+.k-treeview .k-icon {
+  background-color: transparent;
+}
 .k-treeview-group {
   background: none !important;
 }
@@ -2499,16 +2502,17 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 }
 .k-treeview-leaf:focus,
 .k-treeview-leaf.k-focus {
+  border-color: #0072c6;
   box-shadow: none;
 }
 .k-treeview-leaf.k-selected {
-  color: #333333;
-  background-color: #cde6f7;
+  color: #0072c6;
+  background-color: #fff;
 }
 .k-treeview-leaf.k-selected:hover,
 .k-treeview-leaf.k-selected.k-hover {
-  color: #333333;
-  background-color: #bdd4e3;
+  color: #0072c6;
+  background-color: #ebebeb;
 }
 .k-wizard-step:focus,
 .k-wizard-step.k-state-focused {

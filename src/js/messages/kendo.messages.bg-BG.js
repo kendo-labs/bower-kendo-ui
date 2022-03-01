@@ -1095,7 +1095,9 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
   "deleteWindowTitle": "Изтрий събитие",
   "showFullDay": "Покажи цял ден",
   "showWorkDay": "Покажи работни часове",
-  "search": "Намери..."
+  "search": "Намери...",
+  "refresh": "Обнови",
+  "selectView": "Избери изглед"
 });
 }
 

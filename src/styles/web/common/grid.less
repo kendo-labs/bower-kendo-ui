@@ -26,6 +26,7 @@
 
 .k-grid {
     position: relative;
+    line-height: @grid-line-height;
 }
 
 .k-grid table
@@ -46,7 +47,7 @@
     overflow: hidden;
     border-style: solid;
     border-width: 0 0 1px 1px;
-    padding: @grid-th-padding;
+    padding: @grid-header-padding-y @grid-header-padding-x;
     font-weight: normal;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -59,7 +60,7 @@
 }
 
 .k-grid-header th.k-header .k-checkbox {
-    vertical-align: top;
+    vertical-align: text-top;
 }
 
 .k-filtercell {
@@ -430,7 +431,7 @@ div.k-grid-footer
     z-index: 1; // mvc site.css
     color: inherit;
     position: absolute;
-    top: 0;
+    bottom: 0;
     right: 0;
 }
 

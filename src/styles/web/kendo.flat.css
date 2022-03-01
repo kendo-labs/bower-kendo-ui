@@ -2495,6 +2495,9 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
   background: none;
   color: #4c5356;
 }
+.k-treeview .k-icon {
+  background-color: #cccccc;
+}
 .k-treeview-group {
   background: none !important;
 }
@@ -2505,6 +2508,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
 }
 .k-treeview-leaf:focus,
 .k-treeview-leaf.k-focus {
+  border-color: #0c9083;
   box-shadow: inset 0 0 0 1px #0c9083;
 }
 .k-treeview-leaf.k-selected {

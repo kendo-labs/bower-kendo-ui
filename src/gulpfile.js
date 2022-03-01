@@ -1,5 +1,6 @@
 /* jshint browser:false, node:true, esnext: true */
 
+var fs = require('fs');
 var gulp = require('gulp');
 var logger = require('gulp-logger');
 var filter = require('gulp-filter');
@@ -7,11 +8,10 @@ var util = require('gulp-util');
 var sourcemaps = require('gulp-sourcemaps');
 var concat = require('gulp-concat');
 var lazypipe = require('lazypipe');
-var uglify = require('gulp-uglify');
+var gulpUglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var foreach = require('gulp-foreach');
-var amdOptimize = require("amd-optimize");
 var argv = require('yargs').argv;
 
 var less = require('gulp-less');
@@ -19,6 +19,8 @@ var cleanCss = require('gulp-clean-css');
 var clone = require('gulp-clone');
 var gulpIf = require('gulp-if');
 var merge = require('merge2');
+var requirejsOptimize = require('gulp-requirejs-optimize');
+var flatmap = require('gulp-flatmap');
 
 var makeSourceMaps = !argv['skip-source-maps'];
 
@@ -71,12 +73,11 @@ var argv = require('yargs').argv;
 var compress = {
     unsafe       : true,
     hoist_vars   : true,
-    warnings     : false,
     pure_getters : true
 };
 
 var mangle = {
-    except: [ "define" ]
+    reserved: [ "define" ]
 };
 
 function renameModules(match) {
@@ -85,30 +86,17 @@ function renameModules(match) {
     });
 }
 
-var uglify = lazypipe()
-    .pipe(logger, { after: 'uglify complete', extname: '.min.js', showChange: true })
-    .pipe(uglify, { compress, mangle, preserveComments: "license" })
-    .pipe(replace, /define\(".+?\]/g, renameModules)
-    .pipe(rename, { suffix: ".min" });
-
-
-// AMD gathering
-
-function gatherCustomAmd(stream, file) {
-    var moduleId = file.path.match(/kendo\.(.+)\.js/)[1];
-
-    console.log(moduleId);
-    return stream.pipe(amdOptimize(`kendo.${moduleId}`, {
-        baseUrl: "js",
-        exclude: [ 'jquery' ]
-    }));
-}
-
-var gatherCustom = lazypipe()
-    .pipe(foreach, gatherCustomAmd);
+var uglify = stream => {
+    return stream
+        .pipe(gulpUglify({ mangle: mangle, compress: compress, warnings: false }))
+        .pipe(replace(/define\("[\w\.\-\/]+".+?\]/g, renameModules))
+        .pipe(replace(/"kendo\.core"/g, '"kendo.core.min"'))
+        .pipe(rename({ suffix: ".min" }))
+};
 
 gulp.task("custom", function() {
     var files = argv.c;
+    const customFilePath = 'js/kendo.custom.js';
 
     if (!files) {
         throw new util.PluginError({
@@ -118,27 +106,34 @@ gulp.task("custom", function() {
         });
     }
 
-    if (files.indexOf(',') !== -1) {
-        files = `{${files}}`;
-    }
+    files = files.split(',').map(f => `"./kendo.${f}"`);
 
-    var included = [];
-    return gulp.src(`js/kendo.${files}.js`, { base: "js" })
-        .pipe(gatherCustom())
-        .pipe(filter(function(file) {
-            if (included.indexOf(file.path) === -1) {
-                included.push(file.path);
-                return true;
-            }  else {
-                return false;
+    fs.writeFileSync(customFilePath, `(function(f, define){
+            define([${files.join(',')}], f);
+        })(function(){
+            "bundle all";
+            return window.kendo;
+        }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });`);
+
+    var src = gulp.src(customFilePath)
+        .pipe(requirejsOptimize({
+            optimize: "none",
+            paths: {jquery: "empty:"},
+            logLevel: 2,
+            onModuleBundleComplete: function () {
+                fs.unlinkSync(customFilePath);
             }
-        }))
-        .pipe(concat({path: 'js/kendo.custom.js', base: 'js'}))
+        }));
+
+    var minSrc = src
+        .pipe(clone())
         .pipe(sourcemaps.init())
-        .pipe(uglify())
-        .pipe(logger({after: 'source map complete!', extname: '.map', showChange: true}))
-        .pipe(sourcemaps.write("./"))
-        .pipe(gulp.dest("dist/js"));
+        .pipe(flatmap(uglify))
+        .pipe(logger({ after: 'Scripts: Uglify complete', extname: '.min.js', showChange: true }))
+        .pipe(logger({ after: 'Scripts: source map complete!', extname: '.map', showChange: true }))
+        .pipe(sourcemaps.write("./"));
+
+    return merge(src.pipe(gulp.dest("dist/js")), minSrc.pipe(gulp.dest("dist/js")));
 });
 
 gulp.task("less",function() {
