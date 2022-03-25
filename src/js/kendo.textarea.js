@@ -49,8 +49,7 @@ var __meta__ = {// jshint ignore:line
         STATEDISABLED = "k-disabled",
         STATEREADONLY = "k-readonly",
         ARIA_DISABLED = "aria-disabled",
-        TEXTAREACONTAINER = "k-textarea-container",
-        proxy = $.proxy;
+        TEXTAREACONTAINER = "k-textarea-container";
 
     var TextArea = Widget.extend({
         init: function (element, options) {
@@ -229,8 +228,8 @@ var __meta__ = {// jshint ignore:line
                 wrapper.removeClass(STATEDISABLED)
                         .removeClass(STATEREADONLY);
 
-                element.on("focusin" + NS, proxy(that._focusin, that));
-                element.on("focusout" + NS, proxy(that._focusout, that));
+                element.on("focusin" + NS, that._focusin.bind(that));
+                element.on("focusout" + NS, that._focusout.bind(that));
             } else {
                 element.attr(DISABLED, disable)
                        .attr(READONLY, readonly)

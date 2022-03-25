@@ -208,7 +208,7 @@ var __meta__ = { // jshint ignore:line
         },
 
         press: function() {
-            this._holdTimeout = setTimeout($.proxy(this, "_hold"), this.userEvents.minHold);
+            this._holdTimeout = setTimeout(this._hold.bind(this), this.userEvents.minHold);
             this._trigger(PRESS, this.pressEvent);
         },
 
@@ -410,7 +410,7 @@ var __meta__ = { // jshint ignore:line
 
             if (that.captureUpIfMoved && support.eventCapture) {
                 var surfaceElement = that.surface[0],
-                    preventIfMovingProxy = $.proxy(that.preventIfMoving, that);
+                    preventIfMovingProxy = that.preventIfMoving.bind(that);
 
                 withEachUpEvent(function(eventName) {
                     surfaceElement.addEventListener(eventName, preventIfMovingProxy, true);

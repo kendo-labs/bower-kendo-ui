@@ -4745,7 +4745,8 @@ div.k-splitbar.k-state-focused .k-icon,
   background: none;
 }
 .k-grid tr.k-state-selected:hover,
-.k-grid td.k-state-selected:hover {
+.k-grid td.k-state-selected:hover,
+.k-grid td.k-grid-content-sticky.k-state-selected:hover {
   background-color: #d7e4ed;
 }
 .k-gantt .k-treelist .k-alt,
@@ -5268,6 +5269,9 @@ div.k-splitbar.k-state-focused .k-icon,
 .k-master-row.k-state-selected.k-state-hover .k-grid-content-sticky {
   background-color: #d7e4ed;
   background-image: none;
+}
+.k-master-row td.k-grid-content-sticky.k-state-selected {
+  background-color: #cde6f7;
 }
 .k-grid-header .k-grid-header-sticky,
 .k-master-row .k-grid-content-sticky,

@@ -53,10 +53,9 @@ var __meta__ = { // jshint ignore:line
 /*jshint eqnull: true, loopfunc: true, evil: true */
 (function($, undefined) {
     var extend = $.extend,
-        proxy = $.proxy,
         isPlainObject = $.isPlainObject,
         isEmptyObject = $.isEmptyObject,
-        isArray = $.isArray,
+        isArray = Array.isArray,
         grep = $.grep,
         ajax = $.ajax,
         map,
@@ -433,6 +432,8 @@ var __meta__ = { // jshint ignore:line
 
     var LazyObservableArray = ObservableArray.extend({
         init: function (data, type, events) {
+            var parentFn = function() { return this; };
+
             Observable.fn.init.call(this);
 
             this.type = type || ObservableObject;
@@ -446,7 +447,7 @@ var __meta__ = { // jshint ignore:line
             }
 
             this.length = idx;
-            this._parent = proxy(function() { return this; }, this);
+            this._parent = parentFn.bind(this);
         },
         at: function(index) {
             var item = this[index];
@@ -2248,13 +2249,13 @@ var __meta__ = { // jshint ignore:line
                 that.model = model = base.define(that.model);
             }
 
-            var dataFunction = proxy(that.data, that);
+            var dataFunction = that.data.bind(that);
 
             that._dataAccessFunction = dataFunction;
 
             if (that.model) {
-                var groupsFunction = proxy(that.groups, that),
-                    serializeFunction = proxy(that.serialize, that),
+                var groupsFunction = that.groups.bind(that),
+                    serializeFunction = that.serialize.bind(that),
                     originalFieldNames = {},
                     getters = {},
                     serializeGetters = {},
@@ -2666,9 +2667,9 @@ var __meta__ = { // jshint ignore:line
 
             if (isFunction(that.transport.push)) {
                 that.transport.push({
-                    pushCreate: proxy(that._pushCreate, that),
-                    pushUpdate: proxy(that._pushUpdate, that),
-                    pushDestroy: proxy(that._pushDestroy, that)
+                    pushCreate: that._pushCreate.bind(that),
+                    pushUpdate: that._pushUpdate.bind(that),
+                    pushDestroy: that._pushDestroy.bind(that)
                 });
             }
 
@@ -3896,7 +3897,7 @@ var __meta__ = { // jshint ignore:line
                 that._pending = undefined;
                 callback();
             } else {
-                that._pending = { callback: proxy(callback, that), options: options };
+                that._pending = { callback: callback.bind(that), options: options };
             }
         },
 
@@ -3955,7 +3956,7 @@ var __meta__ = { // jshint ignore:line
                 !(that.options.useRanges && that.options.serverPaging)) {
                 that._data.unbind(CHANGE, that._changeHandler);
             } else {
-                that._changeHandler = proxy(that._change, that);
+                that._changeHandler = that._change.bind(that);
             }
 
             return data.bind(CHANGE, that._changeHandler);
@@ -5945,7 +5946,7 @@ var __meta__ = { // jshint ignore:line
                     method = "read";
                 }
 
-                children.one(CHANGE, proxy(this._childrenLoaded, this));
+                children.one(CHANGE, this._childrenLoaded.bind(this));
 
                 if(this._matchFilter){
                     options.filter = { field: '_matchFilter', operator: 'eq', value: true };

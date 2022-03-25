@@ -65,7 +65,6 @@ var __meta__ = { // jshint ignore:line
         ACTIVECHILDREN = ".k-picker-wrap, .k-dropdown-wrap, .k-link",
         MOUSEDOWN = "down",
         DOCUMENT_ELEMENT = $(document.documentElement),
-        proxy = $.proxy,
         WINDOW = $(window),
         SCROLL = "scroll",
         cssPrefix = support.transitions.css,
@@ -171,7 +170,7 @@ var __meta__ = { // jshint ignore:line
             }
 
             if (options.toggleTarget) {
-                $(options.toggleTarget).on(options.toggleEvent + NS, $.proxy(that.toggle, that));
+                $(options.toggleTarget).on(options.toggleEvent + NS, that.toggle.bind(that));
             }
         },
 
@@ -268,7 +267,8 @@ var __meta__ = { // jshint ignore:line
                 options = that.options,
                 animation, wrapper,
                 anchor = $(options.anchor),
-                mobile = element[0] && element.hasClass("km-widget");
+                mobile = element[0] && element.hasClass("km-widget"),
+                listbox = element.find("[role='listbox']");
 
             if (!that.visible()) {
                 if (options.copyAnchorStyles) {
@@ -295,12 +295,18 @@ var __meta__ = { // jshint ignore:line
                 }
 
                 that.wrapper = wrapper = kendo.wrap(element, options.autosize)
-                                        .css({
-                                            overflow: HIDDEN,
-                                            display: "block",
-                                            position: ABSOLUTE
-                                        })
-                                        .attr("aria-hidden", false);
+                    .css({
+                        overflow: HIDDEN,
+                        display: "block",
+                        position: ABSOLUTE
+                    })
+                    .attr("aria-hidden", false);
+
+                if (listbox.attr("aria-label")) {
+                    wrapper.attr("aria-label", listbox.attr("aria-label"));
+                } else if (listbox.attr("aria-labelledby")) {
+                    wrapper.attr("aria-labelledby", listbox.attr("aria-labelledby"));
+                }
 
                 if (support.mobileOS.android) {
                     wrapper.css(TRANSFORM, "translatez(0)"); // Android is VERY slow otherwise. Should be tested in other droids as well since it may cause blur.
@@ -782,7 +788,7 @@ var __meta__ = { // jshint ignore:line
         },
 
         trap: function() {
-            this.element.on("keydown", proxy(this._keepInTrap, this));
+            this.element.on("keydown", this._keepInTrap.bind(this));
         },
 
         removeTrap: function() {

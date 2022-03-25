@@ -344,7 +344,7 @@ var __meta__ = { // jshint ignore:line
                 scope = this.options.$angular[0];
 
                 if (controller) {
-                    var callback = $.proxy(this, '_callController', controller, scope);
+                    var callback = this._callController.bind(this, controller, scope);
 
                     if (/^\$(digest|apply)$/.test(scope.$$phase)) {
                         callback();
@@ -494,7 +494,7 @@ var __meta__ = { // jshint ignore:line
                 that.trigger(AFTER);
             });
 
-            this.getLayoutProxy = $.proxy(this, "_getLayout");
+            this.getLayoutProxy = this._getLayout.bind(this);
             that._setupLayouts(container);
 
             collection = container.children(that._locate("modalview drawer"));
@@ -679,7 +679,7 @@ var __meta__ = { // jshint ignore:line
             this.trigger(LOAD_START);
 
             this._xhr = $.get(kendo.absoluteURL(url, this.remoteViewURLPrefix), "html")
-                .always($.proxy(this, "_xhrComplete", callback, url));
+                .always(this._xhrComplete.bind(this, callback, url));
         },
 
         _xhrComplete: function(callback, url, response) {

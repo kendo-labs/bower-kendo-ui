@@ -39,7 +39,6 @@ var __meta__ = { // jshint ignore:line
         fx = kendo.effects,
         each = $.each,
         extend = $.extend,
-        proxy = $.proxy,
         support = kendo.support,
         browser = support.browser,
         transforms = support.transforms,
@@ -448,7 +447,7 @@ var __meta__ = { // jshint ignore:line
 
             that.effects = effects;
 
-            deferred.done($.proxy(that, "complete"));
+            deferred.done(that.complete.bind(that));
 
             element.data("animating", true);
 
@@ -559,7 +558,7 @@ var __meta__ = { // jshint ignore:line
             this.restoreCallback();
 
             if (hasZoom && !transforms) {
-                setTimeout($.proxy(this, "restoreCallback"), 0); // Again jQuery callback in IE8-
+                setTimeout(this.restoreCallback.bind(this), 0); // Again jQuery callback in IE8-
             }
 
             for (; idx < length; idx ++) {
@@ -770,7 +769,7 @@ var __meta__ = { // jshint ignore:line
                 children = that.children(),
                 childrenLength = children.length;
 
-            deferred.done($.proxy(that, "_complete"));
+            deferred.done(that._complete.bind(that));
 
             element.data("animating", true);
 
@@ -853,7 +852,7 @@ var __meta__ = { // jshint ignore:line
             }
 
             if (hasZoom && !transforms) {
-                setTimeout($.proxy(that, "restoreCallback"), 0); // Again jQuery callback in IE8-
+                setTimeout(that.restoreCallback.bind(that), 0); // Again jQuery callback in IE8-
             }
 
             that.teardown();
@@ -1458,7 +1457,7 @@ var __meta__ = { // jshint ignore:line
 
                 container.addClass(this._containerClass());
 
-                this.completeProxy = $.proxy(this, "complete");
+                this.completeProxy = this.complete.bind(this);
                 container.on(transitions.event, this.completeProxy);
 
                 kendo.animationFrame(function() {
@@ -1483,7 +1482,7 @@ var __meta__ = { // jshint ignore:line
     var Animation = kendo.Class.extend({
         init: function() {
             var that = this;
-            that._tickProxy = proxy(that._tick, that);
+            that._tickProxy = that._tick.bind(that);
             that._started = false;
         },
 

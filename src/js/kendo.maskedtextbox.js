@@ -44,7 +44,6 @@ var __meta__ = { // jshint ignore:line
     var Widget = ui.Widget;
     var NS = ".kendoMaskedTextBox";
     var isPlainObject = $.isPlainObject;
-    var proxy = $.proxy;
     var setTimeout = window.setTimeout;
 
     var LABELCLASSES = "k-label k-input-label";
@@ -296,17 +295,17 @@ var __meta__ = { // jshint ignore:line
                     that.element.off(INPUT);
                 }
                 that.element
-                    .on(ns(KEYDOWN), proxy(that._keydown, that))
-                    .on(ns(DROP), proxy(that._drop, that))
-                    .on(ns(CHANGE), proxy(that._trackChange, that))
-                    .on(INPUT_EVENT_NAME, proxy(that._inputHandler, that));
+                    .on(ns(KEYDOWN), that._keydown.bind(that))
+                    .on(ns(DROP), that._drop.bind(that))
+                    .on(ns(CHANGE), that._trackChange.bind(that))
+                    .on(INPUT_EVENT_NAME, that._inputHandler.bind(that));
 
 
                 if (kendo.support.browser.msie) {
                     var version = kendo.support.browser.version;
                     if (version > 8 && version < 11) {
                         var events = [ns(MOUSEUP), ns(DROP), ns(KEYDOWN), ns(PASTE)].join(" ");
-                        that.element.on(events, proxy(that._legacyIEInputHandler, that));
+                        that.element.on(events, that._legacyIEInputHandler.bind(that));
                     }
                 }
             }
@@ -662,7 +661,7 @@ var __meta__ = { // jshint ignore:line
 
             that._addInvalidState();
             clearTimeout(that._invalidStateTimeout);
-            that._invalidStateTimeout = setTimeout(proxy(that._removeInvalidState, that), 100);
+            that._invalidStateTimeout = setTimeout(that._removeInvalidState.bind(that), 100);
         },
 
         _addInvalidState: function() {

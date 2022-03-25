@@ -4486,7 +4486,8 @@ div.k-filebrowser-dropzone em {
   background: none;
 }
 .k-grid tr.k-state-selected:hover,
-.k-grid td.k-state-selected:hover {
+.k-grid td.k-state-selected:hover,
+.k-grid td.k-grid-content-sticky.k-state-selected:hover {
   background-color: #efeded;
   background-image: none;
 }
@@ -5107,10 +5108,14 @@ div.k-filebrowser-dropzone em {
   background-image: none, linear-gradient(to bottom, rgba(0,0,0,.01) 0%, rgba(0,0,0,.06) 100%);
   background-color: #fff;
 }
-.k-master-row.k-state-selected:hover .k-grid-content-sticky,
-.k-master-row.k-state-selected.k-state-hover .k-grid-content-sticky {
-  background-color: #efeded;
-  background-image: none;
+.k-master-row:hover .k-grid-content-sticky.k-state-selected,
+.k-master-row.k-state-hover .k-grid-content-sticky.k-state-selected {
+  background-color: #eee;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(0,0,0,.13) 0%, rgba(0,0,0,.08) 100%);
+}
+.k-master-row td.k-grid-content-sticky.k-state-selected {
+  background-color: #eee;
 }
 .k-grid-header .k-grid-header-sticky,
 .k-master-row .k-grid-content-sticky,

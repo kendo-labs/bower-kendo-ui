@@ -79,8 +79,7 @@ var __meta__ = { // jshint ignore:line
         HEAD = $("head"),
 
         // mobile app events
-        INIT = "init",
-        proxy = $.proxy;
+        INIT = "init";
 
     function osCssClass(os, options) {
         var classes = [];
@@ -159,7 +158,7 @@ var __meta__ = { // jshint ignore:line
         init: function(element, options) {
             // global reference to current application
             mobile.application = this;
-            $($.proxy(this, 'bootstrap', element, options));
+            $(this.bootstrap.bind(this, element, options));
         },
 
         bootstrap: function(element, options) {
@@ -286,7 +285,12 @@ var __meta__ = { // jshint ignore:line
                 platform = that.options.platform,
                 skin = that.options.skin,
                 split = [],
-                os = OS || MOBILE_PLATFORMS[DEFAULT_OS];
+                os = OS || MOBILE_PLATFORMS[DEFAULT_OS],
+                refreshBackgroundFn = function () {
+                    if (that.os.variant && (that.os.skin && that.os.skin === that.os.name) || !that.os.skin) {
+                        that.element.removeClass("km-wp-dark km-wp-light km-wp-dark-force km-wp-light-force").addClass(wp8Background(that.os));
+                    }
+                };
 
             if (platform) {
                 os.setDefaultPlatform = true;
@@ -317,11 +321,7 @@ var __meta__ = { // jshint ignore:line
 
             if (os.name == "wp") {
                 if (!that.refreshBackgroundColorProxy) {
-                    that.refreshBackgroundColorProxy = $.proxy(function () {
-                        if (that.os.variant && (that.os.skin && that.os.skin === that.os.name) || !that.os.skin) {
-                            that.element.removeClass("km-wp-dark km-wp-light km-wp-dark-force km-wp-light-force").addClass(wp8Background(that.os));
-                        }
-                    }, that);
+                    that.refreshBackgroundColorProxy = refreshBackgroundFn.bind(that);
                 }
 
                 $(document).off("visibilitychange", that.refreshBackgroundColorProxy);
@@ -485,7 +485,7 @@ var __meta__ = { // jshint ignore:line
 
         _attachHideBarHandlers: function() {
             var that = this,
-                hideBar = proxy(that, "_hideBar");
+                hideBar = that._hideBar.bind(that);
 
             if (support.mobileOS.appMode || !that.options.hideAddressBar || !HIDEBAR || that.options.useNativeScrolling) {
                 return;

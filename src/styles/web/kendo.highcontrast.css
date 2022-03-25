@@ -4710,7 +4710,8 @@ div.k-filebrowser-dropzone em {
   background-color: #870074;
 }
 .k-grid td.k-state-selected:hover,
-.k-grid tr.k-state-selected:hover td {
+.k-grid tr.k-state-selected:hover td,
+.k-grid td.k-grid-content-sticky.k-state-selected:hover {
   background-color: #cb00ae;
 }
 .k-header,
@@ -5121,10 +5122,14 @@ div.k-filebrowser-dropzone em {
   background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, rgba(255,255,255,.2) 0%, rgba(255,255,255,.0) 100%);
   background-color: #a7008f;
 }
-.k-master-row.k-state-selected:hover .k-grid-content-sticky,
-.k-master-row.k-state-selected.k-state-hover .k-grid-content-sticky {
-  background-color: #cb00ae;
+.k-master-row:hover .k-grid-content-sticky.k-state-selected,
+.k-master-row.k-state-hover .k-grid-content-sticky.k-state-selected {
+  background-color: #870074;
   background-image: url(textures/glass-lighter.png);
+  background-image: url(textures/glass-lighter.png), linear-gradient(to bottom, rgba(255,255,255,.3) 0%, rgba(255,255,255,.1) 100%);
+}
+.k-master-row td.k-grid-content-sticky.k-state-selected {
+  background-color: #870074;
 }
 .k-grid-header .k-grid-header-sticky,
 .k-master-row .k-grid-content-sticky,

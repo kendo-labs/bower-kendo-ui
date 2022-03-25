@@ -4793,7 +4793,8 @@ td.k-group-cell,
   border-color: #008dcc;
 }
 .k-grid td.k-state-selected:hover,
-.k-grid tr.k-state-selected:hover td {
+.k-grid tr.k-state-selected:hover td,
+.k-grid td.k-grid-content-sticky.k-state-selected:hover {
   background-color: #00a2eb;
 }
 .k-grid-header .k-header .k-link,
@@ -5380,6 +5381,9 @@ table.k-editor {
 .k-master-row.k-state-selected.k-state-hover .k-grid-content-sticky {
   background-color: #00a2eb;
   background-image: none;
+}
+.k-master-row td.k-grid-content-sticky.k-state-selected {
+  background-color: #00b0ff;
 }
 .k-grid-header .k-grid-header-sticky,
 .k-master-row .k-grid-content-sticky,

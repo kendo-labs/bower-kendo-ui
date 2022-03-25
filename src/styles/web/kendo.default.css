@@ -4486,7 +4486,8 @@ div.k-filebrowser-dropzone em {
   background: none;
 }
 .k-grid tr.k-state-selected:hover,
-.k-grid td.k-state-selected:hover {
+.k-grid td.k-state-selected:hover,
+.k-grid td.k-grid-content-sticky.k-state-selected:hover {
   background-color: #f35800;
   background-image: none;
 }
@@ -5107,10 +5108,14 @@ div.k-filebrowser-dropzone em {
   background-image: none, linear-gradient(to bottom, rgba(255,255,255,.25) 0%, rgba(255,255,255,.0) 100%);
   background-color: #bcb4b0;
 }
-.k-master-row.k-state-selected:hover .k-grid-content-sticky,
-.k-master-row.k-state-selected.k-state-hover .k-grid-content-sticky {
+.k-master-row:hover .k-grid-content-sticky.k-state-selected,
+.k-master-row.k-state-hover .k-grid-content-sticky.k-state-selected {
   background-color: #f35800;
-  background-image: none;
+  background-image: url('textures/highlight.png');
+  background-image: none, linear-gradient(to bottom, rgba(255,255,255,.15) 0%, rgba(255,255,255,.0) 100%);
+}
+.k-master-row td.k-grid-content-sticky.k-state-selected {
+  background-color: #f35800;
 }
 .k-grid-header .k-grid-header-sticky,
 .k-master-row .k-grid-content-sticky,

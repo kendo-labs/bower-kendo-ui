@@ -3669,7 +3669,7 @@ input[type="reset"].k-button-expand {
   outline: 0;
   font-family: inherit;
   font-size: inherit;
-  line-height: 2.1em;
+  line-height: 1.42857143;
   text-align: start;
   box-shadow: none;
   display: -ms-inline-flexbox;
@@ -3703,26 +3703,26 @@ input[type="reset"].k-button-expand {
 .k-picker .k-input-loading-icon,
 .k-input .k-clear-value,
 .k-picker .k-clear-value {
-  width: calc(16px + 0.35714286em);
-  height: calc(16px + 0.35714286em);
+  width: 32px;
+  height: 32px;
 }
 .k-input > *,
 .k-picker > * {
   margin: 0;
 }
 input.k-input {
-  padding: 0.17857143em 14px;
+  padding: 8px 14px;
 }
 .k-picker {
   cursor: pointer;
 }
 select.k-picker {
-  padding: 0.17857143em 14px;
+  padding: 8px 14px;
   -webkit-appearance: auto;
           appearance: auto;
 }
 .k-input-inner {
-  padding: 0.17857143em 14px;
+  padding: 8px 14px;
   width: 100%;
   border: 0;
   outline: 0;
@@ -3756,8 +3756,8 @@ textarea.k-input-inner {
   margin: 0;
 }
 .k-picker.k-icon-picker .k-input-inner {
-  width: 2.1em;
-  height: 2.1em;
+  width: 1.42857143;
+  height: 1.42857143;
   box-sizing: content-box;
 }
 .k-input-value-icon {
@@ -3789,7 +3789,7 @@ textarea.k-input-inner {
   margin: -2px -2px;
 }
 .k-icon-picker .k-input-inner {
-  padding: 0.17857143em;
+  padding: 8px;
   -ms-flex-pack: center;
       justify-content: center;
 }
@@ -7971,7 +7971,7 @@ span.k-dropdowntree {
 }
 .k-textbox-container,
 .k-floating-label-container {
-  padding-top: 1.575em;
+  padding-top: 1.0714285725em;
   display: -ms-inline-flexbox;
   display: inline-flex;
   vertical-align: middle;
@@ -7985,11 +7985,11 @@ span.k-dropdowntree {
 .k-textbox-container > .k-label,
 .k-floating-label-container > .k-label {
   max-width: 90%;
-  line-height: 2.1em;
+  line-height: 1.42857143;
   white-space: nowrap;
   text-overflow: ellipsis;
   position: absolute;
-  top: calc(1.75357143em + 1px);
+  top: calc(1.0714285725em + 9px);
   left: 15px;
   overflow: hidden;
   cursor: text;
@@ -8023,9 +8023,9 @@ span.k-dropdowntree {
 .k-floating-label-container > .k-label,
 .k-textbox-container.k-focus > .k-label,
 .k-floating-label-container.k-focus > .k-label {
-  -webkit-transform: translate(-14px, -0.1339285725em) translate(-1px, -1.575em) translate(-12.5%, -9.375%) scale(0.75);
-      -ms-transform: translate(-14px, -0.1339285725em) translate(-1px, -1.575em) translate(-12.5%, -9.375%) scale(0.75);
-          transform: translate(-14px, -0.1339285725em) translate(-1px, -1.575em) translate(-12.5%, -9.375%) scale(0.75);
+  -webkit-transform: translate(-14px, -8px) translate(-1px, -1.0714285725em) translate(-12.5%, -12.5%) scale(0.75);
+      -ms-transform: translate(-14px, -8px) translate(-1px, -1.0714285725em) translate(-12.5%, -12.5%) scale(0.75);
+          transform: translate(-14px, -8px) translate(-1px, -1.0714285725em) translate(-12.5%, -12.5%) scale(0.75);
 }
 .k-textbox-container.k-state-empty:not(.k-focus) ::-webkit-input-placeholder, .k-floating-label-container.k-state-empty:not(.k-focus) ::-webkit-input-placeholder {
   color: transparent;
@@ -8063,9 +8063,9 @@ span.k-dropdowntree {
 .k-rtl .k-floating-label-container.k-focus > .k-label,
 .k-textbox-container[dir='rtl'].k-focus > .k-label,
 .k-floating-label-container[dir='rtl'].k-focus > .k-label {
-  -webkit-transform: translate(14px, -0.1339285725em) translate(1px, -1.575em) translate(12.5%, -9.375%) scale(0.75);
-      -ms-transform: translate(14px, -0.1339285725em) translate(1px, -1.575em) translate(12.5%, -9.375%) scale(0.75);
-          transform: translate(14px, -0.1339285725em) translate(1px, -1.575em) translate(12.5%, -9.375%) scale(0.75);
+  -webkit-transform: translate(14px, -6px) translate(1px, -1.0714285725) translate(12.5%, -9.375%) scale(0.75);
+      -ms-transform: translate(14px, -6px) translate(1px, -1.0714285725) translate(12.5%, -9.375%) scale(0.75);
+          transform: translate(14px, -6px) translate(1px, -1.0714285725) translate(12.5%, -9.375%) scale(0.75);
 }
 .k-input-label {
   margin-right: 14px;
@@ -16023,7 +16023,7 @@ div.k-spreadsheet-window {
   -ms-flex-align: center;
       align-items: center;
   background: none;
-  padding-right: 0.17857143em;
+  padding-right: 8px;
   margin: 0 0.42857143em;
 }
 .k-pdf-viewer-search-dialog .k-search-container .k-textbox .k-icon {
@@ -16039,7 +16039,7 @@ div.k-spreadsheet-window {
   content: "";
 }
 .k-pdf-viewer-search-dialog .k-search-container .k-match-case-button {
-  height: 2.1em;
+  height: 1.42857143 * 1em;
 }
 .k-pdf-viewer-search-dialog .k-search-container .k-search-matches {
   display: inline-block;
@@ -19064,7 +19064,7 @@ table.k-editor .k-editable-area {
 }
 .k-viewhtml-dialog .k-editor-textarea {
   margin: 1em;
-  padding: 0.17857143em 0.17857143em;
+  padding: 8px 8px;
   width: calc(100% - 2em);
   height: 100%;
   border-width: 1px;
@@ -20564,7 +20564,7 @@ table.k-editor .k-editable-area {
   gap: 8px 0;
 }
 .k-taskboard-column-new {
-  max-height: calc(2.45em + 16px);
+  max-height: calc(1.77857143em + 16px);
 }
 .k-taskboard-column-new .k-taskboard-column-header,
 .k-taskboard-column-edit .k-taskboard-column-header {

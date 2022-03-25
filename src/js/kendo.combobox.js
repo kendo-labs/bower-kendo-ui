@@ -73,7 +73,6 @@ var __meta__ = { // jshint ignore:line
         STATE_ACCEPT = "accept",
         STATE_REBIND = "rebind",
         HOVEREVENTS = "mouseenter" + ns + " mouseleave" + ns,
-        proxy = $.proxy,
         newLineRegEx = /(\r\n|\n|\r)/gm,
         NON_PRINTABLE_KEYS = [16,17,18,19,20,33,34,37,39,45,91,92,144,145];
 
@@ -88,7 +87,7 @@ var __meta__ = { // jshint ignore:line
             Select.fn.init.call(that, element, options);
 
             options = that.options;
-            element = that.element.on("focus" + ns, proxy(that._focusHandler, that));
+            element = that.element.on("focus" + ns, that._focusHandler.bind(that));
 
             options.placeholder = options.placeholder || element.attr("placeholder");
 
@@ -261,8 +260,8 @@ var __meta__ = { // jshint ignore:line
 
         _attachFocusEvents: function() {
             var that = this;
-            that.input.on("focus" + nsFocusEvent, proxy(that._inputFocus, that))
-                      .on("focusout" + nsFocusEvent, proxy(that._inputFocusout, that));
+            that.input.on("focus" + nsFocusEvent, that._inputFocus.bind(that))
+                      .on("focusout" + nsFocusEvent, that._inputFocusout.bind(that));
         },
 
         _focusHandler: function(e) {
@@ -341,17 +340,17 @@ var __meta__ = { // jshint ignore:line
                      .attr(ARIA_DISABLED, false)
                      .attr(ARIA_READONLY, false);
 
-                arrow.on(CLICK, proxy(that._arrowClick, that))
+                arrow.on(CLICK, that._arrowClick.bind(that))
                      .on(MOUSEDOWN, function(e) { e.preventDefault(); });
 
-                clear.on(CLICK + " touchend" + ns, proxy(that._clearValue, that));
+                clear.on(CLICK + " touchend" + ns, that._clearValue.bind(that));
 
                 that.input
-                    .on("keydown" + ns, proxy(that._keydown, that))
-                    .on("input" + ns, proxy(that._search, that))
-                    .on("paste" + ns, proxy(that._inputPaste, that));
+                    .on("keydown" + ns, that._keydown.bind(that))
+                    .on("input" + ns, that._search.bind(that))
+                    .on("paste" + ns, that._inputPaste.bind(that));
 
-                that.wrapper.on(CLICK + ns, proxy(that._focusHandler, that));
+                that.wrapper.on(CLICK + ns, that._focusHandler.bind(that));
             } else {
                 wrapper
                     .addClass(disable ? STATEDISABLED : "")
@@ -409,7 +408,7 @@ var __meta__ = { // jshint ignore:line
         },
 
         _openPopup: function() {
-            this.popup.one("activate", proxy(this._scrollToFocusedItem, this));
+            this.popup.one("activate", this._scrollToFocusedItem.bind(this));
             this.popup.open();
         },
 

@@ -82,7 +82,6 @@ var __meta__ = { // jshint ignore:line
         FOCUS = "focus",
         FOCUSOUT = "focusout",
         extend = $.extend,
-        proxy = $.proxy,
         isArray = Array.isArray,
         browser = support.browser,
         HIDDENCLASS = "k-hidden",
@@ -341,8 +340,8 @@ var __meta__ = { // jshint ignore:line
             var that = this;
             var currentOptions = that.options;
             var virtual = currentOptions.virtual;
-            var changeEventOption = { change: proxy(that._listChange, that) };
-            var listBoundHandler = proxy(that._listBound, that);
+            var changeEventOption = { change: that._listChange.bind(that) };
+            var listBoundHandler = that._listBound.bind(that);
             var focusedElm = that._focused;
             var inputId = that.element.attr("id");
             var labelElm = $("label[for=\"" + that.element.attr("id") + "\"]");
@@ -358,10 +357,10 @@ var __meta__ = { // jshint ignore:line
                 autoBind: false,
                 selectable: true,
                 dataSource: that.dataSource,
-                click: proxy(that._click, that),
-                activate: proxy(that._activateItem, that),
+                click: that._click.bind(that),
+                activate: that._activateItem.bind(that),
                 columns: currentOptions.columns,
-                deactivate: proxy(that._deactivateItem, that),
+                deactivate: that._deactivateItem.bind(that),
                 dataBinding: function() {
                     that.trigger(DATA_BINDING);
                 },
@@ -391,7 +390,7 @@ var __meta__ = { // jshint ignore:line
         _initList: function() {
             var that = this;
             var listOptions = that._listOptions({
-                selectedItemChange: proxy(that._listChange, that)
+                selectedItemChange: that._listChange.bind(that)
             });
 
             if (!that.options.virtual) {
@@ -401,7 +400,7 @@ var __meta__ = { // jshint ignore:line
                 that.list.addClass("k-virtual-list");
             }
 
-            that.listView.bind("listBound", proxy(that._listBound, that));
+            that.listView.bind("listBound", that._listBound.bind(that));
             that._setListValue();
         },
 
@@ -410,7 +409,7 @@ var __meta__ = { // jshint ignore:line
 
             if (value !== undefined) {
                 this.listView.value(value)
-                    .done(proxy(this._updateSelectionState, this));
+                    .done(this._updateSelectionState.bind(this));
             }
         },
 
@@ -751,7 +750,7 @@ var __meta__ = { // jshint ignore:line
 
         _activateItem: function() {
             var current = this.listView.focus();
-            if (current) {
+            if (current && this.popup.visible()) {
                 this._focused.add(this.filterInput).attr(ARIA_ACTIVEDESCENDANT, current.attr("id"));
             }
         },
@@ -994,6 +993,8 @@ var __meta__ = { // jshint ignore:line
         },
 
         _openHandler: function(e) {
+            var current;
+
             this._adjustListWidth();
 
             if (this.trigger(OPEN)) {
@@ -1001,6 +1002,11 @@ var __meta__ = { // jshint ignore:line
             } else {
                 this._focused.attr(ARIA_EXPANDED, true);
                 this.ul.attr(ARIA_HIDDEN, false);
+
+                current = this.listView.focus();
+                if (current) {
+                    this._focused.add(this.filterInput).attr(ARIA_ACTIVEDESCENDANT, current.attr("id"));
+                }
             }
         },
 
@@ -1045,6 +1051,7 @@ var __meta__ = { // jshint ignore:line
             } else {
                 this._focused.attr(ARIA_EXPANDED, false);
                 this.ul.attr(ARIA_HIDDEN, true);
+                this._focused.add(this.filterInput).removeAttr(ARIA_ACTIVEDESCENDANT);
             }
         },
 
@@ -1119,12 +1126,12 @@ var __meta__ = { // jshint ignore:line
 
             if (!this.popup.element.is(":visible")) {
                 this.popup.one("open", (function(force) {
-                    return proxy(function() {
+                    return (function() {
                         this._calculatePopupHeight(force);
-                    }, this);
+                    }).bind(this);
                 }).call(this, force));
 
-                this.popup.one(ACTIVATE, proxy(this._refreshScroll, this));
+                this.popup.one(ACTIVATE, this._refreshScroll.bind(this));
             } else {
                 this._calculatePopupHeight(force);
             }
@@ -1137,15 +1144,15 @@ var __meta__ = { // jshint ignore:line
 
             list.popup = new ui.Popup(list.list.parent(), extend({}, list.options.popup, {
                 anchor: list.wrapper,
-                open: proxy(list._openHandler, list),
-                close: proxy(list._closeHandler, list),
+                open: list._openHandler.bind(list),
+                close: list._closeHandler.bind(list),
                 animation: list.options.animation,
                 isRtl: support.isRtl(list.wrapper),
                 autosize: list.options.autoWidth
             }));
 
             list.popup.element.prepend(list.header)
-                .on(MOUSEDOWN + this.ns, proxy(this._listMousedown, this));
+                .on(MOUSEDOWN + this.ns, this._listMousedown.bind(this));
         },
 
         _toggleHover: function(e) {
@@ -1409,9 +1416,9 @@ var __meta__ = { // jshint ignore:line
             if (that.dataSource) {
                 that._unbindDataSource();
             } else {
-                that._requestStartHandler = proxy(that._showBusy, that);
-                that._requestEndHandler = proxy(that._requestEnd, that);
-                that._errorHandler = proxy(that._hideBusy, that);
+                that._requestStartHandler = that._showBusy.bind(that);
+                that._requestEndHandler = that._requestEnd.bind(that);
+                that._errorHandler = that._hideBusy.bind(that);
             }
 
             that.dataSource = kendo.data.DataSource.create(dataSource)
@@ -1740,7 +1747,7 @@ var __meta__ = { // jshint ignore:line
                     return;
                 }
 
-                that._cascadeHandlerProxy = proxy(that._cascadeHandler, that);
+                that._cascadeHandlerProxy = that._cascadeHandler.bind(that);
                 that._cascadeFilterRequests = [];
 
                 options.autoBind = false;
@@ -1888,7 +1895,7 @@ var __meta__ = { // jshint ignore:line
             Widget.fn.init.call(this, element, options);
 
             this.element.attr("role", "listbox")
-                        .on(CLICK + STATIC_LIST_NS, "li", proxy(this._click, this))
+                        .on(CLICK + STATIC_LIST_NS, "li", this._click.bind(this))
                         .on(MOUSEENTER + STATIC_LIST_NS, "li", function() { $(this).addClass(HOVER); })
                         .on(MOUSELEAVE + STATIC_LIST_NS, "li", function() { $(this).removeClass(HOVER); });
 
@@ -1946,14 +1953,7 @@ var __meta__ = { // jshint ignore:line
 
             this.setDataSource(this.options.dataSource);
 
-            this._onScroll = proxy(function() {
-                var that = this;
-                clearTimeout(that._scrollId);
-
-                that._scrollId = setTimeout(function() {
-                    that._renderHeader();
-                }, 50);
-            }, this);
+            this._createOnScrollProxy();
         },
 
         options: {
@@ -1996,7 +1996,7 @@ var __meta__ = { // jshint ignore:line
 
                 that.value(value);
             } else {
-                that._refreshHandler = proxy(that.refresh, that);
+                that._refreshHandler = that.refresh.bind(that);
             }
 
             that.setDSFilter(dataSource.filter());
@@ -2317,6 +2317,19 @@ var __meta__ = { // jshint ignore:line
             if (!e.isDefaultPrevented()) {
                 this._triggerClick(e.currentTarget);
             }
+        },
+
+        _createOnScrollProxy: function() {
+            var onScrollProxy = function() {
+                var that = this;
+                clearTimeout(that._scrollId);
+
+                that._scrollId = setTimeout(function() {
+                    that._renderHeader();
+                }, 50);
+            };
+
+            this._onScroll = onScrollProxy.bind(this);
         },
 
         _triggerClick: function(item) {

@@ -4664,7 +4664,8 @@ div.k-filebrowser-dropzone em {
   color: #fff;
 }
 .k-grid tr:hover,
-.k-grid td.k-state-selected:hover {
+.k-grid td.k-state-selected:hover,
+.k-grid td.k-grid-content-sticky.k-state-selected:hover {
   color: #fff;
   background-color: #00aba9;
 }
@@ -5079,6 +5080,9 @@ div.k-filebrowser-dropzone em {
 .k-master-row.k-state-selected.k-state-hover .k-grid-content-sticky {
   background-color: null;
   background-image: none;
+}
+.k-master-row td.k-grid-content-sticky.k-state-selected {
+  background-color: #008886;
 }
 .k-grid-header .k-grid-header-sticky,
 .k-master-row .k-grid-content-sticky,

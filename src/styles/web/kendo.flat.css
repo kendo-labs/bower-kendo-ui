@@ -4632,7 +4632,8 @@ div.k-filebrowser-dropzone em {
   box-shadow: inset 0 0 0 1px #086158;
 }
 .k-grid tr:hover .k-state-selected,
-.k-grid tr.k-state-selected:hover td {
+.k-grid tr.k-state-selected:hover td,
+.k-grid td.k-grid-content-sticky.k-state-selected:hover {
   background-color: #0da394;
 }
 .k-header,
@@ -5042,6 +5043,12 @@ div.k-filebrowser-dropzone em {
 .k-master-row.k-state-selected.k-state-hover .k-grid-content-sticky {
   background-color: #0da394;
   background-image: none;
+}
+.k-master-row:hover td.k-grid-content-sticky.k-state-selected {
+  background-color: #0da394;
+}
+.k-master-row td.k-grid-content-sticky.k-state-selected {
+  background-color: #10c4b2;
 }
 .k-grid-header .k-grid-header-sticky,
 .k-master-row .k-grid-content-sticky,

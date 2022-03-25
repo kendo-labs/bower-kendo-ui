@@ -39,7 +39,6 @@ var __meta__ = { // jshint ignore:line
         extend = $.extend,
         each = $.each,
         isArray = Array.isArray,
-        proxy = $.proxy,
         noop = $.noop,
         math = Math,
         Template,
@@ -136,7 +135,7 @@ var __meta__ = { // jshint ignore:line
             return target;
         };
 
-    kendo.version = "2022.1.301".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.1.325".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -1785,6 +1784,7 @@ function pad(number, digits, end) {
             element.wrap(
                          $("<div/>")
                          .addClass("k-animation-container")
+                         .attr("role", "region")
                          .css({
                              width: width,
                              height: height
@@ -2766,9 +2766,9 @@ function pad(number, digits, end) {
         Observable: Observable,
         Class: Class,
         Template: Template,
-        template: proxy(Template.compile, Template),
-        render: proxy(Template.render, Template),
-        stringify: proxy(JSON.stringify, JSON),
+        template: Template.compile.bind(Template),
+        render: Template.render.bind(Template),
+        stringify: JSON.stringify.bind(JSON),
         eventTarget: eventTarget,
         htmlEncode: htmlEncode,
         unescape: unescape,

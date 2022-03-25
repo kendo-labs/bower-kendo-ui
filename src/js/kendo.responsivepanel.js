@@ -35,7 +35,6 @@ var __meta__ = { // jshint ignore:line
 };
 
 (function ($, undefined) {
-    var proxy = $.proxy;
     var NS = ".kendoResponsivePanel";
     var OPEN = "open";
     var CLOSE = "close";
@@ -47,8 +46,8 @@ var __meta__ = { // jshint ignore:line
 
             this._guid = "_" + kendo.guid();
 
-            this._toggleHandler = proxy(this._toggleButtonClick, this);
-            this._closeHandler = proxy(this._close, this);
+            this._toggleHandler = this._toggleButtonClick.bind(this);
+            this._closeHandler = this._close.bind(this);
 
             $(document.documentElement).on(ACTIVATE_EVENTS, this.options.toggleButton, this._toggleHandler);
 
@@ -62,7 +61,7 @@ var __meta__ = { // jshint ignore:line
             this.element
                 .addClass("k-rpanel k-rpanel-" + this.options.orientation + " " + this._guid);
 
-            this._resizeHandler = proxy(this.resize, this, true);
+            this._resizeHandler = this.resize.bind(this, true);
             $(window).on("resize" + NS, this._resizeHandler);
         },
         _mediaQuery:
