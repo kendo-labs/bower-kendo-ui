@@ -63,7 +63,7 @@ var __meta__ = { // jshint ignore:line
         DISABLED = "disabled",
         READONLY = "readonly",
         CHANGE = "change",
-        LOADING = "k-i-loading",
+        LOADING = "k-i-loading k-input-loading-icon",
         FOCUSED = "k-focus",
         STATEDISABLED = "k-disabled",
         ARIA_DISABLED = "aria-disabled",
@@ -970,7 +970,7 @@ var __meta__ = { // jshint ignore:line
             input = wrapper.find(SELECTOR);
 
             if (!input[0]) {
-                arrowBtn = html.renderButton('<button type="button" class="k-select k-input-button" aria-label="expand combobox"></button>', {
+                arrowBtn = html.renderButton('<button type="button" class="k-input-button" aria-label="expand combobox"></button>', {
                     icon: "arrow-s",
                     size: options.size,
                     fillMode: options.fillMode,
@@ -1015,7 +1015,7 @@ var __meta__ = { // jshint ignore:line
             }
 
             that._focused = that.input = input;
-            that._arrow = wrapper.find(".k-select")
+            that._arrow = wrapper.find(".k-input-button")
                 .attr({
                     "role": "button",
                     "tabIndex": -1
@@ -1182,7 +1182,7 @@ var __meta__ = { // jshint ignore:line
                 wrapper[0].style.cssText = element[0].style.cssText;
             }
 
-            that.wrapper = wrapper.addClass("k-input k-combobox k-widget")
+            that.wrapper = wrapper.addClass("k-input k-combobox")
                 .addClass(element[0].className)
                 .removeClass('input-validation-error')
                 .css("display", "");

@@ -1,17 +1,17 @@
-/*!
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
+/** 
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
+ *                                                                                                                                                                                                      
+ * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
+ * you may not use this file except in compliance with the License.                                                                                                                                     
+ * You may obtain a copy of the License at                                                                                                                                                              
+ *                                                                                                                                                                                                      
+ *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
+ *                                                                                                                                                                                                      
+ * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
+ * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
+ * See the License for the specific language governing permissions and                                                                                                                                  
+ * limitations under the License.                                                                                                                                                                       
                                                                                                                                                                                                        
                                                                                                                                                                                                        
                                                                                                                                                                                                        
@@ -817,9 +817,15 @@ div.k-scheduler-marquee:after
     margin: 0;
 }
 
-.k-edit-field > ul.k-reset .k-widget
-{
-    margin-left: .8em;
+.k-edit-field > ul.k-reset {
+    .k-widget,
+    .k-dropdownlist,
+    .k-numerictextbox,
+    .k-dateinput,
+    .k-datepicker,
+    .k-datetimepicker {
+        margin-left: .8em;
+    }
 }
 
 .k-edit-field > ul.k-reset .k-numerictextbox,
@@ -828,9 +834,9 @@ div.k-scheduler-marquee:after
     width: 5em;
 }
 
-.k-edit-field > ul.k-reset .k-dropdown,
+.k-edit-field > ul.k-reset .k-dropdownlist,
 .k-edit-field > ul.k-reset .k-datepicker,
-div[name="recurrenceRule"] > .k-dropdown
+div[name="recurrenceRule"] > .k-dropdownlist
 {
     width: 9em;
 }
@@ -848,12 +854,12 @@ div[name="recurrenceRule"] > .k-dropdown
     text-align: center;
 }
 
-.k-scheduler-timezones .k-dropdown:first-child
+.k-scheduler-timezones .k-dropdownlist:first-child
 {
     width: 100%;
 }
 
-.k-scheduler-timezones .k-dropdown + .k-dropdown
+.k-scheduler-timezones .k-dropdownlist + .k-dropdownlist
 {
     margin: .5em 0 .7em;
 }

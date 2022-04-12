@@ -2600,7 +2600,6 @@
 }
 .k-user-select-all {
   -webkit-user-select: all !important;
-      -ms-user-select: all !important;
           user-select: all !important;
 }
 .k-user-select-contain {
@@ -3409,9 +3408,6 @@ input[type="button"].k-button-expand,
 input[type="reset"].k-button-expand {
   width: 100%;
 }
-.k-button-square {
-  aspect-ratio: 1;
-}
 .k-menu-button,
 .k-dropdown-button {
   outline: 0;
@@ -3756,8 +3752,8 @@ textarea.k-input-inner {
   margin: 0;
 }
 .k-picker.k-icon-picker .k-input-inner {
-  width: 1.42857143;
-  height: 1.42857143;
+  width: 1.42857143em;
+  height: 1.42857143em;
   box-sizing: content-box;
 }
 .k-input-value-icon {
@@ -4189,7 +4185,8 @@ textarea.k-input-inner {
   height: 16px;
   border-top-width: 1px;
 }
-select.k-dropdown {
+select.k-dropdown,
+select.k-dropdownlist {
   border-radius: 4px;
   padding: 8px 14px;
   border-width: 1px;
@@ -4727,6 +4724,7 @@ select.k-dropdown {
 .k-form-field .k-autocomplete,
 .k-form-field .k-combobox,
 .k-form-field .k-dropdown,
+.k-form-field .k-dropdownlist,
 .k-form-field .k-dropdowntree,
 .k-form-field .k-dateinput,
 .k-form-field .k-datepicker,
@@ -5326,12 +5324,15 @@ select.k-dropdown {
       align-items: center;
 }
 .k-pager-sizes .k-dropdown,
+.k-pager-sizes .k-dropdownlist,
 .k-pager-sizes > select {
   margin-right: 1ex;
   width: 6em;
 }
 .k-rtl .k-pager-sizes .k-dropdown,
 [dir="rtl"] .k-pager-sizes .k-dropdown,
+.k-rtl .k-pager-sizes .k-dropdownlist,
+[dir="rtl"] .k-pager-sizes .k-dropdownlist,
 .k-rtl .k-pager-sizes > select,
 [dir="rtl"] .k-pager-sizes > select {
   margin-left: 1ex;
@@ -5509,6 +5510,12 @@ select.k-dropdown {
   top: 0;
   left: 0;
   right: 0;
+}
+.k-list-item-text::before,
+.k-list-optionlabel::before {
+  content: "\200b";
+  width: 0px;
+  overflow: hidden;
 }
 .k-list-group-item {
   padding: 4px 8px;
@@ -7705,6 +7712,7 @@ span.k-colorpicker,
 span.k-numerictextbox,
 span.k-combobox,
 span.k-dropdown,
+span.k-dropdownlist,
 span.k-dropdowntree {
   background-image: none;
 }
@@ -7714,6 +7722,7 @@ span.k-dropdowntree {
 .k-filter-menu .k-datetimepicker,
 .k-filter-menu .k-numerictextbox,
 .k-filter-menu .k-dropdown,
+.k-filter-menu .k-dropdownlist,
 .k-filter-menu .k-dropdowntree,
 .k-filter-menu .k-autocomplete,
 .k-filter-menu .k-textbox {
@@ -9416,16 +9425,21 @@ div.k-scheduler-marquee:after {
 .k-edit-field > ul.k-reset.k-toolbar > li {
   margin: 0;
 }
-.k-edit-field > ul.k-reset .k-widget {
+.k-edit-field > ul.k-reset .k-widget,
+.k-edit-field > ul.k-reset .k-dropdownlist,
+.k-edit-field > ul.k-reset .k-numerictextbox,
+.k-edit-field > ul.k-reset .k-dateinput,
+.k-edit-field > ul.k-reset .k-datepicker,
+.k-edit-field > ul.k-reset .k-datetimepicker {
   margin-left: 0.8em;
 }
 .k-edit-field > ul.k-reset .k-numerictextbox,
 .k-edit-field span.k-recur-interval {
   width: 5em;
 }
-.k-edit-field > ul.k-reset .k-dropdown,
+.k-edit-field > ul.k-reset .k-dropdownlist,
 .k-edit-field > ul.k-reset .k-datepicker,
-div[name="recurrenceRule"] > .k-dropdown {
+div[name="recurrenceRule"] > .k-dropdownlist {
   width: 9em;
 }
 .k-scheduler-edit-form .k-edit-buttons .k-scheduler-delete,
@@ -9437,10 +9451,10 @@ div[name="recurrenceRule"] > .k-dropdown {
   padding: 1em 0 2em;
   text-align: center;
 }
-.k-scheduler-timezones .k-dropdown:first-child {
+.k-scheduler-timezones .k-dropdownlist:first-child {
   width: 100%;
 }
-.k-scheduler-timezones .k-dropdown + .k-dropdown {
+.k-scheduler-timezones .k-dropdownlist + .k-dropdownlist {
   margin: 0.5em 0 0.7em;
 }
 .k-scheduler-refresh {
@@ -10214,7 +10228,8 @@ html .k-upload {
 .k-filebrowser .k-tiles-arrange {
   float: right;
 }
-.k-filebrowser .k-tiles-arrange .k-dropdown {
+.k-filebrowser .k-tiles-arrange .k-dropdown,
+.k-filebrowser .k-tiles-arrange .k-dropdownlist {
   width: 5.3em;
 }
 .k-filebrowser .k-upload {
@@ -14196,7 +14211,8 @@ div.k-spreadsheet-window {
   line-height: 3em;
 }
 .k-spreadsheet-window .k-edit-field .k-textbox,
-.k-spreadsheet-window .k-edit-field .k-dropdown {
+.k-spreadsheet-window .k-edit-field .k-dropdown,
+.k-spreadsheet-window .k-edit-field .k-dropdownlist {
   width: 100%;
 }
 .k-spreadsheet-window .k-export-config .k-hr {
@@ -16039,7 +16055,7 @@ div.k-spreadsheet-window {
   content: "";
 }
 .k-pdf-viewer-search-dialog .k-search-container .k-match-case-button {
-  height: 1.42857143 * 1em;
+  height: 1.42857143em;
 }
 .k-pdf-viewer-search-dialog .k-search-container .k-search-matches {
   display: inline-block;
@@ -16415,7 +16431,8 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button::before,
   border-style: solid;
   border-width: 1px;
 }
-.k-filter .k-filter-toolbar .k-filter-operator .k-dropdown {
+.k-filter .k-filter-toolbar .k-filter-operator .k-dropdown,
+.k-filter .k-filter-toolbar .k-filter-operator .k-dropdownlist {
   width: 15em;
 }
 .k-filter .k-filter-toolbar .k-filter-toolbar-item > .k-textbox {
@@ -19126,14 +19143,14 @@ table.k-editor .k-editable-area {
   width: 10em;
   margin: 0 0.35714285em 0 0;
 }
-.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-numerictextbox + .k-dropdown {
+.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-numerictextbox + .k-dropdownlist {
   width: 4.5em;
 }
 .k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-textbox,
-.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-dropdown {
+.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-dropdownlist {
   width: 15em;
 }
-.k-editor-table-wizard-dialog .k-numerictextbox + .k-dropdown {
+.k-editor-table-wizard-dialog .k-numerictextbox + .k-dropdownlist {
   width: 5.35714285em;
 }
 .k-editor-dialog textarea.k-textbox {
@@ -19142,7 +19159,7 @@ table.k-editor .k-editable-area {
 .k-editor-dialog textarea.k-textbox.k-editor-accessibility-summary {
   height: auto;
 }
-.k-editor-dialog.k-editor-table-wizard-dialog .k-dropdown.k-align {
+.k-editor-dialog.k-editor-table-wizard-dialog .k-dropdownlist.k-align {
   width: 4em;
 }
 .k-align-group {
@@ -21205,7 +21222,8 @@ table.k-editor .k-editable-area {
   -ms-flex-align: start;
       align-items: flex-start;
 }
-.k-pivotgrid-configurator-content .k-form .k-dropdown {
+.k-pivotgrid-configurator-content .k-form .k-dropdown,
+.k-pivotgrid-configurator-content .k-form .k-dropdownlist {
   max-width: 90px;
 }
 .k-pivotgrid-configurator-content .k-form .k-textbox {
@@ -21313,7 +21331,8 @@ table.k-editor .k-editable-area {
 .k-calculated-field-actions .k-icon {
   margin-right: 14px;
 }
-.k-calculated-field-actions .k-dropdown {
+.k-calculated-field-actions .k-dropdown,
+.k-calculated-field-actions .k-dropdownlist {
   max-width: 100px;
 }
 .k-filter-menu .k-calculated-item {
@@ -22400,7 +22419,8 @@ table.k-editor .k-editable-area {
 .k-filebrowser .k-search-wrap {
   padding: 2px 0.3em;
 }
-.k-filebrowser .k-tiles-arrange .k-dropdown {
+.k-filebrowser .k-tiles-arrange .k-dropdown,
+.k-filebrowser .k-tiles-arrange .k-dropdownlist {
   width: 80px;
 }
 .k-upload .k-filename {
@@ -22556,11 +22576,11 @@ div.k-spreadsheet-window {
   padding: 0 1em;
 }
 .k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-textbox,
-.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-dropdown {
+.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-dropdownlist {
   width: 16.35em;
 }
-.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-numerictextbox + .k-dropdown,
-.k-editor-dialog.k-editor-table-wizard-dialog .k-dropdown.k-align {
+.k-editor-dialog.k-editor-table-wizard-dialog .k-edit-field .k-numerictextbox + .k-dropdownlist,
+.k-editor-dialog.k-editor-table-wizard-dialog .k-dropdownlist.k-align {
   width: 5.8em;
 }
 .k-editor-dialog.k-editor-table-wizard-dialog .k-edit-buttons {

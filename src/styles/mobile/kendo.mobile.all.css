@@ -562,8 +562,6 @@ button.km-button {
 }
 .km-buttongroup {
   padding: 0.4rem 0.7rem;
-  -webkit-margin-collapse: separate;
-  margin-collapse: separate;
   margin: 0.5em auto;
 }
 .km-widget.km-buttongroup {
@@ -1350,8 +1348,6 @@ button.km-button {
       -ms-user-select: none;
           user-select: none;
   -moz-user-select: -moz-none;
-  -webkit-margin-collapse: separate;
-  margin-collapse: separate;
 }
 .km-scroll-wrapper {
   position: relative;
@@ -1558,7 +1554,8 @@ div.km-split-horizontal > .km-content > .km-pane {
   max-height: 100%;
 }
 .km-modalview .km-content {
-  box-flex: 1;
+  -ms-flex: 1;
+      flex: 1;
 }
 .km-auto-height .km-content {
   -ms-flex: auto;

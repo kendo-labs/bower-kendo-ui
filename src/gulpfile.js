@@ -3,15 +3,12 @@
 var fs = require('fs');
 var gulp = require('gulp');
 var logger = require('gulp-logger');
-var filter = require('gulp-filter');
-var util = require('gulp-util');
+var PluginError = require('plugin-error');
 var sourcemaps = require('gulp-sourcemaps');
-var concat = require('gulp-concat');
 var lazypipe = require('lazypipe');
 var gulpUglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var replace = require('gulp-replace');
-var foreach = require('gulp-foreach');
 var argv = require('yargs').argv;
 
 var less = require('gulp-less');
@@ -99,7 +96,7 @@ gulp.task("custom", function() {
     const customFilePath = 'js/kendo.custom.js';
 
     if (!files) {
-        throw new util.PluginError({
+        throw new PluginError({
             task: "custom",
             plugin: "custom",
             message: "please provide a list of the components to be included in the build with -c, separated with ','"

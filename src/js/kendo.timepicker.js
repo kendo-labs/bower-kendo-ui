@@ -170,7 +170,6 @@ var __meta__ = { // jshint ignore:line
         }
 
         that._heightHandler = that._height.bind(that);
-        that._ariaLabel();
         that._popup();
     };
 
@@ -200,32 +199,6 @@ var __meta__ = { // jshint ignore:line
             this.list.on("click"+ns, ".k-time-footer button.k-time-accept", this._setClickHandler.bind(this));
             this.list.on("mouseover"+ns, ".k-time-list-wrapper", this._mouseOverHandler.bind(this));
             this.list.on("keydown"+ns, this._scrollerKeyDownHandler.bind(this));
-        },
-
-        _ariaLabel: function(){
-            var that = this;
-            var inputElm = $("#"+that.options.id);
-            var ul = that.ul;
-            var id = inputElm.attr("id");
-            var labelElm = $("label[for=\'" + id  + "\']");
-            var ariaLabel = inputElm.attr("aria-label");
-            var ariaLabelledBy = inputElm.attr("aria-labelledby");
-            var labelId;
-
-            if (ariaLabel) {
-                ul.attr("aria-label", ariaLabel);
-            } else if (ariaLabelledBy){
-                ul.attr("aria-labelledby", ariaLabelledBy);
-            } else if (labelElm.length){
-                labelId = labelElm.attr("id");
-                if (labelId) {
-                    ul.attr("aria-labelledby", labelId);
-                } else {
-                    labelId = kendo.guid();
-                    labelElm.attr("id", labelId);
-                    ul.attr("aria-labelledby", labelId);
-                }
-            }
         },
 
         _scrollerKeyDownHandler: function (e) {
@@ -1375,6 +1348,8 @@ var __meta__ = { // jshint ignore:line
                 maxSet: +options.max != +TODAY
             }));
             ul = timeView.ul;
+
+            that._ariaLabel(ul);
 
             that._icon();
             that._reset();

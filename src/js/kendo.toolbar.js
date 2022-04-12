@@ -599,7 +599,7 @@ var __meta__ = { // jshint ignore:line
                 this.toolbar = toolbar;
 
                 this.mainButton = new ToolBarButton($.extend({}, options, { hidden: false }), toolbar);
-                this.arrowButton = $('<a class="' + KBUTTON + EMPTY + BUTTON_DEFAULTS + EMPTY + ICON_BUTTON + EMPTY + SPLIT_BUTTON_ARROW + '"><span class="' + (options.mobile ? "km-icon km-arrowdown" : "k-icon k-i-arrow-s") + '"></span></a>');
+                this.arrowButton = $('<a class="' + KBUTTON + EMPTY + BUTTON_DEFAULTS + EMPTY + ICON_BUTTON + EMPTY + SPLIT_BUTTON_ARROW + '"><span class="' + (options.mobile ? "km-icon km-arrowdown" : "k-icon k-button-icon k-i-arrow-s") + '"></span></a>');
                 this.popupElement = $('<ul class="' + LIST_CONTAINER + EMPTY + MENU_GROUP + '"></ul>');
 
                 this.mainButton.element
@@ -1678,7 +1678,7 @@ var __meta__ = { // jshint ignore:line
                 }
 
                 if (keyCode === keys.HOME) {
-                    if (target.is(".k-dropdown") || target.is("input")) {
+                    if (target.is(".k-dropdownlist") || target.is("input")) {
                         return;
                     }
 
@@ -1689,7 +1689,7 @@ var __meta__ = { // jshint ignore:line
                     }
                     e.preventDefault();
                 } else if (keyCode === keys.END) {
-                    if (target.is(".k-dropdown") || target.is("input")) {
+                    if (target.is(".k-dropdownlist") || target.is("input")) {
                         return;
                     }
                     if (this.overflowAnchor && $(this.overflowAnchor).css("visibility") != "hidden") {
@@ -1698,10 +1698,10 @@ var __meta__ = { // jshint ignore:line
                         items.last().trigger(FOCUS);
                     }
                     e.preventDefault();
-                } else if (keyCode === keys.RIGHT && !this._preventNextFocus && !target.is("input, select, .k-dropdown, .k-colorpicker") && this._getNextElement(e.target, 1 * direction)) {
+                } else if (keyCode === keys.RIGHT && !this._preventNextFocus && !target.is("input, select, .k-dropdownlist, .k-colorpicker") && this._getNextElement(e.target, 1 * direction)) {
                     this._getNextElement(e.target, 1 * direction).focus();
                     e.preventDefault();
-                } else if (keyCode === keys.LEFT && !this._preventNextFocus && !target.is("input, select, .k-dropdown, .k-colorpicker") && this._getNextElement(e.target, -1 * direction)) {
+                } else if (keyCode === keys.LEFT && !this._preventNextFocus && !target.is("input, select, .k-dropdownlist, .k-colorpicker") && this._getNextElement(e.target, -1 * direction)) {
                     this._getNextElement(e.target, -1 * direction).focus();
                     e.preventDefault();
                 }

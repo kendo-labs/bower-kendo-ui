@@ -644,7 +644,7 @@ var __meta__ = { // jshint ignore:line
 
             if (options.scrollable) {
                 that._openedPopups = {};
-                that._scrollWrapper = that.element.wrap("<div class='k-menu-scroll-wrapper " + options.orientation + "'></div>").parent();
+                that._scrollWrapper = that.element.wrap("<div class='k-menu-scroll-wrapper k-" + options.orientation + "'></div>").parent();
                 if (isHorizontal) {
                     removeSpacesBetweenItems(that.element);
                 }
@@ -1850,6 +1850,8 @@ var __meta__ = { // jshint ignore:line
                     if (hasChildren && !hoverItem.hasClass(DISABLEDSTATE)) {
                         that.open(hoverItem);
                         that._moveHover(hoverItem, that._childPopupElement(hoverItem).children().first());
+                    } else if (hoverItem.is("li") && hoverItem.attr("role") === "menuitemcheckbox") {
+                        hoverItem.find(".k-checkbox").attr("checked", true);
                     } else {
                         that._moveHoverToRoot(hoverItem, that._findRootParent(hoverItem));
                     }

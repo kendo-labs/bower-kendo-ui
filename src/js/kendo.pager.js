@@ -54,7 +54,7 @@ var __meta__ = { // jshint ignore:line
         MOUSEDOWN = "down",
         MAX_VALUE = Number.MAX_VALUE,
         isRtl = false,
-        iconTemplate = kendo.template('<a href="\\#" title="#=text#" #if (id !== "") {# aria-describedby="#=id#" #}# class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
+        iconTemplate = kendo.template('<a href="\\#" title="#=text#" aria-label="#=text#" #if (id !== "") {# aria-describedby="#=id#" #}# class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
 
     function button(options) {
         return options.template( {
@@ -133,7 +133,9 @@ var __meta__ = { // jshint ignore:line
 
             isRtl = kendo.support.isRtl(element);
 
-            that._id = that.element.attr("id") || kendo.guid();
+            if (options.navigatable) {
+                that._id = that.element.attr("id") || kendo.guid();
+            }
             that._template();
 
             if (options.previousNext) {

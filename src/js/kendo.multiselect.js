@@ -252,7 +252,7 @@ var __meta__ = { // jshint ignore:line
                         .removeClass(FOCUSEDCLASS)
                         .removeAttr(ID);
 
-                    that._currentTag.find(".k-chip-icon").attr("aria-hidden", true);
+                    that._currentTag.find(".k-chip-action").attr("aria-hidden", true);
 
                     that.input.removeAttr("aria-activedescendant");
                 }
@@ -260,7 +260,7 @@ var __meta__ = { // jshint ignore:line
                 if (candidate) {
                     candidate.addClass(FOCUSEDCLASS).attr(ID, that._tagID);
 
-                    candidate.find(".k-chip-icon").removeAttr("aria-hidden");
+                    candidate.find(".k-chip-action").removeAttr("aria-hidden");
 
                     that.input.attr("aria-activedescendant", that._tagID);
                 }
@@ -303,7 +303,7 @@ var __meta__ = { // jshint ignore:line
                 "aria-multiselectable": true
             });
             that.input.attr("aria-controls", id);
-            that._ariaLabel();
+            that._ariaLabel(that._focused);
         },
 
         _activateItem: function() {
@@ -371,7 +371,7 @@ var __meta__ = { // jshint ignore:line
             var notInput = e.target.nodeName.toLowerCase() !== "input";
             var target = $(e.target);
             var closeButton = target.closest(".k-multiselect-toggle-button, .k-chip").children(".k-i-arrow-s")[0];
-            var removeButton = target.closest(".k-i-x")[0];
+            var removeButton = target.closest(".k-i-x-circle")[0];
 
             if (notInput && !(removeButton && kendo.support.mobileOS) && e.cancelable) {
                 e.preventDefault();
@@ -483,7 +483,7 @@ var __meta__ = { // jshint ignore:line
             e.stopPropagation();
             var target = $(e.currentTarget);
 
-            if (target.is(".k-i-x")) {
+            if (target.is(".k-i-x-circle")) {
                 this._removeTag(target.closest(CHIP), true);
             }
         },
@@ -1546,11 +1546,11 @@ var __meta__ = { // jshint ignore:line
 
             that.tagTemplate = function(data) {
                 return html.renderChip('<span unselectable="on">' +
-                    tagTemplate(data) +
                 '</span>', $.extend({}, options, {
                         fillMode: "solid",
                         rounded: "medium",
                         themeColor: "base",
+                        text: tagTemplate(data),
                         attr: {
                             unselectable: "on"
                         },
@@ -1573,7 +1573,7 @@ var __meta__ = { // jshint ignore:line
         },
 
         _loader: function() {
-            this._loading = $('<span class="k-icon k-i-loading ' + HIDDENCLASS + '"></span>').insertAfter(this.tagList);
+            this._loading = $('<span class="k-icon k-i-loading k-input-loading-icon ' + HIDDENCLASS + '"></span>').insertAfter(this.tagList);
         },
 
         _clearButton: function() {

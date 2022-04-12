@@ -489,7 +489,7 @@ var __meta__ = { // jshint ignore:line
                 el.removeAttr(ARIA_MULTISELECTABLE);
 
                 if (el.attr(ARIA_LABEL)) {
-                    this._ariaLabel = el.attr(ARIA_LABEL);
+                    this._ariaLabelValue = el.attr(ARIA_LABEL);
                     el.removeAttr(ARIA_LABEL);
                 }
             } else {
@@ -499,8 +499,8 @@ var __meta__ = { // jshint ignore:line
                     el.attr(ARIA_MULTISELECTABLE, true);
                 }
 
-                if (this._ariaLabel) {
-                    el.attr(ARIA_LABEL, this._ariaLabel);
+                if (this._ariaLabelValue) {
+                    el.attr(ARIA_LABEL, this._ariaLabelValue);
                 }
             }
         },

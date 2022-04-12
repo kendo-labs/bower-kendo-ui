@@ -4268,7 +4268,8 @@ div.k-filebrowser-dropzone em {
 .k-pager-wrap .k-pager-info {
   color: #999999;
 }
-.k-pager-wrap .k-dropdown {
+.k-pager-wrap .k-dropdown,
+.k-pager-wrap .k-dropdownlist {
   color: #444444;
 }
 .k-state-active,
