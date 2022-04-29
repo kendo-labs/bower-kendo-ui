@@ -138,7 +138,7 @@ var __meta__ = { // jshint ignore:line
             return target;
         };
 
-    kendo.version = "2022.1.412".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.1.429".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -11983,6 +11983,7 @@ var __meta__ = { // jshint ignore:line
                 filters: []
             };
 
+            filter.logic = 'and';
             filter = extend(true, {}, filter);
             filter.filters.push({
                 field: group.field,
@@ -24024,7 +24025,7 @@ var __meta__ = { // jshint ignore:line
         options: {
             name: "Pager",
             ARIATemplate: "Page navigation, page #=page# of #=totalPages#",
-            selectTemplate: '<li><span tabindex="#=tabindex#" #if (navigatable) {# aria-label="#=title#" #}# class="k-link k-state-selected">#=text#</span></li>',
+            selectTemplate: '<li><span role="button" tabindex="#=tabindex#" #if (navigatable) {# aria-label="#=title#" #}# class="k-link k-state-selected">#=text#</span></li>',
             currentPageTemplate: '<li class="k-current-page"><span class="k-link k-pager-nav">#=text#</span></li>',
             linkTemplate: '<li><a tabindex="#=tabindex#" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
             numericItemTemplate: '<li><a tabindex="-1" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
@@ -26969,6 +26970,10 @@ var __meta__ = { // jshint ignore:line
 
                 if (options.click && isFunction(options.click)) {
                     this.clickHandler = options.click;
+                }
+
+                if (options.togglable && options.toggle && isFunction(options.toggle)) {
+                    this.toggleHandler = options.toggle;
                 }
 
                 if (options.imageUrl) {
@@ -37836,11 +37841,6 @@ var __meta__ = { // jshint ignore:line
 
             that._aria();
 
-            //should read changed value of closed dropdownlist
-            if (kendo.support.browser.chrome) {
-                that.wrapper.attr("aria-live", "polite");
-            }
-
             that._enable();
 
             that._attachFocusHandlers();
@@ -38027,7 +38027,7 @@ var __meta__ = { // jshint ignore:line
             var wrapper = this.wrapper,
                 inputId = wrapper.find(".k-input-inner").attr('id');
 
-            wrapper.attr("aria-activedescendant", inputId);
+            wrapper.attr("aria-describedby", inputId);
         },
 
         _focusInput: function () {
@@ -38884,9 +38884,11 @@ var __meta__ = { // jshint ignore:line
                 optionLabel.addClass("k-focus")
                            .attr("id", listView._optionID);
 
-                this._focused.add(this.filterInput)
-                    .removeAttr("aria-activedescendant")
-                    .attr("aria-activedescendant", listView._optionID);
+                if (this.filterInput) {
+                    this.filterInput
+                        .removeAttr("aria-activedescendant")
+                        .attr("aria-activedescendant", listView._optionID);
+                }
             }
         },
 
@@ -39018,7 +39020,7 @@ var __meta__ = { // jshint ignore:line
                     rounded: null
                 });
 
-                wrapper.append('<span id="' + id + '" unselectable="on" role="option" aria-selected="true" class="k-input-inner">' +
+                wrapper.append('<span id="' + id + '" unselectable="on" class="k-input-inner">' +
                             '<span class="k-input-value-text"></span>' +
                         '</span>')
                     .append(arrowBtn)
@@ -39054,7 +39056,7 @@ var __meta__ = { // jshint ignore:line
                 .attr({
                     accesskey: element.attr("accesskey"),
                     unselectable: "on",
-                    role: "listbox",
+                    role: "combobox",
                     "aria-haspopup": "listbox",
                     "aria-expanded": false
                 });
@@ -39074,10 +39076,6 @@ var __meta__ = { // jshint ignore:line
             } else {
                 this.wrapper.attr("aria-expanded", true);
                 this.ul.attr("aria-hidden", false);
-
-                if (kendo.support.browser.chrome) {
-                    this.wrapper.removeAttr("aria-live");
-                }
             }
         },
 
@@ -39087,10 +39085,6 @@ var __meta__ = { // jshint ignore:line
             } else {
                 this.wrapper.attr("aria-expanded", false);
                 this.ul.attr("aria-hidden", true);
-
-                if (kendo.support.browser.chrome) {
-                    this.wrapper.attr("aria-live", "polite");
-                }
             }
         },
 

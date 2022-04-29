@@ -556,6 +556,10 @@ var __meta__ = { // jshint ignore:line
                     this.clickHandler = options.click;
                 }
 
+                if (options.togglable && options.toggle && isFunction(options.toggle)) {
+                    this.toggleHandler = options.toggle;
+                }
+
                 if (options.imageUrl) {
                     img = $('<img alt="icon" class="k-image" />').prependTo(element);
                     img.attr("src", options.imageUrl);

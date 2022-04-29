@@ -138,7 +138,7 @@ var __meta__ = { // jshint ignore:line
             return target;
         };
 
-    kendo.version = "2022.1.412".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.1.429".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 

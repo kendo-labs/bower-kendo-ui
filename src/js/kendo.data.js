@@ -4586,6 +4586,7 @@ var __meta__ = { // jshint ignore:line
                 filters: []
             };
 
+            filter.logic = 'and';
             filter = extend(true, {}, filter);
             filter.filters.push({
                 field: group.field,
