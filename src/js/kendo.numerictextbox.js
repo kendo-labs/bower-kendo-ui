@@ -1,29 +1,20 @@
-/** 
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
- *                                                                                                                                                                                                      
- * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
- * you may not use this file except in compliance with the License.                                                                                                                                     
- * You may obtain a copy of the License at                                                                                                                                                              
- *                                                                                                                                                                                                      
- *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
- *                                                                                                                                                                                                      
- * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
- * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
- * See the License for the specific language governing permissions and                                                                                                                                  
- * limitations under the License.                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-
-*/
+/**
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
-    define('kendo.numerictextbox',[ "./kendo.core", "./kendo.userevents", "./kendo.floatinglabel", "./kendo.html.button" ], f);
+    define('kendo.numerictextbox',[ "kendo.core", "kendo.userevents", "kendo.floatinglabel", "kendo.html.button" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -288,7 +279,6 @@ var __meta__ = { // jshint ignore:line
             var that = this;
             Widget.fn.setOptions.call(that, options);
 
-            that._arrowsWrap.toggle(that.options.spinners);
             that.wrapper.toggleClass("k-expand-padding", !that.options.spinners);
             that._text.prop("placeholder", that.options.placeholder);
             that._placeholder(that.options.placeholder);
@@ -298,6 +288,11 @@ var __meta__ = { // jshint ignore:line
             });
 
             that.options.format = extractFormat(that.options.format);
+            that._upArrowEventHandler.destroy();
+            that._downArrowEventHandler.destroy();
+            that._arrowsWrap.remove();
+            that._arrows();
+
             that._applyCssClasses();
 
             if (options.value !== undefined) {
@@ -396,11 +391,11 @@ var __meta__ = { // jshint ignore:line
             spinners = options.spinners,
             element = that.element;
 
-            arrows = element.siblings("." + CLASS_ICON);
+            arrows = element.siblings(".k-icon-button");
 
             if (!arrows[0]) {
-                arrows = $(buttonHtml("increase", options.upArrowText) + buttonHtml("decrease", options.downArrowText))
-                        .insertAfter(element);
+                arrows = $(buttonHtml("increase", options.upArrowText, options) + buttonHtml("decrease", options.downArrowText, options))
+                        .appendTo(that.wrapper);
 
                 that._arrowsWrap = arrows.wrapAll('<span class="k-input-spinner k-spin-button"/>').parent();
             }
@@ -954,11 +949,11 @@ var __meta__ = { // jshint ignore:line
         values: kendo.cssProperties.roundedValues.concat([['full', 'full']])
     }]);
 
-    function buttonHtml(direction, text) {
+    function buttonHtml(direction, text, options) {
         var className = direction === "increase" ? "arrow-n" : "arrow-s";
         var dir = direction === "increase" ? "increase" : "decrease";
 
-        return html.renderButton('<button role="button" tabindex="-1" unselectable="on" class="k-spinner-' + dir + '" aria-label="' + text + '" title="' + text + '"></button>', extend({}, this.options, {
+        return html.renderButton('<button role="button" tabindex="-1" unselectable="on" class="k-spinner-' + dir + '" aria-label="' + text + '" title="' + text + '"></button>', extend({}, options, {
             icon: className,
             shape: null,
             rounded: null

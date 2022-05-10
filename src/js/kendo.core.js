@@ -1,27 +1,18 @@
-/** 
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
- *                                                                                                                                                                                                      
- * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
- * you may not use this file except in compliance with the License.                                                                                                                                     
- * You may obtain a copy of the License at                                                                                                                                                              
- *                                                                                                                                                                                                      
- *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
- *                                                                                                                                                                                                      
- * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
- * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
- * See the License for the specific language governing permissions and                                                                                                                                  
- * limitations under the License.                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-
-*/
+/**
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define('kendo.core',['jquery'], f);
 })(function(){
@@ -31,6 +22,15 @@ var __meta__ = { // jshint ignore:line
     name: "Core",
     category: "framework",
     description: "The core of the Kendo framework."
+};
+
+var packageMetadata = {
+    name: '@progress/kendo-ui',
+    productName: 'Kendo UI',
+    productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
+    publishDate: 0,
+    version: '',
+    licensingDocsUrl: 'https://www.telerik.com/kendo-ui/my-license/'
 };
 
 /*jshint eqnull: true, loopfunc: true, evil: true, boss: true, freeze: false*/
@@ -138,7 +138,7 @@ var __meta__ = { // jshint ignore:line
             return target;
         };
 
-    kendo.version = "2022.1.429".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.2.510".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -2881,6 +2881,8 @@ function pad(number, digits, end) {
         init: function(element, options) {
             var that = this;
 
+            validatePackage();
+
             that.element = kendo.jQuery(element).handler(that);
 
             that.angular("init", options);
@@ -5220,6 +5222,16 @@ function pad(number, digits, end) {
                 typeof obj;
         };
     }());
+
+    var KendoLicensing={validatePackage:function(){},setScriptKey:function(){}};
+
+    window.KendoLicensing = {
+        setScriptKey: KendoLicensing.setScriptKey
+    };
+
+    function validatePackage() {
+        KendoLicensing.validatePackage(packageMetadata);
+    }
 
 })(jQuery, window);
 

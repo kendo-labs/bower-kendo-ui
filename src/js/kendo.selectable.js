@@ -1,29 +1,20 @@
-/** 
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
- *                                                                                                                                                                                                      
- * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
- * you may not use this file except in compliance with the License.                                                                                                                                     
- * You may obtain a copy of the License at                                                                                                                                                              
- *                                                                                                                                                                                                      
- *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
- *                                                                                                                                                                                                      
- * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
- * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
- * See the License for the specific language governing permissions and                                                                                                                                  
- * limitations under the License.                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-
-*/
+/**
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
-    define('kendo.selectable',[ "./kendo.core", "./kendo.userevents" ], f);
+    define('kendo.selectable',[ "kendo.core", "kendo.userevents" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -67,7 +58,8 @@ var __meta__ = { // jshint ignore:line
     var Selectable = Widget.extend({
         init: function(element, options) {
             var that = this,
-                multiple;
+                multiple,
+                dragToSelect;
 
             Widget.fn.init.call(that, element, options);
 
@@ -78,6 +70,7 @@ var __meta__ = { // jshint ignore:line
             that.relatedTarget = that.options.relatedTarget;
 
             multiple = that.options.multiple;
+            dragToSelect = that.options.dragToSelect;
 
             that.userEvents = new kendo.UserEvents(that.element, {
                 global: true,
@@ -88,10 +81,13 @@ var __meta__ = { // jshint ignore:line
             });
 
             if (multiple) {
+                if(dragToSelect) {
+                    that.userEvents
+                        .bind("start", that._start.bind(that))
+                        .bind("move", that._move.bind(that))
+                        .bind("end", that._end.bind(that));
+                }
                 that.userEvents
-                   .bind("start", that._start.bind(that))
-                   .bind("move", that._move.bind(that))
-                   .bind("end", that._end.bind(that))
                    .bind("select", that._select.bind(that));
             }
         },
@@ -103,6 +99,7 @@ var __meta__ = { // jshint ignore:line
             filter: ">*",
             inputSelectors: INPUTSELECTOR,
             multiple: false,
+            dragToSelect: true,
             relatedTarget: $.noop,
             ignoreOverlapped: false,
             addIdToRanges: false
@@ -495,7 +492,6 @@ var __meta__ = { // jshint ignore:line
     Selectable.parseOptions = function(selectable) {
         var selectableMode = selectable.mode || selectable;
         var asLowerString = typeof selectableMode === "string" && selectableMode.toLowerCase();
-
         return {
             multiple: asLowerString && asLowerString.indexOf("multiple") > -1,
             cell: asLowerString && asLowerString.indexOf("cell") > -1

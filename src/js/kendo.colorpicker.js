@@ -1,29 +1,20 @@
-/** 
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
- *                                                                                                                                                                                                      
- * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
- * you may not use this file except in compliance with the License.                                                                                                                                     
- * You may obtain a copy of the License at                                                                                                                                                              
- *                                                                                                                                                                                                      
- *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
- *                                                                                                                                                                                                      
- * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
- * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
- * See the License for the specific language governing permissions and                                                                                                                                  
- * limitations under the License.                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-
-*/
+/**
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
-    define('colorpicker/colorselector',[ "../kendo.core" ], f);
+    define('colorpicker/colorselector',[ "kendo.core" ], f);
 })(function(){
 
 (function($, undefined) {
@@ -174,7 +165,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 (function(f, define){
     define('colorpicker/contrastToolUtils',[
-        "../kendo.core"
+        "kendo.core"
     ], f);
 })(function(){
 
@@ -376,7 +367,7 @@ return window.kendo;
 
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 (function(f, define){
-    define('colorpicker/colorgradient',[ "../kendo.core", "./contrastToolUtils" ], f);
+    define('colorpicker/colorgradient',[ "kendo.core", "./contrastToolUtils" ], f);
 })(function(){
 
 (function($, undefined) {
@@ -1002,7 +993,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 (function(f, define){
     define('colorpicker/colorpalette',[
-        "../kendo.core"
+        "kendo.core"
     ], f);
 })(function(){
 
@@ -1240,7 +1231,7 @@ return window.kendo;
     define('colorpicker/flatcolorpicker',[
         "./colorgradient",
         "./colorpalette",
-        "../kendo.html.button"
+        "kendo.html.button"
     ], f);
 })(function(){
 
@@ -1572,16 +1563,16 @@ return window.kendo;
 
 (function(f, define){
     define('kendo.colorpicker',[
-        "./kendo.core",
-        "./kendo.color",
-        "./kendo.popup",
-        "./kendo.slider",
-        "./kendo.userevents",
-        "./kendo.button",
-        "./kendo.binder",
-        "./kendo.textbox",
-        "./kendo.numerictextbox",
-        "./kendo.html.button",
+        "kendo.core",
+        "kendo.color",
+        "kendo.popup",
+        "kendo.slider",
+        "kendo.userevents",
+        "kendo.button",
+        "kendo.binder",
+        "kendo.textbox",
+        "kendo.numerictextbox",
+        "kendo.html.button",
 
         "./colorpicker/colorselector",
         "./colorpicker/flatcolorpicker"

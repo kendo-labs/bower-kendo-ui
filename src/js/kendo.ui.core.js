@@ -1,27 +1,18 @@
-/** 
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
- *                                                                                                                                                                                                      
- * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
- * you may not use this file except in compliance with the License.                                                                                                                                     
- * You may obtain a copy of the License at                                                                                                                                                              
- *                                                                                                                                                                                                      
- *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
- *                                                                                                                                                                                                      
- * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
- * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
- * See the License for the specific language governing permissions and                                                                                                                                  
- * limitations under the License.                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-
-*/
+/**
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
     define('kendo.core',['jquery'], f);
 })(function(){
@@ -31,6 +22,15 @@ var __meta__ = { // jshint ignore:line
     name: "Core",
     category: "framework",
     description: "The core of the Kendo framework."
+};
+
+var packageMetadata = {
+    name: '@progress/kendo-ui',
+    productName: 'Kendo UI',
+    productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
+    publishDate: 0,
+    version: '',
+    licensingDocsUrl: 'https://www.telerik.com/kendo-ui/my-license/'
 };
 
 /*jshint eqnull: true, loopfunc: true, evil: true, boss: true, freeze: false*/
@@ -138,7 +138,7 @@ var __meta__ = { // jshint ignore:line
             return target;
         };
 
-    kendo.version = "2022.1.429".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.2.510".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -2881,6 +2881,8 @@ function pad(number, digits, end) {
         init: function(element, options) {
             var that = this;
 
+            validatePackage();
+
             that.element = kendo.jQuery(element).handler(that);
 
             that.angular("init", options);
@@ -5221,6 +5223,16 @@ function pad(number, digits, end) {
         };
     }());
 
+    var KendoLicensing={validatePackage:function(){},setScriptKey:function(){}};
+
+    window.KendoLicensing = {
+        setScriptKey: KendoLicensing.setScriptKey
+    };
+
+    function validatePackage() {
+        KendoLicensing.validatePackage(packageMetadata);
+    }
+
 })(jQuery, window);
 
 return window.kendo;
@@ -5228,7 +5240,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.router',[ "./kendo.core" ], f);
+    define('kendo.router',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -5769,7 +5781,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.userevents',[ "./kendo.core" ], f);
+    define('kendo.userevents',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -6428,7 +6440,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.touch',[ "./kendo.core", "./kendo.userevents" ], f);
+    define('kendo.touch',[ "kendo.core", "kendo.userevents" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -6598,7 +6610,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.data.odata',[ "./kendo.core" ], f);
+    define('kendo.data.odata',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -7153,7 +7165,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.data.xml',[ "./kendo.core" ], f);
+    define('kendo.data.xml',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -7420,7 +7432,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.data',[ "./kendo.core", "./kendo.data.odata", "./kendo.data.xml" ], f);
+    define('kendo.data',[ "kendo.core", "kendo.data.odata", "kendo.data.xml" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -14048,7 +14060,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.binder',[ "./kendo.core", "./kendo.data" ], f);
+    define('kendo.binder',[ "kendo.core", "kendo.data" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -16182,7 +16194,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.fx',[ "./kendo.core" ], f);
+    define('kendo.fx',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -17774,9 +17786,9 @@ return window.kendo;
 
 (function(f, define){
     define('kendo.view',[
-        "./kendo.core",
-        "./kendo.binder",
-        "./kendo.fx"
+        "kendo.core",
+        "kendo.binder",
+        "kendo.fx"
     ], f);
 })(function(){
 
@@ -18502,7 +18514,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function (f, define) {
-    define('kendo.floatinglabel',["./kendo.core"], f);
+    define('kendo.floatinglabel',["kendo.core"], f);
 })(function () {
 
 var __meta__ = {// jshint ignore:line
@@ -18618,7 +18630,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) { (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.data.signalr',[ "./kendo.data" ], f);
+    define('kendo.data.signalr',[ "kendo.data" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -18750,7 +18762,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.validator',[ "./kendo.core" ], f);
+    define('kendo.validator',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -19543,7 +19555,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)();  });
 
 (function(f, define){
-    define('kendo.draganddrop',[ "./kendo.core", "./kendo.userevents" ], f);
+    define('kendo.draganddrop',[ "kendo.core", "kendo.userevents" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -20674,7 +20686,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.scroller',[ "./kendo.fx", "./kendo.draganddrop" ], f);
+    define('kendo.mobile.scroller',[ "kendo.fx", "kendo.draganddrop" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -21383,7 +21395,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.resizable',[ "./kendo.core", "./kendo.draganddrop" ], f);
+    define('kendo.resizable',[ "kendo.core", "kendo.draganddrop" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -21580,7 +21592,7 @@ return window.kendo;
 
 /* jshint eqnull: true */
 (function(f, define){
-    define('kendo.sortable',[ "./kendo.draganddrop" ], f);
+    define('kendo.sortable',[ "kendo.draganddrop" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -22104,7 +22116,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.selectable',[ "./kendo.core", "./kendo.userevents" ], f);
+    define('kendo.selectable',[ "kendo.core", "kendo.userevents" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -22148,7 +22160,8 @@ var __meta__ = { // jshint ignore:line
     var Selectable = Widget.extend({
         init: function(element, options) {
             var that = this,
-                multiple;
+                multiple,
+                dragToSelect;
 
             Widget.fn.init.call(that, element, options);
 
@@ -22159,6 +22172,7 @@ var __meta__ = { // jshint ignore:line
             that.relatedTarget = that.options.relatedTarget;
 
             multiple = that.options.multiple;
+            dragToSelect = that.options.dragToSelect;
 
             that.userEvents = new kendo.UserEvents(that.element, {
                 global: true,
@@ -22169,10 +22183,13 @@ var __meta__ = { // jshint ignore:line
             });
 
             if (multiple) {
+                if(dragToSelect) {
+                    that.userEvents
+                        .bind("start", that._start.bind(that))
+                        .bind("move", that._move.bind(that))
+                        .bind("end", that._end.bind(that));
+                }
                 that.userEvents
-                   .bind("start", that._start.bind(that))
-                   .bind("move", that._move.bind(that))
-                   .bind("end", that._end.bind(that))
                    .bind("select", that._select.bind(that));
             }
         },
@@ -22184,6 +22201,7 @@ var __meta__ = { // jshint ignore:line
             filter: ">*",
             inputSelectors: INPUTSELECTOR,
             multiple: false,
+            dragToSelect: true,
             relatedTarget: $.noop,
             ignoreOverlapped: false,
             addIdToRanges: false
@@ -22576,7 +22594,6 @@ var __meta__ = { // jshint ignore:line
     Selectable.parseOptions = function(selectable) {
         var selectableMode = selectable.mode || selectable;
         var asLowerString = typeof selectableMode === "string" && selectableMode.toLowerCase();
-
         return {
             multiple: asLowerString && asLowerString.indexOf("multiple") > -1,
             cell: asLowerString && asLowerString.indexOf("cell") > -1
@@ -22617,7 +22634,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function (f, define) {
-    define('kendo.badge',["./kendo.core"], f);
+    define('kendo.badge',["kendo.core"], f);
 })(function () {
 
 var __meta__ = {// jshint ignore:line
@@ -22931,7 +22948,7 @@ return window.kendo;
 });
 (function(f, define){
     define('kendo.html.base',[
-        "./kendo.core"
+        "kendo.core"
     ], f);
 })(function(){
 
@@ -23010,7 +23027,7 @@ return window.kendo;
 
 (function(f, define){
     define('kendo.html.button',[
-        "./kendo.html.base"
+        "kendo.html.base"
     ], f);
 })(function(){
 
@@ -23160,7 +23177,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function (f, define) {
-    define('kendo.button',["./kendo.core", "./kendo.badge", "./kendo.html.button"], f);
+    define('kendo.button',["kendo.core", "kendo.badge", "kendo.html.button"], f);
 })(function () {
 
     var __meta__ = { // jshint ignore:line
@@ -23185,7 +23202,7 @@ return window.kendo;
             DISABLED = "disabled",
             DISABLEDSTATE = "k-disabled",
             FOCUSEDSTATE = "k-focus",
-            SELECTEDSTATE = "k-selected";
+            ACTIVESTATE = "k-active";
 
         var BUTTON_DEFAULTS = {
             icon: "",
@@ -23284,7 +23301,7 @@ return window.kendo;
                 var that = this;
                 that.element.removeClass(FOCUSEDSTATE);
                 setTimeout(function() {
-                    that.element.removeClass(SELECTEDSTATE);
+                    that.element.removeClass(ACTIVESTATE);
                 });
             },
 
@@ -23303,12 +23320,12 @@ return window.kendo;
             },
 
             _removeActive: function() {
-                this.element.removeClass(SELECTEDSTATE);
+                this.element.removeClass(ACTIVESTATE);
             },
 
             _addActive: function() {
                 if (this.options.enable) {
-                    this.element.addClass(SELECTEDSTATE);
+                    this.element.addClass(ACTIVESTATE);
                 }
             },
 
@@ -23393,7 +23410,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.bottomnavigation',[ "./kendo.core" ], f);
+    define('kendo.bottomnavigation',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -23754,7 +23771,7 @@ return window.kendo;
 
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 (function(f, define){
-    define('kendo.pager',[ "./kendo.data" ], f);
+    define('kendo.pager',[ "kendo.data" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -24480,7 +24497,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.popup',[ "./kendo.core" ], f);
+    define('kendo.popup',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -25345,7 +25362,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.notification',[ "./kendo.core", "./kendo.popup" ], f);
+    define('kendo.notification',[ "kendo.core", "kendo.popup" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -25838,7 +25855,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.tooltip',[ "./kendo.core", "./kendo.popup", "./kendo.fx" ], f);
+    define('kendo.tooltip',[ "kendo.core", "kendo.popup", "kendo.fx" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -26439,7 +26456,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.toolbar',[ "./kendo.core", "./kendo.userevents", "./kendo.popup", "./kendo.html.button" ], f);
+    define('kendo.toolbar',[ "kendo.core", "kendo.userevents", "kendo.popup", "kendo.html.button" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -26473,7 +26490,7 @@ var __meta__ = { // jshint ignore:line
         SPACER_CLASS = "k-spacer",
         POPUP = "k-popup",
         RESIZABLE_TOOLBAR = "k-toolbar-resizable",
-        STATE_ACTIVE = "k-active",
+        STATE_SELECTED = "k-selected",
         STATE_DISABLED = "k-disabled",
         STATE_HIDDEN = "k-state-hidden",
         HIDDEN = "k-hidden",
@@ -26774,7 +26791,7 @@ var __meta__ = { // jshint ignore:line
                     this.element.attr(ARIA_PRESSED, selected);
                 }
 
-                this.element.toggleClass(STATE_ACTIVE, selected);
+                this.element.toggleClass(STATE_SELECTED, selected);
                 this.options.selected = selected;
             }
         });
@@ -26850,9 +26867,9 @@ var __meta__ = { // jshint ignore:line
                 }
 
                 if (this.options.isChild) {
-                    this.element.toggleClass(STATE_ACTIVE, selected);
+                    this.element.toggleClass(STATE_SELECTED, selected);
                 } else {
-                    this.element.find(DOT + KBUTTON).toggleClass(STATE_ACTIVE, selected);
+                    this.element.find(DOT + KBUTTON).toggleClass(STATE_SELECTED, selected);
                 }
                 this.options.selected = selected;
             }
@@ -27383,7 +27400,7 @@ var __meta__ = { // jshint ignore:line
 
         function toggleActive(e) {
             if (!e.target.is(".k-toggle-button")) {
-                e.target.toggleClass(STATE_ACTIVE, e.type == "press");
+                e.target.toggleClass(STATE_SELECTED, e.type == "press");
             }
         }
 
@@ -27474,7 +27491,7 @@ var __meta__ = { // jshint ignore:line
                     element.addClass("km-widget");
                     KBUTTON = "km-button";
                     BUTTON_GROUP = "km-buttongroup";
-                    STATE_ACTIVE = "km-state-active";
+                    STATE_SELECTED = "km-state-active";
                     STATE_DISABLED = "km-state-disabled";
                 }
 
@@ -27786,7 +27803,7 @@ var __meta__ = { // jshint ignore:line
             },
 
             getSelectedFromGroup: function(groupName) {
-                return this.element.find(DOT + TOGGLE_BUTTON + "[data-group='" + groupName + "']").filter(DOT + STATE_ACTIVE);
+                return this.element.find(DOT + TOGGLE_BUTTON + "[data-group='" + groupName + "']").filter(DOT + STATE_SELECTED);
             },
 
             toggle: function(button, checked) {
@@ -28337,7 +28354,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define) {
-    define('kendo.list',[ "./kendo.data", "./kendo.popup" ], f);
+    define('kendo.list',[ "kendo.data", "kendo.popup" ], f);
 })(function() {
 
 var __meta__ = { // jshint ignore:line
@@ -31248,7 +31265,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.calendar',[ "./kendo.core", "./kendo.selectable" ], f);
+    define('kendo.calendar',[ "kendo.core", "kendo.selectable" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -33330,7 +33347,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.dateinput',[ "./kendo.core" ], f);
+    define('kendo.dateinput',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -34191,7 +34208,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.datepicker',[ "./kendo.calendar", "./kendo.popup",  "./kendo.dateinput", "./kendo.html.button"], f);
+    define('kendo.datepicker',[ "kendo.calendar", "kendo.popup",  "kendo.dateinput", "kendo.html.button"], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -35053,7 +35070,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.virtuallist',[ "./kendo.data" ], f);
+    define('kendo.virtuallist',[ "kendo.data" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -36900,7 +36917,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.autocomplete',[ "./kendo.list", "./kendo.mobile.scroller", "./kendo.virtuallist" ], f);
+    define('kendo.autocomplete',[ "kendo.list", "kendo.mobile.scroller", "kendo.virtuallist" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -37746,7 +37763,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.dropdownlist',[ "./kendo.list", "./kendo.mobile.scroller", "./kendo.virtuallist", "./kendo.html.button" ], f);
+    define('kendo.dropdownlist',[ "kendo.list", "kendo.mobile.scroller", "kendo.virtuallist", "kendo.html.button" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -39241,7 +39258,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.combobox',[ "./kendo.list", "./kendo.mobile.scroller", "./kendo.virtuallist", "./kendo.html.button" ], f);
+    define('kendo.combobox',[ "kendo.list", "kendo.mobile.scroller", "kendo.virtuallist", "kendo.html.button" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -40463,7 +40480,7 @@ return window.kendo;
 
 (function(f, define){
     define('kendo.html.chip',[
-        "./kendo.html.base"
+        "kendo.html.base"
     ], f);
 })(function(){
 
@@ -40548,7 +40565,7 @@ return window.kendo;
 
 (function(f, define){
     define('kendo.html.chiplist',[
-        "./kendo.html.base"
+        "kendo.html.base"
     ], f);
 })(function(){
 
@@ -40602,7 +40619,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.multiselect',[ "./kendo.list", "./kendo.mobile.scroller", "./kendo.virtuallist", "./kendo.html.chip", "./kendo.html.chiplist", "./kendo.html.button" ], f);
+    define('kendo.multiselect',[ "kendo.list", "kendo.mobile.scroller", "kendo.virtuallist", "kendo.html.chip", "kendo.html.chiplist", "kendo.html.button" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -42289,7 +42306,7 @@ return window.kendo;
  * run `src-modules/sync.sh` in this repository.
  */
 (function(f, define){
-    define('kendo.color',[ "./kendo.core" ], f);
+    define('kendo.color',[ "kendo.core" ], f);
 })(function(){
 
     var __meta__ = { // jshint ignore:line
@@ -42866,7 +42883,7 @@ kendo.deepExtend(kendo, {
 
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 (function(f, define) {
-    define('kendo.slider',[ "./kendo.draganddrop" ], f);
+    define('kendo.slider',[ "kendo.draganddrop" ], f);
 })(function() {
 
 var __meta__ = { // jshint ignore:line
@@ -44635,7 +44652,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 
 (function (f, define) {
-    define('kendo.textbox',["./kendo.core", "./kendo.floatinglabel"], f);
+    define('kendo.textbox',["kendo.core", "kendo.floatinglabel"], f);
 })(function () {
 
 var __meta__ = {// jshint ignore:line
@@ -44891,7 +44908,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) { (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.numerictextbox',[ "./kendo.core", "./kendo.userevents", "./kendo.floatinglabel", "./kendo.html.button" ], f);
+    define('kendo.numerictextbox',[ "kendo.core", "kendo.userevents", "kendo.floatinglabel", "kendo.html.button" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -45156,7 +45173,6 @@ var __meta__ = { // jshint ignore:line
             var that = this;
             Widget.fn.setOptions.call(that, options);
 
-            that._arrowsWrap.toggle(that.options.spinners);
             that.wrapper.toggleClass("k-expand-padding", !that.options.spinners);
             that._text.prop("placeholder", that.options.placeholder);
             that._placeholder(that.options.placeholder);
@@ -45166,6 +45182,11 @@ var __meta__ = { // jshint ignore:line
             });
 
             that.options.format = extractFormat(that.options.format);
+            that._upArrowEventHandler.destroy();
+            that._downArrowEventHandler.destroy();
+            that._arrowsWrap.remove();
+            that._arrows();
+
             that._applyCssClasses();
 
             if (options.value !== undefined) {
@@ -45264,11 +45285,11 @@ var __meta__ = { // jshint ignore:line
             spinners = options.spinners,
             element = that.element;
 
-            arrows = element.siblings("." + CLASS_ICON);
+            arrows = element.siblings(".k-icon-button");
 
             if (!arrows[0]) {
-                arrows = $(buttonHtml("increase", options.upArrowText) + buttonHtml("decrease", options.downArrowText))
-                        .insertAfter(element);
+                arrows = $(buttonHtml("increase", options.upArrowText, options) + buttonHtml("decrease", options.downArrowText, options))
+                        .appendTo(that.wrapper);
 
                 that._arrowsWrap = arrows.wrapAll('<span class="k-input-spinner k-spin-button"/>').parent();
             }
@@ -45822,11 +45843,11 @@ var __meta__ = { // jshint ignore:line
         values: kendo.cssProperties.roundedValues.concat([['full', 'full']])
     }]);
 
-    function buttonHtml(direction, text) {
+    function buttonHtml(direction, text, options) {
         var className = direction === "increase" ? "arrow-n" : "arrow-s";
         var dir = direction === "increase" ? "increase" : "decrease";
 
-        return html.renderButton('<button role="button" tabindex="-1" unselectable="on" class="k-spinner-' + dir + '" aria-label="' + text + '" title="' + text + '"></button>', extend({}, this.options, {
+        return html.renderButton('<button role="button" tabindex="-1" unselectable="on" class="k-spinner-' + dir + '" aria-label="' + text + '" title="' + text + '"></button>', extend({}, options, {
             icon: className,
             shape: null,
             rounded: null
@@ -45852,7 +45873,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('colorpicker/colorselector',[ "../kendo.core" ], f);
+    define('colorpicker/colorselector',[ "kendo.core" ], f);
 })(function(){
 
 (function($, undefined) {
@@ -46003,7 +46024,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 (function(f, define){
     define('colorpicker/contrastToolUtils',[
-        "../kendo.core"
+        "kendo.core"
     ], f);
 })(function(){
 
@@ -46205,7 +46226,7 @@ return window.kendo;
 
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 (function(f, define){
-    define('colorpicker/colorgradient',[ "../kendo.core", "./contrastToolUtils" ], f);
+    define('colorpicker/colorgradient',[ "kendo.core", "./contrastToolUtils" ], f);
 })(function(){
 
 (function($, undefined) {
@@ -46831,7 +46852,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 (function(f, define){
     define('colorpicker/colorpalette',[
-        "../kendo.core"
+        "kendo.core"
     ], f);
 })(function(){
 
@@ -47069,7 +47090,7 @@ return window.kendo;
     define('colorpicker/flatcolorpicker',[
         "./colorgradient",
         "./colorpalette",
-        "../kendo.html.button"
+        "kendo.html.button"
     ], f);
 })(function(){
 
@@ -47401,16 +47422,16 @@ return window.kendo;
 
 (function(f, define){
     define('kendo.colorpicker',[
-        "./kendo.core",
-        "./kendo.color",
-        "./kendo.popup",
-        "./kendo.slider",
-        "./kendo.userevents",
-        "./kendo.button",
-        "./kendo.binder",
-        "./kendo.textbox",
-        "./kendo.numerictextbox",
-        "./kendo.html.button",
+        "kendo.core",
+        "kendo.color",
+        "kendo.popup",
+        "kendo.slider",
+        "kendo.userevents",
+        "kendo.button",
+        "kendo.binder",
+        "kendo.textbox",
+        "kendo.numerictextbox",
+        "kendo.html.button",
 
         "./colorpicker/colorselector",
         "./colorpicker/flatcolorpicker"
@@ -47836,7 +47857,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.toggleinputbase',[ "./kendo.core" ], f);
+    define('kendo.toggleinputbase',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -47974,7 +47995,7 @@ return window.kendo;
 
 (function(f, define){
     define('kendo.html.input',[
-        "./kendo.html.base"
+        "kendo.html.base"
     ], f);
 })(function(){
 
@@ -48121,7 +48142,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.checkbox',[ "./kendo.toggleinputbase", "./kendo.html.input" ], f);
+    define('kendo.checkbox',[ "kendo.toggleinputbase", "kendo.html.input" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -48176,7 +48197,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.editable',[ "./kendo.checkbox", "./kendo.dropdownlist", "./kendo.datepicker", "./kendo.numerictextbox", "./kendo.validator", "./kendo.binder" ], f);
+    define('kendo.editable',[ "kendo.checkbox", "kendo.dropdownlist", "kendo.datepicker", "kendo.numerictextbox", "kendo.validator", "kendo.binder" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -48669,7 +48690,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.listview',[ "./kendo.data", "./kendo.editable", "./kendo.selectable", "./kendo.pager" ], f);
+    define('kendo.listview',[ "kendo.data", "kendo.editable", "kendo.selectable", "kendo.pager" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -48715,7 +48736,6 @@ var __meta__ = { // jshint ignore:line
         KEDITITEM = "k-edit-item",
         PAGER_CLASS = "k-listview-pager",
         ITEM_CLASS = "k-listview-item",
-        TABINDEX = "tabindex",
         ARIA_SETSIZE = "aria-setsize",
         ARIA_POSINSET = "aria-posinset",
         ARIA_ROLE = "role",
@@ -48915,8 +48935,6 @@ var __meta__ = { // jshint ignore:line
             } else {
                 this.content = this.element;
             }
-
-            this.content.attr(TABINDEX, -1);
 
             if (height) {
                 this.element.css("height", height);
@@ -49388,7 +49406,7 @@ var __meta__ = { // jshint ignore:line
                             active = activeElement(), idx,
                             scrollable = that.options.scrollable;
 
-                        if (!target.is(that.element) || (!canHandle && !isTextBox && key !== keys.ESC) || (isTextBox && key !== keys.ESC && key !== keys.ENTER)) {
+                        if (target.hasClass(PAGER_CLASS) || (!canHandle && !isTextBox && key !== keys.ESC) || (isTextBox && key !== keys.ESC && key !== keys.ENTER)) {
                             return;
                         }
 
@@ -49550,6 +49568,7 @@ var __meta__ = { // jshint ignore:line
                 index = editable.element.index();
                 editable.element.replaceWith(template(data));
                 item = that.items().eq(index);
+                item.addClass(ITEM_CLASS);
                 item.attr(kendo.attr("uid"), data.uid);
                 item.attr(ARIA_ROLE, role);
 
@@ -49658,11 +49677,10 @@ var __meta__ = { // jshint ignore:line
 
         _crudHandlers: function() {
             var that = this,
-                mousedownNs = MOUSEDOWN + NS,
                 touchstartNs = TOUCHSTART + NS,
                 clickNs = CLICK + NS;
 
-            that.content.on(mousedownNs + " " + touchstartNs, ".k-edit-button", function(e) {
+            that.content.on(touchstartNs + " " + clickNs, ".k-edit-button", function(e) {
                 e.preventDefault();
                 var item = $(this).closest("[" + kendo.attr("uid") + "]");
                 setTimeout(function() {
@@ -49671,7 +49689,7 @@ var __meta__ = { // jshint ignore:line
             });
 
 
-            that.content.on(mousedownNs + " " + touchstartNs, ".k-delete-button", function(e) {
+            that.content.on(touchstartNs + " " + clickNs, ".k-delete-button", function(e) {
                 e.preventDefault();
                 var item = $(this).closest("[" + kendo.attr("uid") + "]");
                  setTimeout(function() {
@@ -49721,7 +49739,7 @@ return window.kendo;
 
 /* jshint eqnull: true */
 (function(f, define) {
-    define('kendo.listbox',[ "./kendo.draganddrop", "./kendo.data", "./kendo.selectable" ], f);
+    define('kendo.listbox',[ "kendo.draganddrop", "kendo.data", "kendo.selectable" ], f);
 })(function() {
 
 var __meta__ = { // jshint ignore:line
@@ -51326,7 +51344,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 
 (function (f, define) {
-    define('kendo.loader',["./kendo.core"], f);
+    define('kendo.loader',["kendo.core"], f);
 })(function () {
 
 var __meta__ = {// jshint ignore:line
@@ -51526,7 +51544,7 @@ return window.kendo;
     (a3 || a2)();
 });
 (function (f, define) {
-    define('kendo.textarea',["./kendo.core", "./kendo.floatinglabel"], f);
+    define('kendo.textarea',["kendo.core", "kendo.floatinglabel"], f);
 })(function () {
 
 var __meta__ = {// jshint ignore:line
@@ -51831,7 +51849,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function (a1, a2, a3) { (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.maskedtextbox',[ "./kendo.core", "./kendo.floatinglabel" ], f);
+    define('kendo.maskedtextbox',[ "kendo.core", "kendo.floatinglabel" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -52558,7 +52576,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.menu',[ "./kendo.popup", "./kendo.data" ], f);
+    define('kendo.menu',[ "kendo.popup", "kendo.data" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -55316,7 +55334,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.panelbar',[ "./kendo.data" ], f);
+    define('kendo.panelbar',[ "kendo.data" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -57091,7 +57109,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.progressbar',[ "./kendo.core" ], f);
+    define('kendo.progressbar',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -57608,7 +57626,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.responsivepanel',[ "./kendo.core" ], f);
+    define('kendo.responsivepanel',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -57773,7 +57791,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define) {
-    define('kendo.tabstrip',[ "./kendo.data" ], f);
+    define('kendo.tabstrip',[ "kendo.data" ], f);
 })(function() {
 
 var __meta__ = { // jshint ignore:line
@@ -59360,7 +59378,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.timepicker',[ "./kendo.popup", "./kendo.dateinput", "./kendo.html.button"], f);
+    define('kendo.timepicker',[ "kendo.popup", "kendo.dateinput", "kendo.html.button"], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -61351,7 +61369,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.datetimepicker',[ "./kendo.datepicker", "./kendo.timepicker", "./kendo.html.button"], f);
+    define('kendo.datetimepicker',[ "kendo.datepicker", "kendo.timepicker", "kendo.html.button"], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -62511,7 +62529,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.splitter',[ "./kendo.resizable" ], f);
+    define('kendo.splitter',[ "kendo.resizable" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -63321,7 +63339,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define) {
-    define('kendo.dialog',["./kendo.core", "./kendo.popup", "./kendo.textbox"], f);
+    define('kendo.dialog',["kendo.core", "kendo.popup", "kendo.textbox"], f);
 })(function() {
 
     var __meta__ = { // jshint ignore:line
@@ -64456,7 +64474,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.window',[ "./kendo.draganddrop", "./kendo.popup"], f);
+    define('kendo.window',[ "kendo.draganddrop", "kendo.popup"], f);
 })(function(){
 
     var __meta__ = { // jshint ignore:line
@@ -66623,7 +66641,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.view',[ "./kendo.core", "./kendo.fx", "./kendo.mobile.scroller", "./kendo.view" ], f);
+    define('kendo.mobile.view',[ "kendo.core", "kendo.fx", "kendo.mobile.scroller", "kendo.view" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -67341,7 +67359,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.loader',[ "./kendo.core" ], f);
+    define('kendo.mobile.loader',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -67440,7 +67458,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.pane',[ "./kendo.mobile.view", "./kendo.mobile.loader" ], f);
+    define('kendo.mobile.pane',[ "kendo.mobile.view", "kendo.mobile.loader" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -67811,7 +67829,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.popover',[ "./kendo.popup", "./kendo.mobile.pane" ], f);
+    define('kendo.mobile.popover',[ "kendo.popup", "kendo.mobile.pane" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -68088,7 +68106,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.shim',[ "./kendo.popup" ], f);
+    define('kendo.mobile.shim',[ "kendo.popup" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -68221,7 +68239,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.modalview',[ "./kendo.mobile.shim", "./kendo.mobile.view" ], f);
+    define('kendo.mobile.modalview',[ "kendo.mobile.shim", "kendo.mobile.view" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -68353,7 +68371,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.drawer',[ "./kendo.mobile.view", "./kendo.userevents" ], f);
+    define('kendo.mobile.drawer',[ "kendo.mobile.view", "kendo.userevents" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -68679,7 +68697,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.splitview',[ "./kendo.mobile.pane" ], f);
+    define('kendo.mobile.splitview',[ "kendo.mobile.pane" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -68829,7 +68847,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.application',[ "./kendo.mobile.pane", "./kendo.router" ], f);
+    define('kendo.mobile.application',[ "kendo.mobile.pane", "kendo.router" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -69334,7 +69352,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.actionsheet',[ "./kendo.mobile.popover", "./kendo.mobile.shim" ], f);
+    define('kendo.mobile.actionsheet',[ "kendo.mobile.popover", "kendo.mobile.shim" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -69504,7 +69522,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.button',[ "./kendo.userevents" ], f);
+    define('kendo.mobile.button',[ "kendo.userevents" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -69773,7 +69791,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.buttongroup',[ "./kendo.core" ], f);
+    define('kendo.mobile.buttongroup',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -69930,7 +69948,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.collapsible',[ "./kendo.core" ], f);
+    define('kendo.mobile.collapsible',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -70120,7 +70138,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.listview',[ "./kendo.data", "./kendo.userevents", "./kendo.mobile.button" ], f);
+    define('kendo.mobile.listview',[ "kendo.data", "kendo.userevents", "kendo.mobile.button" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -71446,7 +71464,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.navbar',[ "./kendo.core" ], f);
+    define('kendo.mobile.navbar',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -71528,7 +71546,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.scrollview',[ "./kendo.fx", "./kendo.data", "./kendo.draganddrop" ], f);
+    define('kendo.mobile.scrollview',[ "kendo.fx", "kendo.data", "kendo.draganddrop" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -72438,7 +72456,7 @@ return window.kendo;
 
 /* jshint multistr: true */
 (function(f, define){
-    define('kendo.mobile.switch',[ "./kendo.fx", "./kendo.userevents" ], f);
+    define('kendo.mobile.switch',[ "kendo.fx", "kendo.userevents" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -72702,7 +72720,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.mobile.tabstrip',[ "./kendo.core" ], f);
+    define('kendo.mobile.tabstrip',[ "kendo.core" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -72882,7 +72900,7 @@ return window.kendo;
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 
 (function(f, define){
-    define('kendo.angular',[ "./kendo.core" ], f);
+    define('kendo.angular',[ "kendo.core" ], f);
 })(function() {
 
 var __meta__ = { // jshint ignore:line
@@ -74372,81 +74390,81 @@ return window.kendo;
 
 (function(f, define){
     define('kendo.ui.core',[
-        "./kendo.core",
-        "./kendo.router",
-        "./kendo.touch",
-        "./kendo.view",
-        "./kendo.floatinglabel",
-        "./kendo.fx",
-        "./kendo.data.odata",
-        "./kendo.data.xml",
-        "./kendo.data",
-        "./kendo.data.signalr",
-        "./kendo.binder",
-        "./kendo.validator",
-        "./kendo.userevents",
-        "./kendo.draganddrop",
-        "./kendo.mobile.scroller",
-        "./kendo.resizable",
-        "./kendo.sortable",
-        "./kendo.selectable",
-        "./kendo.badge",
-        "./kendo.button",
-        "./kendo.bottomnavigation",
-        "./kendo.pager",
-        "./kendo.popup",
-        "./kendo.notification",
-        "./kendo.tooltip",
-        "./kendo.toolbar",
-        "./kendo.list",
-        "./kendo.calendar",
-        "./kendo.dateinput",
-        "./kendo.datepicker",
-        "./kendo.autocomplete",
-        "./kendo.dropdownlist",
-        "./kendo.combobox",
-        "./kendo.multiselect",
-        "./kendo.colorpicker",
-        "./kendo.listview",
-        "./kendo.listbox",
-        "./kendo.loader",
-        "./kendo.textbox",
-        "./kendo.textarea",
-        "./kendo.numerictextbox",
-        "./kendo.maskedtextbox",
-        "./kendo.menu",
-        "./kendo.editable",
-        "./kendo.panelbar",
-        "./kendo.progressbar",
-        "./kendo.responsivepanel",
-        "./kendo.tabstrip",
-        "./kendo.timepicker",
-        "./kendo.datetimepicker",
-        "./kendo.slider",
-        "./kendo.splitter",
-        "./kendo.dialog",
-        "./kendo.window",
-        "./kendo.virtuallist",
-        "./kendo.mobile.popover",
-        "./kendo.mobile.loader",
-        "./kendo.mobile.scroller",
-        "./kendo.mobile.shim",
-        "./kendo.mobile.view",
-        "./kendo.mobile.modalview",
-        "./kendo.mobile.drawer",
-        "./kendo.mobile.splitview",
-        "./kendo.mobile.pane",
-        "./kendo.mobile.application",
-        "./kendo.mobile.actionsheet",
-        "./kendo.mobile.button",
-        "./kendo.mobile.buttongroup",
-        "./kendo.mobile.collapsible",
-        "./kendo.mobile.listview",
-        "./kendo.mobile.navbar",
-        "./kendo.mobile.scrollview",
-        "./kendo.mobile.switch",
-        "./kendo.mobile.tabstrip",
-        "./kendo.angular"
+        "kendo.core",
+        "kendo.router",
+        "kendo.touch",
+        "kendo.view",
+        "kendo.floatinglabel",
+        "kendo.fx",
+        "kendo.data.odata",
+        "kendo.data.xml",
+        "kendo.data",
+        "kendo.data.signalr",
+        "kendo.binder",
+        "kendo.validator",
+        "kendo.userevents",
+        "kendo.draganddrop",
+        "kendo.mobile.scroller",
+        "kendo.resizable",
+        "kendo.sortable",
+        "kendo.selectable",
+        "kendo.badge",
+        "kendo.button",
+        "kendo.bottomnavigation",
+        "kendo.pager",
+        "kendo.popup",
+        "kendo.notification",
+        "kendo.tooltip",
+        "kendo.toolbar",
+        "kendo.list",
+        "kendo.calendar",
+        "kendo.dateinput",
+        "kendo.datepicker",
+        "kendo.autocomplete",
+        "kendo.dropdownlist",
+        "kendo.combobox",
+        "kendo.multiselect",
+        "kendo.colorpicker",
+        "kendo.listview",
+        "kendo.listbox",
+        "kendo.loader",
+        "kendo.textbox",
+        "kendo.textarea",
+        "kendo.numerictextbox",
+        "kendo.maskedtextbox",
+        "kendo.menu",
+        "kendo.editable",
+        "kendo.panelbar",
+        "kendo.progressbar",
+        "kendo.responsivepanel",
+        "kendo.tabstrip",
+        "kendo.timepicker",
+        "kendo.datetimepicker",
+        "kendo.slider",
+        "kendo.splitter",
+        "kendo.dialog",
+        "kendo.window",
+        "kendo.virtuallist",
+        "kendo.mobile.popover",
+        "kendo.mobile.loader",
+        "kendo.mobile.scroller",
+        "kendo.mobile.shim",
+        "kendo.mobile.view",
+        "kendo.mobile.modalview",
+        "kendo.mobile.drawer",
+        "kendo.mobile.splitview",
+        "kendo.mobile.pane",
+        "kendo.mobile.application",
+        "kendo.mobile.actionsheet",
+        "kendo.mobile.button",
+        "kendo.mobile.buttongroup",
+        "kendo.mobile.collapsible",
+        "kendo.mobile.listview",
+        "kendo.mobile.navbar",
+        "kendo.mobile.scrollview",
+        "kendo.mobile.switch",
+        "kendo.mobile.tabstrip",
+        "kendo.angular"
     ], f);
 })(function(){
     "bundle all";

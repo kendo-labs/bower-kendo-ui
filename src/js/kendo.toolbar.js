@@ -1,29 +1,20 @@
-/** 
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
- *                                                                                                                                                                                                      
- * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
- * you may not use this file except in compliance with the License.                                                                                                                                     
- * You may obtain a copy of the License at                                                                                                                                                              
- *                                                                                                                                                                                                      
- *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
- *                                                                                                                                                                                                      
- * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
- * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
- * See the License for the specific language governing permissions and                                                                                                                                  
- * limitations under the License.                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-
-*/
+/**
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function(f, define){
-    define('kendo.toolbar',[ "./kendo.core", "./kendo.userevents", "./kendo.popup", "./kendo.html.button" ], f);
+    define('kendo.toolbar',[ "kendo.core", "kendo.userevents", "kendo.popup", "kendo.html.button" ], f);
 })(function(){
 
 var __meta__ = { // jshint ignore:line
@@ -57,7 +48,7 @@ var __meta__ = { // jshint ignore:line
         SPACER_CLASS = "k-spacer",
         POPUP = "k-popup",
         RESIZABLE_TOOLBAR = "k-toolbar-resizable",
-        STATE_ACTIVE = "k-active",
+        STATE_SELECTED = "k-selected",
         STATE_DISABLED = "k-disabled",
         STATE_HIDDEN = "k-state-hidden",
         HIDDEN = "k-hidden",
@@ -358,7 +349,7 @@ var __meta__ = { // jshint ignore:line
                     this.element.attr(ARIA_PRESSED, selected);
                 }
 
-                this.element.toggleClass(STATE_ACTIVE, selected);
+                this.element.toggleClass(STATE_SELECTED, selected);
                 this.options.selected = selected;
             }
         });
@@ -434,9 +425,9 @@ var __meta__ = { // jshint ignore:line
                 }
 
                 if (this.options.isChild) {
-                    this.element.toggleClass(STATE_ACTIVE, selected);
+                    this.element.toggleClass(STATE_SELECTED, selected);
                 } else {
-                    this.element.find(DOT + KBUTTON).toggleClass(STATE_ACTIVE, selected);
+                    this.element.find(DOT + KBUTTON).toggleClass(STATE_SELECTED, selected);
                 }
                 this.options.selected = selected;
             }
@@ -967,7 +958,7 @@ var __meta__ = { // jshint ignore:line
 
         function toggleActive(e) {
             if (!e.target.is(".k-toggle-button")) {
-                e.target.toggleClass(STATE_ACTIVE, e.type == "press");
+                e.target.toggleClass(STATE_SELECTED, e.type == "press");
             }
         }
 
@@ -1058,7 +1049,7 @@ var __meta__ = { // jshint ignore:line
                     element.addClass("km-widget");
                     KBUTTON = "km-button";
                     BUTTON_GROUP = "km-buttongroup";
-                    STATE_ACTIVE = "km-state-active";
+                    STATE_SELECTED = "km-state-active";
                     STATE_DISABLED = "km-state-disabled";
                 }
 
@@ -1370,7 +1361,7 @@ var __meta__ = { // jshint ignore:line
             },
 
             getSelectedFromGroup: function(groupName) {
-                return this.element.find(DOT + TOGGLE_BUTTON + "[data-group='" + groupName + "']").filter(DOT + STATE_ACTIVE);
+                return this.element.find(DOT + TOGGLE_BUTTON + "[data-group='" + groupName + "']").filter(DOT + STATE_SELECTED);
             },
 
             toggle: function(button, checked) {

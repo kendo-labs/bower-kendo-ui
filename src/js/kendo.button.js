@@ -1,29 +1,20 @@
-/** 
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.                                                                                      
- *                                                                                                                                                                                                      
- * Licensed under the Apache License, Version 2.0 (the "License");                                                                                                                                      
- * you may not use this file except in compliance with the License.                                                                                                                                     
- * You may obtain a copy of the License at                                                                                                                                                              
- *                                                                                                                                                                                                      
- *     http://www.apache.org/licenses/LICENSE-2.0                                                                                                                                                       
- *                                                                                                                                                                                                      
- * Unless required by applicable law or agreed to in writing, software                                                                                                                                  
- * distributed under the License is distributed on an "AS IS" BASIS,                                                                                                                                    
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                                                                                                                             
- * See the License for the specific language governing permissions and                                                                                                                                  
- * limitations under the License.                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-                                                                                                                                                                                                       
-
-*/
+/**
+ * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 (function (f, define) {
-    define('kendo.button',["./kendo.core", "./kendo.badge", "./kendo.html.button"], f);
+    define('kendo.button',["kendo.core", "kendo.badge", "kendo.html.button"], f);
 })(function () {
 
     var __meta__ = { // jshint ignore:line
@@ -48,7 +39,7 @@
             DISABLED = "disabled",
             DISABLEDSTATE = "k-disabled",
             FOCUSEDSTATE = "k-focus",
-            SELECTEDSTATE = "k-selected";
+            ACTIVESTATE = "k-active";
 
         var BUTTON_DEFAULTS = {
             icon: "",
@@ -147,7 +138,7 @@
                 var that = this;
                 that.element.removeClass(FOCUSEDSTATE);
                 setTimeout(function() {
-                    that.element.removeClass(SELECTEDSTATE);
+                    that.element.removeClass(ACTIVESTATE);
                 });
             },
 
@@ -166,12 +157,12 @@
             },
 
             _removeActive: function() {
-                this.element.removeClass(SELECTEDSTATE);
+                this.element.removeClass(ACTIVESTATE);
             },
 
             _addActive: function() {
                 if (this.options.enable) {
-                    this.element.addClass(SELECTEDSTATE);
+                    this.element.addClass(ACTIVESTATE);
                 }
             },
 
