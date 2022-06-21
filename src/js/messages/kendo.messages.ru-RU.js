@@ -21,7 +21,7 @@
         f();
     }
 }(function(){
-(function ($, undefined) {
+(function($, undefined) {
 /* Filter menu operator messages */
 
 if (kendo.ui.FilterCell) {
@@ -577,7 +577,7 @@ $.extend(true, kendo.ui.Gantt.prototype.options.messages, {
 }
 
 /* Filter messages */
-  
+
 if (kendo.ui.Filter) {
   kendo.ui.Filter.prototype.options.messages = $.extend(
   true,
@@ -950,7 +950,7 @@ if (kendo.spreadsheet && kendo.spreadsheet.messages.view) {
 kendo.spreadsheet.messages.view =
 $.extend(true, kendo.spreadsheet.messages.view,{
   "errors": {
-    "shiftingNonblankCells": "Не удается вставить ячейки из-за возможности потери данных. Выберите другое место для вставки или удалите данные с конца рабочего листа.",        
+    "shiftingNonblankCells": "Не удается вставить ячейки из-за возможности потери данных. Выберите другое место для вставки или удалите данные с конца рабочего листа.",
     "filterRangeContainingMerges": "Невозможно создать фильтр в диапазоне, содержащем слияния",
     "validationError": "Введенное вами значение нарушает правила проверки, установленные для ячейки."
   },

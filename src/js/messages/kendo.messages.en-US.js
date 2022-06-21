@@ -21,7 +21,7 @@
         f();
     }
 }(function(){
-(function ($, undefined) {
+(function($, undefined) {
 /* ColorGradient messages */
 
 if (kendo.ui.ColorGradient) {
@@ -80,7 +80,7 @@ $.extend(true, kendo.ui.ColumnMenu.prototype.options.messages,{
   "settings": "Edit Column Settings",
   "lock": "Lock Column",
   "unlock": "Unlock Column",
-  "stick" : "Stick Column",
+  "stick": "Stick Column",
   "unstick": "Unstick Column",
   "setColumnPosition": "Set Column Position",
   "apply": "Apply",
@@ -1097,10 +1097,10 @@ $.extend(true, kendo.spreadsheet.messages.filterMenu,{
       "endswith": "Text ends with"
     },
     "date": {
-      "eq":  "Date is",
+      "eq": "Date is",
       "neq": "Date is not",
-      "lt":  "Date is before",
-      "gt":  "Date is after"
+      "lt": "Date is before",
+      "gt": "Date is after"
     },
     "number": {
       "eq": "Is equal to",
@@ -1289,7 +1289,7 @@ $.extend(true, kendo.ui.TreeView.prototype.options.messages,{
 /* Upload messages */
 
 if (kendo.ui.Upload) {
-kendo.ui.Upload.prototype.options.localization=
+kendo.ui.Upload.prototype.options.localization =
 $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "select": "Select files...",
   "cancel": "Cancel",
@@ -1351,7 +1351,13 @@ $.extend(true, kendo.ui.Dialog.prototype.options.localization, {
 if (kendo.ui.Calendar) {
 kendo.ui.Calendar.prototype.options.messages =
 $.extend(true, kendo.ui.Calendar.prototype.options.messages, {
-  "weekColumnHeader": ""
+    "weekColumnHeader": "",
+    "navigateTo": "Navigate to ",
+    "parentViews": {
+        "month": "year view",
+        "year": "decade view",
+        "decade": "century view"
+    }
 });
 }
 
@@ -1506,7 +1512,7 @@ if (kendo.ui.PDFViewer) {
             open: "Open",
             exportAs: "Export",
             download: "Download",
-            pager:  {
+            pager: {
                 first: "Go to the first page",
                 previous: "Go to the previous page",
                 next: "Go to the next page",

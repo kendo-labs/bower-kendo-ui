@@ -21,7 +21,7 @@
         f();
     }
 }(function(){
-(function ($, undefined) {
+(function($, undefined) {
 /* Filter cell operator messages */
 
 if (kendo.ui.FilterCell) {
@@ -402,7 +402,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
 });
 }
 
-/* FileManager messages */ 
+/* FileManager messages */
 
 if (kendo.ui.FileManager) {
   kendo.ui.FileManager.prototype.options.messages = $.extend(true, kendo.ui.FileManager.prototype.options.messages, {
@@ -420,7 +420,7 @@ if (kendo.ui.FileManager) {
       "dateCreatedField": "Datum gecreeërd",
       "listView": "Lijstweergave",
       "gridView": "Rasterweergave",
-      "search" : "zoek",
+      "search": "zoek",
       "details": "Details bekijken",
       "detailsChecked": "Aan",
       "detailsUnchecked": "Uit",

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.pager',[ "kendo.data" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "pager",
@@ -45,7 +45,7 @@ var __meta__ = { // jshint ignore:line
         MOUSEDOWN = "down",
         MAX_VALUE = Number.MAX_VALUE,
         isRtl = false,
-        iconTemplate = kendo.template('<a href="\\#" title="#=text#" aria-label="#=text#" #if (id !== "") {# aria-describedby="#=id#" #}# class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
+        iconTemplate = kendo.template('<a href="\\#" role="button" title="#=text#" aria-label="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
 
     function button(options) {
         return options.template( {
@@ -81,6 +81,7 @@ var __meta__ = { // jshint ignore:line
               .parent()
               .attr(kendo.attr("page"), page)
               .attr("tabindex", disabled ? -1 : 0)
+              .attr("aria-disabled", disabled)
               .toggleClass("k-state-disabled", disabled);
     }
 
@@ -111,7 +112,6 @@ var __meta__ = { // jshint ignore:line
             that._createDataSource(options);
             that.linkTemplate = kendo.template(that.options.linkTemplate);
             that.selectTemplate = kendo.template(that.options.selectTemplate);
-            that.currentPageTemplate = kendo.template(that.options.currentPageTemplate);
             that.numericSelectItemTemplate = kendo.template(that.options.numericSelectItemTemplate);
 
             page = that.page();
@@ -156,7 +156,7 @@ var __meta__ = { // jshint ignore:line
                     that._numericSelect = that._numericWrap.find(".k-dropdown");
 
                     if (that._numericSelect.length === 0) {
-                       that._numericSelect = $("<select class='k-dropdown k-picker k-dropdown-list' />").appendTo(that._numericWrap);
+                       that._numericSelect = $("<select aria-label='" + that.options.messages.numbersSelectLabel + "' class='k-dropdown k-picker k-dropdown-list' />").appendTo(that._numericWrap);
                     }
                 }
 
@@ -176,7 +176,7 @@ var __meta__ = { // jshint ignore:line
 
             if (options.input) {
                 if (!that.element.find(".k-pager-input").length) {
-                   that.element.append('<span class="k-pager-input k-label">'+
+                   that.element.append('<span class="k-pager-input k-label">' +
                        options.messages.page +
                        '<span class="k-textbox k-input k-input-md k-rounded-md k-input-solid"><input class="k-input-inner" /></span>' +
                        kendo.format(options.messages.of, totalPages) +
@@ -200,8 +200,8 @@ var __meta__ = { // jshint ignore:line
                 }
             }
 
-            if (options.pageSizes){
-                if (!that.element.find(".k-pager-sizes").length){
+            if (options.pageSizes) {
+                if (!that.element.find(".k-pager-sizes").length) {
                     var pageSizes = options.pageSizes.length ? options.pageSizes : ["all", 5, 10, 20];
                     var pageItems = $.map(pageSizes, function(size) {
                         if (size.toLowerCase && size.toLowerCase() === "all") {
@@ -228,7 +228,7 @@ var __meta__ = { // jshint ignore:line
 
             if (options.refresh) {
                 if (!that.element.find(".k-pager-refresh").length) {
-                    that.element.append('<a href="#" class="k-pager-refresh k-link" title="' + options.messages.refresh +
+                    that.element.append('<a role="button" href="#" class="k-pager-refresh k-link" title="' + options.messages.refresh +
                         '" aria-label="' + options.messages.refresh + '"><span class="k-icon k-i-reload"></span></a>');
                 }
 
@@ -285,10 +285,8 @@ var __meta__ = { // jshint ignore:line
         options: {
             name: "Pager",
             ARIATemplate: "Page navigation, page #=page# of #=totalPages#",
-            selectTemplate: '<li><span role="button" tabindex="#=tabindex#" #if (navigatable) {# aria-label="#=title#" #}# class="k-link k-state-selected">#=text#</span></li>',
-            currentPageTemplate: '<li class="k-current-page"><span class="k-link k-pager-nav">#=text#</span></li>',
-            linkTemplate: '<li><a tabindex="#=tabindex#" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
-            numericItemTemplate: '<li><a tabindex="-1" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
+            selectTemplate: '<li><span role="button" aria-current="page" tabindex="#=tabindex#" aria-label="#=title#" class="k-link k-state-selected">#=text#</span></li>',
+            linkTemplate: '<li><a role="button" tabindex="#=tabindex#" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
             numericSelectItemTemplate: '<option value="#= idx #" #if (selected) {# selected="selected" #}#>#= text #</option>',
             buttonCount: 10,
             autoBind: true,
@@ -309,6 +307,7 @@ var __meta__ = { // jshint ignore:line
                 itemsPerPage: "items per page",
                 pageButtonLabel: "Page {0}",
                 pageSizeDropDownLabel: "Page sizes drop down",
+                numbersSelectLabel: "Page select",
                 first: "Go to the first page",
                 previous: "Go to the previous page",
                 next: "Go to the next page",
@@ -328,6 +327,14 @@ var __meta__ = { // jshint ignore:line
             if (that.options.autoBind) {
                 dataSource.fetch();
             }
+        },
+
+        _aria: function() {
+            this.element.attr({
+                "role": "application",
+                "aria-roledescription": "pager",
+                "aria-keyshortcuts": "Enter ArrowRight ArrowLeft"
+            });
         },
 
         _resize: function(size) {
@@ -442,11 +449,12 @@ var __meta__ = { // jshint ignore:line
                 that.element
                     .find(".k-pager-input")
                     .html(that.options.messages.page +
-                        '<span class="k-textbox k-input k-input-md k-rounded-md k-input-solid"><input class="k-input-inner" aria-label="' + page + '"></span>' +
+                        '<span class="k-textbox k-input k-input-md k-rounded-md k-input-solid"><input class="k-input-inner" aria-label="' + that.options.messages.page + " " + page + '"></span>' +
                         kendo.format(options.messages.of, totalPages))
                     .find("input")
                     .val(page)
                     .attr(DISABLED, total < 1)
+                    .attr("aria-disabled", total < 1)
                     .toggleClass("k-state-disabled", total < 1);
             }
 
@@ -472,7 +480,6 @@ var __meta__ = { // jshint ignore:line
                 that.element
                     .find(".k-pager-sizes select")
                     .val(pageSize)
-                    .attr("aria-label", pageSize)
                     .filter("[" + kendo.attr("role") + "=dropdownlist]")
                     .kendoDropDownList("value", pageSize)
                     .kendoDropDownList("text", text); // handles custom values
@@ -483,14 +490,14 @@ var __meta__ = { // jshint ignore:line
             that._updateAria();
         },
 
-        _excludeChildrenFromTab: function () {
+        _excludeChildrenFromTab: function() {
             var activeElement = kendo._activeElement();
             if (this.options.navigatable && (activeElement === this.element[0] || !$.contains(this.element[0], activeElement))) {
                 this.element.find(FOCUSABLE).attr("tabindex", -1);
             }
         },
 
-        _restoreFocus: function (start, end, totalPages) {
+        _restoreFocus: function(start, end, totalPages) {
             var that = this;
 
             if (!that.options.navigatable) {
@@ -513,7 +520,7 @@ var __meta__ = { // jshint ignore:line
             }
         },
 
-        _restoreTabIndexes: function () {
+        _restoreTabIndexes: function() {
             this.element
                 .find("[tabindex='-1']:not(.k-state-disabled)")
                 .attr("tabindex", 0);
@@ -549,7 +556,7 @@ var __meta__ = { // jshint ignore:line
             var pageSize = parseInt(value, 10);
             var dataSource = this.dataSource;
 
-            if (!isNaN(pageSize)){
+            if (!isNaN(pageSize)) {
                 dataSource.pageSize(pageSize);
             } else if ((value + "").toLowerCase() == "all") {
                 dataSource._pageSize = undefined;
@@ -563,14 +570,14 @@ var __meta__ = { // jshint ignore:line
             this._ariaTemplate = template(this.options.ARIATemplate).bind(this);
         },
 
-        _updateAria: function () {
+        _updateAria: function() {
             if (!this.options.navigatable) {
                 return;
             }
             this.element.attr("aria-label", this._ariaTemplate({ page: this.page(), totalPages: this.totalPages() }));
         },
 
-        _navigatable: function () {
+        _navigatable: function() {
             var that = this;
             var options = that.options;
 
@@ -578,7 +585,7 @@ var __meta__ = { // jshint ignore:line
                 return;
             }
 
-            that.element.attr("role", "application");
+            that._aria();
             that.element.attr("id", that._id);
             that._template();
             that._updateAria();
@@ -587,7 +594,7 @@ var __meta__ = { // jshint ignore:line
 
             that.element.on("keydown" + NS, that, that._keyDown.bind(that));
             that.element.on("focusout" + NS, function() { that.element.removeClass("k-state-focused"); });
-            that.element.on("focusin" + NS,  function(e) {
+            that.element.on("focusin" + NS, function(e) {
                 that.element.addClass("k-state-focused");
 
                 if (e.target === that.element[0]) {
@@ -598,7 +605,7 @@ var __meta__ = { // jshint ignore:line
             });
         },
 
-        _keyDown: function (e) {
+        _keyDown: function(e) {
             var that = this;
             var target = $(e.target);
             var allFocusable;
@@ -636,7 +643,7 @@ var __meta__ = { // jshint ignore:line
                 handled = true;
             }
 
-            if (target[0] !== that.element[0] && e.keyCode== keys.TAB) {
+            if (target[0] !== that.element[0] && e.keyCode == keys.TAB) {
                 allFocusable = that.element.find(FOCUSABLE);
                 focusedIndex = allFocusable.index(target);
 
@@ -648,7 +655,7 @@ var __meta__ = { // jshint ignore:line
                     }
                 } else {
                     if (focusedIndex + 1 < allFocusable.length) {
-                        allFocusable.eq(focusedIndex +1 ).trigger("focus");
+                        allFocusable.eq(focusedIndex + 1 ).trigger("focus");
                     } else {
                         allFocusable.first().trigger("focus");
                     }
@@ -681,7 +688,7 @@ var __meta__ = { // jshint ignore:line
             if (this.options.navigatable) {
                 if (target.attr("title") == this.options.messages.morePages) {
                     this._focusMore = target.parent().index();
-                } else if(!target.hasClass("k-pager-refresh") && !target.hasClass("k-pager-nav")) {
+                } else if (!target.hasClass("k-pager-refresh") && !target.hasClass("k-pager-nav")) {
                     this._focusSelected = true;
                 }
             }
@@ -737,5 +744,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

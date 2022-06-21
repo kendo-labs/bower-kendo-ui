@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.virtuallist',[ "kendo.data" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "virtuallist",
@@ -185,7 +185,7 @@ var __meta__ = { // jshint ignore:line
         }
 
         this.angular("cleanup", function() {
-            return { elements: [ element ]};
+            return { elements: [ element ] };
         });
 
         element
@@ -228,7 +228,7 @@ var __meta__ = { // jshint ignore:line
         }
 
         this.angular("compile", function() {
-            return { elements: [ element ], data: [ { dataItem: data.item, group: data.group, newGroup: data.newGroup } ]};
+            return { elements: [ element ], data: [ { dataItem: data.item, group: data.group, newGroup: data.newGroup } ] };
         });
     }
 
@@ -240,14 +240,14 @@ var __meta__ = { // jshint ignore:line
             var currentWidthInt = parseInt(currentWidth, 10);
             var widthStyle = '';
 
-            if(currentWidth){
+            if (currentWidth) {
                 widthStyle += "style='width:";
                 widthStyle += currentWidthInt;
                 widthStyle += percentageUnitsRegex.test(currentWidth) ? "%" : "px";
                 widthStyle += ";'";
             }
             item += "<span class='k-table-td' " + widthStyle + ">";
-            item += templates["column"+ i](dataItem);
+            item += templates["column" + i](dataItem);
             item += "</span>";
         }
 
@@ -313,7 +313,7 @@ var __meta__ = { // jshint ignore:line
 
             that.content = that.wrapper = that.element.wrap("<div unselectable='on' class='" + contentClasses + "'></div>").parent();
 
-            if(that.options.columns && that.options.columns.length) {
+            if (that.options.columns && that.options.columns.length) {
                 var thead = that.element.closest(".k-data-table").find('.k-table-thead');
                 var row = $('<tr class="k-table-group-row">' +
                     '<th class="k-table-th" colspan="' + that.options.columns.length + '"></th>' +
@@ -328,9 +328,9 @@ var __meta__ = { // jshint ignore:line
                 that.element.addClass(LIST_UL);
             }
 
-            if(options.ariaLabel) {
+            if (options.ariaLabel) {
                 this.element.attr("aria-label", options.ariaLabel);
-            } else if(options.ariaLabelledBy) {
+            } else if (options.ariaLabelledBy) {
                 this.element.attr("aria-labelledby", options.ariaLabelledBy);
             }
 
@@ -418,7 +418,7 @@ var __meta__ = { // jshint ignore:line
             var dataSource = source || {};
             var value;
 
-            dataSource = Array.isArray(dataSource) ? {data: dataSource} : dataSource;
+            dataSource = Array.isArray(dataSource) ? { data: dataSource } : dataSource;
             dataSource = kendo.data.DataSource.create(dataSource);
 
             if (that.dataSource) {
@@ -453,7 +453,7 @@ var __meta__ = { // jshint ignore:line
             return this.dataSource.currentRangeStart();
         },
 
-        _triggerListBound: function () {
+        _triggerListBound: function() {
             var that = this;
             var skip = that.skip();
 
@@ -471,10 +471,10 @@ var __meta__ = { // jshint ignore:line
             });
         },
 
-        _highlightSelectedItems: function () {
+        _highlightSelectedItems: function() {
             for (var i = 0; i < this._selectedDataItems.length; i++) {
                 var item = this._getElementByDataItem(this._selectedDataItems[i]);
-                if(item.length){
+                if (item.length) {
                     item.addClass(SELECTED);
                 }
             }
@@ -502,7 +502,7 @@ var __meta__ = { // jshint ignore:line
                     that._selectingValue = true;
 
                     that.bound(true);
-                    that.value(that._values, true).done(function () {
+                    that.value(that._values, true).done(function() {
                         that._selectingValue = false;
                         that._triggerListBound();
                     });
@@ -544,12 +544,12 @@ var __meta__ = { // jshint ignore:line
             };
         },
 
-        _removeSelectedDataItem: function (value) {
+        _removeSelectedDataItem: function(value) {
             var that = this,
                 valueGetter = that._valueGetter;
 
             for (var idx in that._selectedDataItems) {
-                if(valueGetter(that._selectedDataItems[idx]) === value) {
+                if (valueGetter(that._selectedDataItems[idx]) === value) {
                     that._selectedIndexes.splice(idx, 1);
                     return that._selectedDataItems.splice(idx, 1)[0];
                 }
@@ -592,7 +592,7 @@ var __meta__ = { // jshint ignore:line
             return that._valueDeferred;
         },
 
-        _checkValuesOrder: function (value) {
+        _checkValuesOrder: function(value) {
             if (this._removedAddedIndexes &&
                 this._removedAddedIndexes.length === value.length) {
                     var newValue = this._removedAddedIndexes.slice();
@@ -809,7 +809,7 @@ var __meta__ = { // jshint ignore:line
             if (that.options.type === "group") {
                 kendo.ui.progress($(that.wrapper), true);
                 that.mute(function() {
-                    that.dataSource.range(skip, take, function () {
+                    that.dataSource.range(skip, take, function() {
                         kendo.ui.progress($(that.wrapper), false);
                     });
                     view = that.dataSource.view();
@@ -1136,7 +1136,7 @@ var __meta__ = { // jshint ignore:line
 
             if (!hasData) {
                 height = 0;
-            } else if (height/itemHeight > total) {
+            } else if (height / itemHeight > total) {
                 height = total * itemHeight;
             }
 
@@ -1188,9 +1188,9 @@ var __meta__ = { // jshint ignore:line
             if (options.columns) {
                 for (var i = 0; i < options.columns.length; i++) {
                     var currentColumn = options.columns[i];
-                    var templateText = currentColumn.field ? currentColumn.field.toString(): "text";
+                    var templateText = currentColumn.field ? currentColumn.field.toString() : "text";
 
-                    templates["column"+ i] = currentColumn.template || "#: " + templateText + "#";
+                    templates["column" + i] = currentColumn.template || "#: " + templateText + "#";
                 }
             }
 
@@ -1209,7 +1209,7 @@ var __meta__ = { // jshint ignore:line
                 itemHeight = this.options.itemHeight + "px",
                 itemClass = this.options.columns && this.options.columns.length ? TABLE_ITEM : LIST_ITEM;
 
-            while(count-- > 0) {
+            while (count-- > 0) {
                 text = document.createElement("span");
                 text.className = "k-list-item-text";
 
@@ -1473,7 +1473,7 @@ var __meta__ = { // jshint ignore:line
 
             for (var i = index, length = index + itemCount; i < length; i++) {
                 item = this._itemMapper(this.getter(i, index), i, value);
-                if(items[items.length - 1]){
+                if (items[items.length - 1]) {
                     items[items.length - 1].isLastGroupedItem = item.newGroup;
                 }
                 items.push(item);
@@ -1822,7 +1822,7 @@ var __meta__ = { // jshint ignore:line
             this._valueGetter = kendo.getter(this.options.dataValueField);
         },
 
-        _calculateGroupPadding: function (height) {
+        _calculateGroupPadding: function(height) {
             var firstItem = this.items().first(),
                 groupHeader = this.header,
                 padding = 0;
@@ -1838,8 +1838,8 @@ var __meta__ = { // jshint ignore:line
             }
         },
 
-        _calculateColumnsHeaderPadding: function () {
-            if(this.options.columns && this.options.columns.length){
+        _calculateColumnsHeaderPadding: function() {
+            if (this.options.columns && this.options.columns.length) {
                 var isRtl = kendo.support.isRtl(this.wrapper);
                 var scrollbar = kendo.support.scrollbar();
                 var columnsHeader = this.content.parent().parent().find(".k-table-header");
@@ -1858,5 +1858,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

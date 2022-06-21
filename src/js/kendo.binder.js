@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.binder',[ "kendo.core", "kendo.data" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "binder",
@@ -26,7 +26,7 @@ var __meta__ = { // jshint ignore:line
 };
 
 /*jshint eqnull: true */
-(function ($, undefined) {
+(function($, undefined) {
     var kendo = window.kendo,
         Observable = kendo.Observable,
         ObservableObject = kendo.data.ObservableObject,
@@ -48,7 +48,7 @@ var __meta__ = { // jshint ignore:line
 
         try {
             delete a.test;
-        } catch(e) {
+        } catch (e) {
             deleteExpando = false;
         }
     })();
@@ -218,7 +218,7 @@ var __meta__ = { // jshint ignore:line
         destroy: function() {
             if (this.observable) {
                 this.source.unbind(CHANGE, this._change);
-                if(this.currentSource) {
+                if (this.currentSource) {
                     this.currentSource.unbind(CHANGE, this._change);
                 }
             }
@@ -307,18 +307,18 @@ var __meta__ = { // jshint ignore:line
             return this._parseValue(this.element.value, this.dataType());
         },
 
-        _parseValue: function (value, dataType){
+        _parseValue: function(value, dataType) {
             if (dataType == "date") {
                 value = kendo.parseDate(value, "yyyy-MM-dd");
             } else if (dataType == "datetime-local") {
                 value = kendo.parseDate(value, ["yyyy-MM-ddTHH:mm:ss", "yyyy-MM-ddTHH:mm"] );
             } else if (dataType == "number") {
                 value = kendo.parseFloat(value);
-            } else if (dataType == "boolean"){
+            } else if (dataType == "boolean") {
                 value = value.toLowerCase();
-                if(kendo.parseFloat(value) !== null){
+                if (kendo.parseFloat(value) !== null) {
                     value = Boolean(kendo.parseFloat(value));
-                }else{
+                } else {
                     value = (value.toLowerCase() === "true");
                 }
             }
@@ -341,9 +341,9 @@ var __meta__ = { // jshint ignore:line
             var element = $(this.element),
                 binding = this.bindings.css[className],
                 hasClass = this.classes[className] = binding.get();
-            if(hasClass){
+            if (hasClass) {
                 element.addClass(className);
-            }else{
+            } else {
                 element.removeClass(className);
             }
         }
@@ -664,13 +664,13 @@ var __meta__ = { // jshint ignore:line
                     if (source instanceof ObservableArray) {
                         value = this.parsedValue();
                         if (value instanceof Date) {
-                            for(var i = 0; i < source.length; i++){
-                                if(source[i] instanceof Date && +source[i] === +value){
+                            for (var i = 0; i < source.length; i++) {
+                                if (source[i] instanceof Date && +source[i] === +value) {
                                     index = i;
                                     break;
                                 }
                             }
-                        }else{
+                        } else {
                             index = source.indexOf(value);
                         }
                         if (index > -1) {
@@ -694,18 +694,18 @@ var __meta__ = { // jshint ignore:line
                     if (source instanceof ObservableArray) {
                         var index = -1;
                         value = this.parsedValue();
-                        if(value instanceof Date){
-                            for(var i = 0; i < source.length; i++){
-                                if(source[i] instanceof Date && +source[i] === +value){
+                        if (value instanceof Date) {
+                            for (var i = 0; i < source.length; i++) {
+                                if (source[i] instanceof Date && +source[i] === +value) {
                                     index = i;
                                     break;
                                 }
                             }
-                        }else{
+                        } else {
                             index = source.indexOf(value);
                         }
                         element.checked = (index >= 0);
-                    }else{
+                    } else {
                         element.checked = source;
                     }
                 } else if (element.type == "radio") {
@@ -753,10 +753,10 @@ var __meta__ = { // jshint ignore:line
                         that.remove(e.index, e.items);
                     } else if (e.action == "itemchange" || e.action === undefined) {
                         that.render();
-                        if(that.bindings.value){
+                        if (that.bindings.value) {
                             if (that.bindings.value) {
                                 var val = retrievePrimitiveValues(that.bindings.value.get(), $(that.element).data("valueField"));
-                                if(val === null) {
+                                if (val === null) {
                                     that.element.selectedIndex = -1;
                                 } else {
                                     that.element.value = val;
@@ -777,7 +777,7 @@ var __meta__ = { // jshint ignore:line
                 $(this.element).change(this._change);
             },
 
-            parsedValue : function() {
+            parsedValue: function() {
                 var dataType = this.dataType();
                 var values = [];
                 var value, option, idx, length;
@@ -1002,9 +1002,9 @@ var __meta__ = { // jshint ignore:line
                             multiselect = kendo.ui.MultiSelect && widget instanceof kendo.ui.MultiSelect;
                             dropdowntree = kendo.ui.DropDownTree && widget instanceof kendo.ui.DropDownTree;
 
-                            if(!dropdowntree){
+                            if (!dropdowntree) {
                                 widget[fieldName].data(source);
-                            }else{
+                            } else {
                                 widget.treeview[fieldName].data(source);
                             }
 
@@ -1027,7 +1027,7 @@ var __meta__ = { // jshint ignore:line
     }
 
     binders.widget = {
-        events : Binder.extend({
+        events: Binder.extend({
             init: function(widget, bindings, options) {
                 Binder.fn.init.call(this, widget.element[0], bindings, options);
                 this.widget = widget;
@@ -1117,8 +1117,8 @@ var __meta__ = { // jshint ignore:line
             refresh: function() {
                 var that = this;
                 var start = this.bindings.start.get();
-                var end = that.widget._range ? that.widget._range.end: null;
-                this.widget.range({start: start, end: end});
+                var end = that.widget._range ? that.widget._range.end : null;
+                this.widget.range({ start: start, end: end });
             },
 
             destroy: function() {
@@ -1141,8 +1141,8 @@ var __meta__ = { // jshint ignore:line
             refresh: function() {
                 var that = this;
                 var end = this.bindings.end.get();
-                var start = that.widget._range ? that.widget._range.start: null;
-                this.widget.range({start: start, end: end});
+                var start = that.widget._range ? that.widget._range.start : null;
+                this.widget.range({ start: start, end: end });
             },
 
             destroy: function() {
@@ -1375,12 +1375,12 @@ var __meta__ = { // jshint ignore:line
                         oldValues = that.bindings[VALUE].get(),
                         valuePrimitive = that.options.valuePrimitive,
                         selectedNode = that.widget.treeview.select(),
-                        nonPrimitiveValues = that.widget._isMultipleSelection() ? that.widget._getAllChecked(): (that.widget.treeview.dataItem(selectedNode) || that.widget.value()),
+                        nonPrimitiveValues = that.widget._isMultipleSelection() ? that.widget._getAllChecked() : (that.widget.treeview.dataItem(selectedNode) || that.widget.value()),
                         newValues = (valuePrimitive || that.widget.options.autoBind === false) ? that.widget.value() : nonPrimitiveValues;
 
                     var field = this.options.dataValueField || this.options.dataTextField;
 
-                    newValues = newValues.slice ? newValues.slice(0): newValues;
+                    newValues = newValues.slice ? newValues.slice(0) : newValues;
 
                     that._initChange = true;
 
@@ -1913,7 +1913,7 @@ var __meta__ = { // jshint ignore:line
 
     function bindElement(element, source, roles, parents) {
 
-        if(!element || element.getAttribute("data-" + kendo.ns + "stop")){
+        if (!element || element.getAttribute("data-" + kendo.ns + "stop")) {
             return;
         }
 
@@ -1940,7 +1940,7 @@ var __meta__ = { // jshint ignore:line
             bind = parseBindings(bind.replace(whiteSpaceRegExp, ""));
 
             if (!target) {
-                options = kendo.parseOptions(element, {textField: "", valueField: "", template: "", valueUpdate: CHANGE, valuePrimitive: false, autoBind: true}, source);
+                options = kendo.parseOptions(element, { textField: "", valueField: "", template: "", valueUpdate: CHANGE, valuePrimitive: false, autoBind: true }, source);
                 options.roles = roles;
                 target = new BindingTarget(element, options);
             }
@@ -2032,7 +2032,7 @@ var __meta__ = { // jshint ignore:line
             }
         }
 
-        if(destroyWidget) {
+        if (destroyWidget) {
             var widget = kendo.widgetInstance($(element));
             if (widget && typeof widget.destroy === FUNCTION) {
                 widget.destroy();
@@ -2145,5 +2145,5 @@ var __meta__ = { // jshint ignore:line
 return window.kendo;
 
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

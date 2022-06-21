@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.resizable',[ "kendo.core", "kendo.draganddrop" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "resizable",
@@ -124,9 +124,9 @@ var __meta__ = { // jshint ignore:line
                 position;
 
             position = minPosition !== undefined ? Math.max(minPosition, currentPosition) : currentPosition;
-            that.position = position =  maxPosition !== undefined ? Math.min(maxPosition, position) : position;
+            that.position = position = maxPosition !== undefined ? Math.min(maxPosition, position) : position;
 
-            if(that.hint) {
+            if (that.hint) {
                 that.hint.toggleClass(that.options.invalidClass || "", position == maxPosition || position == minPosition)
                          .css(that._position, position);
             }
@@ -138,7 +138,7 @@ var __meta__ = { // jshint ignore:line
         _stop: function(e) {
             var that = this;
 
-            if(that.hint) {
+            if (that.hint) {
                 that.hint.remove();
             }
 
@@ -207,5 +207,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

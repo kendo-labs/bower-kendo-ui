@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.mobile.scrollview',[ "kendo.fx", "kendo.data", "kendo.draganddrop" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "mobile.scrollview",
@@ -39,7 +39,7 @@ var __meta__ = { // jshint ignore:line
 
         // Math
         math = Math,
-        abs  = math.abs,
+        abs = math.abs,
         ceil = math.ceil,
         round = math.round,
         max = math.max,
@@ -546,7 +546,7 @@ var __meta__ = { // jshint ignore:line
 
         forcePageUpdate: function() {
             var offset = this.pane.offset(),
-                threshold  = this.pane.size().width * 3/4;
+                threshold = this.pane.size().width * 3 / 4;
 
             if (abs(offset) > threshold) {
                 return this.updatePage();
@@ -920,5 +920,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

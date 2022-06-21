@@ -21,7 +21,7 @@
         f();
     }
 }(function(){
-(function ($, undefined) {
+(function($, undefined) {
 /* Filter cell operator messages */
 
 if (kendo.ui.FilterCell) {
@@ -388,7 +388,7 @@ $.extend(true, kendo.ui.Scheduler.prototype.options.messages,{
     "end": "Slut",
     "endTimezone": "Sluttidszon",
     "repeat": "Upprepa",
-    "separateTimezones":  "Använd separata start och sluttidszoner",
+    "separateTimezones": "Använd separata start och sluttidszoner",
     "start": "Start",
     "startTimezone": "Starttidszon",
     "timezone": " ",

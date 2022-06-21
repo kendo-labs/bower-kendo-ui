@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.listview',[ "kendo.data", "kendo.editable", "kendo.selectable", "kendo.pager" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "listview",
@@ -115,7 +115,7 @@ var __meta__ = { // jshint ignore:line
 
             that._scrollable();
 
-            if (that.options.autoBind){
+            if (that.options.autoBind) {
                 that.dataSource.fetch();
             }
 
@@ -239,8 +239,11 @@ var __meta__ = { // jshint ignore:line
         },
 
         _progress: function(toggle) {
-            var element = this.content;
-            progress(element, toggle, { opacity: true});
+            var element = this.wrapper;
+            if (toggle && this.content.height()) {
+                element = this.content;
+            }
+            progress(element, toggle, { opacity: true });
         },
 
         _error: function() {
@@ -275,7 +278,7 @@ var __meta__ = { // jshint ignore:line
             var content = that.content;
             var contentClassNames = ["k-listview-content"];
 
-            element.add(content).removeClass(function (index, className) {
+            element.add(content).removeClass(function(index, className) {
                 if (className.indexOf("k-") >= 0) {
                     return true;
                 }
@@ -361,7 +364,7 @@ var __meta__ = { // jshint ignore:line
                 options = that.options,
                 role = (options.selectable || options.navigatable) ? "option" : "listitem",
                 active = activeElement(),
-                endlessAppend =  that._endlessFetchInProgress,
+                endlessAppend = that._endlessFetchInProgress,
                 index = endlessAppend ? that._skipRerenderItemsCount : 0,
                 scrollable = that.options.scrollable;
 
@@ -376,7 +379,7 @@ var __meta__ = { // jshint ignore:line
                         idx = item.index();
 
                         that.angular("cleanup", function() {
-                            return { elements: [ item ]};
+                            return { elements: [ item ] };
                         });
 
                         item.replaceWith(template(data));
@@ -384,7 +387,7 @@ var __meta__ = { // jshint ignore:line
                         item.attr(kendo.attr("uid"), data.uid);
 
                         that.angular("compile", function() {
-                            return { elements: [ item ], data: [ { dataItem: data } ]};
+                            return { elements: [ item ], data: [ { dataItem: data } ] };
                         });
 
                         that.trigger("itemChange", {
@@ -607,18 +610,18 @@ var __meta__ = { // jshint ignore:line
             }
         },
 
-        _bindScrollable: function (){
+        _bindScrollable: function() {
             var that = this;
             var originalPageSize = that._endlessPageSize = that.dataSource.options.pageSize;
 
             that.content
                 .off("scroll" + NS)
-                .on("scroll" + NS, function () {
+                .on("scroll" + NS, function() {
                     if (this.scrollTop + this.clientHeight - this.scrollHeight >= -15 &&
                     !that._endlessFetchInProgress &&
                     that._endlessPageSize < that.dataSource.total()) {
-                        that._skipRerenderItemsCount =  that._endlessPageSize;
-                        that._endlessPageSize = that._skipRerenderItemsCount  + originalPageSize;
+                        that._skipRerenderItemsCount = that._endlessPageSize;
+                        that._endlessPageSize = that._skipRerenderItemsCount + originalPageSize;
                         that.dataSource.options.endless = true;
                         that._endlessFetchInProgress = true;
                         that.dataSource.pageSize(that._endlessPageSize);
@@ -800,7 +803,7 @@ var __meta__ = { // jshint ignore:line
 
                                 that.save();
 
-                                var focusAgain = function(){
+                                var focusAgain = function() {
                                     that.element.trigger("focus");
                                     that.current(that.items().eq(idx));
                                 };
@@ -883,7 +886,7 @@ var __meta__ = { // jshint ignore:line
                 }
 
                 that.angular("cleanup", function() {
-                    return { elements: [ editable.element ]};
+                    return { elements: [ editable.element ] };
                 });
 
                 data = that._modelFromElement(editable.element);
@@ -901,7 +904,7 @@ var __meta__ = { // jshint ignore:line
                 }
 
                 that.angular("compile", function() {
-                    return { elements: [ item ], data: [ { dataItem: data } ]};
+                    return { elements: [ item ], data: [ { dataItem: data } ] };
                 });
             }
             return true;
@@ -942,7 +945,7 @@ var __meta__ = { // jshint ignore:line
             var container = editable.element;
             model = that._modelFromElement(container);
 
-            if (editable.end() && !that.trigger(SAVE, { model: model, item: container }))  {
+            if (editable.end() && !that.trigger(SAVE, { model: model, item: container })) {
                 that._closeEditable();
                 that.dataSource.sync();
             }
@@ -992,7 +995,7 @@ var __meta__ = { // jshint ignore:line
                 var container = that.editable.element;
                 var model = that._modelFromElement(container);
 
-                if (!that.trigger(CANCEL, { model: model, container: container})) {
+                if (!that.trigger(CANCEL, { model: model, container: container })) {
                     dataSource.cancelChanges(model);
                     that._closeEditable();
                 }
@@ -1059,5 +1062,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

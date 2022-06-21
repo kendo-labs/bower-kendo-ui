@@ -21,7 +21,7 @@
         f();
     }
 }(function(){
-(function ($, undefined) {
+(function($, undefined) {
 /* Filter cell operator messages */
 
 if (kendo.ui.FilterCell) {
@@ -410,7 +410,7 @@ $.extend(true, kendo.spreadsheet.messages.borderPalette,{
   "allBorders": "Alle grenzen",
   "insideBorders": "Binnen grenzen",
   "insideHorizontalBorders": "Binnen horizontale randen",
-  "insideVerticalBorders": "Binnen verticale randen",    
+  "insideVerticalBorders": "Binnen verticale randen",
   "outsideBorders": "buiten grenzen",
   "leftBorder": "Linkerrand",
   "topBorder": "Bovenrand",
@@ -568,7 +568,7 @@ $.extend(true, kendo.spreadsheet.messages.dialogs,{
     }
   },
   "unsupportedSelectionDialog": {
-    "errorMessage": "Die actie kan niet worden uitgevoerd op meervoudige selectie."     
+    "errorMessage": "Die actie kan niet worden uitgevoerd op meervoudige selectie."
   },
   "insertCommentDialog": {
     "title": "Opmerking invoegen",
@@ -634,7 +634,7 @@ $.extend(true, kendo.spreadsheet.messages.colorPicker,{
   "cancel": "Annuleren"
 });
 }
-  
+
 if (kendo.spreadsheet && kendo.spreadsheet.messages.toolbar) {
 kendo.spreadsheet.messages.toolbar =
 $.extend(true, kendo.spreadsheet.messages.toolbar,{

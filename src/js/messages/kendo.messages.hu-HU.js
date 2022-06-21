@@ -21,7 +21,7 @@
         f();
     }
 }(function(){
-(function ($, undefined) {
+(function($, undefined) {
 /* FlatColorPicker messages */
 
 if (kendo.ui.FlatColorPicker) {
@@ -841,10 +841,10 @@ $.extend(true, kendo.spreadsheet.messages.filterMenu,{
       "endswith": "A szöveg vége"
     },
     "date": {
-      "eq":  "A dátum",
+      "eq": "A dátum",
       "neq": "A dátum nem",
-      "lt":  "Ezen dátum előtt",
-      "gt":  "Ezen dátum után"
+      "lt": "Ezen dátum előtt",
+      "gt": "Ezen dátum után"
     },
     "number": {
       "eq": "egyenlő",
@@ -1031,7 +1031,7 @@ $.extend(true, kendo.ui.TreeView.prototype.options.messages,{
 /* Upload messages */
 
 if (kendo.ui.Upload) {
-kendo.ui.Upload.prototype.options.localization=
+kendo.ui.Upload.prototype.options.localization =
 $.extend(true, kendo.ui.Upload.prototype.options.localization,{
   "select": "Választás...",
   "cancel": "Mégse",

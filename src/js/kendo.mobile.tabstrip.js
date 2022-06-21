@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.mobile.tabstrip',[ "kendo.core" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "mobile.tabstrip",
@@ -62,7 +62,7 @@ var __meta__ = { // jshint ignore:line
                 idx = 0,
                 length = tabs.length;
 
-            if(isNaN(url)) {
+            if (isNaN(url)) {
                 for (; idx < length; idx ++) {
                     tab = tabs[idx];
                     path = tab.href.replace(/(\#.+)(\?.+)$/, "$1"); // remove the fragment query string - http://www.foo.com?foo#bar**?baz=qux**
@@ -130,7 +130,7 @@ var __meta__ = { // jshint ignore:line
                 return;
             }
 
-            if (that.trigger(SELECT, {item: item})) {
+            if (that.trigger(SELECT, { item: item })) {
                 e.preventDefault();
             } else {
                 that._setActiveItem(item);
@@ -191,5 +191,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

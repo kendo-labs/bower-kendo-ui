@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.mobile.listview',[ "kendo.data", "kendo.userevents", "kendo.mobile.button" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "mobile.listview",
@@ -291,7 +291,7 @@ var __meta__ = { // jshint ignore:line
                 items = this.items,
                 endReached = false;
 
-            while(items.length) {
+            while (items.length) {
                 items.pop().destroy();
             }
 
@@ -349,7 +349,7 @@ var __meta__ = { // jshint ignore:line
             }
 
             if (this.lastDirection) { // scrolling up
-                while(items[items.length - 1].bottom > top + height * 2) {
+                while (items[items.length - 1].bottom > top + height * 2) {
                     if (this.offset === 0) {
                         break;
                     }
@@ -407,7 +407,7 @@ var __meta__ = { // jshint ignore:line
             this.lastDirection = up;
 
             if (up) { // scrolling up
-               if (items[0].top > topBorder &&  // needs reorder
+               if (items[0].top > topBorder && // needs reorder
                    items[items.length - 1].bottom > bottomBorder + padding && // enough padding below
                    this.offset > 0 // we are not at the top
                   )
@@ -743,7 +743,7 @@ var __meta__ = { // jshint ignore:line
 
 
             if (action === "itemchange") {
-                if(!listView._hasBindingTarget()) {
+                if (!listView._hasBindingTarget()) {
                     item = listView.findByDataItem(dataItems)[0];
                     if (item) {
                         listView.setDataItem(item, dataItems[0]);
@@ -863,7 +863,7 @@ var __meta__ = { // jshint ignore:line
             var appliedFilters = this.listView.dataSource.filter();
             var searchInput = this.listView._filter.searchInput;
 
-            if (!appliedFilters || appliedFilters.filters[0].field !== this.listView.options.filterable.field)  {
+            if (!appliedFilters || appliedFilters.filters[0].field !== this.listView.options.filterable.field) {
                 searchInput.val("");
             } else {
                 searchInput.val(appliedFilters.filters[0].value);
@@ -1049,7 +1049,7 @@ var __meta__ = { // jshint ignore:line
                 this._itemBinder.destroy();
             }
 
-            if(this._headerFixer) {
+            if (this._headerFixer) {
                 this._headerFixer.destroy();
             }
 
@@ -1142,7 +1142,7 @@ var __meta__ = { // jshint ignore:line
 
         remove: function(dataItems) {
             var items = this.findByDataItem(dataItems);
-            this.angular("cleanup", function(){
+            this.angular("cleanup", function() {
                 return { elements: items };
             });
             kendo.destroy(items);
@@ -1165,7 +1165,7 @@ var __meta__ = { // jshint ignore:line
                 replaceItem = function(items) {
                     var newItem = $(items[0]);
                     kendo.destroy(item);
-                    listView.angular("cleanup", function(){ return { elements: [ $(item) ] }; });
+                    listView.angular("cleanup", function() { return { elements: [ $(item) ] }; });
                     $(item).replaceWith(newItem);
                     listView.trigger(ITEM_CHANGE, { item: newItem, data: dataItem, ns: ui });
                 };
@@ -1185,7 +1185,7 @@ var __meta__ = { // jshint ignore:line
             this.angular("compile", function() {
                 return {
                     elements: items,
-                    data: dataItems.map(function(data){
+                    data: dataItems.map(function(data) {
                         return { dataItem: data };
                     })
                 };
@@ -1263,7 +1263,7 @@ var __meta__ = { // jshint ignore:line
                 dataItem = this.dataSource.getByUid(id);
             }
 
-            if (this.trigger(CLICK, {target: target, item: item, dataItem: dataItem, button: button})) {
+            if (this.trigger(CLICK, { target: target, item: item, dataItem: dataItem, button: button })) {
                 e.preventDefault();
             }
         },
@@ -1337,5 +1337,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

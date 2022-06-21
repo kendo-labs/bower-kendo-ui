@@ -4861,8 +4861,8 @@ select.k-dropdownlist {
   display: flex;
   -ms-flex-direction: row;
       flex-direction: row;
-  -ms-flex: 0 0 auto;
-      flex: 0 0 auto;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   position: relative;
 }
 .k-tabstrip-items .k-item {
@@ -5074,7 +5074,8 @@ select.k-dropdownlist {
 .k-tabstrip.k-tabstrip-scrollable > .k-tabstrip-items-wrapper > .k-tabstrip-items {
   -ms-flex: 1 1 auto;
       flex: 1 1 auto;
-  white-space: nowrap;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
   overflow: hidden;
 }
 .k-tabstrip.k-tabstrip-scrollable > .k-tabstrip-items-wrapper > .k-button {
@@ -10498,7 +10499,9 @@ span.k-sparkline,
 .k-map .k-marker {
   width: 28px;
   height: 40px;
-  margin: -40px 0 0 -14px;
+  -webkit-transform: translate(-50%, -100%);
+      -ms-transform: translate(-50%, -100%);
+          transform: translate(-50%, -100%);
   font-size: 28px;
   position: absolute;
   cursor: pointer;

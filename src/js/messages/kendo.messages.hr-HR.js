@@ -21,7 +21,7 @@
         f();
     }
 }(function(){
-(function ($, undefined) {
+(function($, undefined) {
 
 if (kendo.spreadsheet && kendo.spreadsheet.messages.borderPalette) {
 kendo.spreadsheet.messages.borderPalette =
@@ -345,7 +345,7 @@ kendo.spreadsheet.messages.view =
 $.extend(true, kendo.spreadsheet.messages.view,{
   "errors": {
     "shiftingNonblankCells": "Nije moguće umetnuti ćelije zbog mogućnosti gubitka podataka. Odaberite drugo mjesto za umetanje ili izbrišite podatke s kraja radnog lista.",
-    "filterRangeContainingMerges": "Nije moguće izraditi filtar unutar raspona koji sadrži spajanja",    
+    "filterRangeContainingMerges": "Nije moguće izraditi filtar unutar raspona koji sadrži spajanja",
     "validationError": "Vrijednost koju ste unijeli krši pravila provjere postavljena u ćeliji."
   },
   "tabs": {

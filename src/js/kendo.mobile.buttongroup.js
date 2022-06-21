@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.mobile.buttongroup',[ "kendo.core" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "mobile.buttongroup",
@@ -32,7 +32,7 @@ var __meta__ = { // jshint ignore:line
         ACTIVE = "state-active",
         DISABLE = "state-disabled",
         SELECT = "select",
-        SELECTOR = "li:not(.km-" + ACTIVE +")";
+        SELECTOR = "li:not(.km-" + ACTIVE + ")";
 
     function className(name) {
         return "k-" + name + " km-" + name;
@@ -55,7 +55,7 @@ var __meta__ = { // jshint ignore:line
             that._enable = true;
             that.select(that.options.index);
 
-            if(!that.options.enable) {
+            if (!that.options.enable) {
                 that._enable = false;
                 that.wrapper.addClass(className(DISABLE));
             }
@@ -76,7 +76,7 @@ var __meta__ = { // jshint ignore:line
             return this.element.find(".km-" + ACTIVE);
         },
 
-        select: function (li) {
+        select: function(li) {
             var that = this,
                 index = -1;
 
@@ -122,7 +122,7 @@ var __meta__ = { // jshint ignore:line
         },
 
         enable: function(enable) {
-            if(typeof enable == "undefined") {
+            if (typeof enable == "undefined") {
                 enable = true;
             }
 
@@ -168,5 +168,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

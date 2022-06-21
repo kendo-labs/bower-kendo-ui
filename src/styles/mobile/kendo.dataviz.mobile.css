@@ -15073,7 +15073,9 @@ span.k-sparkline,
 .k-map .k-marker {
   width: 28px;
   height: 40px;
-  margin: -40px 0 0 -14px;
+  -webkit-transform: translate(-50%, -100%);
+      -ms-transform: translate(-50%, -100%);
+          transform: translate(-50%, -100%);
   font-size: 28px;
   position: absolute;
   cursor: pointer;

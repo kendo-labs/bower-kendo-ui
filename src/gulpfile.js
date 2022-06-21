@@ -68,9 +68,9 @@ var argv = require('yargs').argv;
 
 // uglify
 var compress = {
-    unsafe       : true,
-    hoist_vars   : true,
-    pure_getters : true
+    unsafe: true,
+    hoist_vars: true,
+    pure_getters: true
 };
 
 var mangle = {
@@ -79,17 +79,15 @@ var mangle = {
 
 function renameModules(match) {
     return match.replace(/['"]([\w\.\-\/]+)?['"]/g, function(_, module) {
-        return module == "jquery" ? '"jquery"' : `"${module}.min"`
+        return module == "jquery" ? '"jquery"' : `"${module}.min"`;
     });
 }
 
-var uglify = stream => {
-    return stream
+var uglify = stream => stream
         .pipe(gulpUglify({ mangle: mangle, compress: compress, warnings: false }))
         .pipe(replace(/define\("[\w\.\-\/]+".+?\]/g, renameModules))
         .pipe(replace(/"kendo\.core"/g, '"kendo.core.min"'))
-        .pipe(rename({ suffix: ".min" }))
-};
+        .pipe(rename({ suffix: ".min" }));
 
 gulp.task("custom", function() {
     var files = argv.c;
@@ -115,9 +113,9 @@ gulp.task("custom", function() {
     var src = gulp.src(customFilePath)
         .pipe(requirejsOptimize({
             optimize: "none",
-            paths: {jquery: "empty:"},
+            paths: { jquery: "empty:" },
             logLevel: 2,
-            onModuleBundleComplete: function () {
+            onModuleBundleComplete: function() {
                 fs.unlinkSync(customFilePath);
             }
         }));

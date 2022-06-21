@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.responsivepanel',[ "kendo.core" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "responsive-panel",
@@ -25,11 +25,11 @@ var __meta__ = { // jshint ignore:line
     depends: [ "core" ]
 };
 
-(function ($, undefined) {
+(function($, undefined) {
     var NS = ".kendoResponsivePanel";
     var OPEN = "open";
     var CLOSE = "close";
-    var ACTIVATE_EVENTS = "click" + NS +" touchstart" + NS + " touchend" + NS;
+    var ACTIVATE_EVENTS = "click" + NS + " touchstart" + NS + " touchend" + NS;
     var Widget = kendo.ui.Widget;
     var ResponsivePanel = Widget.extend({
         init: function(element, options) {
@@ -103,7 +103,7 @@ var __meta__ = { // jshint ignore:line
 
             head.appendChild(style);
 
-            if (style.styleSheet){
+            if (style.styleSheet) {
                 style.styleSheet.cssText = cssText;
             } else {
                 style.appendChild(document.createTextNode(cssText));
@@ -111,7 +111,7 @@ var __meta__ = { // jshint ignore:line
         },
         options: {
             name: "ResponsivePanel",
-            content:"",
+            content: "",
             orientation: "left",
             toggleButton: ".k-rpanel-toggle",
             breakpoint: 640,
@@ -129,7 +129,7 @@ var __meta__ = { // jshint ignore:line
         _toggleButtonClick: function(e) {
             e.preventDefault();
 
-            if(e.type == "touchend") {
+            if (e.type == "touchend") {
                 return;
             }
 
@@ -176,5 +176,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

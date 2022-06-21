@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.toggleinputbase',[ "kendo.core" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "toggleinputbase",
@@ -86,13 +86,13 @@ var __meta__ = { // jshint ignore:line
         enable: function(enable) {
             var element = this.element;
 
-            if(typeof enable == "undefined") {
+            if (typeof enable == "undefined") {
                 enable = true;
             }
 
             this.options.enabled = enable;
 
-            if(enable) {
+            if (enable) {
                 element.prop(DISABLED, false);
             } else {
                 element.attr(DISABLED, DISABLED);
@@ -109,13 +109,13 @@ var __meta__ = { // jshint ignore:line
             this.element.on(CHANGE + this.NS, this._change.bind(this));
         },
 
-        _change: function () {
+        _change: function() {
             var checked = this.element[0].checked;
 
             this.trigger(CHANGE, { checked: checked });
         },
 
-        _initSettings: function () {
+        _initSettings: function() {
             var that = this,
                 element = that.element[0],
                 options = that.options;
@@ -148,5 +148,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

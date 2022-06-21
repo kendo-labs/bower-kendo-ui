@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.tooltip',[ "kendo.core", "kendo.popup", "kendo.fx" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "tooltip",
@@ -106,7 +106,7 @@ var __meta__ = { // jshint ignore:line
         };
 
     function restoreTitle(element) {
-        while(element.length) {
+        while (element.length) {
             if (restoreTitleAttributeForElement(element)) {
                 break;
             }
@@ -133,7 +133,7 @@ var __meta__ = { // jshint ignore:line
     }
 
     function saveTitleAttributes(element) {
-        while(element.length && !element.is("body")) {
+        while (element.length && !element.is("body")) {
             if (saveTitleAttributeForElement(element)) {
                 break;
             }
@@ -231,15 +231,15 @@ var __meta__ = { // jshint ignore:line
             }
         },
 
-        _isShownOnFocus: function(){
+        _isShownOnFocus: function() {
             return this.options.showOn && this.options.showOn.match(/focus/);
         },
 
-        _isShownOnMouseEnter: function(){
+        _isShownOnMouseEnter: function() {
             return this.options.showOn && this.options.showOn.match(/mouseenter/);
         },
 
-        _isShownOnClick: function(){
+        _isShownOnClick: function() {
             return this.options.showOn && this.options.showOn.match(/click/);
         },
 
@@ -274,13 +274,13 @@ var __meta__ = { // jshint ignore:line
             that.popup.wrapper.css(marginRule, offset * direction + "px");
         },
 
-        _addDescribedBy: function () {
+        _addDescribedBy: function() {
             var that = this,
                 anchor = that.popup.options.anchor,
                 ariaId = anchor[0].id || that.element[0].id || kendo.guid(),
                 describedBy = [];
 
-            if(anchor.attr(DESCRIBEDBY)) {
+            if (anchor.attr(DESCRIBEDBY)) {
                 describedBy.push(anchor.attr(DESCRIBEDBY));
             }
 
@@ -297,19 +297,19 @@ var __meta__ = { // jshint ignore:line
                 currentDescribedBy = target.attr(DESCRIBEDBY),
                 arrayAttr, finalArray, finalDescribedbyAttr;
 
-            if(!currentDescribedBy) {
+            if (!currentDescribedBy) {
                 return;
             }
 
             arrayAttr = currentDescribedBy.split(" ");
 
-            if(arrayAttr && arrayAttr.length > 0) {
-                finalArray = arrayAttr.filter(function (val) {
+            if (arrayAttr && arrayAttr.length > 0) {
+                finalArray = arrayAttr.filter(function(val) {
                     return val !== tooltipId;
                 });
             }
 
-            if(finalArray && finalArray.length > 0) {
+            if (finalArray && finalArray.length > 0) {
                 finalDescribedbyAttr = finalArray.join(" ");
                 target.attr(DESCRIBEDBY, finalDescribedbyAttr);
             } else {
@@ -388,7 +388,7 @@ var __meta__ = { // jshint ignore:line
             saveTitleAttributes($(e.currentTarget));
         },
 
-        _saveTitle:function (target) {
+        _saveTitle: function(target) {
             saveTitleAttributes(target);
         },
 
@@ -426,7 +426,7 @@ var __meta__ = { // jshint ignore:line
 
                     element.find("." + KCONTENTFRAME)
                         .off("load" + NS)
-                        .on("load" + NS, function(){
+                        .on("load" + NS, function() {
                             that.trigger(CONTENTLOAD);
                             element.show();
                         });
@@ -438,32 +438,32 @@ var __meta__ = { // jshint ignore:line
                 element.html(contentOptions);
             }
 
-            that.angular("compile", function(){
+            that.angular("compile", function() {
                 return { elements: element };
             });
         },
 
         _ajaxRequest: function(options) {
             var that = this,
-                successFn = function (data) {
+                successFn = function(data) {
                     kendo.ui.progress(that.content, false);
 
                     that.content.html(data);
 
-                    that.contentLoading = false;
+                    if (kendo._outerHeight(that.popup.element) > kendo._outerHeight(that.popup.wrapper)) {
+                        that.popup.wrapper.css("height", kendo._outerHeight(that.popup.element) + "px");
+                        that.popup.position();
+                        that._positionCallout();
+                    }
 
                     that.trigger(CONTENTLOAD);
-
-                    that._openPopup();
                 };
-
-            that.contentLoading = true;
 
             jQuery.ajax(extend({
                 type: "GET",
                 dataType: "html",
                 cache: false,
-                error: function (xhr, status) {
+                error: function(xhr, status) {
                     kendo.ui.progress(that.content, false);
 
                     that.trigger(ERROR, { status: status, xhr: xhr });
@@ -517,9 +517,7 @@ var __meta__ = { // jshint ignore:line
                 DOCUMENT.off("keydown" + NS, that._documentKeyDownHandler);
             });
 
-            if (!that.contentLoading) {
-                that._openPopup();
-            }
+            that._openPopup();
         },
 
         _initPopup: function() {
@@ -532,7 +530,7 @@ var __meta__ = { // jshint ignore:line
                 }));
 
             that.popup = new Popup(wrapper, extend({
-                autosize:true,
+                autosize: true,
                 activate: function() {
                     that._addDescribedBy();
 
@@ -586,11 +584,11 @@ var __meta__ = { // jshint ignore:line
             }, that.options.hideAfter);
         },
 
-        _blur: function(e){
+        _blur: function(e) {
             this._closePopup(e.currentTarget);
         },
 
-        _closePopup: function(target){
+        _closePopup: function(target) {
             if (this.popup && !this.popup._hovered) {
                 this.popup.close();
             } else {
@@ -612,5 +610,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

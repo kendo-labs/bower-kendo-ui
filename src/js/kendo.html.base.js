@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.html.base',[
         "kendo.core"
     ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "html.base",
@@ -28,14 +28,14 @@ var __meta__ = { // jshint ignore:line
     features: []
 };
 
-(function ($, undefined) {
+(function($, undefined) {
     var kendo = window.kendo,
         Class = kendo.Class;
 
     kendo.html = kendo.html || {};
 
     var HTMLBase = Class.extend({
-        init: function (element, options) {
+        init: function(element, options) {
             var that = this;
             that.element = $(element);
             options = options || {};
@@ -45,12 +45,13 @@ var __meta__ = { // jshint ignore:line
         options: {
             stylingOptions: []
         },
-        _addClasses: function () {
+        _addClasses: function() {
             var that = this,
                 options = that.options,
-                stylingOptions = options.stylingOptions;
+                stylingOptions = options.stylingOptions,
+                previouslyAddedClasses = that.wrapper.data("added-classes");
 
-            stylingOptions = stylingOptions.map(function(option){
+            stylingOptions = stylingOptions.map(function(option) {
                 var validFill;
 
                 if (option === "themeColor") {
@@ -73,9 +74,14 @@ var __meta__ = { // jshint ignore:line
                 });
             });
 
+            if (previouslyAddedClasses) {
+                that.wrapper.removeClass(previouslyAddedClasses.join(" "));
+            }
+
+            that.wrapper.data("added-classes", stylingOptions);
             that.wrapper.addClass(stylingOptions.join(" "));
         },
-        html: function () {
+        html: function() {
             var that = this;
 
             return that.wrapper[0].outerHTML;
@@ -90,5 +96,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 

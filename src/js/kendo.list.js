@@ -53,6 +53,7 @@ var __meta__ = { // jshint ignore:line
         FIXED_GROUP_HEADER = ".k-list-group-sticky-header",
         GROUP_LABEL = ".k-list-item-group-label",
         ITEMSELECTOR = ".k-list-item",
+        ITEMSELECTORTABLE = ".k-table-row",
         OPEN = "open",
         CLOSE = "close",
         CASCADE = "cascade",
@@ -796,7 +797,6 @@ var __meta__ = { // jshint ignore:line
             id = id ? id + " " + that.ul[0].id : that.ul[0].id;
 
             element.attr({
-                "aria-owns": id,
                 "aria-controls": id
             });
 
@@ -945,7 +945,7 @@ var __meta__ = { // jshint ignore:line
                 }
 
                 if (!visible) {
-                    popups.hide();
+                    list.parent().hide();
                 }
             }
 
@@ -1966,12 +1966,12 @@ var __meta__ = { // jshint ignore:line
         },
 
         _touchHandlers: function() {
-            var that = this;
-            var startY;
-            var endY;
-            var tapPosition = function(event) {
-                return (event.originalEvent || event).changedTouches[0].pageY;
-            };
+            var that = this,
+                itemSelector = this.options.columns && this.options.columns.length ? ITEMSELECTORTABLE : ITEMSELECTOR,
+                startY, endY,
+                tapPosition = function(event) {
+                    return (event.originalEvent || event).changedTouches[0].pageY;
+                };
 
             that.element.on("touchstart" + STATIC_LIST_NS, function(e) {
                 startY = tapPosition(e);
@@ -1986,7 +1986,7 @@ var __meta__ = { // jshint ignore:line
 
                 if (Math.abs(endY - startY) < 10) {
                     that._touchTriggered = true;
-                    that._triggerClick($(e.target).closest(ITEMSELECTOR).get(0));
+                    that._triggerClick($(e.target).closest(itemSelector).get(0));
                 }
             });
         },

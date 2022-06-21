@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function(f, define){
+(function(f, define) {
     define('kendo.numerictextbox',[ "kendo.core", "kendo.userevents", "kendo.floatinglabel", "kendo.html.button" ], f);
-})(function(){
+})(function() {
 
 var __meta__ = { // jshint ignore:line
     id: "numerictextbox",
@@ -119,8 +119,8 @@ var __meta__ = { // jshint ignore:line
                  });
              }
 
-             element.attr("aria-valuemin", options.min !== NULL ? options.min*options.factor : options.min)
-                    .attr("aria-valuemax", options.max !== NULL ? options.max*options.factor : options.max);
+             element.attr("aria-valuemin", options.min !== NULL ? options.min * options.factor : options.min)
+                    .attr("aria-valuemax", options.max !== NULL ? options.max * options.factor : options.max);
 
              options.format = extractFormat(options.format);
 
@@ -144,7 +144,7 @@ var __meta__ = { // jshint ignore:line
                  that.readonly(element.is("[readonly]"));
              }
 
-             that.angular("compile", function(){
+             that.angular("compile", function() {
                  return {
                      elements: that._text.get()
                  };
@@ -241,7 +241,7 @@ var __meta__ = { // jshint ignore:line
             } else {
                 wrapper
                     .addClass(disable ? STATEDISABLED : "")
-                    .removeClass(disable ?"" : STATEDISABLED);
+                    .removeClass(disable ? "" : STATEDISABLED);
 
                 text.attr(DISABLED, disable)
                     .attr(READONLY, readonly)
@@ -275,7 +275,7 @@ var __meta__ = { // jshint ignore:line
             }
         },
 
-        setOptions: function (options) {
+        setOptions: function(options) {
             var that = this;
             Widget.fn.setOptions.call(that, options);
 
@@ -283,8 +283,8 @@ var __meta__ = { // jshint ignore:line
             that._text.prop("placeholder", that.options.placeholder);
             that._placeholder(that.options.placeholder);
             that.element.attr({
-                "aria-valuemin": that.options.min !== NULL ? that.options.min*that.options.factor : that.options.min,
-                "aria-valuemax": that.options.max !== NULL ? that.options.max*that.options.factor : that.options.max
+                "aria-valuemin": that.options.min !== NULL ? that.options.min * that.options.factor : that.options.min,
+                "aria-valuemax": that.options.max !== NULL ? that.options.max * that.options.factor : that.options.max
             });
 
             that.options.format = extractFormat(that.options.format);
@@ -411,7 +411,7 @@ var __meta__ = { // jshint ignore:line
             that._downArrowEventHandler = new kendo.UserEvents(that._downArrow, { release: _release });
         },
 
-        _validation: function () {
+        _validation: function() {
             var that = this;
             var element = that.element;
 
@@ -463,20 +463,20 @@ var __meta__ = { // jshint ignore:line
             });
         },
 
-        selectValue: function(){
+        selectValue: function() {
             if (this.options.selectOnFocus) {
                 this.element[0].select();
             }
         },
 
-        _getFactorValue: function (value) {
+        _getFactorValue: function(value) {
             var that = this,
                 factor = that.options.factor;
 
             if (factor && factor !== 1) {
                 value = kendo.parseFloat(value);
                 if (value !== null) {
-                    value = value/factor;
+                    value = value / factor;
                 }
             }
 
@@ -557,7 +557,7 @@ var __meta__ = { // jshint ignore:line
 
             try {
                 element.setAttribute("type", "text");
-            } catch(e) {
+            } catch (e) {
                 element.type = "text";
             }
 
@@ -575,8 +575,8 @@ var __meta__ = { // jshint ignore:line
             that._text = text.addClass(element.className)
                              .attr({
                                  "role": "spinbutton",
-                                 "aria-valuemin": options.min !== NULL ? options.min*options.factor : options.min,
-                                 "aria-valuemax": options.max !== NULL ? options.max*options.factor : options.max,
+                                 "aria-valuemin": options.min !== NULL ? options.min * options.factor : options.min,
+                                 "aria-valuemax": options.max !== NULL ? options.max * options.factor : options.max,
                                  "autocomplete": "off"
                              });
         },
@@ -606,11 +606,11 @@ var __meta__ = { // jshint ignore:line
             that._cachedCaret = caret(that.element);
         },
 
-        _keyup: function () {
+        _keyup: function() {
             this._removeInvalidState();
         },
 
-        _inputHandler: function () {
+        _inputHandler: function() {
             var element = this.element;
             var value = element.val();
             var min = this.options.min;
@@ -644,7 +644,7 @@ var __meta__ = { // jshint ignore:line
             this._isPasted = false;
         },
 
-        _blinkInvalidState: function () {
+        _blinkInvalidState: function() {
             var that = this;
 
             that._addInvalidState();
@@ -652,14 +652,14 @@ var __meta__ = { // jshint ignore:line
             that._invalidStateTimeout = setTimeout(that._removeInvalidState.bind(that), 100);
         },
 
-        _addInvalidState: function () {
+        _addInvalidState: function() {
             var that = this;
 
             that.wrapper.addClass(STATEINVALID);
             that._validationIcon.removeClass('k-hidden');
         },
 
-        _removeInvalidState: function () {
+        _removeInvalidState: function() {
             var that = this;
 
             that.wrapper.removeClass(STATEINVALID);
@@ -767,11 +767,11 @@ var __meta__ = { // jshint ignore:line
                 that._focusin();
             }
 
-            if(that.options.factor && value) {
-                value = value/that.options.factor;
+            if (that.options.factor && value) {
+                value = value / that.options.factor;
             }
 
-            value =  +(value + that.options.step * step).toFixed(precision);
+            value = +(value + that.options.step * step).toFixed(precision);
             value = that._adjust(value);
             that._update(value);
             that._typing = false;
@@ -834,8 +834,8 @@ var __meta__ = { // jshint ignore:line
             that._placeholder(kendo.toString(value, format, culture));
 
             if (isNotNull) {
-                if(factor) {
-                    value =  parseFloat(that._round(value*factor, decimals), 10);
+                if (factor) {
+                    value = parseFloat(that._round(value * factor, decimals), 10);
                 }
                 value = value.toString();
                 if (value.indexOf("e") !== -1) {
@@ -976,5 +976,5 @@ var __meta__ = { // jshint ignore:line
 
 return window.kendo;
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 
