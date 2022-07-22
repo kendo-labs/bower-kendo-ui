@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* jshint eqnull: true */
+
 (function(f, define) {
     define('kendo.sortable',[ "kendo.draganddrop" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "sortable",
     name: "Sortable",
     category: "framework",

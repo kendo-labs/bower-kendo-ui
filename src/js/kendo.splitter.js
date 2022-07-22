@@ -17,7 +17,7 @@
     define('kendo.splitter',[ "kendo.resizable" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "splitter",
     name: "Splitter",
     category: "web",

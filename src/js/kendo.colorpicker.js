@@ -20,7 +20,7 @@
 (function($, undefined) {
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         Widget = ui.Widget,
@@ -373,7 +373,7 @@ return window.kendo;
 (function($, undefined) {
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         Observable = kendo.Observable,
@@ -1000,7 +1000,7 @@ return window.kendo;
 (function($, undefined){
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         parseColor = kendo.parseColor,
@@ -1238,7 +1238,7 @@ return window.kendo;
 (function($, undefined){
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         html = kendo.html,
@@ -1579,7 +1579,7 @@ return window.kendo;
     ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "colorpicker",
     name: "Color tools",
     category: "web",
@@ -1590,7 +1590,7 @@ var __meta__ = { // jshint ignore:line
 (function($, undefined) {
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         Widget = ui.Widget,

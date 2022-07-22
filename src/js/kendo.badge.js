@@ -17,7 +17,7 @@
     define('kendo.badge',["kendo.core"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "badge",
     name: "Badge",
     category: "web", // suite

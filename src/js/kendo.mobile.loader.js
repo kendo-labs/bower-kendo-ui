@@ -17,7 +17,7 @@
     define('kendo.mobile.loader',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.loader",
     name: "Loader",
     category: "mobile",

@@ -1706,7 +1706,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-state-ho
   background-color: #ffffff;
 }
 .k-pane-wrapper .k-pane .k-scheduler-mobile .k-other-month {
-  background-color: #ffffff;
+  background-color: #f7f7f7;
 }
 .k-pane-wrapper .k-pane .k-grid-edit-form .k-header,
 .k-pane-wrapper .k-pane .k-grid-column-menu .k-header,
@@ -4183,7 +4183,7 @@ td.k-group-cell,
 .k-nonwork-hour,
 .k-scheduler-dayview .k-today.k-nonwork-hour,
 .k-scheduler-timelineview .k-today.k-nonwork-hour {
-  background-color: #ffffff;
+  background-color: #f7f7f7;
 }
 .k-gantt .k-nonwork-hour {
   background-color: rgba(255, 255, 255, 0.2);

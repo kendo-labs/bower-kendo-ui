@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/* jshint multistr: true */
+
 (function(f, define) {
     define('kendo.mobile.switch',[ "kendo.fx", "kendo.userevents" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.switch",
     name: "Switch",
     category: "mobile",

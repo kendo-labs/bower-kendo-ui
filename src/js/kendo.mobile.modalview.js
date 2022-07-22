@@ -17,7 +17,7 @@
     define('kendo.mobile.modalview',[ "kendo.mobile.shim", "kendo.mobile.view" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.modalview",
     name: "ModalView",
     category: "mobile",

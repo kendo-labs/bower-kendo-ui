@@ -17,7 +17,7 @@
     define('kendo.tooltip',[ "kendo.core", "kendo.popup", "kendo.fx" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "tooltip",
     name: "Tooltip",
     category: "web",

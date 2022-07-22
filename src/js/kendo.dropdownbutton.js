@@ -17,7 +17,7 @@
     define('kendo.dropdownbutton',["kendo.html.button", "kendo.button.menu"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "dropdownbutton",
     name: "DropDownButton",
     category: "web",
@@ -104,7 +104,9 @@ var __meta__ = { // jshint ignore:line
 
         _mainButton: function() {
             var that = this,
-                options = extend({}, that.options);
+                options = extend({}, that.options, {
+                    type: that.element.attr("type") || "button"
+                });
 
             delete options.click;
 

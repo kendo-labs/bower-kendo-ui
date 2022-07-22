@@ -17,7 +17,7 @@
     define('kendo.textbox',["kendo.core", "kendo.floatinglabel"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "textbox",
     name: "TextBox",
     category: "web",

@@ -17,7 +17,7 @@
     define('kendo.pager',[ "kendo.data" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "pager",
     name: "Pager",
     category: "framework",

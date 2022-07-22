@@ -10,7 +10,7 @@
     "autoprefixer": "^9.1.5",
     "gulp": "^4.0.2",
     "gulp-cached": "~1.1.0",
-    "gulp-clone": "~1.1.4",
+    "gulp-clone": "^2.0.1",
     "gulp-concat": "^2.6.0",
     "gulp-clean-css": "^2.0.0",
     "gulp-debug": "~4.0.0",

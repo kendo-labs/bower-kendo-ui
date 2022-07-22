@@ -17,7 +17,7 @@
     define('kendo.touch',[ "kendo.core", "kendo.userevents" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "touch",
     name: "Touch",
     category: "mobile",

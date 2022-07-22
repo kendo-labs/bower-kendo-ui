@@ -17,7 +17,7 @@
     define('kendo.core',['jquery'], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "core",
     name: "Core",
     category: "framework",
@@ -33,7 +33,7 @@ var packageMetadata = {
     licensingDocsUrl: 'https://www.telerik.com/kendo-ui/my-license/'
 };
 
-/*jshint eqnull: true, loopfunc: true, evil: true, boss: true, freeze: false*/
+
 (function($, window, undefined) {
     var kendo = window.kendo = window.kendo || { cultures: {} },
         extend = $.extend,
@@ -138,7 +138,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2022.2.621".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.2.722".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -3011,7 +3011,7 @@ function pad(number, digits, end) {
         },
 
         _applyCssClasses: function(element) {
-            var protoOptions = this.__proto__.options, // jshint ignore:line
+            var protoOptions = this.__proto__.options,
                 options = this.options,
                 el = element || this.wrapper || this.element,
                 classes = [],
@@ -3078,7 +3078,7 @@ function pad(number, digits, end) {
         },
 
         _clearCssClasses: function(newOptions, element) {
-            var protoOptions = this.__proto__.options, // jshint ignore:line
+            var protoOptions = this.__proto__.options,
                 currentOptions = this.options,
                 el = element || this.wrapper || this.element,
                 i, prop, widgetName;
@@ -5172,7 +5172,7 @@ function pad(number, digits, end) {
     };
 
     kendo.isElement = function(element) {
-        return element instanceof Element || element instanceof HTMLDocument; // jshint ignore:line
+        return element instanceof Element || element instanceof HTMLDocument;
     };
 
     // Kendo defaults

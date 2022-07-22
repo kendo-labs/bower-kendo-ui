@@ -17,7 +17,7 @@
     define('kendo.dateinput',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "dateinput",
     name: "DateInput",
     category: "web",

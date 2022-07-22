@@ -17,7 +17,7 @@
     define('kendo.button',["kendo.core", "kendo.badge", "kendo.html.button"], f);
 })(function() {
 
-    var __meta__ = { // jshint ignore:line
+    var __meta__ = {
         id: "button",
         name: "Button",
         category: "web",

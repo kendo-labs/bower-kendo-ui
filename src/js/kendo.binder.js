@@ -17,7 +17,7 @@
     define('kendo.binder',[ "kendo.core", "kendo.data" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "binder",
     name: "MVVM",
     category: "framework",
@@ -25,7 +25,7 @@ var __meta__ = { // jshint ignore:line
     depends: [ "core", "data" ]
 };
 
-/*jshint eqnull: true */
+
 (function($, undefined) {
     var kendo = window.kendo,
         Observable = kendo.Observable,

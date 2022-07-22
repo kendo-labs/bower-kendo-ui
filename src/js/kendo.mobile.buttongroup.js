@@ -17,7 +17,7 @@
     define('kendo.mobile.buttongroup',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.buttongroup",
     name: "ButtonGroup",
     category: "mobile",

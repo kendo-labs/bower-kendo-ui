@@ -22,8 +22,9 @@
 (function(f, define) {
     define('kendo.color',[ "kendo.core" ], f);
 })(function() {
+/* eslint-disable space-before-blocks, space-before-function-paren, no-multi-spaces */
 
-    var __meta__ = { // jshint ignore:line
+    var __meta__ = {
         id: "color",
         name: "Color utils",
         category: "framework",
@@ -31,8 +32,6 @@
         description: "Color utilities used across components",
         depends: [ "core" ]
     };
-
-/*jshint eqnull:true  */
 
 window.kendo = window.kendo || {};
 
@@ -93,18 +92,18 @@ var namedColors = {
 
 var browser = support.browser;
 
-var matchNamedColor = function(color) {
+var matchNamedColor = function (color) {
     var colorNames = Object.keys(namedColors);
     colorNames.push("transparent");
 
     var regexp = new RegExp("^(" + colorNames.join("|") + ")(\\W|$)", "i");
-    matchNamedColor = function(color) { return regexp.exec(color); };
+    matchNamedColor = function (color) { return regexp.exec(color); };
 
     return regexp.exec(color);
 };
 
 var BaseColor = Class.extend({
-    init: function() { },
+    init: function() {  },
 
     toHSV: function() { return this; },
 
@@ -595,4 +594,4 @@ kendo.deepExtend(kendo, {
     Color: Color
 });
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });

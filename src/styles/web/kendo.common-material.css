@@ -9529,6 +9529,9 @@ div[name="recurrenceRule"] > .k-dropdownlist {
   -ms-flex-negative: 0;
       flex-shrink: 0;
 }
+.k-tooltip-button .k-icon {
+  color: inherit;
+}
 .k-callout {
   width: 12px;
   height: 12px;
@@ -10043,15 +10046,19 @@ html .k-upload {
 .k-file-invalid > .k-progress {
   width: 100%;
 }
-.k-rtl .k-file-extension-wrapper {
-  margin-left: 14px;
-}
 .k-upload .k-action-buttons {
   border-width: 1px 0 0 0;
   border-style: solid;
 }
 .k-no-flexbox .k-upload .k-action-buttons .k-button {
   border-width: 0;
+}
+.k-rtl .k-file-extension-wrapper {
+  margin-left: 14px;
+}
+.k-rtl .k-upload .k-upload-button {
+  margin-right: 0;
+  margin-left: 1.6em;
 }
 .k-mediaplayer {
   position: relative;
@@ -15765,6 +15772,7 @@ div.k-spreadsheet-window {
   min-height: 19em;
   text-align: center;
   white-space: nowrap;
+  outline: none;
 }
 .k-animation-container-sm .k-calendar-range .k-calendar-view {
   display: -ms-flexbox;

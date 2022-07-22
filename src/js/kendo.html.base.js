@@ -19,7 +19,7 @@
     ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "html.base",
     name: "Html.Base",
     category: "web",

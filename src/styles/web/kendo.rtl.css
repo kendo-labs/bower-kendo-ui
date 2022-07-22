@@ -390,12 +390,6 @@
   margin-left: -1px;
   margin-right: 0;
 }
-.k-rtl .k-tabstrip-items .k-item .k-image,
-.k-rtl .k-panelbar .k-tabstrip-items .k-item .k-image,
-.k-rtl .k-tabstrip-items .k-item .k-sprite,
-.k-rtl .k-panelbar .k-tabstrip-items .k-item .k-sprite {
-  margin: -3px -6px 0 3px;
-}
 .k-rtl .k-tabstrip-prev {
   -webkit-transform: scaleX(-1);
       -ms-transform: scaleX(-1);

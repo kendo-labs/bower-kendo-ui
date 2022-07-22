@@ -17,7 +17,7 @@
     define('kendo.popup',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "popup",
     name: "Pop-up",
     category: "framework",

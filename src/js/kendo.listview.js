@@ -17,7 +17,7 @@
     define('kendo.listview',[ "kendo.data", "kendo.editable", "kendo.selectable", "kendo.pager" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "listview",
     name: "ListView",
     category: "web",

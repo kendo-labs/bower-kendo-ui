@@ -17,7 +17,7 @@
     define('kendo.mobile.collapsible',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.collapsible",
     name: "Collapsible",
     category: "mobile",

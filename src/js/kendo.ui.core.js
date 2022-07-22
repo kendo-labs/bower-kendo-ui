@@ -17,7 +17,7 @@
     define('kendo.core',['jquery'], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "core",
     name: "Core",
     category: "framework",
@@ -33,7 +33,7 @@ var packageMetadata = {
     licensingDocsUrl: 'https://www.telerik.com/kendo-ui/my-license/'
 };
 
-/*jshint eqnull: true, loopfunc: true, evil: true, boss: true, freeze: false*/
+
 (function($, window, undefined) {
     var kendo = window.kendo = window.kendo || { cultures: {} },
         extend = $.extend,
@@ -138,7 +138,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2022.2.621".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.2.722".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -3011,7 +3011,7 @@ function pad(number, digits, end) {
         },
 
         _applyCssClasses: function(element) {
-            var protoOptions = this.__proto__.options, // jshint ignore:line
+            var protoOptions = this.__proto__.options,
                 options = this.options,
                 el = element || this.wrapper || this.element,
                 classes = [],
@@ -3078,7 +3078,7 @@ function pad(number, digits, end) {
         },
 
         _clearCssClasses: function(newOptions, element) {
-            var protoOptions = this.__proto__.options, // jshint ignore:line
+            var protoOptions = this.__proto__.options,
                 currentOptions = this.options,
                 el = element || this.wrapper || this.element,
                 i, prop, widgetName;
@@ -5172,7 +5172,7 @@ function pad(number, digits, end) {
     };
 
     kendo.isElement = function(element) {
-        return element instanceof Element || element instanceof HTMLDocument; // jshint ignore:line
+        return element instanceof Element || element instanceof HTMLDocument;
     };
 
     // Kendo defaults
@@ -5243,7 +5243,7 @@ return window.kendo;
     define('kendo.router',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "router",
     name: "Router",
     category: "framework",
@@ -5785,7 +5785,7 @@ return window.kendo;
     define('kendo.userevents',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "userevents",
     name: "User Events",
     category: "framework",
@@ -6444,7 +6444,7 @@ return window.kendo;
     define('kendo.touch',[ "kendo.core", "kendo.userevents" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "touch",
     name: "Touch",
     category: "mobile",
@@ -6614,7 +6614,7 @@ return window.kendo;
     define('kendo.data.odata',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "data.odata",
     name: "OData",
     category: "framework",
@@ -7169,7 +7169,7 @@ return window.kendo;
     define('kendo.data.xml',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "data.xml",
     name: "XML",
     category: "framework",
@@ -7177,7 +7177,7 @@ var __meta__ = { // jshint ignore:line
     hidden: true
 };
 
-/*jshint  eqnull: true, boss: true */
+
 (function($, undefined) {
     var kendo = window.kendo,
         isArray = Array.isArray,
@@ -7436,7 +7436,7 @@ return window.kendo;
     define('kendo.data',[ "kendo.core", "kendo.data.odata", "kendo.data.xml" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "data",
     name: "Data source",
     category: "framework",
@@ -7460,7 +7460,7 @@ var __meta__ = { // jshint ignore:line
     }]
 };
 
-/*jshint eqnull: true, loopfunc: true, evil: true */
+
 (function($, undefined) {
     var extend = $.extend,
         isPlainObject = $.isPlainObject,
@@ -7920,13 +7920,25 @@ var __meta__ = { // jshint ignore:line
         };
     }
 
+    function isPrimitiveType(value) {
+        return (typeof value === "object" && Object.getPrototypeOf(value) === Object.getPrototypeOf({}))
+                || Object.getPrototypeOf(value) === Object.getPrototypeOf(new Date())
+                || typeof value !== "object";
+      }
+
     function ownKeys(value, ignoreObjectKeys) {
         var props = [];
+        var protoKeys = [];
         var keys, filteredObjectKeys;
 
         value = value || {};
 
-        keys = Object.getOwnPropertyNames(value);
+        if (!isPrimitiveType(value)) {
+            protoKeys = Object.getOwnPropertyNames(Object.getPrototypeOf(value));
+        }
+
+        keys = Object.getOwnPropertyNames(value).concat(protoKeys);
+
         filteredObjectKeys = objectKeys.filter(function(key) {
             return keys.indexOf(key) < 0;
         });
@@ -14088,7 +14100,7 @@ return window.kendo;
     define('kendo.binder',[ "kendo.core", "kendo.data" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "binder",
     name: "MVVM",
     category: "framework",
@@ -14096,7 +14108,7 @@ var __meta__ = { // jshint ignore:line
     depends: [ "core", "data" ]
 };
 
-/*jshint eqnull: true */
+
 (function($, undefined) {
     var kendo = window.kendo,
         Observable = kendo.Observable,
@@ -16222,7 +16234,7 @@ return window.kendo;
     define('kendo.fx',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "fx",
     name: "Effects",
     category: "framework",
@@ -17817,7 +17829,7 @@ return window.kendo;
     ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "view",
     name: "View",
     category: "framework",
@@ -18542,7 +18554,7 @@ return window.kendo;
     define('kendo.floatinglabel',["kendo.core"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "floatinglabel",
     name: "FloatingLabel",
     category: "framework",
@@ -18658,7 +18670,7 @@ return window.kendo;
     define('kendo.data.signalr',[ "kendo.data" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "data.signalr",
     name: "SignalR",
     category: "framework",
@@ -18675,7 +18687,7 @@ var __meta__ = { // jshint ignore:line
     }
 
     function isNativePromise(promise) {
-        return promise && isFunction(promise.then) && isFunction(promise.catch); // jshint ignore:line
+        return promise && isFunction(promise.then) && isFunction(promise.catch);
     }
 
     var transport = kendo.data.RemoteTransport.extend({
@@ -18752,7 +18764,7 @@ var __meta__ = { // jshint ignore:line
                 promise.then(function() {
                     hub.invoke.apply(hub, args)
                               .then(options.success)
-                              .catch(options.error); // jshint ignore:line
+                              .catch(options.error);
                 });
             }
         },
@@ -18790,7 +18802,7 @@ return window.kendo;
     define('kendo.validator',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "validator",
     name: "Validator",
     category: "web",
@@ -18798,7 +18810,7 @@ var __meta__ = { // jshint ignore:line
     depends: [ "core" ]
 };
 
-/* jshint eqnull: true */
+
 (function($, undefined) {
     var kendo = window.kendo,
         Widget = kendo.ui.Widget,
@@ -19583,7 +19595,7 @@ return window.kendo;
     define('kendo.draganddrop',[ "kendo.core", "kendo.userevents" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "draganddrop",
     name: "Drag & drop",
     category: "framework",
@@ -20714,7 +20726,7 @@ return window.kendo;
     define('kendo.mobile.scroller',[ "kendo.fx", "kendo.draganddrop" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.scroller",
     name: "Scroller",
     category: "mobile",
@@ -21423,7 +21435,7 @@ return window.kendo;
     define('kendo.resizable',[ "kendo.core", "kendo.draganddrop" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "resizable",
     name: "Resizable",
     category: "framework",
@@ -21615,12 +21627,12 @@ return window.kendo;
 
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 
-/* jshint eqnull: true */
+
 (function(f, define) {
     define('kendo.sortable',[ "kendo.draganddrop" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "sortable",
     name: "Sortable",
     category: "framework",
@@ -22144,7 +22156,7 @@ return window.kendo;
     define('kendo.selectable',[ "kendo.core", "kendo.userevents" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "selectable",
     name: "Selectable",
     category: "framework",
@@ -22662,7 +22674,7 @@ return window.kendo;
     define('kendo.badge',["kendo.core"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "badge",
     name: "Badge",
     category: "web", // suite
@@ -22977,7 +22989,7 @@ return window.kendo;
     ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "html.base",
     name: "Html.Base",
     category: "web",
@@ -23062,7 +23074,7 @@ return window.kendo;
     ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "html.button",
     name: "Html.Button",
     category: "web",
@@ -23209,7 +23221,7 @@ return window.kendo;
     define('kendo.button',["kendo.core", "kendo.badge", "kendo.html.button"], f);
 })(function() {
 
-    var __meta__ = { // jshint ignore:line
+    var __meta__ = {
         id: "button",
         name: "Button",
         category: "web",
@@ -23442,7 +23454,7 @@ return window.kendo;
     define('kendo.bottomnavigation',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "bottomnavigation",
     name: "BottomNavigation",
     category: "web",
@@ -23803,7 +23815,7 @@ return window.kendo;
     define('kendo.pager',[ "kendo.data" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "pager",
     name: "Pager",
     category: "framework",
@@ -24536,7 +24548,7 @@ return window.kendo;
     define('kendo.popup',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "popup",
     name: "Pop-up",
     category: "framework",
@@ -25400,7 +25412,7 @@ return window.kendo;
     define('kendo.notification',[ "kendo.core", "kendo.popup" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "notification",
     name: "Notification",
     category: "web",
@@ -25893,7 +25905,7 @@ return window.kendo;
     define('kendo.tooltip',[ "kendo.core", "kendo.popup", "kendo.fx" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "tooltip",
     name: "Tooltip",
     category: "web",
@@ -26492,7 +26504,7 @@ return window.kendo;
     define('kendo.button.menu',["kendo.core", "kendo.popup"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "button.menu",
     name: "ButtonMenu",
     category: "web",
@@ -26881,7 +26893,7 @@ return window.kendo;
     define('kendo.splitbutton',["kendo.html.button", "kendo.button.menu"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "splitbutton",
     name: "SplitButton",
     category: "web",
@@ -26994,7 +27006,7 @@ var __meta__ = { // jshint ignore:line
 
         _getAppearanceClasses: function() {
             var that = this,
-                widgetName = that.__proto__.options.name, // jshint ignore:line
+                widgetName = that.__proto__.options.name,
                 roundedClass = kendo.cssProperties.getValidClass({
                     widget: widgetName,
                     propName: "rounded",
@@ -27013,7 +27025,9 @@ var __meta__ = { // jshint ignore:line
 
         _mainButton: function() {
             var that = this,
-                options = extend({}, that.options);
+                options = extend({}, that.options, {
+                    type: that.element.attr("type") || "button"
+                });
 
             delete options.click;
 
@@ -27023,6 +27037,7 @@ var __meta__ = { // jshint ignore:line
         _arrowButton: function() {
             var that = this,
                 options = extend({}, that.options, {
+                    type: "button",
                     icon: that.options.arrowIcon,
                 });
 
@@ -27251,7 +27266,7 @@ return window.kendo;
     define('kendo.dropdownbutton',["kendo.html.button", "kendo.button.menu"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "dropdownbutton",
     name: "DropDownButton",
     category: "web",
@@ -27338,7 +27353,9 @@ var __meta__ = { // jshint ignore:line
 
         _mainButton: function() {
             var that = this,
-                options = extend({}, that.options);
+                options = extend({}, that.options, {
+                    type: that.element.attr("type") || "button"
+                });
 
             delete options.click;
 
@@ -27539,7 +27556,7 @@ return window.kendo;
     define('kendo.toolbar',[ "kendo.core", "kendo.userevents", "kendo.popup", "kendo.html.button", "kendo.splitbutton", "kendo.dropdownbutton" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "toolbar",
     name: "ToolBar",
     category: "web",
@@ -29662,7 +29679,7 @@ return window.kendo;
     define('kendo.list',[ "kendo.data", "kendo.popup" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "list",
     name: "List",
     category: "framework",
@@ -29670,7 +29687,7 @@ var __meta__ = { // jshint ignore:line
     hidden: true
 };
 
-/*jshint evil: true*/
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -32573,7 +32590,7 @@ return window.kendo;
     define('kendo.calendar',[ "kendo.core", "kendo.selectable" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "calendar",
     name: "Calendar",
     category: "web",
@@ -32646,19 +32663,19 @@ var __meta__ = { // jshint ignore:line
         },
         HEADERSELECTOR = '.k-header, .k-calendar-header',
         CLASSIC_HEADER_TEMPLATE = '<div class="k-header k-hstack">' +
-            '<a href="\\#" #=actionAttr#="prev" role="button" class="k-nav-prev k-button #=size# k-rounded-md k-button-flat k-button-flat-base k-icon-button" ' + ARIA_LABEL + '="Previous"><span class="k-button-icon k-icon k-i-arrow-60-left"></span></a>' +
-            '<a href="\\#" #=actionAttr#="nav-up" role="button" id="nav-up" class="k-nav-fast k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-flex"></a>' +
-            '<a href="\\#" #=actionAttr#="next" role="button" class="k-nav-next k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-icon-button" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' +
+            '<a tabindex="-1" href="\\#" #=actionAttr#="prev" role="button" class="k-nav-prev k-button #=size# k-rounded-md k-button-flat k-button-flat-base k-icon-button" ' + ARIA_LABEL + '="Previous"><span class="k-button-icon k-icon k-i-arrow-60-left"></span></a>' +
+            '<a tabindex="-1" href="\\#" #=actionAttr#="nav-up" role="button" id="nav-up" class="k-nav-fast k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-flex"></a>' +
+            '<a tabindex="-1" href="\\#" #=actionAttr#="next" role="button" class="k-nav-next k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-icon-button" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' +
         '</div>',
         MODERN_HEADER_TEMPLATE = '<div class="k-calendar-header k-hstack">' +
             '<a href="\\#" #=actionAttr#="nav-up" id="nav-up" role="button" class="k-calendar-title k-title k-button #=size# k-rounded-md k-button-flat k-button-flat-base "></a>' +
             '<span class="k-spacer"></span>' +
             '<span class="k-calendar-nav k-hstack">' +
-                '<a #=actionAttr#="prev" class="k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-icon-button k-prev-view">' +
+                '<a tabindex="-1" #=actionAttr#="prev" class="k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-icon-button k-prev-view">' +
                     '<span class="k-button-icon k-icon k-i-arrow-60-left"></span>' +
                 '</a>' +
-                '<a #=actionAttr#="today" class="k-nav-today">#=messages.today#</a>' +
-                '<a #=actionAttr#="next" class="k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-icon-button k-next-view">' +
+                '<a tabindex="-1" #=actionAttr#="today" class="k-nav-today">#=messages.today#</a>' +
+                '<a tabindex="-1" #=actionAttr#="next" class="k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-icon-button k-next-view">' +
                     '<span class="k-button-icon k-icon k-i-arrow-60-right"></span>' +
                 '</a>' +
             '</span>' +
@@ -33350,16 +33367,17 @@ var __meta__ = { // jshint ignore:line
             } else if (key == keys.DOWN) {
                 value = index === 0 ? 7 : 4;
                 prevent = true;
-            }
-            else if (key == keys.SPACEBAR) {
+            } else if (key == keys.SPACEBAR) {
                 value = 0;
                 prevent = true;
-            }
-            else if (key == keys.HOME || key == keys.END) {
+            } else if (key == keys.HOME || key == keys.END) {
                 method = key == keys.HOME ? "first" : "last";
                 temp = view[method](currentValue);
                 currentValue = new DATE(temp.getFullYear(), temp.getMonth(), temp.getDate(), currentValue.getHours(), currentValue.getMinutes(), currentValue.getSeconds(), currentValue.getMilliseconds());
                 currentValue.setFullYear(temp.getFullYear());
+                prevent = true;
+            } else if (key === 84) {
+                that._todayClick(e);
                 prevent = true;
             }
 
@@ -33748,7 +33766,7 @@ var __meta__ = { // jshint ignore:line
             }
 
             if (!footer[0]) {
-                footer = $('<div class="k-footer"><a href="#" class="k-link k-nav-today"></a></div>').appendTo(element);
+                footer = $('<div class="k-footer"><a tabindex="-1" href="#" class="k-link k-nav-today"></a></div>').appendTo(element);
             }
 
             that._today = footer.show()
@@ -34646,7 +34664,7 @@ var __meta__ = { // jshint ignore:line
             body = "var clonedDate = new Date(date); var found = date && window.kendo.jQuery.inArray(clonedDate.getDay(),[" + disabledDates + "]) > -1;" + searchExpression;
         }
 
-        callback = new Function("date", body); //jshint ignore:line
+        callback = new Function("date", body);
 
         return callback;
     }
@@ -34691,7 +34709,7 @@ return window.kendo;
     define('kendo.dateinput',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "dateinput",
     name: "DateInput",
     category: "web",
@@ -35552,7 +35570,7 @@ return window.kendo;
     define('kendo.datepicker',[ "kendo.calendar", "kendo.popup", "kendo.dateinput", "kendo.html.button"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "datepicker",
     name: "DatePicker",
     category: "web",
@@ -36425,7 +36443,7 @@ return window.kendo;
     define('kendo.virtuallist',[ "kendo.data" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "virtuallist",
     name: "VirtualList",
     category: "framework",
@@ -38272,7 +38290,7 @@ return window.kendo;
     define('kendo.autocomplete',[ "kendo.list", "kendo.mobile.scroller", "kendo.virtuallist" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "autocomplete",
     name: "AutoComplete",
     category: "web",
@@ -39114,7 +39132,7 @@ return window.kendo;
     define('kendo.dropdownlist',[ "kendo.list", "kendo.mobile.scroller", "kendo.virtuallist", "kendo.html.button" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "dropdownlist",
     name: "DropDownList",
     category: "web",
@@ -40608,7 +40626,7 @@ return window.kendo;
     define('kendo.combobox',[ "kendo.list", "kendo.mobile.scroller", "kendo.virtuallist", "kendo.html.button" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "combobox",
     name: "ComboBox",
     category: "web",
@@ -41827,7 +41845,7 @@ return window.kendo;
     ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "html.chip",
     name: "Html.Chip",
     category: "web",
@@ -41912,7 +41930,7 @@ return window.kendo;
     ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "html.chiplist",
     name: "Html.ChipList",
     category: "web",
@@ -41965,7 +41983,7 @@ return window.kendo;
     define('kendo.multiselect',[ "kendo.list", "kendo.mobile.scroller", "kendo.virtuallist", "kendo.html.chip", "kendo.html.chiplist", "kendo.html.button" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "multiselect",
     name: "MultiSelect",
     category: "web",
@@ -43637,8 +43655,9 @@ return window.kendo;
 (function(f, define) {
     define('kendo.color',[ "kendo.core" ], f);
 })(function() {
+/* eslint-disable space-before-blocks, space-before-function-paren, no-multi-spaces */
 
-    var __meta__ = { // jshint ignore:line
+    var __meta__ = {
         id: "color",
         name: "Color utils",
         category: "framework",
@@ -43646,8 +43665,6 @@ return window.kendo;
         description: "Color utilities used across components",
         depends: [ "core" ]
     };
-
-/*jshint eqnull:true  */
 
 window.kendo = window.kendo || {};
 
@@ -43708,18 +43725,18 @@ var namedColors = {
 
 var browser = support.browser;
 
-var matchNamedColor = function(color) {
+var matchNamedColor = function (color) {
     var colorNames = Object.keys(namedColors);
     colorNames.push("transparent");
 
     var regexp = new RegExp("^(" + colorNames.join("|") + ")(\\W|$)", "i");
-    matchNamedColor = function(color) { return regexp.exec(color); };
+    matchNamedColor = function (color) { return regexp.exec(color); };
 
     return regexp.exec(color);
 };
 
 var BaseColor = Class.extend({
-    init: function() { },
+    init: function() {  },
 
     toHSV: function() { return this; },
 
@@ -44210,12 +44227,12 @@ kendo.deepExtend(kendo, {
     Color: Color
 });
 
-}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
+}, typeof define == 'function' && define.amd ? define : function(a1, a2, a3){ (a3 || a2)(); });
 (function(f, define) {
     define('kendo.slider',[ "kendo.draganddrop" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "slider",
     name: "Slider",
     category: "web",
@@ -45984,7 +46001,7 @@ return window.kendo;
     define('kendo.textbox',["kendo.core", "kendo.floatinglabel"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "textbox",
     name: "TextBox",
     category: "web",
@@ -46240,7 +46257,7 @@ return window.kendo;
     define('kendo.numerictextbox',[ "kendo.core", "kendo.userevents", "kendo.floatinglabel", "kendo.html.button" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "numerictextbox",
     name: "NumericTextBox",
     category: "web",
@@ -47208,7 +47225,7 @@ return window.kendo;
 (function($, undefined) {
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         Widget = ui.Widget,
@@ -47561,7 +47578,7 @@ return window.kendo;
 (function($, undefined) {
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         Observable = kendo.Observable,
@@ -48188,7 +48205,7 @@ return window.kendo;
 (function($, undefined){
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         parseColor = kendo.parseColor,
@@ -48426,7 +48443,7 @@ return window.kendo;
 (function($, undefined){
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         html = kendo.html,
@@ -48767,7 +48784,7 @@ return window.kendo;
     ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "colorpicker",
     name: "Color tools",
     category: "web",
@@ -48778,7 +48795,7 @@ var __meta__ = { // jshint ignore:line
 (function($, undefined) {
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
-    /*jshint eqnull:true  */
+
     var kendo = window.kendo,
         ui = kendo.ui,
         Widget = ui.Widget,
@@ -49189,7 +49206,7 @@ return window.kendo;
     define('kendo.toggleinputbase',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "toggleinputbase",
     name: "ToggleInputBase",
     category: "web",
@@ -49328,7 +49345,7 @@ return window.kendo;
     ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "html.input",
     name: "Html.Input",
     category: "web",
@@ -49474,7 +49491,7 @@ return window.kendo;
     define('kendo.checkbox',[ "kendo.toggleinputbase", "kendo.html.input" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "checkbox",
     name: "CheckBox",
     category: "web",
@@ -49529,7 +49546,7 @@ return window.kendo;
     define('kendo.editable',[ "kendo.checkbox", "kendo.dropdownlist", "kendo.datepicker", "kendo.numerictextbox", "kendo.validator", "kendo.binder" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "editable",
     name: "Editable",
     category: "framework",
@@ -49537,7 +49554,7 @@ var __meta__ = { // jshint ignore:line
     hidden: true
 };
 
-/* jshint eqnull: true */
+
 (function($, undefined) {
     var kendo = window.kendo,
         ui = kendo.ui,
@@ -50022,7 +50039,7 @@ return window.kendo;
     define('kendo.listview',[ "kendo.data", "kendo.editable", "kendo.selectable", "kendo.pager" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "listview",
     name: "ListView",
     category: "web",
@@ -51069,12 +51086,12 @@ return window.kendo;
 
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 
-/* jshint eqnull: true */
+
 (function(f, define) {
     define('kendo.listbox',[ "kendo.draganddrop", "kendo.data", "kendo.selectable" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "listbox",
     name: "ListBox",
     category: "web",
@@ -52679,7 +52696,7 @@ return window.kendo;
     define('kendo.loader',["kendo.core"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "loader",
     name: "Loader",
     category: "web",
@@ -52879,7 +52896,7 @@ return window.kendo;
     define('kendo.textarea',["kendo.core", "kendo.floatinglabel"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "textarea",
     name: "TextArea",
     category: "web",
@@ -53188,7 +53205,7 @@ return window.kendo;
     define('kendo.maskedtextbox',[ "kendo.core", "kendo.floatinglabel" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "maskedtextbox",
     name: "MaskedTextBox",
     category: "web",
@@ -53919,7 +53936,7 @@ return window.kendo;
     define('kendo.menu',[ "kendo.popup", "kendo.data" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "menu",
     name: "Menu",
     category: "web",
@@ -56683,7 +56700,7 @@ return window.kendo;
     define('kendo.panelbar',[ "kendo.data" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "panelbar",
     name: "PanelBar",
     category: "web",
@@ -58450,7 +58467,7 @@ return window.kendo;
     define('kendo.progressbar',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "progressbar",
     name: "ProgressBar",
     category: "web",
@@ -58967,7 +58984,7 @@ return window.kendo;
     define('kendo.responsivepanel',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "responsive-panel",
     name: "Responsive Panel",
     category: "web",
@@ -59132,7 +59149,7 @@ return window.kendo;
     define('kendo.tabstrip',[ "kendo.data" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "tabstrip",
     name: "TabStrip",
     category: "web",
@@ -60719,7 +60736,7 @@ return window.kendo;
     define('kendo.timepicker',[ "kendo.popup", "kendo.dateinput", "kendo.html.button"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "timepicker",
     name: "TimePicker",
     category: "web",
@@ -62709,7 +62726,7 @@ return window.kendo;
     define('kendo.datetimepicker',[ "kendo.datepicker", "kendo.timepicker", "kendo.html.button"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "datetimepicker",
     name: "DateTimePicker",
     category: "web",
@@ -63853,7 +63870,7 @@ return window.kendo;
     define('kendo.splitter',[ "kendo.resizable" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "splitter",
     name: "Splitter",
     category: "web",
@@ -64670,7 +64687,7 @@ return window.kendo;
     define('kendo.dialog',["kendo.core", "kendo.popup", "kendo.textbox"], f);
 })(function() {
 
-    var __meta__ = { // jshint ignore:line
+    var __meta__ = {
         id: "dialog",
         name: "Dialog",
         category: "web", // suite
@@ -65426,7 +65443,8 @@ return window.kendo;
             },
 
             _closeAnimationEnd: function() {
-                var that = this;
+                var that = this,
+                    previousFocus = that._previousFocus;
 
                 that._closing = false;
                 that.wrapper.hide().css("opacity", "");
@@ -65436,6 +65454,12 @@ return window.kendo;
                     var lastModal = that._object(that._modals().last());
                     if (lastModal) {
                         lastModal.toFront();
+                    } else if (previousFocus) {
+                        that._previousFocus = null;
+
+                        setTimeout(function() {
+                            previousFocus.focus();
+                        });
                     }
                 }
             },
@@ -65556,6 +65580,10 @@ return window.kendo;
             },
 
             _focusDialog: function() {
+                var firstModal = this._object(this._modals().first());
+
+                this._previousFocus = firstModal && firstModal._previousFocus ? firstModal._previousFocus : document.activeElement;
+
                 if (this._defaultFocus) {
                     this._focus(this._defaultFocus);
                 }
@@ -65773,7 +65801,7 @@ return window.kendo;
 
         templates = {
             wrapper: template("<div class='k-widget k-window k-dialog' role='dialog'></div>"),
-            action: template("<button type='button' class='k-button k-button-md k-rounded-md k-button-solid # if (data.primary) { # k-button-solid-primary # } else { # k-button-solid-base # } #' role='button'></button>"),
+            action: template("<button type='button' class='k-button k-button-md k-rounded-md k-button-solid # if (data.primary) { # k-button-solid-primary # } else { # k-button-solid-base # } #'></button>"),
             titlebar: template(
                 "<div class='k-window-titlebar k-dialog-titlebar k-hstack'>" +
                     "<span class='k-window-title k-dialog-title'>#: title #</span>" +
@@ -65782,7 +65810,7 @@ return window.kendo;
             ),
             close: template("<a role='button' href='\\#' class='k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button k-window-action k-dialog-action k-dialog-close' title='#: messages.close #' aria-label='#: messages.close #' tabindex='-1'>" +
                 "<span class='k-button-icon k-icon k-i-close'></span></a>"),
-            actionbar: template("<div class='k-dialog-buttongroup k-actions k-hstack k-justify-content-#: buttonLayout #' role='toolbar'></div>"),
+            actionbar: template("<div class='k-dialog-buttongroup k-actions k-hstack k-justify-content-#: buttonLayout #'></div>"),
             overlay: "<div class='k-overlay'></div>",
             alertWrapper: template("<div class='k-widget k-window k-dialog' role='alertdialog'></div>"),
             alert: "<div></div>",
@@ -65805,7 +65833,7 @@ return window.kendo;
     define('kendo.window',[ "kendo.draganddrop", "kendo.popup"], f);
 })(function() {
 
-    var __meta__ = { // jshint ignore:line
+    var __meta__ = {
         id: "window",
         name: "Window",
         category: "web",
@@ -67973,7 +68001,7 @@ return window.kendo;
     define('kendo.mobile.view',[ "kendo.core", "kendo.fx", "kendo.mobile.scroller", "kendo.view" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.view",
     name: "View",
     category: "mobile",
@@ -68691,7 +68719,7 @@ return window.kendo;
     define('kendo.mobile.loader',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.loader",
     name: "Loader",
     category: "mobile",
@@ -68790,7 +68818,7 @@ return window.kendo;
     define('kendo.mobile.pane',[ "kendo.mobile.view", "kendo.mobile.loader" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.pane",
     name: "Pane",
     category: "mobile",
@@ -69161,7 +69189,7 @@ return window.kendo;
     define('kendo.mobile.popover',[ "kendo.popup", "kendo.mobile.pane" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.popover",
     name: "PopOver",
     category: "mobile",
@@ -69438,7 +69466,7 @@ return window.kendo;
     define('kendo.mobile.shim',[ "kendo.popup" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.shim",
     name: "Shim",
     category: "mobile",
@@ -69571,7 +69599,7 @@ return window.kendo;
     define('kendo.mobile.modalview',[ "kendo.mobile.shim", "kendo.mobile.view" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.modalview",
     name: "ModalView",
     category: "mobile",
@@ -69703,7 +69731,7 @@ return window.kendo;
     define('kendo.mobile.drawer',[ "kendo.mobile.view", "kendo.userevents" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.drawer",
     name: "Drawer",
     category: "mobile",
@@ -70029,7 +70057,7 @@ return window.kendo;
     define('kendo.mobile.splitview',[ "kendo.mobile.pane" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.splitview",
     name: "SplitView",
     category: "mobile",
@@ -70179,7 +70207,7 @@ return window.kendo;
     define('kendo.mobile.application',[ "kendo.mobile.pane", "kendo.router" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.application",
     name: "Application",
     category: "mobile",
@@ -70684,7 +70712,7 @@ return window.kendo;
     define('kendo.mobile.actionsheet',[ "kendo.mobile.popover", "kendo.mobile.shim" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.actionsheet",
     name: "ActionSheet",
     category: "mobile",
@@ -70854,7 +70882,7 @@ return window.kendo;
     define('kendo.mobile.button',[ "kendo.userevents" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.button",
     name: "Button",
     category: "mobile",
@@ -71123,7 +71151,7 @@ return window.kendo;
     define('kendo.mobile.buttongroup',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.buttongroup",
     name: "ButtonGroup",
     category: "mobile",
@@ -71280,7 +71308,7 @@ return window.kendo;
     define('kendo.mobile.collapsible',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.collapsible",
     name: "Collapsible",
     category: "mobile",
@@ -71470,7 +71498,7 @@ return window.kendo;
     define('kendo.mobile.listview',[ "kendo.data", "kendo.userevents", "kendo.mobile.button" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.listview",
     name: "ListView",
     category: "mobile",
@@ -72796,7 +72824,7 @@ return window.kendo;
     define('kendo.mobile.navbar',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.navbar",
     name: "NavBar",
     category: "mobile",
@@ -72878,7 +72906,7 @@ return window.kendo;
     define('kendo.mobile.scrollview',[ "kendo.fx", "kendo.data", "kendo.draganddrop" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.scrollview",
     name: "ScrollView",
     category: "mobile",
@@ -73783,12 +73811,12 @@ return window.kendo;
 
 }, typeof define == 'function' && define.amd ? define : function(a1, a2, a3) { (a3 || a2)(); });
 
-/* jshint multistr: true */
+
 (function(f, define) {
     define('kendo.mobile.switch',[ "kendo.fx", "kendo.userevents" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.switch",
     name: "Switch",
     category: "mobile",
@@ -74052,7 +74080,7 @@ return window.kendo;
     define('kendo.mobile.tabstrip',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.tabstrip",
     name: "TabStrip",
     category: "mobile",
@@ -74232,7 +74260,7 @@ return window.kendo;
     define('kendo.angular',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "angular",
     name: "AngularJS Directives",
     category: "framework",
@@ -74249,7 +74277,6 @@ var __meta__ = { // jshint ignore:line
         return;
     }
 
-    /*jshint eqnull:true,loopfunc:true,-W052,-W028  */
 
     var module = angular.module('kendo.directives', []),
         $injector = angular.injector(['ng']),
@@ -74323,7 +74350,7 @@ var __meta__ = { // jshint ignore:line
     };
 
     function createWidget(scope, element, attrs, widget, origAttr, controllers) {
-        /* jshint latedef: false */
+
         if (!(element instanceof jQuery)) {
             throw new Error("The Kendo UI directives require jQuery to be available before AngularJS. Please include jquery before angular in the document.");
         }
@@ -74941,7 +74968,7 @@ var __meta__ = { // jshint ignore:line
     }
 
     function setTemplate(key, value) {
-        this[key] = kendo.stringify(value); // jshint ignore:line
+        this[key] = kendo.stringify(value);
     }
 
     module.factory('directiveFactory', [ '$compile', function(compile) {

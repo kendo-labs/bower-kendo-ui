@@ -17,7 +17,7 @@
     define('kendo.mobile.popover',[ "kendo.popup", "kendo.mobile.pane" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "mobile.popover",
     name: "PopOver",
     category: "mobile",

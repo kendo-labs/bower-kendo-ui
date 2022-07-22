@@ -17,7 +17,7 @@
     define('kendo.floatinglabel',["kendo.core"], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "floatinglabel",
     name: "FloatingLabel",
     category: "framework",

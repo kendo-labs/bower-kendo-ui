@@ -17,7 +17,7 @@
     define('kendo.timezones',[ "kendo.core" ], f);
 })(function() {
 
-var __meta__ = { // jshint ignore:line
+var __meta__ = {
     id: "timezones",
     name: "Timezones",
     category: "framework",
