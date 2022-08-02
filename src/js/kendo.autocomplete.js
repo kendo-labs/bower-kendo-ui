@@ -623,6 +623,16 @@ var __meta__ = {
                     });
                 }
                 e.preventDefault();
+            } else if (key === keys.ESC ) {
+                if (visible) {
+                    e.preventDefault();
+                    that.close();
+                } else {
+                    that._clearValue();
+                }
+            } else if (e.altKey && key === keys.UP && visible) {
+                e.preventDefault();
+                that.close();
             } else if (key === keys.UP) {
                 if (visible) {
                     this._move(current ? "focusPrev" : "focusLast");
@@ -648,13 +658,6 @@ var __meta__ = {
                 }
 
                 this._blur();
-            } else if (key === keys.ESC) {
-                if (visible) {
-                    e.preventDefault();
-                } else {
-                    that._clearValue();
-                }
-                that.close();
             } else if (that.popup.visible() && (key === keys.PAGEDOWN || key === keys.PAGEUP)) {
                 e.preventDefault();
 

@@ -138,7 +138,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2022.2.722".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.2.802".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -22169,13 +22169,13 @@ var __meta__ = {
         Widget = kendo.ui.Widget,
         abs = Math.abs,
         ARIASELECTED = "aria-selected",
-        SELECTED = "k-state-selected",
-        ACTIVE = "k-state-selecting",
+        SELECTED = "k-selected",
+        ACTIVE = "k-selecting",
         SELECTABLE = "k-selectable",
         CHANGE = "change",
         NS = ".kendoSelectable",
         UNSELECT = "unselect",
-        UNSELECTING = "k-state-unselecting",
+        UNSELECTING = "k-unselecting",
         INPUTSELECTOR = "input,a,textarea,.k-multiselect-wrap,select,button,.k-button>span,.k-button>img,span.k-icon.k-i-arrow-60-down,span.k-icon.k-i-arrow-60-up,label.k-checkbox-label.k-no-text,.k-icon.k-i-collapse,.k-icon.k-i-expand,span.k-numeric-wrap,.k-focusable",
         msie = kendo.support.browser.msie,
         supportEventDelegation = false,
@@ -23493,11 +23493,11 @@ var __meta__ = {
             vertical: "k-bottom-nav-item-flow-vertical",
             horizontal: "k-bottom-nav-item-flow-horizontal"
         },
-        selected: "k-state-selected",
-        disabled: "k-state-disabled",
+        selected: "k-selected",
+        disabled: "k-disabled",
         border: "k-bottom-nav-border",
         shadow: "k-bottom-nav-shadow",
-        focus: "k-state-focused"
+        focus: "k-focus"
     };
 
     var templates = {
@@ -23880,7 +23880,7 @@ var __meta__ = {
               .attr(kendo.attr("page"), page)
               .attr("tabindex", disabled ? -1 : 0)
               .attr("aria-disabled", disabled)
-              .toggleClass("k-state-disabled", disabled);
+              .toggleClass("k-disabled", disabled);
     }
 
     function first(element, page) {
@@ -24083,7 +24083,7 @@ var __meta__ = {
         options: {
             name: "Pager",
             ARIATemplate: "Page navigation, page #=page# of #=totalPages#",
-            selectTemplate: '<li><span role="button" aria-current="page" tabindex="#=tabindex#" aria-label="#=title#" class="k-link k-state-selected">#=text#</span></li>',
+            selectTemplate: '<li><span role="button" aria-current="page" tabindex="#=tabindex#" aria-label="#=title#" class="k-link k-selected">#=text#</span></li>',
             linkTemplate: '<li><a role="button" tabindex="#=tabindex#" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
             numericSelectItemTemplate: '<option value="#= idx #" #if (selected) {# selected="selected" #}#>#= text #</option>',
             buttonCount: 10,
@@ -24253,7 +24253,7 @@ var __meta__ = {
                     .val(page)
                     .attr(DISABLED, total < 1)
                     .attr("aria-disabled", total < 1)
-                    .toggleClass("k-state-disabled", total < 1);
+                    .toggleClass("k-disabled", total < 1);
             }
 
             if (options.previousNext) {
@@ -24303,7 +24303,7 @@ var __meta__ = {
             }
 
             if (that._focusSelected) {
-                that.element.find(".k-state-selected").trigger("focus");
+                that.element.find(".k-selected").trigger("focus");
                 that._focusSelected = null;
             }
 
@@ -24320,7 +24320,7 @@ var __meta__ = {
 
         _restoreTabIndexes: function() {
             this.element
-                .find("[tabindex='-1']:not(.k-state-disabled)")
+                .find("[tabindex='-1']:not(.k-disabled)")
                 .attr("tabindex", 0);
         },
 
@@ -24391,14 +24391,14 @@ var __meta__ = {
             that._tabindex(that.element);
 
             that.element.on("keydown" + NS, that, that._keyDown.bind(that));
-            that.element.on("focusout" + NS, function() { that.element.removeClass("k-state-focused"); });
+            that.element.on("focusout" + NS, function() { that.element.removeClass("k-focus"); });
             that.element.on("focusin" + NS, function(e) {
-                that.element.addClass("k-state-focused");
+                that.element.addClass("k-focus");
 
                 if (e.target === that.element[0]) {
                     that.element.find(FOCUSABLE).attr("tabindex", -1);
                 } else {
-                    that.element.removeClass("k-state-focused");
+                    that.element.removeClass("k-focus");
                 }
             });
         },
@@ -24491,7 +24491,7 @@ var __meta__ = {
                 }
             }
 
-            if (!target.is(".k-state-disabled")) {
+            if (!target.is(".k-disabled")) {
                 this.page(parseInt(target.attr(kendo.attr("page")), 10));
             }
         },
@@ -24581,7 +24581,7 @@ var __meta__ = {
         POSITION = "position",
         VISIBLE = "visible",
         EFFECTS = "effects",
-        ACTIVE = "k-state-active",
+        ACTIVE = "k-active",
         ACTIVEBORDER = "k-state-border",
         ACTIVEBORDERREGEXP = /k-state-border-(\w+)/,
         ACTIVECHILDREN = ".k-picker-wrap, .k-dropdown-wrap, .k-link",
@@ -32630,16 +32630,16 @@ var __meta__ = {
         CHANGE = "change",
         NAVIGATE = "navigate",
         VALUE = "value",
-        HOVER = "k-state-hover",
-        DISABLED = "k-state-disabled",
-        FOCUSED = "k-state-focused",
+        HOVER = "k-hover",
+        DISABLED = "k-disabled",
+        FOCUSED = "k-focus",
         OTHERMONTH = "k-other-month",
         OUTOFRANGE = "k-out-of-range",
         TODAY = "k-nav-today",
         CELLSELECTOR = "td:has(.k-link)",
         CELLSELECTORVALID = "td:has(.k-link):not(." + DISABLED + "):not(." + OUTOFRANGE + ")",
         WEEKCOLUMNSELECTOR = "td:not(:has(.k-link))",
-        SELECTED = "k-state-selected",
+        SELECTED = "k-selected",
         BLUR = "blur" + ns,
         FOCUS = "focus",
         FOCUS_WITH_NS = FOCUS + ns,
@@ -33217,8 +33217,8 @@ var __meta__ = {
                 selectableOptions = Selectable.parseOptions(that.options.selectable);
 
             if (!selectableOptions.multiple) {
-                if ($(eventArgs.event.currentTarget).is("td") && !$(eventArgs.event.currentTarget).hasClass("k-state-selected")) {
-                    $(eventArgs.event.currentTarget).addClass("k-state-selected");
+                if ($(eventArgs.event.currentTarget).is("td") && !$(eventArgs.event.currentTarget).hasClass("k-selected")) {
+                    $(eventArgs.event.currentTarget).addClass("k-selected");
                 }
                 else {
                     that._click($(eventArgs.event.currentTarget).find("a"));
@@ -33264,7 +33264,7 @@ var __meta__ = {
         _toggleSelection: function(currentCell) {
             var that = this,
                 date = toDateObject(currentCell.find("a"));
-                if (currentCell.hasClass("k-state-selected")) {
+                if (currentCell.hasClass("k-selected")) {
                     that._selectDates.push(date);
                 }
                 else {
@@ -34545,7 +34545,7 @@ var __meta__ = {
     }
 
     function mousetoggle(e) {
-        var disabled = $(this).hasClass("k-state-disabled");
+        var disabled = $(this).hasClass("k-disabled");
 
         if (!disabled) {
             $(this).toggleClass(HOVER, MOUSEENTER.indexOf(e.type) > -1 || e.type == FOCUS);
@@ -35599,7 +35599,7 @@ var __meta__ = {
     DISABLED = "disabled",
     READONLY = "readonly",
     FOCUSED = "k-focus",
-    SELECTED = "k-state-selected",
+    SELECTED = "k-selected",
     STATEDISABLED = "k-disabled",
     HOVER = "k-hover",
     HOVEREVENTS = "mouseenter" + ns + " mouseleave" + ns,
@@ -38896,6 +38896,16 @@ var __meta__ = {
                     });
                 }
                 e.preventDefault();
+            } else if (key === keys.ESC ) {
+                if (visible) {
+                    e.preventDefault();
+                    that.close();
+                } else {
+                    that._clearValue();
+                }
+            } else if (e.altKey && key === keys.UP && visible) {
+                e.preventDefault();
+                that.close();
             } else if (key === keys.UP) {
                 if (visible) {
                     this._move(current ? "focusPrev" : "focusLast");
@@ -38921,13 +38931,6 @@ var __meta__ = {
                 }
 
                 this._blur();
-            } else if (key === keys.ESC) {
-                if (visible) {
-                    e.preventDefault();
-                } else {
-                    that._clearValue();
-                }
-                that.close();
             } else if (that.popup.visible() && (key === keys.PAGEDOWN || key === keys.PAGEUP)) {
                 e.preventDefault();
 
@@ -44270,9 +44273,9 @@ var __meta__ = {
         DRAG_HANDLE = ".k-draghandle",
         TRACK_SELECTOR = ".k-slider-track",
         TICK_SELECTOR = ".k-tick",
-        STATE_SELECTED = "k-state-selected",
-        STATE_FOCUSED = "k-state-focused",
-        STATE_DISABLED = "k-state-disabled",
+        STATE_SELECTED = "k-selected",
+        STATE_FOCUSED = "k-focus",
+        STATE_DISABLED = "k-disabled",
         DISABLED = "disabled",
         UNDEFINED = "undefined",
         TABINDEX = "tabindex",
@@ -45046,10 +45049,10 @@ var __meta__ = {
                         that._focusWithMouse(e.target);
                     }).bind(that))
                     .on(MOUSE_OVER, function(e) {
-                        $(e.currentTarget).addClass("k-state-hover");
+                        $(e.currentTarget).addClass("k-hover");
                     })
                     .on("mouseout" + NS, (function(e) {
-                        $(e.currentTarget).removeClass("k-state-hover");
+                        $(e.currentTarget).removeClass("k-hover");
                         this._clearTimer();
                     }).bind(that))
                     .on(MOUSE_DOWN, (function(e) {
@@ -45080,12 +45083,12 @@ var __meta__ = {
                 .off(MOUSE_DOWN)
                 .on(MOUSE_DOWN, function(e) {
                     e.preventDefault();
-                    $(this).addClass("k-state-active");
+                    $(this).addClass("k-active");
                 })
                 .off(MOUSE_UP)
                 .on(MOUSE_UP, function(e) {
                     e.preventDefault();
-                    $(this).removeClass("k-state-active");
+                    $(this).removeClass("k-active");
                 })
                 .off("mouseleave" + NS)
                 .on("mouseleave" + NS, kendo.preventDefault)
@@ -48211,8 +48214,8 @@ return window.kendo;
         parseColor = kendo.parseColor,
         KEYS = kendo.keys,
         BACKGROUNDCOLOR = "background-color",
-        ITEMSELECTEDCLASS = "k-state-selected",
-        ITEMSFOCUSEDCLASS = "k-state-focus",
+        ITEMSELECTEDCLASS = "k-selected",
+        ITEMSFOCUSEDCLASS = "k-focus",
         SIMPLEPALETTE = "000000,7f7f7f,880015,ed1c24,ff7f27,fff200,22b14c,00a2e8,3f48cc,a349a4,ffffff,c3c3c3,b97a57,ffaec9,ffc90e,efe4b0,b5e61d,99d9ea,7092be,c8bfe7",
         WEBPALETTE = "FFFFFF,FFCCFF,FF99FF,FF66FF,FF33FF,FF00FF,CCFFFF,CCCCFF,CC99FF,CC66FF,CC33FF,CC00FF,99FFFF,99CCFF,9999FF,9966FF,9933FF,9900FF,FFFFCC,FFCCCC,FF99CC,FF66CC,FF33CC,FF00CC,CCFFCC,CCCCCC,CC99CC,CC66CC,CC33CC,CC00CC,99FFCC,99CCCC,9999CC,9966CC,9933CC,9900CC,FFFF99,FFCC99,FF9999,FF6699,FF3399,FF0099,CCFF99,CCCC99,CC9999,CC6699,CC3399,CC0099,99FF99,99CC99,999999,996699,993399,990099,FFFF66,FFCC66,FF9966,FF6666,FF3366,FF0066,CCFF66,CCCC66,CC9966,CC6666,CC3366,CC0066,99FF66,99CC66,999966,996666,993366,990066,FFFF33,FFCC33,FF9933,FF6633,FF3333,FF0033,CCFF33,CCCC33,CC9933,CC6633,CC3333,CC0033,99FF33,99CC33,999933,996633,993333,990033,FFFF00,FFCC00,FF9900,FF6600,FF3300,FF0000,CCFF00,CCCC00,CC9900,CC6600,CC3300,CC0000,99FF00,99CC00,999900,996600,993300,990000,66FFFF,66CCFF,6699FF,6666FF,6633FF,6600FF,33FFFF,33CCFF,3399FF,3366FF,3333FF,3300FF,00FFFF,00CCFF,0099FF,0066FF,0033FF,0000FF,66FFCC,66CCCC,6699CC,6666CC,6633CC,6600CC,33FFCC,33CCCC,3399CC,3366CC,3333CC,3300CC,00FFCC,00CCCC,0099CC,0066CC,0033CC,0000CC,66FF99,66CC99,669999,666699,663399,660099,33FF99,33CC99,339999,336699,333399,330099,00FF99,00CC99,009999,006699,003399,000099,66FF66,66CC66,669966,666666,663366,660066,33FF66,33CC66,339966,336666,333366,330066,00FF66,00CC66,009966,006666,003366,000066,66FF33,66CC33,669933,666633,663333,660033,33FF33,33CC33,339933,336633,333333,330033,00FF33,00CC33,009933,006633,003333,000033,66FF00,66CC00,669900,666600,663300,660000,33FF00,33CC00,339900,336600,333300,330000,00FF00,00CC00,009900,006600,003300,000000",
         NS = ".kendoColorTools",
@@ -50077,8 +50080,8 @@ var __meta__ = {
         FOCUSSELECTOR = "> *:not(.k-loading-mask)",
         PROGRESS = "progress",
         ERROR = "error",
-        FOCUSED = "k-state-focused",
-        SELECTED = "k-state-selected",
+        FOCUSED = "k-focus",
+        SELECTED = "k-selected",
         KEDITITEM = "k-edit-item",
         PAGER_CLASS = "k-listview-pager",
         ITEM_CLASS = "k-listview-item",
@@ -56743,18 +56746,18 @@ var __meta__ = {
         MOUSELEAVE = "mouseleave",
         CONTENTLOAD = "contentLoad",
         UNDEFINED = "undefined",
-        ACTIVECLASS = "k-state-active",
+        ACTIVECLASS = "k-active",
         GROUPS = "> .k-panel",
         CONTENTS = "> .k-content",
         STRING = "string",
-        FOCUSEDCLASS = "k-state-focused",
-        DISABLEDCLASS = "k-state-disabled",
-        SELECTEDCLASS = "k-state-selected",
+        FOCUSEDCLASS = "k-focus",
+        DISABLEDCLASS = "k-disabled",
+        SELECTEDCLASS = "k-selected",
         SELECTEDSELECTOR = "." + SELECTEDCLASS,
-        HIGHLIGHTCLASS = "k-state-highlight",
-        ACTIVEITEMSELECTOR = ITEM + ":not(.k-state-disabled)",
+        HIGHLIGHTCLASS = "k-highlight",
+        ACTIVEITEMSELECTOR = ITEM + ":not(.k-disabled)",
         clickableItems = "> " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR + ", .k-panel > " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR,
-        disabledItems = ITEM + ".k-state-disabled > .k-link",
+        disabledItems = ITEM + ".k-disabled > .k-link",
         selectableItems = "> li > " + SELECTEDSELECTOR + ", .k-panel > li > " + SELECTEDSELECTOR,
         ARIA_DISABLED = "aria-disabled",
         ARIA_EXPANDED = "aria-expanded",
@@ -57980,7 +57983,7 @@ var __meta__ = {
             var target = $(e.currentTarget);
 
             if (!target.parents("li." + DISABLEDCLASS).length) {
-                target.toggleClass("k-state-hover", e.type == MOUSEENTER);
+                target.toggleClass("k-hover", e.type == MOUSEENTER);
             }
         },
 
@@ -58053,7 +58056,7 @@ var __meta__ = {
 
             item
                 .filter("li[disabled]")
-                .addClass("k-state-disabled")
+                .addClass("k-disabled")
                 .attr(ARIA_DISABLED, true)
                 .prop("disabled", false);
 
@@ -58489,11 +58492,11 @@ var __meta__ = {
         KPROGRESSBARREVERSE = "k-progressbar-reverse",
         KPROGRESSBARINDETERMINATE = "k-progressbar-indeterminate",
         KPROGRESSBARCOMPLETE = "k-complete",
-        KPROGRESSWRAPPER = "k-state-selected",
+        KPROGRESSWRAPPER = "k-selected",
         KPROGRESSSTATUS = "k-progress-status",
         LABEL_POSITION_END = "k-progress-end",
-        KCOMPLETEDCHUNK = "k-state-selected",
-        STATEDISABLED = "k-state-disabled",
+        KCOMPLETEDCHUNK = "k-selected",
+        STATEDISABLED = "k-disabled",
         PROGRESSTYPE = {
             VALUE: "value",
             PERCENT: "percent",
@@ -59197,10 +59200,10 @@ var __meta__ = {
         MOUSEENTER = "mouseenter",
         MOUSELEAVE = "mouseleave",
         CONTENTLOAD = "contentLoad",
-        DISABLEDSTATE = "k-state-disabled",
-        ACTIVESTATE = "k-state-active",
-        FOCUSEDSTATE = "k-state-focused",
-        HOVERSTATE = "k-state-hover",
+        DISABLEDSTATE = "k-disabled",
+        ACTIVESTATE = "k-active",
+        FOCUSEDSTATE = "k-focus",
+        HOVERSTATE = "k-hover",
         TABONTOP = "k-tab-on-top",
         NAVIGATABLEITEMS = ".k-item:not(." + DISABLEDSTATE + ")",
         KEYBOARDNAVIGATABLEITEMS = ".k-item",
@@ -59232,7 +59235,7 @@ var __meta__ = {
                     index = item.index;
 
                 if (item.enabled === false) {
-                    result.push("k-state-disabled");
+                    result.push("k-disabled");
                 }
 
                 if (index === 0) {
@@ -60099,7 +60102,7 @@ var __meta__ = {
             }
 
             that.tabGroup
-                .on(CLICK + NS, ".k-state-disabled .k-link", false)
+                .on(CLICK + NS, ".k-disabled .k-link", false)
                 .on(CLICK + NS, " > " + NAVIGATABLEITEMS, that._itemClick.bind(that));
         },
 
@@ -63398,12 +63401,18 @@ var __meta__ = {
                 timeView = that.timeView,
                 value = that.element.val(),
                 isDateViewVisible = that.options.singlePopup ? that.popup.visible() : dateView.popup.visible();
+
             var stopPropagation = that._dateInput && e.stopImmediatePropagation;
+
             if (e.altKey && e.keyCode === kendo.keys.DOWN) {
                 that.toggle(isDateViewVisible ? "time" : "date");
             } else if (isDateViewVisible) {
                 dateView.move(e);
                 that._updateARIA(dateView._current);
+
+                if (e.keyCode === kendo.keys.ENTER) {
+                    that.toggle("time");
+                }
             } else if (!that.options.singlePopup && timeView.popup.visible()) {
                 timeView.move(e);
             } else if (e.keyCode === kendo.keys.ENTER && value !== that._oldText) {
@@ -63899,7 +63908,7 @@ var __meta__ = {
         CLICK = "click",
         PANE = "pane",
         MOUSELEAVE = "mouseleave",
-        FOCUSED = "k-state-focused",
+        FOCUSED = "k-focus",
         KPANE = "k-" + PANE,
         PANECLASS = "." + KPANE,
         TABINDEX = "tabindex",
@@ -64354,10 +64363,10 @@ var __meta__ = {
                     var element = $(this),
                         config = element.data(PANE) || {}, size;
 
-                    element.removeClass("k-state-collapsed");
+                    element.removeClass("k-collapsed");
                     if (config.collapsed) {
                         size = config.collapsedSize ? calculateSize(config.collapsedSize, totalSize) : 0;
-                        element.css("overflow", "hidden").addClass("k-state-collapsed");
+                        element.css("overflow", "hidden").addClass("k-collapsed");
                     } else if (isFluid(config.size)) {
                         freeSizedPanes = freeSizedPanes.add(this);
                         panesSizes.push(false);
@@ -65874,7 +65883,7 @@ return window.kendo;
             KCONTENTFRAME = "k-content-frame",
             LOADING = "k-i-loading",
             KHOVERSTATE = "k-hover",
-            KFOCUSEDSTATE = "k-state-focused",
+            KFOCUSEDSTATE = "k-focus",
             MAXIMIZEDSTATE = "k-window-maximized",
             INLINE_FLEX = "k-display-inline-flex",
             // constants

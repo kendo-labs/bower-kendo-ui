@@ -185,7 +185,8 @@ span.k-dropdowntree {
         z-index: 12;
     }
 
-    &.k-state-focused {
+    &.k-state-focused,
+    &.k-focus {
         &::before,
         &::after {
             display: block;
@@ -305,7 +306,8 @@ span.k-dropdowntree {
 }
 
 
-.k-multiple-selection .k-in.k-state-selected {
+.k-multiple-selection .k-in.k-state-selected,
+.k-multiple-selection .k-in.k-selected {
     border-color: transparent;
     color: inherit;
     background: none;

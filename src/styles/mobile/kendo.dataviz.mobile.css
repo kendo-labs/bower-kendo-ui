@@ -15223,7 +15223,8 @@ span.k-sparkline,
 .k-treemap-wrap.k-last > .k-treemap-tile {
   padding: 0.3em;
 }
-.k-treemap-tile.k-state-hover {
+.k-treemap-tile.k-state-hover,
+.k-treemap-tile.k-hover {
   z-index: 2;
   background-image: none;
 }

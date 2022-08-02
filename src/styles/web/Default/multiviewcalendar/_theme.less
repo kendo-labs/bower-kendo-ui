@@ -45,7 +45,8 @@
 
 
     // States
-    td.k-state-hover {
+    td.k-state-hover,
+    td.k-hover {
         .k-link {
             .fill(
                 @multiviewcalendar-cell-hovered-text,
@@ -54,7 +55,8 @@
             )
         }
     }
-    td.k-state-selected {
+    td.k-state-selected,
+    td.k-selected {
         .k-link {
             .fill(
                 @multiviewcalendar-cell-selected-text,
@@ -63,7 +65,8 @@
             )
         }
     }
-    td.k-state-focused {
+    td.k-state-focused,
+    td.k-focus {
         .k-link {
             box-shadow: @multiviewcalendar-cell-focused-shadow;
         }

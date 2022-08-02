@@ -371,7 +371,8 @@
 }
 
 .k-task-wrap:hover,
-.k-gantt-line.k-state-selected
+.k-gantt-line.k-state-selected,
+.k-gantt-line.k-selected
 {
     z-index: 3;
 }
@@ -408,7 +409,8 @@
     cursor: pointer;
 }
 
-.k-task-dot.k-state-hover
+.k-task-dot.k-state-hover,
+.k-task-dot.k-hover
 {
     background-color: transparent;
 }
@@ -446,6 +448,7 @@
 
 .k-task-dot:hover:after,
 .k-task-dot.k-state-hover:after,
+.k-task-dot.k-hover:after,
 .k-task-wrap-active .k-task-dot:after
 {
     border-style: solid;

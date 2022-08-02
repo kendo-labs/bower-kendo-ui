@@ -28,7 +28,8 @@
     }
 
     &:focus,
-    &.k-state-focus {
+    &.k-state-focus,
+    &.k-focus {
         .fill(
             @card-focus-text,
             @card-focus-bg,
@@ -98,7 +99,8 @@
 }
 
 .k-card:focus .k-card-callout,
-.k-card.k-state-focus .k-card-callout {
+.k-card.k-state-focus .k-card-callout,
+.k-card.k-focus .k-card-callout {
     .fill(
         @card-focus-text,
         @card-focus-bg,

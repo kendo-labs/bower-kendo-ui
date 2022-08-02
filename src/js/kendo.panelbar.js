@@ -60,18 +60,18 @@ var __meta__ = {
         MOUSELEAVE = "mouseleave",
         CONTENTLOAD = "contentLoad",
         UNDEFINED = "undefined",
-        ACTIVECLASS = "k-state-active",
+        ACTIVECLASS = "k-active",
         GROUPS = "> .k-panel",
         CONTENTS = "> .k-content",
         STRING = "string",
-        FOCUSEDCLASS = "k-state-focused",
-        DISABLEDCLASS = "k-state-disabled",
-        SELECTEDCLASS = "k-state-selected",
+        FOCUSEDCLASS = "k-focus",
+        DISABLEDCLASS = "k-disabled",
+        SELECTEDCLASS = "k-selected",
         SELECTEDSELECTOR = "." + SELECTEDCLASS,
-        HIGHLIGHTCLASS = "k-state-highlight",
-        ACTIVEITEMSELECTOR = ITEM + ":not(.k-state-disabled)",
+        HIGHLIGHTCLASS = "k-highlight",
+        ACTIVEITEMSELECTOR = ITEM + ":not(.k-disabled)",
         clickableItems = "> " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR + ", .k-panel > " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR,
-        disabledItems = ITEM + ".k-state-disabled > .k-link",
+        disabledItems = ITEM + ".k-disabled > .k-link",
         selectableItems = "> li > " + SELECTEDSELECTOR + ", .k-panel > li > " + SELECTEDSELECTOR,
         ARIA_DISABLED = "aria-disabled",
         ARIA_EXPANDED = "aria-expanded",
@@ -1297,7 +1297,7 @@ var __meta__ = {
             var target = $(e.currentTarget);
 
             if (!target.parents("li." + DISABLEDCLASS).length) {
-                target.toggleClass("k-state-hover", e.type == MOUSEENTER);
+                target.toggleClass("k-hover", e.type == MOUSEENTER);
             }
         },
 
@@ -1370,7 +1370,7 @@ var __meta__ = {
 
             item
                 .filter("li[disabled]")
-                .addClass("k-state-disabled")
+                .addClass("k-disabled")
                 .attr(ARIA_DISABLED, true)
                 .prop("disabled", false);
 
