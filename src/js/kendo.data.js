@@ -2364,12 +2364,18 @@ var __meta__ = {
                     if (currOriginal.hasSubgroups && currOriginal.value == currentNew.value) {
                         fillLastGroup(currOriginal, currentNew);
                     } else if (currOriginal.field && currOriginal.value == currentNew.value) {
+                        currOriginal.items.omitChangeEvent = true;
                         currOriginal.items.push.apply(currOriginal.items, currentNew.items);
+                        currOriginal.items.omitChangeEvent = false;
                     } else {
+                        originalGroup.items.omitChangeEvent = true;
                         originalGroup.items.push.apply(originalGroup.items, [currentNew]);
+                        originalGroup.items.omitChangeEvent = false;
                     }
                 } else if (currentNew) {
+                    originalGroup.items.omitChangeEvent = true;
                     originalGroup.items.push.apply(originalGroup.items, [currentNew]);
+                    originalGroup.items.omitChangeEvent = false;
                 }
             }
         }
