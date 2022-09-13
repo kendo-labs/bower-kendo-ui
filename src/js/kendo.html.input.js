@@ -60,6 +60,7 @@ var __meta__ = {
         options: {
             label: null,
             labelPosition: "after",
+            labelId: null,
             encoded: true
         },
         _wrapper: function() {
@@ -83,6 +84,14 @@ var __meta__ = {
                     that.labelEl.text(options.label);
                 } else {
                     that.labelEl.html(options.label);
+                }
+
+                if (options.labelId) {
+                    that.labelEl.attr("id", options.labelId);
+                }
+
+                if (options.optional) {
+                    that.labelEl.append("<span class='" + options.optionalClass + "'>" + options.optionalText + "</span>");
                 }
 
                 that.element[options.labelPosition](that.labelEl);
@@ -115,6 +124,8 @@ var __meta__ = {
             name: "HTMLCheckBox",
             inputClass: "k-checkbox",
             labelClass: "k-checkbox-label",
+            optionalClass: "k-label-optional",
+            optionalText: "(Optional)",
             type: "checkbox",
             rounded: "medium",
             size: "medium",
@@ -132,6 +143,8 @@ var __meta__ = {
             name: "HTMLRadioButton",
             inputClass: "k-radio",
             labelClass: "k-radio-label",
+            optionalClass: "k-label-optional",
+            optionalText: "(Optional)",
             type: "radio",
             size: "medium",
             stylingOptions: [ "size"]

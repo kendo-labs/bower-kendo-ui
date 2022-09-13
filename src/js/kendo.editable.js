@@ -160,6 +160,8 @@ var __meta__ = {
             tag = "<select />";
         } else if (type === "RadioGroup" || type === "CheckBoxGroup") {
             tag = "<ul />";
+        } else if (type === "Signature") {
+            tag = "<div></div>";
         } else {
             tag = type === "Editor" || type === "TextArea" ? "<textarea />" : "<input />";
         }
@@ -168,11 +170,11 @@ var __meta__ = {
     }
 
     var kendoEditors = [
-        "AutoComplete", "CheckBox", "CheckBoxGroup", "ColorPicker", "ComboBox", "DateInput",
+        "AutoComplete", "CheckBox", "CheckBoxGroup", "ColorGradient", "ColorPicker", "ColorPalette", "ComboBox", "DateInput",
         "DatePicker", "DateTimePicker", "DropDownTree",
-        "Editor", "MaskedTextBox", "MultiColumnComboBox","MultiSelect",
+        "Editor", "FlatColorPicker", "MaskedTextBox", "MultiColumnComboBox","MultiSelect",
         "NumericTextBox", "RadioGroup", "Rating", "Slider", "Switch", "TimePicker", "DropDownList",
-        "TextBox", "TextArea", "Captcha"
+        "TextBox", "TextArea", "Captcha", "Signature"
     ];
 
     var editors = {

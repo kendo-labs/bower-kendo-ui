@@ -1015,30 +1015,10 @@
 .k-picker.k-invalid .k-input-validation-icon {
   color: #ff3e3e;
 }
-.k-input-inner::-webkit-input-placeholder {
-  color: rgba(51, 51, 51, 0.5);
-  opacity: 1;
-  -webkit-user-select: none;
-          user-select: none;
-}
-.k-input-inner:-ms-input-placeholder {
-  color: rgba(51, 51, 51, 0.5);
-  opacity: 1;
-  -ms-user-select: none;
-      user-select: none;
-}
-.k-input-inner::-ms-input-placeholder {
-  color: rgba(51, 51, 51, 0.5);
-  opacity: 1;
-  -ms-user-select: none;
-      user-select: none;
-}
 .k-input-inner::placeholder {
   color: rgba(51, 51, 51, 0.5);
   opacity: 1;
-  -webkit-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
 }
 .k-input-inner:-ms-input-placeholder {
   color: rgba(51, 51, 51, 0.5);
@@ -1287,8 +1267,7 @@
   color: #333;
   background-color: #f7f7f7;
   transition: box-shadow 0.2s ease-in-out;
-  -ms-flex-order: -1;
-      order: -1;
+  order: -1;
 }
 .k-chat .k-alt .k-bubble {
   border-color: #007cc0;
@@ -2195,52 +2174,52 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
   color: #000000;
   background-color: #b8b8b8;
 }
-.k-badge-solid.k-badge-primary {
+.k-badge-solid-primary {
   border-color: #007cc0;
   color: #ffffff;
   background-color: #007cc0;
 }
-.k-badge-solid.k-badge-secondary {
+.k-badge-solid-secondary {
   border-color: #f2f2f2;
   color: #000000;
   background-color: #f2f2f2;
 }
-.k-badge-solid.k-badge-tertiary {
+.k-badge-solid-tertiary {
   border-color: #99d101;
   color: #000000;
   background-color: #99d101;
 }
-.k-badge-solid.k-badge-info {
+.k-badge-solid-info {
   border-color: #38a4ff;
   color: #ffffff;
   background-color: #38a4ff;
 }
-.k-badge-solid.k-badge-success {
+.k-badge-solid-success {
   border-color: #63b887;
   color: #ffffff;
   background-color: #63b887;
 }
-.k-badge-solid.k-badge-warning {
+.k-badge-solid-warning {
   border-color: #fbc43a;
   color: #000000;
   background-color: #fbc43a;
 }
-.k-badge-solid.k-badge-error {
+.k-badge-solid-error {
   border-color: #ff3e3e;
   color: #ffffff;
   background-color: #ff3e3e;
 }
-.k-badge-solid.k-badge-dark {
+.k-badge-solid-dark {
   border-color: #000000;
   color: #ffffff;
   background-color: #000000;
 }
-.k-badge-solid.k-badge-light {
+.k-badge-solid-light {
   border-color: #ffffff;
   color: #000000;
   background-color: #ffffff;
 }
-.k-badge-solid.k-badge-inverse {
+.k-badge-solid-inverse {
   border-color: #000000;
   color: #ffffff;
   background-color: #000000;
@@ -2249,34 +2228,34 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
   border-color: currentColor;
   background-color: #fff;
 }
-.k-badge-outline.k-badge-primary {
+.k-badge-outline-primary {
   color: #007cc0;
 }
-.k-badge-outline.k-badge-secondary {
+.k-badge-outline-secondary {
   color: #f2f2f2;
 }
-.k-badge-outline.k-badge-tertiary {
+.k-badge-outline-tertiary {
   color: #99d101;
 }
-.k-badge-outline.k-badge-info {
+.k-badge-outline-info {
   color: #38a4ff;
 }
-.k-badge-outline.k-badge-success {
+.k-badge-outline-success {
   color: #63b887;
 }
-.k-badge-outline.k-badge-warning {
+.k-badge-outline-warning {
   color: #fbc43a;
 }
-.k-badge-outline.k-badge-error {
+.k-badge-outline-error {
   color: #ff3e3e;
 }
-.k-badge-outline.k-badge-dark {
+.k-badge-outline-dark {
   color: #000000;
 }
-.k-badge-outline.k-badge-light {
+.k-badge-outline-light {
   color: #ffffff;
 }
-.k-badge-outline.k-badge-inverse {
+.k-badge-outline-inverse {
   color: #000000;
 }
 .k-badge-border-cutout {
@@ -2427,6 +2406,11 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
   background-color: #f2f2f2;
   background-image: linear-gradient(none);
   background-image: none;
+}
+.k-toolbar .k-toolbar-item:focus,
+.k-toolbar .k-toolbar-item.k-focus {
+  text-decoration: none;
+  outline: 0;
 }
 .k-window {
   border-radius: 0;
@@ -2868,18 +2852,15 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
 .k-imageeditor-canvas {
   background: linear-gradient(45deg, rgba(0, 0, 0, 0.09) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.09) 75%, rgba(0, 0, 0, 0.09) 0), linear-gradient(45deg, rgba(0, 0, 0, 0.09) 25%, transparent 25%, transparent 75%, rgba(0, 0, 0, 0.09) 75%, rgba(0, 0, 0, 0.09) 0), white;
   background-repeat: repeat, repeat;
-  background-position: 0px 0px, 5px 5px;
-  -webkit-transform-origin: 0 0 0;
-      -ms-transform-origin: 0 0 0;
-          transform-origin: 0 0 0;
+  background-position: 0px 0px, calc(10px / 2) calc(10px / 2);
+  transform-origin: 0 0 0;
   background-origin: padding-box, padding-box;
   background-clip: border-box, border-box;
   background-size: 10px 10px, 10px 10px;
   box-shadow: none;
   text-shadow: none;
   transition: none;
-  -webkit-transform: scaleX(1) scaleY(1) scaleZ(1);
-          transform: scaleX(1) scaleY(1) scaleZ(1);
+  transform: scaleX(1) scaleY(1) scaleZ(1);
 }
 .k-imageeditor-action-pane {
   border-color: #bfbfbf;
@@ -3692,6 +3673,10 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
   border-color: #bfbfbf;
   color: #333;
   background-color: #fff;
+}
+.k-popover-inner {
+  background-color: inherit;
+  border-color: inherit;
 }
 .k-popover-header {
   border-color: #bfbfbf;

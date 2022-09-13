@@ -13,7 +13,6 @@
     "gulp-clone": "^2.0.1",
     "gulp-concat": "^2.6.0",
     "gulp-clean-css": "^2.0.0",
-    "gulp-debug": "~4.0.0",
     "gulp-filter": "~3.0.1",
     "gulp-flatmap": "^1.0.2",
     "gulp-if": "^2.0.0",

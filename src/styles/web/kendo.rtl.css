@@ -30,9 +30,7 @@
 }
 .k-rtl .k-calendar .k-i-arrow-60-right,
 .k-rtl .k-calendar .k-i-arrow-60-left {
-  -webkit-transform: scaleX(-1);
-      -ms-transform: scaleX(-1);
-          transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .k-rtl .k-form-text-row input {
   margin-right: 0;
@@ -68,9 +66,7 @@
 }
 .k-rtl .k-i-indent-increase,
 .k-rtl .k-i-indent-decrease {
-  -webkit-transform: scaleX(-1);
-      -ms-transform: scaleX(-1);
-          transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .k-rtl .k-overflow-tools {
   left: 0;
@@ -391,28 +387,20 @@
   margin-right: 0;
 }
 .k-rtl .k-tabstrip-prev {
-  -webkit-transform: scaleX(-1);
-      -ms-transform: scaleX(-1);
-          transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .k-rtl .k-tabstrip-next {
-  -webkit-transform: scaleX(-1);
-      -ms-transform: scaleX(-1);
-          transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .k-rtl .k-treelist .k-i-arrow-60-right,
 .k-rtl .k-treelist .k-i-arrow-45-down-right {
-  -webkit-transform: scaleX(-1);
-      -ms-transform: scaleX(-1);
-          transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .k-rtl .k-pager-wrap .k-i-arrow-end-right,
 .k-rtl .k-pager-wrap .k-i-arrow-end-left,
 .k-rtl .k-pager-wrap .k-i-arrow-60-right,
 .k-rtl .k-pager-wrap .k-i-arrow-60-left {
-  -webkit-transform: scaleX(-1);
-      -ms-transform: scaleX(-1);
-          transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 .k-rtl .k-dropzone em {
   margin-left: 0;

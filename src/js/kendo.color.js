@@ -128,7 +128,7 @@ var BaseColor = Class.extend({
     },
 
     equals: function(c) {
-        return c === this || c !== null && this.toCssRgba() === parseColor(c).toCssRgba();
+        return c === this || ((c !== null && c !== undefined) && this.toCssRgba() === parseColor(c).toCssRgba());
     },
 
     diff: function(other) {
