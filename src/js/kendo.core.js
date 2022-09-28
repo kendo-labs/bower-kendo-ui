@@ -138,7 +138,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2022.3.913".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.3.928".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 

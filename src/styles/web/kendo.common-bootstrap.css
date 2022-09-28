@@ -4405,7 +4405,7 @@ select.k-dropdownlist {
 }
 .k-form-fieldset {
   margin: 32px 0 0;
-  padding: 0 0;
+  padding: 0px 0px;
   border-width: 0;
   box-sizing: border-box;
 }
@@ -4414,7 +4414,7 @@ select.k-dropdownlist {
 }
 .k-form-legend {
   margin: 0 0 16px;
-  padding: 0 0;
+  padding: 0px 0px;
   border-style: solid;
   width: 100%;
   border-width: 0 0 2px;
@@ -4493,9 +4493,9 @@ select.k-dropdownlist {
 }
 .k-form-buttons {
   margin: 16px 0 0;
-  padding: 0 0;
+  padding: 0px 0px;
   border-width: 0;
-  border-top-width: 0;
+  border-top-width: 0px;
   border-style: solid;
   display: flex;
   flex-flow: row nowrap;
@@ -4558,8 +4558,8 @@ select.k-dropdownlist {
 }
 .k-tabstrip {
   margin: 0;
-  padding: 0 0;
-  border-width: 0;
+  padding: 0px 0px;
+  border-width: 0px;
   border-style: solid;
   border-color: transparent;
   box-sizing: border-box;
@@ -4866,7 +4866,7 @@ select.k-dropdownlist {
   transform: scaleX(-1);
 }
 .k-pager-nav {
-  border-radius: 0;
+  border-radius: 0px;
   padding: 6px 6px;
   min-width: 2.3em;
   height: 2.3em;
@@ -4912,7 +4912,7 @@ select.k-dropdownlist {
   flex-direction: row;
 }
 .k-pager-numbers .k-link {
-  border-radius: 0;
+  border-radius: 0px;
   padding: 6px 6px;
   min-width: 2.3em;
   height: 2.3em;
@@ -5001,7 +5001,7 @@ select.k-dropdownlist {
   order: 9;
 }
 .k-pager-refresh {
-  border-radius: 0;
+  border-radius: 0px;
   padding: 6px 6px;
   min-width: 2.3em;
   height: 2.3em;
@@ -5076,7 +5076,7 @@ select.k-dropdownlist {
   overflow: hidden;
 }
 .k-list-scroller {
-  padding: 0 0;
+  padding: 0px 0px;
   box-sizing: border-box;
 }
 .k-list-scroller .k-list-scroller {
@@ -5119,7 +5119,7 @@ select.k-dropdownlist {
   list-style: none;
 }
 .k-list-item {
-  border-radius: 0;
+  border-radius: 0px;
   padding: 4px 8px;
   border: 0;
   outline: none;
@@ -5885,7 +5885,7 @@ div.k-grid-footer {
 }
 .k-filter-menu.k-popup,
 .k-grid-filter-popup.k-popup {
-  padding: 6px 0;
+  padding: 6px 0px;
 }
 .k-filter-menu.k-popup .k-filter-menu-container,
 .k-grid-filter-popup.k-popup .k-filter-menu-container {
@@ -5929,14 +5929,14 @@ div.k-grid-footer {
   align-items: stretch;
 }
 .k-grid-columnmenu-popup.k-popup {
-  padding: 6px 0;
+  padding: 6px 0px;
 }
 .k-grid-columnmenu-popup .k-filter-menu {
   padding: 0;
   border-radius: 0;
 }
 .k-grid-columnmenu-popup .k-filter-menu .k-filter-menu-container {
-  padding: 6px 0;
+  padding: 6px 0px;
   display: flex;
   flex-flow: column nowrap;
   align-items: stretch;
@@ -8285,7 +8285,7 @@ span.k-dropdowntree {
   width: 16px;
   height: 16px;
   border-style: solid;
-  border-width: 0;
+  border-width: 0px;
   outline: 0;
   box-sizing: border-box;
   background: none;
@@ -14209,7 +14209,7 @@ div.k-spreadsheet-window {
   align-items: center;
 }
 .k-card-deck-scrollwrap > .k-button {
-  border-radius: 0;
+  border-radius: 0px;
   flex: 0 0 auto;
   position: absolute;
   z-index: 1;
@@ -14282,7 +14282,7 @@ div.k-spreadsheet-window {
   flex: 1 1 auto;
 }
 .k-tilelayout {
-  border-width: 0;
+  border-width: 0px;
   border-style: solid;
   box-sizing: border-box;
   outline: 0;
@@ -14690,7 +14690,7 @@ div.k-spreadsheet-window {
   margin-left: 8px;
 }
 .k-calendar {
-  padding: 0 0;
+  padding: 0px 0px;
   border-width: 1px;
   border-style: solid;
   line-height: 1.42857143;
@@ -14737,7 +14737,7 @@ div.k-spreadsheet-window {
 }
 .k-calendar .k-header {
   padding: 2px 2px;
-  border-bottom-width: 0;
+  border-bottom-width: 0px;
   border-bottom-style: solid;
   text-align: center;
   position: relative;
@@ -15266,7 +15266,7 @@ kendo-scrollview.k-scrollview-wrap kendo-scrollview-pager,
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 0px;
   height: calc(10px + (2 * 0px) + (2 * 20px));
 }
 kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable,
@@ -15399,8 +15399,8 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button::before,
   width: 4.71428571em;
   height: 30px;
   border-radius: 4.71428571em;
-  padding: 0 0;
-  border-width: 0;
+  padding: 0px 0px;
+  border-width: 0px;
   border-style: solid;
   display: flex;
   flex-flow: row nowrap;
@@ -15436,7 +15436,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button::before,
   display: block;
 }
 .k-switch-on .k-switch-thumb-wrap {
-  left: calc(100% - (2.35714286em / 2) - 0 - 0);
+  left: calc(100% - (2.35714286em / 2) - 0px - 0px);
 }
 .k-ie .k-switch-on .k-switch-thumb-wrap,
 .k-edge .k-switch-on .k-switch-thumb-wrap {
@@ -15444,12 +15444,12 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button::before,
   margin-left: -2.35714286em;
 }
 .k-switch-off .k-switch-thumb-wrap {
-  left: calc((2.35714286em / 2) + 0 + 0);
+  left: calc((2.35714286em / 2) + 0px + 0px);
 }
 .k-switch-label-on,
 .k-switch-label-off {
   display: inline;
-  width: calc(100% - 2.35714286em - calc(10px + 2px) - 0);
+  width: calc(100% - 2.35714286em - calc(10px + 2px) - 0px);
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -15459,11 +15459,11 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button::before,
 }
 .k-switch-label-on {
   text-align: left;
-  left: calc(10px - 0);
+  left: calc(10px - 0px);
 }
 .k-switch-label-off {
   text-align: right;
-  right: calc(10px - 0);
+  right: calc(10px - 0px);
 }
 .k-rtl .k-switch .k-switch-thumb,
 .k-switch[dir="rtl"] .k-switch-thumb {
@@ -15471,22 +15471,22 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button::before,
 }
 .k-rtl .k-switch.k-switch-on .k-switch-thumb-wrap,
 .k-switch[dir="rtl"].k-switch-on .k-switch-thumb-wrap {
-  left: calc((2.35714286em / 2) + 0 + 0);
+  left: calc((2.35714286em / 2) + 0px + 0px);
 }
 .k-rtl .k-switch.k-switch-off .k-switch-thumb-wrap,
 .k-switch[dir="rtl"].k-switch-off .k-switch-thumb-wrap {
-  left: calc(100% - (2.35714286em / 2) - 0 - 0);
+  left: calc(100% - (2.35714286em / 2) - 0px - 0px);
 }
 .k-rtl .k-switch .k-switch-label-on,
 .k-switch[dir="rtl"] .k-switch-label-on {
   text-align: right;
   left: initial;
-  right: calc(10px - 0);
+  right: calc(10px - 0px);
 }
 .k-rtl .k-switch .k-switch-label-off,
 .k-switch[dir="rtl"] .k-switch-label-off {
   text-align: left;
-  left: calc(10px - 0);
+  left: calc(10px - 0px);
   right: initial;
 }
 .k-filter {
@@ -16101,8 +16101,8 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button::before,
   flex-direction: row;
 }
 .k-breadcrumb .k-breadcrumb-container {
-  margin: 0 0;
-  padding: 0 0;
+  margin: 0px 0px;
+  padding: 0px 0px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -16636,8 +16636,8 @@ a.k-badge:hover,
   flex-shrink: 0;
 }
 .k-checkbox-list {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
   list-style: none;
 }
 .k-checkbox-list .k-checkbox-item {
@@ -16751,8 +16751,8 @@ a.k-badge:hover,
   flex-shrink: 0;
 }
 .k-radio-list {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
   list-style: none;
 }
 .k-radio-list .k-radio-item {
@@ -17262,9 +17262,9 @@ a.k-badge:hover,
   left: 3px;
 }
 .k-stepper {
-  margin: 0 0;
-  padding: 0 0;
-  border-width: 0;
+  margin: 0px 0px;
+  padding: 0px 0px;
+  border-width: 0px;
   border-style: solid;
   font-size: 14px;
   line-height: 1.42857143;
@@ -17440,7 +17440,7 @@ a.k-badge:hover,
 }
 .k-wizard {
   padding: calc(16px * 2) calc(16px * 2);
-  border-width: 0;
+  border-width: 0px;
   font-size: inherit;
   line-height: 1.42857143;
   position: relative;
@@ -18522,7 +18522,7 @@ table.k-editor .k-editable-area {
 }
 .k-fab-items {
   margin: 0;
-  padding: 16px 0;
+  padding: 16px 0px;
   display: flex;
 }
 .k-fab-items-bottom {
@@ -18568,7 +18568,7 @@ table.k-editor .k-editable-area {
 }
 .k-fab-item-icon {
   padding: 8px 8px;
-  border-width: 0;
+  border-width: 0px;
   border-radius: 50%;
   box-sizing: content-box;
   outline: none;
@@ -18668,36 +18668,36 @@ table.k-editor .k-editable-area {
   border-color: inherit;
 }
 .k-actionsheet-top {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-  border-width: 0;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-width: 0px;
   border-top-width: 0;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
 }
 .k-actionsheet-bottom {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  border-width: 0;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  border-width: 0px;
   border-bottom-width: 0;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
 }
 .k-actionsheet-left {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-width: 0;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-width: 0px;
   border-left-width: 0;
   left: 0;
   top: 50%;
   transform: translatey(-50%);
 }
 .k-actionsheet-right {
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-  border-width: 0;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 0px;
+  border-width: 0px;
   border-right-width: 0;
   right: 0;
   top: 50%;
@@ -18739,7 +18739,7 @@ table.k-editor .k-editable-area {
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.12);
 }
 .k-bottom-nav-item {
-  padding: 0 8px;
+  padding: 0px 8px;
   min-width: 72px;
   min-height: calc((16px * 2.5) + (4px * 2));
   border-width: 0;
@@ -18919,7 +18919,7 @@ table.k-editor .k-editable-area {
   gap: calc(16px / 2);
 }
 .k-taskboard-column-cards-container {
-  padding: 0 calc(16px / 2);
+  padding: 0px calc(16px / 2);
   outline: none;
   overflow: auto;
   margin-bottom: calc(16px / 2);

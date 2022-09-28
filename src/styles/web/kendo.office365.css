@@ -1743,7 +1743,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
   background-color: #fff;
 }
 .k-pane-wrapper .k-pane .k-scheduler-mobile .k-other-month {
-  background-color: #fff;
+  background-color: #e3f1fb;
 }
 .k-pane-wrapper .k-pane .k-grid-edit-form .k-header,
 .k-pane-wrapper .k-pane .k-grid-column-menu .k-header,
@@ -4432,7 +4432,7 @@ td.k-group-cell,
   border-color: #c9c9c9;
 }
 .k-nonwork-hour {
-  background-color: #fff;
+  background-color: #e3f1fb;
 }
 .k-gantt .k-nonwork-hour {
   background-color: rgba(0, 0, 0, 0.02);
@@ -4542,6 +4542,7 @@ td.k-group-cell,
   border-color: #c9c9c9;
 }
 .k-state-selected,
+.k-selected,
 .k-state-selected:link,
 .k-selected:link,
 .k-state-selected:visited,
@@ -5210,9 +5211,6 @@ div.k-splitbar.k-focus .k-icon,
 .k-gantt .k-gantt-toolbar ul li.k-selected {
   background-color: #fff;
   border-color: transparent;
-}
-.k-scheduler .k-nonwork-hour {
-  background-color: #e3f1fb;
 }
 .k-scheduler-content .k-event {
   box-shadow: inset 4px 0 0 0 rgba(255, 255, 255, 0.5);

@@ -138,7 +138,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2022.3.913".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.3.928".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -29360,7 +29360,9 @@ var __meta__ = {
                     item, handler, eventData, urlTarget,
                     templateFocusable;
 
-                e.preventDefault();
+                if (target.closest(DOT + TEMPLATE_ITEM).length === 0) {
+                    e.preventDefault();
+                }
 
                 if (target.hasClass(MENU_BUTTON) || target.hasClass(OVERFLOW_ANCHOR)) {
                     that._resetTabIndex(target);
@@ -29522,18 +29524,24 @@ var __meta__ = {
                     this._resetTabIndex(last);
                     last.trigger(FOCUS);
                     e.preventDefault();
-                } else if (!this.options.navigateOnTab && keyCode === keys.RIGHT && !target.is(INPUT + ":not([type=file])" + COMMA + SELECT + COMMA + DOT + DROPDOWNLIST + COMMA + DOT + COLORPICKER) && this._getNextElement(e.target, 1 * direction)) {
-                    next = $(this._getNextElement(e.target, 1 * direction));
-                    this._resetTabIndex(next);
-                    next.trigger(FOCUS);
+                } else if (!this.options.navigateOnTab &&
+                    keyCode === keys.RIGHT &&
+                    !target.is(INPUT + ":not([type=file])" + COMMA + SELECT + COMMA + DOT + DROPDOWNLIST + COMMA + DOT + COLORPICKER) &&
+                    this._getNextElement(e.target, 1 * direction)) {
+                        next = $(this._getNextElement(e.target, 1 * direction));
+                        this._resetTabIndex(next);
+                        next.trigger(FOCUS);
 
-                    e.preventDefault();
-                } else if (!this.options.navigateOnTab && keyCode === keys.LEFT && !target.is(INPUT + ":not([type=file])" + COMMA + SELECT + COMMA + EMPTY + DOT + DROPDOWNLIST + COMMA + DOT + COLORPICKER) && this._getNextElement(e.target, -1 * direction)) {
-                    next = $(this._getNextElement(e.target, -1 * direction));
-                    this._resetTabIndex(next);
-                    next.trigger(FOCUS);
+                        e.preventDefault();
+                } else if (!this.options.navigateOnTab &&
+                    keyCode === keys.LEFT &&
+                    !target.is(INPUT + ":not([type=file])" + COMMA + SELECT + COMMA + EMPTY + DOT + DROPDOWNLIST + COMMA + DOT + COLORPICKER) &&
+                    this._getNextElement(e.target, -1 * direction)) {
+                        next = $(this._getNextElement(e.target, -1 * direction));
+                        this._resetTabIndex(next);
+                        next.trigger(FOCUS);
 
-                    e.preventDefault();
+                        e.preventDefault();
                 }
             },
 
@@ -29561,7 +29569,7 @@ var __meta__ = {
                         return false;
                     } else if (current.hasClass(OVERFLOW_ANCHOR) && current.css("visibility") === HIDDEN) {
                         return false;
-                    } else if (current.hasClass(TEMPLATE_ITEM) && current.find(DOT + "k-picker" + COMMA + DOT + "k-input").length === 0) {
+                    } else if (current.hasClass(TEMPLATE_ITEM) && current.find("input:visible" + COMMA + DOT + "k-picker" + COMMA + DOT + "k-input").length === 0) {
                         return false;
                     } else if (!current.hasClass(TEMPLATE_ITEM) && current.closest(DOT + TEMPLATE_ITEM).length > 0) {
                         return false;
@@ -46603,11 +46611,32 @@ var __meta__ = {
 
             that.options.format = extractFormat(that.options.format);
             that._upArrowEventHandler.destroy();
+            that._upArrowEventHandler = null;
             that._downArrowEventHandler.destroy();
+            that._downArrowEventHandler = null;
             that._arrowsWrap.remove();
             that._arrows();
 
             that._applyCssClasses();
+
+            if (that._inputLabel) {
+                that._inputLabel.off(ns);
+                that._inputLabel.remove();
+
+                if (that.floatingLabel) {
+                    that.floatingLabel.destroy();
+                    if (that._floatingLabelContainer) {
+                        that.wrapper.unwrap();
+                    }
+                }
+            }
+
+            that._label();
+
+            that._editable({
+                readonly: that.options.readonly,
+                disable: !that.options.enable
+            });
 
             if (options.value !== undefined) {
                 that.value(options.value);
@@ -55255,7 +55284,7 @@ var __meta__ = {
                 };
 
             if (referenceItem && !parent.length) {
-                parent = $(that.renderGroup({ group: groupData, options: that.options })).appendTo(referenceItem);
+                parent = $(that.renderGroup({ group: groupData, options: that.options })).css("display", "none").appendTo(referenceItem);
             }
 
             if (plain || isArray(item) || item instanceof kendo.data.ObservableArray) { // is JSON
