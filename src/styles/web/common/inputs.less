@@ -355,7 +355,8 @@ span.k-dropdowntree {
         width: auto;
     }
 
-    &.k-state-empty {
+    &.k-state-empty,
+    &.k-empty {
         > .k-label {
             transform: translate( 0, 0 ) scale( 1 );
             font-style: normal;
@@ -384,6 +385,10 @@ span.k-dropdowntree {
         color: transparent;
     }
 
+    &.k-empty:not(.k-focus) ::placeholder {
+        color: transparent;
+    }
+
     .k-rtl &,
     &[dir='rtl'] {
 
@@ -392,7 +397,8 @@ span.k-dropdowntree {
             right: calc(@input-padding-x + @input-border-width);
         }
 
-        &.k-state-empty {
+        &.k-state-empty,
+        &.k-empty {
             > .k-label {
                 transform: translate( 0, 0 ) scale( 1 );
             }

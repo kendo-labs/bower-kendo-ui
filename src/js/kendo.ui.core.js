@@ -29,7 +29,7 @@ var packageMetadata = {
     productName: 'Kendo UI',
     productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
     publishDate: 0,
-    version: '',
+    version: '2022.3.1005'.replace(/^\s+|\s+$/g, ''),
     licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
 };
 
@@ -138,7 +138,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2022.3.928".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.3.1005".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -1951,6 +1951,10 @@ function pad(number, digits, end) {
     }
 
     function isScrollable(element) {
+        if (element.dataset[kendo.ns + "scrollable"] === "false") {
+            return false;
+        }
+
         if (element && element.className && typeof(element.className) === "string" && element.className.indexOf("k-auto-scrollable") > -1) {
             return true;
         }
@@ -18575,7 +18579,7 @@ var __meta__ = {
         ui = kendo.ui,
         NS = ".kendoFloatingLabel",
         FLOATINGLABELCONTAINER = "k-floating-label-container",
-        EMPTY = "k-state-empty",
+        EMPTY = "k-empty",
         FOCUSED = "k-focus",
         STATEDISABLED = "k-disabled",
         NOCLICKCLASS = "k-no-click",

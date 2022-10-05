@@ -6650,11 +6650,23 @@ div.k-grid-footer {
   overflow: hidden;
   cursor: default;
   min-height: 1.3em;
+  line-height: 1.71428571;
   white-space: nowrap;
+}
+.k-task-single .k-task-actions .k-link {
+  color: inherit;
+}
+.k-task-single .k-task-actions .k-link .k-icon {
+  opacity: 0.5;
+}
+.k-task-single .k-task-actions .k-link:hover .k-icon {
+  opacity: 1;
 }
 .k-task-template {
   padding: 0.2em 1.4em 0.2em 0.6em;
   line-height: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .k-task-actions,
 .k-task-content > .k-link {
@@ -6959,6 +6971,10 @@ div.k-grid-footer {
   border-style: solid;
   border-width: 8px;
   right: 1.4em;
+}
+.k-rtl .k-task-planned .k-task-moment.k-moment-left {
+  margin-left: 0;
+  margin-right: calc(2px / 2 - calc((2px * 2 + 6px) / 2));
 }
 .k-rtl .k-summary-wrap .k-task-offset::before {
   content: "";
@@ -7523,7 +7539,9 @@ span.k-dropdowntree {
   width: auto;
 }
 .k-textbox-container.k-state-empty > .k-label,
-.k-floating-label-container.k-state-empty > .k-label {
+.k-floating-label-container.k-state-empty > .k-label,
+.k-textbox-container.k-empty > .k-label,
+.k-floating-label-container.k-empty > .k-label {
   transform: translate(0, 0) scale(1);
   font-style: normal;
 }
@@ -7541,6 +7559,10 @@ span.k-dropdowntree {
 .k-floating-label-container.k-state-empty:not(.k-focus) ::placeholder {
   color: transparent;
 }
+.k-textbox-container.k-empty:not(.k-focus) ::placeholder,
+.k-floating-label-container.k-empty:not(.k-focus) ::placeholder {
+  color: transparent;
+}
 .k-rtl .k-textbox-container > .k-label,
 .k-rtl .k-floating-label-container > .k-label,
 .k-textbox-container[dir='rtl'] > .k-label,
@@ -7551,7 +7573,11 @@ span.k-dropdowntree {
 .k-rtl .k-textbox-container.k-state-empty > .k-label,
 .k-rtl .k-floating-label-container.k-state-empty > .k-label,
 .k-textbox-container[dir='rtl'].k-state-empty > .k-label,
-.k-floating-label-container[dir='rtl'].k-state-empty > .k-label {
+.k-floating-label-container[dir='rtl'].k-state-empty > .k-label,
+.k-rtl .k-textbox-container.k-empty > .k-label,
+.k-rtl .k-floating-label-container.k-empty > .k-label,
+.k-textbox-container[dir='rtl'].k-empty > .k-label,
+.k-floating-label-container[dir='rtl'].k-empty > .k-label {
   transform: translate(0, 0) scale(1);
 }
 .k-rtl .k-textbox-container > .k-label,
