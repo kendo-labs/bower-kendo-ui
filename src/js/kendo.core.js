@@ -29,7 +29,7 @@ var packageMetadata = {
     productName: 'Kendo UI',
     productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
     publishDate: 0,
-    version: '2022.3.1005'.replace(/^\s+|\s+$/g, ''),
+    version: '2022.3.1012'.replace(/^\s+|\s+$/g, ''),
     licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
 };
 
@@ -138,7 +138,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2022.3.1005".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2022.3.1012".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
