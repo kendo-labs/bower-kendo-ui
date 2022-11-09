@@ -170,6 +170,7 @@
 @header-text-color: @normal-text-color;
 @header-background-color: @base;
 @header-gradient: @widget-gradient;
+@footer-background-color: @header-background-color;
 @group-background-color: @background;
 @group-border-color: lighten(@background, 26%);
 @content-background-color: @base;
@@ -223,6 +224,7 @@
 @tooltip-text: @normal-text-color;
 @tooltip-border: darken(@normal-text-color, 21%);
 
+@tooltip-callout-s-border: inherit;
 
 @list-border-radius: (@border-radius - 1);
 @inner-border-radius: (@border-radius - 1);
@@ -1691,6 +1693,7 @@
 
 .k-block,
 .k-widget,
+.k-popup,
 .k-group,
 .k-content,
 .k-header,

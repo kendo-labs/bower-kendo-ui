@@ -169,7 +169,8 @@
 @link-text-color: #428bca;
 @header-text-color: #ffffff;
 @header-background-color: @accent;
-@group-background-color: @accent;
+@footer-background-color: @background;
+@group-background-color: @background;
 @group-border-color: rgba(0, 0, 0, 0.2);
 @content-background-color: @background;
 @hover-background-color: @hover-background;
@@ -224,6 +225,7 @@
 @tooltip-text: #ffffff;
 @tooltip-border: rgba(100,100,100,.9);
 
+@tooltip-callout-s-border: inherit;
 
 @validation-text-color: contrast(@validation-background-color, lighten(@warning, 80%), darken(@warning, 60%), 0.5);
 @validation-background-color: @warning;
@@ -1729,6 +1731,7 @@ a.k-icon {
 
 .k-block,
 .k-widget,
+.k-popup,
 .k-group,
 .k-content,
 .k-header,

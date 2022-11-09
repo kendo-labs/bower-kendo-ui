@@ -204,6 +204,7 @@
 @tooltip-text: #ffffff;
 @tooltip-border: lighten(@hover-background, 1%);
 
+@tooltip-callout-s-border: inherit;
 
 @draghandle-border-color: saturate(@hover-background, 1%);
 @draghandle-shadow: 0 1px 1px 0 fadeout(darken(@normal-text-color, 10%), 70%);
@@ -249,6 +250,7 @@
 @default-icon-opacity: 1;
 @header-background-color: @base;
 @header-text-color: @normal-text-color;
+@footer-background-color: @header-background-color;
 @group-background-color: @base;
 @group-border-color: contrast(@base, lighten(@base, 14%), darken(@base, 14%), 0.5);
 @content-background-color: @base;
@@ -1689,6 +1691,7 @@
 
 .k-block,
 .k-widget,
+.k-popup,
 .k-group,
 .k-content,
 .k-header,

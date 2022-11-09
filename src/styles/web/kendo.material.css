@@ -2516,6 +2516,11 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
   background-color: rgba(100, 100, 100, 0.9);
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
 }
+.k-tooltip .k-callout-s,
+.k-tooltip.k-widget .k-callout-s,
+.k-tooltip.k-popup .k-callout-s {
+  border-top-color: inherit;
+}
 .k-tooltip-primary {
   border-color: #3f51b5;
   color: #ffffff;
@@ -4233,6 +4238,7 @@ a.k-icon:hover {
 }
 .k-block,
 .k-widget,
+.k-popup,
 .k-group,
 .k-content,
 .k-header,
@@ -4272,7 +4278,7 @@ a.k-icon:hover {
 .k-widget .k-status,
 .k-dropzone-hovered,
 .k-popup {
-  background-color: #3f51b5;
+  background-color: #fff;
 }
 .k-grouping-row td,
 td.k-group-cell,
@@ -5528,7 +5534,7 @@ div.k-scheduler-marquee:after {
 }
 .k-action-window .k-action-buttons {
   border-color: #e6e6e6;
-  background: #3f51b5;
+  background: #fff;
 }
 .k-spreadsheet-sample {
   color: #919191;

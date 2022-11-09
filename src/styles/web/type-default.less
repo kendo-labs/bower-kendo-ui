@@ -164,6 +164,7 @@
 @header-text-color: contrast(@selected-background, lighten(@normal-text-color, 1%), darken(@normal-text-color, 13%), 0.5);
 @header-background-color: saturate(@base, 4%);
 @header-gradient: @widget-gradient;
+@footer-background-color: @header-background-color;
 @group-background-color: contrast(@base, lighten(@background, 4%), darken(@background, 4%), 0.5);
 @group-border-color: contrast(@base, lighten(@base, 1%), darken(@base, 14%), 0.5);
 @content-background-color: @background;
@@ -218,6 +219,7 @@
 @tooltip-text: @header-text-color;
 @tooltip-border: @secondary-border-color;
 
+@tooltip-callout-s-border: inherit;
 
 @validation-text-color: contrast(@validation-background-color, lighten(@warning, 80%), darken(@warning, 60%), 0.5);
 @validation-background-color: @warning;
@@ -1693,6 +1695,7 @@
 
 .k-block,
 .k-widget,
+.k-popup,
 .k-group,
 .k-content,
 .k-filter-row > th,

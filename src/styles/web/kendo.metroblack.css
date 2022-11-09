@@ -1268,9 +1268,9 @@
   font-weight: bold;
 }
 .k-chat .k-bubble {
-  border-color: #0e0e0e;
+  border-color: #222222;
   color: #ffffff;
-  background-color: #0e0e0e;
+  background-color: #222222;
   transition: box-shadow 0.2s ease-in-out;
   order: -1;
 }
@@ -2540,6 +2540,11 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
   color: #ffffff;
   background-color: #00b0ae;
   box-shadow: 0 2px 2px 0 rgba(255, 255, 255, 0.2);
+}
+.k-tooltip .k-callout-s,
+.k-tooltip.k-widget .k-callout-s,
+.k-tooltip.k-popup .k-callout-s {
+  border-top-color: inherit;
 }
 .k-tooltip-primary {
   border-color: #008886;
@@ -4251,6 +4256,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
 }
 .k-block,
 .k-widget,
+.k-popup,
 .k-group,
 .k-content,
 .k-header,

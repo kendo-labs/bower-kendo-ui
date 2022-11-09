@@ -2586,6 +2586,11 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
   background-color: #2c232b;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.7);
 }
+.k-tooltip .k-callout-s,
+.k-tooltip.k-widget .k-callout-s,
+.k-tooltip.k-popup .k-callout-s {
+  border-top-color: inherit;
+}
 .k-tooltip-primary {
   border-color: #870074;
   color: #ffffff;
@@ -4288,6 +4293,7 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
 }
 .k-block,
 .k-widget,
+.k-popup,
 .k-group,
 .k-content,
 .k-header,

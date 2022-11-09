@@ -3139,8 +3139,8 @@ hr.k-separator {
   overflow: hidden;
   clear: both;
 }
-.k-popup .k-actions {
-  padding: 6px 0 0;
+.k-actions.k-timeduration-footer {
+  margin-top: 0;
 }
 .k-colorpicker-popup .k-actions {
   padding: 6px 8px;
@@ -3436,11 +3436,8 @@ input[type="reset"].k-button-expand {
   justify-content: flex-start;
 }
 .k-action-buttons {
-  margin: 1em 0 0;
-  padding: 6px 8px;
   text-align: right;
   position: relative;
-  clear: both;
 }
 .k-action-buttons .k-button {
   min-width: 75px;
@@ -7319,12 +7316,6 @@ span.k-dropdowntree {
   text-align: center;
   flex: 0 0 21em;
 }
-.k-datetime-container .k-time-list-container {
-  justify-content: center;
-}
-.k-datetime-container .k-timeselector {
-  outline: none;
-}
 .k-datetime-container .k-time-tab .k-datetime-selector {
   transform: translateX(-100%);
 }
@@ -7355,29 +7346,34 @@ span.k-dropdowntree {
   line-height: inherit;
   cursor: pointer;
 }
-.k-time-list-wrapper {
-  display: inline-block;
-  overflow: hidden;
-  box-sizing: content-box;
-  overflow-x: hidden;
-  overflow-y: auto;
+.k-time-list-container {
+  display: flex;
   position: relative;
-  padding: 20px 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+.k-time-fast-selection.k-actions {
+  margin-top: 0;
+  border-width: 0;
+}
+.k-time-list-wrapper {
+  display: inline-flex;
+  position: relative;
+  flex-flow: column wrap;
+  flex: 1;
   text-align: center;
-  width: 5em;
+  min-width: 5em;
   height: calc(7 * (1.42857143 * 1em + 2 * 4px));
 }
 .k-time-list-wrapper .k-title {
   display: block;
   text-align: center;
   font-size: 10px;
-  position: absolute;
   text-transform: capitalize;
   font-weight: bold;
   min-width: 100%;
   height: 1.5em;
   line-height: 1.5em;
-  margin-top: calc(-1 * 20px);
   z-index: 12;
 }
 .k-time-list-wrapper.k-state-focused::before,
@@ -7397,22 +7393,19 @@ span.k-dropdowntree {
 }
 .k-time-list-wrapper.k-state-focused::before,
 .k-time-list-wrapper.k-focus::before {
-  top: 0;
+  top: 7px;
 }
 .k-time-list-wrapper.k-state-focused::after,
 .k-time-list-wrapper.k-focus::after {
   bottom: 0;
 }
 .k-time-container {
-  position: absolute;
+  position: relative;
   display: block;
+  flex: 1;
   overflow-x: hidden;
   overflow-y: scroll;
   line-height: 1.42857143;
-  left: 0;
-  right: 0;
-  top: 20px;
-  bottom: 20px;
   padding-right: 100px;
   padding-left: 100px;
   margin-left: -100px;
@@ -7422,6 +7415,7 @@ span.k-dropdowntree {
 .k-time-container > ul {
   height: auto;
   width: 5em;
+  margin: auto;
 }
 .k-rtl .k-time-container,
 .k-time-container.k-rtl,
@@ -7433,19 +7427,18 @@ span.k-dropdowntree {
   margin-right: -100px;
   margin-left: calc(-100px - 17px);
 }
-.k-time-list-container {
-  display: flex;
-  position: relative;
+.k-timeselector {
+  outline: none;
 }
 .k-time-list {
-  position: absolute;
+  position: relative;
   display: flex;
+  flex: 1;
+  padding-top: 8px;
+  padding-bottom: 16px;
   z-index: 10;
   outline: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  top: 0;
+  overflow: hidden;
 }
 .k-time-list::before,
 .k-time-list::after {
@@ -7469,7 +7462,7 @@ span.k-dropdowntree {
 }
 .k-time-highlight {
   position: absolute;
-  top: 50%;
+  top: calc(50% + 7px);
   left: 0;
   right: 0;
   transform: translateY(-50%);
@@ -7490,7 +7483,10 @@ span.k-dropdowntree {
   display: inline-flex;
   align-self: center;
   justify-content: center;
-  height: 100%;
+  align-items: center;
+  height: calc(1.42857143 * 1em + 8px * 2);
+  position: relative;
+  top: 7px;
   z-index: 11;
 }
 .k-time-footer {
@@ -11128,6 +11124,9 @@ span.k-sparkline,
 .k-i-clock:before {
   content: "\e107";
 }
+.k-i-clock-arrow-rotate:before {
+  content: "\e15d";
+}
 .k-i-calendar:before {
   content: "\e108";
 }
@@ -13470,9 +13469,8 @@ div.k-spreadsheet-window {
   width: 100%;
 }
 .k-spreadsheet-window .k-action-buttons {
-  top: 10px;
   padding: 10px;
-  margin-bottom: calc(10px - 1em);
+  margin: 10px -0.75em -0.75em;
 }
 .k-spreadsheet-window .k-edit-label {
   width: 25%;
@@ -20486,6 +20484,9 @@ table.k-editor .k-editable-area {
   display: block;
   z-index: 1;
 }
+.k-signature-canvas:focus {
+  outline: 0;
+}
 .k-signature-line {
   position: absolute;
   bottom: 33%;
@@ -20811,6 +20812,9 @@ li.k-item.k-last.k-selected {
 }
 div.k-spreadsheet-window {
   padding: 1em;
+}
+div.k-spreadsheet-window .k-action-buttons {
+  margin: 10px -1em -1em;
 }
 .k-editor-dialog.k-editor-table-wizard-dialog.k-window-content {
   overflow: hidden;
