@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -148,11 +148,17 @@
             return true;
         }
 
-        var SUMMARYTEMPLATE = '<ul>' +
-            '#for(var i = 0; i < errors.length; i += 1){#' +
-                '<li><a data-field="#=errors[i].field#" href="\\#">#= errors[i].message #</a></li>' +
-            '# } #' +
-        '</ul>';
+        var SUMMARYTEMPLATE = function (ref) {
+            var errors = ref.errors;
+
+            var result = '<ul>';
+            for (var i = 0; i < errors.length; i += 1) {
+                result += "<li><a data-field=\"" + (errors[i].field) + "\" href=\"#\">" + (errors[i].message) + "</a></li>";
+            }
+
+            result += '</ul>';
+            return result;
+        };
 
         var Validator = Widget.extend({
             init: function(element, options) {
@@ -190,7 +196,11 @@
 
             options: {
                 name: "Validator",
-                errorTemplate: '<span class="k-form-error">#= message #</span>',
+                errorTemplate: function (ref) {
+                    var message = ref.message;
+
+                    return ("<span class=\"k-form-error\">" + message + "</span>");
+        },
                 messages: {
                     required: "{0} is required",
                     pattern: "{0} is not valid",

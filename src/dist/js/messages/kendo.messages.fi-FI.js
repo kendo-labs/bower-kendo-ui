@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -583,7 +583,7 @@
     "alignmentDialog": {
       "title": "Asemointi",
       "buttons": {
-       "justtifyLeft": "Tasaa vasemmalle",
+       "justifyLeft": "Tasaa vasemmalle",
        "justifyCenter": "Keskitä",
        "justifyRight": "Tasaa oikealle",
        "justifyFull": "Tasaa molemmat reunat",
@@ -735,7 +735,7 @@
     "addRowBelow": "Lisää rivi alapuolelle",
     "alignment": "Alignment",
     "alignmentButtons": {
-      "justtifyLeft": "Tasaa vasemmalle",
+      "justifyLeft": "Tasaa vasemmalle",
       "justifyCenter": "Keskitä",
       "justifyRight": "Tasaa oikealle",
       "justifyFull": "Tasaa molemmat reunat",

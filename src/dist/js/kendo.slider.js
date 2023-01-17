@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1113,7 +1113,7 @@
                 }
 
                 $(".k-slider-tooltip").remove(); // if user changes window while tooltip is visible, a second one will be created
-                that.tooltipDiv = $("<div class='k-tooltip k-slider-tooltip'><!-- --></div>").appendTo(document.body);
+                that.tooltipDiv = $("<div role='tooltip' class='k-tooltip k-slider-tooltip'><!-- --></div>").appendTo(document.body);
 
                 html = owner._getFormattedValue(that.val || owner.value(), that);
 

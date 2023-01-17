@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@
             DISABLED = "disabled",
             READONLY = "readonly",
             INPUT = "k-input-inner",
+            INPUT_EV = "input",
             FOCUSED = "k-focus",
             LABELCLASSES = "k-label k-input-label",
             STATEDISABLED = "k-disabled",
@@ -66,12 +67,17 @@
                     .attr("placeholder", that.options.placeholder)
                     .attr("autocomplete", "off");
 
+                if (options.icon) {
+                    that._icon();
+                }
+
                 kendo.notify(that);
                 that._applyCssClasses();
             },
 
             events: [
-                CHANGE
+                CHANGE,
+                INPUT_EV
             ],
 
             options: {
@@ -83,7 +89,8 @@
                 label: null,
                 rounded: "medium",
                 size: "medium",
-                fillMode: "solid"
+                fillMode: "solid",
+                icon: null
             },
 
             value: function(value) {
@@ -188,6 +195,7 @@
                     element.on("focusin" + NS, that._focusin.bind(that));
                     element.on("focusout" + NS, that._focusout.bind(that));
                     element.on("change" + NS, that._change.bind(that));
+                    element.on(INPUT_EV + NS, that._input.bind(that));
                 } else {
                     element.attr(DISABLED, disable)
                            .attr(READONLY, readonly)
@@ -196,6 +204,17 @@
                     wrapper.toggleClass(STATEDISABLED, disable)
                             .toggleClass(NOCLICKCLASS, readonly);
                 }
+            },
+
+            _icon: function() {
+                this.wrapper.prepend('<span class="k-input-icon k-icon k-i-' + this.options.icon + '"></span>');
+            },
+
+            _input: function(e) {
+                var that = this;
+                var newValue = that.element.val();
+
+                that.trigger(INPUT_EV, { value: newValue, originalEvent: e });
             },
 
             _label: function() {

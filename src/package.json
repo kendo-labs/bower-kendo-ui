@@ -45,8 +45,8 @@
   "scripts": {
     "build": "npx gulp build",
     "scripts": "npx gulp scripts",
-    "scripts:mjs": "npx rollup -c rollup.mjs.config.js",
+    "scripts:mjs": "npx gulp scripts:mjs",
     "scripts:modules": "npx rollup -c rollup.modules.config.js",
-    "scripts:all": "npm run scripts && npm run scripts:modules"
+    "scripts:all": "npm run scripts && npm run scripts:mjs && npm run scripts:modules"
   }
 }

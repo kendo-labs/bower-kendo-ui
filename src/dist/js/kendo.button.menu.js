@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@
             NS = ".kendoButtonMenu",
             ui = kendo.ui,
             keys = kendo.keys,
+            encode = kendo.htmlEncode,
             extend = $.extend,
 
             DOT = ".",
@@ -77,14 +78,56 @@
             spriteCssClass: null
         };
 
-        var IMAGE_TEMPLATE = "#if(imageUrl){#<img alt=\"icon\" class=\"" + cssClasses.image + "\" src=\"#:imageUrl#\" />#}#";
-        var SPRITE_TEMPLATE = "#if(spriteCssClass){#<span class=\"" + cssClasses.sprite + " #:spriteCssClass#\"></span>#}#";
-        var ICON_TEMPLATE = "#if(icon){#<span class=\"" + cssClasses.icon + " k-i-#:icon#\"></span>#}#";
-        var TEXT_TEMPLATE = "#if(text){#<span class=\"" + cssClasses.itemText + "\">#:text#</span>#}#";
+        var IMAGE_TEMPLATE = function (ref) {
+            var imageUrl = ref.imageUrl;
 
-        var ITEM_TEMPLATE = "<span class=\"" + cssClasses.item + "\">" + IMAGE_TEMPLATE + SPRITE_TEMPLATE + ICON_TEMPLATE + TEXT_TEMPLATE + "</span>";
+            return ("" + (imageUrl ? ("<img alt=\"icon\" class=\"" + (cssClasses.image) + "\" src=\"" + (encode(imageUrl)) + "\" />") : ''));
+        };
+        var SPRITE_TEMPLATE = function (ref) {
+            var spriteCssClass = ref.spriteCssClass;
 
-        var LINK_TEMPLATE = "<a href=\"#:url#\" class=\"" + cssClasses.item + "\">" + IMAGE_TEMPLATE + SPRITE_TEMPLATE + ICON_TEMPLATE + TEXT_TEMPLATE + "</a>";
+            return ("" + (spriteCssClass ? ("<span class=\"" + (cssClasses.sprite) + " " + (encode(spriteCssClass)) + "\"></span>") : ''));
+        };
+        var ICON_TEMPLATE = function (ref) {
+            var icon = ref.icon;
+
+            return ("" + (icon ? ("<span class=\"" + (cssClasses.icon) + " k-i-" + (encode(icon)) + "\"></span>") : ''));
+        };
+        var TEXT_TEMPLATE = function (ref) {
+            var text = ref.text;
+
+            return ("" + (text ? ("<span class=\"" + (cssClasses.itemText) + "\">" + (encode(text)) + "</span>") : ''));
+        };
+
+        var ITEM_TEMPLATE = function (ref) {
+            var imageUrl = ref.imageUrl;
+            var spriteCssClass = ref.spriteCssClass;
+            var icon = ref.icon;
+            var text = ref.text;
+
+            return "<span class=\"" + (cssClasses.item) + "\">" +
+                                                            "" + (IMAGE_TEMPLATE({ imageUrl: imageUrl })) +
+                                                            "" + (SPRITE_TEMPLATE({ spriteCssClass: spriteCssClass })) +
+                                                            "" + (ICON_TEMPLATE({ icon: icon })) +
+                                                            "" + (TEXT_TEMPLATE({ text: text })) +
+                                                        "</span>";
+        };
+
+        var LINK_TEMPLATE = function (ref) {
+            var url = ref.url;
+            var imageUrl = ref.imageUrl;
+            var spriteCssClass = ref.spriteCssClass;
+            var icon = ref.icon;
+            var text = ref.text;
+            var attributes = ref.attributes;
+
+            return "<a href=\"" + (encode(url)) + "\" " + (attributes.target ? ("target=\"" + (attributes.target) + "\"") : '') + " class=\"" + (cssClasses.item) + "\">" +
+                                                        "" + (IMAGE_TEMPLATE({ imageUrl: imageUrl })) +
+                                                        "" + (SPRITE_TEMPLATE({ spriteCssClass: spriteCssClass })) +
+                                                        "" + (ICON_TEMPLATE({ icon: icon })) +
+                                                        "" + (TEXT_TEMPLATE({ text: text })) +
+                                                    "</a>";
+        };
 
         function findFocusableSibling(element, dir) {
             var getSibling = dir === NEXT ? $.fn.next : $.fn.prev;
@@ -169,6 +212,7 @@
                 }
 
                 if (item.attributes) {
+                    delete item.attributes.target;
                     menuItem.attr(item.attributes);
                 }
 

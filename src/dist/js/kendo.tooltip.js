@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,15 +48,24 @@
             CONTENTLOAD = "contentLoad",
             REQUESTSTART = "requestStart",
             KCONTENTFRAME = "k-content-frame",
-            TEMPLATE = '<div role="tooltip" class="k-widget k-tooltip#if (!autoHide) {# k-tooltip-closable#}#">' +
-                '<div class="k-tooltip-content"></div>' +
-                '#if (!autoHide) {# <div class="k-tooltip-button"><a href="\\#" class="k-icon k-i-close" title="Close"></a></div> #}#' +
-                '#if (callout){ #<div class="k-callout k-callout-#=dir#"></div>#}#' +
-            '</div>',
-            IFRAMETEMPLATE = kendo.template(
-                "<iframe frameborder='0' class='" + KCONTENTFRAME + "' src='#= content.url #'>" +
+            TEMPLATE = function (ref) {
+                    var autoHide = ref.autoHide;
+                    var callout = ref.callout;
+                    var dir = ref.dir;
+
+                    return "<div role=\"tooltip\" class=\"k-widget k-tooltip" + (!autoHide ? ' k-tooltip-closable' : '') + "\">" +
+                    '<div class="k-tooltip-content"></div>' +
+                    (!autoHide ? '<div class="k-tooltip-button"><a href="#" class="k-icon k-i-close" title="Close"></a></div>' : '') +
+                    (callout ? ("<div class=\"k-callout k-callout-" + dir + "\"></div>") : '') +
+                '</div>';
+        },
+            IFRAMETEMPLATE = kendo.template(function (ref) {
+                    var content = ref.content;
+
+                    return "<iframe frameborder='0' class='" + KCONTENTFRAME + "' src='" + (content.url) + "'>" +
                     "This page requires frames in order to show content" +
-                "</iframe>"
+                "</iframe>";
+        }
             ),
             NS = ".kendoTooltip",
             POSITIONS = {

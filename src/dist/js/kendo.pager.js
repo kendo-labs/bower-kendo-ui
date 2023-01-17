@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,13 @@
             MOUSEDOWN = "down",
             MAX_VALUE = Number.MAX_VALUE,
             isRtl = false,
-            iconTemplate = kendo.template('<a href="\\#" role="button" title="#=text#" aria-label="#=text#" class="k-link k-pager-nav #= wrapClassName #"><span class="k-icon #= className #"></span></a>');
+            iconTemplate = function (ref) {
+                var text = ref.text;
+                var wrapClassName = ref.wrapClassName;
+                var className = ref.className;
+
+                return ("<a href=\"#\" role=\"button\" title=\"" + text + "\" aria-label=\"" + text + "\" class=\"k-link k-pager-nav " + wrapClassName + "\"><span class=\"k-icon " + className + "\"></span></a>");
+        };
 
         function button(options) {
             return options.template( {
@@ -284,10 +290,35 @@
 
             options: {
                 name: "Pager",
-                ARIATemplate: "Page navigation, page #=page# of #=totalPages#",
-                selectTemplate: '<li><span role="button" aria-current="page" tabindex="#=tabindex#" aria-label="#=title#" class="k-link k-selected">#=text#</span></li>',
-                linkTemplate: '<li><a role="button" tabindex="#=tabindex#" href="\\#" class="k-link" data-#=ns#page="#=idx#" #if (title !== "") {# title="#=title#" #}#>#=text#</a></li>',
-                numericSelectItemTemplate: '<option value="#= idx #" #if (selected) {# selected="selected" #}#>#= text #</option>',
+                ARIATemplate: function (ref) {
+                    var page = ref.page;
+                    var totalPages = ref.totalPages;
+
+                    return ("Page navigation, page " + page + " of " + totalPages);
+        },
+                selectTemplate: function (ref) {
+                    var text = ref.text;
+                    var title = ref.title;
+                    var tabindex = ref.tabindex;
+
+                    return ("<li><span role=\"button\" aria-current=\"page\" tabindex=\"" + tabindex + "\" aria-label=\"" + title + "\" class=\"k-link k-selected\">" + text + "</span></li>");
+        },
+                linkTemplate: function (ref) {
+                    var ns = ref.ns;
+                    var idx = ref.idx;
+                    var text = ref.text;
+                    var title = ref.title;
+                    var tabindex = ref.tabindex;
+
+                    return ("<li><a role=\"button\" tabindex=\"" + tabindex + "\" href=\"#\" class=\"k-link\" data-" + ns + "page=\"" + idx + "\" " + (title !== "" ? ("title=\"" + title + "\"") : '') + ">" + text + "</a></li>");
+        },
+                numericSelectItemTemplate: function (ref) {
+                    var idx = ref.idx;
+                    var selected = ref.selected;
+                    var text = ref.text;
+
+                    return ("<option value=\"" + idx + "\" " + (selected ? 'selected="selected"' : '') + ">" + text + "</option>");
+        },
                 buttonCount: 10,
                 autoBind: true,
                 numeric: true,

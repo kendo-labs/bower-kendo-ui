@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@
         var kendo = window.kendo,
             Widget = kendo.ui.Widget,
             extend = $.extend,
+            encode = kendo.htmlEncode,
             setTimeout = window.setTimeout,
             CLICK = "click",
             SHOW = "show",
@@ -53,12 +54,19 @@
             UP = "up",
             NS = ".kendoNotification",
             WRAPPER = '<div role="alert" aria-live="polite" class="k-widget k-popup k-notification"></div>',
-            TEMPLATE = '<div class="k-notification-wrap">' +
-                    '<span class="k-icon k-i-#:typeIcon#" title="#:typeIcon#"></span>' +
-                    '<div class="k-notification-content">#=content#</div>' +
-                    '<span aria-hidden="true" class="#: closeButton ? "" : "k-hidden"# k-icon k-i-close" title="Hide"></span>' +
-                '</div>',
-            SAFE_TEMPLATE = TEMPLATE.replace("#=content#", "#:content#");
+            GET_TEMPLATE_FUNC = function (encodeContent) { return function (ref) {
+                    var typeIcon = ref.typeIcon;
+                    var content = ref.content;
+                    var closeButton = ref.closeButton;
+
+                    return '<div class="k-notification-wrap">' +
+                    "<span class=\"k-icon k-i-" + (encode(typeIcon)) + "\" title=\"" + (encode(typeIcon)) + "\"></span>" +
+                    "<div class=\"k-notification-content\">" + (encodeContent ? encode(content) : content) + "</div>" +
+                    "<span aria-hidden=\"true\" class=\"" + (closeButton ? "" : "k-hidden") + " k-icon k-i-close\" title=\"Hide\"></span>" +
+                '</div>';
+    ; }                },
+            TEMPLATE = GET_TEMPLATE_FUNC(false),
+            SAFE_TEMPLATE = GET_TEMPLATE_FUNC(true);
 
         var Notification = Widget.extend({
             init: function(element, options) {

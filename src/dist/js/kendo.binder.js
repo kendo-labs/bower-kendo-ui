@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@
 
   (function($, undefined$1) {
       var kendo = window.kendo,
+          encode = kendo.htmlEncode,
           Observable = kendo.Observable,
           ObservableObject = kendo.data.ObservableObject,
           ObservableArray = kendo.data.ObservableArray,
@@ -551,17 +552,20 @@
               if (!template) {
                   if (nodeName == "select") {
                       if (options.valueField || options.textField) {
-                          template = kendo.format('<option value="#:{0}#">#:{1}#</option>',
-                              options.valueField || options.textField, options.textField || options.valueField);
+                          template = function (data) {
+                              var valueAttr = kendo.getter(options.valueField || options.textField)(data);
+                              var innerText = kendo.getter(options.textField || options.valueField)(data);
+                              return ("<option value=\"" + (encode(valueAttr)) + "\">" + (encode(innerText)) + "</option>");
+                          };
                       } else {
-                          template = "<option>#:data#</option>";
+                          template = function (data) { return ("<option>" + (encode(data)) + "</option>"); };
                       }
                   } else if (nodeName == "tbody") {
-                      template = "<tr><td>#:data#</td></tr>";
+                      template = function (data) { return ("<tr><td>" + (encode(data)) + "</td></tr>"); };
                   } else if (nodeName == "ul" || nodeName == "ol") {
-                      template = "<li>#:data#</li>";
+                      template = function (data) { return ("<li>" + (encode(data)) + "</li>"); };
                   } else {
-                      template = "#:data#";
+                      template = function (data) { return ("" + (encode(data))); };
                   }
                   template = kendo.template(template);
               }

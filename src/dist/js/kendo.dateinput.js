@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -232,6 +232,14 @@
                 }
             },
 
+            _hasDateInput: function() {
+                var emptyInput = (new customDateTime(null, this.options.format, this.options.culture, this.options.messages))
+                                    .toPair(this.options.format, this.options.culture, this.options.messages)[0];
+                var currentInput = this._dateTime.toPair(this.options.format, this.options.culture, this.options.messages)[0];
+
+                return emptyInput !== currentInput;
+            },
+
             readonly: function(readonly) {
                 this._editable({
                     readonly: readonly === undefined$1 ? true : readonly,
@@ -266,7 +274,7 @@
                     floatCheck: function () {
                         that._toggleDateMask(true);
 
-                        if (!that.value() && document.activeElement !== that.element[0]) {
+                        if (!that.value() && !that._hasDateInput() && document.activeElement !== that.element[0]) {
                             that._toggleDateMask(false);
                             return true;
                         }

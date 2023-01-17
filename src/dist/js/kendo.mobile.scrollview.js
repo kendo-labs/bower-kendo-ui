@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -393,6 +393,8 @@
             },
 
             _templates: function() {
+                var this$1$1 = this;
+
                 var template = this.options.template,
                     emptyTemplate = this.options.emptyTemplate,
                     templateProxy = {},
@@ -400,14 +402,14 @@
 
                 if (typeof template === FUNCTION) {
                     templateProxy.template = template;
-                    template = "#=this.template(data)#";
+                    template = function (data) { return this$1$1.template(data); };
                 }
 
                 this.template = kendo.template(template).bind(templateProxy);
 
                 if (typeof emptyTemplate === FUNCTION) {
                     emptyTemplateProxy.emptyTemplate = emptyTemplate;
-                    emptyTemplate = "#=this.emptyTemplate(data)#";
+                    emptyTemplate = function (data) { return this$1$1.emptyTemplate(data); };
                 }
 
                 this.emptyTemplate = kendo.template(emptyTemplate).bind(emptyTemplateProxy);
@@ -766,8 +768,8 @@
                 enablePager: true,
                 pagerOverlay: false,
                 autoBind: true,
-                template: "",
-                emptyTemplate: ""
+                template: function () { return ""; },
+                emptyTemplate: function () { return ""; }
             },
 
             events: [

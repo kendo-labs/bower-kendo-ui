@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@
             SCROLLSPEED = 50,
             extend = $.extend,
             each = $.each,
+            encode = kendo.htmlEncode,
             template = kendo.template,
             keys = kendo.keys,
             Widget = ui.Widget,
@@ -90,7 +91,7 @@
             itemSelector = ".k-item",
             availableItemsSelector = ".k-item:not(.k-disabled)",
             linkSelector = ".k-item:not(.k-disabled) > .k-link",
-            exclusionSelector = ":not(.k-item.k-separator)",
+            exclusionSelector = ":not(.k-item.k-separator):visible",
             templateSelector = "div:not(.k-animation-container,.k-list-container)",
             scrollButtonSelector = ".k-menu-scroll-button",
             touchPointerTypes = { "2": 1, "touch": 1 },
@@ -524,6 +525,8 @@
 
                 if (element[0].id) {
                     that._ariaId = kendo.format("{0}_mn_active", element[0].id);
+                } else {
+                    that._ariaId = kendo.format("{0}_mn_active", kendo.guid());
                 }
 
                 kendo.notify(that);
@@ -1827,10 +1830,10 @@
                 } else if (key == keys.UP) {
                     target = that._itemUp(hoverItem, belongsToVertical, hasChildren);
                 } else if (key == keys.HOME) {
-                    that._moveHover(hoverItem, hoverItem.parent().children().first());
+                    that._moveHover(hoverItem, hoverItem.parent().children(":visible").first());
                     e.preventDefault();
                 } else if (key == keys.END) {
-                    that._moveHover(hoverItem, hoverItem.parent().children().last());
+                    that._moveHover(hoverItem, hoverItem.parent().children(":visible").last());
                     e.preventDefault();
                 } else if (key == keys.ESC) {
                     target = that._itemEsc(hoverItem, belongsToVertical);
@@ -2006,7 +2009,7 @@
                 }
 
                 if (!nextItem.length && item.length) {
-                    nextItem = item.parent().children().first();
+                    nextItem = item.parent().children(":visible").first();
                 } else if (!item.length) {
                     nextItem = that.wrapper.children(".k-item").first();
                 }
@@ -2026,7 +2029,7 @@
                 }
 
                 if (!nextItem.length && item.length) {
-                    nextItem = item.parent().children().last();
+                    nextItem = item.parent().children(":visible").last();
                 } else if (!item.length) {
                     nextItem = that.wrapper.children(".k-item").last();
                 }
@@ -2271,99 +2274,113 @@
 
             _fieldAccessor: function(fieldName) {
                 var fieldBindings = this.options[bindings[fieldName]] || [],
-                    count = fieldBindings.length,
-                    result = "(function(item) {";
+                    count = fieldBindings.length;
 
                 if (count === 0) {
-                    result += "return item['" + fieldName + "'];";
+                    return (function(item) { return item[fieldName]; });
                 } else {
-                    result += "var levels = [" +
-                                $.map(fieldBindings, function(x) {
-                                    return "function(d){ return " + kendo.expr(x) + "}";
-                                }).join(",") + "];";
-                    result += "if(item.level){return levels[Math.min(item.level(), " + count + "-1)](item);}else";
-                    result += "{return levels[" + count + "-1](item)}";
+                    return (function(item) {
+                        var levels = $.map(fieldBindings, kendo.getter);
+                        if (item.level) {
+                            return levels[Math.min(item.level(), count - 1)](item);
+                        } else {
+                            return levels[count - 1](item);
+                        }
+                    });
                 }
-
-                result += "})";
-
-                return result;
             },
 
             _templates: function() {
+                var this$1$1 = this;
+
                 var that = this,
                     options = that.options,
                     fieldAccessor = that._fieldAccessor.bind(that);
 
                 if (options.template && typeof options.template == STRING) {
-                        options.template = template(options.template);
+                    options.template = template(options.template);
                 } else if (!options.template) {
-                        options.template = template(
-                        "<span class='k-menu-link-text'>" +
-                        "# var text = " + fieldAccessor("text") + "(data.item); #" +
-                        "# if (typeof data.item.encoded != 'undefined' && data.item.encoded === false) {#" +
-                            "#= text #" +
-                        "# } else { #" +
-                            "#: text #" +
-                        "# } #</span>"
-                    );
+                    options.template = template(function (data) {
+                        var text = fieldAccessor("text")(data.item);
+                        if (!(typeof data.item.encoded != 'undefined' && data.item.encoded === false)) {
+                            text = encode(text);
+                        }
+
+                        return ("<span class='k-menu-link-text'>" + text + "</span>");
+                    });
                 }
 
                 that.templates = {
-                    content: template(
-                        "#var contentHtml = " + fieldAccessor("content") + "(item);#" +
-                        "<div #= contentCssAttributes(item.toJSON ? item.toJSON() : item) # tabindex='-1'>#= contentHtml || '' #</div>"
+                    content: template(function (data) {
+                        var item = data.item;
+                        var contentHtml = fieldAccessor("content")(item);
+                        var contCssAttributes = data.contentCssAttributes(item.toJSON ? item.toJSON() : item);
+                        return ("<div " + contCssAttributes + " tabindex='-1'>" + (contentHtml || '') + "</div>");
+                    }),
+                    group: template(function (data) { return "<ul class='" + (data.groupCssClass(data.group)) + "' " + (data.groupAttributes(data.group)) + " role='menu' aria-hidden='true'>" +
+                        "" + (data.renderItems(data)) +
+                        "</ul>"; }
                     ),
-                    group: template(
-                        "<ul class='#= groupCssClass(group) #'#= groupAttributes(group) # role='menu' aria-hidden='true'>" +
-                            "#= renderItems(data) #" +
-                        "</ul>"
-                    ),
-                    itemWrapper: template(
-                        "# var url = " + fieldAccessor("url") + "(item); #" +
-                        "# var imageUrl = " + fieldAccessor("imageUrl") + "(item); #" +
-                        "# var imgAttributes = " + fieldAccessor("imageAttr") + "(item);#" +
-                        "# var tag = url ? 'a' : 'span' #" +
-                        "<#= tag # class='#= textClass(item) #' #if(url){#href='#= url #'#}#>" +
+                    itemWrapper: template(function (data) {
+                        var item = data.item;
+                        var url = fieldAccessor("url")(item);
+                        var imageUrl = fieldAccessor("imageUrl")(item);
+                        var imgAttributes = fieldAccessor("imageAttr")(item);
+                        var tag = url ? 'a' : 'span';
 
-                        "# if (imageUrl) { #" +
-                                  "<img #= imageCssAttributes(imgAttributes) #  alt='' src='#= imageUrl #' />" +
-                        "# } #" +
+                        return "<" + tag + " class='" + (rendering.textClass(item)) + "' " + (url ? ("href='" + url + "'") : '') + " >" +
+                            (imageUrl ? ("<img " + (rendering.imageCssAttributes(imgAttributes)) + "  alt='' src='" + imageUrl + "' />") : '') +
+                            this$1$1.templates.sprite(item) +
+                            this$1$1.options.template(data) +
+                            data.arrow(data) +
+                            "</" + tag + ">";
+                    }),
+                    item: template(function (data) {
+                        var item = data.item,
+                            menu = data.menu,
+                            group = data.group,
+                            subGroup = data.subGroup;
+                        var contentHtml = fieldAccessor("content")(item);
+                        return "<li class='" + (rendering.wrapperCssClass(group, item)) + "' " + (rendering.itemCssAttributes(item.toJSON ? item.toJSON() : item)) + " role='menuitem'  " + (item.items ? "aria-haspopup='true'" : '') +
+                            "" + (item.enabled === false ? "aria-disabled='true'" : '') +
+                            kendo.attr("uid") + "='" + (item.uid) + "' " +
+                            (item.items && item.items.length > 0 ?
+                                (item.expanded ?
+                                    " aria-expanded='true'"
+                                    : " aria-expanded='false'")
+                                : '') +
+                            ">" +
+                            "" + (this$1$1.templates.itemWrapper(data)) +
+                            (item.hasChildren || item.items ?
+                                ("" + (subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded } })))
+                                : (item.content || item.contentUrl || contentHtml ?
+                                ("" + (data.renderContent(data)))
+                                : '')
+                            ) +
+                            "</li>";
+                    }),
+                    scrollButton: template(function (ref) {
+                            var direction = ref.direction;
 
-                        "#= sprite(item) #" +
-                        "#= data.menu.options.template(data) #" +
-                        "#= arrow(data) #" +
-                        "</#= tag #>"
+                            return "<span class='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-icon-button k-menu-scroll-button k-scroll-" + direction + "' unselectable='on'>" +
+                        "<span class='k-button-icon k-icon k-i-arrow-60-" + direction + "'></span>" +
+                        "</span>";
+                }
                     ),
-                    item: template(
-                        "#var contentHtml = " + fieldAccessor("content") + "(item);#" +
-                        "<li class='#= wrapperCssClass(group, item) #' #= itemCssAttributes(item.toJSON ? item.toJSON() : item) # role='menuitem'  #=item.items ? \"aria-haspopup='true'\": \"\"#" +
-                            "#=item.enabled === false ? \"aria-disabled='true'\" : ''#" +
-                            kendo.attr("uid") + "='#= item.uid #' " +
-                            "# if(item.items && item.items.length > 0) { # " +
-                                "# if(item.expanded) { # " +
-                                    " aria-expanded='true'" +
-                                "# } else { #" +
-                                    " aria-expanded='false'" +
-                                "# } #" +
-                            "# } #" +
-                        ">" +
-                            "#= itemWrapper(data) #" +
-                            "#if (item.hasChildren || item.items) { #" +
-                                "#= subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded } }) #" +
-                            "# } else if (item.content || item.contentUrl || contentHtml) { #" +
-                                "#= renderContent(data) #" +
-                            "# } #" +
-                        "</li>"
-                    ),
-                    scrollButton: template(
-                        "<span class='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-icon-button k-menu-scroll-button k-scroll-#= direction #' unselectable='on'>" +
-                            "<span class='k-button-icon k-icon k-i-arrow-60-#= direction #'></span>" +
-                        "</span>"
-                    ),
-                    arrow: template("<span aria-hidden='true' class='k-menu-expand-arrow'><span class='#= arrowClass(item, group) #'></span></span>"),
-                    sprite: template("# var spriteCssClass = " + fieldAccessor("spriteCssClass") + "(data); if(spriteCssClass) {#<span class='k-sprite #= spriteCssClass #'></span>#}#"),
-                    empty: template("")
+                    arrow: template(function (ref) {
+                            var item = ref.item;
+                            var group = ref.group;
+
+                            return ("<span aria-hidden='true' class='k-menu-expand-arrow'><span class='" + (rendering.arrowClass(item, group)) + "'></span></span>");
+                }),
+                    sprite: template(function (data) {
+                        var spriteCssClass = fieldAccessor("spriteCssClass")(data);
+                        if (spriteCssClass) {
+                            return ("<span class='k-sprite " + spriteCssClass + "'></span>");
+                        }
+                        return '';
+                    }),
+                    empty: template(function () { return ""; })
                 };
             },
 
@@ -2379,7 +2396,7 @@
                     itemWrapper: that.templates.itemWrapper,
                     renderContent: that.renderContent,
                     arrow: item.items || item.content || item[that.options.dataContentField[0]] ? that.templates.arrow : empty,
-                    subGroup: that.renderGroup
+                    subGroup: that.renderGroup.bind(that)
                 }, rendering));
             },
 
@@ -2457,7 +2474,9 @@
                 orientation: "vertical",
                 alignToAnchor: false,
                 copyAnchorStyles: true,
-                target: "body"
+                target: "body",
+                origin: undefined$1,
+                position: undefined$1
             },
 
             events: [
@@ -2516,6 +2535,11 @@
                             that.popup.element.kendoStop(true);
                         }
 
+                        if (!that._triggerFocusOnActivate) {
+                            that._triggerFocusOnActivate = that._focusMenu.bind(that);
+                        }
+                        that.bind(ACTIVATE, that._triggerFocusOnActivate);
+
                         if (y !== undefined$1) {
                             var overflowWrapper = that._overflowWrapper();
                             if (overflowWrapper) {
@@ -2536,12 +2560,17 @@
                         DOCUMENT_ELEMENT.off(that.popup.downEvent, that.popup._mousedownProxy);
                         DOCUMENT_ELEMENT
                             .on(kendo.support.mousedown + NS + that._marker, that._closeProxy);
-
-                        that.element.trigger("focus");
                     }
                 }
 
                 return that;
+            },
+
+            _focusMenu: function() {
+                var that = this;
+
+                that.unbind(ACTIVATE, that._triggerFocusOnActivate);
+                that.element.trigger("focus");
             },
 
             _configurePopupScrolling: function(x, y) {
@@ -2738,6 +2767,8 @@
                 that.popup = that.element
                                 .addClass("k-context-menu")
                                 .kendoPopup({
+                                    origin: that.options.origin,
+                                    position: that.options.position,
                                     autosize: that.options.orientation === "horizontal",
                                     anchor: that.target || "body",
                                     copyAnchorStyles: that.options.copyAnchorStyles,
@@ -2770,7 +2801,7 @@
                 Menu.fn._focus.call(this, e);
 
                 if (activeElement() === e.currentTarget) {
-                    this._moveHover(hoverItem, this.wrapper.children().first());
+                    this._moveHover(hoverItem, this.wrapper.children().filter(":visible").not(".k-separator").first());
                 }
             }
         });

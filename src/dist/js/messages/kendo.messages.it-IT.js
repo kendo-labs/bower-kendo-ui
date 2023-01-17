@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -572,7 +572,7 @@
     "alignmentDialog": {
       "title": "Allineamento",
       "buttons": {
-       "justtifyLeft": "Allinea testo a sinistra",
+       "justifyLeft": "Allinea testo a sinistra",
        "justifyCenter": "Allinea al centro",
        "justifyRight": "Allinea testo a destra",
        "justifyFull": "Giustifica",
@@ -724,7 +724,7 @@
     "addRowBelow": "Aggiungi riga sotto",
     "alignment": "Allineamento",
     "alignmentButtons": {
-    "justtifyLeft": "Allinea testo a sinistra",
+    "justifyLeft": "Allinea testo a sinistra",
     "justifyCenter": "Allinea al centro",
     "justifyRight": "Allinea testo a destra",
     "justifyFull": "Giustifica",

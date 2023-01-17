@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -945,7 +945,7 @@
     "alignmentDialog": {
       "title": "Alignment",
       "buttons": {
-       "justtifyLeft": "Align left",
+       "justifyLeft": "Align left",
        "justifyCenter": "Center",
        "justifyRight": "Align right",
        "justifyFull": "Justify",
@@ -1135,7 +1135,7 @@
     "addRowBelow": "Add row below",
     "alignment": "Alignment",
     "alignmentButtons": {
-      "justtifyLeft": "Align left",
+      "justifyLeft": "Align left",
       "justifyCenter": "Center",
       "justifyRight": "Align right",
       "justifyFull": "Justify",
@@ -1556,7 +1556,8 @@
                   next: "Next Match",
                   previous: "Previous Match",
                   close: "Close",
-                  of: "of"
+                  of: "of",
+                  dragHandle: "Drag search"
               }
           }
       });

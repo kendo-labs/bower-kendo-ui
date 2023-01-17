@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -901,6 +901,8 @@
   border-color: #00aba9;
   color: #fff;
   background-color: #0e0e0e;
+  background-image: linear-gradient(none);
+  background-image: none;
 }
 .k-widget.k-input:focus,
 .k-input:focus,
@@ -3225,15 +3227,15 @@ kendo-scrollview.k-scrollview-wrap .k-scrollview-pageable > .k-button.k-hover,
 .k-actionsheet-header {
   box-shadow: null;
 }
+.k-actionsheet-item:focus,
+.k-actionsheet-item.k-state-focus,
+.k-actionsheet-item.k-focus {
+  box-shadow: none;
+}
 .k-actionsheet-action:hover,
 .k-actionsheet-action.k-state-hover,
 .k-actionsheet-action.k-hover {
   background-color: #00aba9;
-}
-.k-actionsheet-action:focus,
-.k-actionsheet-action.k-state-focus,
-.k-actionsheet-action.k-focus {
-  box-shadow: none;
 }
 .k-bottom-nav-solid.k-bottom-nav-primary {
   color: #a6d5d5;
@@ -5198,6 +5200,9 @@ div.k-filebrowser-dropzone em {
   border-color: #000000;
 }
 .k-spreadsheet-pane .k-spreadsheet-merged-cell {
+  background-color: #0e0e0e;
+}
+.k-spreadsheet-pane .k-spreadsheet-disabled-mask {
   background-color: #0e0e0e;
 }
 .k-spreadsheet-pane .k-selection-partial,

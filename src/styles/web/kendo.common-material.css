@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -4780,7 +4780,6 @@ select.k-dropdownlist {
 }
 .k-tabstrip .k-button.k-disabled {
   pointer-events: none;
-  opacity: 0;
 }
 .k-rtl .k-tabstrip.k-tabstrip-left > .k-tabstrip-items-wrapper,
 .k-tabstrip.k-rtl.k-tabstrip-left > .k-tabstrip-items-wrapper,
@@ -13088,6 +13087,9 @@ span.k-sparkline,
   border-width: 3px;
   border-style: solid;
 }
+.k-spreadsheet .k-spreadsheet-pane .k-spreadsheet-disabled-mask {
+  position: absolute;
+}
 .k-spreadsheet .k-spreadsheet-vaxis,
 .k-spreadsheet .k-spreadsheet-haxis {
   position: absolute;
@@ -13648,22 +13650,8 @@ div.k-spreadsheet-window {
 .k-spreadsheet-toolbar {
   border-width: 0;
 }
-.k-spreadsheet-toolbar > .k-widget[data-property='fontSize'] {
-  width: 75px;
-}
-.k-spreadsheet-toolbar > .k-widget[data-property='format'] {
-  width: 100px;
-}
-.k-spreadsheet-toolbar > .k-widget[data-property='fontFamily'] {
-  width: 130px;
-}
-.k-spreadsheet-toolbar [data-tool=alignment],
-.k-spreadsheet-toolbar [data-tool=backgroundColor],
-.k-spreadsheet-toolbar [data-tool=borders],
-.k-spreadsheet-toolbar [data-tool=freeze],
-.k-spreadsheet-toolbar [data-tool=merge],
-.k-spreadsheet-toolbar [data-tool=textColor] {
-  width: auto;
+.k-spreadsheet-toolbar > [data-property='fontSize'] {
+  width: 7em;
 }
 .k-spreadsheet-formula-input > .k-syntax-func.k-syntax-at-point,
 .k-spreadsheet-formula-input > .k-syntax-bool.k-syntax-at-point,
@@ -15104,15 +15092,8 @@ div.k-spreadsheet-window {
   flex: 0 0 auto;
   z-index: 2;
 }
-.k-pdf-viewer .k-pager-wrap {
-  padding: 0;
-  min-height: auto;
-  border-width: 0;
-  color: inherit;
-  background: none;
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
+.k-pdf-viewer .k-viewer-pager-input .k-textbox {
+  width: 3em;
 }
 .k-pdf-viewer .k-list-scroller {
   flex: 1 1 auto;
@@ -16997,6 +16978,7 @@ a.k-badge:hover,
   text-align: start;
   display: flex;
   flex-flow: row wrap;
+  grid-column-gap: 4px;
 }
 .k-filemanager-preview .k-file-meta-label {
   display: inline-block;
@@ -18663,6 +18645,8 @@ table.k-editor .k-editable-area {
 }
 .k-actionsheet-item {
   padding: 0;
+  outline: 0;
+  display: block;
   box-sizing: border-box;
 }
 .k-actionsheet-action {

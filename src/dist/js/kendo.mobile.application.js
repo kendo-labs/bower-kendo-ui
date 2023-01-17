@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@
             mobile = kendo.mobile,
             support = kendo.support,
             Widget = mobile.ui.Widget,
+            encode = kendo.htmlEncode,
             Pane = mobile.ui.Pane,
 
             DEFAULT_OS = "ios7",
@@ -51,14 +52,14 @@
                 wp: { wp: true, browser: "default", device: "wp", flatVersion: "800", majorVersion: "8", minorVersion: "0.0", name: "wp", tablet: false }
             },
 
-            viewportTemplate = kendo.template('<meta content="initial-scale=#: data.scale #, maximum-scale=#: data.scale #, user-scalable=no#=data.height#" name="viewport" />', { usedWithBlock: false }),
-            systemMeta = kendo.template('<meta name="apple-mobile-web-app-capable" content="#= data.webAppCapable === false ? \'no\' : \'yes\' #" /> ' +
-                         '<meta name="apple-mobile-web-app-status-bar-style" content="#=data.statusBarStyle#" /> ' +
-                         '<meta name="msapplication-tap-highlight" content="no" /> ', { usedWithBlock: false }),
-            clipTemplate = kendo.template('<style>.km-view { clip: rect(0 #= data.width #px #= data.height #px 0); }</style>', { usedWithBlock: false }),
+            viewportTemplate = kendo.template(function (data) { return ("<meta content=\"initial-scale=" + (encode(data.scale)) + ", maximum-scale=" + (encode(data.scale)) + ", user-scalable=no" + (data.height) + "\" name=\"viewport\" />"); }, { usedWithBlock: false }),
+            systemMeta = kendo.template(function (data) { return "<meta name=\"apple-mobile-web-app-capable\" content=\"" + (data.webAppCapable === false ? 'no' : 'yes') + "\" /> " +
+                         "<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"" + (data.statusBarStyle) + "\" /> " +
+                         '<meta name="msapplication-tap-highlight" content="no" /> '; }, { usedWithBlock: false }),
+            clipTemplate = kendo.template(function (data) { return ("<style>.km-view { clip: rect(0 " + (data.width) + "px " + (data.height) + "px 0); }</style>"); }, { usedWithBlock: false }),
             ENABLE_CLIP = OS.android && OS.browser != "chrome" || OS.blackberry,
 
-            iconMeta = kendo.template('<link rel="apple-touch-icon' + (OS.android ? '-precomposed' : '') + '" # if(data.size) { # sizes="#=data.size#" #}# href="#=data.icon#" />', { usedWithBlock: false }),
+            iconMeta = kendo.template(function (data) { return ("<link rel=\"apple-touch-icon" + (OS.android ? '-precomposed' : '') + "\" " + (data.size ? ("sizes=\"" + (data.size) + "\"") : '') + " href=\"" + (data.icon) + "\" />"); }, { usedWithBlock: false }),
 
             HIDEBAR = (OS.device == "iphone" || OS.device == "ipod") && OS.majorVersion < 7,
             SUPPORT_SWIPE_TO_GO_BACK = (OS.device == "iphone" || OS.device == "ipod") && OS.majorVersion >= 7,

@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,7 @@
         var kendo = window.kendo,
             ui = kendo.ui,
             List = ui.List,
+            encode = kendo.htmlEncode,
             html = kendo.html,
             keys = $.extend({ A: 65 }, kendo.keys),
             activeElement = kendo._activeElement,
@@ -193,8 +194,8 @@
                 virtual: false,
                 itemTemplate: "",
                 tagTemplate: "",
-                groupTemplate: "#:data#",
-                fixedGroupTemplate: "#:data#",
+                groupTemplate: function (data) { return encode(data); },
+                fixedGroupTemplate: function (data) { return encode(data); },
                 clearButton: true,
                 autoWidth: false,
                 popup: null,
@@ -327,7 +328,7 @@
                 var template = listOptions.itemTemplate || itemTemplate || listOptions.template;
 
                 if (!template) {
-                    template = "#:" + kendo.expr(listOptions.dataTextField, "data") + "#";
+                    template = function (data) { return encode(kendo.getter(listOptions.dataTextField)(data)); };
                 }
 
                 listOptions.template = template;
@@ -1545,13 +1546,22 @@
                 var isMultiple = options.tagMode === "multiple";
                 var singleTag = options.messages.singleTag;
                 var defaultTemplate;
+                var multipleTemplateFunc;
+                var singleTemplateFunc;
 
                 if (that.element[0].length && !hasDataSource) {
                     options.dataTextField = options.dataTextField || "text";
                     options.dataValueField = options.dataValueField || "value";
                 }
 
-                defaultTemplate = isMultiple ? kendo.template("#:" + kendo.expr(options.dataTextField, "data") + "#", { useWithBlock: false }) : kendo.template("#:values.length# " + singleTag);
+                multipleTemplateFunc = function (data) { return encode(kendo.getter(options.dataTextField)(data)); };
+                singleTemplateFunc = function (ref) {
+                    var values = ref.values;
+
+                    return ((values.length) + " " + singleTag);
+                };
+
+                defaultTemplate = isMultiple ? multipleTemplateFunc : singleTemplateFunc;
 
                 that.tagTextTemplate = tagTemplate = tagTemplate ? kendo.template(tagTemplate) : defaultTemplate;
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -992,7 +992,7 @@
                     "alignmentDialog": {
                         "title": "对齐",
                         "buttons": {
-                            "justtifyLeft": "左对齐",
+                            "justifyLeft": "左对齐",
                             "justifyCenter": "水平居中",
                             "justifyRight": "右对齐",
                             "justifyFull": "两端对齐",
@@ -1246,7 +1246,7 @@
                     "addRowBelow": "在下面插入行",
                     "alignment": "对齐",
                     "alignmentButtons": {
-                        "justtifyLeft": "左对齐",
+                        "justifyLeft": "左对齐",
                         "justifyCenter": "水平居中",
                         "justifyRight": "右对齐",
                         "justifyFull": "两端对齐",

@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,10 +64,22 @@
         };
 
         var templates = {
-            item: template("<span class='" + bottomNavigationStyles.item + "'></span>"),
-            anchor: template("<a class='" + bottomNavigationStyles.item + "' href='#:url#'></a>"),
-            text: template("<span class='" + bottomNavigationStyles.text + "'>#=text#</span>"),
-            icon: template("<span class='" + bottomNavigationStyles.navIcon + "#if(icon){# k-icon k-i-#:icon# #}#'></span>")
+            item: template(function () { return ("<span class=\"" + (bottomNavigationStyles.item) + "\"></span>"); }),
+            anchor: template(function (ref) {
+                var url = ref.url;
+
+                return ("<a class=\"" + (bottomNavigationStyles.item) + "\"  href=\"" + (kendo.htmlEncode(url)) + "\"></a>");
+        }),
+            text: template(function (ref) {
+                var text = ref.text;
+
+                return ("<span class=\"" + (bottomNavigationStyles.text) + "\" >" + text + "</span>");
+        }),
+            icon: template(function (ref) {
+                var icon = ref.icon;
+
+                return ("<span class=\"" + (bottomNavigationStyles.navIcon) + " " + (icon ? ("k-icon k-i-" + icon) : '') + "\"></span>");
+        })
         };
 
         var BottomNavigation = Widget.extend({

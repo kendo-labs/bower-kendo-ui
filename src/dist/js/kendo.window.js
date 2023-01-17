@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1809,26 +1809,36 @@
             });
 
             templates = {
-                wrapper: template("<div class='k-widget k-window'></div>"),
-                action: template(
-                    "<a role='button' href='\\#' class='k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button k-window-action' aria-label='#= name #'>" +
-                        "<span class='k-button-icon k-icon k-i-#= name.toLowerCase() #'></span>" +
-                    "</a>"
+                wrapper: template(function () { return "<div class='k-widget k-window'></div>"; }),
+                action: template(function (ref) {
+                        var name = ref.name;
+
+                        return "<a role='button' href='#' class='k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button k-window-action' aria-label='" + name + "'>" +
+                        "<span class='k-button-icon k-icon k-i-" + (name.toLowerCase()) + "'></span>" +
+                    "</a>";
+            }
                 ),
-                titlebar: template(
-                    "<div class='k-window-titlebar k-hstack'>" +
-                        "<span class='k-window-title'>#= title #</span>" +
+                titlebar: template(function (ref) {
+                        var title = ref.title;
+
+                        return "<div class='k-window-titlebar k-hstack'>" +
+                        "<span class='k-window-title'>" + title + "</span>" +
                         "<div class='k-window-actions k-hstack'></div>" +
-                    "</div>"
+                    "</div>";
+            }
                 ),
                 overlay: "<div class='k-overlay'></div>",
-                contentFrame: template(
-                    "<iframe frameborder='0' title='#= title #' class='" + KCONTENTFRAME + "' " +
-                    "src='#= content.url #'>" +
+                contentFrame: template(function (ref) {
+                        var title = ref.title;
+                        var content = ref.content;
+
+                        return "<iframe frameborder='0' title='" + title + "' class='" + KCONTENTFRAME + "' " +
+                    "src='" + (content.url) + "'>" +
                     "This page requires frames in order to show content" +
-                    "</iframe>"
+                    "</iframe>";
+            }
                 ),
-                resizeHandle: template("<div aria-hidden='true' class='k-resize-handle k-resize-#= data #'></div>")
+                resizeHandle: template(function (data) { return ("<div aria-hidden='true' class='k-resize-handle k-resize-" + data + "'></div>"); })
             };
 
 

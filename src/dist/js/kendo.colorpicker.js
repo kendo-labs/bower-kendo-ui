@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@
             },
             options: {
                 name: "ColorSelector",
-                ARIATemplate: 'Current selected color is #=data || "none"#',
+                ARIATemplate: function (data) { return ("Current selected color is " + (data || "none")); },
                 value: null,
                 _standalone: true
             },
@@ -163,6 +163,10 @@
 
                 if (!nohooks) {
                     if ((color && (!prev || !color.equals(prev))) || (color === null && color !== prev)) {
+                        if (color === null && this.element.val) {
+                            this.element.val(color);
+                        }
+
                         this.element.trigger("change");
                         this.trigger("change", { value: this.value() });
                     } else if (!this._standalone) {
@@ -514,6 +518,7 @@
             Observable = kendo.Observable,
             parseColor = kendo.parseColor,
             extend = $.extend,
+            encode = kendo.htmlEncode,
             Color = kendo.Color,
             KEYS = kendo.keys,
             BACKGROUNDCOLOR = "background-color",
@@ -543,9 +548,8 @@
                 that._viewModel = kendo.observable({
                     switchMode: that.switchMode.bind(that),
                     keydown: that.keydown.bind(that),
-                    mode: function (mode) {
-                        return mode === this.get("format");
-                    },
+                    isHEXMode: function () { return this.get("format") === 'hex' },
+                    isRGBMode: function () { return this.get("format") === 'rgb' },
                     format: options.format,
                     formats: options.formats,
                     rgb: null,
@@ -564,44 +568,69 @@
 
                 Observable.fn.init.call(that);
             },
-            _template: kendo.template(
-                '# if (options.formats && options.formats.length > 1) { #' +
-                '<div class="k-vstack">' +
-                    '<button class="k-colorgradient-toggle-mode" data-#:ns#role="button" data-#:ns#icon="arrows-kpi" data data-#:ns#bind="click: switchMode" data-#:ns#fill-mode="flat" data-#:ns#size="#: options.size #" title="#: options.messages.toggleFormat #">' +
-                   '</button>' +
-                '</div>' +
-                '# } #' +
+            _template: kendo.template(function (ref) {
+                var options = ref.options;
+                var ns = ref.ns;
 
+                var optionsSize = encode(options.size);
+                var optionsTabIndex = encode(options.tabindex);
+
+                var vStackElement = "";
+                if (options.formats && options.formats.length > 1) {
+                    var optionsMessagesToggleFormat = encode(options.messages.toggleFormat);
+
+                    vStackElement =
+                    '<div class="k-vstack">' +
+                        "<button class=\"k-colorgradient-toggle-mode\" data-" + ns + "role=\"button\" data-" + ns + "icon=\"arrows-kpi\" data data-" + ns + "bind=\"click: switchMode\" data-" + ns + "fill-mode=\"flat\" data-" + ns + "size=\"" + optionsSize + "\" title=\"" + optionsMessagesToggleFormat + "\">" +
+                        '</button>' +
+                    '</div>';
+                }
 
                 // HEX input
-                '# if (options.formats && options.formats.indexOf("hex") >= 0) { #' +
-                '<div class="k-vstack k-flex-1" data-#:ns#bind="visible: mode(\'hex\')">' +
-                    '<input type="text" data-#:ns#bind="value: hex" data-#:ns#role="textbox" data-#:ns#size="#: options.size #" tabindex="#:options.tabindex#"  aria-label="#: options.messages.hex #"/>' +
-                    '<label class="k-colorgradient-input-label">HEX</label>' +
-                '</div>' +
-                '# } #' +
+                var hexInputElement = "";
+                if (options.formats && options.formats.indexOf("hex") >= 0) {
+                    var optionsMessagesHex = encode(options.messages.hex);
+
+                    hexInputElement =
+                    "<div class=\"k-vstack k-flex-1\" data-" + ns + "bind=\"visible: isHEXMode\">" +
+                        "<input type=\"text\" data-" + ns + "bind=\"value: hex\" data-" + ns + "role=\"textbox\" data-" + ns + "size=\"" + optionsSize + "\" tabindex=\"" + optionsTabIndex + "\"  aria-label=\"" + optionsMessagesHex + "\"/>" +
+                        '<label class="k-colorgradient-input-label">HEX</label>' +
+                    '</div>';
+                }
 
                 // RGBA input
-                '# if (options.formats && options.formats.indexOf("rgb") >= 0) { #' +
-                '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' +
-                    '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.r" data-#:ns#role="numerictextbox" data-#:ns#size="#: options.size #" data-#:ns#max="255" data-#:ns#min="0" data-#:ns#decimals="0" data-#:ns#spinners="false" data-#:ns#format="n0"  aria-label="#: options.messages.red #" />' +
-                    '<label class="k-colorgradient-input-label">R</label>' +
-                '</div>' +
-                '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' +
-                    '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.g" data-#:ns#role="numerictextbox" data-#:ns#size="#: options.size #" data-#:ns#max="255" data-#:ns#min="0" data-#:ns#decimals="0" data-#:ns#spinners="false" data-#:ns#format="n0"  aria-label="#: options.messages.green #" />' +
-                    '<label class="k-colorgradient-input-label">G</label>' +
-                '</div>' +
-                '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' +
-                    '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.b" data-#:ns#role="numerictextbox" data-#:ns#size="#: options.size #" data-#:ns#max="255" data-#:ns#min="0" data-#:ns#decimals="0" data-#:ns#spinners="false" data-#:ns#format="n0"  aria-label="#: options.messages.blue #"/>' +
-                    '<label class="k-colorgradient-input-label">B</label>' +
-                '</div>' +
-                '#if(options.opacity){#' +
-                '<div  class="k-vstack" data-#:ns#bind="visible: mode(\'rgb\')">' +
-                    '<input tabindex="#:options.tabindex#" data-#:ns#bind="value: rgb.a" data-#:ns#role="numerictextbox" data-#:ns#size="#: options.size #" data-#:ns#step="0.1" data-#:ns#max="1" data-#:ns#min="0" data-#:ns#decimals="1" data-#:ns#spinners="false" data-#:ns#format="n1"  aria-label="#: options.messages.alpha #" />' +
-                    '<label class="k-colorgradient-input-label">A</label>' +
-                '</div>' +
-                '# } #' +
-                '# } #'),
+                var rgbaInputElement = "";
+                if (options.formats && options.formats.indexOf("rgb") >= 0) {
+                    var optionsMessagesRed = encode(options.messages.red);
+                    var optionsMessagesGreen = encode(options.messages.green);
+                    var optionsMessagesBlue = encode(options.messages.blue);
+
+                    rgbaInputElement =
+                    "<div class=\"k-vstack\" data-" + ns + "bind=\"visible: isRGBMode\">" +
+                        "<input tabindex=\"" + optionsTabIndex + "\" data-" + ns + "bind=\"value: rgb.r\" data-" + ns + "role=\"numerictextbox\" data-" + ns + "size=\"" + optionsSize + "\" data-" + ns + "max=\"255\" data-" + ns + "min=\"0\" data-" + ns + "decimals=\"0\" data-" + ns + "spinners=\"false\" data-" + ns + "format=\"n0\" aria-label=\"" + optionsMessagesRed + "\" />" +
+                        '<label class="k-colorgradient-input-label">R</label>' +
+                    '</div>' +
+                    "<div class=\"k-vstack\" data-" + ns + "bind=\"visible: isRGBMode\">" +
+                        "<input tabindex=\"" + optionsTabIndex + "\" data-" + ns + "bind=\"value: rgb.g\" data-" + ns + "role=\"numerictextbox\" data-" + ns + "size=\"" + optionsSize + "\" data-" + ns + "max=\"255\" data-" + ns + "min=\"0\" data-" + ns + "decimals=\"0\" data-" + ns + "spinners=\"false\" data-" + ns + "format=\"n0\" aria-label=\"" + optionsMessagesGreen + "\" />" +
+                        '<label class="k-colorgradient-input-label">G</label>' +
+                    '</div>' +
+                    "<div class=\"k-vstack\" data-" + ns + "bind=\"visible: isRGBMode\">" +
+                        "<input tabindex=\"" + optionsTabIndex + "\" data-" + ns + "bind=\"value: rgb.b\" data-" + ns + "role=\"numerictextbox\" data-" + ns + "size=\"" + optionsSize + "\" data-" + ns + "max=\"255\" data-" + ns + "min=\"0\" data-" + ns + "decimals=\"0\" data-" + ns + "spinners=\"false\" data-" + ns + "format=\"n0\" aria-label=\"" + optionsMessagesBlue + "\"/>" +
+                        '<label class="k-colorgradient-input-label">B</label>' +
+                    '</div>';
+
+                    if(options.opacity) {
+                        var optionsMessagesAlpha = options.messages.alpha;
+                        rgbaInputElement +=
+                        "<div class=\"k-vstack\" data-" + ns + "bind=\"visible: isRGBMode\">" +
+                            "<input tabindex=\"" + optionsTabIndex + "\" data-" + ns + "bind=\"value: rgb.a\" data-" + ns + "role=\"numerictextbox\" data-" + ns + "size=\"" + optionsSize + "\" data-" + ns + "step=\"0.1\" data-" + ns + "max=\"1\" data-" + ns + "min=\"0\" data-" + ns + "decimals=\"1\" data-" + ns + "spinners=\"false\" data-" + ns + "format=\"n1\" aria-label=\"" + optionsMessagesAlpha + "\" />" +
+                            '<label class="k-colorgradient-input-label">A</label>' +
+                        '</div>';
+                    }
+                }
+
+                return vStackElement + hexInputElement + rgbaInputElement;
+            }),
             destroy: function(){
                 var that = this;
 
@@ -719,7 +748,7 @@
             options: {
                 name : "ColorGradient",
                 opacity : false,
-                hsvDragARIATemplate: 'Color well with two-dimensional slider for selecting saturation and value. Selected color is #=data || "none"#',
+                hsvDragARIATemplate: function (data) { return ("Color well with two-dimensional slider for selecting saturation and value. Selected color is " + (data || "none")); },
                 input : true,
                 format: "hex",
                 formats: ["rgb", "hex"],
@@ -738,27 +767,15 @@
                 },
                 _otOfPicker: true
             },
-            _template: kendo.template(
-                '<div class="k-colorgradient-canvas k-hstack">' +
-                    '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"></div><div role="slider" aria-orientation="undefined" class="k-hsv-draghandle k-draghandle"></div></div>' +
-
-                    '<div class="k-hsv-controls k-hstack">' +
-                        '<input class="k-hue-slider k-colorgradient-slider" />' +
-                        '# if (opacity) { #' +
-                            '<input class="k-alpha-slider k-colorgradient-slider" />' +
-                        '# } #' +
+            _template: kendo.template(function (options) { return '<div class="k-colorgradient-canvas k-hstack">' +
+                        '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"></div><div role="slider" aria-orientation="undefined" class="k-hsv-draghandle k-draghandle"></div></div>' +
+                        '<div class="k-hsv-controls k-hstack">' +
+                            '<input class="k-hue-slider k-colorgradient-slider" />' +
+                            (options.opacity ? '<input class="k-alpha-slider k-colorgradient-slider" />' : '') +
+                        '</div>' +
                     '</div>' +
-                '</div>' +
-
-                '# if (input) { #' +
-                '<div class="k-colorgradient-inputs k-hstack">' +
-                '</div>' +
-                '# } #' +
-
-                '# if (contrastTool) { #' +
-                    '<div class="k-colorgradient-color-contrast k-vbox">' +
-                    '</div>' +
-                '# } #'
+                    (options.input ? '<div class="k-colorgradient-inputs k-hstack"></div>' : '') +
+                    (options.contrastTool ? '<div class="k-colorgradient-color-contrast k-vbox"></div>' : ''); }
             ),
             focus: function() {
                 this._hsvHandle.focus();
@@ -1015,24 +1032,31 @@
                     contrastOptions = that.options.contrastTool,
                     backgroundColor = contrastOptions.backgroundColor ? parseColor(contrastOptions.backgroundColor) : parseColor(WHITE),
                     contrastRatio = contrastToolUtils.getContrastFromTwoRGBAs(parseColor(color.toCssRgba()), backgroundColor),
-                    contrastRatioTemplate = kendo.template('<div class="k-contrast-ratio">' +
-                                                '<span class="k-contrast-ratio-text">#:messages.contrastRatio# #:kendo.toString(ratio, "n2")#</span>' +
-                                                '<span class="k-contrast-validation k-text-success">' +
-                                                    '#if (ratio > 4.5) {#' +
-                                                        '<span class="k-icon k-i-check"></span>' +
-                                                    '#}#' +
-                                                    '#if (ratio > 7) {#' +
-                                                        '<span class="k-icon k-i-check"></span>' +
-                                                    '#}#' +
-                                                '</span></div>'),
-                    labelTemplate = kendo.template('<div>' +
-                                                '<span>#:level#: #:limit# </span>' +
-                                                '#if (ratio > limit) {#' +
-                                                '<span class="k-contrast-validation k-text-success">#:messages.pass# <span class="k-icon k-i-check"></span></span>' +
-                                                '#} else {#' +
-                                                '<span class="k-contrast-validation k-text-error">#:messages.fail# <span class="k-icon k-i-close"></span></span>' +
-                                                '#}#' +
-                                                '</div>'),
+                    contrastRatioTemplate = kendo.template(function (ref) {
+                                                    var messages = ref.messages;
+                                                    var ratio = ref.ratio;
+
+                                                    return '<div class="k-contrast-ratio">' +
+                                                    "<span class=\"k-contrast-ratio-text\">" + (encode(messages.contrastRatio)) + " " + (encode(kendo.toString(ratio, "n2"))) + "</span>" +
+                                                    '<span class="k-contrast-validation k-text-success">' +
+                                                        (ratio > 4.5 ?  '<span class="k-icon k-i-check"></span>' : '') +
+                                                        (ratio > 7 ?  '<span class="k-icon k-i-check"></span>' : '') +
+                                                '</span></div>';
+                }),
+                    labelTemplate = kendo.template(function (ref) {
+                                                    var messages = ref.messages;
+                                                    var ratio = ref.ratio;
+                                                    var limit = ref.limit;
+                                                    var level = ref.level;
+
+                                                    return '<div>' +
+                                                    "<span>" + (encode(level)) + ": " + (encode(limit)) + " </span>" +
+                                                    (ratio > limit ?
+                                                    ("<span class=\"k-contrast-validation k-text-success\">" + (encode(messages.pass)) + " <span class=\"k-icon k-i-check\"></span></span>")
+                                                    :
+                                                    ("<span class=\"k-contrast-validation k-text-error\">" + (encode(messages.fail)) + " <span class=\"k-icon k-i-close\"></span></span>")) +
+                                                '</div>';
+                }),
                     output = "";
 
                 output += contrastRatioTemplate({
@@ -1375,20 +1399,36 @@
                 items.removeClass(ITEMSELECTEDCLASS).removeAttr("aria-selected");
                 item.addClass(ITEMSELECTEDCLASS).attr("aria-selected", true);
             },
-            _template: kendo.template(
+            _template: kendo.template(function (ref) {
+                var colors = ref.colors;
+                var columns = ref.columns;
+                var tileSize = ref.tileSize;
+                var value = ref.value;
+                var id = ref.id;
+
+                var startPart =
                 '<div class="k-colorpalette-table-wrap">' +
-                '<table class="k-colorpalette-table k-palette" role="presentation"><tr role="row">' +
-                  '# for (var i = 0; i < colors.length; ++i) { #' +
-                    '# var selected = colors[i].equals(value); #' +
-                    '# if (i && i % columns == 0) { # </tr><tr role="row"> # } #' +
-                    '<td role="gridcell" unselectable="on" style="background-color:#= colors[i].toCss() #"' +
-                        '#= selected ? " aria-selected=true" : "" # ' +
-                        '#=(id && i === 0) ? "id=\\""+id+"\\" " : "" # ' +
-                        'class="k-colorpalette-tile#= selected ? " ' + ITEMSELECTEDCLASS + '" : "" #" ' +
-                        'aria-label="#= colors[i].toCss() #"></td>' +
-                  '# } #' +
-                '</tr></table></div>'
-            ),
+                '<table class="k-colorpalette-table k-palette" role="presentation"><tr role="row">';
+
+                var cellElements = "";
+                for (var i = 0; i < colors.length; ++i) {
+                    var selected = colors[i].equals(value);
+                    if (i && i % columns == 0) {
+                        cellElements += '</tr><tr role="row">';
+                    }
+
+                    cellElements +=
+                    "<td role=\"gridcell\" unselectable=\"on\" style=\"background-color:" + (colors[i].toCss()) + "\"" +
+                        (selected ? " aria-selected=true" : "") + " " +
+                        ((id && i === 0) ? 'id=\\"' + id + '\\" ' : '') + " " +
+
+                        "class=\"k-colorpalette-tile" + (selected ? " " + ITEMSELECTEDCLASS : "") + "\" " +
+                        "aria-label=\"" + (colors[i].toCss()) + "\"></td>";
+                }
+
+                var endPart = '</tr></table></div>';
+                return startPart + cellElements + endPart;
+            }),
             _tileSize: function() {
                 var tileSize = this.options.tileSize,
                     width, height;
@@ -1470,6 +1510,7 @@
             html = kendo.html,
             Color = kendo.Color,
             extend = $.extend,
+            encode = kendo.htmlEncode,
             BACKGROUNDCOLOR = "background-color",
             MESSAGES = {
                 apply  : "Apply",
@@ -1754,22 +1795,21 @@
                         rounded: "medium"
                     });
 
-                return kendo.template(
-                        '<div class="k-coloreditor-header k-hstack">' +
-                            '# if (views && views.length > 1) { #' +
+                return kendo.template(function (options, buttonOptions) { return '<div class="k-coloreditor-header k-hstack">' +
+                            ((options.views && options.views.length > 1) ?
                             '<div class="k-coloreditor-header-actions k-hstack">' +
                                 '<div role="group" class="k-button-group k-button-group-flat">' +
-                                    html.renderButton('<button aria-pressed="false" data-view="gradient" title="#:messages.gradient#"></button>', extend({ icon: "color-canvas" }, buttonOptions)) +
-                                    html.renderButton('<button aria-pressed="false" data-view="palette" title="#:messages.palette#"></button>', extend({ icon: "palette" }, buttonOptions)) +
+                                    html.renderButton(("<button aria-pressed=\"false\" data-view=\"gradient\" title=\"" + (encode(options.messages.gradient)) + "\"></button>"), extend({ icon: "color-canvas" }, buttonOptions)) +
+                                    html.renderButton(("<button aria-pressed=\"false\" data-view=\"palette\" title=\"" + (encode(options.messages.palette)) + "\"></button>"), extend({ icon: "palette" }, buttonOptions)) +
                                 '</div>' +
-                            '</div>' +
-                            '# } #' +
+                            '</div>'
+                            : '') +
                             '<div class="k-spacer"></div>' +
                             '<div class="k-coloreditor-header-actions k-hstack">' +
-                                '# if (clearButton) { #' +
-                                html.renderButton('<button class="k-coloreditor-reset" title="#:messages.clearColor#"></button>', extend({ icon: "reset-color" }, buttonOptions)) +
-                                '# } #' +
-                                '# if (preview) { #' +
+                                (options.clearButton ?
+                                html.renderButton(("<button class=\"k-coloreditor-reset\" title=\"" + (encode(options.messages.clearColor)) + "\"></button>"), extend({ icon: "reset-color" }, buttonOptions))
+                                : '') +
+                                (options.preview ?
                                 '<div class="k-coloreditor-preview k-vstack">' +
                                     '<span class="k-coloreditor-preview-color k-color-preview">' +
                                         '<span class="k-color-preview-mask"></span>' +
@@ -1777,18 +1817,18 @@
                                     '<span class="k-coloreditor-current-color k-color-preview">' +
                                         '<span class="k-color-preview-mask"></span>' +
                                     '</span>' +
-                                '</div>' +
-                                '# } #' +
+                                '</div>'
+                                : '') +
                             '</div>' +
                         '</div>' +
                         '<div class="k-coloreditor-views k-vstack"></div>' +
-                        '# if (buttons) { #' +
+                        (options.buttons ?
                         '<div class="k-coloreditor-footer k-actions k-hstack k-justify-content-end">' +
-                            html.renderButton('<button class="k-coloreditor-cancel" title="#:messages.cancel#">#: messages.cancel #</button>', extend({}, buttonOptions, { fillMode: "solid" })) +
-                            html.renderButton('<button class="k-coloreditor-apply" title="#:messages.apply#">#: messages.apply #</button>', extend({}, buttonOptions, { fillMode: "solid", themeColor: "primary" })) +
-                        '</div>' +
-                        '# } #'
-                    )(options);
+                            html.renderButton(("<button class=\"k-coloreditor-cancel\" title=\"" + (encode(options.messages.cancel)) + "\">" + (encode(options.messages.cancel)) + "</button>"), extend({}, buttonOptions, { fillMode: "solid" })) +
+                            html.renderButton(("<button class=\"k-coloreditor-apply\" title=\"" + (encode(options.messages.apply)) + "\">" + (encode(options.messages.apply)) + "</button>"), extend({}, buttonOptions, { fillMode: "solid", themeColor: "primary" })) +
+                        '</div>'
+                        : ''); }
+                    )(options, buttonOptions);
             },
             _wrapper: function() {
                 var options = this.options,
@@ -1964,18 +2004,20 @@
                 }
             },
 
-            _template: kendo.template(
-                '<span role="textbox" aria-haspopup="true" class="k-colorpicker k-picker k-icon-picker">' +
-                    '<span  class="k-input-inner">' +
-                        '<span class="k-value-icon k-color-preview #: toolIcon ? "k-icon-color-preview" : "" #">' +
-                            '# if (toolIcon) { #' +
-                            '<span class="k-color-preview-icon k-icon #= toolIcon #"></span>' +
-                            '# } #' +
+            _template: kendo.template(function (ref) {
+                   var toolIcon = ref.toolIcon;
+                   var _buttonHtml = ref._buttonHtml;
+
+                   return '<span role="textbox" aria-haspopup="true" class="k-colorpicker k-picker k-icon-picker">' +
+                    '<span class="k-input-inner">' +
+                        "<span class=\"k-value-icon k-color-preview " + (toolIcon ? 'k-icon-color-preview' : '') + "\">" +
+                            (toolIcon ? ("<span class=\"k-color-preview-icon k-icon " + toolIcon + "\"></span>") : '') +
                             '<span class="k-color-preview-mask"></span>' +
                         '</span>' +
                     '</span >' +
-                    '#= _buttonHtml #' +
-                '</span>'
+                    _buttonHtml +
+                '</span>';
+        }
             ),
 
             options: {
@@ -1997,7 +2039,7 @@
                 view: "gradient",
                 views: ["gradient", "palette"],
                 backgroundColor: null,
-                ARIATemplate: 'Current selected color is #=data || "none"#',
+                ARIATemplate: function (data) { return ("Current selected color is " + (data || "none")); },
                 size: "medium",
                 rounded: "medium",
                 fillMode: "solid"

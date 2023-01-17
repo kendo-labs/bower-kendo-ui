@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,7 +122,11 @@
 
                 _click: function(e) {
                     if (this.options.enable) {
-                        if (this.trigger(CLICK, { event: e })) {
+                        if (this.trigger(CLICK, {
+                            event: e,
+                            id: this.element.attr("id"),
+                            target: this.element
+                        })) {
                             e.preventDefault();
                         }
                     }
@@ -190,9 +194,9 @@
                     } catch (err) {}
                 },
 
-                _badge: function() {
+                _badge: function(options) {
                     var that = this;
-                    var badgeOptions = that.options.badge;
+                    var badgeOptions = options || that.options.badge;
                     var badgeEelement;
 
                     if (badgeOptions === null || badgeOptions === undefined$1) {

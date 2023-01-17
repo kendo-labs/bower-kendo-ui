@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -308,7 +308,8 @@
                 for (var idx = 0; idx < this.options.columns.length; idx++) {
                     var currentColumn = this.options.columns[idx];
                     var title = currentColumn.title || currentColumn.field || "";
-                    var template = currentColumn.headerTemplate || title;
+                    var titleFunc = function () { return title; };
+                    var template = currentColumn.headerTemplate || titleFunc;
                     var columnsHeaderTemplate = typeof template !== "function" ? kendo.template(template) : template;
                     var currentWidth = currentColumn.width;
                     var currentWidthInt = parseInt(currentWidth, 10);
@@ -343,7 +344,7 @@
             _noData: function() {
                 var list = this;
                 var noData = $(list.noData);
-                var template = list.options.noDataTemplate === true ? list.options.messages.noData : list.options.noDataTemplate;
+                var template = list.options.noDataTemplate === true ? function () { return list.options.messages.noData; } : list.options.noDataTemplate;
 
                 list.angular("cleanup", function() { return { elements: noData }; });
                 kendo.destroy(noData);
@@ -418,7 +419,7 @@
                 }, options, virtual, changeEventOption);
 
                 if (!options.template) {
-                    options.template = "#:" + kendo.expr(options.dataTextField, "data") + "#";
+                    options.template = function (data) { return htmlEncode(kendo.getter(options.dataTextField)(data)); };
                 }
 
                 if (currentOptions.$angular) {
@@ -1869,6 +1870,13 @@
                 var valueField = that.options.cascadeFromField || parent.options.dataValueField;
                 var expressions;
 
+                // Applicable only when parent is ComboBox or MultiColumnComboBox
+                if (parent.options.cascadeOnCustomValue &&
+                    filterValue === null &&
+                    (!that.options.cascadeFromParentField || that.options.cascadeFromParentField === parent.options.dataValueField)) {
+                        filterValue = parent.value();
+                }
+
                 that._valueBeforeCascade = valueBeforeCascade !== undefined$1 ? valueBeforeCascade : that.value();
 
                 if (filterValue || filterValue === 0) {
@@ -2375,8 +2383,6 @@
             _valueExpr: function(type, values) {
                 var that = this;
                 var idx = 0;
-
-                var body;
                 var comparer;
                 var normalized = [];
 
@@ -2387,14 +2393,14 @@
                         normalized.push(unifyType(values[idx], type));
                     }
 
-                    body = "for (var idx = 0; idx < " + normalized.length + "; idx++) {" +
-                            " if (current === values[idx]) {" +
-                            "   return idx;" +
-                            " }" +
-                            "} " +
-                            "return -1;";
-
-                    comparer = new Function("current", "values", body);
+                    comparer = function (current, values) {
+                        for (var idx = 0; idx < normalized.length; idx++) {
+                            if (current === values[idx]) {
+                                return idx;
+                            }
+                        }
+                        return -1;
+                    };
 
                     that._valueComparer = function(current) {
                         return comparer(current, normalized);
@@ -2567,23 +2573,6 @@
                 return candidate;
             },
 
-            _template: function() {
-                var that = this;
-                var options = that.options;
-                var template = options.template;
-
-                if (!template) {
-                    template = kendo.template('<li tabindex="-1" role="option" unselectable="on" class="k-list-item"><span class="k-list-item-text">${' + kendo.expr(options.dataTextField, "data") + "}</span></li>", { useWithBlock: false });
-                } else {
-                    template = kendo.template(template);
-                    template = function(data) {
-                        return '<li tabindex="-1" role="option" unselectable="on" class="k-list-item">' + template(data) + "</li>";
-                    };
-                }
-
-                return template;
-            },
-
             _templates: function() {
                 var template;
                 var options = this.options;
@@ -2594,12 +2583,12 @@
                 };
 
                 if (options.columns) {
-                    for (var i = 0; i < options.columns.length; i++) {
-                        var currentColumn = options.columns[i];
-                        var templateText = currentColumn.field ? currentColumn.field.toString() : TEXT;
+                    options.columns.forEach(function (column, i) {
+                        var templateText = column.field ? column.field.toString() : TEXT;
+                        var templateFunc = function (data) { return htmlEncode(kendo.getter(templateText)(data)); };
 
-                        templates["column" + i] = currentColumn.template || "#: " + templateText + "#";
-                    }
+                        templates["column" + i] = column.template || templateFunc;
+                    });
                 }
 
                 for (var key in templates) {

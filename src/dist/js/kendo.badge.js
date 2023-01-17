@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,16 @@
         var ui = kendo.ui;
         var HIDDEN = 'k-hidden';
 
-        var iconTemplate = '<span class=\'k-badge-icon k-icon k-i-#= icon #\'></span>';
-        var svgIconTemplate = '<span class=\'k-badge-icon k-svg-icon\'>#= icon #</span>';
+        var iconTemplate = function (ref) {
+            var icon = ref.icon;
+
+            return ("<span class='k-badge-icon k-icon k-i-" + icon + "'></span>");
+        };
+        var svgIconTemplate = function (ref) {
+            var icon = ref.icon;
+
+            return ("<span class='k-badge-icon k-svg-icon'>" + icon + "</span>");
+        };
 
         var Badge = Widget.extend({
             init: function(element, options) {

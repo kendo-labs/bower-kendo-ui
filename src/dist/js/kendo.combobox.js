@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@
 
     (function($, undefined$1) {
         var kendo = window.kendo,
+            encode = kendo.htmlEncode,
             ui = kendo.ui,
             html = kendo.html,
             List = ui.List,
@@ -165,12 +166,13 @@
                 cascadeFrom: "",
                 cascadeFromField: "",
                 cascadeFromParentField: "",
+                cascadeOnCustomValue: false,
                 ignoreCase: true,
                 animation: {},
                 virtual: false,
                 template: null,
-                groupTemplate: "#:data#",
-                fixedGroupTemplate: "#:data#",
+                groupTemplate: function (data) { return encode(data); },
+                fixedGroupTemplate: function (data) { return encode(data); },
                 clearButton: true,
                 syncValueAndText: true,
                 autoWidth: false,
@@ -178,7 +180,8 @@
                 size: "medium",
                 fillMode: "solid",
                 rounded: "medium",
-                label: null
+                label: null,
+                clearOnEscape: true
             },
 
             events: [
@@ -1093,7 +1096,7 @@
                     }
                 } else if (key != keys.TAB && !that._move(e) && !isNonPrintableKey && !isFkey && !e.ctrlKey) {
                    that._search();
-                } else if (key === keys.ESC && !that.popup.visible() && that.text()) {
+                } else if (that.options.clearOnEscape && key === keys.ESC && !that.popup.visible() && that.text()) {
                     that._clearValue();
                 }
             },

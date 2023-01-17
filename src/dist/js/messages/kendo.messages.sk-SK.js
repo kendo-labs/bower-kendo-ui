@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -612,7 +612,7 @@
       "alignmentDialog": {
           "title": "Zarovnanie",
           "buttons": {
-              "justtifyLeft": "Zarovnať vľavo",
+              "justifyLeft": "Zarovnať vľavo",
               "justifyCenter": "Centrovať",
               "justifyRight": "Zarovnať vpravo",
               "justifyFull": "Zarovnať do bloku",
@@ -776,7 +776,7 @@
       "addRowBelow": "Pridať riadok pod",
       "alignment": "Zarovnanie",
       "alignmentButtons": {
-          "justtifyLeft": "Zarovnať vľavo",
+          "justifyLeft": "Zarovnať vľavo",
           "justifyCenter": "Centrovať",
           "justifyRight": "Zarovnať vpravo",
           "justifyFull": "Zarovnať do bloku",

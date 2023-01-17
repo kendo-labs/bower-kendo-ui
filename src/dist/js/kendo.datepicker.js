@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -443,7 +443,12 @@
                 month: {},
                 dates: [],
                 disableDates: null,
-                ARIATemplate: 'Current focused #=data.valueType# is #=data.text#',
+                ARIATemplate: function (ref) {
+                    var valueType = ref.valueType;
+                    var text = ref.text;
+
+                    return ("Current focused " + valueType + " is " + text);
+        },
                 dateInput: false,
                 weekNumber: false,
                 messages: {
@@ -578,6 +583,19 @@
                 var labelOptions = $.isPlainObject(options.label) ? options.label : {
                     content: options.label
                 };
+
+                if (that._dateInput) {
+                    labelOptions.floatCheck = function () {
+                        that._dateInput._toggleDateMask(true);
+
+                        if (!that.value() && !that._dateInput._hasDateInput() && document.activeElement !== that.element[0]) {
+                            that._dateInput._toggleDateMask(false);
+                            return true;
+                        }
+
+                        return false;
+                    };
+                }
 
                 that.label = new kendo.ui.Label(null, $.extend({}, labelOptions, {
                     widget: that

@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@
     };
 
     (function($, undefined$1) {
+        var this$1$1 = this;
+
         var kendo = window.kendo,
             Node = window.Node,
             mobile = kendo.mobile,
@@ -39,10 +41,14 @@
             attrValue = kendo.attrValue,
             GROUP_CLASS = "km-group-title",
             ACTIVE_CLASS = "km-state-active",
-            GROUP_WRAPPER = '<div class="' + GROUP_CLASS + '"><div class="km-text"></div></div>',
-            GROUP_TEMPLATE = kendo.template('<li><div class="' + GROUP_CLASS + '"><div class="km-text">#= this.headerTemplate(data) #</div></div><ul>#= kendo.render(this.template, data.items)#</ul></li>'),
+            GROUP_WRAPPER = "<div class=\"" + GROUP_CLASS + "\"><div class=\"km-text\"></div></div>",
+            GROUP_TEMPLATE = kendo.template(function (data) { return ("<li><div class=\"" + GROUP_CLASS + "\"><div class=\"km-text\">" + (this$1$1.headerTemplate(data)) + "</div></div><ul>" + (kendo.render(this$1$1.template, data.items)) + "</ul></li>"); }),
             WRAPPER = '<div class="km-listview-wrapper"></div>',
-            SEARCH_TEMPLATE = kendo.template('<form class="km-filter-form"><div class="km-filter-wrap"><input type="search" placeholder="#=placeholder#"/><a href="\\#" class="km-filter-reset" title="Clear"><span class="km-icon km-clear"></span><span class="km-text">Clear</span></a></div></form>'),
+            SEARCH_TEMPLATE = kendo.template(function (ref) {
+                var placeholder = ref.placeholder;
+
+                return ("<form class=\"km-filter-form\"><div class=\"km-filter-wrap\"><input type=\"search\" placeholder=\"" + placeholder + "\"/><a href=\"#\" class=\"km-filter-reset\" title=\"Clear\"><span class=\"km-icon km-clear\"></span><span class=\"km-text\">Clear</span></a></div></form>");
+        }),
             NS = ".kendoMobileListView",
             STYLED = "styled",
             DATABOUND = "dataBound",
@@ -1002,8 +1008,12 @@
                 type: "flat",
                 autoBind: true,
                 fixedHeaders: false,
-                template: "#:data#",
-                headerTemplate: '<span class="km-text">#:value#</span>',
+                template: function (data) { return kendo.htmlEncode(data); },
+                headerTemplate: function (ref) {
+                    var value = ref.value;
+
+                    return ("<span class=\"km-text\">" + (kendo.htmlEncode(value)) + "</span>");
+        },
                 appendOnRefresh: false,
                 loadMore: false,
                 endlessScroll: false,
@@ -1222,27 +1232,30 @@
             },
 
             _templates: function() {
+                var this$1$1 = this;
+
                 var template = this.options.template,
                     headerTemplate = this.options.headerTemplate,
-                    dataIDAttribute = ' data-uid="#=arguments[0].uid || ""#"',
                     templateProxy = {},
                     groupTemplateProxy = {};
 
                 if (typeof template === FUNCTION) {
                     templateProxy.template = template;
-                    template = "#=this.template(data)#";
+                } else {
+                    templateProxy.template = kendo.template(template);
                 }
 
-                this.template = kendo.template("<li" + dataIDAttribute + ">" + template + "</li>").bind(templateProxy);
+                this.template = kendo.template(function (data) { return ("<li" + (data[0].uid ? (" data-uid=\"" + (data[0].uid) + "\"") : "") + ">" + (this$1$1.template(data)) + "</li>"); }).bind(templateProxy);
 
                 groupTemplateProxy.template = this.template;
 
                 if (typeof headerTemplate === FUNCTION) {
                     groupTemplateProxy._headerTemplate = headerTemplate;
-                    headerTemplate = "#=this._headerTemplate(data)#";
+                } else {
+                    groupTemplateProxy._headerTemplate = kendo.template(headerTemplate);
                 }
 
-                groupTemplateProxy.headerTemplate = kendo.template(headerTemplate);
+                groupTemplateProxy.headerTemplate = kendo.template(function (data){ return this$1$1._headerTemplate(data); });
 
                 this.groupTemplate = GROUP_TEMPLATE.bind(groupTemplateProxy);
             },

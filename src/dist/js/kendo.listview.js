@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,7 @@
             Widget = kendo.ui.Widget,
             keys = kendo.keys,
             EMPTY_STRING = "",
+            EMPTY_STRING_TEMPLATE = function () { return EMPTY_STRING; },
             DOT = ".",
             FOCUSSELECTOR = "> *:not(.k-loading-mask)",
             PROGRESS = "progress",
@@ -141,10 +142,10 @@
                 navigatable: false,
                 pageable: false,
                 height: null,
-                template: EMPTY_STRING,
-                altTemplate: EMPTY_STRING,
-                editTemplate: EMPTY_STRING,
-                contentTemplate: "<div data-content='true' />",
+                template: EMPTY_STRING_TEMPLATE,
+                altTemplate: null,
+                editTemplate: null,
+                contentTemplate: function () { return "<div data-content='true' />"; },
                 contentElement: "div",
                 bordered: true,
                 borders: "",
@@ -175,9 +176,9 @@
             _templates: function() {
                 var options = this.options;
 
-                this.template = kendo.template(options.template || EMPTY_STRING);
-                this.altTemplate = kendo.template(options.altTemplate || options.template);
-                this.editTemplate = kendo.template(options.editTemplate || EMPTY_STRING);
+                this.template = kendo.template(options.template || EMPTY_STRING_TEMPLATE);
+                this.altTemplate = kendo.template(options.altTemplate || options.template || EMPTY_STRING_TEMPLATE);
+                this.editTemplate = kendo.template(options.editTemplate || EMPTY_STRING_TEMPLATE);
             },
 
             _item: function(action) {
@@ -813,7 +814,7 @@
                                     };
 
                                     that.one("dataBound", focusAgain);
-                                } else if (that.options.editTemplate !== "") {
+                                } else if (that.options.editTemplate) {
                                     that.edit(current);
                                 }
                             }

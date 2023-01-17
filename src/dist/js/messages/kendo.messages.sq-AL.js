@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -701,7 +701,7 @@
     "alignmentDialog": {
       "title": "Radhitja",
       "buttons": {
-       "justtifyLeft": "Radhit majtas",
+       "justifyLeft": "Radhit majtas",
        "justifyCenter": "Qendër",
        "justifyRight": "Radhit djathtas",
        "justifyFull": "Justifiko",
@@ -879,7 +879,7 @@
     "addRowBelow": "Shto rresht poshtë",
     "alignment": "Radhitja",
     "alignmentButtons": {
-      "justtifyLeft": "Radhit majtas",
+      "justifyLeft": "Radhit majtas",
       "justifyCenter": "Qendër",
       "justifyRight": "Radhit djathtas",
       "justifyFull": "Justifiko",

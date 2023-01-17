@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,10 @@
             getCulture = kendo.getCulture,
             transitions = kendo.support.transitions,
             transitionOrigin = transitions ? transitions.css + "transform-origin" : "",
-            cellTemplate = template('<td class="#=data.cssClass#" role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#">#=data.value#</a></td>', { useWithBlock: false }),
-            emptyCellTemplate = template('<td role="gridcell" class="k-calendar-td k-out-of-range"><a class="k-link"></a></td>', { useWithBlock: false }),
-            otherMonthCellTemplate = template('<td role="gridcell" class="k-calendar-td k-out-of-range">&nbsp;</td>', { useWithBlock: false }),
-            weekNumberTemplate = template('<td class="k-calendar-td k-alt">#= data.weekNumber #</td>', { useWithBlock: false }),
+            cellTemplate = template(function (data) { return ("<td class=\"" + (data.cssClass) + "\" role=\"gridcell\"><a tabindex=\"-1\" class=\"k-link\" href=\"#\" data-" + (data.ns) + "value=\"" + (data.dateString) + "\">" + (data.value) + "</a></td>"); }),
+            emptyCellTemplate = template(function () { return '<td role="gridcell" class="k-calendar-td k-out-of-range"><a class="k-link"></a></td>'; }),
+            otherMonthCellTemplate = template(function () { return '<td role="gridcell" class="k-calendar-td k-out-of-range">&nbsp;</td>'; }),
+            weekNumberTemplate = template(function (data) { return ("<td class=\"k-calendar-td k-alt\">" + (data.weekNumber) + "</td>"); }),
             outerWidth = kendo._outerWidth,
             ns = ".kendoCalendar",
             CLICK = "click" + ns,
@@ -89,24 +89,19 @@
                 century: 3
             },
             HEADERSELECTOR = '.k-header, .k-calendar-header',
-            CLASSIC_HEADER_TEMPLATE = '<div class="k-header k-hstack">' +
-                '<a tabindex="-1" href="\\#" #=actionAttr#="prev" role="button" class="k-nav-prev k-button #=size# k-rounded-md k-button-flat k-button-flat-base k-icon-button" ' + ARIA_LABEL + '="Previous"><span class="k-button-icon k-icon k-i-arrow-60-left"></span></a>' +
-                '<a tabindex="-1" href="\\#" #=actionAttr#="nav-up" role="button" id="nav-up" class="k-nav-fast k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-flex"></a>' +
-                '<a tabindex="-1" href="\\#" #=actionAttr#="next" role="button" class="k-nav-next k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-icon-button" ' + ARIA_LABEL + '="Next"><span class="k-icon k-i-arrow-60-right"></span></a>' +
-            '</div>',
-            MODERN_HEADER_TEMPLATE = '<div class="k-calendar-header k-hstack">' +
-                '<a href="\\#" #=actionAttr#="nav-up" id="nav-up" role="button" class="k-calendar-title k-title k-button #=size# k-rounded-md k-button-flat k-button-flat-base "></a>' +
-                '<span class="k-spacer"></span>' +
-                '<span class="k-calendar-nav k-hstack">' +
-                    '<a tabindex="-1" #=actionAttr#="prev" class="k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-icon-button k-prev-view">' +
-                        '<span class="k-button-icon k-icon k-i-arrow-60-left"></span>' +
-                    '</a>' +
-                    '<a tabindex="-1" #=actionAttr#="today" class="k-nav-today">#=messages.today#</a>' +
-                    '<a tabindex="-1" #=actionAttr#="next" class="k-button #=size# k-rounded-md k-button-flat k-button-flat-base  k-icon-button k-next-view">' +
-                        '<span class="k-button-icon k-icon k-i-arrow-60-right"></span>' +
-                    '</a>' +
-                '</span>' +
-            '</div>';
+            CLASSIC_HEADER_TEMPLATE = function (ref) {
+                var actionAttr = ref.actionAttr;
+                var size = ref.size;
+
+                return ("<div class=\"k-header k-hstack\">\n            <a tabindex=\"-1\" href=\"#\" " + actionAttr + "=\"prev\" role=\"button\" class=\"k-nav-prev k-button " + size + " k-rounded-md k-button-flat k-button-flat-base k-icon-button\" " + ARIA_LABEL + "=\"Previous\"><span class=\"k-button-icon k-icon k-i-arrow-60-left\"></span></a>\n            <a tabindex=\"-1\" href=\"#\" " + actionAttr + "=\"nav-up\" role=\"button\" id=\"nav-up\" class=\"k-nav-fast k-button " + size + " k-rounded-md k-button-flat k-button-flat-base  k-flex\"></a>\n            <a tabindex=\"-1\" href=\"#\" " + actionAttr + "=\"next\" role=\"button\" class=\"k-nav-next k-button " + size + " k-rounded-md k-button-flat k-button-flat-base  k-icon-button\" " + ARIA_LABEL + "=\"Next\"><span class=\"k-icon k-i-arrow-60-right\"></span></a>\n        </div>");
+        },
+            MODERN_HEADER_TEMPLATE = function (ref) {
+                var actionAttr = ref.actionAttr;
+                var size = ref.size;
+                var messages = ref.messages;
+
+                return ("<div class=\"k-calendar-header k-hstack\">\n            <a href=\"\\#\" " + actionAttr + "=\"nav-up\" id=\"nav-up\" role=\"button\" class=\"k-calendar-title k-title k-button " + size + " k-rounded-md k-button-flat k-button-flat-base \"></a>\n            <span class=\"k-spacer\"></span>\n            <span class=\"k-calendar-nav k-hstack\">\n                <a tabindex=\"-1\" " + actionAttr + "=\"prev\" class=\"k-button " + size + " k-rounded-md k-button-flat k-button-flat-base  k-icon-button k-prev-view\">\n                    <span class=\"k-button-icon k-icon k-i-arrow-60-left\"></span>\n                </a>\n                <a tabindex=\"-1\" " + actionAttr + "=\"today\" class=\"k-nav-today\">" + (messages.today) + "</a>\n                <a tabindex=\"-1\" " + actionAttr + "=\"next\" class=\"k-button " + size + " k-rounded-md k-button-flat k-button-flat-base  k-icon-button k-next-view\">\n                    <span class=\"k-button-icon k-icon k-i-arrow-60-right\"></span>\n                </a>\n            </span>\n        </div>");
+        };
 
         var Calendar = Widget.extend({
             init: function(element, options) {
@@ -1366,16 +1361,16 @@
                     content = month.content,
                     weekNumber = month.weekNumber,
                     empty = month.empty,
-                    footerTemplate = '#= kendo.toString(data,"D","' + options.culture + '") #';
+                    footerTemplate = function (data) { return ("" + (kendo.toString(data,"D",options.culture))); };
 
                 that.month = {
-                    content: template('<td class="#=data.cssClass#" role="gridcell"><a tabindex="-1" class="k-link#=data.linkClass#" href="#=data.url#" ' + kendo.attr(VALUE) + '="#=data.dateString#" title="#=data.title#">' + (content || "#=data.value#") + '</a></td>', { useWithBlock: !!content }),
-                    empty: template('<td role="gridcell">' + (empty || "&nbsp;") + "</td>", { useWithBlock: !!empty }),
-                    weekNumber: template('<td class="k-alt">' + (weekNumber || "#= data.weekNumber #") + "</td>", { useWithBlock: !!weekNumber })
+                    content: function (data) { return ("<td class=\"" + (data.cssClass) + "\" role=\"gridcell\"><a tabindex=\"-1\" class=\"k-link " + (data.linkClass) + "\" href=\"" + (data.url) + "\" " + (kendo.attr(VALUE)) + "=\"" + (data.dateString) + "\" title=\"" + (data.title) + "\">" + (executeTemplate(content, data) || data.value) + "</a></td>"); },
+                    empty: function (data) { return ("<td role=\"gridcell\">" + (executeTemplate(empty, data) || "&nbsp;") + "</td>"); },
+                    weekNumber: function (data) { return ("<td class=\"k-alt\">" + (executeTemplate(weekNumber, data) || data.weekNumber) + "</td>"); }
                 };
 
                 that.year = {
-                    content: template('<td class="#=data.cssClass#" role="gridcell"><a tabindex="-1" class="k-link" href="\\#" data-#=data.ns#value="#=data.dateString#" aria-label="#=data.label#">#=data.value#</a></td>', { useWithBlock: false })
+                    content: template(function (data) { return ("<td class=\"" + (data.cssClass) + "\" role=\"gridcell\"><a tabindex=\"-1\" class=\"k-link\" href=\"#\" data-" + (data.ns) + "value=\"" + (data.dateString) + "\" aria-label=\"" + (data.label) + "\">" + (data.value) + "</a></td>"); })
                 };
 
                 if (footer && footer !== true) {
@@ -2070,30 +2065,24 @@
         }
 
         function createDisabledExpr(dates) {
-            var body, callback,
+            var callback,
                 disabledDates = [],
-                days = ["su", "mo", "tu", "we", "th", "fr", "sa"],
-                searchExpression = "if (found) {" +
-                        " return true " +
-                    "} else {" +
-                        "return false" +
-                    "}";
+                days = ["su", "mo", "tu", "we", "th", "fr", "sa"];
 
             if (dates[0] instanceof DATE) {
                 disabledDates = convertDatesArray(dates);
-                body = "var clonedDate = new Date(date); var found = date && window.kendo.jQuery.inArray(clonedDate.setHours(0, 0, 0, 0),[" + disabledDates + "]) > -1;" + searchExpression;
+                callback = function (date) { return !!(date && disabledDates.indexOf((new Date(date)).setHours(0, 0, 0, 0)) > -1); };
             } else {
-                for (var i = 0; i < dates.length; i++) {
-                    var day = dates[i].slice(0,2).toLowerCase();
-                    var index = $.inArray(day, days);
+                disabledDates = dates.map(function (day) {
+                    day = day.slice(0,2).toLowerCase();
+                    var index = days.indexOf(day);
                     if (index > -1) {
-                        disabledDates.push(index);
+                        return index;
                     }
-                }
-                body = "var clonedDate = new Date(date); var found = date && window.kendo.jQuery.inArray(clonedDate.getDay(),[" + disabledDates + "]) > -1;" + searchExpression;
-            }
+                });
 
-            callback = new Function("date", body);
+                callback = function (date) { return !!(date && disabledDates.indexOf((new Date(date)).getDay()) > -1); };
+            }
 
             return callback;
         }
@@ -2113,6 +2102,17 @@
             value = createDate(value[0], value[1], value[2]);
 
             return value;
+        }
+
+        // Backwards compatibility after CSP changes.
+        function executeTemplate(tmpl, data) {
+            if (tmpl) {
+                if (kendo.isFunction(tmpl)) {
+                    return tmpl(data);
+                }
+                return template(tmpl)(data);
+            }
+            return undefined$1;
         }
 
         calendar.isEqualDatePart = isEqualDatePart;

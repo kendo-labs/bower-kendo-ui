@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -695,7 +695,7 @@
           "alignmentDialog": {
             "title": "Στοίχιση",
             "buttons": {
-              "justtifyLeft": "Στοίχιση Αριστερά",
+              "justifyLeft": "Στοίχιση Αριστερά",
               "justifyCenter": "Κέντρο",
               "justifyRight": "Στοίχιση Δεξιά",
               "justifyFull": "Justify",
@@ -863,7 +863,7 @@
           "addRowBelow": "Προσθήκη γραμμής κάτω",
           "alignment": "Ευθυγράμμιση",
           "alignmentButtons": {
-            "justtifyLeft": "Ευθυγράμμιση Αριστερά",
+            "justifyLeft": "Ευθυγράμμιση Αριστερά",
             "justifyCenter": "Κέντρο",
             "justifyRight": "Ευθυγράμμιση Δεξιά",
             "justifyFull": "Ισάζω",

@@ -87,7 +87,7 @@ function compileScripts() {
 }
 
 function compileMjsScripts() {
-    return HELPERS.execute('npm run scripts:mjs');
+    return HELPERS.execute('npx rollup -c rollup.mjs.config.js');
 }
 
 function renameModules(match) {
@@ -117,10 +117,6 @@ function uglifyScripts(stream) {
         .pipe(gulpIf(makeSourceMaps, sourcemaps.write("./")));
 }
 
-function compileModulesScripts() {
-    return HELPERS.execute('npm run scripts:modules');
-}
-
 function mjsMin() {
     return gulp.src(['dist/mjs/kendo.*.js', 'dist/mjs/cultures/*.js', 'dist/mjs/messages/*.js'], { base: "dist/mjs" })
         .pipe(gulpIf(makeSourceMaps, sourcemaps.init()))
@@ -137,11 +133,8 @@ function distThirdParty() {
         .pipe(gulp.dest('dist/js'));
 }
 
-gulp.task('scripts', gulp.parallel(
-    gulp.series(compileMjsScripts, mjsMin),
-    gulp.series(compileScripts, gulp.parallel(distThirdParty, minScripts)),
-    compileModulesScripts
-));
+gulp.task('scripts', gulp.parallel(gulp.series(compileScripts, gulp.parallel(distThirdParty, minScripts))));
+gulp.task('scripts:mjs', gulp.parallel(gulp.series(compileMjsScripts, mjsMin)));
 
 function minScripts() {
     return gulp.src(['dist/js/kendo.*.js', 'dist/js/cultures/*.js', 'dist/js/messages/*.js'], { base: "dist/js" })

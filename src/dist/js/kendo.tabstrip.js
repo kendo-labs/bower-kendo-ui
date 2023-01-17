@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,22 +82,34 @@
             ARIA_LABELLEDBY = "aria-labelledby",
 
             templates = {
-                content: template(
-                    "<div class='k-tabstrip-content k-content' #= contentAttributes(data) # tabindex='0'>#= content(item) #</div>"
-                ),
-                itemWrapper: template(
-                    "<#= tag(item) # class='k-link' #= contentUrl(item) # #= textAttributes(item) #>" +
-                        "#= image(item) ##= sprite(item) ##= text(item) #" +
-                    "</#= tag(item) #>"
-                ),
-                item: template(
-                    "<li class='#= wrapperCssClass(group, item) #' role='tab' #=item.active ? \"aria-selected='true'\" : ''#>" +
-                        "#= itemWrapper(data) #" +
-                    "</li>"
-                ),
-                image: template("<img class='k-image' alt='' src='#= imageUrl #' />"),
-                sprite: template("<span class='k-sprite #= spriteCssClass #'></span>"),
-                empty: template("")
+                content: function (data) { return ("<div class='k-tabstrip-content k-content' " + (data.contentAttributes(data)) + " tabindex='0'>" + (data.content(data.item)) + "</div>"); },
+                itemWrapper: function (ref) {
+                        var tag = ref.tag;
+                        var item = ref.item;
+                        var contentUrl = ref.contentUrl;
+                        var textAttributes = ref.textAttributes;
+                        var image = ref.image;
+                        var sprite = ref.sprite;
+                        var text = ref.text;
+
+                        return "<" + (tag(item)) + " class='k-link' " + (contentUrl(item)) + " " + (textAttributes(item)) + ">" +
+                        "" + (image(item)) + (sprite(item)) + (text(item)) +
+                    "</" + (tag(item)) + ">";
+        },
+                item: function (data) { return "<li class='" + (data.wrapperCssClass(data.group, data.item)) + "' role='tab' " + (data.item.active ? "aria-selected='true'" : '') + ">" +
+                        "" + (data.itemWrapper(data)) +
+                    "</li>"; },
+                image: function (ref) {
+                    var imageUrl = ref.imageUrl;
+
+                    return ("<img class='k-image' alt='' src='" + imageUrl + "' />");
+        },
+                sprite: function (ref) {
+                    var spriteCssClass = ref.spriteCssClass;
+
+                    return ("<span class='k-sprite " + spriteCssClass + "'></span>");
+        },
+                empty: function () { return ""; }
             },
 
             rendering = {

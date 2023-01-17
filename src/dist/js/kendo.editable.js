@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,15 @@
            POINT = ".",
            AUTOCOMPLETEVALUE = "off",
            nameSpecialCharRegExp = /("|\%|'|\[|\]|\$|\.|\,|\:|\;|\+|\*|\&|\!|\#|\(|\)|<|>|\=|\?|\@|\^|\{|\}|\~|\/|\||`)/g,
-           ERRORTEMPLATE = '<div class="k-tooltip k-tooltip-error k-validator-tooltip">' +
+           ERRORTEMPLATE = function (ref) {
+              var message = ref.message;
+
+              return '<div class="k-tooltip k-tooltip-error k-validator-tooltip">' +
                '<span class="k-tooltip-icon k-icon k-i-warning"></span>' +
-               '<span class="k-tooltip-content">#= message #</span>' +
+               "<span class=\"k-tooltip-content\">" + message + "</span>" +
                '<span class="k-callout k-callout-n"></span>' +
-           '</div>',
+           '</div>';
+       },
            CHANGE = "change";
        var EQUAL_SET = "equalSet";
        var specialRules = ["url", "email", "number", "date", "boolean"];
@@ -174,7 +178,7 @@
            "DatePicker", "DateTimePicker", "DropDownTree",
            "Editor", "FlatColorPicker", "MaskedTextBox", "MultiColumnComboBox","MultiSelect",
            "NumericTextBox", "RadioGroup", "Rating", "Slider", "Switch", "TimePicker", "DropDownList",
-           "TextBox", "TextArea", "Captcha", "Signature"
+           "TextBox", "TextArea", "Captcha", "Signature", "TimeDurationPicker"
        ];
 
        var editors = {

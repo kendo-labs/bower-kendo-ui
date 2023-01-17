@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1022,15 +1022,21 @@
                 if (options.template && typeof options.template == "string") {
                     template = kendo.template(options.template);
                 } else if (!options.template) {
-                    template = kendo.template('${' + kendo.expr(options.dataTextField, "data") + "}", { useWithBlock: false });
+                    template = kendo.template(function (data) { return ("" + (kendo.getter(options.dataTextField)(data))); });
                 } else {
                     template = options.template;
                 }
 
                 that.templates = {
-                    itemTemplate: kendo.template("# var item = data.item, r = data.r; # <li class='k-list-item' role='option' aria-selected='false'><span class='k-list-item-text'>#=r(item)#</span></li>", { useWithBlock: false }),
+                    itemTemplate: kendo.template(function (ref) {
+                            var item = ref.item;
+                            var r = ref.r;
+
+                            return ("<li class='k-list-item' role='option' aria-selected='false'><span class='k-list-item-text'>" + (r(item)) + "</span></li>");
+                }
+                    ),
                     itemContent: template,
-                    toolbar: "<div role='toolbar' class='" + TOOLBAR_CLASS + "'></div>"
+                    toolbar: ("<div role='toolbar' class='" + TOOLBAR_CLASS + "'></div>")
                 };
             },
 
@@ -1592,12 +1598,17 @@
 
             _initTemplates: function() {
                 this.templates = {
-                    tool: kendoTemplate(
-                        "<li>" +
-                            "<a href='\\\\#' class='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-icon-button' data-command='#= command #' title='#= text #' aria-label='#= text #' role='button'>" +
-                                "<span class='k-button-icon k-icon #= iconClass #'></span>" +
+                    tool: kendoTemplate( function (ref) {
+                            var iconClass = ref.iconClass;
+                            var command = ref.command;
+                            var text = ref.text;
+
+                            return "<li>" +
+                            "<a href='#' class='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-icon-button' data-command='" + command + "' title='" + text + "' aria-label='" + text + "' role='button'>" +
+                                "<span class='k-button-icon k-icon " + iconClass + "'></span>" +
                             "</a>" +
-                        "</li>")
+                        "</li>";
+                })
                 };
             },
 

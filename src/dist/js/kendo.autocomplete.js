@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@
 
     (function($, undefined$1) {
         var kendo = window.kendo,
+            encode = kendo.htmlEncode,
             support = kendo.support,
             caret = kendo.caret,
             activeElement = kendo._activeElement,
@@ -168,8 +169,8 @@
                 enabled: true,
                 suggest: false,
                 template: "",
-                groupTemplate: "#:data#",
-                fixedGroupTemplate: "#:data#",
+                groupTemplate: function (data) { return encode(data); },
+                fixedGroupTemplate: function (data) { return encode(data); },
                 dataTextField: "",
                 minLength: 1,
                 enforceMinLength: false,

@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@
     "alignmentDialog": {
       "title": "Подравняване",
       "buttons": {
-       "justtifyLeft": "Подравняване отляво",
+       "justifyLeft": "Подравняване отляво",
        "justifyCenter": "Центриране",
        "justifyRight": "Подравняване отдясно",
        "justifyFull": "Двустранно подравняване",
@@ -283,7 +283,7 @@
     "addRowBelow": "Добави ред отдолу",
     "alignment": "Подравняване",
     "alignmentButtons": {
-      "justtifyLeft": "Подравняване отляво",
+      "justifyLeft": "Подравняване отляво",
       "justifyCenter": "Центрирано",
       "justifyRight": "Подравняване отдясно",
       "justifyFull": "Двустранно подравняване",
@@ -1343,7 +1343,7 @@
                   }
               },
               okText: "ОК",
-              save: "Сапази",
+              save: "Запази",
               cancel: "Отмени",
               search: {
                   inputLabel: "Търси текст",
@@ -1351,7 +1351,8 @@
                   next: "Следващо съвпадение",
                   previous: "Предишно съвпадение",
                   close: "Затвори",
-                  of: "от"
+                  of: "от",
+                  dragHandle: "Премести търсенето"
               }
           }
       });

@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -701,7 +701,7 @@
     "alignmentDialog": {
       "title": "Poravnanje",
       "buttons": {
-       "justtifyLeft": "Poravnati levo",
+       "justifyLeft": "Poravnati levo",
        "justifyCenter": "Centar",
        "justifyRight": "Poravnati desno",
        "justifyFull": "Poravnajte tekst do ivica",
@@ -880,7 +880,7 @@
     "addRowBelow": "Dodajte kolonu dole",
     "alignment": "Poravnanje",
     "alignmentButtons": {
-      "justtifyLeft": "Poravnati levo",
+      "justifyLeft": "Poravnati levo",
       "justifyCenter": "Centar",
       "justifyRight": "Poravnati desno",
       "justifyFull": "Poravnajte tekst do ivica",

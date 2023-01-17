@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@
 
     (function($, undefined$1) {
         var kendo = window.kendo,
+            encode = kendo.htmlEncode,
             ui = kendo.ui,
             html = kendo.html,
             List = ui.List,
@@ -190,8 +191,8 @@
                 template: null,
                 valueTemplate: null,
                 optionLabelTemplate: null,
-                groupTemplate: "#:data#",
-                fixedGroupTemplate: "#:data#",
+                groupTemplate: function (data) { return encode(data); },
+                fixedGroupTemplate: function (data) { return encode(data); },
                 autoWidth: false,
                 popup: null,
                 filterTitle: null,
@@ -321,7 +322,7 @@
                 this._prevent = true;
 
                 filterInput.addClass("k-hidden");
-                filterInput.closest(".k-list-filter").css("width", this.popup.element.css("width"));
+                filterInput.closest(".k-list-filter").css("width", this.popup.element.width());
                 filterInput.removeClass("k-hidden");
 
                 if (isInputActive) {
@@ -490,15 +491,9 @@
                 }
 
                 if (!template) {
-                    template = "#:";
-
-                    if (typeof optionLabel === "string") {
-                        template += "data";
-                    } else {
-                        template += kendo.expr(options.dataTextField, "data");
-                    }
-
-                    template += "#";
+                    template = function (data) { return (typeof optionLabel === "string" ?
+                        encode(data) :
+                        encode(kendo.getter(options.dataTextField)(data))); };
                 }
 
                 if (typeof template !== "function") {
@@ -1368,7 +1363,7 @@
 
 
                 if (!template) {
-                    template = kendo.template('#:this._text(data)#', { useWithBlock: false }).bind(that);
+                    template = function (data) { return encode(that._text(data)); };
                 } else {
                     template = kendo.template(template);
                 }

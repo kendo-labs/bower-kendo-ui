@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2022.3.1109'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.1.117'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -140,7 +140,7 @@
                 return target;
             };
 
-        kendo.version = "2022.3.1109".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.1.117".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -175,9 +175,12 @@
             this.options = deepExtend({}, this.options, options);
         };
 
-        var isFunction = kendo.isFunction = function(fn) {
-            return typeof fn === "function";
-        };
+        var isPresent = kendo.isPresent = function (value) { return value !== null && value !== undefined$1; };
+        var isBlank = kendo.isBlank = function (value) { return value === null || value === undefined$1; };
+        var isString = kendo.isString = function (value) { return typeof value === 'string'; };
+        var isNumeric = kendo.isNumeric = function (value) { return !isNaN(value - parseFloat(value)); };
+        var isDate = kendo.isDate = function (value) { return value && value.getTime; };
+        var isFunction = kendo.isFunction = function (value) { return typeof value === 'function'; };
 
         var preventDefault = function() {
             this._defaultPrevented = true;
@@ -391,11 +394,16 @@
                 functionBody = functionBody.replace(sharpRegExp, "#");
 
                 try {
+                    // This function evaluation is required for legacy support of the Kendo Template syntax - non CSP compliant.
                     fn = new Function(argumentName, functionBody);
                     fn._slotCount = Math.floor(parts.length / 2);
                     return fn;
                 } catch (e) {
-                    throw new Error(kendo.format("Invalid template:'{0}' Generated code:'{1}'", template, functionBody));
+                    if (kendo.debugTemplates) {
+                        window.console.warn(("Invalid template:'" + template + "' Generated code:'" + functionBody + "'"));
+                    } else {
+                        throw new Error(kendo.format("Invalid template:'{0}' Generated code:'{1}'", template, functionBody));
+                    }
                 }
             }
         };
@@ -2248,7 +2256,8 @@
                 mobileOS = support.mobileOS = {
                     ios: true,
                     tablet: "tablet",
-                    device: "ipad"
+                    device: "ipad",
+                    majorVersion: 13
                 };
             }
 
@@ -2410,7 +2419,7 @@
                 safari = support.browser.safari;
             support.msPointers = !chrome && window.MSPointerEvent;
             support.pointers = !chrome && !mobileChrome && !mozilla && !safari && window.PointerEvent;
-            support.kineticScrollNeeded = mobileOS && (support.touch || support.msPointers || support.pointers);
+            support.kineticScrollNeeded = mobileOS && (mobileOS.device !== "ipad" || mobileOS.majorVersion < 13) && (support.touch || support.msPointers || support.pointers);
         })();
 
 
@@ -2813,13 +2822,62 @@
                 return expression;
             },
 
+            exprToArray: function (expression, safe) {
+                expression = expression || "";
+                var FIELD_REGEX = /\[(?:(\d+)|['"](.*?)['"])\]|((?:(?!\[.*?\]|\.).)+)/g;
+                var fields = [];
+
+                expression.replace(FIELD_REGEX, function (_, index, indexAccessor, field) {
+                    fields.push(kendo.isPresent(index) ? index : (indexAccessor || field));
+                    return undefined$1;
+                });
+
+                return fields;
+            },
+
             getter: function(expression, safe) {
                 var key = expression + safe;
-                return getterCache[key] = getterCache[key] || new Function("d", "return " + kendo.expr(expression, safe));
+
+                return getterCache[key] = getterCache[key] || (function (obj) {
+                    var fields = kendo.exprToArray(expression, safe);
+
+                    var result = obj;
+                    for (var idx = 0; idx < fields.length; idx++) {
+                        result = result[fields[idx]];
+                        if (!kendo.isPresent(result) && safe) {
+                            return result;
+                        }
+                    }
+
+                    return result;
+                });
             },
 
             setter: function(expression) {
-                return setterCache[expression] = setterCache[expression] || new Function("d,value", kendo.expr(expression) + "=value");
+                return setterCache[expression] = setterCache[expression] || (function (obj, value) {
+                    var fields = kendo.exprToArray(expression);
+
+                    var innerSetter = function (ref) {
+                        var parent = ref.parent;
+                        var val = ref.val;
+                        var prop = ref.prop;
+                        var props = ref.props;
+
+                        if (props.length) {
+                            parent = parent[props.shift()];
+                            innerSetter({ parent: parent, val: val, prop: prop, props: props });
+                        } else {
+                            parent[prop] = val;
+                        }
+                    };
+
+                    innerSetter({
+                        parent: obj,
+                        val: value,
+                        prop: fields.pop(),
+                        props: fields
+                    });
+                });
             },
 
             accessor: function(expression) {
@@ -3194,7 +3252,12 @@
             } else if (numberRegExp.test(value) && option != "mask" && option != "format") {
                 value = parseFloat(value);
             } else if (jsonRegExp.test(value) && !jsonFormatRegExp.test(value)) {
-                value = new Function("return (" + value + ")")();
+                try {
+                    value = JSON.parse(value);
+                } catch (error) {
+                    // Fallback to function eval for legacy reason - non CSP compliant
+                    value = new Function("return (" + value + ")")();
+                }
             }
 
             return value;
@@ -5207,6 +5270,9 @@
                     curr[key] = value;
                 }
             };
+
+            // Use external global flags for templates.
+            kendo.debugTemplates = window.DEBUG_KENDO_TEMPLATES;
 
         })();
 
