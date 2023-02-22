@@ -29,7 +29,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.1.117'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.1.222'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -140,7 +140,7 @@
                 return target;
             };
 
-        kendo.version = "2023.1.117".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.1.222".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -11709,6 +11709,10 @@
                 if (that._filter && e && e.action === "add") {
                     var model = e.items[0],
                         resultData = result.data;
+
+                    if (that._isGrouped()) {
+                        resultData = flattenGroups(resultData);
+                    }
 
                     var modelIsInView = resultData.find(function(item) {
                         return item.uid === model.uid;
@@ -56749,11 +56753,11 @@
                     resize = "k-resize-none";
                 }
 
-                action = action || "addClass";
-
-                if (options.overflow === "auto") {
-                    overflow = "!k-overflow-y-auto";
+                if (overflow) {
+                    overflow = "!" + overflow;
                 }
+
+                action = action || "addClass";
 
                 that.wrapper[action](resize);
                 that.element[action](overflow);

@@ -124,11 +124,11 @@
                     resize = "k-resize-none";
                 }
 
-                action = action || "addClass";
-
-                if (options.overflow === "auto") {
-                    overflow = "!k-overflow-y-auto";
+                if (overflow) {
+                    overflow = "!" + overflow;
                 }
+
+                action = action || "addClass";
 
                 that.wrapper[action](resize);
                 that.element[action](overflow);

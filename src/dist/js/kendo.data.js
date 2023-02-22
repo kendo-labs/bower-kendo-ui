@@ -4265,6 +4265,10 @@
                    var model = e.items[0],
                        resultData = result.data;
 
+                   if (that._isGrouped()) {
+                       resultData = flattenGroups(resultData);
+                   }
+
                    var modelIsInView = resultData.find(function(item) {
                        return item.uid === model.uid;
                    });
