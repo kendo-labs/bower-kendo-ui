@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.floatinglabel'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.floatinglabel', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "MaskedTextBox",
         category: "web",
         description: "The MaskedTextBox widget allows to specify a mask type on an input field.",
-        depends: ["core", "floatinglabel"]
+        depends: ["core", "floatinglabel", "icons"]
     };
 
     (function($, undefined$1) {
@@ -127,9 +127,9 @@
                     that.readonly(element.is("[readonly]"));
                 }
 
-                that.value(that.options.value || element.val());
+                that._validationIcon = $(kendo.ui.icon({ icon: "exclamation-circle", iconClass: "k-input-validation-icon k-hidden" })).insertAfter(element);
 
-                that._validationIcon = $("<span class='k-input-validation-icon k-icon k-i-warning k-hidden'></span>").insertAfter(element);
+                that.value(that.options.value || element.val());
 
                 that._label();
                 that._applyCssClasses();

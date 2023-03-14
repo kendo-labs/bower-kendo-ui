@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.draganddrop'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.draganddrop', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "Slider",
         category: "web",
         description: "The Slider widget provides a rich input for selecting values or ranges of values.",
-        depends: [ "draganddrop" ]
+        depends: [ "draganddrop", "icons" ]
     };
 
     (function($, undefined$1) {
@@ -561,26 +561,27 @@
         }
 
         function createButton(options, type, isHorizontal) {
-            var buttonCssClass = "";
+            var buttonIconName = "";
 
             if (isHorizontal) {
                 if (type === "increase") {
-                    buttonCssClass = "k-i-arrow-e";
+                    buttonIconName = "caret-alt-right";
                 } else {
-                    buttonCssClass = "k-i-arrow-w";
+                    buttonIconName = "caret-alt-left";
                 }
             } else {
                 if (type == "increase") {
-                    buttonCssClass = "k-i-arrow-n";
+                    buttonIconName = "caret-alt-up";
                 } else {
-                    buttonCssClass = "k-i-arrow-s";
+                    buttonIconName = "caret-alt-down";
                 }
             }
 
             return "<a role='button' class='k-button k-button-md k-rounded-full k-button-solid k-button-solid-base k-icon-button k-button-" + type + "' " +
                     "title='" + options[type + "ButtonTitle"] + "' " +
                     "aria-label='" + options[type + "ButtonTitle"] + "'>" +
-                    "<span class='k-button-icon k-icon " + buttonCssClass + "'></span></a>";
+                        kendo.ui.icon({ icon: buttonIconName, iconClass: "k-button-icon" }) +
+                    "</a>";
         }
 
         function createSliderItems(options, distance) {

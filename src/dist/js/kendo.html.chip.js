@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.html.base'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.html.base', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "Html.Chip",
         category: "web",
         description: "HTML rendering utility for Kendo UI for jQuery.",
-        depends: [ "html.base" ],
+        depends: [ "html.base", "icons" ],
         features: []
     };
 
@@ -72,7 +72,7 @@
                 that._addClasses();
 
                 if (options.icon) {
-                    that.wrapper.prepend($("<span class='k-chip-icon k-icon k-i-" + options.icon + "'></span>").attr(options.iconAttr));
+                    that.wrapper.prepend($(kendo.ui.icon({ icon: options.icon, iconClass: ("k-chip-icon" + (options.iconClass ? (" " + (options.iconClass)) : '')) })).attr(options.iconAttr));
                 } else if (options.iconClass) {
                     that.wrapper.prepend($("<span class='" + options.iconClass + "'></span>").attr(options.iconAttr));
                 } else if (options.avatarClass) {
@@ -97,8 +97,7 @@
                 }
 
                 if (options.removable) {
-                    var removeIconClass = options.removeIconClass ? options.removeIconClass : "k-chip-icon k-icon k-i-" + options.removeIcon;
-                    that.wrapper.append($("<span class='k-chip-action k-chip-remove-action'><span class='" + removeIconClass + "'></span></span>").attr(options.removableAttr));
+                    that.wrapper.append($(("<span class='k-chip-action k-chip-remove-action'>" + (kendo.ui.icon({ icon: options.removeIcon, iconClass: "k-chip-icon" })) + "</span>")).attr(options.removableAttr));
                 }
             }
         });

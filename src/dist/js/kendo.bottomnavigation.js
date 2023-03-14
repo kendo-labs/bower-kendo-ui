@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.core'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "BottomNavigation",
         category: "web",
         description: "The BottomNavigation widget is a navigation element that allows movement between primary destinations in an app.",
-        depends: [ "core" ]
+        depends: [ "core", "icons" ]
     };
 
     (function($, undefined$1) {
@@ -78,7 +78,7 @@
             icon: template(function (ref) {
                 var icon = ref.icon;
 
-                return ("<span class=\"" + (bottomNavigationStyles.navIcon) + " " + (icon ? ("k-icon k-i-" + icon) : '') + "\"></span>");
+                return kendo.ui.icon($(("<span class=\"" + (bottomNavigationStyles.navIcon) + "\"></span>")), { icon: icon });
         })
         };
 

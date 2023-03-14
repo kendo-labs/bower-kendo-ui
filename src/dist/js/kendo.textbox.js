@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.floatinglabel'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.floatinglabel', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "TextBox",
         category: "web",
         description: "The TextBox widget enables you to style and provide a floating label functionality to input elements",
-        depends: ["core", "floatinglabel"]
+        depends: ["core", "floatinglabel", "icons"]
     };
 
     (function($, undefined$1) {
@@ -207,7 +207,7 @@
             },
 
             _icon: function() {
-                this.wrapper.prepend('<span class="k-input-icon k-icon k-i-' + this.options.icon + '"></span>');
+                this.wrapper.prepend(kendo.ui.icon({ icon: this.options.icon, iconClass: "k-input-icon" }));
             },
 
             _input: function(e) {

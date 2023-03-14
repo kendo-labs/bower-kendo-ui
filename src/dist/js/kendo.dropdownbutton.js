@@ -55,7 +55,8 @@
             FOCUS = "focus";
 
         var cssClasses = {
-            menuButton: "k-menu-button"
+            menuButton: "k-menu-button",
+            dropdownButton: "k-dropdown-button"
         };
 
         var DropDownButton = Widget.extend({
@@ -83,6 +84,7 @@
 
             options: {
                 name: "DropDownButton",
+                direction: "down",
                 enabled: true,
                 items: [],
                 rounded: "medium",
@@ -110,7 +112,7 @@
 
                 delete options.click;
 
-                that.element.addClass(cssClasses.menuButton);
+                that.element.addClass(cssClasses.menuButton).addClass(cssClasses.dropdownButton);
 
                 html.renderButton(that.element, options);
             },

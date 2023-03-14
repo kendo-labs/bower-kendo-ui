@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.draganddrop', 'kendo.popup'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.draganddrop', 'kendo.popup', 'kendo.icons', 'kendo.html.button'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
             name: "Window",
             category: "web",
             description: "The Window widget displays content in a modal or non-modal HTML window.",
-            depends: [ "draganddrop", "popup" ],
+            depends: [ "draganddrop", "popup", "icons" ],
             features: [ {
                 id: "window-fx",
                 name: "Animation",
@@ -55,8 +55,9 @@
                 KDIALOGCONTENT = ".k-dialog-content",
                 KWINDOWRESIZEHANDLES = ".k-resize-handle",
                 KOVERLAY = ".k-overlay",
+                KWINDOWMINIMIZED = "k-window-minimized",
                 KCONTENTFRAME = "k-content-frame",
-                LOADING = "k-i-loading",
+                LOADINGICONCLASS = "k-i-loading",
                 KHOVERSTATE = "k-hover",
                 KFOCUSEDSTATE = "k-focus",
                 MAXIMIZEDSTATE = "k-window-maximized",
@@ -84,12 +85,12 @@
                 OVERFLOW = "overflow",
                 DATADOCOVERFLOWRULE = "original-overflow-rule",
                 ZINDEX = "zIndex",
-                MINIMIZE_MAXIMIZE = ".k-window-actions .k-i-window-minimize,.k-window-actions .k-i-window-maximize",
-                KPIN = ".k-i-pin",
-                KUNPIN = ".k-i-unpin",
-                PIN_UNPIN = KPIN + "," + KUNPIN,
-                TITLEBAR_BUTTONS = ".k-window-titlebar .k-window-action",
-                REFRESHICON = ".k-window-titlebar .k-i-refresh",
+                MINIMIZE_MAXIMIZEICONSELECTORS = ".k-window-titlebar-actions .k-i-window-minimize,.k-window-titlebar-actions .k-i-window,.k-window-titlebar-actions .k-svg-i-window-minimize,.k-window-titlebar-actions .k-svg-i-window",
+                KPINICONCLASSSELECTOR = ".k-i-pin,.k-svg-i-pin",
+                KUNPINICONCLASSSELECTOR = ".k-i-unpin,.k-svg-i-unpin",
+                PIN_UNPINICONCLASSSELECTOR = KPINICONCLASSSELECTOR + "," + KUNPINICONCLASSSELECTOR,
+                TITLEBAR_BUTTONSSELECTOR = ".k-window-titlebar .k-window-titlebar-action",
+                REFRESHICONSELECTOR = ".k-window-titlebar .k-i-arrow-rotate-cw,.k-window-titlebar .k-svg-i-arrow-rotate-cw",
                 WINDOWEVENTSHANDLED = "WindowEventsHandled",
                 zero = /^0[a-z]*$/i,
                 isLocalUrl = kendo.isLocalUrl,
@@ -221,6 +222,10 @@
 
                     wrapper = that.wrapper = element.closest(KWINDOW);
 
+                    if (options.themeColor && options.themeColor !== "none") {
+                        wrapper.addClass(kendo.getValidCssClass("k-window-", "themeColor", options.themeColor));
+                    }
+
                     if (!element.is(".k-window-content") || !wrapper[0]) {
                         element.addClass("k-window-content");
                         element.attr("tabindex", 0);
@@ -229,6 +234,10 @@
 
                         that.title(that.options.title);
                         that._dimensions();
+
+                        if (options._footerTemplate) {
+                            that.wrapper.append(kendo.template(options._footerTemplate)(options._footerMessages));
+                        }
                     }
 
                     that.minTop = that.minLeft = -Infinity;
@@ -250,9 +259,9 @@
                     }
 
                     wrapper
-                        .on("mouseenter" + NS, TITLEBAR_BUTTONS, that._buttonEnter.bind(that))
-                        .on("mouseleave" + NS, TITLEBAR_BUTTONS, that._buttonLeave.bind(that))
-                        .on("click" + NS, "> " + TITLEBAR_BUTTONS, that._windowActionHandler.bind(that))
+                        .on("mouseenter" + NS, TITLEBAR_BUTTONSSELECTOR, that._buttonEnter.bind(that))
+                        .on("mouseleave" + NS, TITLEBAR_BUTTONSSELECTOR, that._buttonLeave.bind(that))
+                        .on("click" + NS, "> " + TITLEBAR_BUTTONSSELECTOR, that._windowActionHandler.bind(that))
                         .on("keydown" + NS, that, that._keydown.bind(that))
                         .on("focus" + NS, that._focus.bind(that))
                         .on("blur" + NS, that._blur.bind(that));
@@ -502,7 +511,7 @@
 
                     if (resizable) {
                         wrapper.on("dblclick" + NS, KWINDOWTITLEBAR, (function(e) {
-                            if (!$(e.target).closest(".k-window-action").length) {
+                            if (!$(e.target).closest(".k-window-titlebar-action").length) {
                                 this.toggleMaximization();
                             }
                         }).bind(this));
@@ -534,12 +543,19 @@
                     var actions = options.actions;
                     var pinned = options.pinned;
                     var titlebar = this.wrapper.children(KWINDOWTITLEBAR);
-                    var container = titlebar.find(".k-window-actions");
-                    var windowSpecificCommands = [ "maximize", "minimize" ];
+                    var container = titlebar.find(".k-window-titlebar-actions");
+                    var windowSpecificCommands = [ "minimize", "maximize" ];
+                    var icons = {
+                        "maximize": "window",
+                        "refresh": "arrow-rotate-cw",
+                        "custom": "gear"
+                    };
+                    var icon;
 
                     actions = $.map(actions, function(action) {
                         action = pinned && action.toLowerCase() === "pin" ? "unpin" : action;
-                        return { name: (windowSpecificCommands.indexOf(action.toLowerCase()) > - 1) ? "window-" + action : action };
+                        icon = icons[action.toLowerCase()] || "";
+                        return { name: (windowSpecificCommands.indexOf(action.toLowerCase()) > - 1) ? "window-" + action : action, icon: action.toLowerCase() == "close" ? "x" : icon };
                     });
 
                     container.html(kendo.render(templates.action, actions));
@@ -551,6 +567,9 @@
                     var doc = this.containment && !that._isPinned ? this.containment : $(document);
                     // make a deep extend over options.position telerik/kendo-ui-core#844
                     var cachedOptions = JSON.parse(JSON.stringify(options));
+
+                    that.wrapper.removeClass(kendo.getValidCssClass("k-window-", "themeColor", that.options.themeColor));
+
                     extend(options.position, that.options.position);
                     extend(options.position, cachedOptions.position);
 
@@ -573,6 +592,11 @@
                     that._resizable();
                     that._draggable();
                     that._actions();
+
+                    if (that.options.themeColor && that.options.themeColor !== "none") {
+                        that.wrapper.addClass(kendo.getValidCssClass("k-window-", "themeColor", that.options.themeColor));
+                    }
+
                     if (typeof options.modal !== "undefined") {
                         var visible = that.options.visible !== false;
                         that._enableDocumentScrolling();
@@ -614,6 +638,7 @@
                         }
                     },
                     title: "",
+                    themeColor: "",
                     actions: ["Close"],
                     autoFocus: true,
                     modal: false,
@@ -780,7 +805,7 @@
                 _overlay: function(visible) {
                     var overlay = this.containment ? this.containment.children(KOVERLAY) : this.appendTo.children(KOVERLAY),
                         wrapper = this.wrapper,
-                        display = visible ? "block" : "none",
+                        display = visible ? "inline-flex" : "none",
                         zIndex = parseInt(wrapper.css(ZINDEX), 10) - 1;
 
                     if (!overlay.length) {
@@ -802,23 +827,23 @@
                 },
 
                 _actionForIcon: function(icon) {
-                    var iconClass = /\bk-i(-\w+)+\b/.exec(icon[0].className)[0];
+                    var iconClass = /\bk(-svg)?-i(-\w+)+\b/.exec(icon[0].className)[0];
                     return {
-                        "k-i-close": "_close",
-                        "k-i-window-maximize": "maximize",
-                        "k-i-window-minimize": "minimize",
-                        "k-i-window-restore": "restore",
-                        "k-i-refresh": "refresh",
-                        "k-i-pin": "pin",
-                        "k-i-unpin": "unpin"
-                    }[iconClass];
+                        "x": "_close",
+                        "window": "maximize",
+                        "window-minimize": "minimize",
+                        "window-restore": "restore",
+                        "arrow-rotate-cw": "refresh",
+                        "pin": "pin",
+                        "unpin": "unpin"
+                    }[iconClass.replace(/(k-i-|k-svg-i-)/, "")];
                 },
 
                 _windowActionHandler: function(e) {
                     if (this._closing) {
                         return;
                     }
-                    var icon = $(e.target).closest(".k-window-action").find(".k-icon");
+                    var icon = $(e.target).closest(".k-window-titlebar-action").find(".k-icon,.k-svg-icon");
                     var action = this._actionForIcon(icon);
 
                     if (action) {
@@ -1033,9 +1058,10 @@
                         if (!wrapper.is(VISIBLE)) {
                             contentElement.css(OVERFLOW, HIDDEN);
 
-                            that.wrapper.find(TITLEBAR_BUTTONS).addClass("k-button-flat");
+                            that.wrapper.find(TITLEBAR_BUTTONSSELECTOR).addClass("k-button-flat");
 
-                            wrapper.addClass(INLINE_FLEX).kendoStop().kendoAnimate({
+                            wrapper.css({ display: "inline-flex" });
+                            wrapper.kendoStop().kendoAnimate({
                                 effects: showOptions.effects,
                                 duration: showOptions.duration,
                                 complete: this._activate.bind(this)
@@ -1128,7 +1154,7 @@
                         this._removeOverlay();
 
                         // Prevent close animation from stopping
-                        that.wrapper.find(TITLEBAR_BUTTONS).removeClass("k-button-flat");
+                        that.wrapper.find(TITLEBAR_BUTTONSSELECTOR).removeClass("k-button-flat");
 
                         wrapper.kendoStop().kendoAnimate({
                             effects: hideOptions.effects || showOptions.effects,
@@ -1178,7 +1204,7 @@
                 },
 
                 _actionable: function(element) {
-                    return $(element).is(TITLEBAR_BUTTONS + "," + TITLEBAR_BUTTONS + " .k-icon, :input, a, .k-input, .k-icon, [role='gridcell'], .k-input-value-text");
+                    return $(element).is((TITLEBAR_BUTTONSSELECTOR + ", :input, a, .k-input, .k-icon, .k-svg-icon, [role='gridcell'], .k-input-value-text"));
                 },
 
                 _shouldFocus: function(target) {
@@ -1298,15 +1324,16 @@
                             height: restoreOptions.height
                         })
                         .removeClass(MAXIMIZEDSTATE)
+                        .removeClass(KWINDOWMINIMIZED)
                         .find(".k-window-content,.k-resize-handle").show().end()
-                        .find(".k-window-titlebar .k-i-window-restore").parent().remove().end().end()
-                        .find(MINIMIZE_MAXIMIZE).parent().show().end().end()
-                        .find(PIN_UNPIN).parent().show();
+                        .find(".k-window-titlebar .k-i-window-restore,.k-window-titlebar .k-svg-i-window-restore").parent().remove().end().end()
+                        .find(MINIMIZE_MAXIMIZEICONSELECTORS).parent().show().end().end()
+                        .find(PIN_UNPINICONCLASSSELECTOR).parent().show();
 
                     if (options.isMaximized) {
-                        that.wrapper.find(".k-i-window-maximize").parent().trigger("focus");
+                        that.wrapper.find(".k-i-window,.k-svg-i-window").parent().trigger("focus");
                     } else if (options.isMinimized) {
-                        that.wrapper.find(".k-i-window-minimize").parent().trigger("focus");
+                        that.wrapper.find(".k-i-window-minimize,.k-svg-i-window-minimize").parent().trigger("focus");
                     }
 
                     that.options.width = restoreOptions.width;
@@ -1351,16 +1378,16 @@
 
                     wrapper
                         .children(KWINDOWRESIZEHANDLES).hide().end()
-                        .children(KWINDOWTITLEBAR).find(MINIMIZE_MAXIMIZE).parent().hide()
+                        .children(KWINDOWTITLEBAR).find(MINIMIZE_MAXIMIZEICONSELECTORS).parent().hide()
                         .eq(0).before(templates.action({ name: "window-restore" }));
 
                     callback.call(that);
 
-                    that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPIN).parent().toggle(actionId !== "maximize");
+                    that.wrapper.children(KWINDOWTITLEBAR).find(PIN_UNPINICONCLASSSELECTOR).parent().toggle(actionId !== "maximize");
 
                     that.trigger(actionId);
 
-                    wrapper.find(".k-i-window-restore").parent().trigger("focus");
+                    wrapper.find(".k-i-window-restore,.k-svg-i-window-restore").parent().trigger("focus");
 
                     return that;
                 },
@@ -1485,6 +1512,7 @@
                     });
 
                     this.wrapper.attr("aria-labelled-by", this.element.attr("aria-labelled-by"));
+                    this.wrapper.addClass(KWINDOWMINIMIZED);
 
                     this._updateBoundaries();
 
@@ -1516,7 +1544,10 @@
                         }
 
                         wrapper.css(extend(position, { position: "fixed" }));
-                        wrapper.children(KWINDOWTITLEBAR).find(KPIN).addClass("k-i-unpin").removeClass("k-i-pin");
+                        var pinIcon = wrapper.children(KWINDOWTITLEBAR).find(KPINICONCLASSSELECTOR).eq(0);
+                        if (pinIcon.length > 0) {
+                            kendo.ui.icon(pinIcon, { icon: "unpin" });
+                        }
 
                         that._isPinned = true;
                         that.options.pinned = true;
@@ -1579,7 +1610,10 @@
                         position.left = constrain(left, that.minLeft, that.maxLeft);
 
                         wrapper.css(extend(position, { position: "" }));
-                        wrapper.children(KWINDOWTITLEBAR).find(KUNPIN).addClass("k-i-pin").removeClass("k-i-unpin");
+                        var pinIcon = wrapper.children(KWINDOWTITLEBAR).find(KUNPINICONCLASSSELECTOR).eq(0);
+                        if (pinIcon.length > 0) {
+                            kendo.ui.icon(pinIcon, { icon: "pin" });
+                        }
                     }
                 },
 
@@ -1678,7 +1712,7 @@
 
                 _ajaxComplete: function() {
                     clearTimeout(this._loadingIconTimeout);
-                    this.wrapper.find(REFRESHICON).removeClass(LOADING);
+                    this.wrapper.find(REFRESHICONSELECTOR).removeClass(LOADINGICONCLASS);
                 },
 
                 _ajaxError: function(xhr, status) {
@@ -1700,7 +1734,7 @@
                 },
 
                 _showLoading: function() {
-                    this.wrapper.find(REFRESHICON).addClass(LOADING);
+                    this.wrapper.find(REFRESHICONSELECTOR).addClass(LOADINGICONCLASS);
                 },
 
                 _ajaxRequest: function(options) {
@@ -1792,7 +1826,7 @@
                     }
 
                     wrapper.find(".k-window-title")
-                        .css(isRtl ? "left" : "right", outerWidth(wrapper.find(".k-window-actions")) + 10);
+                        .css(isRtl ? "left" : "right", outerWidth(wrapper.find(".k-window-titlebar-actions")) + 10);
 
                     contentHtml.css("visibility", "").show();
 
@@ -1809,21 +1843,22 @@
             });
 
             templates = {
-                wrapper: template(function () { return "<div class='k-widget k-window'></div>"; }),
+                wrapper: template(function () { return "<div class='k-window'></div>"; }),
                 action: template(function (ref) {
-                        var name = ref.name;
+                    var name = ref.name;
+                    var icon = ref.icon;
 
-                        return "<a role='button' href='#' class='k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button k-window-action' aria-label='" + name + "'>" +
-                        "<span class='k-button-icon k-icon k-i-" + (name.toLowerCase()) + "'></span>" +
-                    "</a>";
-            }
-                ),
+                    var iconName = (icon || "").toLowerCase() || name.toLowerCase();
+                    if (iconName == "restore") { iconName = "window-restore"; }
+
+                    return kendo.html.renderButton(("<button role='button' class='k-window-titlebar-action' aria-label='" + name + "'></button>"), { icon: iconName, fillMode: "flat" });
+                }),
                 titlebar: template(function (ref) {
                         var title = ref.title;
 
                         return "<div class='k-window-titlebar k-hstack'>" +
                         "<span class='k-window-title'>" + title + "</span>" +
-                        "<div class='k-window-actions k-hstack'></div>" +
+                        "<div class='k-window-titlebar-actions'></div>" +
                     "</div>";
             }
                 ),
@@ -2056,7 +2091,7 @@
                     var wnd = this.owner,
                         draggable = wnd.options.draggable,
                         element = wnd.element,
-                        actions = element.find(".k-window-actions"),
+                        actions = element.find(".k-window-titlebar-actions"),
                         containerOffset = kendo.getOffset(wnd.appendTo);
 
                     this._preventDragging = wnd.trigger(DRAGSTART) || !draggable;

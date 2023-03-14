@@ -973,7 +973,7 @@
 
                 if (!input[0]) {
                     arrowBtn = html.renderButton('<button type="button" class="k-input-button" aria-label="expand combobox"></button>', {
-                        icon: "arrow-s",
+                        icon: "caret-alt-down",
                         size: options.size,
                         fillMode: options.fillMode,
                         shape: "none",
@@ -1022,7 +1022,7 @@
                         "role": "button",
                         "tabIndex": -1
                     });
-                that._arrowIcon = that._arrow.find(".k-icon");
+                that._arrowIcon = that._arrow.find(".k-icon, .k-svg-icon");
             },
 
             _clearButton: function() {

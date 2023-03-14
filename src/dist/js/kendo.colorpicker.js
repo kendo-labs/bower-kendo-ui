@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.color', 'kendo.popup', 'kendo.slider', 'kendo.userevents', 'kendo.button', 'kendo.binder', 'kendo.textbox', 'kendo.numerictextbox', 'kendo.html.button'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.color', 'kendo.popup', 'kendo.slider', 'kendo.userevents', 'kendo.button', 'kendo.binder', 'kendo.textbox', 'kendo.numerictextbox', 'kendo.html.button', 'kendo.icons'], factory) :
     factory();
 })((function () {
     (function($, undefined$1) {
@@ -507,7 +507,7 @@
             name: "ColorGradient",
             category: "web", // suite
             description: "ColorGradient allows selection of a color from an HSV canvas.",
-            depends: ["core", "popup", "textbox"] // dependencies
+            depends: ["core", "popup", "textbox", "icons"] // dependencies
         };
     (function($, undefined$1) {
         // WARNING: removing the following jshint declaration and turning
@@ -581,7 +581,7 @@
 
                     vStackElement =
                     '<div class="k-vstack">' +
-                        "<button class=\"k-colorgradient-toggle-mode\" data-" + ns + "role=\"button\" data-" + ns + "icon=\"arrows-kpi\" data data-" + ns + "bind=\"click: switchMode\" data-" + ns + "fill-mode=\"flat\" data-" + ns + "size=\"" + optionsSize + "\" title=\"" + optionsMessagesToggleFormat + "\">" +
+                        "<button class=\"k-colorgradient-toggle-mode\" data-" + ns + "role=\"button\" data-" + ns + "icon=\"caret-alt-expand\" data data-" + ns + "bind=\"click: switchMode\" data-" + ns + "fill-mode=\"flat\" data-" + ns + "size=\"" + optionsSize + "\" title=\"" + optionsMessagesToggleFormat + "\">" +
                         '</button>' +
                     '</div>';
                 }
@@ -1039,8 +1039,8 @@
                                                     return '<div class="k-contrast-ratio">' +
                                                     "<span class=\"k-contrast-ratio-text\">" + (encode(messages.contrastRatio)) + " " + (encode(kendo.toString(ratio, "n2"))) + "</span>" +
                                                     '<span class="k-contrast-validation k-text-success">' +
-                                                        (ratio > 4.5 ?  '<span class="k-icon k-i-check"></span>' : '') +
-                                                        (ratio > 7 ?  '<span class="k-icon k-i-check"></span>' : '') +
+                                                        (ratio > 4.5 ?  kendo.ui.icon("check") : '') +
+                                                        (ratio > 7 ?  kendo.ui.icon("check") : '') +
                                                 '</span></div>';
                 }),
                     labelTemplate = kendo.template(function (ref) {
@@ -1052,9 +1052,9 @@
                                                     return '<div>' +
                                                     "<span>" + (encode(level)) + ": " + (encode(limit)) + " </span>" +
                                                     (ratio > limit ?
-                                                    ("<span class=\"k-contrast-validation k-text-success\">" + (encode(messages.pass)) + " <span class=\"k-icon k-i-check\"></span></span>")
+                                                    ("<span class=\"k-contrast-validation k-text-success\">" + (encode(messages.pass)) + " " + (kendo.ui.icon("check")) + "</span>")
                                                     :
-                                                    ("<span class=\"k-contrast-validation k-text-error\">" + (encode(messages.fail)) + " <span class=\"k-icon k-i-close\"></span></span>")) +
+                                                    ("<span class=\"k-contrast-validation k-text-error\">" + (encode(messages.fail)) + " " + (kendo.ui.icon("x")) + "</span>")) +
                                                 '</div>';
                 }),
                     output = "";
@@ -1799,7 +1799,7 @@
                             ((options.views && options.views.length > 1) ?
                             '<div class="k-coloreditor-header-actions k-hstack">' +
                                 '<div role="group" class="k-button-group k-button-group-flat">' +
-                                    html.renderButton(("<button aria-pressed=\"false\" data-view=\"gradient\" title=\"" + (encode(options.messages.gradient)) + "\"></button>"), extend({ icon: "color-canvas" }, buttonOptions)) +
+                                    html.renderButton(("<button aria-pressed=\"false\" data-view=\"gradient\" title=\"" + (encode(options.messages.gradient)) + "\"></button>"), extend({ icon: "droplet-slider" }, buttonOptions)) +
                                     html.renderButton(("<button aria-pressed=\"false\" data-view=\"palette\" title=\"" + (encode(options.messages.palette)) + "\"></button>"), extend({ icon: "palette" }, buttonOptions)) +
                                 '</div>' +
                             '</div>'
@@ -1807,7 +1807,7 @@
                             '<div class="k-spacer"></div>' +
                             '<div class="k-coloreditor-header-actions k-hstack">' +
                                 (options.clearButton ?
-                                html.renderButton(("<button class=\"k-coloreditor-reset\" title=\"" + (encode(options.messages.clearColor)) + "\"></button>"), extend({ icon: "reset-color" }, buttonOptions))
+                                html.renderButton(("<button class=\"k-coloreditor-reset\" title=\"" + (encode(options.messages.clearColor)) + "\"></button>"), extend({ icon: "droplet-slash" }, buttonOptions))
                                 : '') +
                                 (options.preview ?
                                 '<div class="k-coloreditor-preview k-vstack">' +
@@ -1927,7 +1927,7 @@
                 that._value = options.value = value;
 
                 var _buttonHtml = kendo.html.renderButton('<button class="k-input-button" unselectable="on" aria-label="select" tabindex="-1"></button>', $.extend({}, that.options, {
-                    icon: "arrow-s"
+                    icon: "caret-alt-down"
                 }));
 
                 var content = that._inputWrapper = that.wrapper = $(that._template($.extend({}, that.options, {
@@ -2011,7 +2011,7 @@
                    return '<span role="textbox" aria-haspopup="true" class="k-colorpicker k-picker k-icon-picker">' +
                     '<span class="k-input-inner">' +
                         "<span class=\"k-value-icon k-color-preview " + (toolIcon ? 'k-icon-color-preview' : '') + "\">" +
-                            (toolIcon ? ("<span class=\"k-color-preview-icon k-icon " + toolIcon + "\"></span>") : '') +
+                            (toolIcon ? kendo.ui.icon({ icon: toolIcon, iconClass: "k-color-preview-icon" }) : '') +
                             '<span class="k-color-preview-mask"></span>' +
                         '</span>' +
                     '</span >' +

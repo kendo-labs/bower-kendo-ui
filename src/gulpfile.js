@@ -1,17 +1,13 @@
 
 
-var fs = require('fs');
 var gulp = require('gulp');
 var logger = require('gulp-logger');
 var PluginError = require('plugin-error');
 var sourcemaps = require('gulp-sourcemaps');
-var lazypipe = require('lazypipe');
 var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var argv = require('yargs').argv;
 
-var less = require('gulp-less');
-var cleanCss = require('gulp-clean-css');
 var clone = require('gulp-clone');
 var gulpIf = require('gulp-if');
 var merge = require('merge2');
@@ -24,49 +20,6 @@ const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 
 var makeSourceMaps = !argv['skip-source-maps'];
-
-var postcss = require("gulp-postcss");
-var autoprefixer = require("autoprefixer");
-var calc = require("postcss-calc");
-var browsers = [
-    "Explorer >= 9",
-    "last 3 Edge versions",
-    "last 2 Chrome versions",
-    "last 2 Firefox versions",
-    "last 2 Opera versions",
-    "last 2 Safari major versions",
-    "last 2 iOS major versions",
-    "Android >= 4.4",
-    "ExplorerMobile >= 10"
-];
-var postcssPlugins = [
-    calc({
-        precision: 10
-    }),
-    autoprefixer({
-        browsers: browsers
-    })
-];
-
-var cleanCssOptions = {
-    compatibility: 'ie9',
-    aggressiveMerging: false,
-    advanced: false
-};
-
-var fromLess = lazypipe()
-    .pipe(logger, { after: 'LESS complete!', extname: '.css', showChange: true })
-    .pipe(less, {
-        math: 'strict',
-        relativeUrls: true,
-        plugins: []
-    })
-    .pipe(replace, /\.\.\/mobile\//g, ''); // temp hack for the discrepancy between source and generated "source"
-
-var minify = lazypipe()
-    .pipe(logger, { after: 'Min CSS complete!', extname: '.min.css', showChange: true } )
-    .pipe(cleanCss, cleanCssOptions)
-    .pipe(rename, { suffix: ".min" });
 
 var argv = require('yargs').argv;
 
@@ -191,18 +144,5 @@ gulp.task("custom", function() {
     return merge(src.pipe(gulp.dest("dist/js")), minSrc.pipe(gulp.dest("dist/js")));
 });
 
-gulp.task("less",function() {
-    var css = gulp.src(`styles/${argv.styles || '**/kendo*.less'}`, { base: "styles" })
-        .pipe(fromLess())
-        .pipe(postcss(postcssPlugins));
 
-    var minCss = css.pipe(clone())
-        .pipe(gulpIf(makeSourceMaps, sourcemaps.init()))
-        .pipe(minify())
-        .pipe(gulpIf(makeSourceMaps, sourcemaps.write("./")));
-
-    return merge(css, minCss)
-        .pipe(gulp.dest('dist/styles'));
-});
-
-gulp.task('build', gulp.parallel('scripts', 'less'));
+gulp.task('build', gulp.parallel('scripts'));

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.data', 'kendo.popup', 'kendo.label'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.data', 'kendo.popup', 'kendo.label', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
         id: "list",
         name: "List",
         category: "framework",
-        depends: [ "data", "popup", "label" ],
+        depends: [ "data", "popup", "label", "icons" ],
         hidden: true
     };
 
@@ -713,7 +713,7 @@
                 var clearTitle = list.options.messages.clear;
 
                 if (!list._clear) {
-                    list._clear = $('<span unselectable="on" class="k-clear-value" title="' + clearTitle + '"><span class="k-icon k-i-x"></span></span>').attr({
+                    list._clear = $(("<span unselectable=\"on\" class=\"k-clear-value\" title=\"" + clearTitle + "\">" + (kendo.ui.icon("x")) + "</span>")).attr({
                         "role": "button",
                         "tabIndex": -1
                     });
@@ -1141,8 +1141,10 @@
 
                 if (!this.popup.element.is(":visible")) {
                     this.popup.one("open", (function(force) {
-                        return (function() {
-                            this._calculatePopupHeight(force);
+                        return (function(e) {
+                            if (!e.isDefaultPrevented()) {
+                                this._calculatePopupHeight(force);
+                            }
                         }).bind(this);
                     }).call(this, force));
 

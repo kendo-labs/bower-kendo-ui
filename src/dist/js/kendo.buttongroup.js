@@ -97,7 +97,11 @@
                 index: -1,
                 enable: true,
                 enabled: true,
-                preventKeyNav: false
+                preventKeyNav: false,
+                size: "medium",
+                rounded: "medium",
+                fillMode: "solid",
+                themeColor: "base"
             },
 
             badge: function(item, value) {
@@ -256,6 +260,7 @@
 
             _renderItems: function(items) {
                 var that = this,
+                    groupOptions = that.options,
                     children = that.element.children(),
                     buttons = [];
 
@@ -268,7 +273,11 @@
                                 badge: kendo.attrValue(el, "badge"),
                                 icon: !image[0] ? kendo.attrValue(el, "icon") : null,
                                 disabled: disabled,
-                                selected: !disabled ? el.is(DOT + SELECTED) : false
+                                selected: !disabled ? el.is(DOT + SELECTED) : false,
+                                size: groupOptions.size,
+                                rounded: groupOptions.rounded,
+                                fillMode: groupOptions.fillMode,
+                                themeColor: groupOptions.themeColor
                             };
 
                         buttons.push(that._addButton(el, options));
@@ -288,6 +297,13 @@
                     if (item.attributes) {
                         el.attr(item.attributes);
                     }
+
+                    item = $.extend({}, item, {
+                        size: groupOptions.size,
+                        rounded: groupOptions.rounded,
+                        fillMode: groupOptions.fillMode,
+                        themeColor: groupOptions.themeColor
+                    });
 
                     el.appendTo(that.element);
                     buttons.push(that._addButton(el, item));

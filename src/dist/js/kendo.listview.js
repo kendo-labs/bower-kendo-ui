@@ -256,7 +256,7 @@
                 var options = this.options;
                 var height = options.height;
 
-                this.element.addClass("k-widget k-listview");
+                this.element.addClass("k-listview");
 
 
                 if (options.contentElement) {
@@ -276,7 +276,7 @@
                 var flex = options.flex;
                 var grid = options.grid;
                 var element = that.element;
-                var elementClassNames = ["k-widget", "k-listview"];
+                var elementClassNames = ["k-listview"];
                 var content = that.content;
                 var contentClassNames = ["k-listview-content"];
 
@@ -704,7 +704,7 @@
                     content = that.content,
                     clickCallback = function(e) {
                         that.current($(e.currentTarget));
-                        if (!$(e.target).is(":button, a, :input, a > .k-icon, textarea")) {
+                        if (!$(e.target).is(":button, a, :input, a > .k-icon, a > k-svg-icon, textarea")) {
                             kendo.focusElement(element);
                         }
                     };

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.draganddrop', 'kendo.data', 'kendo.selectable'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.draganddrop', 'kendo.data', 'kendo.selectable', 'kendo.html.button'], factory) :
     factory();
 })((function () {
     var __meta__ = {
         id: "listbox",
         name: "ListBox",
         category: "web",
-        depends: ["draganddrop", "data", "selectable"]
+        depends: ["draganddrop", "data", "selectable", 'html.button']
     };
 
     (function($, undefined$1) {
@@ -50,9 +50,9 @@
         var SELECTED_STATE_CLASS = "k-selected";
         var ENABLED_ITEM_SELECTOR = ".k-list-item:not(.k-disabled)";
         var ENABLED_ITEMS_SELECTOR = ".k-list-ul:not(.k-disabled) >" + ENABLED_ITEM_SELECTOR;
-        var TOOLBAR_CLASS = "k-listbox-toolbar";
+        var TOOLBAR_CLASS = "k-listbox-actions";
         var TOOL_SELECTOR = ".k-button";
-        var ENABLED_TOOL_SELECTOR = "li > a.k-button:not(.k-disabled)";
+        var ENABLED_TOOL_SELECTOR = "button.k-button:not(.k-disabled)";
         var FOCUSED_CLASS = "k-focus";
         var DRAG_CLUE_CLASS = "k-drag-clue";
         var DROP_HINT_CLASS = "k-drop-hint";
@@ -733,7 +733,7 @@
                 var draggedIndex = items.not(that.placeholder).index(that.draggedElement);
                 var dataItem = that.dataItem(draggedItem);
                 var eventData = { dataItems: [dataItem], items: $(draggedItem) };
-                var connectedListBox = that.placeholder.closest(".k-widget.k-listbox").find("[data-role='listbox']").getKendoListBox();
+                var connectedListBox = that.placeholder.closest(".k-listbox").find("[data-role='listbox']").getKendoListBox();
 
                 if (that.trigger(DROP, extend({}, eventData, { draggableEvent: e }))) {
                     e.preventDefault();
@@ -987,7 +987,7 @@
                     wrapper = element.parent("div.k-listbox");
 
                 if (!wrapper[0]) {
-                    wrapper = element.wrap('<div class="k-widget k-listbox" unselectable="on" />').parent();
+                    wrapper = element.wrap('<div class="k-listbox" unselectable="on" />').parent();
                     wrapper[0].style.cssText = element[0].style.cssText;
                     wrapper[0].title = element[0].title;
                     $('<div class="k-list-scroller"><div class="k-list k-list-md"><div class="k-list-content"></div></div></div>').insertBefore(element);
@@ -1554,17 +1554,12 @@
                     .on(CLICK, ENABLED_TOOL_SELECTOR, that._onToolClick.bind(that))
                     .on(KEYDOWN, that._keyDown.bind(that));
             },
-
-            _createToolList: function() {
-                return $("<ul class='k-reset' />");
-            },
-
             _createTools: function() {
                 var that = this;
                 var tools = that.options.tools;
                 var toolsLength = tools.length;
                 var toolsMessages = that.options.messages.tools;
-                var toolList = that._createToolList();
+                var toolList = that.element;
                 var tool;
                 var i;
 
@@ -1599,33 +1594,31 @@
             _initTemplates: function() {
                 this.templates = {
                     tool: kendoTemplate( function (ref) {
+                            var icon = ref.icon;
                             var iconClass = ref.iconClass;
                             var command = ref.command;
                             var text = ref.text;
 
-                            return "<li>" +
-                            "<a href='#' class='k-button k-button-md k-rounded-md k-button-solid k-button-solid-base k-icon-button' data-command='" + command + "' title='" + text + "' aria-label='" + text + "' role='button'>" +
-                                "<span class='k-button-icon k-icon " + iconClass + "'></span>" +
-                            "</a>" +
-                        "</li>";
+                            return kendo.html.renderButton(("<button data-command='" + command + "' title='" + text + "' aria-label='" + text + "'></button>"), { icon: icon, iconClass: iconClass });
                 })
                 };
             },
 
             _keyDown: function(e) {
                 var key = e.keyCode,
-                    targetTool = $(e.target).closest("li");
+                    target = $(e.target),
+                    targetTool = target.is(TOOL_SELECTOR) ? target : target.closest("li");
 
                 if (key === kendo.keys.UP || key === kendo.keys.LEFT) {
                     e.preventDefault();
                     if (targetTool.prev().length) {
-                        this._tabindex(targetTool.prev().find(TOOL_SELECTOR));
+                        this._tabindex(targetTool.prev());
                     }
                     this._focusTool();
                 } else if (key === kendo.keys.DOWN || key === kendo.keys.RIGHT) {
                     e.preventDefault();
                     if (targetTool.next()) {
-                        this._tabindex(targetTool.next().find(TOOL_SELECTOR));
+                        this._tabindex(targetTool.next());
                     }
                     this._focusTool();
                 }
@@ -1685,31 +1678,31 @@
         ToolBar.defaultTools = {
             remove: {
                 command: REMOVE,
-                iconClass: "k-i-x"
+                icon: "x"
             },
             moveUp: {
                 command: MOVE_UP,
-                iconClass: "k-i-arrow-60-up"
+                icon: "caret-alt-up"
             },
             moveDown: {
                 command: MOVE_DOWN,
-                iconClass: "k-i-arrow-60-down"
+                icon: "caret-alt-down"
             },
             transferTo: {
                 command: TRANSFER_TO,
-                iconClass: "k-i-arrow-60-right"
+                icon: "caret-alt-right"
             },
             transferFrom: {
                 command: TRANSFER_FROM,
-                iconClass: "k-i-arrow-60-left"
+                icon: "caret-alt-left"
             },
             transferAllTo: {
                 command: TRANSFER_ALL_TO,
-                iconClass: "k-i-arrow-double-60-right"
+                icon: "caret-double-alt-right"
             },
             transferAllFrom: {
                 command: TRANSFER_ALL_FROM,
-                iconClass: "k-i-arrow-double-60-left"
+                icon: "caret-double-alt-left"
             }
         };
 
@@ -1718,7 +1711,7 @@
         });
 
         function isInputElement(element) {
-            return $(element).is(":button,a,:input,a>.k-icon,textarea,span.k-select,span.k-icon,span.k-link,label.k-checkbox-label,.k-input,.k-multiselect-wrap,.k-picker-wrap,.k-picker-wrap>.k-selected-color,.k-tool-icon,.k-dropdownlist");
+            return $(element).is(":button,a,:input,a>.k-icon,a>.k-svg-icon,textarea,span.k-select,span.k-icon,span.k-svg-icon,span.k-link,label.k-checkbox-label,.k-input,.k-multiselect-wrap,.k-picker-wrap,.k-picker-wrap>.k-selected-color,.k-tool-icon,.k-dropdownlist");
         }
 
     })(window.kendo.jQuery);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.userevents', 'kendo.floatinglabel', 'kendo.html.button'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.userevents', 'kendo.floatinglabel', 'kendo.html.button', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "NumericTextBox",
         category: "web",
         description: "The NumericTextBox widget can format and display numeric, percentage or currency textbox.",
-        depends: [ "core", "userevents", "floatinglabel", "html.button" ]
+        depends: [ "core", "userevents", "floatinglabel", "html.button", "icons" ]
     };
 
     (function($, undefined$1) {
@@ -440,7 +440,7 @@
                 var that = this;
                 var element = that.element;
 
-                that._validationIcon = $("<span class='k-input-validation-icon " + CLASS_ICON + " k-i-warning k-hidden'></span>").insertAfter(element);
+                that._validationIcon = $(kendo.ui.icon({ icon: "exclamation-circle", iconClass: "k-input-validation-icon k-hidden" })).insertAfter(element);
             },
 
             _blur: function() {
@@ -975,7 +975,7 @@
         }]);
 
         function buttonHtml(direction, text, options) {
-            var className = direction === "increase" ? "arrow-n" : "arrow-s";
+            var className = direction === "increase" ? "caret-alt-up" : "caret-alt-down";
             var dir = direction === "increase" ? "increase" : "decrease";
 
             return html.renderButton('<button role="button" tabindex="-1" unselectable="on" class="k-spinner-' + dir + '" aria-label="' + text + '" title="' + text + '"></button>', extend({}, options, {

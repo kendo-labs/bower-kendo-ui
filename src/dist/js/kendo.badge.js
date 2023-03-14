@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.core'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "Badge",
         category: "web", // suite
         description: "The Badge decorates avatars, navigation menus, or other components in the application when visual notification is needed",
-        depends: ["core"] // dependencies
+        depends: ["core", "icons"] // dependencies
     };
 
     (function($, undefined$1) {
@@ -34,7 +34,7 @@
         var iconTemplate = function (ref) {
             var icon = ref.icon;
 
-            return ("<span class='k-badge-icon k-icon k-i-" + icon + "'></span>");
+            return kendo.ui.icon($("<span class='k-badge-icon'></span>"), { icon: icon });
         };
         var svgIconTemplate = function (ref) {
             var icon = ref.icon;

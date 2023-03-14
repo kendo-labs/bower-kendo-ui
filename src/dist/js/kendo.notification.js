@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.popup'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.popup', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "Notification",
         category: "web",
         description: "The Notification widget displays user alerts.",
-        depends: [ "core", "popup" ],
+        depends: [ "core", "popup", "icons" ],
         features: [ {
             id: "notification-fx",
             name: "Animation",
@@ -32,6 +32,8 @@
     };
 
     (function($, undefined$1) {
+        var obj;
+
         var kendo = window.kendo,
             Widget = kendo.ui.Widget,
             extend = $.extend,
@@ -41,32 +43,36 @@
             SHOW = "show",
             HIDE = "hide",
             KNOTIFICATION = "k-notification",
-            KICLOSE = ".k-notification-wrap .k-i-close",
+            KCLOSEICONCLASS = "k-close-icon",
+            KCLOSEICONSELECTOR = ".k-notification-actions ." + KCLOSEICONCLASS,
             KHIDING = "k-hiding",
             INFO = "info",
             SUCCESS = "success",
             WARNING = "warning",
             ERROR = "error",
+            TYPEICONS = ( obj = {}, obj[INFO] = "info-circle", obj[ERROR] = "x-outline", obj[WARNING] = "exclamation-circle", obj[SUCCESS] = "check-outline", obj ),
             TOP = "top",
             LEFT = "left",
             BOTTOM = "bottom",
             RIGHT = "right",
             UP = "up",
             NS = ".kendoNotification",
-            WRAPPER = '<div role="alert" aria-live="polite" class="k-widget k-popup k-notification"></div>',
+            WRAPPER = '<div role="alert" aria-live="polite" class="k-notification"></div>',
             GET_TEMPLATE_FUNC = function (encodeContent) { return function (ref) {
-                    var typeIcon = ref.typeIcon;
-                    var content = ref.content;
-                    var closeButton = ref.closeButton;
+                        var typeIcon = ref.typeIcon;
+                        var content = ref.content;
+                        var closeButton = ref.closeButton;
 
-                    return '<div class="k-notification-wrap">' +
-                    "<span class=\"k-icon k-i-" + (encode(typeIcon)) + "\" title=\"" + (encode(typeIcon)) + "\"></span>" +
-                    "<div class=\"k-notification-content\">" + (encodeContent ? encode(content) : content) + "</div>" +
-                    "<span aria-hidden=\"true\" class=\"" + (closeButton ? "" : "k-hidden") + " k-icon k-i-close\" title=\"Hide\"></span>" +
-                '</div>';
+                        return kendo.ui.icon($(("<span title=\"" + (encode(typeIcon)) + "\"></span>")), { icon: TYPEICONS[encode(typeIcon)] || encode(typeIcon) }) +
+                    "<div class=\"k-notification-content\">" + (encodeContent ? encode(content) : content) + "</div>";
     ; }                },
             TEMPLATE = GET_TEMPLATE_FUNC(false),
-            SAFE_TEMPLATE = GET_TEMPLATE_FUNC(true);
+            SAFE_TEMPLATE = GET_TEMPLATE_FUNC(true),
+            defaultActions = {
+                close: {
+                    template: kendo.ui.icon($('<span aria-hidden="true" title="Hide"></span>'), { icon: "x", iconClass: KCLOSEICONCLASS })
+                }
+            };
 
         var Notification = Widget.extend({
             init: function(element, options) {
@@ -213,7 +219,7 @@
                         }
                     });
                 } else if (options.button) {
-                    closeIcon = popup.element.find(KICLOSE);
+                    closeIcon = popup.element.find(KCLOSEICONSELECTOR);
                     if (attachDelay) {
                         setTimeout(function() {
                             attachClick(closeIcon);
@@ -247,7 +253,7 @@
                     },
                     deactivate: function(e) {
                         e.sender.element.off(NS);
-                        e.sender.element.find(KICLOSE).off(NS);
+                        e.sender.element.find(KCLOSEICONSELECTOR).off(NS);
                         e.sender.destroy();
                     }
                 });
@@ -269,6 +275,7 @@
 
                     popup.open(x, y);
                 }
+                wrapper.removeClass("k-popup");
 
                 popup.wrapper.addClass(that._guid).css(extend({ margin: 0,zIndex: 10050 }, that._popupPaddings));
 
@@ -323,10 +330,10 @@
                 } else if (options.button) {
                     if (attachDelay) {
                         setTimeout(function() {
-                            attachClick(wrapper.find(KICLOSE));
+                            attachClick(wrapper.find(KCLOSEICONSELECTOR));
                         }, allowHideAfter);
                     } else {
-                        attachClick(wrapper.find(KICLOSE));
+                        attachClick(wrapper.find(KCLOSEICONSELECTOR));
                     }
                 }
             },
@@ -349,6 +356,7 @@
                     .hide()
                     .kendoAnimate(animation.open || false);
 
+                wrapper.css("display", "");
                 initializedNotifications = that.getNotifications();
                 initializedNotifications.each(function(idx, element) {
                     that._attachStaticEvents(options, $(element));
@@ -365,7 +373,7 @@
 
             _hideStatic: function(wrapper) {
                 wrapper.kendoAnimate(extend(this.options.animation.close || false, { complete: function() {
-                    wrapper.off(NS).find(KICLOSE).off(NS);
+                    wrapper.off(NS).find(KCLOSEICONSELECTOR).off(NS);
                     wrapper.remove();
                 } }));
                 this._triggerHide(wrapper);
@@ -407,7 +415,6 @@
 
                     wrapper
                         .addClass(KNOTIFICATION + "-" + type)
-                        .toggleClass(KNOTIFICATION + "-button", options.button)
                         .toggleClass(KNOTIFICATION + "-closable", options.button)
                         .attr({
                             "data-role": "alert",
@@ -415,6 +422,10 @@
                         })
                         .css({ width: options.width, height: options.height })
                         .append(that._getCompiled(type, safe)(args));
+
+                    if (that.options.button) {
+                        wrapper.append(that.addActions("close"));
+                    }
 
                     wrapper.find(".k-notification-content").attr("id", contentId);
                     wrapper.attr("aria-describedby", contentId);
@@ -489,7 +500,7 @@
                 if (that.options.appendTo) {
                     return guidElements;
                 } else {
-                    return guidElements.children("." + KNOTIFICATION);
+                    return guidElements.find(">.k-child-animation-container >." + KNOTIFICATION);
                 }
             },
 
@@ -512,7 +523,24 @@
 
             destroy: function() {
                 Widget.fn.destroy.call(this);
-                this.getNotifications().off(NS).find(KICLOSE).off(NS);
+                this.getNotifications().off(NS).find(KCLOSEICONSELECTOR).off(NS);
+            },
+
+            addActions: function(actions) {
+                var actionsContainer = $('<span class="k-notification-actions"/>');
+
+                if (!Array.isArray(actions)) {
+                    actions = [actions];
+                }
+
+                actions.forEach(function(action) {
+                    $(defaultActions[action].template)
+                        .wrap(("<span class=\"k-notification-action k-notification-" + action + "-action\">"))
+                        .parent()
+                        .appendTo(actionsContainer);
+                });
+
+                return actionsContainer;
             }
         });
 

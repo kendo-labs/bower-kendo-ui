@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.popup'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.popup', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "ButtonMenu",
         category: "web",
         description: "The popup Menu list part of the SplitButton and the DropDownButton",
-        depends: ["core", "popup"]
+        depends: ["core", "popup", "icons"]
     };
 
     (function($, undefined$1) {
@@ -51,8 +51,18 @@
             OPEN = "menuOpen",
             CLOSE = "menuClose",
             KEYDOWN = "keydown",
+            FOCUS = "focus",
 
-            FOCUS = "focus";
+            DIRECTIONS = {
+                "down": {
+                    origin: "bottom left",
+                    position: "top left"
+                },
+                "up": {
+                    origin: "top left",
+                    position: "bottom left"
+                }
+            };
 
         var cssClasses = {
             popup: "k-menu-popup",
@@ -91,7 +101,7 @@
         var ICON_TEMPLATE = function (ref) {
             var icon = ref.icon;
 
-            return ("" + (icon ? ("<span class=\"" + (cssClasses.icon) + " k-i-" + (encode(icon)) + "\"></span>") : ''));
+            return ("" + (icon ? kendo.ui.icon(encode(icon)) : ''));
         };
         var TEXT_TEMPLATE = function (ref) {
             var text = ref.text;
@@ -171,6 +181,7 @@
 
             options: {
                 name: "ButtonMenu",
+                direction: "down",
                 element: null,
                 items: [],
                 size: "medium",
@@ -243,7 +254,8 @@
 
             _initPopup: function() {
                 var that = this,
-                    options = that.options;
+                    options = that.options,
+                    direction = options.direction || "down";
 
                 that._popup = new ui.Popup(that.element, extend({}, options.popup, {
                     anchor: that.mainButton,
@@ -254,7 +266,7 @@
                     open: that._popupOpenHandler.bind(that),
                     close: that._popupCloseHandler.bind(that),
                     activate: that._popupExpandHandler.bind(that)
-                }));
+                }, DIRECTIONS[direction]));
             },
 
             _popupOpenHandler: function(ev) {

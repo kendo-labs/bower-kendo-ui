@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.data'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.data', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "TabStrip",
         category: "web",
         description: "The TabStrip widget displays a collection of tabs with associated tab content.",
-        depends: [ "data" ],
+        depends: [ "data", "icons" ],
         features: [ {
             id: "tabstrip-fx",
             name: "Animation",
@@ -199,7 +199,7 @@
         }
 
         function scrollButtonHtml(buttonClass, iconClass) {
-            return "<span aria-hidden='true' class='k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button k-tabstrip-" + buttonClass + "' unselectable='on'><span class='k-button-icon k-icon " + iconClass + "'></span></span>";
+            return ("<span aria-hidden='true' class='k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button k-tabstrip-" + buttonClass + "' unselectable='on'>" + (kendo.ui.icon({ icon: iconClass, iconClass: "k-button-icon" })) + "</span>");
         }
 
         var TabStrip = Widget.extend({
@@ -1306,8 +1306,8 @@
                         var browser = kendo.support.browser;
                         var isRtlScrollDirection = that._isRtl && !browser.msie && !browser.edge;
 
-                        that.tabWrapper.prepend(scrollButtonHtml("prev", "k-i-arrow-60-left"));
-                        that.tabWrapper.append(scrollButtonHtml("next", "k-i-arrow-60-right"));
+                        that.tabWrapper.prepend(scrollButtonHtml("prev", "caret-alt-left"));
+                        that.tabWrapper.append(scrollButtonHtml("next", "caret-alt-right"));
 
                         scrollPrevButton = that._scrollPrevButton = that.tabWrapper.children(".k-tabstrip-prev");
                         scrollNextButton = that._scrollNextButton = that.tabWrapper.children(".k-tabstrip-next");
@@ -1410,7 +1410,7 @@
                 var that = this,
                     tabPosition = that.options.tabPosition;
 
-                that.wrapper.addClass("k-floatwrap k-tabstrip-" + tabPosition);
+                that.wrapper.addClass("k-tabstrip-" + tabPosition);
 
                 if (tabPosition == "bottom") {
                     that.tabWrapper.appendTo(that.wrapper);

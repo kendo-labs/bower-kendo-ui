@@ -106,7 +106,6 @@
                 that.element.hide()
                     .addClass("k-popup k-group k-reset")
                     .toggleClass("k-rtl", !!options.isRtl)
-                    .css({ position: ABSOLUTE })
                     .appendTo(options.appendTo)
                     .attr("aria-hidden", true)
                     .on("mouseenter" + NS, function() {
@@ -132,7 +131,8 @@
 
                 extend(options.animation.open, {
                     complete: function() {
-                        that.wrapper.css({ overflow: VISIBLE }); // Forcing refresh causes flickering in mobile.
+                        that.wrapper.addClass("k-animation-container-shown"); // Forcing refresh causes flickering in mobile.
+                        that.wrapper.css("overflow","");
                         that._activated = true;
                         that._trigger(ACTIVATE);
                     }
@@ -241,7 +241,7 @@
                 element.removeData();
 
                 if (options.appendTo[0] === document.body) {
-                    parent = element.parent(".k-animation-container");
+                    parent = element.closest(".k-animation-container");
 
                     if (parent[0]) {
                         parent.remove();
@@ -259,7 +259,8 @@
                     animation, wrapper,
                     anchor = $(options.anchor),
                     mobile = element[0] && element.hasClass("km-widget"),
-                    listbox = element.find("[role='listbox']");
+                    listbox = element.find("[role='listbox']"),
+                    parent;
 
                 if (!that.visible()) {
                     if (options.copyAnchorStyles) {
@@ -269,7 +270,7 @@
                         element.css(kendo.getComputedStyles(anchor[0], styles));
                     }
 
-                    if (element.data("animating") || that._trigger(OPEN)) {
+                    if (that.element.parent().data("animating") || that._trigger(OPEN)) {
                         return;
                     }
 
@@ -293,6 +294,8 @@
                         })
                         .attr("aria-hidden", false);
 
+                    parent = element.parent();
+
                     if (listbox.attr("aria-label")) {
                         wrapper.attr("aria-label", listbox.attr("aria-label"));
                     } else if (listbox.attr("aria-labelledby")) {
@@ -300,7 +303,7 @@
                     }
 
                     if (support.mobileOS.android) {
-                        wrapper.css(TRANSFORM, "translatez(0)"); // Android is VERY slow otherwise. Should be tested in other droids as well since it may cause blur.
+                        parent.css(TRANSFORM, "translatez(0)"); // Android is VERY slow otherwise. Should be tested in other droids as well since it may cause blur.
                     }
 
                     wrapper.css(POSITION);
@@ -312,20 +315,20 @@
                     that.flipped = that._position(fixed);
                     animation = that._openAnimation();
 
-                    if (options.anchor != BODY) {
+                    if (options.anchor != BODY && !that.element.hasClass("k-tooltip")) {
                         that._showDirClass(animation);
                     }
 
-                    if (!element.is(":visible") && element.data("olddisplay") === undefined$1) {
-                        element.show();
-                        element.data("olddisplay", element.css("display"));
-                        element.hide();
-                    }
+                    parent.hide();
+                    element.show();
+                    that.wrapper.show();
 
-                    element.data(EFFECTS, animation.effects)
+                    parent.data(EFFECTS, animation.effects)
                            .kendoStop(true)
-                           .kendoAnimate(animation)
-                           .attr("aria-hidden", false);
+                           .kendoAnimate(animation);
+
+
+                    element.attr("aria-hidden", false);
                 }
             },
 
@@ -402,8 +405,6 @@
                     .children(ACTIVECHILDREN)
                     .addClass(ACTIVE)
                     .addClass(dirClass);
-
-                this.element.addClass(ACTIVEBORDER + "-" + kendo.directions[direction].reverse);
             },
 
             position: function() {
@@ -421,17 +422,19 @@
             },
 
             visible: function() {
-                return this.element.is(":" + VISIBLE);
+                return this.wrapper.is(":" + VISIBLE) && this.element.is(":" + VISIBLE);
             },
 
             close: function(skipEffects) {
                 var that = this,
+                    parent = that.element.parent(),
                     options = that.options, wrap,
                     animation, openEffects, closeEffects;
 
                 if (that.visible()) {
                     wrap = (that.wrapper[0] ? that.wrapper : kendo.wrap(that.element).hide());
 
+                    that.wrapper.removeClass("k-animation-container-shown");
                     that._toggleResize(false);
 
                     if (that._closing || that._trigger(CLOSE)) {
@@ -455,7 +458,7 @@
                         animation = { hide: true, effects: {} };
                     } else {
                         animation = extend(true, {}, options.animation.close);
-                        openEffects = that.element.data(EFFECTS);
+                        openEffects = parent.data(EFFECTS);
                         closeEffects = animation.effects;
 
                         if (!closeEffects && !kendo.size(closeEffects) && openEffects && kendo.size(openEffects)) {
@@ -466,13 +469,12 @@
                         that._closing = true;
                     }
 
-                    that.element
-                            .kendoStop(true)
-                            .attr("aria-hidden", true);
+                    parent.kendoStop(true);
+                    that.element.attr("aria-hidden", true);
                     wrap
                         .css({ overflow: HIDDEN }) // stop callback will remove hidden overflow
                         .attr("aria-hidden", true);
-                    that.element.kendoAnimate(animation);
+                    parent.kendoAnimate(animation);
 
                     if (skipEffects) {
                         that._animationClose();
@@ -696,7 +698,6 @@
                     location.left += that._flip(offsets.left, outerWidth(element), outerWidth(anchor), viewportWidth / zoomLevel, origins[1], positions[1], outerWidth(wrapper));
                 }
 
-                element.css(POSITION, ABSOLUTE);
                 wrapper.css(location);
 
                 return (location.left != flipPos.left || location.top != flipPos.top);
@@ -714,7 +715,7 @@
                     appendTo = $(that.options.appendTo),
                     appendToOffset,
                     width = outerWidth(element),
-                    height = outerHeight(element) || outerHeight(element.children().first()),
+                    height = outerHeight(element) || outerHeight(element.find(".k-child-animation-container").children().first()),
                     anchorWidth = outerWidth(anchor),
                     anchorHeight = outerHeight(anchor),
                     top = that.options.omitOriginOffsets ? 0 : anchorOffset.top,

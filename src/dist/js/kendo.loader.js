@@ -37,7 +37,7 @@
             ARIA_LIVE = 'aria-live';
 
         var loaderClasses = {
-            loader: "k-widget k-loader",
+            loader: "k-loader",
             canvas: "k-loader-canvas",
             segment: "k-loader-segment"
         };

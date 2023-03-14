@@ -90,7 +90,7 @@
                 name: "Collapsible",
                 collapsed: true,
                 collapseIcon: "arrow-n",
-                expandIcon: "arrow-s",
+                expandIcon: "caret-alt-down",
                 iconPosition: LEFT,
                 animation: true,
                 inset: false

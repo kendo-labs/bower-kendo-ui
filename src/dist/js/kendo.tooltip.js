@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 (function (factory) {
-    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.popup', 'kendo.fx'], factory) :
+    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.popup', 'kendo.fx', 'kendo.icons'], factory) :
     factory();
 })((function () {
     var __meta__ = {
@@ -22,7 +22,7 @@
         name: "Tooltip",
         category: "web",
         description: "The Tooltip widget displays a popup hint for a given html element.",
-        depends: [ "core", "popup" ],
+        depends: [ "core", "popup", "icons" ],
         features: [ {
             id: "tooltip-fx",
             name: "Animation",
@@ -55,7 +55,7 @@
 
                     return "<div role=\"tooltip\" class=\"k-widget k-tooltip" + (!autoHide ? ' k-tooltip-closable' : '') + "\">" +
                     '<div class="k-tooltip-content"></div>' +
-                    (!autoHide ? '<div class="k-tooltip-button"><a href="#" class="k-icon k-i-close" title="Close"></a></div>' : '') +
+                    (!autoHide ? ("<div class=\"k-tooltip-button\">" + (kendo.ui.icon($('<a href="#" title="Close"></a>'), { icon: "x" })) + "</div>") : '') +
                     (callout ? ("<div class=\"k-callout k-callout-" + dir + "\"></div>") : '') +
                 '</div>';
         },

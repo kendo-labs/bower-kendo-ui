@@ -374,8 +374,8 @@
                 var that = this;
                 var notInput = e.target.nodeName.toLowerCase() !== "input";
                 var target = $(e.target);
-                var closeButton = target.closest(".k-multiselect-toggle-button, .k-chip").children(".k-i-arrow-s")[0];
-                var removeButton = target.closest(".k-i-x, .k-i-x-circle")[0];
+                var closeButton = target.closest(".k-multiselect-toggle-button, .k-chip").children("[class*='-i-caret-alt-down']")[0];
+                var removeButton = target.closest("[class*='-i-x']")[0];
 
                 if (notInput && !(removeButton && kendo.support.mobileOS) && e.cancelable) {
                     e.preventDefault();
@@ -487,7 +487,7 @@
                 e.stopPropagation();
                 var target = $(e.currentTarget);
 
-                if (target.is(".k-i-x-circle")) {
+                if (target.is("[class*='-i-x-circle']")) {
                     this._removeTag(target.closest(CHIP), true);
                 }
             },
@@ -579,7 +579,7 @@
                     tagList
                         .on(MOUSEENTER, CHIP, function() { $(this).addClass(HOVERCLASS); })
                         .on(MOUSELEAVE, CHIP, function() { $(this).removeClass(HOVERCLASS); })
-                        .on(CLICK + " touchend" + ns, ".k-chip .k-icon", that._tagListClick.bind(that));
+                        .on(CLICK + " touchend" + ns, ".k-chip .k-icon,.k-chip .k-svg-icon", that._tagListClick.bind(that));
                 } else {
 
                     wrapper.toggleClass(STATEDISABLED, disable)
@@ -1570,6 +1570,7 @@
                     '</span>', $.extend({}, options, {
                             fillMode: "solid",
                             rounded: "medium",
+                            enabled: !that.element.is("[disabled]"),
                             themeColor: "base",
                             text: tagTemplate(data),
                             attr: {
@@ -1582,7 +1583,7 @@
                                 "aria-label": that.options.messages.deleteTag,
                                 title: that.options.messages.deleteTag
                             },
-                            icon: !isMultiple ? "arrow-s" : "",
+                            icon: !isMultiple ? "caret-alt-down" : "",
                             iconAttr: {
                                 unselectable: "on",
                                 "aria-hidden": true,
@@ -1609,7 +1610,7 @@
             _arrowButton: function() {
                 var arrowTitle = this.options.messages.downArrow,
                     arrow = $(html.renderButton('<button type="button" aria-label="' + arrowTitle + '" class="k-input-button k-multiselect-toggle-button"></button>', $.extend({}, this.options, {
-                        icon: "arrow-s"
+                        icon: "caret-alt-down"
                     })));
 
                 if (this._arrow) {
