@@ -209,13 +209,14 @@
 
             _renderListItem: function(item) {
                 var that = this,
+                    attributesId = item.attributes ? item.attributes.id : null,
                     id, menuItem;
 
                 item = extend({}, baseItem, item, {
                     enabled: item.enable && item.enabled // backward compatibility: support both enable and enabled options.
                 });
 
-                id = item.id || kendo.guid();
+                id = item.id || attributesId || kendo.guid();
                 menuItem = $("<li id=\"" + id + "\" role=\"" + ROLE_MENU_ITEM + "\" class=\"" + cssClasses.listItem + "\">" + that._renderItemButton(item) + "</li>");
 
                 if (item.click) {
@@ -224,6 +225,12 @@
 
                 if (item.attributes) {
                     delete item.attributes.target;
+
+                    if (item.attributes.class) {
+                        menuItem.addClass(item.attributes.class);
+                        delete item.attributes.class;
+                    }
+
                     menuItem.attr(item.attributes);
                 }
 

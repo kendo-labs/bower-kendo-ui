@@ -29,7 +29,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.1.314'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.1.322'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -140,7 +140,7 @@
                 return target;
             };
 
-        kendo.version = "2023.1.314".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.1.322".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -7838,8 +7838,9 @@
                         this.trigger(CHANGE, {
                             action: "remove",
                             index: index,
-                            items: result
+                            items: this.omitCache && this.omitCache.length ? result.concat(this.omitCache) : result
                         });
+                        this.omitCache = [];
                     }
 
                     for (i = 0, len = result.length; i < len; i++) {
@@ -10666,9 +10667,9 @@
                 }
             },
 
-            _removeItems: function(items, removePristine) {
-                if (!isArray(items)) {
-                    items = [items];
+            _removeItems: function(itemsToRemove, removePristine) {
+                if (!isArray(itemsToRemove)) {
+                    itemsToRemove = [itemsToRemove];
                 }
 
                 var shouldRemovePristine = typeof removePristine !== "undefined" ? removePristine : true;
@@ -10677,15 +10678,29 @@
                 var autoSync = this.options.autoSync;
                 this.options.autoSync = false;
                 try {
-                    for (var idx = 0; idx < items.length; idx ++) {
-                        var item = items[idx];
+                    for (var idx = 0; idx < itemsToRemove.length; idx ++) {
+                        var item = itemsToRemove[idx];
                         var model = this._createNewModel(item);
                         var found = false;
+                        var index = idx;
 
                         this._eachItem(this._data, function(items) {
+                            // Ensure all children of a parent are removed before the change event is triggered.
+                            if (index !== itemsToRemove.length - 1) {
+                                items.omitChangeEvent = true;
+                                items.omitCache = [];
+                            } else {
+                                items.omitChangeEvent = false;
+                            }
+
                             for (var idx = 0; idx < items.length; idx++) {
                                 var item = items.at(idx);
                                 if (item.id === model.id) {
+                                    /* When the change event is omitted, certain calculations such as 'total' are broken because only the last item reaches the change handler.
+                                       Keep track of all child items that had their change event omitted and when the change is finally triggered, concat them to the result.*/
+                                    if (items.omitChangeEvent) {
+                                        items.omitCache.push(item);
+                                    }
                                     destroyed.push(item);
                                     items.splice(idx, 1);
                                     found = true;
@@ -32322,13 +32337,14 @@
 
             _renderListItem: function(item) {
                 var that = this,
+                    attributesId = item.attributes ? item.attributes.id : null,
                     id, menuItem;
 
                 item = extend({}, baseItem, item, {
                     enabled: item.enable && item.enabled // backward compatibility: support both enable and enabled options.
                 });
 
-                id = item.id || kendo.guid();
+                id = item.id || attributesId || kendo.guid();
                 menuItem = $("<li id=\"" + id + "\" role=\"" + ROLE_MENU_ITEM + "\" class=\"" + cssClasses.listItem + "\">" + that._renderItemButton(item) + "</li>");
 
                 if (item.click) {
@@ -32337,6 +32353,12 @@
 
                 if (item.attributes) {
                     delete item.attributes.target;
+
+                    if (item.attributes.class) {
+                        menuItem.addClass(item.attributes.class);
+                        delete item.attributes.class;
+                    }
+
                     menuItem.attr(item.attributes);
                 }
 
