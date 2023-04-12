@@ -29,7 +29,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.1.322'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.1.412'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -140,7 +140,7 @@
                 return target;
             };
 
-        kendo.version = "2023.1.322".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.1.412".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -28711,10 +28711,9 @@
 
                 that.wrapper = that.element;
 
+                that.selectedIndices = [];
 
                 that._buttons = that._renderItems(that.options.items);
-
-                that.selectedIndices = [];
 
                 that.element
                     .addClass(KWIDGET + EMPTY + KBUTTONGROUP)
@@ -28918,7 +28917,7 @@
                     buttons = [];
 
                 if (children.length > 0) {
-                    children.each(function() {
+                    children.each(function(index) {
                         var el = $(this),
                             image = el.find("img").addClass("k-image"),
                             disabled = el.is("[disabled]") || el.hasClass(DISABLED),
@@ -28934,6 +28933,10 @@
                             };
 
                         buttons.push(that._addButton(el, options));
+
+                        if (options.selected) {
+                            that.selectedIndices.push(index);
+                        }
                     });
                 }
 
@@ -28941,7 +28944,7 @@
                     return buttons;
                 }
 
-                items.forEach(function(item) {
+                items.forEach(function(item, index) {
                     var text = item.text ? item.encoded === false ? item.text : kendo.htmlEncode(item.text) : "",
                         el = item.url ? $("<a href=" + item.url + ">") : $("<button>");
 
@@ -28960,6 +28963,10 @@
 
                     el.appendTo(that.element);
                     buttons.push(that._addButton(el, item));
+
+                    if (item.selected) {
+                        that.selectedIndices.push(index);
+                    }
                 });
 
                 return buttons;
@@ -36047,7 +36054,6 @@
             POPUP_BUTTON = "k-popup-button",
             KSEPARATOR = "k-separator",
             SPACER_CLASS = "k-spacer",
-            BUTTON_ICON = "k-button-icon",
             UPLOAD_BUTTON = "k-upload-button",
             POPUP = "k-popup",
             RESIZABLE_TOOLBAR = "k-toolbar-resizable",
@@ -36119,6 +36125,7 @@
             COMMA = ",",
             ID = "id",
             UID = "uid",
+            NBSP = "&nbsp;",
 
             K_DROP_DOWN_BUTTON = "kendoDropDownButton",
             K_SPLIT_BUTTON = "kendoSplitButton",
@@ -36533,7 +36540,11 @@
                 }
 
                 if (element) {
-                    element.appendTo(this.element);
+                    if (this.overflowAnchor) {
+                        element.insertBefore(this.overflowAnchor);
+                    } else {
+                        element.appendTo(this.element);
+                    }
 
                     element.find("[disabled]").removeAttr("disabled");
 
@@ -36658,6 +36669,7 @@
                     delete options.imageUrl;
                     delete options.icon;
                 }
+
                 if (options.showText === TOOLBAR) {
                     if (!options.attributes) {
                         options.attributes = {};
@@ -36666,6 +36678,9 @@
                     options.attributes[ARIA_LABEL] = options.text;
 
                     options.text = NOTHING;
+                } else if (options.text === undefined$1 || options.text === NOTHING) {
+                    options.text = NBSP;
+                    options.encoded = false;
                 }
 
                 that.overflowMenu.append(options);
@@ -36786,22 +36801,25 @@
                     overflowTemplate = options.overflowTemplate,
                     element, menuitem, inputsInTemplate = $(NOTHING);
 
-                if (template) {
-                    template = isFunction(template) ? template(options) : template;
-                    element = $(TEMPLATE_WRAPPER);
-                    element.html(template);
-                }
-
-                if (overflowTemplate && this.overflowMenu) {
+                if (overflowTemplate && this.overflowMenu && options.overflow !== OVERFLOW_NEVER) {
                     overflowTemplate = isFunction(overflowTemplate) ? overflowTemplate(options)[0] : overflowTemplate;
                     this.overflowMenu.append({});
                     menuitem = this.overflowMenu.element
                         .find(DOT + MENU_ITEM)
                         .last()
-                        .addClass(STATE_HIDDEN)
                         .find(DOT + MENU_LINK)
                         .html(overflowTemplate)
                         .parent();
+                }
+
+                if (template && options.overflow !== OVERFLOW_ALWAYS) {
+                    template = isFunction(template) ? template(options) : template;
+                    element = $(TEMPLATE_WRAPPER);
+                    element.html(template);
+
+                    if (menuitem) {
+                        menuitem.addClass(STATE_HIDDEN);
+                    }
                 }
 
                 if (element) {
@@ -37425,7 +37443,7 @@
                 var this$1$1 = this;
 
                 var item = $(e.item),
-                    togglable = item.find(MENU_LINK_TOGGLE).length > 0,
+                    togglable = item.find(DOT + MENU_LINK_TOGGLE).length > 0,
                     id = item.attr(ID);
 
                 if (id && id.indexOf(DASH + OVERFLOW) > -1) {
@@ -58253,12 +58271,12 @@
         }
 
         function convertToValueBinding(container) {
-            container.find(":input:not(:button, .k-combobox .k-input, .k-checkbox-list .k-checkbox, .k-radio-list .k-radio, [" + kendo.attr("role") + "=listbox], [" + kendo.attr("role") + "=upload], [" + kendo.attr("skip") + "], [type=file])").each(function() {
+            container.find(":input:not(:button, .k-combobox .k-input, .k-checkbox-list .k-checkbox, .k-radio-list .k-radio, [" + kendo.attr("role") + "=listbox], [" + kendo.attr("role") + "=upload], [" + kendo.attr("skip") + "], [type=file]), [" + kendo.attr("role") + "=radiogroup]").each(function() {
                 var bindAttr = kendo.attr("bind"),
                     binding = this.getAttribute(bindAttr) || "",
                     bindingName = this.type === "checkbox" || this.type === "radio" ? "checked:" : "value:",
                     isAntiForgeryToken = this.getAttribute("name") === Editable.antiForgeryTokenName,
-                    fieldName = this.name;
+                    fieldName = this.attributes.name && this.attributes.name.value;
 
                 if (binding.indexOf(bindingName) === -1 && fieldName && !isAntiForgeryToken) {
                     binding += (binding.length ? "," : "") + bindingName + fieldName;

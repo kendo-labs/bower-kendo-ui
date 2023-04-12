@@ -58,10 +58,9 @@
 
                 that.wrapper = that.element;
 
+                that.selectedIndices = [];
 
                 that._buttons = that._renderItems(that.options.items);
-
-                that.selectedIndices = [];
 
                 that.element
                     .addClass(KWIDGET + EMPTY + KBUTTONGROUP)
@@ -265,7 +264,7 @@
                     buttons = [];
 
                 if (children.length > 0) {
-                    children.each(function() {
+                    children.each(function(index) {
                         var el = $(this),
                             image = el.find("img").addClass("k-image"),
                             disabled = el.is("[disabled]") || el.hasClass(DISABLED),
@@ -281,6 +280,10 @@
                             };
 
                         buttons.push(that._addButton(el, options));
+
+                        if (options.selected) {
+                            that.selectedIndices.push(index);
+                        }
                     });
                 }
 
@@ -288,7 +291,7 @@
                     return buttons;
                 }
 
-                items.forEach(function(item) {
+                items.forEach(function(item, index) {
                     var text = item.text ? item.encoded === false ? item.text : kendo.htmlEncode(item.text) : "",
                         el = item.url ? $("<a href=" + item.url + ">") : $("<button>");
 
@@ -307,6 +310,10 @@
 
                     el.appendTo(that.element);
                     buttons.push(that._addButton(el, item));
+
+                    if (item.selected) {
+                        that.selectedIndices.push(index);
+                    }
                 });
 
                 return buttons;

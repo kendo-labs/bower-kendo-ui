@@ -43,7 +43,6 @@
             POPUP_BUTTON = "k-popup-button",
             KSEPARATOR = "k-separator",
             SPACER_CLASS = "k-spacer",
-            BUTTON_ICON = "k-button-icon",
             UPLOAD_BUTTON = "k-upload-button",
             POPUP = "k-popup",
             RESIZABLE_TOOLBAR = "k-toolbar-resizable",
@@ -115,6 +114,7 @@
             COMMA = ",",
             ID = "id",
             UID = "uid",
+            NBSP = "&nbsp;",
 
             K_DROP_DOWN_BUTTON = "kendoDropDownButton",
             K_SPLIT_BUTTON = "kendoSplitButton",
@@ -529,7 +529,11 @@
                 }
 
                 if (element) {
-                    element.appendTo(this.element);
+                    if (this.overflowAnchor) {
+                        element.insertBefore(this.overflowAnchor);
+                    } else {
+                        element.appendTo(this.element);
+                    }
 
                     element.find("[disabled]").removeAttr("disabled");
 
@@ -654,6 +658,7 @@
                     delete options.imageUrl;
                     delete options.icon;
                 }
+
                 if (options.showText === TOOLBAR) {
                     if (!options.attributes) {
                         options.attributes = {};
@@ -662,6 +667,9 @@
                     options.attributes[ARIA_LABEL] = options.text;
 
                     options.text = NOTHING;
+                } else if (options.text === undefined$1 || options.text === NOTHING) {
+                    options.text = NBSP;
+                    options.encoded = false;
                 }
 
                 that.overflowMenu.append(options);
@@ -782,22 +790,25 @@
                     overflowTemplate = options.overflowTemplate,
                     element, menuitem, inputsInTemplate = $(NOTHING);
 
-                if (template) {
-                    template = isFunction(template) ? template(options) : template;
-                    element = $(TEMPLATE_WRAPPER);
-                    element.html(template);
-                }
-
-                if (overflowTemplate && this.overflowMenu) {
+                if (overflowTemplate && this.overflowMenu && options.overflow !== OVERFLOW_NEVER) {
                     overflowTemplate = isFunction(overflowTemplate) ? overflowTemplate(options)[0] : overflowTemplate;
                     this.overflowMenu.append({});
                     menuitem = this.overflowMenu.element
                         .find(DOT + MENU_ITEM)
                         .last()
-                        .addClass(STATE_HIDDEN)
                         .find(DOT + MENU_LINK)
                         .html(overflowTemplate)
                         .parent();
+                }
+
+                if (template && options.overflow !== OVERFLOW_ALWAYS) {
+                    template = isFunction(template) ? template(options) : template;
+                    element = $(TEMPLATE_WRAPPER);
+                    element.html(template);
+
+                    if (menuitem) {
+                        menuitem.addClass(STATE_HIDDEN);
+                    }
                 }
 
                 if (element) {
@@ -1421,7 +1432,7 @@
                 var this$1$1 = this;
 
                 var item = $(e.item),
-                    togglable = item.find(MENU_LINK_TOGGLE).length > 0,
+                    togglable = item.find(DOT + MENU_LINK_TOGGLE).length > 0,
                     id = item.attr(ID);
 
                 if (id && id.indexOf(DASH + OVERFLOW) > -1) {

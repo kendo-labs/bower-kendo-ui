@@ -1401,7 +1401,7 @@
                   previous: "Jít na předchozí stránku",
                   next: "Jít na další stránku",
                   last: "Jít na poslední stránku",
-                  of: " z {0} ",
+                  of: "z",
                   page: "stránka",
                   pages: "stránek"
               },

@@ -1532,7 +1532,7 @@
                   previous: "Go to the previous page",
                   next: "Go to the next page",
                   last: "Go to the last page",
-                  of: " of {0} ",
+                  of: "of",
                   page: "page",
                   pages: "pages"
               },
