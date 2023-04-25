@@ -922,7 +922,8 @@
                         fillMode: options.fillMode,
                         rounded: options.rounded,
                         min: options.min,
-                        max: options.max
+                        max: options.max,
+                        messages: options.messages.dateInput
                     });
                 }
             },

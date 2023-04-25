@@ -17,6 +17,95 @@
     typeof define === 'function' && define.amd ? define(['jquery'], factory) :
     factory();
 })((function () {
+    var breakpoints;
+    var EVENT = "change";
+
+    var defaultBreakpoints = {
+        small: "(max-width: 500px)",
+        medium: "(min-width: 500.1px) and (max-width: 768px)",
+        large: "(min-width: 768.1px)",
+    };
+
+    function createMediaQuery(query) {
+        var mediaQueryList = window.matchMedia(query);
+        var onEnterCallbacks = [];
+        var onLeaveCallbacks = [];
+        var onChangeHandlers = [];
+        var kendoMediaQuery = { mediaQueryList: mediaQueryList };
+
+        var onChangeHandler = function (ev) {
+            onChangeHandlers.forEach(function (cb) { return cb(ev); });
+
+            if (ev.matches) {
+                onEnterCallbacks.forEach(function (cb) { return cb(ev); });
+            } else {
+                onLeaveCallbacks.forEach(function (cb) { return cb(ev); });
+            }
+        };
+
+        mediaQueryList.addEventListener(EVENT, onChangeHandler);
+
+        var onChange = function (cb) {
+            onChangeHandlers.push(cb);
+            return kendoMediaQuery;
+        };
+
+        var onEnter = function (cb) {
+            onEnterCallbacks.push(cb);
+
+            if (mediaQueryList.matches) {
+                var media = mediaQueryList.media;
+                var matches = true;
+
+                var ev = new MediaQueryListEvent(EVENT, {
+                    media: media,
+                    matches: matches,
+                });
+
+                cb(ev);
+            }
+
+            return kendoMediaQuery;
+        };
+
+        var onLeave = function (cb) {
+            onLeaveCallbacks.push(cb);
+            return kendoMediaQuery;
+        };
+
+        var destroy = function () {
+            mediaQueryList.removeEventListener(EVENT, onChangeHandler);
+            onEnterCallbacks = null;
+            onLeaveCallbacks = null;
+            onChangeHandlers = null;
+            mediaQueryList = null;
+            kendoMediaQuery = null;
+        };
+
+        kendoMediaQuery.onChange = onChange;
+        kendoMediaQuery.onEnter = onEnter;
+        kendoMediaQuery.onLeave = onLeave;
+        kendoMediaQuery.destroy = destroy;
+
+        return kendoMediaQuery;
+    }
+
+    function mediaQuery(query) {
+        if (!query) {
+            return;
+        }
+
+        breakpoints =
+            breakpoints ||
+            Object.assign({}, defaultBreakpoints, kendo.defaults.breakpoints);
+
+        if (query in breakpoints) {
+            query = breakpoints[query];
+        }
+
+        return createMediaQuery(query);
+    }
+
     var __meta__ = {
         id: "core",
         name: "Core",
@@ -29,7 +118,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.1.412'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.1.425'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -140,7 +229,7 @@
                 return target;
             };
 
-        kendo.version = "2023.1.412".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.1.425".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -2814,6 +2903,7 @@
             isLocalUrl: function(url) {
                 return url && !localUrlRe.test(url);
             },
+            mediaQuery: mediaQuery,
 
             expr: function(expression, safe, paramName) {
                 expression = expression || "";
@@ -5287,6 +5377,8 @@
             // Use external global flags for templates.
             kendo.debugTemplates = window.DEBUG_KENDO_TEMPLATES;
 
+            // Setup default mediaQuery breakpoints
+            kendo.setDefaults('breakpoints', defaultBreakpoints);
         })();
 
         // Implement type() as it has been depricated in jQuery

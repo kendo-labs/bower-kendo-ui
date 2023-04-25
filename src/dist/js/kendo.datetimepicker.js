@@ -1075,7 +1075,8 @@
                         rounded: options.rounded,
                         min: options.min,
                         max: options.max,
-                        interval: options.interval
+                        interval: options.interval,
+                        messages: options.messages.dateInput
                     });
                 }
             },

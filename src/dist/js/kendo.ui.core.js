@@ -17,6 +17,95 @@
     typeof define === 'function' && define.amd ? define(['jquery'], factory) :
     factory();
 })((function () {
+    var breakpoints;
+    var EVENT = "change";
+
+    var defaultBreakpoints = {
+        small: "(max-width: 500px)",
+        medium: "(min-width: 500.1px) and (max-width: 768px)",
+        large: "(min-width: 768.1px)",
+    };
+
+    function createMediaQuery(query) {
+        var mediaQueryList = window.matchMedia(query);
+        var onEnterCallbacks = [];
+        var onLeaveCallbacks = [];
+        var onChangeHandlers = [];
+        var kendoMediaQuery = { mediaQueryList: mediaQueryList };
+
+        var onChangeHandler = function (ev) {
+            onChangeHandlers.forEach(function (cb) { return cb(ev); });
+
+            if (ev.matches) {
+                onEnterCallbacks.forEach(function (cb) { return cb(ev); });
+            } else {
+                onLeaveCallbacks.forEach(function (cb) { return cb(ev); });
+            }
+        };
+
+        mediaQueryList.addEventListener(EVENT, onChangeHandler);
+
+        var onChange = function (cb) {
+            onChangeHandlers.push(cb);
+            return kendoMediaQuery;
+        };
+
+        var onEnter = function (cb) {
+            onEnterCallbacks.push(cb);
+
+            if (mediaQueryList.matches) {
+                var media = mediaQueryList.media;
+                var matches = true;
+
+                var ev = new MediaQueryListEvent(EVENT, {
+                    media: media,
+                    matches: matches,
+                });
+
+                cb(ev);
+            }
+
+            return kendoMediaQuery;
+        };
+
+        var onLeave = function (cb) {
+            onLeaveCallbacks.push(cb);
+            return kendoMediaQuery;
+        };
+
+        var destroy = function () {
+            mediaQueryList.removeEventListener(EVENT, onChangeHandler);
+            onEnterCallbacks = null;
+            onLeaveCallbacks = null;
+            onChangeHandlers = null;
+            mediaQueryList = null;
+            kendoMediaQuery = null;
+        };
+
+        kendoMediaQuery.onChange = onChange;
+        kendoMediaQuery.onEnter = onEnter;
+        kendoMediaQuery.onLeave = onLeave;
+        kendoMediaQuery.destroy = destroy;
+
+        return kendoMediaQuery;
+    }
+
+    function mediaQuery(query) {
+        if (!query) {
+            return;
+        }
+
+        breakpoints =
+            breakpoints ||
+            Object.assign({}, defaultBreakpoints, kendo.defaults.breakpoints);
+
+        if (query in breakpoints) {
+            query = breakpoints[query];
+        }
+
+        return createMediaQuery(query);
+    }
+
     var __meta__$1q = {
         id: "core",
         name: "Core",
@@ -29,7 +118,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.1.412'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.1.425'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -140,7 +229,7 @@
                 return target;
             };
 
-        kendo.version = "2023.1.412".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.1.425".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -2814,6 +2903,7 @@
             isLocalUrl: function(url) {
                 return url && !localUrlRe.test(url);
             },
+            mediaQuery: mediaQuery,
 
             expr: function(expression, safe, paramName) {
                 expression = expression || "";
@@ -5287,6 +5377,8 @@
             // Use external global flags for templates.
             kendo.debugTemplates = window.DEBUG_KENDO_TEMPLATES;
 
+            // Setup default mediaQuery breakpoints
+            kendo.setDefaults('breakpoints', defaultBreakpoints);
         })();
 
         // Implement type() as it has been depricated in jQuery
@@ -11738,7 +11830,7 @@
                     var model = e.items[0],
                         resultData = result.data;
 
-                    if (that._isGrouped()) {
+                    if (that._isGrouped() && !this._isServerGrouped()) {
                         resultData = flattenGroups(resultData);
                     }
 
@@ -23214,13 +23306,13 @@
                     .addClass(KSVGICON)
                     .removeClass(currentIconClass) // Remove any existing icons.
                     .addClass(className)
-                    .addClass(iconClass || '');
+                    .addClass(iconClass || '')
+                    .attr("aria-hidden", true);
 
                 if ($.isPlainObject(icon)) {
                     svgElm.attr('viewBox', icon.viewBox || '')
                         .attr({
                             'viewBox': icon.viewBox || '',
-                            'aria-hidden': 'true',
                             'focusable': 'false',
                             'xmlns': 'http://www.w3.org/2000/svg'
                         })
@@ -23689,25 +23781,25 @@
 
     var displayInlineBlockIcon = {
         name: 'display-Inline-block',
-        content: '<path d="M448 32h32v448h-32zM32 32h32v448H32zM96 384h320V128H96v256zm64-192h192v128H160V192z" />',
+        content: '<path d="M448 32h32v448h-32zM32 32h32v448H32zm64 352h320V128H96v256zm64-192h192v128H160V192z" />',
         viewBox: '0 0 512 512'
     };
 
     var displayBlockIcon = {
         name: 'display-block',
-        content: '<path d="M32 32h448v32H32zM32 448h448v32H32zM32 384h448V128H32v256zm64-192h320v128H96V192z" />',
+        content: '<path d="M32 32h448v32H32zm0 416h448v32H32zm0-64h448V128H32v256zm64-192h320v128H96V192z" />',
         viewBox: '0 0 512 512'
     };
 
     var displayFlexIcon = {
         name: 'display-flex',
-        content: '<path d="M32 32v448h448V32H32zm416 416H64V64h384v384z" />',
+        content: '<path d="M32 32v448h448V32H32zm416 416H64V64h384v384zM128 128h96v256h-96zm160 0h96v256h-96z" />',
         viewBox: '0 0 512 512'
     };
 
     var displayInlineFlexIcon = {
         name: 'display-inline-flex',
-        content: '<path d="M96 416h320V96H96v320zm32-288h256v256H128V128z" />',
+        content: '<path d="M96 416h320V96H96v320zm32-288h256v256H128V128zm32 32h64v192h-64zm128 0h64v192h-64zM32 32h32v448H32zm416 0h32v448h-32z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -23725,13 +23817,13 @@
 
     var gapColumnIcon = {
         name: 'gap-column',
-        content: '<path d="M32 32v448h448V32H32zm416 416H64V64h384v384z" />',
+        content: '<path d="M32 32v448h448V32H32zm416 416H64V64h384v384zM96 96h96v320H96zm224 0h96v320h-96z" />',
         viewBox: '0 0 512 512'
     };
 
     var gapRowIcon = {
         name: 'gap-row',
-        content: '<path d="M480 32H32v448h448V32zM64 448V64h384v384H64z" />',
+        content: '<path d="M480 32H32v448h448V32zM64 448V64h384v384H64zM96 96h320v96H96zm0 224h320v96H96z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -23761,7 +23853,7 @@
 
     var lineHeightIcon = {
         name: 'line-height',
-        content: '<path d="m310 336 26 80h48L280 96h-48L128 416h48l26-80h108zm-54-166.2L294.4 288h-76.8L256 169.8zM32 32h448v32H32zM32 448h448v32H32z" />',
+        content: '<path d="m310 336 26 80h48L280 96h-48L128 416h48l26-80h108zm-54-166.2L294.4 288h-76.8L256 169.8zM32 32h448v32H32zm0 416h448v32H32z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -23803,37 +23895,37 @@
 
     var maxHeightIcon = {
         name: 'max-height',
-        content: '<path d="M384 0H96v32h288zM384 479H240.6L320 352h-64V160h64L240 32l-80 128h64v192h-64l79.4 127H96v32h288z" />',
+        content: '<path d="M384 0H96v32h288zm0 479H240.6L320 352h-64V160h64L240 32l-80 128h64v192h-64l79.4 127H96v32h288z" />',
         viewBox: '0 0 512 512'
     };
 
     var maxWidthIcon = {
         name: 'max-width',
-        content: '<path d="M0 96v288h32V96zM479 96v143.4L352 160v64H160v-64L32 240l128 80v-64h192v64l127-79.4V384h32V96z" />',
+        content: '<path d="M0 96v288h32V96zm479 0v143.4L352 160v64H160v-64L32 240l128 80v-64h192v64l127-79.4V384h32V96z" />',
         viewBox: '0 0 512 512'
     };
 
     var minHeightIcon = {
         name: 'min-height',
-        content: '<path d="M240 192H96v32h288v-32zM384 288H96v32h288zM160 448h160l-80-128zM224 448h32v64h-32zM256 64V0h-32v64h-64l80 128 80-128z" />',
+        content: '<path d="M240 192H96v32h288v-32zm144 96H96v32h288zM160 448h160l-80-128zm64 0h32v64h-32zm32-384V0h-32v64h-64l80 128 80-128z" />',
         viewBox: '0 0 512 512'
     };
 
     var minWidthIcon = {
         name: 'min-width',
-        content: '<path d="M192 240v144h32V96h-32zM288 96v288h32V96zM448 320V160l-128 80zM448 224h64v32h-64zM64 224H0v32h64v64l128-80-128-80z" />',
+        content: '<path d="M192 240v144h32V96h-32zm96-144v288h32V96zm160 224V160l-128 80zm0-96h64v32h-64zm-384 0H0v32h64v64l128-80-128-80z" />',
         viewBox: '0 0 512 512'
     };
 
     var outlineOffsetIcon = {
         name: 'outline-offset',
-        content: '<path d="M448 32H32v448h448V32h-32zm0 416H64V64h384v384z" />',
+        content: '<path d="M448 32H32v448h448V32h-32zm0 416H64V64h384v384zM160 320v32h192V160H160v160zm32-128h128v128H192V192z" />',
         viewBox: '0 0 512 512'
     };
 
     var outlineWidthIcon = {
         name: 'outline-width',
-        content: '<path d="M416 32H32v448h448V32h-64zm0 384H96V96h320v320z" />',
+        content: '<path d="M416 32H32v448h448V32h-64zm0 384H96V96h320v320zm-256-32h224V128H128v256h32zm0-224h192v192H160V160z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -23869,25 +23961,25 @@
 
     var positionBottomIcon = {
         name: 'position-bottom',
-        content: '<path d="M32 64v416h448V32H32v32zm416 0v384H64V64h384z" />',
+        content: '<path d="M32 64v416h448V32H32v32zm416 0v384H64V64h384zM96 320h320v96H96z" />',
         viewBox: '0 0 512 512'
     };
 
     var positionLeftIcon = {
         name: 'position-left',
-        content: '<path d="M448 32H32v448h448V32h-32zm0 416H64V64h384v384z" />',
+        content: '<path d="M448 32H32v448h448V32h-32zm0 416H64V64h384v384zM96 96h96v320H96z" />',
         viewBox: '0 0 512 512'
     };
 
     var positionRightIcon = {
         name: 'position-right',
-        content: '<path d="M64 480h416V32H32v448h32zm0-416h384v384H64V64z" />',
+        content: '<path d="M64 480h416V32H32v448h32zm0-416h384v384H64V64zm256 32h96v320h-96z" />',
         viewBox: '0 0 512 512'
     };
 
     var positionTopIcon = {
         name: 'position-top',
-        content: '<path d="M480 448V32H32v448h448v-32zm-416 0V64h384v384H64z" />',
+        content: '<path d="M480 448V32H32v448h448v-32zm-416 0V64h384v384H64zM96 96h320v96H96z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -23917,7 +24009,7 @@
 
     var rightDoubleQuotesIcon = {
         name: 'right-double-quotes',
-        content: '<path d="M136 100.2c-57.4 0-104 46.6-104 104s46.6 104 104 104c20.1 0 38.9-5.7 54.8-15.6-14.2 30.5-37.4 55.2-69.2 73.7-44 25.6-89.1 29.6-89.6 29.6l1.3 15.9 1.3 15.9c2.1-.2 51.8-4.4 102-33.2 47.1-27 103.3-81.3 103.3-186.1.1-1.4.1-2.8.1-4.3 0-57.3-46.6-103.9-104-103.9zM480 204.2c0-57.4-46.6-104-104-104s-104 46.6-104 104 46.6 104 104 104c20.1 0 38.9-5.7 54.8-15.6-14.2 30.5-37.4 55.2-69.2 73.7-44 25.6-89.1 29.6-89.6 29.6l2.6 31.9c2.1-.2 51.8-4.4 102-33.2 47.1-27 103.3-81.3 103.3-186.1.1-1.4.1-2.8.1-4.3z" />',
+        content: '<path d="M136 100.2c-57.4 0-104 46.6-104 104s46.6 104 104 104c20.1 0 38.9-5.7 54.8-15.6-14.2 30.5-37.4 55.2-69.2 73.7-44 25.6-89.1 29.6-89.6 29.6l1.3 15.9 1.3 15.9c2.1-.2 51.8-4.4 102-33.2 47.1-27 103.3-81.3 103.3-186.1.1-1.4.1-2.8.1-4.3 0-57.3-46.6-103.9-104-103.9zm344 104c0-57.4-46.6-104-104-104s-104 46.6-104 104 46.6 104 104 104c20.1 0 38.9-5.7 54.8-15.6-14.2 30.5-37.4 55.2-69.2 73.7-44 25.6-89.1 29.6-89.6 29.6l2.6 31.9c2.1-.2 51.8-4.4 102-33.2 47.1-27 103.3-81.3 103.3-186.1.1-1.4.1-2.8.1-4.3z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -23930,6 +24022,18 @@
     var dataSdsIcon = {
         name: 'data-sds',
         content: '<path d="M224 152.54c105.6 0 191.4-27.4 191.9-61.3v-.3c0-34-85.9-61.6-191.9-61.6S32.1 56.94 32.1 90.94v.3c.5 33.9 86.3 61.3 191.9 61.3Zm-191.9 71.9c.5 33.9 86.3 61.3 191.9 61.3s191.4-27.4 192-61.3v-.3l-.1-86.5c-.5 33.9-86.3 61.3-191.9 61.3s-191.49-27.4-192-61.29l.1 86.49v.3Zm-.1 41.21.1 86.49v.3c.4 26.7 53.7 49.3 127.9 57.8v-86.8c-74.29-8.4-127.59-31.1-128-57.79Zm320 37.69 105 70-105 70v-52.5H189v-35h163v-52.5Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var downloadLightIcon = {
+        name: 'download-light',
+        content: '<path d="M368 256 256 384 144 256h96V32h32v224h96Zm112 192H32v32h448v-32Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var eyeSlashIcon = {
+        name: 'eye-slash',
+        content: '<path d="m245.43 358.68 24.92 24.92c-4.75.26-9.54.4-14.34.4-94.7 0-179.7-51.5-224-128 13.19-22.83 30.01-43.43 49.65-61.1l23.01 23.01C91.46 229.29 79.51 242.07 69.8 256c26.33 33.77 54.15 53.86 72.6 65.1 39.18 23.88 77.54 33.37 103.03 37.58m131.42-4.44L480 457.39 457.39 480 345.51 368.12s-.07.03-.1.04L232.2 254.94l.11-.03-39.21-39.21-.03.11-26.8-26.8s.04-.05.06-.08l-7.01-7.01s-.06.03-.09.04l-24.17-24.17s.06-.03.09-.05L32 54.61 54.61 32l111.87 111.87A260.193 260.193 0 0 1 256 128c94.8 0 179.8 51.5 224 128-24 41.53-60.05 75.69-103.15 98.24Zm-7.25-33.14c27.8-16.4 54.1-38.7 72.6-65.1-18.4-26.4-44.8-48.7-72.6-65.1-12.2-7.2-25.1-13.2-38.4-17.9 22.6 20.5 36.8 50.1 36.8 83 0 25.15-8.31 48.37-22.32 67.08l7.01 7.01c5.76-2.76 11.41-5.74 16.91-8.99Z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -24685,7 +24789,7 @@
 
     var imageIcon = {
         name: 'image',
-        content: '<path d="M304 160c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48zm144-96H64c-17.6 0-32 14.4-32 32v320c0 17.6 14.4 32 32 32H448c17.6 0 32-14.4 32-32V96c0-17.6-14.4-32-32-32zm-.1 272-64-64-80 80L176 224 64 336V96.1l.1-.1h383.8l.1.1-.1 239.9z" />',
+        content: '<path d="M304 160c26.5 0 48 21.5 48 48s-21.5 48-48 48-48-21.5-48-48 21.5-48 48-48zm144-96H64c-17.6 0-32 14.4-32 32v320c0 17.6 14.4 32 32 32h384c17.6 0 32-14.4 32-32V96c0-17.6-14.4-32-32-32zm-.1 272-64-64-80 80L176 224 64 336V96.1l.1-.1h383.8l.1.1-.1 239.9z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -26023,7 +26127,7 @@
 
     var toolbarFloatIcon = {
         name: 'toolbar-float',
-        content: '<path d="M64 352h416v128H64V352zm96 32H96v64h96v-64h-32zm160 0h-96v64h96v-64zm32 0v64h96v-64h-96zM63.961 131.844l90.51 90.51 45.255-45.255-90.51-90.51-45.255 45.255zM63.961 131.844l90.51 90.51 45.255-45.255-90.51-90.51-45.255 45.255zm158.392 67.882 67.882-67.882-22.627-22.627-22.627 22.627-90.51-90.51c-12.445-12.445-32.81-12.445-45.255 0l-67.882 67.882c-12.445 12.445-12.445 32.81 0 45.255l90.51 90.51-22.627 22.627 22.627 22.627 67.882-67.882L297.373 320 320 297.373l-97.647-97.647zm-67.882 22.627-90.51-90.51 45.255-45.255 90.51 90.51-45.255 45.255zM480 256h-64v64h64v-64z" />',
+        content: '<path d="M64 352h416v128H64V352zm96 32H96v64h96v-64h-32zm160 0h-96v64h96v-64zm32 0v64h96v-64h-96zM63.961 131.844l90.51 90.51 45.255-45.255-90.51-90.51-45.255 45.255zm0 0 90.51 90.51 45.255-45.255-90.51-90.51-45.255 45.255zm158.392 67.882 67.882-67.882-22.627-22.627-22.627 22.627-90.51-90.51c-12.445-12.445-32.81-12.445-45.255 0l-67.882 67.882c-12.445 12.445-12.445 32.81 0 45.255l90.51 90.51-22.627 22.627 22.627 22.627 67.882-67.882L297.373 320 320 297.373l-97.647-97.647zm-67.882 22.627-90.51-90.51 45.255-45.255 90.51 90.51-45.255 45.255zM480 256h-64v64h64v-64z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -27373,6 +27477,7 @@
         documentManagerIcon: documentManagerIcon,
         dollarIcon: dollarIcon,
         downloadIcon: downloadIcon,
+        downloadLightIcon: downloadLightIcon,
         dragAndDropIcon: dragAndDropIcon,
         dribbbleBoxIcon: dribbbleBoxIcon,
         dribbbleIcon: dribbbleIcon,
@@ -27388,6 +27493,7 @@
         exeIcon: exeIcon,
         exportIcon: exportIcon,
         eyeIcon: eyeIcon,
+        eyeSlashIcon: eyeSlashIcon,
         eyedropperIcon: eyedropperIcon,
         facebookBoxIcon: facebookBoxIcon,
         facebookIcon: facebookIcon,
@@ -28948,7 +29054,7 @@
                     var text = item.text ? item.encoded === false ? item.text : kendo.htmlEncode(item.text) : "",
                         el = item.url ? $("<a href=" + item.url + ">") : $("<button>");
 
-                    el.text(text);
+                    el.html(text);
 
                     if (item.attributes) {
                         el.attr(item.attributes);
@@ -30240,7 +30346,7 @@
                 options.appendTo = $($(options.appendTo)[0] || parentPopup[0] || document.body);
 
                 that.element.hide()
-                    .addClass("k-popup k-group k-reset")
+                    .addClass("k-popup")
                     .toggleClass("k-rtl", !!options.isRtl)
                     .appendTo(options.appendTo)
                     .attr("aria-hidden", true)
@@ -36775,7 +36881,12 @@
 
                 separator.addClass(KSEPARATOR);
                 separator.attr(ROLE, SEPARATOR);
-                separator.appendTo(this.element);
+
+                if (this.overflowAnchor) {
+                    separator.insertBefore(this.overflowAnchor);
+                } else {
+                    separator.appendTo(this.element);
+                }
 
                 this._addAttributes(options, separator);
 
@@ -36793,7 +36904,12 @@
             _addSpacer: function() {
                 var spacer = $(SPACER_EL);
                 spacer.addClass(SPACER_CLASS);
-                spacer.appendTo(this.element);
+
+                if (this.overflowAnchor) {
+                    spacer.insertBefore(this.overflowAnchor);
+                } else {
+                    spacer.appendTo(this.element);
+                }
             },
 
             _addTemplate: function(options) {
@@ -44778,7 +44894,8 @@
                         fillMode: options.fillMode,
                         rounded: options.rounded,
                         min: options.min,
-                        max: options.max
+                        max: options.max,
+                        messages: options.messages.dateInput
                     });
                 }
             },
@@ -46904,6 +47021,8 @@
                            .attr(ARIA_DISABLED, disable)
                            .attr(ARIA_READONLY, readonly);
                 }
+
+                that._toggleCloseVisibility();
             },
 
             close: function() {
@@ -47328,7 +47447,7 @@
                 that._loading.addClass(HIDDENCLASS);
                 that.element.attr("aria-busy", false);
                 that._busy = null;
-                that._showClear();
+                that._toggleCloseVisibility();
             },
 
             _showBusy: function() {
@@ -47442,7 +47561,9 @@
             },
 
             _toggleCloseVisibility: function() {
-                if (this.value()) {
+                var preventShow = this.element.is(":disabled") || this.element.is("[readonly]");
+
+                if (this.value() && !preventShow) {
                     this._showClear();
                 } else {
                     this._hideClear();
@@ -50308,7 +50429,7 @@
         name: "Html.ChipList",
         category: "web",
         description: "HTML rendering utility for Kendo UI for jQuery.",
-        depends: [ "html.base" ],
+        depends: ["html.base"],
         features: []
     };
 
@@ -50330,12 +50451,29 @@
                 var that = this;
                 HTMLBase.fn.init.call(that, element, options);
                 that.wrapper = that.element.addClass("k-chip-list");
+                that._applyAriaAttributes(options);
                 that._addClasses();
             },
             options: {
                 name: "HTMLChipList",
                 size: "medium",
-                stylingOptions: [ "size" ]
+                stylingOptions: ["size"]
+            },
+            _applyAriaAttributes: function(options) {
+                var that = this;
+                options = $.extend({ selectable: "none" }, options);
+                var ariaLabelOption = (options.attributes || {})["aria-label"];
+
+                if (options.selectable !== "none") {
+                    that.element.attr({
+                        "aria-multiselectable": options.selectable === "multiple",
+                        role: "listbox",
+                        "aria-label": ariaLabelOption || that.element.attr("id") + " listbox",
+                        "aria-orientation": "horizontal"
+                    });
+                } else {
+                    that.element.removeAttr("role aria-label aria-multiselectable aria-orientation");
+                }
             }
         });
 
@@ -50430,6 +50568,7 @@
                 that._customOptions = {};
 
                 that._wrapper();
+                that._inputValuesContainer();
                 that._tagList();
                 that._input();
                 that._textContainer();
@@ -50782,6 +50921,8 @@
                     if (shouldTrigger) {
                         that._change();
                     }
+
+                    that._refreshTagListAria();
                     that._close();
                 };
 
@@ -51677,6 +51818,7 @@
 
                 if (this.persistTagList) {
                     this.updatePersistTagList(added, removed);
+                    that._refreshTagListAria();
 
                     return;
                 }
@@ -51696,7 +51838,7 @@
                     for (idx = 0; idx < added.length; idx++) {
                         addedItem = added[idx];
 
-                        that.input.before(that.tagTemplate(addedItem.dataItem));
+                        that.tagList.append(that.tagTemplate(addedItem.dataItem));
 
                         that._setOption(getter(addedItem.dataItem), true);
                     }
@@ -51716,10 +51858,16 @@
                     }
                 }
 
+                that._refreshTagListAria();
                 that._refreshFloatingLabel();
 
                 that._angularTagItems("compile");
                 that._placeholder();
+            },
+
+            _refreshTagListAria: function() {
+                var that = this;
+                html.renderChipList(that.tagList, $.extend({ selectable: that.value().length === 0 ? "none" : "multiple" }, that.options));
             },
 
             _updateTagListHTML: function() {
@@ -51733,13 +51881,15 @@
                 });
 
                 if (values.length) {
-                    that.input.before(that.tagTemplate({
+                    that.tagList.append(that.tagTemplate({
                         values: values,
                         dataItems: that.dataItems(),
                         maxTotal: that._maxTotal,
                         currentTotal: total
                     }));
                 }
+
+                that._refreshTagListAria();
             },
 
             _select: function(candidate) {
@@ -51839,10 +51989,10 @@
                 var that = this;
                 var element = that.element;
                 var accessKey = element[0].accessKey;
-                var input = that.tagList.children("input.k-input-inner");
+                var input = that._inputValuesContainer.children("input.k-input-inner");
 
                 if (!input[0]) {
-                    input = $('<input class="k-input-inner" />').appendTo(that.tagList);
+                    input = $('<input class="k-input-inner" />').appendTo(that._inputValuesContainer);
                 }
 
                 element.removeAttr("accesskey");
@@ -51857,13 +52007,24 @@
                 }
             },
 
+            _inputValuesContainer: function() {
+                var that = this,
+                    inputValuesContainer = that.wrapper.children(".k-input-values");
+
+                if (!inputValuesContainer[0]) {
+                    inputValuesContainer = $('<div class="k-input-values"></div>').appendTo(that.wrapper);
+                }
+
+                that._inputValuesContainer = inputValuesContainer;
+            },
+
             _tagList: function() {
                 var that = this,
                     options = that.options,
-                    tagList = that.wrapper.children(".k-input-values");
+                    tagList = that._inputValuesContainer.children(".k-chip-list");
 
                 if (!tagList[0]) {
-                    tagList = $(html.renderChipList('<div unselectable="on" class="k-input-values k-selection-multiple" />', $.extend({}, options))).appendTo(that.wrapper);
+                    tagList = $(html.renderChipList('<div unselectable="on" class="k-selection-multiple" />', $.extend({ selectable: "none" }, options))).appendTo(that._inputValuesContainer);
                 }
 
                 that.tagList = tagList;
@@ -51905,7 +52066,10 @@
                             themeColor: "base",
                             text: tagTemplate(data),
                             attr: {
-                                unselectable: "on"
+                                unselectable: "on",
+                                "aria-selected": true,
+                                role: "option",
+                                "aria-keyshortcuts": isMultiple ? "Enter Delete" : "Enter"
                             },
                             removable: isMultiple,
                             removableAttr: {
@@ -51926,14 +52090,14 @@
             },
 
             _loader: function() {
-                this._loading = $('<span class="k-icon k-i-loading k-input-loading-icon ' + HIDDENCLASS + '"></span>').insertAfter(this.tagList);
+                this._loading = $('<span class="k-icon k-i-loading k-input-loading-icon ' + HIDDENCLASS + '"></span>').insertAfter(this._inputValuesContainer);
             },
 
             _clearButton: function() {
                 List.fn._clearButton.call(this);
 
                 if (this.options.clearButton) {
-                    this._clear.insertAfter(this.tagList);
+                    this._clear.insertAfter(this._inputValuesContainer);
                     this.wrapper.addClass("k-multiselect-clearable");
                 }
             },
@@ -57630,7 +57794,7 @@
                    var toolIcon = ref.toolIcon;
                    var _buttonHtml = ref._buttonHtml;
 
-                   return '<span role="textbox" aria-haspopup="true" class="k-colorpicker k-picker k-icon-picker">' +
+                   return '<span role="combobox" aria-haspopup="dialog" aria-expanded="false" class="k-colorpicker k-picker k-icon-picker">' +
                     '<span class="k-input-inner">' +
                         "<span class=\"k-value-icon k-color-preview " + (toolIcon ? 'k-icon-color-preview' : '') + "\">" +
                             (toolIcon ? kendo.ui.icon({ icon: toolIcon, iconClass: "k-color-preview-icon" }) : '') +
@@ -57799,7 +57963,7 @@
                     var selectorWrapper = $('<div id="' + id + '" class="k-colorpicker-popup"></div>').appendTo(document.body);
                     var selector = that._selector = new selectorType($('<div></div>').appendTo(selectorWrapper), options);
 
-                    that.wrapper.attr("aria-owns", id);
+                    that.wrapper.attr("aria-controls", id);
 
                     that._popup = popup = selectorWrapper.kendoPopup({
                         anchor: that.wrapper,
@@ -57858,12 +58022,15 @@
                                     }
                                 }, 0);
                             }
+
+                            that.wrapper.attr("aria-expanded", false);
                         },
                         open: function(ev) {
                             if (that.trigger("open")) {
                                 ev.preventDefault();
                             } else {
                                 that.wrapper.addClass("k-focus");
+                                that.wrapper.attr("aria-expanded", true);
                             }
                         },
                         activate: function() {
@@ -65592,6 +65759,8 @@
                                 kendo.resize(contentHolder);
                             } }, animation, {
                                 complete: function() {
+                                    // See https://github.com/telerik/kendo-ui-core/issues/6660
+                                    that.element.css('min-height', oldMinHeight);
                                     item.removeAttr("data-animating");
 
                                     that.trigger(ACTIVATE, { item: item[0], contentElement: contentHolder[0] });
@@ -65633,12 +65802,9 @@
                 var oldMinHeight = that.element.css('min-height');
                 that.element.css('min-height', that.element.outerHeight());
 
-                visibleContents
-                        .removeClass(ACTIVESTATE);
-
+                visibleContents.removeClass(ACTIVESTATE);
                 that.tabGroup.find("." + TABONTOP).removeClass(TABONTOP);
-                        item.addClass(TABONTOP) // change these directly to bring the tab on top.
-                            .css("z-index");
+                item.addClass(TABONTOP).css("z-index");
 
                 if (kendo.size(animation.effects)) {
                     item.kendoAddClass(ACTIVESTATE, { duration: animation.duration });
@@ -65657,8 +65823,6 @@
                 } else {
                     showContent();
                 }
-
-                that.element.css('min-height', oldMinHeight);
 
                 return true;
             },
@@ -68190,7 +68354,8 @@
                         interval: options.interval,
                         size: options.size,
                         fillMode: options.fillMode,
-                        rounded: options.rounded
+                        rounded: options.rounded,
+                        messages: options.messages.dateInput
                     });
                 }
                 that._old = that._update(options.value || that.element.val());
@@ -69922,7 +70087,8 @@
                         rounded: options.rounded,
                         min: options.min,
                         max: options.max,
-                        interval: options.interval
+                        interval: options.interval,
+                        messages: options.messages.dateInput
                     });
                 }
             },

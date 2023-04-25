@@ -273,6 +273,8 @@
                            .attr(ARIA_DISABLED, disable)
                            .attr(ARIA_READONLY, readonly);
                 }
+
+                that._toggleCloseVisibility();
             },
 
             close: function() {
@@ -697,7 +699,7 @@
                 that._loading.addClass(HIDDENCLASS);
                 that.element.attr("aria-busy", false);
                 that._busy = null;
-                that._showClear();
+                that._toggleCloseVisibility();
             },
 
             _showBusy: function() {
@@ -811,7 +813,9 @@
             },
 
             _toggleCloseVisibility: function() {
-                if (this.value()) {
+                var preventShow = this.element.is(":disabled") || this.element.is("[readonly]");
+
+                if (this.value() && !preventShow) {
                     this._showClear();
                 } else {
                     this._hideClear();

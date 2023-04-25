@@ -203,13 +203,13 @@
                     .addClass(KSVGICON)
                     .removeClass(currentIconClass) // Remove any existing icons.
                     .addClass(className)
-                    .addClass(iconClass || '');
+                    .addClass(iconClass || '')
+                    .attr("aria-hidden", true);
 
                 if ($.isPlainObject(icon)) {
                     svgElm.attr('viewBox', icon.viewBox || '')
                         .attr({
                             'viewBox': icon.viewBox || '',
-                            'aria-hidden': 'true',
                             'focusable': 'false',
                             'xmlns': 'http://www.w3.org/2000/svg'
                         })

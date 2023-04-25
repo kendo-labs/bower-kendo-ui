@@ -2008,7 +2008,7 @@
                    var toolIcon = ref.toolIcon;
                    var _buttonHtml = ref._buttonHtml;
 
-                   return '<span role="textbox" aria-haspopup="true" class="k-colorpicker k-picker k-icon-picker">' +
+                   return '<span role="combobox" aria-haspopup="dialog" aria-expanded="false" class="k-colorpicker k-picker k-icon-picker">' +
                     '<span class="k-input-inner">' +
                         "<span class=\"k-value-icon k-color-preview " + (toolIcon ? 'k-icon-color-preview' : '') + "\">" +
                             (toolIcon ? kendo.ui.icon({ icon: toolIcon, iconClass: "k-color-preview-icon" }) : '') +
@@ -2177,7 +2177,7 @@
                     var selectorWrapper = $('<div id="' + id + '" class="k-colorpicker-popup"></div>').appendTo(document.body);
                     var selector = that._selector = new selectorType($('<div></div>').appendTo(selectorWrapper), options);
 
-                    that.wrapper.attr("aria-owns", id);
+                    that.wrapper.attr("aria-controls", id);
 
                     that._popup = popup = selectorWrapper.kendoPopup({
                         anchor: that.wrapper,
@@ -2236,12 +2236,15 @@
                                     }
                                 }, 0);
                             }
+
+                            that.wrapper.attr("aria-expanded", false);
                         },
                         open: function(ev) {
                             if (that.trigger("open")) {
                                 ev.preventDefault();
                             } else {
                                 that.wrapper.addClass("k-focus");
+                                that.wrapper.attr("aria-expanded", true);
                             }
                         },
                         activate: function() {

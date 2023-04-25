@@ -764,7 +764,12 @@
 
                 separator.addClass(KSEPARATOR);
                 separator.attr(ROLE, SEPARATOR);
-                separator.appendTo(this.element);
+
+                if (this.overflowAnchor) {
+                    separator.insertBefore(this.overflowAnchor);
+                } else {
+                    separator.appendTo(this.element);
+                }
 
                 this._addAttributes(options, separator);
 
@@ -782,7 +787,12 @@
             _addSpacer: function() {
                 var spacer = $(SPACER_EL);
                 spacer.addClass(SPACER_CLASS);
-                spacer.appendTo(this.element);
+
+                if (this.overflowAnchor) {
+                    spacer.insertBefore(this.overflowAnchor);
+                } else {
+                    spacer.appendTo(this.element);
+                }
             },
 
             _addTemplate: function(options) {

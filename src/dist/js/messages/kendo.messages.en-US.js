@@ -543,7 +543,7 @@
       "pdf": "Export to PDF",
       "save": "Save changes",
       "select": "Select",
-      "update": "Update",
+      "update": "Save",
       "search": "Search..."
     },
     "editable": {
@@ -600,7 +600,7 @@
       "retry": "Retry",
       "commands": {
           "edit": "Edit",
-          "update": "Update",
+          "update": "Save",
           "canceledit": "Cancel",
           "create": "Add new record",
           "createchild": "Add child record",
