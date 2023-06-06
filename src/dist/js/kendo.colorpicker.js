@@ -592,7 +592,7 @@
                     var optionsMessagesHex = encode(options.messages.hex);
 
                     hexInputElement =
-                    "<div class=\"k-vstack k-flex-1\" data-" + ns + "bind=\"visible: isHEXMode\">" +
+                    "<div class=\"k-vstack\" data-" + ns + "bind=\"visible: isHEXMode\">" +
                         "<input type=\"text\" data-" + ns + "bind=\"value: hex\" data-" + ns + "role=\"textbox\" data-" + ns + "size=\"" + optionsSize + "\" tabindex=\"" + optionsTabIndex + "\"  aria-label=\"" + optionsMessagesHex + "\"/>" +
                         '<label class="k-colorgradient-input-label">HEX</label>' +
                     '</div>';
@@ -768,7 +768,7 @@
                 _otOfPicker: true
             },
             _template: kendo.template(function (options) { return '<div class="k-colorgradient-canvas k-hstack">' +
-                        '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"></div><div role="slider" aria-orientation="undefined" class="k-hsv-draghandle k-draghandle"></div></div>' +
+                        '<div class="k-hsv-rectangle"><div class="k-hsv-gradient"><div role="slider" aria-orientation="undefined" class="k-hsv-draghandle k-draghandle"></div></div></div>' +
                         '<div class="k-hsv-controls k-hstack">' +
                             '<input class="k-hue-slider k-colorgradient-slider" />' +
                             (options.opacity ? '<input class="k-alpha-slider k-colorgradient-slider" />' : '') +
@@ -1406,9 +1406,7 @@
                 var value = ref.value;
                 var id = ref.id;
 
-                var startPart =
-                '<div class="k-colorpalette-table-wrap">' +
-                '<table class="k-colorpalette-table k-palette" role="presentation"><tr role="row">';
+                var startPart = '<table class="k-colorpalette-table" role="presentation"><tr role="row">';
 
                 var cellElements = "";
                 for (var i = 0; i < colors.length; ++i) {
@@ -1426,7 +1424,7 @@
                         "aria-label=\"" + (colors[i].toCss()) + "\"></td>";
                 }
 
-                var endPart = '</tr></table></div>';
+                var endPart = '</tr></table>';
                 return startPart + cellElements + endPart;
             }),
             _tileSize: function() {
@@ -1823,7 +1821,7 @@
                         '</div>' +
                         '<div class="k-coloreditor-views k-vstack"></div>' +
                         (options.buttons ?
-                        '<div class="k-coloreditor-footer k-actions k-hstack k-justify-content-end">' +
+                        '<div class="k-coloreditor-footer k-actions k-actions-end k-actions-horizontal">' +
                             html.renderButton(("<button class=\"k-coloreditor-cancel\" title=\"" + (encode(options.messages.cancel)) + "\">" + (encode(options.messages.cancel)) + "</button>"), extend({}, buttonOptions, { fillMode: "solid" })) +
                             html.renderButton(("<button class=\"k-coloreditor-apply\" title=\"" + (encode(options.messages.apply)) + "\">" + (encode(options.messages.apply)) + "</button>"), extend({}, buttonOptions, { fillMode: "solid", themeColor: "primary" })) +
                         '</div>'

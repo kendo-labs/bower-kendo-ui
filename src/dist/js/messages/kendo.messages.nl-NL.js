@@ -327,7 +327,7 @@
   if (kendo.ui.Pager) {
   kendo.ui.Pager.prototype.options.messages =
   $.extend(true, kendo.ui.Pager.prototype.options.messages,{
-    "allPages": "All",
+    "allPages": "Alle",
     "display": "items {0} - {1} van {2}",
     "empty": "Geen items om te tonen",
     "first": "Ga naar eerste pagina",
@@ -335,10 +335,10 @@
     "last": "Ga naar laatste pagina",
     "next": "Ga naar volgende pagina",
     "of": "van {0}",
-    "page": "Pagina",
+    "page": "Pagina {0}",
     "previous": "Ga naar vorige pagina",
     "refresh": "Verversen",
-    "morePages": "Meer pagina"
+    "morePages": "Meer pagina's"
   });
   }
 

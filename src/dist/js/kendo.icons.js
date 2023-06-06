@@ -443,9 +443,9 @@
         viewBox: '0 0 512 512'
     };
 
-    var displayInlineBlockIcon = {
-        name: 'display-Inline-block',
-        content: '<path d="M448 32h32v448h-32zM32 32h32v448H32zm64 352h320V128H96v256zm64-192h192v128H160V192z" />',
+    var nonRecurrenceIcon = {
+        name: 'non-recurrence',
+        content: '<path d="m321 434.2 47.5 47.5C335.5 501 297 512 256 512 132.3 512 32 411.7 32 288c0-41 11-79.5 30.3-112.6l47.5 47.5c-8.9 19.9-13.8 41.9-13.8 65 0 88.2 71.8 160 160 160 23.1.1 45.2-4.8 65-13.7Zm118.3-17.5c12.9-18.3 23.1-38.7 30.1-60.4 6.9-21.5 10.6-44.5 10.6-68.3 0-40.8-10.9-79.1-30-112l-55.5 32c13.6 23.5 21.5 50.9 21.5 80 0 4.8-.2 9.5-.6 14.2-2.2 24.8-10.1 47.9-22.3 68.2L173.6 150.9c20.3-12.2 43.4-20.1 68.2-22.3 4.7-.4 9.4-.6 14.2-.6v64l160-96L256 0v64c-23.8 0-46.7 3.7-68.3 10.6-21.8 7-42.1 17.2-60.4 30.1L22.6 0 0 22.6 489.4 512l22.6-22.6-72.7-72.7Z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -698,6 +698,12 @@
     var eyeSlashIcon = {
         name: 'eye-slash',
         content: '<path d="m245.43 358.68 24.92 24.92c-4.75.26-9.54.4-14.34.4-94.7 0-179.7-51.5-224-128 13.19-22.83 30.01-43.43 49.65-61.1l23.01 23.01C91.46 229.29 79.51 242.07 69.8 256c26.33 33.77 54.15 53.86 72.6 65.1 39.18 23.88 77.54 33.37 103.03 37.58m131.42-4.44L480 457.39 457.39 480 345.51 368.12s-.07.03-.1.04L232.2 254.94l.11-.03-39.21-39.21-.03.11-26.8-26.8s.04-.05.06-.08l-7.01-7.01s-.06.03-.09.04l-24.17-24.17s.06-.03.09-.05L32 54.61 54.61 32l111.87 111.87A260.193 260.193 0 0 1 256 128c94.8 0 179.8 51.5 224 128-24 41.53-60.05 75.69-103.15 98.24Zm-7.25-33.14c27.8-16.4 54.1-38.7 72.6-65.1-18.4-26.4-44.8-48.7-72.6-65.1-12.2-7.2-25.1-13.2-38.4-17.9 22.6 20.5 36.8 50.1 36.8 83 0 25.15-8.31 48.37-22.32 67.08l7.01 7.01c5.76-2.76 11.41-5.74 16.91-8.99Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var displayInlineBlockIcon = {
+        name: 'display-inline-block',
+        content: '<path d="M448 32h32v448h-32zM32 32h32v448H32zm64 352h320V128H96v256zm64-192h192v128H160V192z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -4345,6 +4351,7 @@
         musicNotesIcon: musicNotesIcon,
         myspaceBoxIcon: myspaceBoxIcon,
         myspaceIcon: myspaceIcon,
+        nonRecurrenceIcon: nonRecurrenceIcon,
         notEqualIcon: notEqualIcon,
         outdentIcon: outdentIcon,
         outlineOffsetIcon: outlineOffsetIcon,
@@ -4625,7 +4632,7 @@
         kendo.ui.plugin(FontIcon);
         kendo.ui.plugin(SvgIcon);
 
-        kendo.setDefaults('iconType', 'font');
+        kendo.setDefaults('iconType', 'svg');
         kendo.ui.svgIcons = svgIcons;
         kendo.ui.icon = html.renderIcon;
     })(window.kendo.jQuery);

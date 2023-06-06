@@ -217,10 +217,60 @@
                 that.wrapper.off(ns);
                 clearTimeout(that._pasteTimeout);
 
+                if (that.filterInput) {
+                    that.filterInput.off(ns);
+                }
+
                 that._arrow.off(CLICK + " " + MOUSEDOWN);
                 that._clear.off(CLICK + " " + MOUSEDOWN);
 
                 Select.fn.destroy.call(that);
+            },
+
+            _onActionSheetCreate: function() {
+                var that = this;
+
+                if (that.filterInput) {
+                    that.filterInput
+                        .on("keydown" + ns, that._keydown.bind(that))
+                        .on("input" + ns, that._search.bind(that))
+                        .on("paste" + ns, that._inputPaste.bind(that))
+                        .attr({
+                            "role": "combobox",
+                            "aria-expanded": false
+                        });
+
+                    that.popup.bind("activate", function () {
+                        that.filterInput.val(that.input.val());
+                        that.filterInput.trigger("focus");
+                    });
+
+                    that.popup.bind("deactivate", function () {
+                        that.input.trigger("focus");
+                    });
+                }
+            },
+
+            _onCloseButtonPressed: function() {
+                var that = this;
+                var textField = that.options.dataTextField || "text";
+                var current = that.listView.focus();
+
+                if (!current) {
+                    if (that._syncValueAndText() || that._isSelect) {
+                        if (!that.dataItem() || that.dataItem()[textField] !== that.input.val()) {
+                            var input = that.filterInput && activeElement() === that.filterInput[0] ? that.filterInput : that.input;
+                            that._accessor(input.val());
+                        }
+                    }
+
+                    if (that.options.highlightFirst) {
+                        that.listView.value(that.input.val());
+                        that._blur();
+                    } else {
+                        that._oldText = that.text();
+                    }
+                }
             },
 
             _isValueChanged: function(value) {
@@ -234,6 +284,10 @@
                 var hasText = text && text !== that._oldText && text !== that.options.placeholder;
                 var index = that.selectedIndex;
                 var isCustom = index === -1;
+
+                if (that.filterInput && activeElement() === that.filterInput[0] && isCustom && hasText) {
+                    that.input.val(that.filterInput.val());
+                }
 
                 if (!that.options.syncValueAndText && !that.value() && isCustom && hasText) {
                     that._old = "";
@@ -282,6 +336,10 @@
                 var that = this;
                 var value = that.value();
                 var isClearButton = !$(e.relatedTarget).closest('.k-clear-value').length;
+
+                if (that.filterInput && e.relatedTarget === that.filterInput[0]) {
+                    return;
+                }
 
                 that._userTriggered = true;
                 that.wrapper.removeClass(FOCUSED);
@@ -507,7 +565,7 @@
 
             _listBound: function() {
                 var that = this;
-                var isActive = that.input[0] === activeElement();
+                var isActive = that.input[0] === activeElement() || that.filterInput && that.filterInput[0] === activeElement();
 
                 var data = that.dataSource.flatView();
                 var skip = that.listView.skip();
@@ -739,7 +797,7 @@
                 text = text === null ? "" : text;
 
                 var that = this;
-                var input = that.input[0];
+                var input = that.filterInput && that.filterInput[0] === activeElement() ? that.filterInput[0] : that.input[0];
                 var ignoreCase = that.options.ignoreCase;
                 var loweredText = text;
                 var dataItem;
@@ -1083,7 +1141,8 @@
                     } else {
                         if (that._syncValueAndText() || that._isSelect) {
                             if (!that.dataItem() || that.dataItem()[textField] !== that.input.val()) {
-                                that._accessor(that.input.val());
+                                var input = that.filterInput && activeElement() === that.filterInput[0] ? that.filterInput : that.input;
+                                that._accessor(input.val());
                             }
                         }
 
@@ -1222,8 +1281,11 @@
             },
 
             _clearValue: function() {
+                var that = this;
+                var input = that.filterInput && that.filterInput[0] === activeElement() ? that.filterInput : that.input;
+
                 Select.fn._clearValue.call(this);
-                this.input.trigger("focus");
+                input.trigger("focus");
             }
         });
 

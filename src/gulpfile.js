@@ -1,7 +1,6 @@
 
 
 var gulp = require('gulp');
-var logger = require('gulp-logger');
 var PluginError = require('plugin-error');
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
@@ -63,26 +62,21 @@ function uglifyScripts(stream) {
         .pipe(gulpIf(makeSourceMaps, sourcemaps.init()))
         .pipe(replace(/define\((?:["'][\w\.\-\/]+["'])?.+?\]/g, renameModules))
         .pipe(replace(/"kendo\.core"/g, '"kendo.core.min"'))
-        .pipe(logger({ extname: '.min.js', showChange: true }))
         .pipe(terser(terserOptions))
         .pipe(rename({ suffix: ".min" }))
-        .pipe(logger({ extname: '.js.map', showChange: true }))
         .pipe(gulpIf(makeSourceMaps, sourcemaps.write("./")));
 }
 
 function mjsMin() {
     return gulp.src(['dist/mjs/kendo.*.js', 'dist/mjs/cultures/*.js', 'dist/mjs/messages/*.js'], { base: "dist/mjs" })
         .pipe(gulpIf(makeSourceMaps, sourcemaps.init()))
-        .pipe(logger({ after: 'Terser: Uglify complete!', showChange: true }))
         .pipe(terser(terserOptions))
-        .pipe(logger({ after: 'Sourcemap: Write complete!', extname: '.js.map', showChange: true }))
         .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest('dist/mjs'));
 }
 
 function distThirdParty() {
     return gulp.src('js/{jquery,angular,pako,jszip}*.*')
-        .pipe(logger({ after: "ThirdParty: Scripts copied!", display: 'name', dest: './dist/js/', showChange: true }))
         .pipe(gulp.dest('dist/js'));
 }
 
@@ -129,16 +123,13 @@ gulp.task("custom", function() {
             ]
         })
         .pipe(source('kendo.custom.js'))
-        .pipe(logger({ before: 'Custom: Bundling!', after: 'Custom: Bundle complete!', showChange: true }))
         .pipe(buffer());
 
     var minSrc = src
         .pipe(clone())
         .pipe(gulpIf(makeSourceMaps, sourcemaps.init()))
-        .pipe(logger({ after: 'Terser: Uglify complete!', extname: '.min.js', showChange: true }))
         .pipe(terser(terserOptions))
         .pipe(rename({ suffix: ".min" }))
-        .pipe(logger({ after: 'Sourcemap: Write complete!', extname: '.js.map', showChange: true }))
         .pipe(gulpIf(makeSourceMaps, sourcemaps.write("./")));
 
     return merge(src.pipe(gulp.dest("dist/js")), minSrc.pipe(gulp.dest("dist/js")));

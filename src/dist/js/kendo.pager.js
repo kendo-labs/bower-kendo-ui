@@ -35,6 +35,10 @@
             LAST = "caret-alt-to-right",
             PREV = "caret-alt-left",
             NEXT = "caret-alt-right",
+            FIRST_CONST = "caret-alt-to-left",
+            LAST_CONST = "caret-alt-to-right",
+            PREV_CONST = "caret-alt-left",
+            NEXT_CONST = "caret-alt-right",
             SIZE = "k-pager-mobile-md k-pager-mobile-sm",
             FOCUSABLE = ":kendoFocusable:not([tabindex='-1'])",
             CHANGE = "change",
@@ -134,6 +138,20 @@
                 that.downEvent = kendo.applyEventMap(MOUSEDOWN, kendo.guid());
 
                 isRtl = kendo.support.isRtl(element);
+
+                if (isRtl) {
+                    FIRST = LAST_CONST;
+                    LAST = FIRST_CONST;
+                    PREV = NEXT_CONST;
+                    NEXT = PREV_CONST;
+                } else {
+                    FIRST = FIRST_CONST;
+                    LAST = LAST_CONST;
+                    PREV = PREV_CONST;
+                    NEXT = NEXT_CONST;
+                }
+
+
                 if (options.size) {
                     buttonSize = kendo.getValidCssClass("k-button-", "size", options.size);
                     dropDownClasses = "k-rounded-md " + kendo.getValidCssClass("k-picker-", "size", options.size);
@@ -144,29 +162,30 @@
                 }
                 that._template();
 
-                if (options.previousNext) {
-                    if (!that.element.find("[class*='-i-" + FIRST + "']").length) {
-                        that.element.append(icon(FIRST, options.messages.first, "k-pager-first", that._id, buttonSize));
+                if (options.previousNext || options.numeric) {
+                    that._numericWrap = that.element.find(".k-pager-numbers-wrap");
 
-                        first(that.element, page, totalPages);
+                    if (that._numericWrap.length === 0) {
+                        that._numericWrap = $("<div class='k-pager-numbers-wrap' />").appendTo(that.element);
+                    }
+                }
+
+
+                if (options.previousNext) {
+                    if (!that._numericWrap.find("[class*='-i-" + FIRST + "']").length) {
+                        that._numericWrap.append(icon(FIRST, options.messages.first, "k-pager-first", that._id, buttonSize));
+
+                        first(that._numericWrap, page, totalPages);
                     }
 
-                    if (!that.element.find("[class*='-i-" + PREV + "']").length) {
-                        that.element.append(icon(PREV, options.messages.previous, null, that._id, buttonSize));
+                    if (!that._numericWrap.find("[class*='-i-" + PREV + "']").length) {
+                        that._numericWrap.append(icon(PREV, options.messages.previous, null, that._id, buttonSize));
 
-                        prev(that.element, page, totalPages);
+                        prev(that._numericWrap, page, totalPages);
                     }
                 }
 
                 if (options.numeric) {
-                    if (!that._numericWrap) {
-                        that._numericWrap = that.element.find(".k-pager-numbers-wrap");
-
-                        if (that._numericWrap.length === 0) {
-                            that._numericWrap = $("<div class='k-pager-numbers-wrap' />").appendTo(that.element);
-                        }
-                    }
-
                     if (!that._numericSelect) {
                         that._numericSelect = that._numericWrap.find(".k-dropdown");
 
@@ -202,16 +221,16 @@
                 }
 
                 if (options.previousNext) {
-                    if (!that.element.find("[class*='-i-" + NEXT + "']").length) {
-                        that.element.append(icon(NEXT, options.messages.next, null, that._id, buttonSize));
+                    if (!that._numericWrap.find("[class*='-i-" + NEXT + "']").length) {
+                        that._numericWrap.append(icon(NEXT, options.messages.next, null, that._id, buttonSize));
 
-                        next(that.element, page, totalPages);
+                        next(that._numericWrap, page, totalPages);
                     }
 
-                    if (!that.element.find("[class*='-i-" + LAST + "']").length) {
-                        that.element.append(icon(LAST, options.messages.last, "k-pager-last", that._id, buttonSize));
+                    if (!that._numericWrap.find("[class*='-i-" + LAST + "']").length) {
+                        that._numericWrap.append(icon(LAST, options.messages.last, "k-pager-last", that._id, buttonSize));
 
-                        last(that.element, page, totalPages);
+                        last(that._numericWrap, page, totalPages);
                     }
                 }
 

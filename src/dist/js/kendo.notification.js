@@ -243,8 +243,10 @@
                     anchor: openPopup[0] ? openPopup : document.body,
                     origin: that._popupOrigin,
                     position: that._popupPosition,
+                    _resizeOnWrap: true,
                     animation: options.animation,
                     copyAnchorStyles: false,
+                    autosize: true,
                     modal: true,
                     collision: "",
                     isRtl: that._isRtl,
@@ -260,7 +262,7 @@
 
                 that._attachPopupEvents(options, popup);
 
-                wrapper.removeClass("k-group k-reset");
+                wrapper.removeClass("k-group k-reset k-popup");
 
                 if (openPopup[0]) {
                     popup.open();

@@ -517,7 +517,7 @@
                 }
 
                 if (current && current[0] != target[0]) {
-                    that.popup.close();
+                    that.popup.close(true);
                     that.popup.element.kendoStop(true, true);// animation can be too long to hide the element before it is shown again
                 }
 

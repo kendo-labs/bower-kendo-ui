@@ -122,7 +122,11 @@
                         that._placeholder(false);
                         wrapper.addClass(FOCUSED);
                     })
-                    .on("focusout" + ns, function() {
+                    .on("focusout" + ns, function(ev) {
+                        if (that.filterInput && ev.relatedTarget === that.filterInput[0]) {
+                            return;
+                        }
+
                         that._change();
                         that._placeholder();
                         that.close();
@@ -191,6 +195,40 @@
                 fillMode: "solid",
                 rounded: "medium",
                 label: null
+            },
+
+            _onActionSheetCreate: function() {
+                var that = this;
+
+                if (that.filterInput) {
+                    that.filterInput
+                        .on("keydown" + ns, that._keydown.bind(that))
+                        .on("keypress" + ns, that._keypress.bind(that))
+                        .on("input" + ns, that._search.bind(that))
+                        .on("paste" + ns, that._search.bind(that))
+                        .attr({
+                            autocomplete: AUTOCOMPLETEVALUE,
+                            role: "combobox",
+                            "aria-expanded": false
+                        });
+
+                    that.popup.bind("activate", function () {
+                        that.filterInput.val(that.element.val());
+                        that.filterInput.trigger("focus");
+                    });
+
+                    that.popup.bind("deactivate", function () {
+                        that.element.trigger("focus");
+                    });
+                }
+            },
+
+            _onCloseButtonPressed: function() {
+                var that = this;
+
+                if (that.filterInput && activeElement() === that.filterInput[0]) {
+                    that.element.val(that.filterInput.val());
+                }
             },
 
             _dataSource: function() {
@@ -296,6 +334,10 @@
                 that._clear.off(ns);
                 that.wrapper.off(ns);
 
+                if (that.filterInput) {
+                    that.filterInput.off(ns);
+                }
+
                 List.fn.destroy.call(that);
             },
 
@@ -313,14 +355,15 @@
                 ignoreCase = options.ignoreCase,
                 separator = that._separator(),
                 length,
-                accentFoldingFiltering = that.dataSource.options.accentFoldingFiltering;
+                accentFoldingFiltering = that.dataSource.options.accentFoldingFiltering,
+                element = that.filterInput && activeElement() === that.filterInput[0] ? that.filterInput : that.element;
 
                 word = word || that._accessor();
 
                 clearTimeout(that._typingTimeout);
 
                 if (separator) {
-                    word = wordAtCaret(caret(that.element)[0], word, separator);
+                    word = wordAtCaret(caret(element)[0], word, separator);
                 }
 
                 length = word.length;
@@ -461,7 +504,7 @@
                 var data = that.dataSource.flatView();
                 var length = data.length;
                 var groupsLength = that.dataSource._group ? that.dataSource._group.length : 0;
-                var isActive = that.element[0] === activeElement();
+                var isActive = that.element[0] === activeElement() || that.filterInput && that.filterInput[0] === activeElement();
                 var action;
 
                 that._renderFooter();
@@ -571,6 +614,10 @@
                 that._old = value;
                 that._oldText = value;
 
+                if (that.filterInput && activeElement() === that.filterInput[0]) {
+                    that.element.val(that.filterInput.val());
+                }
+
                 if (valueUpdated || itemSelected) {
                     // trigger the DOM change event so any subscriber gets notified
                     that.element.trigger(CHANGE);
@@ -586,7 +633,7 @@
 
             _accessor: function(value) {
                 var that = this,
-                    element = that.element[0];
+                    element = that.filterInput && activeElement() === that.filterInput[0] ? that.filterInput[0] : that.element[0];
 
                 if (value !== undefined$1) {
                     element.value = value === null ? "" : value;

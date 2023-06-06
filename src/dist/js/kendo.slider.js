@@ -75,7 +75,7 @@
                 options = that.options;
                 that._isHorizontal = options.orientation == "horizontal";
                 that._isRtl = that._isHorizontal && kendo.support.isRtl(element);
-                that._position = that._isHorizontal ? "left" : "bottom";
+                that._position = that._isRtl ? "right" : that._isHorizontal ? "left" : "bottom";
                 that._sizeFn = that._isHorizontal ? "width" : "height";
                 that._outerSize = that._isHorizontal ? outerWidth : outerHeight;
 
@@ -307,11 +307,6 @@
 
                 that._pixelSteps[lastItem] = that._maxSelection;
                 that._values[lastItem] = options.max;
-
-                if (that._isRtl) {
-                    that._pixelSteps.reverse();
-                    that._values.reverse();
-                }
             },
 
             _getValueFromPosition: function(mousePosition, draggableArea) {
@@ -560,14 +555,14 @@
                    "'></div></div>";
         }
 
-        function createButton(options, type, isHorizontal) {
+        function createButton(options, type, isHorizontal, isRtl) {
             var buttonIconName = "";
 
             if (isHorizontal) {
                 if (type === "increase") {
-                    buttonIconName = "caret-alt-right";
+                    buttonIconName = isRtl ? "caret-alt-left" : "caret-alt-right";
                 } else {
-                    buttonIconName = "caret-alt-left";
+                    buttonIconName = isRtl ? "caret-alt-right" : "caret-alt-left";
                 }
             } else {
                 if (type == "increase") {
@@ -974,9 +969,7 @@
 
             _nextValueByIndex: function(index) {
                 var count = this._values.length;
-                if (this._isRtl) {
-                    index = count - 1 - index;
-                }
+
                 return this._values[math.max(0, math.min(index, count - 1))];
             },
 
@@ -1013,11 +1006,10 @@
                 var selectionValue = val - options.min,
                     index = that._valueIndex = math.ceil(round(selectionValue / options.smallStep)),
                     selection = parseInt(that._pixelSteps[index], 10),
-                    selectionDiv = that._trackDiv.find(".k-slider-selection"),
-                    rtlCorrection = that._isRtl ? 2 : 0;
+                    selectionDiv = that._trackDiv.find(".k-slider-selection");
 
-                selectionDiv[that._sizeFn](that._isRtl ? that._maxSelection - selection : selection);
-                dragHandle.css(that._position, selection - rtlCorrection);
+                selectionDiv[that._sizeFn](selection);
+                dragHandle.css(that._position, selection);
             }
 
             moveSelection(options.value);
@@ -1743,12 +1735,11 @@
                     selectionStartIndex = math.ceil(round(selectionStartValue / options.smallStep)),
                     selectionEndIndex = math.ceil(round(selectionEndValue / options.smallStep)),
                     selectionStart = that._pixelSteps[selectionStartIndex],
-                    selectionEnd = that._pixelSteps[selectionEndIndex],
-                    rtlCorrection = that._isRtl ? 2 : 0;
+                    selectionEnd = that._pixelSteps[selectionEndIndex];
 
-                dragHandles.eq(0).css(that._position, selectionStart - rtlCorrection)
+                dragHandles.eq(0).css(that._position, selectionStart)
                            .end()
-                           .eq(1).css(that._position, selectionEnd - rtlCorrection);
+                           .eq(1).css(that._position, selectionEnd);
 
                 makeSelection(selectionStart, selectionEnd);
             }
@@ -1761,13 +1752,8 @@
                 selection = math.abs(selectionStart - selectionEnd);
 
                 selectionDiv[that._sizeFn](selection);
-                if (that._isRtl) {
-                    selectionPosition = math.max(selectionStart, selectionEnd);
-                    selectionDiv.css("right", that._maxSelection - selectionPosition - 1);
-                } else {
-                    selectionPosition = math.min(selectionStart, selectionEnd);
-                    selectionDiv.css(that._position, selectionPosition - 1);
-                }
+                selectionPosition = math.min(selectionStart, selectionEnd);
+                selectionDiv.css(that._position, selectionPosition - 1);
             }
 
             moveSelection(that.value());
