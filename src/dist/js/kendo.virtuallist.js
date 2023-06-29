@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.data.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.data'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendovirtuallist = global.kendovirtuallist || {}, global.kendovirtuallist.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "virtuallist",
         name: "VirtualList",
@@ -242,11 +243,10 @@
                 var widthStyle = '';
 
                 if (currentWidth) {
-                    widthStyle += "style='width:";
-                    widthStyle += currentWidthInt;
-                    widthStyle += percentageUnitsRegex.test(currentWidth) ? "%" : "px";
-                    widthStyle += ";'";
+                    var widthValue = "" + currentWidthInt + (percentageUnitsRegex.test(currentWidth) ? "%" : "px");
+                    widthStyle = "style=\"width: " + widthValue + "; max-width: " + widthValue + ";\"";
                 }
+
                 item += "<span class='k-table-td' " + widthStyle + ">";
                 item += templates["column" + i](dataItem);
                 item += "</span>";
@@ -745,7 +745,7 @@
                     defs.push(deferred);
                 });
 
-                $.when.apply($, defs).then(function() {
+                $.when.apply($, defs).done(function() {
                     result.resolve();
                 });
 
@@ -1859,5 +1859,8 @@
         kendo.ui.plugin(VirtualList);
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

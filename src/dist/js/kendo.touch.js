@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.userevents.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.userevents'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendotouch = global.kendotouch || {}, global.kendotouch.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "touch",
         name: "Touch",
@@ -178,5 +179,8 @@
 
         kendo.ui.plugin(Touch);
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

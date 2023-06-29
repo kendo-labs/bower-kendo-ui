@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendoprogressbar = global.kendoprogressbar || {}, global.kendoprogressbar.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "progressbar",
         name: "ProgressBar",
@@ -528,5 +529,8 @@
 
         kendo.ui.plugin(ProgressBar);
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

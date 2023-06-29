@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.html.button.js'), require('kendo.button.menu.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.html.button', 'kendo.button.menu'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendodropdownbutton = global.kendodropdownbutton || {}, global.kendodropdownbutton.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "dropdownbutton",
         name: "DropDownButton",
@@ -299,5 +300,8 @@
         ui.plugin(DropDownButton);
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

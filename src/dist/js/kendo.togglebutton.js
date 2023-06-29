@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.button.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.button'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendotogglebutton = global.kendotogglebutton || {}, global.kendotogglebutton.js = factory()));
+})(this, (function () {
     var __meta__ = {
             id: "togglebutton",
             name: "ToggleButton",
@@ -128,5 +129,8 @@
             kendo.ui.plugin(ToggleButton);
 
         })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.list.js'), require('kendo.mobile.scroller.js'), require('kendo.virtuallist.js'), require('kendo.html.chip.js'), require('kendo.html.chiplist.js'), require('kendo.html.button.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.list', 'kendo.mobile.scroller', 'kendo.virtuallist', 'kendo.html.chip', 'kendo.html.chiplist', 'kendo.html.button'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendomultiselect = global.kendomultiselect || {}, global.kendomultiselect.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "multiselect",
         name: "MultiSelect",
@@ -1614,7 +1615,7 @@
                 singleTemplateFunc = function (ref) {
                     var values = ref.values;
 
-                    return ((values.length) + " " + singleTag);
+                    return ((values.length) + " " + (encode(singleTag)));
                 };
 
                 defaultTemplate = isMultiple ? multipleTemplateFunc : singleTemplateFunc;
@@ -1667,7 +1668,7 @@
             },
 
             _arrowButton: function() {
-                var arrowTitle = this.options.messages.downArrow,
+                var arrowTitle = encode(this.options.messages.downArrow),
                     arrow = $(html.renderButton('<button type="button" aria-label="' + arrowTitle + '" class="k-input-button k-multiselect-toggle-button"></button>', $.extend({}, this.options, {
                         icon: "caret-alt-down"
                     })));
@@ -1764,5 +1765,8 @@
         }]);
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

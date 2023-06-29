@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.popup.js'), require('kendo.icons.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.popup', 'kendo.icons'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendonotification = global.kendonotification || {}, global.kendonotification.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "notification",
         name: "Notification",
@@ -549,5 +550,8 @@
         kendo.ui.plugin(Notification);
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

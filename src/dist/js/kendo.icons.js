@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.html.icon.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.html.icon'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendoicons = global.kendoicons || {}, global.kendoicons.js = factory()));
+})(this, (function () {
     var caretTrIcon = {
         name: 'caret-tr',
         content: '<path d="M352 160v192L160 160h192z" />',
@@ -4636,5 +4637,8 @@
         kendo.ui.svgIcons = svgIcons;
         kendo.ui.icon = html.renderIcon;
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

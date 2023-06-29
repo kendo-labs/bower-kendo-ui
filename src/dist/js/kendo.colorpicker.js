@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.color.js'), require('kendo.popup.js'), require('kendo.slider.js'), require('kendo.userevents.js'), require('kendo.button.js'), require('kendo.binder.js'), require('kendo.textbox.js'), require('kendo.numerictextbox.js'), require('kendo.html.button.js'), require('kendo.icons.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.color', 'kendo.popup', 'kendo.slider', 'kendo.userevents', 'kendo.button', 'kendo.binder', 'kendo.textbox', 'kendo.numerictextbox', 'kendo.html.button', 'kendo.icons'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendocolorpicker = global.kendocolorpicker || {}, global.kendocolorpicker.js = factory()));
+})(this, (function () {
     (function($, undefined$1) {
         // WARNING: removing the following jshint declaration and turning
         // == into === to make JSHint happy will break functionality.
@@ -2283,5 +2284,8 @@
         }]);
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

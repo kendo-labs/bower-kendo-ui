@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.floatinglabel.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.floatinglabel'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendolabel = global.kendolabel || {}, global.kendolabel.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: 'label',
         name: 'Label',
@@ -144,5 +145,7 @@
     });
 
     kendo.ui.plugin(Label);
+
+    return kendo;
 
 }));

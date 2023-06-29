@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.data.js'), require('kendo.userevents.js'), require('kendo.mobile.button.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.data', 'kendo.userevents', 'kendo.mobile.button'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendomobile = global.kendomobile || {}, global.kendomobile.listview = global.kendomobile.listview || {}, global.kendomobile.listview.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "mobile.listview",
         name: "ListView",
@@ -1347,5 +1348,8 @@
 
         ui.plugin(ListView);
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

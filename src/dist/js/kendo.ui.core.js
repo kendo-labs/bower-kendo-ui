@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery')) :
     typeof define === 'function' && define.amd ? define(['jquery'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendoui = global.kendoui || {}, global.kendoui.core = global.kendoui.core || {}, global.kendoui.core.js = factory()));
+})(this, (function () {
     var breakpoints;
     var EVENT = "change";
 
@@ -120,7 +121,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.2.606'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.2.629'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -293,7 +294,7 @@
                 return target;
             };
 
-        kendo.version = "2023.2.606".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.2.629".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -732,6 +733,7 @@
             objectToString = {}.toString;
 
         //cultures
+        kendo.cultures = kendo.cultures || {}; // Ensure cultures object exists
         kendo.cultures["en-US"] = {
             name: EN,
             numberFormat: {
@@ -5220,7 +5222,7 @@
         var roundedValues = [ ['small', 'sm'], ['medium', 'md'], ['large', 'lg'] ];
         //var alignValues = [ ['top start', 'top-start'], ['top end', 'top-end'], ['bottom start', 'bottom-start'], ['bottom end', 'bottom-end'] ];
         var positionModeValues = [ 'fixed', 'static', 'sticky', 'absolute' ];
-        var resizeValues = [ 'both', 'horizontal', 'vertical' ];
+        var resizeValues = [ ['both', 'resize'], ['horizontal', 'resize-x'], ['vertical', 'resize-y'] ];
         var overflowValues = [ 'auto', 'hidden', 'visible', 'scroll', 'clip' ];
 
         kendo.cssProperties = (function() {
@@ -5307,7 +5309,7 @@
                     } else if (propName === "rounded") {
                         prefix = "k-rounded-";
                     } else if (propName === "resize") {
-                        prefix = "k-resize-";
+                        prefix = "k-";
                     } else if (propName === "overflow") {
                         prefix = "k-overflow-";
                     } else {
@@ -5628,6 +5630,7 @@
         }
 
     })(jQuery, window);
+    var kendo$1h = kendo;
 
     var __meta__$1h = {
         id: "router",
@@ -5980,6 +5983,7 @@
         kendo.absoluteURL = absoluteURL;
         kendo.history = new History();
     })(window.kendo.jQuery);
+    var kendo$1g = kendo;
 
     (function() {
         var kendo = window.kendo,
@@ -6813,6 +6817,7 @@
         kendo.touchDelta = touchDelta;
         kendo.UserEvents = UserEvents;
      })(window.kendo.jQuery);
+    var kendo$1f = kendo;
 
     var __meta__$1f = {
         id: "touch",
@@ -6975,6 +6980,7 @@
 
         kendo.ui.plugin(Touch);
     })(window.kendo.jQuery);
+    var kendo$1e = kendo;
 
     /*
     This code is copied/inspired by the internal @progress/kendo-data-query repo:
@@ -7660,6 +7666,7 @@
         });
 
     })(window.kendo.jQuery);
+    var kendo$1d = kendo;
 
     var __meta__$1d = {
         id: "data.xml",
@@ -7919,6 +7926,7 @@
             }
         });
     })(window.kendo.jQuery);
+    var kendo$1c = kendo;
 
     var __meta__$1c = {
         id: "data",
@@ -14584,6 +14592,7 @@
             BatchBuffer: BatchBuffer
         });
     })(window.kendo.jQuery);
+    var kendo$1b = kendo;
 
     var __meta__$1b = {
         id: "binder",
@@ -15651,10 +15660,16 @@
                 },
 
                 refresh: function() {
+                    var val = this.bindings[CHECKED].get();
+
                     if (this.element.type === "radio") {
-                        this.widget.check(this.bindings[CHECKED].get().toString() === this.value());
+                        if (val !== undefined$1) {
+                            this.widget.check(val.toString() === this.value());
+                        } else {
+                            this.widget.check(false);
+                        }
                     } else {
-                        this.widget.check(this.bindings[CHECKED].get() === true);
+                        this.widget.check(val === true);
                     }
                 },
 
@@ -16713,6 +16728,7 @@
         };
 
     })(window.kendo.jQuery);
+    var kendo$1a = kendo;
 
     var __meta__$1a = {
         id: "fx",
@@ -18296,6 +18312,7 @@
             return Math.max(inner.width / outer.width, inner.height / outer.height);
         };
     })(window.kendo.jQuery);
+    var kendo$19 = kendo;
 
     var __meta__$19 = {
         id: "view",
@@ -19013,6 +19030,7 @@
         kendo.ViewClone = ViewClone;
 
     })(window.kendo.jQuery);
+    var kendo$18 = kendo;
 
     var __meta__$18 = {
         id: "floatinglabel",
@@ -19135,6 +19153,7 @@
         });
         ui.plugin(FloatingLabel);
     })(window.kendo.jQuery);
+    var kendo$17 = kendo;
 
     var __meta__$17 = {
         id: 'label',
@@ -19145,11 +19164,11 @@
         hidden: true
     };
 
-    var kendo$1 = window.kendo;
-    var $$1 = kendo$1.jQuery;
-    var ui = kendo$1.ui;
+    var kendo$16 = window.kendo;
+    var $$1 = kendo$16.jQuery;
+    var ui = kendo$16.ui;
     var Widget = ui.Widget;
-    var isFunction = kendo$1.isFunction;
+    var isFunction = kendo$16.isFunction;
 
     var LABELCLASSES = "k-label k-input-label";
 
@@ -19236,7 +19255,7 @@
             }
 
             if (!id) {
-                id = options.name + "_" + kendo$1.guid();
+                id = options.name + "_" + kendo$16.guid();
                 element.attr("id", id);
             }
 
@@ -19257,12 +19276,12 @@
 
             if (floating) {
                 that._floatingLabelContainer = that.widget.wrapper.wrap("<span></span>").parent();
-                that.floatingLabel = new kendo$1.ui.FloatingLabel(that._floatingLabelContainer, $$1.extend({}, options));
+                that.floatingLabel = new kendo$16.ui.FloatingLabel(that._floatingLabelContainer, $$1.extend({}, options));
             }
         }
     });
 
-    kendo$1.ui.plugin(Label);
+    kendo$16.ui.plugin(Label);
 
     var __meta__$16 = {
         id: "data.signalr",
@@ -19387,6 +19406,7 @@
         });
 
     })(window.kendo.jQuery);
+    var kendo$15 = kendo;
 
     var __meta__$15 = {
         id: "validator",
@@ -19832,6 +19852,14 @@
                     widgetInstance = kendo.widgetInstance(input.closest(".k-signature"));
                 }
 
+                if (input.is("[type=radio]")) {
+                    widgetInstance = kendo.widgetInstance(input.closest(".k-radio-list"));
+                }
+
+                if (input.is("[type=checkbox]")) {
+                    widgetInstance = kendo.widgetInstance(input.closest(".k-checkbox-list"));
+                }
+
                 if (!valid && !input.data("captcha_validating")) {
                     that._errors[fieldName] = messageText;
                     var lblId = lbl.attr('id');
@@ -19861,7 +19889,7 @@
                             widgetInstance = kendo.widgetInstance(input.closest(".k-checkbox-list"));
                         }
 
-                        if (widgetInstance && widgetInstance.wrapper && (widgetInstance.element !== widgetInstance.wrapper || widgetInstance.options.name == "Signature")) {
+                        if (widgetInstance && widgetInstance.wrapper && (widgetInstance.element !== widgetInstance.wrapper || ["Signature", "RadioGroup", "CheckBoxGroup"].indexOf(widgetInstance.options.name) > -1)) {
                             messageLabel.insertAfter(widgetInstance.wrapper);
                         } else if (parentElement && parentElement.nodeName === "LABEL") {
                             // Input inside label
@@ -20185,6 +20213,7 @@
 
         kendo.ui.plugin(Validator);
     })(window.kendo.jQuery);
+    var kendo$14 = kendo;
 
     var __meta__$14 = {
         id: "draganddrop",
@@ -21308,6 +21337,7 @@
         };
 
      })(window.kendo.jQuery);
+    var kendo$13 = kendo;
 
     var __meta__$13 = {
         id: "mobile.scroller",
@@ -22009,6 +22039,7 @@
 
         ui.plugin(Scroller);
     })(window.kendo.jQuery);
+    var kendo$12 = kendo;
 
     var __meta__$12 = {
         id: "resizable",
@@ -22197,6 +22228,7 @@
         kendo.ui.plugin(Resizable);
 
     })(window.kendo.jQuery);
+    var kendo$11 = kendo;
 
     var __meta__$11 = {
         id: "sortable",
@@ -22713,6 +22745,7 @@
 
         kendo.ui.plugin(Sortable);
     })(window.kendo.jQuery);
+    var kendo$10 = kendo;
 
     var __meta__$10 = {
         id: "selectable",
@@ -23259,6 +23292,7 @@
         kendo.ui.plugin(Selectable);
 
     })(window.kendo.jQuery);
+    var kendo$$ = kendo;
 
     var __meta__$$ = {
         id: "html.base",
@@ -23334,6 +23368,7 @@
         });
 
     })(window.kendo.jQuery);
+    var kendo$_ = kendo;
 
     var __meta__$_ = {
         id: "html.icon",
@@ -23567,6 +23602,7 @@
             values: ['primary', 'secondary', 'tertiary', 'inherit', 'info', 'success', 'warning', 'error', 'dark', 'light', 'inverse']
         }]);
     })(window.kendo.jQuery);
+    var kendo$Z = kendo;
 
     var caretTrIcon = {
         name: 'caret-tr',
@@ -28187,6 +28223,7 @@
         kendo.ui.svgIcons = svgIcons;
         kendo.ui.icon = html.renderIcon;
     })(window.kendo.jQuery);
+    var kendo$Y = kendo;
 
     var __meta__$Y = {
         id: "badge",
@@ -28515,6 +28552,7 @@
         ui.plugin(Badge);
 
     })(window.kendo.jQuery);
+    var kendo$X = kendo;
 
     var __meta__$X = {
         id: "html.button",
@@ -28656,6 +28694,7 @@
         }]);
 
     })(window.kendo.jQuery);
+    var kendo$W = kendo;
 
     var __meta__$W = {
             id: "button",
@@ -28885,6 +28924,7 @@
             kendo.ui.plugin(Button);
 
         })(window.kendo.jQuery);
+    var kendo$V = kendo;
 
     var __meta__$V = {
             id: "togglebutton",
@@ -28997,6 +29037,7 @@
             kendo.ui.plugin(ToggleButton);
 
         })(window.kendo.jQuery);
+    var kendo$U = kendo;
 
     var __meta__$U = {
         id: "buttongroup",
@@ -29338,6 +29379,7 @@
 
         ui.plugin(ButtonGroup);
     })(window.kendo.jQuery);
+    var kendo$T = kendo;
 
     var __meta__$T = {
         id: "bottomnavigation",
@@ -29713,6 +29755,7 @@
 
         kendo.cssProperties.registerPrefix("BottomNavigation", "k-bottom-nav-");
     })(window.kendo.jQuery);
+    var kendo$S = kendo;
 
     var __meta__$S = {
         id: "pager",
@@ -29727,6 +29770,7 @@
             ui = kendo.ui,
             Widget = ui.Widget,
             keys = kendo.keys,
+            encode = kendo.htmlEncode,
             template = kendo.template,
             FIRST = "caret-alt-to-left",
             LAST = "caret-alt-to-right",
@@ -29908,9 +29952,9 @@
                 if (options.input) {
                     if (!that.element.find(".k-pager-input").length) {
                        that.element.append('<span class="k-pager-input k-label">' +
-                           options.messages.page +
+                            encode(options.messages.page) +
                            '<span class="k-textbox k-input k-input-md k-rounded-md k-input-solid"><input class="k-input-inner" /></span>' +
-                           kendo.format(options.messages.of, totalPages) +
+                           encode(kendo.format(options.messages.of, totalPages)) +
                            '</span>');
                     }
 
@@ -29936,13 +29980,13 @@
                         var pageSizes = options.pageSizes.length ? options.pageSizes : ["all", 5, 10, 20];
                         var pageItems = $.map(pageSizes, function(size) {
                             if (size.toLowerCase && size.toLowerCase() === "all") {
-                                return "<option value='all'>" + options.messages.allPages + "</option>";
+                                return "<option value='all'>" + encode(options.messages.allPages) + "</option>";
                             }
 
                             return "<option>" + size + "</option>";
                         });
 
-                        $('<span class="k-pager-sizes k-label"><select></select>' + options.messages.itemsPerPage + "</span>")
+                        $('<span class="k-pager-sizes k-label"><select></select>' + encode(options.messages.itemsPerPage) + "</span>")
                             .appendTo(that.element)
                             .find("select").html(pageItems.join("")).end()
                             .appendTo(that.element);
@@ -30031,7 +30075,7 @@
                     var tabindex = ref.tabindex;
                     var size = ref.size;
 
-                    return ("<button role=\"button\" aria-current=\"page\" tabindex=\"" + tabindex + "\" aria-label=\"" + title + "\" class=\"k-button " + size + " k-button-flat k-button-flat-primary k-selected\">" + text + "</span>");
+                    return ("<button role=\"button\" aria-current=\"page\" tabindex=\"" + tabindex + "\" aria-label=\"" + title + "\" class=\"k-button " + size + " k-button-flat k-button-flat-primary k-selected\">" + (encode(text)) + "</span>");
         },
                 linkTemplate: function (ref) {
                     var ns = ref.ns;
@@ -30041,14 +30085,14 @@
                     var tabindex = ref.tabindex;
                     var size = ref.size;
 
-                    return ("<button class=\"k-button " + size + " k-button-flat k-button-flat-primary\" tabindex=\"" + tabindex + "\" href=\"#\" data-" + ns + "page=\"" + idx + "\" " + (title !== "" ? ("title=\"" + title + "\"") : '') + ">" + text + "</button>");
+                    return ("<button class=\"k-button " + size + " k-button-flat k-button-flat-primary\" tabindex=\"" + tabindex + "\" href=\"#\" data-" + ns + "page=\"" + idx + "\" " + (title !== "" ? ("title=\"" + title + "\"") : '') + ">" + (encode(text)) + "</button>");
         },
                 numericSelectItemTemplate: function (ref) {
                     var idx = ref.idx;
                     var selected = ref.selected;
                     var text = ref.text;
 
-                    return ("<option value=\"" + idx + "\" " + (selected ? 'selected="selected"' : '') + ">" + text + "</option>");
+                    return ("<option value=\"" + idx + "\" " + (selected ? 'selected="selected"' : '') + ">" + (encode(text)) + "</option>");
         },
                 buttonCount: 10,
                 autoBind: true,
@@ -30217,7 +30261,7 @@
                         .find(".k-pager-input")
                         .html(that.options.messages.page +
                             '<span class="k-textbox k-input k-input-md k-rounded-md k-input-solid"><input class="k-input-inner" aria-label="' + that.options.messages.page + " " + page + '"></span>' +
-                            kendo.format(options.messages.of, totalPages))
+                            encode(kendo.format(options.messages.of, totalPages)))
                         .find("input")
                         .val(page)
                         .attr(DISABLED, total < 1)
@@ -30508,6 +30552,7 @@
 
         ui.plugin(Pager);
     })(window.kendo.jQuery);
+    var kendo$R = kendo;
 
     var __meta__$R = {
         id: "popup",
@@ -31366,6 +31411,7 @@
         });
         ui.Popup.TabKeyTrap = TabKeyTrap;
     })(window.kendo.jQuery);
+    var kendo$Q = kendo;
 
     var __meta__$Q = {
         id: "actionsheet",
@@ -31964,6 +32010,7 @@
         ui.plugin(ActionSheet);
 
     })(window.kendo.jQuery);
+    var kendo$P = kendo;
 
     var __meta__$P = {
         id: "notification",
@@ -32497,6 +32544,7 @@
         kendo.ui.plugin(Notification);
 
     })(window.kendo.jQuery);
+    var kendo$O = kendo;
 
     var __meta__$O = {
         id: "tooltip",
@@ -33109,6 +33157,7 @@
 
         kendo.ui.plugin(Tooltip);
     })(window.kendo.jQuery);
+    var kendo$N = kendo;
 
     var __meta__$N = {
         id: "button.menu",
@@ -33552,6 +33601,7 @@
         ui.plugin(ButtonMenu);
 
     })(window.kendo.jQuery);
+    var kendo$M = kendo;
 
     var __meta__$M = {
         id: "splitbutton",
@@ -33704,6 +33754,7 @@
                 delete options.text;
                 delete options.imageUrl;
                 delete options.click;
+                delete options.iconClass;
 
                 html.renderButton(that.arrowButton, options);
             },
@@ -33916,6 +33967,7 @@
         ui.plugin(SplitButton);
 
     })(window.kendo.jQuery);
+    var kendo$L = kendo;
 
     var __meta__$L = {
         id: "dropdownbutton",
@@ -34199,6 +34251,7 @@
         ui.plugin(DropDownButton);
 
     })(window.kendo.jQuery);
+    var kendo$K = kendo;
 
     var __meta__$K = {
         id: "menu",
@@ -37013,6 +37066,7 @@
         ui.plugin(ContextMenu);
 
     })(window.kendo.jQuery);
+    var kendo$J = kendo;
 
     var __meta__$J = {
         id: "toolbar",
@@ -37910,6 +37964,10 @@
                 element = widget.wrapper || widget.element;
                 element.addClass(TOOLBAR_TOOLS_CLASSES[component]);
                 this._addAttributes(options, element);
+
+                if (options.url) {
+                    widgetElement.removeAttr(ROLE);
+                }
 
                 if (hasButtons) {
                     element.find(DOT + KBUTTON).addClass(TOOLBAR_TOOL);
@@ -38856,6 +38914,7 @@
 
         kendo.ui.plugin(ToolBar);
     })(window.kendo.jQuery);
+    var kendo$I = kendo;
 
     var __meta__$I = {
         id: "list",
@@ -39213,7 +39272,7 @@
             _noData: function() {
                 var list = this;
                 var noData = $(list.noData);
-                var template = list.options.noDataTemplate === true ? function () { return list.options.messages.noData; } : list.options.noDataTemplate;
+                var template = list.options.noDataTemplate === true ? function () { return htmlEncode(list.options.messages.noData); } : list.options.noDataTemplate;
 
                 list.angular("cleanup", function() { return { elements: noData }; });
                 kendo.destroy(noData);
@@ -40079,7 +40138,7 @@
                     list._removeStaticHeader();
                 }
 
-                list.popup = new ui.Popup(list.list.parent(), extend({}, list.options.popup, {
+                list.popup = new ui.Popup(list.list.parent().addClass("k-list-container"), extend({}, list.options.popup, {
                     anchor: list.wrapper,
                     open: list._openHandler.bind(list),
                     close: list._closeHandler.bind(list),
@@ -42023,6 +42082,7 @@
         kendo.cssProperties.registerPrefix("List", "k-list-");
 
     })(window.kendo.jQuery);
+    var kendo$H = kendo;
 
     var __meta__$H = {
         id: "calendar",
@@ -42039,6 +42099,7 @@
             Widget = ui.Widget,
             keys = kendo.keys,
             parse = kendo.parseDate,
+            encode = kendo.htmlEncode,
             adjustDST = kendo.date.adjustDST,
             weekInYear = kendo.date.weekInYear,
             Selectable = kendo.ui.Selectable,
@@ -42107,8 +42168,9 @@
                 var actionAttr = ref.actionAttr;
                 var size = ref.size;
                 var messages = ref.messages;
+                var isRtl = ref.isRtl;
 
-                return "<div class=\"k-calendar-header k-hstack\">\n            <button " + actionAttr + "=\"nav-up\" id=\"" + kendo.guid() + "\" class=\"k-calendar-title k-button " + size + " k-button-flat k-button-flat-base k-rounded-md\">\n                <span class=\"k-button-text\"></span>\n            </button>\n            <span class=\"k-spacer\"></span>\n            <span class=\"k-calendar-nav\">\n                <button tabindex=\"-1\" " + actionAttr + "=\"prev\" class=\"k-calendar-nav-prev k-button " + size + " k-button-flat k-button-flat-base k-rounded-md k-icon-button\">\n                    " + (kendo.ui.icon({ icon: "chevron-left", iconClass: "k-button-icon" })) + "\n                </button>\n                <button tabindex=\"-1\" " + actionAttr + "=\"today\" class=\"k-calendar-nav-today k-button " + size + " k-button-flat k-button-flat-primary k-rounded-md\">\n                    <span class=\"k-button-text\">" + (messages.today) + "</span>\n                </button>\n                <button tabindex=\"-1\" " + actionAttr + "=\"next\" class=\"k-calendar-nav-next k-button " + size + " k-button-flat k-button-flat-base k-rounded-md k-icon-button\">\n                    " + (kendo.ui.icon({ icon: "chevron-right", iconClass: "k-button-icon" })) + "\n                </button>\n            </span>\n        </div>";
+                return "<div class=\"k-calendar-header k-hstack\">\n            <button " + actionAttr + "=\"nav-up\" id=\"" + kendo.guid() + "\" class=\"k-calendar-title k-button " + size + " k-button-flat k-button-flat-base k-rounded-md\">\n                <span class=\"k-button-text\"></span>\n            </button>\n            <span class=\"k-spacer\"></span>\n            <span class=\"k-calendar-nav\">\n                <button tabindex=\"-1\" " + actionAttr + "=" + (isRtl ? "next" : "prev") + " class=\"k-calendar-nav-prev k-button " + size + " k-button-flat k-button-flat-base k-rounded-md k-icon-button\">\n                    " + (kendo.ui.icon({ icon: ("chevron-" + (isRtl ? "right" : "left")), iconClass: "k-button-icon" })) + "\n                </button>\n                <button tabindex=\"-1\" " + actionAttr + "=\"today\" class=\"k-calendar-nav-today k-button " + size + " k-button-flat k-button-flat-primary k-rounded-md\">\n                    <span class=\"k-button-text\">" + (kendo.htmlEncode(messages.today)) + "</span>\n                </button>\n                <button tabindex=\"-1\" " + actionAttr + "=" + (isRtl ? "prev" : "next") + " class=\"k-calendar-nav-next k-button " + size + " k-button-flat k-button-flat-base k-rounded-md k-icon-button\">\n                    " + (kendo.ui.icon({ icon: ("chevron-" + (isRtl ? "left" : "right")), iconClass: "k-button-icon" })) + "\n                </button>\n            </span>\n        </div>";
         };
 
         var Calendar = Widget.extend({
@@ -42443,7 +42505,7 @@
                     title.html('<span class="k-button-text">' + currentView.title(value, min, max, culture) + '</span>');
 
                     if (that.options.messages.parentViews && that._view.name !== CENTURY) {
-                        title.attr("title", that.options.messages.navigateTo + that.options.messages.parentViews[that._view.name]);
+                        title.attr("title", encode(that.options.messages.navigateTo + that.options.messages.parentViews[that._view.name]));
                     } else {
                         title.removeAttr("title");
                     }
@@ -43487,7 +43549,7 @@
                     html += '<thead class="k-calendar-thead"><tr role="row" class="k-calendar-tr">';
 
                     if (isWeekColumnVisible) {
-                        html += '<th scope="col" class="k-calendar-th k-alt">' + options.messages.weekColumnHeader + '</th>';
+                        html += '<th scope="col" class="k-calendar-th k-alt">' + encode(options.messages.weekColumnHeader) + '</th>';
                     }
 
                     for (; idx < 7; idx++) {
@@ -44144,6 +44206,7 @@
 
         kendo.calendar = calendar;
     })(window.kendo.jQuery);
+    var kendo$G = kendo;
 
     var __meta__$G = {
         id: "virtuallist",
@@ -44370,11 +44433,10 @@
                 var widthStyle = '';
 
                 if (currentWidth) {
-                    widthStyle += "style='width:";
-                    widthStyle += currentWidthInt;
-                    widthStyle += percentageUnitsRegex.test(currentWidth) ? "%" : "px";
-                    widthStyle += ";'";
+                    var widthValue = "" + currentWidthInt + (percentageUnitsRegex.test(currentWidth) ? "%" : "px");
+                    widthStyle = "style=\"width: " + widthValue + "; max-width: " + widthValue + ";\"";
                 }
+
                 item += "<span class='k-table-td' " + widthStyle + ">";
                 item += templates["column" + i](dataItem);
                 item += "</span>";
@@ -44873,7 +44935,7 @@
                     defs.push(deferred);
                 });
 
-                $.when.apply($, defs).then(function() {
+                $.when.apply($, defs).done(function() {
                     result.resolve();
                 });
 
@@ -45987,6 +46049,7 @@
         kendo.ui.plugin(VirtualList);
 
     })(window.kendo.jQuery);
+    var kendo$F = kendo;
 
     var __meta__$F = {
         id: "autocomplete",
@@ -46882,6 +46945,7 @@
             values: kendo.cssProperties.roundedValues.concat([['full', 'full']])
         }]);
     })(window.kendo.jQuery);
+    var kendo$E = kendo;
 
     var __meta__$E = {
         id: "dropdownlist",
@@ -48344,6 +48408,7 @@
             values: kendo.cssProperties.roundedValues.concat([['full', 'full']])
         }]);
     })(window.kendo.jQuery);
+    var kendo$D = kendo;
 
     var __meta__$D = {
         id: "combobox",
@@ -49626,6 +49691,7 @@
             values: kendo.cssProperties.roundedValues.concat([['full', 'full']])
         }]);
     })(window.kendo.jQuery);
+    var kendo$C = kendo;
 
     var __meta__$C = {
         id: "html.chip",
@@ -49725,6 +49791,7 @@
         }]);
 
     })(window.kendo.jQuery);
+    var kendo$B = kendo;
 
     var __meta__$B = {
         id: "html.chiplist",
@@ -49787,6 +49854,7 @@
         kendo.cssProperties.registerPrefix("HTMLChipList", "k-chip-list-");
 
     })(window.kendo.jQuery);
+    var kendo$A = kendo;
 
     var __meta__$A = {
         id: "multiselect",
@@ -51385,7 +51453,7 @@
                 singleTemplateFunc = function (ref) {
                     var values = ref.values;
 
-                    return ((values.length) + " " + singleTag);
+                    return ((values.length) + " " + (encode(singleTag)));
                 };
 
                 defaultTemplate = isMultiple ? multipleTemplateFunc : singleTemplateFunc;
@@ -51438,7 +51506,7 @@
             },
 
             _arrowButton: function() {
-                var arrowTitle = this.options.messages.downArrow,
+                var arrowTitle = encode(this.options.messages.downArrow),
                     arrow = $(html.renderButton('<button type="button" aria-label="' + arrowTitle + '" class="k-input-button k-multiselect-toggle-button"></button>', $.extend({}, this.options, {
                         icon: "caret-alt-down"
                     })));
@@ -51535,6 +51603,7 @@
         }]);
 
     })(window.kendo.jQuery);
+    var kendo$z = kendo;
 
     /***********************************************************************
      * WARNING: this file is auto-generated.  If you change it directly,
@@ -53863,6 +53932,7 @@
         kendo.ui.plugin(RangeSlider);
 
     })(window.kendo.jQuery);
+    var kendo$y = kendo;
 
     var __meta__$x = {
         id: "textbox",
@@ -54141,6 +54211,7 @@
 
         ui.plugin(TextBox);
     })(window.kendo.jQuery);
+    var kendo$x = kendo;
 
     var __meta__$w = {
         id: "numerictextbox",
@@ -55123,6 +55194,7 @@
 
         ui.plugin(NumericTextBox);
     })(window.kendo.jQuery);
+    var kendo$w = kendo;
 
     (function($, undefined$1) {
         // WARNING: removing the following jshint declaration and turning
@@ -57390,6 +57462,7 @@
         }]);
 
     })(window.kendo.jQuery);
+    var kendo$v = kendo;
 
     var __meta__$t = {
         id: "listbox",
@@ -59109,6 +59182,7 @@
         }
 
     })(window.kendo.jQuery);
+    var kendo$u = kendo;
 
     var __meta__$s = {
         id: "loader",
@@ -59300,6 +59374,7 @@
         ui.plugin(Loader);
 
     })(window.kendo.jQuery);
+    var kendo$t = kendo;
 
     var __meta__$r = {
         id: "textarea",
@@ -59601,6 +59676,7 @@
 
         ui.plugin(TextArea);
     })(window.kendo.jQuery);
+    var kendo$s = kendo;
 
     var __meta__$q = {
         id: "maskedtextbox",
@@ -60328,6 +60404,7 @@
         ui.plugin(MaskedTextBox);
 
     })(window.kendo.jQuery);
+    var kendo$r = kendo;
 
     var __meta__$p = {
         id: "panelbar",
@@ -62159,6 +62236,7 @@
     kendo.ui.plugin(PanelBar);
 
     })(window.kendo.jQuery);
+    var kendo$q = kendo;
 
     var __meta__$o = {
         id: "progressbar",
@@ -62671,6 +62749,7 @@
 
         kendo.ui.plugin(ProgressBar);
     })(window.kendo.jQuery);
+    var kendo$p = kendo;
 
     var __meta__$n = {
         id: "responsive-panel",
@@ -62833,6 +62912,7 @@
 
         kendo.ui.plugin(ResponsivePanel);
     })(window.kendo.jQuery);
+    var kendo$o = kendo;
 
     var __meta__$m = {
         id: "tabstrip",
@@ -64419,6 +64499,7 @@
         kendo.ui.plugin(TabStrip);
 
     })(window.kendo.jQuery);
+    var kendo$n = kendo;
 
     var __meta__$l = {
         id: "splitter",
@@ -65229,6 +65310,7 @@
         };
 
     })(window.kendo.jQuery);
+    var kendo$m = kendo;
 
     var __meta__$k = {
             id: "dialog",
@@ -66245,7 +66327,11 @@
                     name: "Alert",
                     modal: true,
                     actions: [{
-                        text: function () { return ("" + (encode(messages.okText))); }
+                        text: function (ref) {
+                            var messages = ref.messages;
+
+                            return ("" + (encode(messages.okText)));
+            }
                     }]
                 }
             });
@@ -66407,6 +66493,7 @@
             kendo.prompt = kendoPrompt;
 
         })(window.kendo.jQuery);
+    var kendo$l = kendo;
 
     var __meta__$j = {
             id: "window",
@@ -68612,6 +68699,7 @@
             kendo.ui.plugin(Window);
 
         })(window.kendo.jQuery);
+    var kendo$k = kendo;
 
     var __meta__$i = {
         id: "mobile.view",
@@ -69322,6 +69410,7 @@
         ui.plugin(View);
         ui.plugin(Layout);
     })(window.kendo.jQuery);
+    var kendo$j = kendo;
 
     var __meta__$h = {
         id: "mobile.loader",
@@ -69413,6 +69502,7 @@
 
         ui.plugin(Loader);
     })(window.kendo.jQuery);
+    var kendo$i = kendo;
 
     var __meta__$g = {
         id: "mobile.pane",
@@ -69776,6 +69866,7 @@
         };
         ui.plugin(Pane);
     })(window.kendo.jQuery);
+    var kendo$h = kendo;
 
     var __meta__$f = {
         id: "mobile.popover",
@@ -70045,6 +70136,7 @@
         ui.plugin(Popup);
         ui.plugin(PopOver);
     })(window.kendo.jQuery);
+    var kendo$g = kendo;
 
     var __meta__$e = {
         id: "mobile.shim",
@@ -70170,6 +70262,7 @@
 
         ui.plugin(Shim);
     })(window.kendo.jQuery);
+    var kendo$f = kendo;
 
     var __meta__$d = {
         id: "mobile.modalview",
@@ -70294,6 +70387,7 @@
 
         ui.plugin(ModalView);
     })(window.kendo.jQuery);
+    var kendo$e = kendo;
 
     var __meta__$c = {
         id: "mobile.drawer",
@@ -70612,6 +70706,7 @@
 
         ui.plugin(Drawer);
     })(window.kendo.jQuery);
+    var kendo$d = kendo;
 
     var __meta__$b = {
         id: "mobile.splitview",
@@ -70754,6 +70849,7 @@
 
         ui.plugin(SplitView);
     })(window.kendo.jQuery);
+    var kendo$c = kendo;
 
     var __meta__$a = {
         id: "mobile.application",
@@ -71252,6 +71348,7 @@
         kendo.mobile.Application = Application;
         kendo.ui.plugin(Application, kendo.mobile, 'Mobile');
     })(window.kendo.jQuery);
+    var kendo$b = kendo;
 
     var __meta__$9 = {
         id: "mobile.actionsheet",
@@ -71418,6 +71515,7 @@
 
         ui.plugin(ActionSheet);
     })(window.kendo.jQuery);
+    var kendo$a = kendo;
 
     var __meta__$8 = {
         id: "mobile.button",
@@ -71679,6 +71777,7 @@
         ui.plugin(BackButton);
         ui.plugin(DetailButton);
     })(window.kendo.jQuery);
+    var kendo$9 = kendo;
 
     var __meta__$7 = {
         id: "mobile.buttongroup",
@@ -71828,6 +71927,7 @@
 
         ui.plugin(ButtonGroup);
     })(window.kendo.jQuery);
+    var kendo$8 = kendo;
 
     var __meta__$6 = {
         id: "mobile.collapsible",
@@ -72010,6 +72110,7 @@
 
         ui.plugin(Collapsible);
     })(window.kendo.jQuery);
+    var kendo$7 = kendo;
 
     var __meta__$5 = {
         id: "mobile.listview",
@@ -73341,6 +73442,7 @@
 
         ui.plugin(ListView);
     })(window.kendo.jQuery);
+    var kendo$6 = kendo;
 
     var __meta__$4 = {
         id: "mobile.navbar",
@@ -73415,6 +73517,7 @@
 
         ui.plugin(NavBar);
     })(window.kendo.jQuery);
+    var kendo$5 = kendo;
 
     var __meta__$3 = {
         id: "mobile.scrollview",
@@ -74318,6 +74421,7 @@
         ui.plugin(ScrollView);
 
     })(window.kendo.jQuery);
+    var kendo$4 = kendo;
 
     var __meta__$2 = {
         id: "mobile.switch",
@@ -74574,6 +74678,7 @@
 
         ui.plugin(Switch);
     })(window.kendo.jQuery);
+    var kendo$3 = kendo;
 
     var __meta__$1 = {
         id: "mobile.tabstrip",
@@ -74746,6 +74851,7 @@
 
         ui.plugin(TabStrip);
     })(window.kendo.jQuery);
+    var kendo$2 = kendo;
 
     var __meta__ = {
         id: "angular",
@@ -76228,5 +76334,8 @@
     })(window.kendo.jQuery, window.angular);
 
     "bundle all";
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

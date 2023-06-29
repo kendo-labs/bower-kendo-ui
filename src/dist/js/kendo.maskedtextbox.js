@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.floatinglabel.js'), require('kendo.icons.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.floatinglabel', 'kendo.icons'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendomaskedtextbox = global.kendomaskedtextbox || {}, global.kendomaskedtextbox.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "maskedtextbox",
         name: "MaskedTextBox",
@@ -743,5 +744,8 @@
         ui.plugin(MaskedTextBox);
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

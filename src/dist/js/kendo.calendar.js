@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.selectable.js'), require('kendo.icons.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.selectable', 'kendo.icons'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendocalendar = global.kendocalendar || {}, global.kendocalendar.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "calendar",
         name: "Calendar",
@@ -32,6 +33,7 @@
             Widget = ui.Widget,
             keys = kendo.keys,
             parse = kendo.parseDate,
+            encode = kendo.htmlEncode,
             adjustDST = kendo.date.adjustDST,
             weekInYear = kendo.date.weekInYear,
             Selectable = kendo.ui.Selectable,
@@ -100,8 +102,9 @@
                 var actionAttr = ref.actionAttr;
                 var size = ref.size;
                 var messages = ref.messages;
+                var isRtl = ref.isRtl;
 
-                return "<div class=\"k-calendar-header k-hstack\">\n            <button " + actionAttr + "=\"nav-up\" id=\"" + kendo.guid() + "\" class=\"k-calendar-title k-button " + size + " k-button-flat k-button-flat-base k-rounded-md\">\n                <span class=\"k-button-text\"></span>\n            </button>\n            <span class=\"k-spacer\"></span>\n            <span class=\"k-calendar-nav\">\n                <button tabindex=\"-1\" " + actionAttr + "=\"prev\" class=\"k-calendar-nav-prev k-button " + size + " k-button-flat k-button-flat-base k-rounded-md k-icon-button\">\n                    " + (kendo.ui.icon({ icon: "chevron-left", iconClass: "k-button-icon" })) + "\n                </button>\n                <button tabindex=\"-1\" " + actionAttr + "=\"today\" class=\"k-calendar-nav-today k-button " + size + " k-button-flat k-button-flat-primary k-rounded-md\">\n                    <span class=\"k-button-text\">" + (messages.today) + "</span>\n                </button>\n                <button tabindex=\"-1\" " + actionAttr + "=\"next\" class=\"k-calendar-nav-next k-button " + size + " k-button-flat k-button-flat-base k-rounded-md k-icon-button\">\n                    " + (kendo.ui.icon({ icon: "chevron-right", iconClass: "k-button-icon" })) + "\n                </button>\n            </span>\n        </div>";
+                return "<div class=\"k-calendar-header k-hstack\">\n            <button " + actionAttr + "=\"nav-up\" id=\"" + kendo.guid() + "\" class=\"k-calendar-title k-button " + size + " k-button-flat k-button-flat-base k-rounded-md\">\n                <span class=\"k-button-text\"></span>\n            </button>\n            <span class=\"k-spacer\"></span>\n            <span class=\"k-calendar-nav\">\n                <button tabindex=\"-1\" " + actionAttr + "=" + (isRtl ? "next" : "prev") + " class=\"k-calendar-nav-prev k-button " + size + " k-button-flat k-button-flat-base k-rounded-md k-icon-button\">\n                    " + (kendo.ui.icon({ icon: ("chevron-" + (isRtl ? "right" : "left")), iconClass: "k-button-icon" })) + "\n                </button>\n                <button tabindex=\"-1\" " + actionAttr + "=\"today\" class=\"k-calendar-nav-today k-button " + size + " k-button-flat k-button-flat-primary k-rounded-md\">\n                    <span class=\"k-button-text\">" + (kendo.htmlEncode(messages.today)) + "</span>\n                </button>\n                <button tabindex=\"-1\" " + actionAttr + "=" + (isRtl ? "prev" : "next") + " class=\"k-calendar-nav-next k-button " + size + " k-button-flat k-button-flat-base k-rounded-md k-icon-button\">\n                    " + (kendo.ui.icon({ icon: ("chevron-" + (isRtl ? "left" : "right")), iconClass: "k-button-icon" })) + "\n                </button>\n            </span>\n        </div>";
         };
 
         var Calendar = Widget.extend({
@@ -436,7 +439,7 @@
                     title.html('<span class="k-button-text">' + currentView.title(value, min, max, culture) + '</span>');
 
                     if (that.options.messages.parentViews && that._view.name !== CENTURY) {
-                        title.attr("title", that.options.messages.navigateTo + that.options.messages.parentViews[that._view.name]);
+                        title.attr("title", encode(that.options.messages.navigateTo + that.options.messages.parentViews[that._view.name]));
                     } else {
                         title.removeAttr("title");
                     }
@@ -1480,7 +1483,7 @@
                     html += '<thead class="k-calendar-thead"><tr role="row" class="k-calendar-tr">';
 
                     if (isWeekColumnVisible) {
-                        html += '<th scope="col" class="k-calendar-th k-alt">' + options.messages.weekColumnHeader + '</th>';
+                        html += '<th scope="col" class="k-calendar-th k-alt">' + encode(options.messages.weekColumnHeader) + '</th>';
                     }
 
                     for (; idx < 7; idx++) {
@@ -2137,5 +2140,8 @@
 
         kendo.calendar = calendar;
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

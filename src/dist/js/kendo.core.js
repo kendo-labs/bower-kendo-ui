@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('jquery')) :
     typeof define === 'function' && define.amd ? define(['jquery'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendocore = global.kendocore || {}, global.kendocore.js = factory()));
+})(this, (function () {
     var breakpoints;
     var EVENT = "change";
 
@@ -120,7 +121,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.2.606'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.2.629'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -293,7 +294,7 @@
                 return target;
             };
 
-        kendo.version = "2023.2.606".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.2.629".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -732,6 +733,7 @@
             objectToString = {}.toString;
 
         //cultures
+        kendo.cultures = kendo.cultures || {}; // Ensure cultures object exists
         kendo.cultures["en-US"] = {
             name: EN,
             numberFormat: {
@@ -5220,7 +5222,7 @@
         var roundedValues = [ ['small', 'sm'], ['medium', 'md'], ['large', 'lg'] ];
         //var alignValues = [ ['top start', 'top-start'], ['top end', 'top-end'], ['bottom start', 'bottom-start'], ['bottom end', 'bottom-end'] ];
         var positionModeValues = [ 'fixed', 'static', 'sticky', 'absolute' ];
-        var resizeValues = [ 'both', 'horizontal', 'vertical' ];
+        var resizeValues = [ ['both', 'resize'], ['horizontal', 'resize-x'], ['vertical', 'resize-y'] ];
         var overflowValues = [ 'auto', 'hidden', 'visible', 'scroll', 'clip' ];
 
         kendo.cssProperties = (function() {
@@ -5307,7 +5309,7 @@
                     } else if (propName === "rounded") {
                         prefix = "k-rounded-";
                     } else if (propName === "resize") {
-                        prefix = "k-resize-";
+                        prefix = "k-";
                     } else if (propName === "overflow") {
                         prefix = "k-overflow-";
                     } else {
@@ -5628,5 +5630,8 @@
         }
 
     })(jQuery, window);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

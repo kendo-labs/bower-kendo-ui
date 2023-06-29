@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.popup.js'), require('kendo.textbox.js'), require('kendo.icons.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.popup', 'kendo.textbox', 'kendo.icons'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendodialog = global.kendodialog || {}, global.kendodialog.js = factory()));
+})(this, (function () {
     var __meta__ = {
             id: "dialog",
             name: "Dialog",
@@ -1032,7 +1033,11 @@
                     name: "Alert",
                     modal: true,
                     actions: [{
-                        text: function () { return ("" + (encode(messages.okText))); }
+                        text: function (ref) {
+                            var messages = ref.messages;
+
+                            return ("" + (encode(messages.okText)));
+            }
                     }]
                 }
             });
@@ -1194,5 +1199,8 @@
             kendo.prompt = kendoPrompt;
 
         })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

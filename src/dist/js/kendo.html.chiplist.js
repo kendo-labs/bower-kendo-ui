@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.html.base.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.html.base'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendohtml = global.kendohtml || {}, global.kendohtml.chiplist = global.kendohtml.chiplist || {}, global.kendohtml.chiplist.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "html.chiplist",
         name: "Html.ChipList",
@@ -78,5 +79,8 @@
         kendo.cssProperties.registerPrefix("HTMLChipList", "k-chip-list-");
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.core'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendovalidator = global.kendovalidator || {}, global.kendovalidator.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "validator",
         name: "Validator",
@@ -461,6 +462,14 @@
                     widgetInstance = kendo.widgetInstance(input.closest(".k-signature"));
                 }
 
+                if (input.is("[type=radio]")) {
+                    widgetInstance = kendo.widgetInstance(input.closest(".k-radio-list"));
+                }
+
+                if (input.is("[type=checkbox]")) {
+                    widgetInstance = kendo.widgetInstance(input.closest(".k-checkbox-list"));
+                }
+
                 if (!valid && !input.data("captcha_validating")) {
                     that._errors[fieldName] = messageText;
                     var lblId = lbl.attr('id');
@@ -490,7 +499,7 @@
                             widgetInstance = kendo.widgetInstance(input.closest(".k-checkbox-list"));
                         }
 
-                        if (widgetInstance && widgetInstance.wrapper && (widgetInstance.element !== widgetInstance.wrapper || widgetInstance.options.name == "Signature")) {
+                        if (widgetInstance && widgetInstance.wrapper && (widgetInstance.element !== widgetInstance.wrapper || ["Signature", "RadioGroup", "CheckBoxGroup"].indexOf(widgetInstance.options.name) > -1)) {
                             messageLabel.insertAfter(widgetInstance.wrapper);
                         } else if (parentElement && parentElement.nodeName === "LABEL") {
                             // Input inside label
@@ -814,5 +823,8 @@
 
         kendo.ui.plugin(Validator);
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

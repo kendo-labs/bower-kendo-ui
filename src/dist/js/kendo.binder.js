@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.data.js')) :
   typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.data'], factory) :
-  factory();
-})((function () {
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendobinder = global.kendobinder || {}, global.kendobinder.js = factory()));
+})(this, (function () {
   var __meta__ = {
       id: "binder",
       name: "MVVM",
@@ -1083,10 +1084,16 @@
               },
 
               refresh: function() {
+                  var val = this.bindings[CHECKED].get();
+
                   if (this.element.type === "radio") {
-                      this.widget.check(this.bindings[CHECKED].get().toString() === this.value());
+                      if (val !== undefined$1) {
+                          this.widget.check(val.toString() === this.value());
+                      } else {
+                          this.widget.check(false);
+                      }
                   } else {
-                      this.widget.check(this.bindings[CHECKED].get() === true);
+                      this.widget.check(val === true);
                   }
               },
 
@@ -2145,5 +2152,8 @@
       };
 
   })(window.kendo.jQuery);
+  var kendo$1 = kendo;
+
+  return kendo$1;
 
 }));

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.data.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.data'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendodata = global.kendodata || {}, global.kendodata.signalr = global.kendodata.signalr || {}, global.kendodata.signalr.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "data.signalr",
         name: "SignalR",
@@ -140,5 +141,8 @@
         });
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

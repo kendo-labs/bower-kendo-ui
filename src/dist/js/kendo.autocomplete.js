@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.list.js'), require('kendo.mobile.scroller.js'), require('kendo.virtuallist.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.list', 'kendo.mobile.scroller', 'kendo.virtuallist'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendoautocomplete = global.kendoautocomplete || {}, global.kendoautocomplete.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "autocomplete",
         name: "AutoComplete",
@@ -911,5 +912,8 @@
             values: kendo.cssProperties.roundedValues.concat([['full', 'full']])
         }]);
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

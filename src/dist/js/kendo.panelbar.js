@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.data.js'), require('kendo.icons.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.data', 'kendo.icons'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendopanelbar = global.kendopanelbar || {}, global.kendopanelbar.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "panelbar",
         name: "PanelBar",
@@ -1847,5 +1848,8 @@
     kendo.ui.plugin(PanelBar);
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

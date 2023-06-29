@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.mobile.popover.js'), require('kendo.mobile.shim.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.mobile.popover', 'kendo.mobile.shim'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendomobile = global.kendomobile || {}, global.kendomobile.actionsheet = global.kendomobile.actionsheet || {}, global.kendomobile.actionsheet.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "mobile.actionsheet",
         name: "ActionSheet",
@@ -182,5 +183,8 @@
 
         ui.plugin(ActionSheet);
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

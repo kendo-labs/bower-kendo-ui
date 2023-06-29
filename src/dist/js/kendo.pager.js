@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.data.js'), require('kendo.icons.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.data', 'kendo.icons'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendopager = global.kendopager || {}, global.kendopager.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "pager",
         name: "Pager",
@@ -30,6 +31,7 @@
             ui = kendo.ui,
             Widget = ui.Widget,
             keys = kendo.keys,
+            encode = kendo.htmlEncode,
             template = kendo.template,
             FIRST = "caret-alt-to-left",
             LAST = "caret-alt-to-right",
@@ -211,9 +213,9 @@
                 if (options.input) {
                     if (!that.element.find(".k-pager-input").length) {
                        that.element.append('<span class="k-pager-input k-label">' +
-                           options.messages.page +
+                            encode(options.messages.page) +
                            '<span class="k-textbox k-input k-input-md k-rounded-md k-input-solid"><input class="k-input-inner" /></span>' +
-                           kendo.format(options.messages.of, totalPages) +
+                           encode(kendo.format(options.messages.of, totalPages)) +
                            '</span>');
                     }
 
@@ -239,13 +241,13 @@
                         var pageSizes = options.pageSizes.length ? options.pageSizes : ["all", 5, 10, 20];
                         var pageItems = $.map(pageSizes, function(size) {
                             if (size.toLowerCase && size.toLowerCase() === "all") {
-                                return "<option value='all'>" + options.messages.allPages + "</option>";
+                                return "<option value='all'>" + encode(options.messages.allPages) + "</option>";
                             }
 
                             return "<option>" + size + "</option>";
                         });
 
-                        $('<span class="k-pager-sizes k-label"><select></select>' + options.messages.itemsPerPage + "</span>")
+                        $('<span class="k-pager-sizes k-label"><select></select>' + encode(options.messages.itemsPerPage) + "</span>")
                             .appendTo(that.element)
                             .find("select").html(pageItems.join("")).end()
                             .appendTo(that.element);
@@ -334,7 +336,7 @@
                     var tabindex = ref.tabindex;
                     var size = ref.size;
 
-                    return ("<button role=\"button\" aria-current=\"page\" tabindex=\"" + tabindex + "\" aria-label=\"" + title + "\" class=\"k-button " + size + " k-button-flat k-button-flat-primary k-selected\">" + text + "</span>");
+                    return ("<button role=\"button\" aria-current=\"page\" tabindex=\"" + tabindex + "\" aria-label=\"" + title + "\" class=\"k-button " + size + " k-button-flat k-button-flat-primary k-selected\">" + (encode(text)) + "</span>");
         },
                 linkTemplate: function (ref) {
                     var ns = ref.ns;
@@ -344,14 +346,14 @@
                     var tabindex = ref.tabindex;
                     var size = ref.size;
 
-                    return ("<button class=\"k-button " + size + " k-button-flat k-button-flat-primary\" tabindex=\"" + tabindex + "\" href=\"#\" data-" + ns + "page=\"" + idx + "\" " + (title !== "" ? ("title=\"" + title + "\"") : '') + ">" + text + "</button>");
+                    return ("<button class=\"k-button " + size + " k-button-flat k-button-flat-primary\" tabindex=\"" + tabindex + "\" href=\"#\" data-" + ns + "page=\"" + idx + "\" " + (title !== "" ? ("title=\"" + title + "\"") : '') + ">" + (encode(text)) + "</button>");
         },
                 numericSelectItemTemplate: function (ref) {
                     var idx = ref.idx;
                     var selected = ref.selected;
                     var text = ref.text;
 
-                    return ("<option value=\"" + idx + "\" " + (selected ? 'selected="selected"' : '') + ">" + text + "</option>");
+                    return ("<option value=\"" + idx + "\" " + (selected ? 'selected="selected"' : '') + ">" + (encode(text)) + "</option>");
         },
                 buttonCount: 10,
                 autoBind: true,
@@ -520,7 +522,7 @@
                         .find(".k-pager-input")
                         .html(that.options.messages.page +
                             '<span class="k-textbox k-input k-input-md k-rounded-md k-input-solid"><input class="k-input-inner" aria-label="' + that.options.messages.page + " " + page + '"></span>' +
-                            kendo.format(options.messages.of, totalPages))
+                            encode(kendo.format(options.messages.of, totalPages)))
                         .find("input")
                         .val(page)
                         .attr(DISABLED, total < 1)
@@ -811,5 +813,8 @@
 
         ui.plugin(Pager);
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));

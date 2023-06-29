@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.core.js'), require('kendo.data.odata.js'), require('kendo.data.xml.js')) :
    typeof define === 'function' && define.amd ? define(['kendo.core', 'kendo.data.odata', 'kendo.data.xml'], factory) :
-   factory();
-})((function () {
+   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendodata = global.kendodata || {}, global.kendodata.js = factory()));
+})(this, (function () {
    /*
    This code is copied/inspired by the internal @progress/kendo-data-query repo:
    https://github.com/telerik/kendo-data-query/tree/develop/src/filtering
@@ -6819,5 +6820,8 @@
            BatchBuffer: BatchBuffer
        });
    })(window.kendo.jQuery);
+   var kendo$1 = kendo;
+
+   return kendo$1;
 
 }));

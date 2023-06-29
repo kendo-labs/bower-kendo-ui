@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function (factory) {
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('kendo.data.js'), require('kendo.popup.js'), require('kendo.label.js'), require('kendo.icons.js'), require('kendo.actionsheet.js')) :
     typeof define === 'function' && define.amd ? define(['kendo.data', 'kendo.popup', 'kendo.label', 'kendo.icons', 'kendo.actionsheet'], factory) :
-    factory();
-})((function () {
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendolist = global.kendolist || {}, global.kendolist.js = factory()));
+})(this, (function () {
     var __meta__ = {
         id: "list",
         name: "List",
@@ -373,7 +374,7 @@
             _noData: function() {
                 var list = this;
                 var noData = $(list.noData);
-                var template = list.options.noDataTemplate === true ? function () { return list.options.messages.noData; } : list.options.noDataTemplate;
+                var template = list.options.noDataTemplate === true ? function () { return htmlEncode(list.options.messages.noData); } : list.options.noDataTemplate;
 
                 list.angular("cleanup", function() { return { elements: noData }; });
                 kendo.destroy(noData);
@@ -1239,7 +1240,7 @@
                     list._removeStaticHeader();
                 }
 
-                list.popup = new ui.Popup(list.list.parent(), extend({}, list.options.popup, {
+                list.popup = new ui.Popup(list.list.parent().addClass("k-list-container"), extend({}, list.options.popup, {
                     anchor: list.wrapper,
                     open: list._openHandler.bind(list),
                     close: list._closeHandler.bind(list),
@@ -3183,5 +3184,8 @@
         kendo.cssProperties.registerPrefix("List", "k-list-");
 
     })(window.kendo.jQuery);
+    var kendo$1 = kendo;
+
+    return kendo$1;
 
 }));
