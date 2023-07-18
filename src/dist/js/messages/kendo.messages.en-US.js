@@ -82,7 +82,11 @@
     "setColumnPosition": "Set Column Position",
     "apply": "Apply",
     "reset": "Reset",
-    "buttonTitle": "{0} edit column settings"
+    "buttonTitle": "{0} edit column settings",
+    "movePrev": "Move previous",
+    "moveNext": "Move next",
+    "groupColumn": "Group column",
+    "ungroupColumn": "Ungroup column"
   });
   }
 

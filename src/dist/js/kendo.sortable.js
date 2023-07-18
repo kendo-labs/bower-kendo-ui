@@ -480,9 +480,11 @@
             },
 
             _cancel: function() {
-                this.draggedElement.show();
-                this.placeholder.remove();
-                this.draggable.dropped = true;
+                if (this.draggedElement) {
+                    this.draggedElement.show();
+                    this.placeholder.remove();
+                    this.draggable.dropped = true;
+                }
             },
 
             _items: function() {

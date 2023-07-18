@@ -73,7 +73,11 @@
     "done": "Done",
     "settings": "Column Settings",
     "lock": "Lock",
-    "unlock": "Unlock"
+    "unlock": "Unlock",
+    "movePrev": "Move previous",
+    "moveNext": "Move next",
+    "groupColumn": "Group column",
+    "ungroupColumn": "Ungroup column"
   });
   }
 

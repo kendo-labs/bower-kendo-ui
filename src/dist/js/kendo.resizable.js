@@ -55,7 +55,8 @@
                     drag: that._resize.bind(that),
                     dragcancel: that._cancel.bind(that),
                     dragstart: that._start.bind(that),
-                    dragend: that._stop.bind(that)
+                    dragend: that._dragend.bind(that),
+                    clickMoveClick: options.clickMoveClick
                 });
 
                 that.userEvents = that.draggable.userEvents;
@@ -69,7 +70,8 @@
 
             options: {
                 name: "Resizable",
-                orientation: HORIZONTAL
+                orientation: HORIZONTAL,
+                clickMoveClick: false
             },
 
             resize: function() {
@@ -136,7 +138,12 @@
                 that.trigger(RESIZE, extend(e, { position: position }));
             },
 
-            _stop: function(e) {
+            _dragend: function(e) {
+                this._stop();
+                this.trigger(RESIZEEND, extend(e, { position: this.position }));
+            },
+
+            _stop: function() {
                 var that = this;
 
                 if (that.hint) {
@@ -144,7 +151,6 @@
                 }
 
                 that.resizing = false;
-                that.trigger(RESIZEEND, extend(e, { position: that.position }));
                 $(document.body).css("cursor", "");
             },
 
@@ -154,7 +160,7 @@
                 if (that.hint) {
                     that.position = undefined$1;
                     that.hint.css(that._position, that._initialElementPosition);
-                    that._stop(e);
+                    that._stop();
                 }
             },
 

@@ -121,7 +121,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.2.629'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.2.718'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -294,7 +294,7 @@
                 return target;
             };
 
-        kendo.version = "2023.2.629".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.2.718".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -3781,10 +3781,6 @@
                 kendo.init(element, kendo.mobile.ui, kendo.ui, kendo.dataviz.ui);
             },
 
-            appLevelNativeScrolling: function() {
-                return kendo.mobile.application && kendo.mobile.application.options && kendo.mobile.application.options.useNativeScrolling;
-            },
-
             roles: {},
 
             ui: {
@@ -4994,22 +4990,6 @@
             }
 
             return start;
-        };
-
-        kendo.compileMobileDirective = function(element, scope) {
-            var angular = window.angular;
-
-            element.attr("data-" + kendo.ns + "role", element[0].tagName.toLowerCase().replace('kendo-mobile-', '').replace('-', ''));
-
-            angular.element(element).injector().invoke(["$compile", function($compile) {
-                $compile(element)(scope);
-
-                if (!/^\$(digest|apply)$/.test(scope.$$phase)) {
-                    scope.$digest();
-                }
-            }]);
-
-            return kendo.widgetInstance(element, kendo.mobile.ui);
         };
 
         kendo.antiForgeryTokens = function() {

@@ -188,6 +188,7 @@
 
             options: {
                 name: "Splitter",
+                clickMoveClick: true,
                 orientation: HORIZONTAL,
                 panes: []
             },
@@ -478,6 +479,10 @@
 
                 that.wrapper.addClass("k-splitter-resizing");
 
+                if (that._suppressResize) {
+                    return;
+                }
+
                 if (splitBarsCount === 0) {
                     splitBarsCount = panes.length - 1;
                     panes.slice(0, splitBarsCount)
@@ -702,7 +707,12 @@
 
         function PaneResizing(splitter) {
             var that = this,
-                orientation = splitter.orientation;
+                orientation = splitter.orientation,
+                handle = ".k-splitbar-draggable-" + orientation + "[data-marker=" + splitter._marker + "]";
+
+            if (splitter.options.clickMoveClick) {
+                handle += ",.k-ghost-splitbar";
+            }
 
             that.owner = splitter;
             that._element = splitter.element;
@@ -712,7 +722,8 @@
 
             that._resizable = new kendo.ui.Resizable(splitter.element, {
                 orientation: orientation,
-                handle: ".k-splitbar-draggable-" + orientation + "[data-marker=" + splitter._marker + "]",
+                handle: handle,
+                clickMoveClick: splitter.options.clickMoveClick,
                 hint: that._createHint.bind(that),
                 start: that._start.bind(that),
                 max: that._max.bind(that),
@@ -764,8 +775,16 @@
                 var that = this,
                     splitbar = $(e.currentTarget),
                     previousPane = splitbar.prev(),
-                    nextPane = splitbar.next(),
-                    previousPaneConfig = previousPane.data(PANE),
+                    nextPane = splitbar.next();
+
+                if ($(e.initialTarget).closest(".k-expand-next, .k-expand-prev, .k-collapse-next, .k-collapse-prev").length > 0 ||
+                    !nextPane.length ||
+                    !previousPane.length) {
+                        e.preventDefault();
+                        return;
+                }
+
+                var previousPaneConfig = previousPane.data(PANE),
                     nextPaneConfig = nextPane.data(PANE),
                     prevBoundary = parseInt(previousPane[0].style[that.positioningProperty], 10),
                     nextBoundary = parseInt(nextPane[0].style[that.positioningProperty], 10) + nextPane[0][that.sizingDomProperty] - splitbar[0][that.sizingDomProperty],
@@ -773,8 +792,16 @@
                     toPx = function(value) {
                         var val = parseInt(value, 10);
                         return (isPixelSize(value) ? val : (totalSize * val) / 100) || 0;
-                    },
-                    prevMinSize = toPx(previousPaneConfig.min),
+                    };
+
+                if (!previousPaneConfig || !nextPaneConfig) {
+                    e.preventDefault();
+                    e.sender.draggable.clickMoveClick.cancel();
+                    that.owner.element.find(".k-ghost-splitbar").remove();
+                    return;
+                }
+
+                var prevMinSize = toPx(previousPaneConfig.min),
                     prevMaxSize = toPx(previousPaneConfig.max) || nextBoundary - prevBoundary,
                     nextMinSize = toPx(nextPaneConfig.min),
                     nextMaxSize = toPx(nextPaneConfig.max) || nextBoundary - prevBoundary;
@@ -800,8 +827,13 @@
                 if (e.keyCode !== kendo.keys.ESC) {
                     var ghostPosition = e.position,
                         previousPane = splitbar.prev(),
-                        nextPane = splitbar.next(),
-                        previousPaneConfig = previousPane.data(PANE),
+                        nextPane = splitbar.next();
+
+                    if (!nextPane.length || !previousPane.length) {
+                        return false;
+                    }
+
+                    var previousPaneConfig = previousPane.data(PANE),
                         nextPaneConfig = nextPane.data(PANE),
                         previousPaneNewSize = ghostPosition - parseInt(previousPane[0].style[that.positioningProperty], 10),
                         nextPaneNewSize = parseInt(nextPane[0].style[that.positioningProperty], 10) + nextPane[0][that.sizingDomProperty] - ghostPosition - splitbar[0][that.sizingDomProperty],

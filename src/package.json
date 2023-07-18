@@ -35,6 +35,11 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
+  "overrides": {
+    "chokidar": "^3.0.0",
+    "glob-stream": "^8.0.0",
+    "micromatch": "^4.0.0"
+  },
   "scripts": {
     "build": "npx gulp build",
     "scripts": "npx gulp scripts",

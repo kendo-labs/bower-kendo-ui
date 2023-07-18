@@ -109,7 +109,7 @@
         return createMediaQuery(query);
     }
 
-    var __meta__$1i = {
+    var __meta__$10 = {
         id: "core",
         name: "Core",
         category: "framework",
@@ -121,7 +121,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.2.629'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.2.718'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -294,7 +294,7 @@
                 return target;
             };
 
-        kendo.version = "2023.2.629".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.2.718".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -3781,10 +3781,6 @@
                 kendo.init(element, kendo.mobile.ui, kendo.ui, kendo.dataviz.ui);
             },
 
-            appLevelNativeScrolling: function() {
-                return kendo.mobile.application && kendo.mobile.application.options && kendo.mobile.application.options.useNativeScrolling;
-            },
-
             roles: {},
 
             ui: {
@@ -4996,22 +4992,6 @@
             return start;
         };
 
-        kendo.compileMobileDirective = function(element, scope) {
-            var angular = window.angular;
-
-            element.attr("data-" + kendo.ns + "role", element[0].tagName.toLowerCase().replace('kendo-mobile-', '').replace('-', ''));
-
-            angular.element(element).injector().invoke(["$compile", function($compile) {
-                $compile(element)(scope);
-
-                if (!/^\$(digest|apply)$/.test(scope.$$phase)) {
-                    scope.$digest();
-                }
-            }]);
-
-            return kendo.widgetInstance(element, kendo.mobile.ui);
-        };
-
         kendo.antiForgeryTokens = function() {
             var tokens = { },
                 csrf_token = $("meta[name=csrf-token],meta[name=_csrf]").attr("content"),
@@ -5630,9 +5610,9 @@
         }
 
     })(jQuery, window);
-    var kendo$1h = kendo;
+    var kendo$$ = kendo;
 
-    var __meta__$1h = {
+    var __meta__$$ = {
         id: "router",
         name: "Router",
         category: "framework",
@@ -5983,7 +5963,7 @@
         kendo.absoluteURL = absoluteURL;
         kendo.history = new History();
     })(window.kendo.jQuery);
-    var kendo$1g = kendo;
+    var kendo$_ = kendo;
 
     (function() {
         var kendo = window.kendo,
@@ -6167,7 +6147,7 @@
         kendo.Router = Router;
     })();
 
-    var __meta__$1g = {
+    var __meta__$_ = {
         id: "userevents",
         name: "User Events",
         category: "framework",
@@ -6805,6 +6785,213 @@
             }
         });
 
+        var ClickMoveClick = Observable.extend({
+            init: function(element, options) {
+                var that = this,
+                    filter,
+                    ns = kendo.guid();
+
+                options = options || {};
+                filter = that.filter = options.filter;
+                that.touches = [];
+                that._maxTouches = 1;
+                that.eventNS = ns;
+                that._downStarted = 0;
+
+                element = $(element).handler(that);
+                Observable.fn.init.call(that);
+
+                extend(that, {
+                    element: element,
+                    // the touch events lock to the element anyway, so no need for the global setting
+                    surface: options.global && ENABLE_GLOBAL_SURFACE ? $(element[0].ownerDocument.documentElement) : $(options.surface || element),
+                    stopPropagation: options.stopPropagation,
+                    pressed: false
+                });
+
+                that.surface.handler(that)
+                    .on(kendo.applyEventMap("move", ns), "_move")
+                    .on(kendo.applyEventMap("cancel up", ns), "cancel");
+
+                element.on(kendo.applyEventMap("down", ns), filter, "_down")
+                    .on(kendo.applyEventMap("up", ns), filter, "_up");
+
+                that.bind([
+                    START,
+                    MOVE,
+                    END,
+                    HOLD,
+                    CANCEL,
+                    SELECT
+                ], options);
+            },
+
+            _down: function(e) {
+                if (e.which && e.which > 1) {
+                    this.cancel();
+                } else {
+                    this._downStarted = new Date().getTime();
+                    this._downTarget = e.target;
+                }
+            },
+
+            _up: function(e) {
+                var currentMilestone = new Date().getTime(),
+                    currentTarget = e.target;
+
+                if ((!e.which || e.which === 1) &&
+                    currentMilestone < this._downStarted + CLICK_DELAY &&
+                    currentTarget === this._downTarget) {
+                        if (this.touches && this.touches.length > 0) {
+                            this._end(e);
+                        } else {
+                            this._start(e);
+                        }
+
+                        this._preventCancel = true;
+                } else {
+                    this.cancel();
+                }
+
+                this._downStarted = 0;
+                this._downTarget = null;
+            },
+
+            destroy: function() {
+                var that = this;
+
+                if (that._destroyed) {
+                    return;
+                }
+
+                that._destroyed = true;
+
+                that.element.kendoDestroy(that.eventNS);
+                that.surface.kendoDestroy(that.eventNS);
+                that.element.removeData("handler");
+                that.surface.removeData("handler");
+                that._disposeAll();
+
+                that.unbind();
+                delete that.surface;
+                delete that.element;
+                delete that.currentTarget;
+            },
+
+            capture: function() {
+                ClickMoveClick.current = this;
+            },
+
+            cancel: function() {
+                if (this._preventCancel) {
+                    this._preventCancel = false;
+                    return;
+                } else if (this.touches && this.touches.length > 0) {
+                    this._disposeAll();
+                    this.trigger(CANCEL);
+                }
+            },
+
+            notify: function(eventName, data) {
+                data.clickMoveClick = true;
+                return this.trigger(eventName, extend(data, { type: eventName }));
+            },
+
+            _maxTouchesReached: function() {
+                return this.touches.length >= this._maxTouches;
+            },
+
+            _disposeAll: function() {
+                var touches = this.touches;
+
+                while (touches.length > 0) {
+                    touches.pop().dispose();
+                }
+            },
+
+            _start: function(e) {
+                var that = this,
+                    idx = 0,
+                    filter = that.filter,
+                    target,
+                    touches = getTouches(e),
+                    length = touches.length,
+                    touch,
+                    which = e.which;
+
+                if ((which && which > 1) || (that._maxTouchesReached())) {
+                    return;
+                }
+
+                ClickMoveClick.current = null;
+
+                that.currentTarget = e.currentTarget;
+
+                if (that.stopPropagation) {
+                    e.stopPropagation();
+                }
+
+                for (; idx < length; idx ++) {
+                    if (that._maxTouchesReached()) {
+                        break;
+                    }
+
+                    touch = touches[idx];
+
+                    if (filter) {
+                        target = $(touch.currentTarget);
+                    } else {
+                        target = that.element;
+                    }
+
+                    if (!target.length) {
+                        continue;
+                    }
+
+                    touch = new Touch(that, target, touch);
+                    that.touches.push(touch);
+                    touch.press();
+                    touch._start(touch);
+                }
+            },
+
+            _move: function(e) {
+                this._eachTouch("move", e);
+            },
+
+            _end: function(e) {
+                this._eachTouch("move", e);
+                this._eachTouch("end", e);
+            },
+
+            _eachTouch: function(methodName, e) {
+                var that = this,
+                    dict = {},
+                    touches = getTouches(e),
+                    activeTouches = that.touches,
+                    idx,
+                    touch,
+                    touchInfo,
+                    matchingTouch;
+
+                for (idx = 0; idx < activeTouches.length; idx ++) {
+                    touch = activeTouches[idx];
+                    dict[touch.id] = touch;
+                }
+
+                for (idx = 0; idx < touches.length; idx ++) {
+                    touchInfo = touches[idx];
+                    matchingTouch = dict[touchInfo.id];
+
+                    if (matchingTouch) {
+                        matchingTouch.x.move(touchInfo.location);
+                        matchingTouch.y.move(touchInfo.location);
+                        matchingTouch[methodName](touchInfo);
+                    }
+                }
+            }
+        });
+
         UserEvents.defaultThreshold = function(value) {
             DEFAULT_THRESHOLD = value;
         };
@@ -6816,10 +7003,11 @@
         kendo.getTouches = getTouches;
         kendo.touchDelta = touchDelta;
         kendo.UserEvents = UserEvents;
+        kendo.ClickMoveClick = ClickMoveClick;
      })(window.kendo.jQuery);
-    var kendo$1f = kendo;
+    var kendo$Z = kendo;
 
-    var __meta__$1f = {
+    var __meta__$Z = {
         id: "touch",
         name: "Touch",
         category: "mobile",
@@ -6980,7 +7168,7 @@
 
         kendo.ui.plugin(Touch);
     })(window.kendo.jQuery);
-    var kendo$1e = kendo;
+    var kendo$Y = kendo;
 
     /*
     This code is copied/inspired by the internal @progress/kendo-data-query repo:
@@ -7120,7 +7308,7 @@
         return transformCompositeFilter(expr);
     };
 
-    var __meta__$1e = {
+    var __meta__$Y = {
         id: "data.odata",
         name: "OData",
         category: "framework",
@@ -7666,9 +7854,9 @@
         });
 
     })(window.kendo.jQuery);
-    var kendo$1d = kendo;
+    var kendo$X = kendo;
 
-    var __meta__$1d = {
+    var __meta__$X = {
         id: "data.xml",
         name: "XML",
         category: "framework",
@@ -7926,9 +8114,9 @@
             }
         });
     })(window.kendo.jQuery);
-    var kendo$1c = kendo;
+    var kendo$W = kendo;
 
-    var __meta__$1c = {
+    var __meta__$W = {
         id: "data",
         name: "Data source",
         category: "framework",
@@ -14592,9 +14780,9 @@
             BatchBuffer: BatchBuffer
         });
     })(window.kendo.jQuery);
-    var kendo$1b = kendo;
+    var kendo$V = kendo;
 
-    var __meta__$1b = {
+    var __meta__$V = {
         id: "binder",
         name: "MVVM",
         category: "framework",
@@ -16728,9 +16916,9 @@
         };
 
     })(window.kendo.jQuery);
-    var kendo$1a = kendo;
+    var kendo$U = kendo;
 
-    var __meta__$1a = {
+    var __meta__$U = {
         id: "fx",
         name: "Effects",
         category: "framework",
@@ -18312,9 +18500,9 @@
             return Math.max(inner.width / outer.width, inner.height / outer.height);
         };
     })(window.kendo.jQuery);
-    var kendo$19 = kendo;
+    var kendo$T = kendo;
 
-    var __meta__$19 = {
+    var __meta__$T = {
         id: "view",
         name: "View",
         category: "framework",
@@ -19030,9 +19218,9 @@
         kendo.ViewClone = ViewClone;
 
     })(window.kendo.jQuery);
-    var kendo$18 = kendo;
+    var kendo$S = kendo;
 
-    var __meta__$18 = {
+    var __meta__$S = {
         id: "floatinglabel",
         name: "FloatingLabel",
         category: "framework",
@@ -19153,9 +19341,9 @@
         });
         ui.plugin(FloatingLabel);
     })(window.kendo.jQuery);
-    var kendo$17 = kendo;
+    var kendo$R = kendo;
 
-    var __meta__$17 = {
+    var __meta__$R = {
         id: 'label',
         name: 'Label',
         category: 'framework',
@@ -19164,11 +19352,11 @@
         hidden: true
     };
 
-    var kendo$16 = window.kendo;
-    var $$1 = kendo$16.jQuery;
-    var ui = kendo$16.ui;
+    var kendo$Q = window.kendo;
+    var $$1 = kendo$Q.jQuery;
+    var ui = kendo$Q.ui;
     var Widget = ui.Widget;
-    var isFunction = kendo$16.isFunction;
+    var isFunction = kendo$Q.isFunction;
 
     var LABELCLASSES = "k-label k-input-label";
 
@@ -19255,7 +19443,7 @@
             }
 
             if (!id) {
-                id = options.name + "_" + kendo$16.guid();
+                id = options.name + "_" + kendo$Q.guid();
                 element.attr("id", id);
             }
 
@@ -19276,14 +19464,14 @@
 
             if (floating) {
                 that._floatingLabelContainer = that.widget.wrapper.wrap("<span></span>").parent();
-                that.floatingLabel = new kendo$16.ui.FloatingLabel(that._floatingLabelContainer, $$1.extend({}, options));
+                that.floatingLabel = new kendo$Q.ui.FloatingLabel(that._floatingLabelContainer, $$1.extend({}, options));
             }
         }
     });
 
-    kendo$16.ui.plugin(Label);
+    kendo$Q.ui.plugin(Label);
 
-    var __meta__$16 = {
+    var __meta__$Q = {
         id: "data.signalr",
         name: "SignalR",
         category: "framework",
@@ -19406,9 +19594,9 @@
         });
 
     })(window.kendo.jQuery);
-    var kendo$15 = kendo;
+    var kendo$P = kendo;
 
-    var __meta__$15 = {
+    var __meta__$P = {
         id: "validator",
         name: "Validator",
         category: "web",
@@ -20213,9 +20401,9 @@
 
         kendo.ui.plugin(Validator);
     })(window.kendo.jQuery);
-    var kendo$14 = kendo;
+    var kendo$O = kendo;
 
-    var __meta__$14 = {
+    var __meta__$O = {
         id: "draganddrop",
         name: "Drag & drop",
         category: "framework",
@@ -20232,6 +20420,7 @@
             Widget = kendo.ui.Widget,
             Observable = kendo.Observable,
             UserEvents = kendo.UserEvents,
+            ClickMoveClick = kendo.ClickMoveClick,
             extend = $.extend,
             getOffset = kendo.getOffset,
             draggables = {},
@@ -20840,6 +21029,17 @@
 
                 that._activated = false;
 
+                if (this.options.clickMoveClick) {
+                    that.clickMoveClick = new ClickMoveClick(that.element, {
+                        global: true,
+                        filter: that.options.filter,
+                        start: that._startClickMoveClick.bind(that),
+                        move: that._drag.bind(that),
+                        end: that._end.bind(that),
+                        cancel: that._onCancel.bind(that)
+                    });
+                }
+
                 that.userEvents = new UserEvents(that.element, {
                     global: true,
                     allowSelection: true,
@@ -20849,7 +21049,7 @@
                     hold: that._hold.bind(that),
                     move: that._drag.bind(that),
                     end: that._end.bind(that),
-                    cancel: that._cancel.bind(that),
+                    cancel: that._onCancel.bind(that),
                     select: that._select.bind(that)
                 });
 
@@ -20881,7 +21081,8 @@
                 ignore: null,
                 holdToDrag: false,
                 autoScroll: false,
-                dropped: false
+                dropped: false,
+                clickMoveClick: false
             },
 
             cancelHold: function() {
@@ -20892,8 +21093,13 @@
                 var that = this;
 
                 if (e.keyCode === kendo.keys.ESC) {
-                    that._trigger(DRAGCANCEL, { event: e });
                     that.userEvents.cancel();
+
+                    if (that.clickMoveClick) {
+                        that.clickMoveClick.cancel();
+                    }
+
+                    this._trigger(DRAGCANCEL, { event: e });
                 }
             },
 
@@ -20908,9 +21114,15 @@
                 if (cursorOffset) {
                    coordinates = { left: e.x.location + cursorOffset.left, top: e.y.location + cursorOffset.top };
                 } else {
-                    that.hintOffset.left += e.x.delta;
-                    that.hintOffset.top += e.y.delta;
-                    coordinates = $.extend({}, that.hintOffset);
+                    if (e.x.delta !== 0 || e.y.delta !== 0) {
+                        that.hintOffset.left += e.x.delta;
+                        that.hintOffset.top += e.y.delta;
+                        coordinates = $.extend({}, that.hintOffset);
+                    } else {
+                        that.hintOffset.left = e.x.startLocation + e.x.initialDelta;
+                        that.hintOffset.top = e.y.startLocation + e.y.initialDelta;
+                        coordinates = $.extend({}, that.hintOffset);
+                    }
                 }
 
                 if (boundaries) {
@@ -20936,6 +21148,12 @@
                 if (!this._shouldIgnoreTarget(e.event.target)) {
                     e.preventDefault();
                 }
+            },
+
+            _startClickMoveClick: function(e) {
+                this._activated = true;
+
+                this._start(e);
             },
 
             _start: function(e) {
@@ -20997,6 +21215,11 @@
 
                 if (that._trigger(DRAGSTART, e)) {
                     that.userEvents.cancel();
+
+                    if (that.clickMoveClick) {
+                        that.clickMoveClick.cancel();
+                    }
+
                     that._afterEnd();
                 }
 
@@ -21142,6 +21365,11 @@
                 this._cancel(this._trigger(DRAGEND, e));
             },
 
+            _onCancel: function(e) {
+                this._cancel();
+                this._trigger(DRAGCANCEL, { event: e });
+            },
+
             _cancel: function(isDefaultPrevented) {
                 var that = this;
 
@@ -21160,7 +21388,6 @@
                             that.hint.animate(that.currentTargetOffset, "fast", that._afterEndHandler);
                         }
                     }, 0);
-
                 } else {
                     that._afterEnd();
                 }
@@ -21179,7 +21406,8 @@
                         currentTarget: that.currentTarget,
                         initialTarget: e.touch ? e.touch.initialTouch : null,
                         dropTarget: e.dropTarget,
-                        elementUnderCursor: e.elementUnderCursor
+                        elementUnderCursor: e.elementUnderCursor,
+                        clickMoveClick: e.clickMoveClick
                     }
                 ));
             },
@@ -21226,6 +21454,10 @@
                 that._afterEnd();
 
                 that.userEvents.destroy();
+
+                if (that.clickMoveClick) {
+                    that.clickMoveClick.destroy();
+                }
 
                 this._scrollableParent = null;
                 this._cursorElement = null;
@@ -21337,9 +21569,9 @@
         };
 
      })(window.kendo.jQuery);
-    var kendo$13 = kendo;
+    var kendo$N = kendo;
 
-    var __meta__$13 = {
+    var __meta__$N = {
         id: "mobile.scroller",
         name: "Scroller",
         category: "mobile",
@@ -22039,9 +22271,9 @@
 
         ui.plugin(Scroller);
     })(window.kendo.jQuery);
-    var kendo$12 = kendo;
+    var kendo$M = kendo;
 
-    var __meta__$12 = {
+    var __meta__$M = {
         id: "resizable",
         name: "Resizable",
         category: "framework",
@@ -22078,7 +22310,8 @@
                     drag: that._resize.bind(that),
                     dragcancel: that._cancel.bind(that),
                     dragstart: that._start.bind(that),
-                    dragend: that._stop.bind(that)
+                    dragend: that._dragend.bind(that),
+                    clickMoveClick: options.clickMoveClick
                 });
 
                 that.userEvents = that.draggable.userEvents;
@@ -22092,7 +22325,8 @@
 
             options: {
                 name: "Resizable",
-                orientation: HORIZONTAL
+                orientation: HORIZONTAL,
+                clickMoveClick: false
             },
 
             resize: function() {
@@ -22159,7 +22393,12 @@
                 that.trigger(RESIZE, extend(e, { position: position }));
             },
 
-            _stop: function(e) {
+            _dragend: function(e) {
+                this._stop();
+                this.trigger(RESIZEEND, extend(e, { position: this.position }));
+            },
+
+            _stop: function() {
                 var that = this;
 
                 if (that.hint) {
@@ -22167,7 +22406,6 @@
                 }
 
                 that.resizing = false;
-                that.trigger(RESIZEEND, extend(e, { position: that.position }));
                 $(document.body).css("cursor", "");
             },
 
@@ -22177,7 +22415,7 @@
                 if (that.hint) {
                     that.position = undefined$1;
                     that.hint.css(that._position, that._initialElementPosition);
-                    that._stop(e);
+                    that._stop();
                 }
             },
 
@@ -22228,9 +22466,9 @@
         kendo.ui.plugin(Resizable);
 
     })(window.kendo.jQuery);
-    var kendo$11 = kendo;
+    var kendo$L = kendo;
 
-    var __meta__$11 = {
+    var __meta__$L = {
         id: "sortable",
         name: "Sortable",
         category: "framework",
@@ -22692,9 +22930,11 @@
             },
 
             _cancel: function() {
-                this.draggedElement.show();
-                this.placeholder.remove();
-                this.draggable.dropped = true;
+                if (this.draggedElement) {
+                    this.draggedElement.show();
+                    this.placeholder.remove();
+                    this.draggable.dropped = true;
+                }
             },
 
             _items: function() {
@@ -22745,9 +22985,9 @@
 
         kendo.ui.plugin(Sortable);
     })(window.kendo.jQuery);
-    var kendo$10 = kendo;
+    var kendo$K = kendo;
 
-    var __meta__$10 = {
+    var __meta__$K = {
         id: "selectable",
         name: "Selectable",
         category: "framework",
@@ -23292,9 +23532,9 @@
         kendo.ui.plugin(Selectable);
 
     })(window.kendo.jQuery);
-    var kendo$$ = kendo;
+    var kendo$J = kendo;
 
-    var __meta__$$ = {
+    var __meta__$J = {
         id: "html.base",
         name: "Html.Base",
         category: "web",
@@ -23368,9 +23608,9 @@
         });
 
     })(window.kendo.jQuery);
-    var kendo$_ = kendo;
+    var kendo$I = kendo;
 
-    var __meta__$_ = {
+    var __meta__$I = {
         id: "html.icon",
         name: "Html.Icon",
         category: "web",
@@ -23602,7 +23842,7 @@
             values: ['primary', 'secondary', 'tertiary', 'inherit', 'info', 'success', 'warning', 'error', 'dark', 'light', 'inverse']
         }]);
     })(window.kendo.jQuery);
-    var kendo$Z = kendo;
+    var kendo$H = kendo;
 
     var caretTrIcon = {
         name: 'caret-tr',
@@ -24291,6 +24531,42 @@
     var displayInlineBlockIcon = {
         name: 'display-inline-block',
         content: '<path d="M448 32h32v448h-32zM32 32h32v448H32zm64 352h320V128H96v256zm64-192h192v128H160V192z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var paperPlaneIcon = {
+        name: 'paper-plane',
+        content: '<path d="M469.783 271.879 54.329 446.734c-13.149 5.534-26.266-8.042-21.225-21.967l48.3-133.404c2.16-5.966 7.298-10.169 13.326-10.901C312.467 256 239.85 263.839 312.467 256c-72.618-7.839 0 0-217.739-24.462-6.027-.732-11.165-4.935-13.325-10.901l-48.3-133.404C28.063 73.308 41.18 59.732 54.33 65.266l415.454 174.855c13.623 5.734 13.623 26.024 0 31.758Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var gaugeLinearIcon = {
+        name: 'gauge-linear',
+        content: '<path d="M16 164h480v184H16V164ZM90 58h110l-55 74-55-74ZM16 380h36v74H16v-74Zm444 0h36v74h-36v-74Zm-222 0h36v74h-36v-74Zm-111 0h36v36h-36v-36Zm222 0h36v36h-36v-36Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var gaugeRadialIcon = {
+        name: 'gauge-radial',
+        content: '<path d="M256 16C123.5 16 16 123.5 16 256s107.5 240 240 240 240-107.5 240-240S388.5 16 256 16Zm0 445.7c-113.4 0-205.7-92.3-205.7-205.7 0-113.4 92.3-205.7 205.7-205.7 113.4 0 205.7 92.3 205.7 205.7 0 113.4-92.3 205.7-205.7 205.7Zm0-377.1c94.7 0 171.4 76.7 171.5 171.5h-68.6c0-56.8-46.2-102.9-102.9-102.9-22.2 0-42.8 7-59.6 19l37.4 37.4c6.7-3.2 14.3-5 22.2-5 28.4 0 51.4 23 51.4 51.4s-23 51.4-51.4 51.4-51.4-23-51.4-51.4c0-8 1.8-15.5 5-22.2l-37.4-37.4c-11.9 16.9-19 37.4-19 59.6H84.6c0-41.2 14.5-78.9 38.7-108.5l-12.7-12.7 24.2-24.2 12.7 12.7c29.6-24.2 67.3-38.7 108.5-38.7Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var envelopeBoxIcon = {
+        name: 'envelope-box',
+        content: '<path d="m377 182.4-88.8 88.8-31.2 29-33.2-29-88.8-88.8c-7.7 2-13.8 8.1-15.8 15.8l73 73-73 73c2 7.7 8.1 13.8 15.8 15.8l73-73 49 44.8 47-44.8 73 73c7.7-2 13.8-8.1 15.8-15.8l-73-73 73-73c-2-7.7-8.1-13.8-15.8-15.8zM448 32H64c-17.7 0-32 14.3-32 32v384c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V64c0-17.7-14.3-32-32-32zm-32 329.6c0 12.4-10 22.4-22.4 22.4H118.4C106 384 96 374 96 361.6V182.4c0-12.4 10-22.4 22.4-22.4h275.2c12.4 0 22.4 10 22.4 22.4v179.2z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var envelopeLinkIcon = {
+        name: 'envelope-link',
+        content: '<path d="M224 432c0-5.1.8-10.1 2.3-14.7C232.5 398 250.6 384 272 384h64c-1.5-1.9-3-3.8-4.6-5.6-14.6-16.2-35.8-26.4-59.4-26.4-12.2 0-23.8 2.7-34.1 7.6-4.4 2.1-8.6 4.6-12.5 7.4-16.4 11.8-28.2 29.7-32 50.4-.9 4.7-1.4 9.6-1.4 14.6 0 44.2 35.8 80 80 80 26.2 0 49.4-12.6 64-32h-64c-26.5 0-48-21.5-48-48zm208-80c-26.2 0-49.4 12.6-64 32h64c26.5 0 48 21.5 48 48s-21.5 48-48 48h-64c14.6 19.4 37.8 32 64 32 44.2 0 80-35.8 80-80s-35.8-80-80-80zm0 64H272c-8.8 0-16 7.2-16 16s7.2 16 16 16h160c8.8 0 16-7.2 16-16s-7.2-16-16-16zM32 0C14.3 0 0 14.3 0 32v256c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H32zm23.7 32L224 200.3 392.3 32c11 2.9 19.7 11.6 22.6 22.6L310.6 158.9l104.3 104.3c-2.9 11-11.6 19.7-22.6 22.6L288 181.5l-64 64-64-64L55.7 285.8c-11-2.9-19.7-11.6-22.6-22.6l104.3-104.3L33.1 54.6C36 43.6 44.7 34.9 55.7 32z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var envelopeIcon = {
+        name: 'envelope',
+        content: '<path d="M64 96c-17.7 0-32 14.3-32 32v256c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V128c0-17.7-14.3-32-32-32H64zm23.7 32L256 296.3 424.3 128c11 2.9 19.7 11.6 22.6 22.6L342.6 254.9l104.3 104.3c-2.9 11-11.6 19.7-22.6 22.6L320 277.5l-64 64-64-64L87.7 381.8c-11-2.9-19.7-11.6-22.6-22.6l104.3-104.3L65.1 150.6c2.9-11 11.6-19.7 22.6-22.6z" />',
         viewBox: '0 0 512 512'
     };
 
@@ -27745,6 +28021,9 @@
         envelopBoxIcon: envelopBoxIcon,
         envelopIcon: envelopIcon,
         envelopLinkIcon: envelopLinkIcon,
+        envelopeBoxIcon: envelopeBoxIcon,
+        envelopeIcon: envelopeIcon,
+        envelopeLinkIcon: envelopeLinkIcon,
         equalIcon: equalIcon,
         exclamationCircleIcon: exclamationCircleIcon,
         exeIcon: exeIcon,
@@ -27812,6 +28091,8 @@
         fullscreenIcon: fullscreenIcon,
         gapColumnIcon: gapColumnIcon,
         gapRowIcon: gapRowIcon,
+        gaugeLinearIcon: gaugeLinearIcon,
+        gaugeRadialIcon: gaugeRadialIcon,
         gearIcon: gearIcon,
         gearsIcon: gearsIcon,
         globeIcon: globeIcon,
@@ -27953,6 +28234,7 @@
         pageHeaderSectionIcon: pageHeaderSectionIcon,
         paletteIcon: paletteIcon,
         paneFreezeIcon: paneFreezeIcon,
+        paperPlaneIcon: paperPlaneIcon,
         paperclipAltIcon: paperclipAltIcon,
         paperclipIcon: paperclipIcon,
         paragraphAddIcon: paragraphAddIcon,
@@ -28151,7 +28433,7 @@
         zoomOutIcon: zoomOutIcon
     });
 
-    var __meta__$Z = {
+    var __meta__$H = {
         id: "icons",
         name: "Icons",
         category: "web",
@@ -28223,9 +28505,9 @@
         kendo.ui.svgIcons = svgIcons;
         kendo.ui.icon = html.renderIcon;
     })(window.kendo.jQuery);
-    var kendo$Y = kendo;
+    var kendo$G = kendo;
 
-    var __meta__$Y = {
+    var __meta__$G = {
         id: "badge",
         name: "Badge",
         category: "web", // suite
@@ -28552,9 +28834,9 @@
         ui.plugin(Badge);
 
     })(window.kendo.jQuery);
-    var kendo$X = kendo;
+    var kendo$F = kendo;
 
-    var __meta__$X = {
+    var __meta__$F = {
         id: "html.button",
         name: "Html.Button",
         category: "web",
@@ -28694,9 +28976,9 @@
         }]);
 
     })(window.kendo.jQuery);
-    var kendo$W = kendo;
+    var kendo$E = kendo;
 
-    var __meta__$W = {
+    var __meta__$E = {
             id: "button",
             name: "Button",
             category: "web",
@@ -28924,9 +29206,9 @@
             kendo.ui.plugin(Button);
 
         })(window.kendo.jQuery);
-    var kendo$V = kendo;
+    var kendo$D = kendo;
 
-    var __meta__$V = {
+    var __meta__$D = {
             id: "togglebutton",
             name: "ToggleButton",
             category: "web",
@@ -29037,9 +29319,9 @@
             kendo.ui.plugin(ToggleButton);
 
         })(window.kendo.jQuery);
-    var kendo$U = kendo;
+    var kendo$C = kendo;
 
-    var __meta__$U = {
+    var __meta__$C = {
         id: "buttongroup",
         name: "ButtonGroup",
         category: "web",
@@ -29379,9 +29661,9 @@
 
         ui.plugin(ButtonGroup);
     })(window.kendo.jQuery);
-    var kendo$T = kendo;
+    var kendo$B = kendo;
 
-    var __meta__$T = {
+    var __meta__$B = {
         id: "bottomnavigation",
         name: "BottomNavigation",
         category: "web",
@@ -29755,9 +30037,9 @@
 
         kendo.cssProperties.registerPrefix("BottomNavigation", "k-bottom-nav-");
     })(window.kendo.jQuery);
-    var kendo$S = kendo;
+    var kendo$A = kendo;
 
-    var __meta__$S = {
+    var __meta__$A = {
         id: "pager",
         name: "Pager",
         category: "framework",
@@ -30552,9 +30834,9 @@
 
         ui.plugin(Pager);
     })(window.kendo.jQuery);
-    var kendo$R = kendo;
+    var kendo$z = kendo;
 
-    var __meta__$R = {
+    var __meta__$z = {
         id: "popup",
         name: "Pop-up",
         category: "framework",
@@ -31411,9 +31693,9 @@
         });
         ui.Popup.TabKeyTrap = TabKeyTrap;
     })(window.kendo.jQuery);
-    var kendo$Q = kendo;
+    var kendo$y = kendo;
 
-    var __meta__$Q = {
+    var __meta__$y = {
         id: "actionsheet",
         name: "ActionSheet",
         category: "web", // suite
@@ -32010,9 +32292,9 @@
         ui.plugin(ActionSheet);
 
     })(window.kendo.jQuery);
-    var kendo$P = kendo;
+    var kendo$x = kendo;
 
-    var __meta__$P = {
+    var __meta__$x = {
         id: "notification",
         name: "Notification",
         category: "web",
@@ -32544,9 +32826,9 @@
         kendo.ui.plugin(Notification);
 
     })(window.kendo.jQuery);
-    var kendo$O = kendo;
+    var kendo$w = kendo;
 
-    var __meta__$O = {
+    var __meta__$w = {
         id: "tooltip",
         name: "Tooltip",
         category: "web",
@@ -33157,9 +33439,9 @@
 
         kendo.ui.plugin(Tooltip);
     })(window.kendo.jQuery);
-    var kendo$N = kendo;
+    var kendo$v = kendo;
 
-    var __meta__$N = {
+    var __meta__$v = {
         id: "button.menu",
         name: "ButtonMenu",
         category: "web",
@@ -33601,9 +33883,9 @@
         ui.plugin(ButtonMenu);
 
     })(window.kendo.jQuery);
-    var kendo$M = kendo;
+    var kendo$u = kendo;
 
-    var __meta__$M = {
+    var __meta__$u = {
         id: "splitbutton",
         name: "SplitButton",
         category: "web",
@@ -33967,9 +34249,9 @@
         ui.plugin(SplitButton);
 
     })(window.kendo.jQuery);
-    var kendo$L = kendo;
+    var kendo$t = kendo;
 
-    var __meta__$L = {
+    var __meta__$t = {
         id: "dropdownbutton",
         name: "DropDownButton",
         category: "web",
@@ -34251,9 +34533,9 @@
         ui.plugin(DropDownButton);
 
     })(window.kendo.jQuery);
-    var kendo$K = kendo;
+    var kendo$s = kendo;
 
-    var __meta__$K = {
+    var __meta__$s = {
         id: "menu",
         name: "Menu",
         category: "web",
@@ -37066,9 +37348,9 @@
         ui.plugin(ContextMenu);
 
     })(window.kendo.jQuery);
-    var kendo$J = kendo;
+    var kendo$r = kendo;
 
-    var __meta__$J = {
+    var __meta__$r = {
         id: "toolbar",
         name: "ToolBar",
         category: "web",
@@ -38191,7 +38473,7 @@
                     templateItem = target.closest(DOT + TEMPLATE_ITEM),
                     isOverflowAnchor = target.is(DOT + OVERFLOW_ANCHOR);
 
-                if (!this.options.navigateOnTab && keyCode === keys.ESC && templateItem.length > 0) {
+                if (!this.options.navigateOnTab && !target.is(".k-toolbar-tool") && keyCode === keys.ESC && templateItem.length > 0) {
                     e.stopPropagation();
                     this._keyDeactivateTemplate(templateItem);
                     return;
@@ -38914,9 +39196,9 @@
 
         kendo.ui.plugin(ToolBar);
     })(window.kendo.jQuery);
-    var kendo$I = kendo;
+    var kendo$q = kendo;
 
-    var __meta__$I = {
+    var __meta__$q = {
         id: "list",
         name: "List",
         category: "framework",
@@ -42082,9 +42364,9 @@
         kendo.cssProperties.registerPrefix("List", "k-list-");
 
     })(window.kendo.jQuery);
-    var kendo$H = kendo;
+    var kendo$p = kendo;
 
-    var __meta__$H = {
+    var __meta__$p = {
         id: "calendar",
         name: "Calendar",
         category: "web",
@@ -44206,9 +44488,9 @@
 
         kendo.calendar = calendar;
     })(window.kendo.jQuery);
-    var kendo$G = kendo;
+    var kendo$o = kendo;
 
-    var __meta__$G = {
+    var __meta__$o = {
         id: "virtuallist",
         name: "VirtualList",
         category: "framework",
@@ -46049,9 +46331,9 @@
         kendo.ui.plugin(VirtualList);
 
     })(window.kendo.jQuery);
-    var kendo$F = kendo;
+    var kendo$n = kendo;
 
-    var __meta__$F = {
+    var __meta__$n = {
         id: "autocomplete",
         name: "AutoComplete",
         category: "web",
@@ -46945,9 +47227,9 @@
             values: kendo.cssProperties.roundedValues.concat([['full', 'full']])
         }]);
     })(window.kendo.jQuery);
-    var kendo$E = kendo;
+    var kendo$m = kendo;
 
-    var __meta__$E = {
+    var __meta__$m = {
         id: "dropdownlist",
         name: "DropDownList",
         category: "web",
@@ -48408,9 +48690,9 @@
             values: kendo.cssProperties.roundedValues.concat([['full', 'full']])
         }]);
     })(window.kendo.jQuery);
-    var kendo$D = kendo;
+    var kendo$l = kendo;
 
-    var __meta__$D = {
+    var __meta__$l = {
         id: "combobox",
         name: "ComboBox",
         category: "web",
@@ -49691,9 +49973,9 @@
             values: kendo.cssProperties.roundedValues.concat([['full', 'full']])
         }]);
     })(window.kendo.jQuery);
-    var kendo$C = kendo;
+    var kendo$k = kendo;
 
-    var __meta__$C = {
+    var __meta__$k = {
         id: "html.chip",
         name: "Html.Chip",
         category: "web",
@@ -49737,6 +50019,7 @@
                 removeIconClass: "",
                 content: "",
                 text: "",
+                actions: [],
                 stylingOptions: [ "size", "rounded", "fillMode", "themeColor" ]
             },
             _wrapper: function() {
@@ -49772,8 +50055,28 @@
                     that.wrapper.addClass("k-disabled");
                 }
 
+                if ((options.actions && options.actions.length > 0) || options.removable) {
+                    that._actions();
+                }
+
+
+            },
+            _actions: function() {
+                var that = this,
+                    options = that.options;
+
+                that.actionsWrapper = $("<span class='k-chip-actions'></span>");
+                that.actionsWrapper.appendTo(that.wrapper);
+
+                if (options.actions && options.actions.length > 0) {
+                    for (var i = 0; i < options.actions.length; i++) {
+                        var action = options.actions[i];
+                        that.actionsWrapper.append($(("<span class='k-chip-action " + (action.iconClass ? action.iconClass : '') + "'>" + (kendo.ui.icon({ icon: action.icon, iconClass: "k-chip-icon" })) + "</span>")).attr(action.attr ? action.attr : {}));
+                    }
+                }
+
                 if (options.removable) {
-                    that.wrapper.append($(("<span class='k-chip-action k-chip-remove-action'>" + (kendo.ui.icon({ icon: options.removeIcon, iconClass: "k-chip-icon" })) + "</span>")).attr(options.removableAttr));
+                    that.actionsWrapper.append($(("<span class='k-chip-action k-chip-remove-action'>" + (kendo.ui.icon({ icon: options.removeIcon, iconClass: "k-chip-icon" })) + "</span>")).attr(options.removableAttr));
                 }
             }
         });
@@ -49791,9 +50094,9 @@
         }]);
 
     })(window.kendo.jQuery);
-    var kendo$B = kendo;
+    var kendo$j = kendo;
 
-    var __meta__$B = {
+    var __meta__$j = {
         id: "html.chiplist",
         name: "Html.ChipList",
         category: "web",
@@ -49854,9 +50157,9 @@
         kendo.cssProperties.registerPrefix("HTMLChipList", "k-chip-list-");
 
     })(window.kendo.jQuery);
-    var kendo$A = kendo;
+    var kendo$i = kendo;
 
-    var __meta__$A = {
+    var __meta__$i = {
         id: "multiselect",
         name: "MultiSelect",
         category: "web",
@@ -51603,7 +51906,7 @@
         }]);
 
     })(window.kendo.jQuery);
-    var kendo$z = kendo;
+    var kendo$h = kendo;
 
     /***********************************************************************
      * WARNING: this file is auto-generated.  If you change it directly,
@@ -51613,7 +51916,7 @@
      */
     /* eslint-disable space-before-blocks, space-before-function-paren, no-multi-spaces */
 
-        var __meta__$z = {
+        var __meta__$h = {
             id: "color",
             name: "Color utils",
             category: "framework",
@@ -52183,7 +52486,7 @@
         Color: Color
     });
 
-    var __meta__$y = {
+    var __meta__$g = {
         id: "slider",
         name: "Slider",
         category: "web",
@@ -53932,9 +54235,9 @@
         kendo.ui.plugin(RangeSlider);
 
     })(window.kendo.jQuery);
-    var kendo$y = kendo;
+    var kendo$g = kendo;
 
-    var __meta__$x = {
+    var __meta__$f = {
         id: "textbox",
         name: "TextBox",
         category: "web",
@@ -54211,9 +54514,9 @@
 
         ui.plugin(TextBox);
     })(window.kendo.jQuery);
-    var kendo$x = kendo;
+    var kendo$f = kendo;
 
-    var __meta__$w = {
+    var __meta__$e = {
         id: "numerictextbox",
         name: "NumericTextBox",
         category: "web",
@@ -55194,7 +55497,7 @@
 
         ui.plugin(NumericTextBox);
     })(window.kendo.jQuery);
-    var kendo$w = kendo;
+    var kendo$e = kendo;
 
     (function($, undefined$1) {
         // WARNING: removing the following jshint declaration and turning
@@ -55681,7 +55984,7 @@
 
     })(window.kendo.jQuery);
 
-    var __meta__$v = {
+    var __meta__$d = {
             id: "colorgradient",
             name: "ColorGradient",
             category: "web", // suite
@@ -57037,7 +57340,7 @@
         ui.plugin(FlatColorPicker);
     })(window.kendo.jQuery);
 
-    var __meta__$u = {
+    var __meta__$c = {
         id: "colorpicker",
         name: "Color tools",
         category: "web",
@@ -57462,9 +57765,9 @@
         }]);
 
     })(window.kendo.jQuery);
-    var kendo$v = kendo;
+    var kendo$d = kendo;
 
-    var __meta__$t = {
+    var __meta__$b = {
         id: "listbox",
         name: "ListBox",
         category: "web",
@@ -59182,9 +59485,9 @@
         }
 
     })(window.kendo.jQuery);
-    var kendo$u = kendo;
+    var kendo$c = kendo;
 
-    var __meta__$s = {
+    var __meta__$a = {
         id: "loader",
         name: "Loader",
         category: "web",
@@ -59374,9 +59677,9 @@
         ui.plugin(Loader);
 
     })(window.kendo.jQuery);
-    var kendo$t = kendo;
+    var kendo$b = kendo;
 
-    var __meta__$r = {
+    var __meta__$9 = {
         id: "textarea",
         name: "TextArea",
         category: "web",
@@ -59676,9 +59979,9 @@
 
         ui.plugin(TextArea);
     })(window.kendo.jQuery);
-    var kendo$s = kendo;
+    var kendo$a = kendo;
 
-    var __meta__$q = {
+    var __meta__$8 = {
         id: "maskedtextbox",
         name: "MaskedTextBox",
         category: "web",
@@ -60404,9 +60707,9 @@
         ui.plugin(MaskedTextBox);
 
     })(window.kendo.jQuery);
-    var kendo$r = kendo;
+    var kendo$9 = kendo;
 
-    var __meta__$p = {
+    var __meta__$7 = {
         id: "panelbar",
         name: "PanelBar",
         category: "web",
@@ -62236,9 +62539,9 @@
     kendo.ui.plugin(PanelBar);
 
     })(window.kendo.jQuery);
-    var kendo$q = kendo;
+    var kendo$8 = kendo;
 
-    var __meta__$o = {
+    var __meta__$6 = {
         id: "progressbar",
         name: "ProgressBar",
         category: "web",
@@ -62749,9 +63052,9 @@
 
         kendo.ui.plugin(ProgressBar);
     })(window.kendo.jQuery);
-    var kendo$p = kendo;
+    var kendo$7 = kendo;
 
-    var __meta__$n = {
+    var __meta__$5 = {
         id: "responsive-panel",
         name: "Responsive Panel",
         category: "web",
@@ -62912,9 +63215,9 @@
 
         kendo.ui.plugin(ResponsivePanel);
     })(window.kendo.jQuery);
-    var kendo$o = kendo;
+    var kendo$6 = kendo;
 
-    var __meta__$m = {
+    var __meta__$4 = {
         id: "tabstrip",
         name: "TabStrip",
         category: "web",
@@ -64499,9 +64802,9 @@
         kendo.ui.plugin(TabStrip);
 
     })(window.kendo.jQuery);
-    var kendo$n = kendo;
+    var kendo$5 = kendo;
 
-    var __meta__$l = {
+    var __meta__$3 = {
         id: "splitter",
         name: "Splitter",
         category: "web",
@@ -64671,6 +64974,7 @@
 
             options: {
                 name: "Splitter",
+                clickMoveClick: true,
                 orientation: HORIZONTAL,
                 panes: []
             },
@@ -64961,6 +65265,10 @@
 
                 that.wrapper.addClass("k-splitter-resizing");
 
+                if (that._suppressResize) {
+                    return;
+                }
+
                 if (splitBarsCount === 0) {
                     splitBarsCount = panes.length - 1;
                     panes.slice(0, splitBarsCount)
@@ -65185,7 +65493,12 @@
 
         function PaneResizing(splitter) {
             var that = this,
-                orientation = splitter.orientation;
+                orientation = splitter.orientation,
+                handle = ".k-splitbar-draggable-" + orientation + "[data-marker=" + splitter._marker + "]";
+
+            if (splitter.options.clickMoveClick) {
+                handle += ",.k-ghost-splitbar";
+            }
 
             that.owner = splitter;
             that._element = splitter.element;
@@ -65195,7 +65508,8 @@
 
             that._resizable = new kendo.ui.Resizable(splitter.element, {
                 orientation: orientation,
-                handle: ".k-splitbar-draggable-" + orientation + "[data-marker=" + splitter._marker + "]",
+                handle: handle,
+                clickMoveClick: splitter.options.clickMoveClick,
                 hint: that._createHint.bind(that),
                 start: that._start.bind(that),
                 max: that._max.bind(that),
@@ -65247,8 +65561,16 @@
                 var that = this,
                     splitbar = $(e.currentTarget),
                     previousPane = splitbar.prev(),
-                    nextPane = splitbar.next(),
-                    previousPaneConfig = previousPane.data(PANE),
+                    nextPane = splitbar.next();
+
+                if ($(e.initialTarget).closest(".k-expand-next, .k-expand-prev, .k-collapse-next, .k-collapse-prev").length > 0 ||
+                    !nextPane.length ||
+                    !previousPane.length) {
+                        e.preventDefault();
+                        return;
+                }
+
+                var previousPaneConfig = previousPane.data(PANE),
                     nextPaneConfig = nextPane.data(PANE),
                     prevBoundary = parseInt(previousPane[0].style[that.positioningProperty], 10),
                     nextBoundary = parseInt(nextPane[0].style[that.positioningProperty], 10) + nextPane[0][that.sizingDomProperty] - splitbar[0][that.sizingDomProperty],
@@ -65256,8 +65578,16 @@
                     toPx = function(value) {
                         var val = parseInt(value, 10);
                         return (isPixelSize(value) ? val : (totalSize * val) / 100) || 0;
-                    },
-                    prevMinSize = toPx(previousPaneConfig.min),
+                    };
+
+                if (!previousPaneConfig || !nextPaneConfig) {
+                    e.preventDefault();
+                    e.sender.draggable.clickMoveClick.cancel();
+                    that.owner.element.find(".k-ghost-splitbar").remove();
+                    return;
+                }
+
+                var prevMinSize = toPx(previousPaneConfig.min),
                     prevMaxSize = toPx(previousPaneConfig.max) || nextBoundary - prevBoundary,
                     nextMinSize = toPx(nextPaneConfig.min),
                     nextMaxSize = toPx(nextPaneConfig.max) || nextBoundary - prevBoundary;
@@ -65283,8 +65613,13 @@
                 if (e.keyCode !== kendo.keys.ESC) {
                     var ghostPosition = e.position,
                         previousPane = splitbar.prev(),
-                        nextPane = splitbar.next(),
-                        previousPaneConfig = previousPane.data(PANE),
+                        nextPane = splitbar.next();
+
+                    if (!nextPane.length || !previousPane.length) {
+                        return false;
+                    }
+
+                    var previousPaneConfig = previousPane.data(PANE),
                         nextPaneConfig = nextPane.data(PANE),
                         previousPaneNewSize = ghostPosition - parseInt(previousPane[0].style[that.positioningProperty], 10),
                         nextPaneNewSize = parseInt(nextPane[0].style[that.positioningProperty], 10) + nextPane[0][that.sizingDomProperty] - ghostPosition - splitbar[0][that.sizingDomProperty],
@@ -65310,9 +65645,9 @@
         };
 
     })(window.kendo.jQuery);
-    var kendo$m = kendo;
+    var kendo$4 = kendo;
 
-    var __meta__$k = {
+    var __meta__$2 = {
             id: "dialog",
             name: "Dialog",
             category: "web", // suite
@@ -66493,9 +66828,9 @@
             kendo.prompt = kendoPrompt;
 
         })(window.kendo.jQuery);
-    var kendo$l = kendo;
+    var kendo$3 = kendo;
 
-    var __meta__$j = {
+    var __meta__$1 = {
             id: "window",
             name: "Window",
             category: "web",
@@ -67012,7 +67347,7 @@
                         this.dragging = null;
                     }
                     if (draggable) {
-                        this.dragging = new WindowDragging(this, draggable.dragHandle || KWINDOWTITLEBAR);
+                        this.dragging = new WindowDragging(this, draggable.dragHandle || KWINDOWTITLEBAR, draggable.clickMoveClick);
                     }
                 },
 
@@ -68548,13 +68883,20 @@
                 }
             };
 
-            function WindowDragging(wnd, dragHandle) {
-                var that = this;
+            function WindowDragging(wnd, dragHandle, clickMoveClick) {
+                var that = this,
+                    filter = dragHandle;
+
+                if (clickMoveClick) {
+                    filter += ",.k-overlay";
+                }
+
                 that.owner = wnd;
                 that._preventDragging = false;
                 that._draggable = new Draggable(wnd.wrapper, {
                     filter: dragHandle,
                     group: wnd.wrapper.id + "-moving",
+                    clickMoveClick: clickMoveClick,
                     dragstart: that.dragstart.bind(that),
                     drag: that.drag.bind(that),
                     dragend: that.dragend.bind(that),
@@ -68699,6158 +69041,6 @@
             kendo.ui.plugin(Window);
 
         })(window.kendo.jQuery);
-    var kendo$k = kendo;
-
-    var __meta__$i = {
-        id: "mobile.view",
-        name: "View",
-        category: "mobile",
-        description: "Mobile View",
-        depends: [ "core", "fx", "mobile.scroller", "view" ],
-        hidden: true
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            mobile = kendo.mobile,
-            ui = mobile.ui,
-            attr = kendo.attr,
-            Widget = ui.Widget,
-            ViewClone = kendo.ViewClone,
-            INIT = "init",
-            UI_OVERLAY = '<div style="height: 100%; width: 100%; position: absolute; top: 0; left: 0; z-index: 20000; display: none"></div>',
-            BEFORE_SHOW = "beforeShow",
-            SHOW = "show",
-            AFTER_SHOW = "afterShow",
-            BEFORE_HIDE = "beforeHide",
-            TRANSITION_END = "transitionEnd",
-            TRANSITION_START = "transitionStart",
-            HIDE = "hide",
-            DESTROY = "destroy",
-            attrValue = kendo.attrValue,
-            roleSelector = kendo.roleSelector,
-            directiveSelector = kendo.directiveSelector,
-            compileMobileDirective = kendo.compileMobileDirective;
-
-        function initPopOvers(element) {
-            var popovers = element.find(roleSelector("popover")),
-                idx, length,
-                roles = ui.roles;
-
-            for (idx = 0, length = popovers.length; idx < length; idx ++) {
-                kendo.initWidget(popovers[idx], {}, roles);
-            }
-        }
-
-        function preventScrollIfNotInput(e) {
-            if (!kendo.triggeredByInput(e)) {
-                e.preventDefault();
-            }
-        }
-
-        var View = Widget.extend({
-            init: function(element, options) {
-                Widget.fn.init.call(this, element, options);
-                this.params = {};
-
-                $.extend(this, options);
-
-                this.transition = this.transition || this.defaultTransition;
-
-                this._id();
-
-                if (!this.options.$angular) {
-                    this._layout();
-                    this._overlay();
-                    this._scroller();
-                    this._model();
-                } else {
-                    this._overlay();
-                }
-            },
-
-            events: [
-                INIT,
-                BEFORE_SHOW,
-                SHOW,
-                AFTER_SHOW,
-                BEFORE_HIDE,
-                HIDE,
-                DESTROY,
-                TRANSITION_START,
-                TRANSITION_END
-            ],
-
-            options: {
-                name: "View",
-                title: "",
-                layout: null,
-                getLayout: $.noop,
-                reload: false,
-                transition: "",
-                defaultTransition: "",
-                useNativeScrolling: false,
-                stretch: false,
-                zoom: false,
-                model: null,
-                modelScope: window,
-                scroller: {},
-                initWidgets: true
-            },
-
-            enable: function(enable) {
-                if (typeof enable == "undefined") {
-                    enable = true;
-                }
-
-                if (enable) {
-                    this.overlay.hide();
-                } else {
-                    this.overlay.show();
-                }
-            },
-
-            destroy: function() {
-                if (this.layout) {
-                    this.layout.detach(this);
-                }
-
-                this.trigger(DESTROY);
-
-
-                Widget.fn.destroy.call(this);
-
-                if (this.scroller) {
-                    this.scroller.destroy();
-                }
-
-                if (this.options.$angular) {
-                    this.element.scope().$destroy();
-                }
-
-                kendo.destroy(this.element);
-            },
-
-            purge: function() {
-                this.destroy();
-                this.element.remove();
-            },
-
-            triggerBeforeShow: function() {
-                if (this.trigger(BEFORE_SHOW, { view: this })) {
-                    return false;
-                }
-                return true;
-            },
-
-            triggerBeforeHide: function() {
-                if (this.trigger(BEFORE_HIDE, { view: this })) {
-                    return false;
-                }
-                return true;
-            },
-
-            showStart: function() {
-                var element = this.element;
-
-                element.css("display", "");
-
-                if (!this.inited) {
-                    this.inited = true;
-                    this.trigger(INIT, { view: this });
-                } else { // skip the initial controller update
-                    this._invokeNgController();
-                }
-
-                if (this.layout) {
-                    this.layout.attach(this);
-                }
-
-                this._padIfNativeScrolling();
-                this.trigger(SHOW, { view: this });
-                kendo.resize(element);
-            },
-
-            showEnd: function() {
-                this.trigger(AFTER_SHOW, { view: this });
-                this._padIfNativeScrolling();
-            },
-
-            hideEnd: function() {
-                var that = this;
-                that.element.hide();
-                that.trigger(HIDE, { view: that });
-
-                if (that.layout) {
-                    that.layout.trigger(HIDE, { view: that, layout: that.layout });
-                }
-            },
-
-            beforeTransition: function(type) {
-                this.trigger(TRANSITION_START, { type: type });
-            },
-
-            afterTransition: function(type) {
-                this.trigger(TRANSITION_END, { type: type });
-            },
-
-            _padIfNativeScrolling: function() {
-                if (mobile.appLevelNativeScrolling()) {
-                    var isAndroid = kendo.support.mobileOS && kendo.support.mobileOS.android,
-                        skin = mobile.application.skin() || "",
-                        isAndroidForced = mobile.application.os.android || (skin.indexOf("android") > -1),
-                        hasPlatformIndependentSkin = skin === "flat" || (skin.indexOf("material") > -1),
-                        topContainer = (isAndroid || isAndroidForced) && (!hasPlatformIndependentSkin) ? "footer" : "header",
-                        bottomContainer = (isAndroid || isAndroidForced) && (!hasPlatformIndependentSkin) ? "header" : "footer";
-
-                    this.content.css({
-                        paddingTop: this[topContainer].height(),
-                        paddingBottom: this[bottomContainer].height()
-                    });
-                }
-            },
-
-            contentElement: function() {
-                var that = this;
-
-                return that.options.stretch ? that.content : that.scrollerContent;
-            },
-
-            clone: function() {
-                return new ViewClone(this);
-            },
-
-            _scroller: function() {
-                var that = this;
-
-                if (mobile.appLevelNativeScrolling()) {
-                    return;
-                }
-                if (that.options.stretch) {
-                    that.content.addClass("km-stretched-view");
-                } else {
-                    that.content.kendoMobileScroller($.extend(that.options.scroller, { zoom: that.options.zoom, useNative: that.options.useNativeScrolling }));
-
-                    that.scroller = that.content.data("kendoMobileScroller");
-                    that.scrollerContent = that.scroller.scrollElement;
-                }
-
-                // prevent accidental address bar display when pulling the header
-                if (kendo.support.kineticScrollNeeded) {
-                    $(that.element).on("touchmove", ".km-header", preventScrollIfNotInput);
-                    if (!that.options.useNativeScrolling && !that.options.stretch) {
-                        $(that.element).on("touchmove", ".km-content", preventScrollIfNotInput);
-                    }
-                }
-            },
-
-            _model: function() {
-                var that = this,
-                    element = that.element,
-                    model = that.options.model;
-
-                if (typeof model === "string") {
-                    model = kendo.getter(model)(that.options.modelScope);
-                }
-
-                that.model = model;
-
-                initPopOvers(element);
-
-                that.element.css("display", "");
-                if (that.options.initWidgets) {
-                    if (model) {
-                        kendo.bind(element, model, ui, kendo.ui, kendo.dataviz.ui);
-                    } else {
-                        mobile.init(element.children());
-                    }
-                }
-                that.element.css("display", "none");
-            },
-
-            _id: function() {
-                var element = this.element,
-                    idAttrValue = element.attr("id") || "";
-
-                this.id = attrValue(element, "url") || "#" + idAttrValue;
-
-                if (this.id == "#") {
-                    this.id = kendo.guid();
-                    element.attr("id", this.id);
-                }
-            },
-
-            _layout: function() {
-                var contentSelector = roleSelector("content"),
-                    element = this.element;
-
-                element.addClass("km-view");
-
-                this.header = element.children(roleSelector("header")).addClass("km-header");
-                this.footer = element.children(roleSelector("footer")).addClass("km-footer");
-
-                if (!element.children(contentSelector)[0]) {
-                  element.wrapInner("<div " + attr("role") + '="content"></div>');
-                }
-
-                this.content = element.children(roleSelector("content"))
-                                    .addClass("km-content");
-
-                this.element.prepend(this.header).append(this.footer);
-
-
-                this.layout = this.options.getLayout(this.layout);
-
-                if (this.layout) {
-                    this.layout.setup(this);
-                }
-            },
-
-            _overlay: function() {
-                this.overlay = $(UI_OVERLAY).appendTo(this.element);
-            },
-
-            _invokeNgController: function() {
-                var controller,
-                    scope;
-
-                if (this.options.$angular) {
-                    controller = this.element.controller();
-                    scope = this.options.$angular[0];
-
-                    if (controller) {
-                        var callback = this._callController.bind(this, controller, scope);
-
-                        if (/^\$(digest|apply)$/.test(scope.$$phase)) {
-                            callback();
-                        } else {
-                            scope.$apply(callback);
-                        }
-                    }
-                }
-            },
-
-            _callController: function(controller, scope) {
-                this.element.injector().invoke(controller.constructor, controller, { $scope: scope });
-            }
-        });
-
-        function initWidgets(collection) {
-            collection.each(function() {
-                kendo.initWidget($(this), {}, ui.roles);
-            });
-        }
-
-        var Layout = Widget.extend({
-            init: function(element, options) {
-                Widget.fn.init.call(this, element, options);
-
-                element = this.element;
-
-                this.header = element.children(this._locate("header")).addClass("km-header");
-                this.footer = element.children(this._locate("footer")).addClass("km-footer");
-                this.elements = this.header.add(this.footer);
-
-                initPopOvers(element);
-
-                if (!this.options.$angular) {
-                    kendo.mobile.init(this.element.children());
-                }
-                this.element.detach();
-                this.trigger(INIT, { layout: this });
-            },
-
-            _locate: function(selectors) {
-                return this.options.$angular ? directiveSelector(selectors) : roleSelector(selectors);
-            },
-
-            options: {
-                name: "Layout",
-                id: null,
-                platform: null
-            },
-
-            events: [
-                INIT,
-                SHOW,
-                HIDE
-            ],
-
-            setup: function(view) {
-                if (!view.header[0]) { view.header = this.header; }
-                if (!view.footer[0]) { view.footer = this.footer; }
-            },
-
-            detach: function(view) {
-                var that = this;
-                if (view.header === that.header && that.header[0]) {
-                    view.element.prepend(that.header.detach()[0].cloneNode(true));
-                }
-
-                if (view.footer === that.footer && that.footer.length) {
-                    view.element.append(that.footer.detach()[0].cloneNode(true));
-                }
-            },
-
-            attach: function(view) {
-                var that = this,
-                    previousView = that.currentView;
-
-                if (previousView) {
-                    that.detach(previousView);
-                }
-
-                if (view.header === that.header) {
-                    that.header.detach();
-                    view.element.children(roleSelector("header")).remove();
-                    view.element.prepend(that.header);
-                }
-
-                if (view.footer === that.footer) {
-                    that.footer.detach();
-                    view.element.children(roleSelector("footer")).remove();
-                    view.element.append(that.footer);
-                }
-
-                that.trigger(SHOW, { layout: that, view: view });
-                that.currentView = view;
-            }
-        });
-
-        var Observable = kendo.Observable,
-            bodyRegExp = /<body[^>]*>(([\u000a\u000d\u2028\u2029]|.)*)<\/body>/i,
-            LOAD_START = "loadStart",
-            LOAD_COMPLETE = "loadComplete",
-            SHOW_START = "showStart",
-            SAME_VIEW_REQUESTED = "sameViewRequested",
-            VIEW_SHOW = "viewShow",
-            VIEW_TYPE_DETERMINED = "viewTypeDetermined",
-            AFTER = "after";
-
-        var ViewEngine = Observable.extend({
-            init: function(options) {
-                var that = this,
-                    views,
-                    errorMessage,
-                    container,
-                    collection;
-
-                Observable.fn.init.call(that);
-
-                $.extend(that, options);
-                that.sandbox = $("<div />");
-                container = that.container;
-
-                views = that._hideViews(container);
-                that.rootView = views.first();
-
-                if (!that.rootView[0] && options.rootNeeded) {
-                    if (container[0] == kendo.mobile.application.element[0]) {
-                        errorMessage = 'Your kendo mobile application element does not contain any direct child elements with data-role="view" attribute set. Make sure that you instantiate the mobile application using the correct container.';
-                    } else {
-                        errorMessage = 'Your pane element does not contain any direct child elements with data-role="view" attribute set.';
-                    }
-                    throw new Error(errorMessage);
-                }
-
-                that.layouts = {};
-
-                that.viewContainer = new kendo.ViewContainer(that.container);
-
-                that.viewContainer.bind("accepted", function(e) {
-                    e.view.params = that.params;
-                });
-
-                that.viewContainer.bind("complete", function(e) {
-                    that.trigger(VIEW_SHOW, { view: e.view });
-                });
-
-                that.viewContainer.bind(AFTER, function() {
-                    that.trigger(AFTER);
-                });
-
-                this.getLayoutProxy = this._getLayout.bind(this);
-                that._setupLayouts(container);
-
-                collection = container.children(that._locate("modalview drawer"));
-                if (that.$angular) {
-
-                    that.$angular[0].viewOptions = {
-                        defaultTransition: that.transition,
-                        loader: that.loader,
-                        container: that.container,
-                        getLayout: that.getLayoutProxy
-                    };
-
-                    collection.each(function(idx, element) {
-                        compileMobileDirective($(element), options.$angular[0]);
-                    });
-                } else {
-                    initWidgets(collection);
-                }
-
-                this.bind(this.events, options);
-            },
-
-            events: [
-                SHOW_START,
-                AFTER,
-                VIEW_SHOW,
-                LOAD_START,
-                LOAD_COMPLETE,
-                SAME_VIEW_REQUESTED,
-                VIEW_TYPE_DETERMINED
-            ],
-
-            destroy: function() {
-                kendo.destroy(this.container);
-
-                for (var id in this.layouts) {
-                    this.layouts[id].destroy();
-                }
-            },
-
-            view: function() {
-                return this.viewContainer.view;
-            },
-
-            showView: function(url, transition, params) {
-                url = url.replace(new RegExp("^" + this.remoteViewURLPrefix), "");
-                if (url === "" && this.remoteViewURLPrefix) {
-                    url = "/";
-                }
-
-                if (url.replace(/^#/, "") === this.url) {
-                    this.trigger(SAME_VIEW_REQUESTED);
-                    return false;
-                }
-
-                this.trigger(SHOW_START);
-
-                var that = this,
-                    showClosure = function(view) {
-                        return that.viewContainer.show(view, transition, url);
-                    },
-                    element = that._findViewElement(url),
-                    view = kendo.widgetInstance(element);
-
-                that.url = url.replace(/^#/, "");
-
-                that.params = params;
-
-                if (view && view.reload) {
-                    view.purge();
-                    element = [];
-                }
-
-                this.trigger(VIEW_TYPE_DETERMINED, { remote: element.length === 0, url: url });
-
-                if (element[0]) {
-                    if (!view) {
-                        view = that._createView(element);
-                    }
-
-                    return showClosure(view);
-                } else {
-                    if (this.serverNavigation) {
-                        location.href = url;
-                    } else {
-                        that._loadView(url, showClosure);
-                    }
-                    return true;
-                }
-            },
-
-            append: function(html, url) {
-                var sandbox = this.sandbox,
-                    urlPath = (url || "").split("?")[0],
-                    container = this.container,
-                    views,
-                    modalViews,
-                    view;
-
-                if (bodyRegExp.test(html)) {
-                    html = RegExp.$1;
-                }
-
-                sandbox[0].innerHTML = html;
-
-                container.append(sandbox.children("script, style"));
-
-                views = this._hideViews(sandbox);
-                view = views.first();
-
-                // Generic HTML content found as remote view - no remote view markers
-                if (!view.length) {
-                    views = view = sandbox.wrapInner("<div data-role=view />").children(); // one element
-                }
-
-                if (urlPath) {
-                    view.hide().attr(attr("url"), urlPath);
-                }
-
-                this._setupLayouts(sandbox);
-
-                modalViews = sandbox.children(this._locate("modalview drawer"));
-
-                container.append(sandbox.children(this._locate("layout modalview drawer")).add(views));
-
-                // Initialize the modalviews after they have been appended to the final container
-                initWidgets(modalViews);
-
-                return this._createView(view);
-            },
-
-            _locate: function(selectors) {
-                return this.$angular ? directiveSelector(selectors) : roleSelector(selectors);
-            },
-
-            _findViewElement: function(url) {
-                var element,
-                    urlPath = url.split("?")[0];
-
-                if (!urlPath) {
-                    return this.rootView;
-                }
-
-                element = this.container.children("[" + attr("url") + "='" + urlPath + "']");
-
-                // do not try to search for "#/foo/bar" id, jQuery throws error
-                if (!element[0] && urlPath.indexOf("/") === -1) {
-                    element = this.container.children(urlPath.charAt(0) === "#" ? urlPath : "#" + urlPath);
-                }
-
-                return element;
-            },
-
-            _createView: function(element) {
-                if (this.$angular) {
-                    return compileMobileDirective(element, this.$angular[0]);
-                } else {
-                    return kendo.initWidget(element, {
-                        defaultTransition: this.transition,
-                        loader: this.loader,
-                        container: this.container,
-                        getLayout: this.getLayoutProxy,
-                        modelScope: this.modelScope,
-                        reload: attrValue(element, "reload")
-                    }, ui.roles);
-                }
-            },
-
-            _getLayout: function(name) {
-                if (name === "") {
-                    return null;
-                }
-
-                return name ? this.layouts[name] : this.layouts[this.layout];
-            },
-
-            _loadView: function(url, callback) {
-                if (this._xhr) {
-                    this._xhr.abort();
-                }
-
-                this.trigger(LOAD_START);
-
-                this._xhr = $.get(kendo.absoluteURL(url, this.remoteViewURLPrefix), "html")
-                    .always(this._xhrComplete.bind(this, callback, url));
-            },
-
-            _xhrComplete: function(callback, url, response) {
-                var success = true;
-
-                if (typeof response === "object") {
-                    if (response.status === 0) {
-                        if (response.responseText && response.responseText.length > 0) {
-                            success = true;
-                            response = response.responseText;
-                        } else { // request has been aborted for real
-                            return;
-                        }
-                    }
-                }
-
-                this.trigger(LOAD_COMPLETE);
-
-                if (success) {
-                    callback(this.append(response, url));
-                }
-            },
-
-            _hideViews: function(container) {
-                return container.children(this._locate("view splitview")).hide();
-            },
-
-            _setupLayouts: function(element) {
-                var that = this,
-                    layout;
-
-                element.children(that._locate("layout")).each(function() {
-                    if (that.$angular) {
-                        layout = compileMobileDirective($(this), that.$angular[0]);
-                    } else {
-                        layout = kendo.initWidget($(this), {}, ui.roles);
-                    }
-
-                    var platform = layout.options.platform;
-
-                    if (!platform || platform === mobile.application.os.name) {
-                        that.layouts[layout.options.id] = layout;
-                    } else {
-                        layout.destroy();
-                    }
-                });
-
-            }
-        });
-
-        kendo.mobile.ViewEngine = ViewEngine;
-
-        ui.plugin(View);
-        ui.plugin(Layout);
-    })(window.kendo.jQuery);
-    var kendo$j = kendo;
-
-    var __meta__$h = {
-        id: "mobile.loader",
-        name: "Loader",
-        category: "mobile",
-        description: "Mobile Loader",
-        depends: [ "core" ],
-        hidden: true
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            ui = kendo.mobile.ui,
-            Widget = ui.Widget,
-            CAPTURE_EVENTS = $.map(kendo.eventMap, function(value) { return value; }).join(" ").split(" ");
-
-        var Loader = Widget.extend({
-            init: function(container, options) {
-                var that = this,
-                    element = $('<div class="km-loader"><span class="km-loading km-spin"></span><span class="km-loading-left"></span><span class="km-loading-right"></span></div>');
-
-                Widget.fn.init.call(that, element, options);
-
-                that.container = container;
-                that.captureEvents = false;
-
-                that._attachCapture();
-
-                element.append(that.options.loading).hide().appendTo(container);
-            },
-
-            options: {
-                name: "Loader",
-                loading: "<h1>Loading...</h1>",
-                timeout: 100
-            },
-
-            show: function() {
-                var that = this;
-
-                clearTimeout(that._loading);
-
-                if (that.options.loading === false) {
-                    return;
-                }
-
-                that.captureEvents = true;
-                that._loading = setTimeout(function() {
-                    that.element.show();
-                }, that.options.timeout);
-            },
-
-            hide: function() {
-                this.captureEvents = false;
-                clearTimeout(this._loading);
-                this.element.hide();
-            },
-
-            changeMessage: function(message) {
-                this.options.loading = message;
-                this.element.find(">h1").html(message);
-            },
-
-            transition: function() {
-                this.captureEvents = true;
-                this.container.css("pointer-events", "none");
-            },
-
-            transitionDone: function() {
-                this.captureEvents = false;
-                this.container.css("pointer-events", "");
-            },
-
-            _attachCapture: function() {
-                var that = this;
-                that.captureEvents = false;
-
-                function capture(e) {
-                    if (that.captureEvents) {
-                        e.preventDefault();
-                    }
-                }
-
-                for (var i = 0; i < CAPTURE_EVENTS.length; i ++) {
-                    that.container[0].addEventListener(CAPTURE_EVENTS[i], capture, true);
-                }
-            }
-        });
-
-        ui.plugin(Loader);
-    })(window.kendo.jQuery);
-    var kendo$i = kendo;
-
-    var __meta__$g = {
-        id: "mobile.pane",
-        name: "Pane",
-        category: "mobile",
-        description: "Mobile Pane",
-        depends: [ "mobile.view", "mobile.loader" ],
-        hidden: true
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            mobile = kendo.mobile,
-            roleSelector = kendo.roleSelector,
-            ui = mobile.ui,
-            Widget = ui.Widget,
-            ViewEngine = mobile.ViewEngine,
-            View = ui.View,
-            Loader = mobile.ui.Loader,
-
-            EXTERNAL = "external",
-            HREF = "href",
-            DUMMY_HREF = "#!",
-
-            NAVIGATE = "navigate",
-            VIEW_SHOW = "viewShow",
-            SAME_VIEW_REQUESTED = "sameViewRequested",
-            OS = kendo.support.mobileOS,
-            SKIP_TRANSITION_ON_BACK_BUTTON = OS.ios && !OS.appMode && OS.flatVersion >= 700,
-            WIDGET_RELS = /popover|actionsheet|modalview|drawer/,
-            BACK = "#:back",
-
-            attrValue = kendo.attrValue;
-
-        var Pane = Widget.extend({
-            init: function(element, options) {
-                var that = this;
-
-                Widget.fn.init.call(that, element, options);
-
-                options = that.options;
-                element = that.element;
-
-                element.addClass("km-pane");
-
-                if (that.options.collapsible) {
-                    element.addClass("km-collapsible-pane");
-                }
-
-                this.history = [];
-
-                this.historyCallback = function(url, params, backButtonPressed) {
-                    var transition = that.transition;
-                    that.transition = null;
-
-                    // swiping back in iOS leaves the app in a very broken state if we perform a transition
-                    if (SKIP_TRANSITION_ON_BACK_BUTTON && backButtonPressed) {
-                        transition = "none";
-                    }
-
-                    return that.viewEngine.showView(url, transition, params);
-                };
-
-                this._historyNavigate = function(url) {
-                    if (url === BACK) {
-                        if (that.history.length === 1) {
-                            return;
-                        }
-
-                        that.history.pop();
-                        url = that.history[that.history.length - 1];
-                    } else {
-                        that.history.push(url);
-                    }
-
-                    that.historyCallback(url, kendo.parseQueryStringParams(url));
-                };
-
-                this._historyReplace = function(url) {
-                    var params = kendo.parseQueryStringParams(url);
-                    that.history[that.history.length - 1] = url;
-                    that.historyCallback(url, params);
-                };
-
-                that.loader = new Loader(element, {
-                    loading: that.options.loading
-                });
-
-                that.viewEngine = new ViewEngine({
-                    container: element,
-                    transition: options.transition,
-                    modelScope: options.modelScope,
-                    rootNeeded: !options.initial,
-                    serverNavigation: options.serverNavigation,
-                    remoteViewURLPrefix: options.root || "",
-                    layout: options.layout,
-                    $angular: options.$angular,
-                    loader: that.loader,
-
-                    showStart: function() {
-                        that.loader.transition();
-                        that.closeActiveDialogs();
-                    },
-
-                    after: function() {
-                        that.loader.transitionDone();
-                    },
-
-                    viewShow: function(e) {
-                        that.trigger(VIEW_SHOW, e);
-                    },
-
-                    loadStart: function() {
-                        that.loader.show();
-                    },
-
-                    loadComplete: function() {
-                        that.loader.hide();
-                    },
-
-                    sameViewRequested: function() {
-                        that.trigger(SAME_VIEW_REQUESTED);
-                    },
-
-                    viewTypeDetermined: function(e) {
-                        if (!e.remote || !that.options.serverNavigation) {
-                            that.trigger(NAVIGATE, { url: e.url });
-                        }
-                    }
-                });
-
-
-                this._setPortraitWidth();
-
-                kendo.onResize(function() {
-                    that._setPortraitWidth();
-                });
-
-                that._setupAppLinks();
-            },
-
-            closeActiveDialogs: function() {
-                var dialogs = this.element.find(roleSelector("actionsheet popover modalview")).filter(":visible");
-                dialogs.each(function() {
-                    kendo.widgetInstance($(this), ui).close();
-                });
-            },
-
-            navigateToInitial: function() {
-                var initial = this.options.initial;
-
-                if (initial) {
-                    this.navigate(initial);
-                }
-
-                return initial;
-            },
-
-            options: {
-                name: "Pane",
-                portraitWidth: "",
-                transition: "",
-                layout: "",
-                collapsible: false,
-                initial: null,
-                modelScope: window,
-                loading: "<h1>Loading...</h1>"
-            },
-
-            events: [
-                NAVIGATE,
-                VIEW_SHOW,
-                SAME_VIEW_REQUESTED
-            ],
-
-            append: function(html) {
-                return this.viewEngine.append(html);
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                this.viewEngine.destroy();
-                this.userEvents.destroy();
-            },
-
-            navigate: function(url, transition) {
-                if (url instanceof View) {
-                    url = url.id;
-                }
-
-                this.transition = transition;
-
-                this._historyNavigate(url);
-            },
-
-            replace: function(url, transition) {
-                if (url instanceof View) {
-                    url = url.id;
-                }
-
-                this.transition = transition;
-
-                this._historyReplace(url);
-            },
-
-            bindToRouter: function(router) {
-                var that = this,
-                    history = this.history,
-                    viewEngine = this.viewEngine;
-
-                router.bind("init", function(e) {
-                    var url = e.url,
-                        attrUrl = router.pushState ? url : "/";
-
-                    viewEngine.rootView.attr(kendo.attr("url"), attrUrl);
-
-                    // if current is set, then this means that the pane has navigated to a given view - we need to update the router accordingly.
-                    var length = history.length;
-
-                    if (url === "/" && length) {
-                        router.navigate(history[length - 1], true);
-                        e.preventDefault(); // prevents from executing routeMissing, by default
-                    }
-                });
-
-                router.bind("routeMissing", function(e) {
-                    if (!that.historyCallback(e.url, e.params, e.backButtonPressed)) {
-                        e.preventDefault();
-                    }
-                });
-
-                router.bind("same", function() {
-                    that.trigger(SAME_VIEW_REQUESTED);
-                });
-
-                that._historyNavigate = function(url) {
-                    router.navigate(url);
-                };
-
-                that._historyReplace = function(url) {
-                    router.replace(url);
-                };
-            },
-
-            hideLoading: function() {
-                this.loader.hide();
-            },
-
-            showLoading: function() {
-                this.loader.show();
-            },
-
-            changeLoadingMessage: function(message) {
-                this.loader.changeMessage(message);
-            },
-
-            view: function() {
-                return this.viewEngine.view();
-            },
-
-            _setPortraitWidth: function() {
-                var width,
-                    portraitWidth = this.options.portraitWidth;
-
-                if (portraitWidth) {
-                    width = kendo.mobile.application.element.is(".km-vertical") ? portraitWidth : "auto";
-                    this.element.css("width", width);
-                }
-            },
-
-            _setupAppLinks: function() {
-                var that = this,
-                    linkRoles = "tab",
-                    pressedButtonSelector = "[data-" + kendo.ns + "navigate-on-press]",
-
-                    buttonSelectors = $.map(["button", "backbutton", "detailbutton", "listview-link"] , function(role) {
-                        return roleSelector(role) + ":not(" + pressedButtonSelector + ")";
-                    }).join(",");
-
-                this.element.handler(this)
-                    .on("down", roleSelector(linkRoles) + "," + pressedButtonSelector, "_mouseup")
-                    .on("click", roleSelector(linkRoles) + "," + buttonSelectors + "," + pressedButtonSelector, "_appLinkClick");
-
-                this.userEvents = new kendo.UserEvents(this.element, {
-                    fastTap: true,
-                    filter: buttonSelectors,
-                    tap: function(e) {
-                        e.event.currentTarget = e.touch.currentTarget;
-                        that._mouseup(e.event);
-                    }
-                });
-
-                // remove the ms-touch-action added by the user events, breaks native scrolling in WP8
-                this.element.css('-ms-touch-action', '');
-            },
-
-            _appLinkClick: function(e) {
-                var href = $(e.currentTarget).attr("href");
-                var remote = href && href[0] !== "#" && this.options.serverNavigation;
-
-                if (!remote && attrValue($(e.currentTarget), "rel") != EXTERNAL) {
-                    e.preventDefault();
-                }
-            },
-
-            _mouseup: function(e) {
-                if (e.which > 1 || e.isDefaultPrevented()) {
-                    return;
-                }
-
-                var pane = this,
-                    link = $(e.currentTarget),
-                    transition = attrValue(link, "transition"),
-                    rel = attrValue(link, "rel") || "",
-                    target = attrValue(link, "target"),
-                    href = link.attr(HREF),
-                    delayedTouchEnd = SKIP_TRANSITION_ON_BACK_BUTTON && link[0].offsetHeight === 0,
-                    remote = href && href[0] !== "#" && this.options.serverNavigation;
-
-                if (delayedTouchEnd || remote || rel === EXTERNAL || (typeof href === "undefined") || href === DUMMY_HREF) {
-                    return;
-                }
-
-                // Prevent iOS address bar progress display for in app navigation
-                link.attr(HREF, DUMMY_HREF);
-                setTimeout(function() { link.attr(HREF, href); });
-
-                if (rel.match(WIDGET_RELS)) {
-                    kendo.widgetInstance($(href), ui).openFor(link);
-                    // if propagation is not stopped and actionsheet is opened from tabstrip,
-                    // the actionsheet is closed immediately.
-                    if (rel === "actionsheet" || rel === "drawer") {
-                        e.stopPropagation();
-                    }
-                } else {
-                    if (target === "_top") {
-                        pane = mobile.application.pane;
-                    }
-                    else if (target) {
-                        pane = $("#" + target).data("kendoMobilePane");
-                    }
-
-                    pane.navigate(href, transition);
-                }
-
-                e.preventDefault();
-            }
-        });
-
-        Pane.wrap = function(element) {
-            if (!element.is(roleSelector("view"))) {
-                element = element.wrap('<div data-' + kendo.ns + 'role="view" data-stretch="true"></div>').parent();
-            }
-
-            var paneContainer = element.wrap('<div class="km-pane-wrapper"><div></div></div>').parent(),
-                pane = new Pane(paneContainer);
-
-            pane.navigate("");
-
-            return pane;
-        };
-        ui.plugin(Pane);
-    })(window.kendo.jQuery);
-    var kendo$h = kendo;
-
-    var __meta__$f = {
-        id: "mobile.popover",
-        name: "PopOver",
-        category: "mobile",
-        description: "The mobile PopOver widget represents a transient view which is displayed when the user taps on a navigational widget or area on the screen. ",
-        depends: [ "popup", "mobile.pane" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            mobile = kendo.mobile,
-            ui = mobile.ui,
-            HIDE = "hide",
-            OPEN = "open",
-            CLOSE = "close",
-            WRAPPER = '<div class="km-popup-wrapper"></div>',
-            ARROW = '<div class="km-popup-arrow"></div>',
-            OVERLAY = '<div class="km-popup-overlay"></div>',
-            DIRECTION_CLASSES = "km-up km-down km-left km-right",
-            Widget = ui.Widget,
-            DIRECTIONS = {
-                "down": {
-                    origin: "bottom center",
-                    position: "top center"
-                },
-                "up": {
-                    origin: "top center",
-                    position: "bottom center"
-                },
-                "left": {
-                    origin: "center left",
-                    position: "center right",
-                    collision: "fit flip"
-                },
-                "right": {
-                    origin: "center right",
-                    position: "center left",
-                    collision: "fit flip"
-                }
-            },
-
-            ANIMATION = {
-                animation: {
-                    open: {
-                        effects: "fade:in",
-                        duration: 0
-                    },
-                    close: {
-                        effects: "fade:out",
-                        duration: 400
-                    }
-                }
-            },
-            DIMENSIONS = {
-                "horizontal": { offset: "top", size: "height" },
-                "vertical": { offset: "left", size: "width" }
-            },
-
-            REVERSE = {
-                "up": "down",
-                "down": "up",
-                "left": "right",
-                "right": "left"
-            };
-
-        var Popup = Widget.extend({
-            init: function(element, options) {
-                var that = this,
-                    containerPopup = element.closest(".km-modalview-wrapper"),
-                    viewport = element.closest(".km-root").children('.km-pane').first(),
-                    container = containerPopup[0] ? containerPopup : viewport,
-                    popupOptions,
-                    axis;
-
-                if (options.viewport) {
-                    viewport = options.viewport;
-                } else if (!viewport[0]) {
-                    viewport = window;
-                }
-
-                if (options.container) {
-                    container = options.container;
-                } else if (!container[0]) {
-                    container = document.body;
-                }
-
-                popupOptions = {
-                    viewport: viewport,
-                    copyAnchorStyles: false,
-                    autosize: true,
-                    open: function() {
-                        that.overlay.show();
-                    },
-
-                    activate: that._activate.bind(that),
-
-                    deactivate: function() {
-                        that.overlay.hide();
-                        if (!that._apiCall) {
-                            that.trigger(HIDE);
-                        }
-
-                        that._apiCall = false;
-                    }
-                };
-
-                Widget.fn.init.call(that, element, options);
-
-                element = that.element;
-                options = that.options;
-
-                element.wrap(WRAPPER).addClass("km-popup").show();
-
-                axis = that.options.direction.match(/left|right/) ? "horizontal" : "vertical";
-
-                that.dimensions = DIMENSIONS[axis];
-
-                that.wrapper = element.parent().css({
-                    width: options.width,
-                    height: options.height
-                }).addClass("km-popup-wrapper km-" + options.direction).hide();
-
-                that.arrow = $(ARROW).prependTo(that.wrapper).hide();
-
-                that.overlay = $(OVERLAY).appendTo(container).hide();
-                popupOptions.appendTo = that.overlay;
-
-                if (options.className) {
-                    that.overlay.addClass(options.className);
-                }
-
-                that.popup = new kendo.ui.Popup(that.wrapper, $.extend(true, popupOptions, ANIMATION, DIRECTIONS[options.direction]));
-            },
-
-            options: {
-                name: "Popup",
-                width: 240,
-                height: "",
-                direction: "down",
-                container: null,
-                viewport: null
-            },
-
-            events: [
-                HIDE
-            ],
-
-            show: function(target) {
-                this.popup.options.anchor = $(target);
-                this.popup.open();
-            },
-
-            hide: function() {
-                this._apiCall = true;
-                this.popup.close();
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                this.popup.destroy();
-                this.overlay.remove();
-            },
-
-            target: function() {
-                return this.popup.options.anchor;
-            },
-
-            _activate: function() {
-                var that = this,
-                    direction = that.options.direction,
-                    dimensions = that.dimensions,
-                    offset = dimensions.offset,
-                    popup = that.popup,
-                    anchor = popup.options.anchor,
-                    anchorOffset = $(anchor).offset(),
-                    elementOffset = $(popup.element).offset(),
-                    cssClass = popup.flipped ? REVERSE[direction] : direction,
-                    min = that.arrow[dimensions.size]() * 2,
-                    max = that.element[dimensions.size]() - that.arrow[dimensions.size](),
-                    size = $(anchor)[dimensions.size](),
-                    offsetAmount = anchorOffset[offset] - elementOffset[offset] + (size / 2);
-
-                if (offsetAmount < min) {
-                    offsetAmount = min;
-                }
-
-                if (offsetAmount > max) {
-                    offsetAmount = max;
-                }
-
-                that.wrapper.removeClass(DIRECTION_CLASSES).addClass("km-" + cssClass);
-                that.arrow.css(offset, offsetAmount).show();
-            }
-        });
-
-        var PopOver = Widget.extend({
-            init: function(element, options) {
-                var that = this,
-                    popupOptions;
-
-                that.initialOpen = false;
-
-                Widget.fn.init.call(that, element, options);
-
-                popupOptions = $.extend({
-                    className: "km-popover-root",
-                    hide: function() { that.trigger(CLOSE); }
-                }, this.options.popup);
-
-                that.popup = new Popup(that.element, popupOptions);
-                that.popup.overlay.on("move", function(e) {
-                    if (e.target == that.popup.overlay[0]) {
-                        e.preventDefault();
-                    }
-                });
-
-                that.pane = new ui.Pane(that.element, $.extend(this.options.pane, { $angular: this.options.$angular }));
-
-                kendo.notify(that, ui);
-            },
-
-            options: {
-                name: "PopOver",
-                popup: { },
-                pane: { }
-            },
-
-            events: [
-                OPEN,
-                CLOSE
-            ],
-
-            open: function(target) {
-                this.popup.show(target);
-
-                if (!this.initialOpen) {
-                    if (!this.pane.navigateToInitial()) {
-                        this.pane.navigate("");
-                    }
-
-                    this.popup.popup._position();
-                    this.initialOpen = true;
-                } else {
-                    this.pane.view()._invokeNgController();
-                }
-            },
-
-            openFor: function(target) {
-                this.open(target);
-                this.trigger(OPEN, { target: this.popup.target() });
-            },
-
-            close: function() {
-                this.popup.hide();
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                this.pane.destroy();
-                this.popup.destroy();
-
-                kendo.destroy(this.element);
-            }
-        });
-
-        ui.plugin(Popup);
-        ui.plugin(PopOver);
-    })(window.kendo.jQuery);
-    var kendo$g = kendo;
-
-    var __meta__$e = {
-        id: "mobile.shim",
-        name: "Shim",
-        category: "mobile",
-        description: "Mobile Shim",
-        depends: [ "popup" ],
-        hidden: true
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            ui = kendo.mobile.ui,
-            Popup = kendo.ui.Popup,
-            SHIM = '<div class="km-shim"></div>',
-            HIDE = "hide",
-            Widget = ui.Widget;
-
-        var Shim = Widget.extend({
-            init: function(element, options) {
-                var that = this,
-                    app = kendo.mobile.application,
-                    os = kendo.support.mobileOS,
-                    osname = app ? app.os.name : (os ? os.name : "ios"),
-                    ioswp = osname === "ios" || osname === "wp" || (app ? app.os.skin : false),
-                    bb = osname === "blackberry",
-                    align = options.align || (ioswp ? "bottom center" : bb ? "center right" : "center center"),
-                    position = options.position || (ioswp ? "bottom center" : bb ? "center right" : "center center"),
-                    effect = options.effect || (ioswp ? "slideIn:up" : bb ? "slideIn:left" : "fade:in"),
-                    shim = $(SHIM).handler(that).hide();
-
-                Widget.fn.init.call(that, element, options);
-
-                that.shim = shim;
-                element = that.element;
-                options = that.options;
-
-                if (options.className) {
-                    that.shim.addClass(options.className);
-                }
-
-                if (!options.modal) {
-                    that.shim.on("down", "_hide");
-                }
-
-                (app ? app.element : $(document.body)).append(shim);
-
-                that.popup = new Popup(that.element, {
-                    anchor: shim,
-                    modal: true,
-                    appendTo: shim,
-                    origin: align,
-                    position: position,
-                    animation: {
-                        open: {
-                            effects: effect,
-                            duration: options.duration
-                        },
-                        close: {
-                            duration: options.duration
-                        }
-                    },
-
-                    close: function(e) {
-                        var prevented = false;
-
-                        if (!that._apiCall) {
-                            prevented = that.trigger(HIDE);
-                        }
-
-                        if (prevented) {
-                            e.preventDefault();
-                        }
-
-                        that._apiCall = false;
-                    },
-
-                    deactivate: function() { // Deactivate event can't be prevented.
-                        shim.hide();
-                    },
-
-                    open: function() {
-                        shim.show();
-                    }
-                });
-
-                kendo.notify(that);
-            },
-
-            events: [ HIDE ],
-
-            options: {
-                name: "Shim",
-                modal: false,
-                align: undefined$1,
-                position: undefined$1,
-                effect: undefined$1,
-                duration: 200
-            },
-
-            show: function() {
-                this.popup.open();
-            },
-
-            hide: function() {
-                this._apiCall = true;
-                this.popup.close();
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                this.shim.kendoDestroy();
-                this.popup.destroy();
-                this.shim.remove();
-            },
-
-            _hide: function(e) {
-                if (!e || !$.contains(this.shim.children().children(".k-popup")[0], e.target)) {
-                    this.popup.close();
-                }
-            }
-        });
-
-        ui.plugin(Shim);
-    })(window.kendo.jQuery);
-    var kendo$f = kendo;
-
-    var __meta__$d = {
-        id: "mobile.modalview",
-        name: "ModalView",
-        category: "mobile",
-        description: "The Kendo ModalView is used to present self-contained functionality in the context of the current task.",
-        depends: [ "mobile.shim", "mobile.view" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            ui = kendo.mobile.ui,
-            Shim = ui.Shim,
-            Widget = ui.Widget,
-            BEFORE_OPEN = "beforeOpen",
-            OPEN = "open",
-            CLOSE = "close",
-            INIT = "init",
-            WRAP = '<div class="km-modalview-wrapper"></div>';
-
-        var ModalView = ui.View.extend({
-            init: function(element, options) {
-                var that = this;
-
-                Widget.fn.init.call(that, element, options);
-
-                that._id();
-                that._wrap();
-                that._shim();
-
-                if (!this.options.$angular) {
-                    that._layout();
-                    that._scroller();
-                    that._model();
-                }
-
-                that.element.css("display", "");
-
-                that.trigger(INIT);
-            },
-
-            events: [
-                INIT,
-                BEFORE_OPEN,
-                OPEN,
-                CLOSE
-            ],
-
-            options: {
-                name: "ModalView",
-                modal: true,
-                width: null,
-                height: null
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                this.shim.destroy();
-            },
-
-            open: function(target) {
-                var that = this;
-                that.target = $(target);
-                that.shim.show();
-
-                that._invokeNgController();
-
-                // necessary for the mobile view interface
-                that.trigger("show", { view: that });
-            },
-
-            // Interface implementation, called from the pane click handlers
-            openFor: function(target) {
-                if (!this.trigger(BEFORE_OPEN, { target: target })) {
-                    this.open(target);
-                    this.trigger(OPEN, { target: target });
-                }
-            },
-
-            close: function() {
-                if (this.element.is(":visible") && !this.trigger(CLOSE)) {
-                    this.shim.hide();
-                }
-            },
-
-            _wrap: function() {
-                var that = this,
-                    element = that.element,
-                    options = that.options,
-                    width, height;
-
-                width = element[0].style.width || "auto";
-                height = element[0].style.height || "auto";
-
-                element.addClass("km-modalview").wrap(WRAP);
-
-                that.wrapper = element.parent().css({
-                    width: options.width || width || 300,
-                    height: options.height || height || 300
-                }).addClass(height == "auto" ? " km-auto-height" : "");
-
-                element.css({ width: "", height: "" });
-            },
-
-            _shim: function() {
-                var that = this;
-
-                that.shim = new Shim(that.wrapper, {
-                    modal: that.options.modal,
-                    position: "center center",
-                    align: "center center",
-                    effect: "fade:in",
-                    className: "km-modalview-root",
-                    hide: function(e) {
-                        if (that.trigger(CLOSE)) {
-                            e.preventDefault();
-                        }
-                    }
-                });
-            }
-        });
-
-        ui.plugin(ModalView);
-    })(window.kendo.jQuery);
-    var kendo$e = kendo;
-
-    var __meta__$c = {
-        id: "mobile.drawer",
-        name: "Drawer",
-        category: "mobile",
-        description: "The Kendo Mobile Drawer widget provides slide to reveal global application toolbox",
-        depends: [ "mobile.view", "userevents" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            mobile = kendo.mobile,
-            os = kendo.support.mobileOS,
-            Transition = kendo.effects.Transition,
-            roleSelector = kendo.roleSelector,
-            AXIS = "x",
-            ui = mobile.ui,
-            SWIPE_TO_OPEN = !(os.ios && os.majorVersion == 7 && !os.appMode),
-            BEFORE_SHOW = "beforeShow",
-            INIT = "init",
-            SHOW = "show",
-            HIDE = "hide",
-            AFTER_HIDE = "afterHide",
-            NULL_VIEW = { enable: $.noop };
-
-        var Drawer = ui.View.extend({
-            init: function(element, options) {
-                // move the drawer to the top, in order to hide it
-                $(element).parent().prepend(element);
-
-                mobile.ui.Widget.fn.init.call(this, element, options);
-
-                if (!this.options.$angular) {
-                    this._layout();
-                    this._scroller();
-                }
-
-                this._model();
-
-                var pane = this.element.closest(roleSelector("pane")).data("kendoMobilePane"),
-                    userEvents;
-
-                if (pane) {
-                    this.pane = pane;
-                    this.pane.bind("viewShow", function(e) {
-                        drawer._viewShow(e);
-                    });
-
-                    this.pane.bind("sameViewRequested", function() {
-                        drawer.hide();
-                    });
-
-                    userEvents = this.userEvents = new kendo.UserEvents(pane.element, {
-                        fastTap: true,
-                        filter: roleSelector("view splitview"),
-                        allowSelection: true
-                    });
-
-                } else {
-                    this.currentView = NULL_VIEW;
-                    var container = $(this.options.container);
-
-                    if (!container) {
-                        throw new Error("The drawer needs a container configuration option set.");
-                    }
-
-                    userEvents = this.userEvents = new kendo.UserEvents(container, { fastTap: true, allowSelection: true });
-                    this._attachTransition(container);
-                }
-
-                var drawer = this;
-
-                var hide = function(e) {
-                    if (drawer.visible) {
-                        drawer.hide();
-                        e.preventDefault();
-                    }
-                };
-
-                if (this.options.swipeToOpen && SWIPE_TO_OPEN) {
-                    userEvents.bind("press", function() { drawer.transition.cancel(); });
-                    userEvents.bind("start", function(e) { drawer._start(e); });
-                    userEvents.bind("move", function(e) { drawer._update(e); });
-                    userEvents.bind("end", function(e) { drawer._end(e); });
-                    userEvents.bind("tap", hide);
-                } else {
-                    userEvents.bind("press", hide);
-                }
-
-                this.leftPositioned = this.options.position === "left";
-
-                this.visible = false;
-
-                this.element.hide().addClass("km-drawer").addClass(this.leftPositioned ? "km-left-drawer" : "km-right-drawer");
-                this.trigger(INIT);
-            },
-
-            options: {
-                name: "Drawer",
-                position: "left",
-                views: [],
-                swipeToOpenViews: [],
-                swipeToOpen: true,
-                title: "",
-                container: null
-            },
-
-            events: [
-                BEFORE_SHOW,
-                HIDE,
-                AFTER_HIDE,
-                INIT,
-                SHOW
-            ],
-
-            show: function() {
-                if (this._activate()) {
-                    this._show();
-                }
-            },
-
-            hide: function() {
-                if (!this.currentView) {
-                    return;
-                }
-
-                this.currentView.enable();
-
-                Drawer.current = null;
-                this._moveViewTo(0);
-                this.trigger(HIDE, { view: this });
-            },
-
-            // Alias in order to support popover/modalview etc. interface
-            openFor: function() {
-                if (this.visible) {
-                    this.hide();
-                } else {
-                    this.show();
-                }
-            },
-
-            destroy: function() {
-                ui.View.fn.destroy.call(this);
-                this.userEvents.destroy();
-            },
-
-            _activate: function() {
-                if (this.visible) {
-                    return true;
-                }
-
-                var visibleOnCurrentView = this._currentViewIncludedIn(this.options.views);
-
-                if (!visibleOnCurrentView || this.trigger(BEFORE_SHOW, { view: this })) {
-                    return false;
-                }
-
-                this._setAsCurrent();
-                this.element.show();
-
-                this.trigger(SHOW, { view: this });
-                this._invokeNgController();
-                return true;
-            },
-
-            _currentViewIncludedIn: function(views) {
-                if (!this.pane || !views.length) {
-                    return true;
-                }
-
-                var view = this.pane.view();
-                return $.inArray(view.id.replace('#', ''), views) > -1 || $.inArray(view.element.attr("id"), views) > -1;
-            },
-
-            _show: function() {
-                this.currentView.enable(false);
-
-                this.visible = true;
-                var offset = this.element.width();
-
-                if (!this.leftPositioned) {
-                    offset = -offset;
-                }
-
-                this._moveViewTo(offset);
-            },
-
-            _setAsCurrent: function() {
-                if (Drawer.last !== this) {
-                    if (Drawer.last) {
-                        Drawer.last.element.hide();
-                    }
-                    this.element.show();
-                }
-
-                Drawer.last = this;
-                Drawer.current = this;
-            },
-
-            _moveViewTo: function(offset) {
-                this.userEvents.cancel();
-                this.transition.moveTo({ location: offset, duration: 400, ease: Transition.easeOutExpo });
-            },
-
-            _viewShow: function(e) {
-                if (this.currentView) {
-                    this.currentView.enable();
-                }
-
-                if (this.currentView === e.view) {
-                    this.hide();
-                    return;
-                }
-
-                this.currentView = e.view;
-                this._attachTransition(e.view.element);
-            },
-
-            _attachTransition: function(element) {
-                var that = this,
-                    movable = this.movable,
-                    currentOffset = movable && movable.x;
-
-
-                if (this.transition) {
-                    this.transition.cancel();
-                    this.movable.moveAxis("x", 0);
-                }
-
-                movable = this.movable = new kendo.ui.Movable(element);
-
-                this.transition = new Transition({
-                    axis: AXIS,
-                    movable: this.movable,
-                    onEnd: function() {
-                        if (movable[AXIS] === 0) {
-                            element[0].style.cssText = "";
-                            that.element.hide();
-                            that.trigger(AFTER_HIDE);
-                            that.visible = false;
-                        }
-                    }
-                });
-
-                if (currentOffset) {
-                    element.addClass("k-fx-hidden");
-                    kendo.animationFrame(function() {
-                        element.removeClass("k-fx-hidden");
-                        that.movable.moveAxis(AXIS, currentOffset);
-                        that.hide();
-                    });
-                }
-            },
-
-            _start: function(e) {
-                var userEvents = e.sender;
-
-                // ignore non-horizontal swipes
-                if (Math.abs(e.x.velocity) < Math.abs(e.y.velocity) || kendo.triggeredByInput(e.event) || !this._currentViewIncludedIn(this.options.swipeToOpenViews)) {
-                    userEvents.cancel();
-                    return;
-                }
-
-                var leftPositioned = this.leftPositioned,
-                    visible = this.visible,
-                    canMoveLeft = leftPositioned && visible || !leftPositioned && !Drawer.current,
-                    canMoveRight = !leftPositioned && visible || leftPositioned && !Drawer.current,
-                    leftSwipe = e.x.velocity < 0;
-
-                if ((canMoveLeft && leftSwipe) || (canMoveRight && !leftSwipe)) {
-                    if (this._activate()) {
-                        userEvents.capture();
-                        return;
-                    }
-                }
-
-                userEvents.cancel();
-            },
-
-            _update: function(e) {
-                var movable = this.movable,
-                    newPosition = movable.x + e.x.delta,
-                    limitedPosition;
-
-                if (this.leftPositioned) {
-                    limitedPosition = Math.min(Math.max(0, newPosition), this.element.width());
-                } else {
-                    limitedPosition = Math.max(Math.min(0, newPosition), -this.element.width());
-                }
-
-                this.movable.moveAxis(AXIS, limitedPosition);
-                e.event.preventDefault();
-                e.event.stopPropagation();
-            },
-
-            _end: function(e) {
-                var velocity = e.x.velocity,
-                    pastHalf = Math.abs(this.movable.x) > this.element.width() / 2,
-                    velocityThreshold = 0.8,
-                    shouldShow;
-
-                if (this.leftPositioned) {
-                    shouldShow = velocity > -velocityThreshold && (velocity > velocityThreshold || pastHalf);
-                } else {
-                    shouldShow = velocity < velocityThreshold && (velocity < -velocityThreshold || pastHalf);
-                }
-
-                if (shouldShow) {
-                    this._show();
-                } else {
-                    this.hide();
-                }
-            }
-        });
-
-        ui.plugin(Drawer);
-    })(window.kendo.jQuery);
-    var kendo$d = kendo;
-
-    var __meta__$b = {
-        id: "mobile.splitview",
-        name: "SplitView",
-        category: "mobile",
-        description: "The mobile SplitView is a tablet-specific view that consists of two or more mobile Pane widgets.",
-        depends: [ "mobile.pane" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            ui = kendo.mobile.ui,
-            Widget = ui.Widget,
-            EXPANED_PANE_SHIM = "<div class='km-expanded-pane-shim'></div>",
-            View = ui.View;
-
-        var SplitView = View.extend({
-            init: function(element, options) {
-                var that = this,
-                pane, modalViews;
-
-                Widget.fn.init.call(that, element, options);
-                element = that.element;
-
-                $.extend(that, options);
-
-                that._id();
-
-                if (!that.options.$angular) {
-                    that._layout();
-                    that._overlay();
-                } else {
-                    that._overlay();
-                }
-
-                that._style();
-
-                modalViews = element.children(that._locate("modalview"));
-
-                if (!that.options.$angular) {
-                    kendo.mobile.init(modalViews);
-                } else {
-                    modalViews.each(function(idx, element) {
-                        kendo.compileMobileDirective($(element), options.$angular[0]);
-                    });
-                }
-
-                that.panes = [];
-                that._paramsHistory = [];
-
-                if (!that.options.$angular) {
-                    that.content.children(kendo.roleSelector("pane")).each(function() {
-                        pane = kendo.initWidget(this, {}, ui.roles);
-                        that.panes.push(pane);
-                    });
-                } else {
-                    that.element.children(kendo.directiveSelector("pane")).each(function() {
-                        pane = kendo.compileMobileDirective($(this), options.$angular[0]);
-                        that.panes.push(pane);
-                    });
-
-                    that.element.children(kendo.directiveSelector("header footer")).each(function() {
-                        kendo.compileMobileDirective($(this), options.$angular[0]);
-                    });
-                }
-
-                that.expandedPaneShim = $(EXPANED_PANE_SHIM).appendTo(that.element);
-
-                that._shimUserEvents = new kendo.UserEvents(that.expandedPaneShim, {
-                    fastTap: true,
-                    tap: function() {
-                        that.collapsePanes();
-                    }
-                });
-            },
-
-            _locate: function(selectors) {
-                return this.options.$angular ? kendo.directiveSelector(selectors) : kendo.roleSelector(selectors);
-            },
-
-            options: {
-                name: "SplitView",
-                style: "horizontal"
-            },
-
-            expandPanes: function() {
-                this.element.addClass("km-expanded-splitview");
-            },
-
-            collapsePanes: function() {
-                this.element.removeClass("km-expanded-splitview");
-            },
-
-            // Implement view interface
-            _layout: function() {
-                var that = this,
-                    element = that.element;
-
-                that.transition = kendo.attrValue(element, "transition");
-                kendo.mobile.ui.View.prototype._layout.call(this);
-                kendo.mobile.init(this.header.add(this.footer));
-                that.element.addClass("km-splitview");
-                that.content.addClass("km-split-content");
-            },
-
-            _style: function() {
-                var style = this.options.style,
-                    element = this.element,
-                    styles;
-
-                if (style) {
-                    styles = style.split(" ");
-                    $.each(styles, function() {
-                        element.addClass("km-split-" + this);
-                    });
-                }
-            },
-
-            showStart: function() {
-                var that = this;
-                that.element.css("display", "");
-
-                if (!that.inited) {
-                    that.inited = true;
-                    $.each(that.panes, function() {
-                        if (this.options.initial) {
-                            this.navigateToInitial();
-                        } else {
-                            this.navigate("");
-                        }
-                    });
-                    that.trigger("init", { view: that });
-                } else {
-                    this._invokeNgController();
-                }
-
-                that.trigger("show", { view: that });
-            }
-        });
-
-        ui.plugin(SplitView);
-    })(window.kendo.jQuery);
-    var kendo$c = kendo;
-
-    var __meta__$a = {
-        id: "mobile.application",
-        name: "Application",
-        category: "mobile",
-        description: "The Mobile application provides a framework to build native looking web applications on mobile devices.",
-        depends: [ "mobile.pane", "router" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            mobile = kendo.mobile,
-            support = kendo.support,
-            Widget = mobile.ui.Widget,
-            encode = kendo.htmlEncode,
-            Pane = mobile.ui.Pane,
-
-            DEFAULT_OS = "ios7",
-            OS = support.mobileOS,
-            BERRYPHONEGAP = OS.device == "blackberry" && OS.flatVersion >= 600 && OS.flatVersion < 1000 && OS.appMode,
-            FONT_SIZE_COEF = 0.93,
-            VERTICAL = "km-vertical",
-            CHROME = OS.browser === "chrome",
-            BROKEN_WEBVIEW_RESIZE = OS.ios && OS.flatVersion >= 700 && OS.flatVersion < 800 && (OS.appMode || CHROME),
-            INITIALLY_HORIZONTAL = (Math.abs(window.orientation) / 90 == 1),
-            HORIZONTAL = "km-horizontal",
-
-            MOBILE_PLATFORMS = {
-                ios7: { ios: true, browser: "default", device: "iphone", flatVersion: "700", majorVersion: "7", minorVersion: "0.0", name: "ios", tablet: false },
-                ios: { ios: true, browser: "default", device: "iphone", flatVersion: "612", majorVersion: "6", minorVersion: "1.2", name: "ios", tablet: false },
-                android: { android: true, browser: "default", device: "android", flatVersion: "442", majorVersion: "4", minorVersion: "4.2", name: "android", tablet: false },
-                blackberry: { blackberry: true, browser: "default", device: "blackberry", flatVersion: "710", majorVersion: "7", minorVersion: "1.0", name: "blackberry", tablet: false },
-                meego: { meego: true, browser: "default", device: "meego", flatVersion: "850", majorVersion: "8", minorVersion: "5.0", name: "meego", tablet: false },
-                wp: { wp: true, browser: "default", device: "wp", flatVersion: "800", majorVersion: "8", minorVersion: "0.0", name: "wp", tablet: false }
-            },
-
-            viewportTemplate = kendo.template(function (data) { return ("<meta content=\"initial-scale=" + (encode(data.scale)) + ", maximum-scale=" + (encode(data.scale)) + ", user-scalable=no" + (data.height) + "\" name=\"viewport\" />"); }, { usedWithBlock: false }),
-            systemMeta = kendo.template(function (data) { return "<meta name=\"apple-mobile-web-app-capable\" content=\"" + (data.webAppCapable === false ? 'no' : 'yes') + "\" /> " +
-                         "<meta name=\"apple-mobile-web-app-status-bar-style\" content=\"" + (data.statusBarStyle) + "\" /> " +
-                         '<meta name="msapplication-tap-highlight" content="no" /> '; }, { usedWithBlock: false }),
-            clipTemplate = kendo.template(function (data) { return ("<style>.km-view { clip: rect(0 " + (data.width) + "px " + (data.height) + "px 0); }</style>"); }, { usedWithBlock: false }),
-            ENABLE_CLIP = OS.android && OS.browser != "chrome" || OS.blackberry,
-
-            iconMeta = kendo.template(function (data) { return ("<link rel=\"apple-touch-icon" + (OS.android ? '-precomposed' : '') + "\" " + (data.size ? ("sizes=\"" + (data.size) + "\"") : '') + " href=\"" + (data.icon) + "\" />"); }, { usedWithBlock: false }),
-
-            HIDEBAR = (OS.device == "iphone" || OS.device == "ipod") && OS.majorVersion < 7,
-            SUPPORT_SWIPE_TO_GO_BACK = (OS.device == "iphone" || OS.device == "ipod") && OS.majorVersion >= 7,
-            HISTORY_TRANSITION = SUPPORT_SWIPE_TO_GO_BACK ? "none" : null,
-            BARCOMPENSATION = OS.browser == "mobilesafari" ? 60 : 0,
-            STATUS_BAR_HEIGHT = 20,
-            WINDOW = $(window),
-            SCREEN = window.screen,
-            HEAD = $("head"),
-
-            // mobile app events
-            INIT = "init";
-
-        function osCssClass(os, options) {
-            var classes = [];
-
-            if (OS) {
-                classes.push("km-on-" + OS.name);
-            }
-
-            if (os.skin) {
-                classes.push("km-" + os.skin);
-            } else {
-                if (os.name == "ios" && os.majorVersion > 6) {
-                    classes.push("km-ios7");
-                } else {
-                    classes.push("km-" + os.name);
-                }
-            }
-            if ((os.name == "ios" && os.majorVersion < 7) || os.name != "ios") {
-                classes.push("km-" + os.name + os.majorVersion);
-            }
-            classes.push("km-" + os.majorVersion);
-            classes.push("km-m" + (os.minorVersion ? os.minorVersion[0] : 0));
-
-            if (os.variant && ((os.skin && os.skin === os.name) || !os.skin || os.setDefaultPlatform === false)) {
-                classes.push("km-" + (os.skin ? os.skin : os.name) + "-" + os.variant);
-            }
-
-            if (os.cordova) {
-                classes.push("km-cordova");
-            }
-            if (os.appMode) {
-                classes.push("km-app");
-            } else {
-                classes.push("km-web");
-            }
-
-            if (options && options.statusBarStyle) {
-                classes.push("km-" + options.statusBarStyle + "-status-bar");
-            }
-
-            return classes.join(" ");
-        }
-
-        function wp8Background(os) {
-            return 'km-wp-' + (os.noVariantSet ?
-                                (parseInt($("<div style='background: Background' />").css("background-color").split(",")[1], 10) === 0 ? 'dark' : 'light') :
-                                os.variant + " km-wp-" + os.variant + "-force");
-        }
-
-        function isOrientationHorizontal(element) {
-            return OS.wp ? element.css("animation-name") == "-kendo-landscape" : (Math.abs(window.orientation) / 90 == 1);
-        }
-
-        function getOrientationClass(element) {
-            return isOrientationHorizontal(element) ? HORIZONTAL : VERTICAL;
-        }
-
-        function setMinimumHeight(pane) {
-            pane.parent().addBack()
-                   .css("min-height", window.innerHeight);
-        }
-
-        function applyViewportHeight() {
-            $("meta[name=viewport]").remove();
-                HEAD.append(viewportTemplate({
-                height: ", width=device-width" + // width=device-width was removed for iOS6, but this should stay for BB PhoneGap.
-                            (isOrientationHorizontal() ?
-                                ", height=" + window.innerHeight + "px" :
-                                (support.mobileOS.flatVersion >= 600 && support.mobileOS.flatVersion < 700) ?
-                                    ", height=" + window.innerWidth + "px" :
-                                    ", height=device-height")
-            }));
-        }
-
-        var Application = Widget.extend({
-            init: function(element, options) {
-                // global reference to current application
-                mobile.application = this;
-                $(this.bootstrap.bind(this, element, options));
-            },
-
-            bootstrap: function(element, options) {
-                element = $(element);
-
-                if (!element[0]) {
-                    element = $(document.body);
-                }
-
-                Widget.fn.init.call(this, element, options);
-                this.element.removeAttr("data-" + kendo.ns + "role");
-
-                this._setupPlatform();
-                this._attachMeta();
-                this._setupElementClass();
-                this._attachHideBarHandlers();
-                var paneOptions = $.extend({}, this.options);
-                delete paneOptions.name;
-
-                var that = this,
-                    startHistory = function() {
-                        that.pane = new Pane(that.element, paneOptions);
-                        that.pane.navigateToInitial();
-
-                        if (that.options.updateDocumentTitle) {
-                            that._setupDocumentTitle();
-                        }
-
-                        that._startHistory();
-                        that.trigger(INIT);
-                    };
-
-                if (this.options.$angular) {
-                    setTimeout(startHistory);
-                } else {
-                    startHistory();
-                }
-            },
-
-            options: {
-                name: "Application",
-                hideAddressBar: true,
-                browserHistory: true,
-                historyTransition: HISTORY_TRANSITION,
-                modelScope: window,
-                statusBarStyle: "black",
-                transition: "",
-                retina: false,
-                platform: null,
-                skin: null,
-                updateDocumentTitle: true,
-                useNativeScrolling: false
-            },
-
-            events: [
-                INIT
-            ],
-
-            navigate: function(url, transition) {
-                this.pane.navigate(url, transition);
-            },
-
-            replace: function(url, transition) {
-                this.pane.replace(url, transition);
-            },
-
-            scroller: function() {
-                return this.view().scroller;
-            },
-
-            hideLoading: function() {
-                if (this.pane) {
-                    this.pane.hideLoading();
-                } else {
-                    throw new Error("The mobile application instance is not fully instantiated. Please consider activating loading in the application init event handler.");
-                }
-            },
-
-            showLoading: function() {
-                if (this.pane) {
-                    this.pane.showLoading();
-                } else {
-                    throw new Error("The mobile application instance is not fully instantiated. Please consider activating loading in the application init event handler.");
-                }
-            },
-
-            changeLoadingMessage: function(message) {
-                if (this.pane) {
-                    this.pane.changeLoadingMessage(message);
-                } else {
-                    throw new Error("The mobile application instance is not fully instantiated. Please consider changing the message in the application init event handler.");
-                }
-            },
-
-            view: function() {
-                return this.pane.view();
-            },
-
-            skin: function(skin) {
-                var that = this;
-
-                if (!arguments.length) {
-                    return that.options.skin;
-                }
-
-                that.options.skin = skin || "";
-                that.element[0].className = "km-pane";
-                that._setupPlatform();
-                that._setupElementClass();
-
-                return that.options.skin;
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                this.pane.destroy();
-                if (this.options.browserHistory) {
-                    this.router.destroy();
-                }
-            },
-
-            _setupPlatform: function() {
-                var that = this,
-                    platform = that.options.platform,
-                    skin = that.options.skin,
-                    split = [],
-                    os = OS || MOBILE_PLATFORMS[DEFAULT_OS],
-                    refreshBackgroundFn = function() {
-                        if (that.os.variant && (that.os.skin && that.os.skin === that.os.name) || !that.os.skin) {
-                            that.element.removeClass("km-wp-dark km-wp-light km-wp-dark-force km-wp-light-force").addClass(wp8Background(that.os));
-                        }
-                    };
-
-                if (platform) {
-                    os.setDefaultPlatform = true;
-                    if (typeof platform === "string") {
-                        split = platform.split("-");
-                        os = $.extend({ variant: split[1] }, os, MOBILE_PLATFORMS[split[0]]);
-                    } else {
-                        os = platform;
-                    }
-                }
-
-                if (skin) {
-                    split = skin.split("-");
-                    if (!OS) {
-                        os.setDefaultPlatform = false;
-                    }
-                    os = $.extend({}, os, { skin: split[0], variant: split[1] });
-                }
-
-                if (!os.variant) {
-                    os.noVariantSet = true;
-                    os.variant = "dark";
-                }
-
-                that.os = os;
-
-                that.osCssClass = osCssClass(that.os, that.options);
-
-                if (os.name == "wp") {
-                    if (!that.refreshBackgroundColorProxy) {
-                        that.refreshBackgroundColorProxy = refreshBackgroundFn.bind(that);
-                    }
-
-                    $(document).off("visibilitychange", that.refreshBackgroundColorProxy);
-                    $(document).off("resume", that.refreshBackgroundColorProxy);
-
-                    if (!os.skin) {
-                        that.element.parent().css("overflow", "hidden");
-
-                        $(document).on("visibilitychange", that.refreshBackgroundColorProxy); // Restore theme on browser focus (using the Visibility API).
-                        $(document).on("resume", that.refreshBackgroundColorProxy); // PhoneGap fires resume.
-
-                        that.refreshBackgroundColorProxy();
-                    }
-                }
-            },
-
-            _startHistory: function() {
-                if (this.options.browserHistory) {
-                    this.router = new kendo.Router({ pushState: this.options.pushState, root: this.options.root, hashBang: this.options.hashBang });
-                    this.pane.bindToRouter(this.router);
-                    this.router.start();
-                } else {
-                    if (!this.options.initial) {
-                        this.pane.navigate("");
-                    }
-                }
-            },
-
-            _resizeToScreenHeight: function() {
-                var includeStatusBar = $("meta[name=apple-mobile-web-app-status-bar-style]").attr("content").match(/black-translucent|hidden/),
-                    element = this.element,
-                    height;
-
-                if (CHROME) {
-                    height = window.innerHeight;
-                } else {
-                    if (isOrientationHorizontal(element)) {
-                        if (includeStatusBar) {
-                            if (INITIALLY_HORIZONTAL) {
-                                height = SCREEN.availWidth + STATUS_BAR_HEIGHT;
-                            } else {
-                                height = SCREEN.availWidth;
-                            }
-                        } else {
-                            if (INITIALLY_HORIZONTAL) {
-                                height = SCREEN.availWidth;
-                            } else {
-                                height = SCREEN.availWidth - STATUS_BAR_HEIGHT;
-                            }
-                        }
-                    } else {
-                        if (includeStatusBar) {
-                            if (INITIALLY_HORIZONTAL) {
-                                height = SCREEN.availHeight;
-                            } else {
-                                height = SCREEN.availHeight + STATUS_BAR_HEIGHT;
-                            }
-                        } else {
-                            if (INITIALLY_HORIZONTAL) {
-                                height = SCREEN.availHeight - STATUS_BAR_HEIGHT;
-                            } else {
-                                height = SCREEN.availHeight;
-                            }
-                        }
-                    }
-                }
-
-                element.height(height);
-            },
-
-            _setupElementClass: function() {
-                var that = this, size,
-                    element = that.element;
-
-                element.parent().addClass("km-root km-" + (that.os.tablet ? "tablet" : "phone"));
-                element.addClass(that.osCssClass + " " + getOrientationClass(element));
-                if (this.options.useNativeScrolling) {
-                    element.parent().addClass("km-native-scrolling");
-                }
-
-                if (CHROME) {
-                    element.addClass("km-ios-chrome");
-                }
-
-                if (support.wpDevicePixelRatio) {
-                    element.parent().css("font-size", support.wpDevicePixelRatio + "em");
-                }
-
-                if (this.options.retina) {
-                    element.parent().addClass("km-retina");
-                    element.parent().css("font-size", (support.devicePixelRatio * FONT_SIZE_COEF) + "em");
-                }
-
-                if (BERRYPHONEGAP) {
-                    applyViewportHeight();
-                }
-                if (that.options.useNativeScrolling) {
-                    element.parent().addClass("km-native-scrolling");
-                } else if (ENABLE_CLIP) {
-                    size = (screen.availWidth > screen.availHeight ? screen.availWidth : screen.availHeight) + 200;
-                    $(clipTemplate({ width: size, height: size })).appendTo(HEAD);
-                }
-
-                if (BROKEN_WEBVIEW_RESIZE) {
-                    that._resizeToScreenHeight();
-                }
-
-                kendo.onResize(function() {
-                    element
-                        .removeClass("km-horizontal km-vertical")
-                        .addClass(getOrientationClass(element));
-
-                    if (that.options.useNativeScrolling) {
-                        setMinimumHeight(element);
-                    }
-
-                    if (BROKEN_WEBVIEW_RESIZE) {
-                        that._resizeToScreenHeight();
-                    }
-
-                    if (BERRYPHONEGAP) {
-                        applyViewportHeight();
-                    }
-
-                    kendo.resize(element);
-                });
-            },
-
-            _clearExistingMeta: function() {
-                HEAD.find("meta")
-                    .filter("[name|='apple-mobile-web-app'],[name|='msapplication-tap'],[name='viewport']")
-                    .remove();
-            },
-
-            _attachMeta: function() {
-                var options = this.options,
-                    icon = options.icon, size;
-
-                this._clearExistingMeta();
-
-                if (!BERRYPHONEGAP) {
-                    HEAD.prepend(viewportTemplate({ height: "", scale: this.options.retina ? 1 / support.devicePixelRatio : "1.0" }));
-                }
-
-                HEAD.prepend(systemMeta(options));
-
-                if (icon) {
-                    if (typeof icon === "string") {
-                        icon = { "": icon };
-                    }
-
-                    for (size in icon) {
-                        HEAD.prepend(iconMeta({ icon: icon[size], size: size }));
-                    }
-                }
-
-                if (options.useNativeScrolling) {
-                    setMinimumHeight(this.element);
-                }
-            },
-
-            _attachHideBarHandlers: function() {
-                var that = this,
-                    hideBar = that._hideBar.bind(that);
-
-                if (support.mobileOS.appMode || !that.options.hideAddressBar || !HIDEBAR || that.options.useNativeScrolling) {
-                    return;
-                }
-
-                that._initialHeight = {};
-
-                WINDOW.on("load", hideBar);
-
-                kendo.onResize(function() {
-                    setTimeout(window.scrollTo, 0, 0, 1);
-                });
-            },
-
-            _setupDocumentTitle: function() {
-                var that = this,
-                    defaultTitle = document.title;
-
-                that.pane.bind("viewShow", function(e) {
-                    var title = e.view.title;
-                    document.title = title !== undefined$1 ? title : defaultTitle;
-                });
-            },
-
-            _hideBar: function() {
-                var that = this,
-                    element = that.element;
-
-                element.height(kendo.support.transforms.css + "calc(100% + " + BARCOMPENSATION + "px)");
-                $(window).trigger(kendo.support.resize);
-            }
-        });
-
-        kendo.mobile.Application = Application;
-        kendo.ui.plugin(Application, kendo.mobile, 'Mobile');
-    })(window.kendo.jQuery);
-    var kendo$b = kendo;
-
-    var __meta__$9 = {
-        id: "mobile.actionsheet",
-        name: "ActionSheet",
-        category: "mobile",
-        description: "The mobile ActionSheet widget displays a set of choices related to a task the user initiates.",
-        depends: [ "mobile.popover", "mobile.shim" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            support = kendo.support,
-            ui = kendo.mobile.ui,
-            Shim = ui.Shim,
-            Popup = ui.Popup,
-            Widget = ui.Widget,
-            OPEN = "open",
-            CLOSE = "close",
-            COMMAND = "command",
-            BUTTONS = "li>a",
-            CONTEXT_DATA = "actionsheetContext",
-            WRAP = '<div class="km-actionsheet-wrapper"></div>',
-            cancelTemplate = kendo.template(function (ref) {
-                var cancel = ref.cancel;
-
-                return ("<li class=\"km-actionsheet-cancel\"><a href=\"#\">" + (kendo.htmlEncode(cancel)) + "</a></li>");
-        });
-
-        var ActionSheet = Widget.extend({
-            init: function(element, options) {
-                var that = this,
-                    ShimClass,
-                    tablet,
-                    type,
-                    os = support.mobileOS;
-
-                Widget.fn.init.call(that, element, options);
-
-                options = that.options;
-                type = options.type;
-                element = that.element;
-
-                if (type === "auto") {
-                    tablet = os && os.tablet;
-                } else {
-                    tablet = type === "tablet";
-                }
-
-                ShimClass = tablet ? Popup : Shim;
-
-                if (options.cancelTemplate) {
-                    cancelTemplate = kendo.template(options.cancelTemplate);
-                }
-
-                element
-                    .addClass("km-actionsheet")
-                    .append(cancelTemplate({ cancel: that.options.cancel }))
-                    .wrap(WRAP)
-                    .on("up", BUTTONS, "_click")
-                    .on("click", BUTTONS, kendo.preventDefault);
-
-                that.view().bind("destroy", function() {
-                    that.destroy();
-                });
-
-                that.wrapper = element.parent().addClass(type ? " km-actionsheet-" + type : "");
-
-                that.shim = new ShimClass(that.wrapper, $.extend({ modal: os.ios && os.majorVersion < 7, className: "km-actionsheet-root" }, that.options.popup) );
-
-                that._closeProxy = that._close.bind(that);
-                that._shimHideProxy = that._shimHide.bind(that);
-                that.shim.bind("hide", that._shimHideProxy);
-
-                if (tablet) {
-                    kendo.onResize(that._closeProxy);
-                }
-
-                kendo.notify(that, ui);
-            },
-
-            events: [
-                OPEN,
-                CLOSE,
-                COMMAND
-            ],
-
-            options: {
-                name: "ActionSheet",
-                cancel: "Cancel",
-                type: "auto",
-                popup: { height: "auto" }
-            },
-
-            open: function(target, context) {
-                var that = this;
-                that.target = $(target);
-                that.context = context;
-                that.shim.show(target);
-            },
-
-            close: function() {
-                this.context = this.target = null;
-                this.shim.hide();
-            },
-
-            openFor: function(target) {
-                var that = this,
-                    context = target.data(CONTEXT_DATA);
-
-                that.open(target, context);
-                that.trigger(OPEN, { target: target, context: context });
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                kendo.unbindResize(this._closeProxy);
-                this.shim.destroy();
-            },
-
-            _click: function(e) {
-                if (e.isDefaultPrevented()) {
-                    return;
-                }
-
-                var currentTarget = $(e.currentTarget);
-                var action = currentTarget.data("action");
-
-                if (action) {
-                    var actionData = {
-                        target: this.target,
-                        context: this.context
-                    },
-                    $angular = this.options.$angular;
-
-                    if ($angular) {
-                        this.element.injector().get("$parse")(action)($angular[0])(actionData);
-                    } else {
-                        kendo.getter(action)(window)(actionData);
-                    }
-                }
-
-                this.trigger(COMMAND, { target: this.target, context: this.context, currentTarget: currentTarget });
-
-                e.preventDefault();
-                this._close();
-            },
-
-            _shimHide: function(e) {
-                if (!this.trigger(CLOSE)) {
-                    this.context = this.target = null;
-                } else {
-                    e.preventDefault();
-                }
-            },
-
-            _close: function(e) {
-                if (!this.trigger(CLOSE)) {
-                    this.close();
-                } else {
-                    e.preventDefault();
-                }
-            }
-        });
-
-        ui.plugin(ActionSheet);
-    })(window.kendo.jQuery);
-    var kendo$a = kendo;
-
-    var __meta__$8 = {
-        id: "mobile.button",
-        name: "Button",
-        category: "mobile",
-        description: "The Button widget navigates between mobile Application views when pressed.",
-        depends: [ "userevents" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            mobile = kendo.mobile,
-            ui = mobile.ui,
-            Widget = ui.Widget,
-            support = kendo.support,
-            os = support.mobileOS,
-            ANDROID3UP = os.android && os.flatVersion >= 300,
-            CLICK = "click",
-            DISABLED = "disabled",
-            DISABLEDSTATE = "km-state-disabled";
-
-        function highlightButton(widget, event, highlight) {
-            $(event.target).closest(".km-button,.km-detail").toggleClass("km-state-active", highlight);
-
-            if (ANDROID3UP && widget.deactivateTimeoutID) {
-                clearTimeout(widget.deactivateTimeoutID);
-                widget.deactivateTimeoutID = 0;
-            }
-        }
-
-        function createBadge(value) {
-            return $('<span class="km-badge">' + value + '</span>');
-        }
-
-        var Button = Widget.extend({
-            init: function(element, options) {
-                var that = this;
-
-                Widget.fn.init.call(that, element, options);
-                var useTap = that.options.clickOn === "up";
-
-                that._wrap();
-                that._style();
-
-                if (!useTap) {
-                    that.element.attr("data-navigate-on-press", true);
-                }
-
-                that.options.enable = that.options.enable && !that.element.attr(DISABLED);
-                that.enable(that.options.enable);
-
-                that._userEvents = new kendo.UserEvents(that.element, {
-                    allowSelection: !useTap,
-                    fastTap: true,
-                    press: function(e) {
-                        that._activate(e);
-                    },
-                    release: function(e) {
-                        highlightButton(that, e, false);
-                        if (!useTap) { e.event.stopPropagation(); }
-                    }
-                });
-
-                that._userEvents.bind(useTap ? "tap" : "press", function(e) {
-                    that._release(e);
-                });
-
-
-                if (ANDROID3UP) {
-                    that.element.on("move", function(e) { that._timeoutDeactivate(e); });
-                }
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                this._userEvents.destroy();
-            },
-
-            events: [
-                CLICK
-            ],
-
-            options: {
-                name: "Button",
-                icon: "",
-                style: "",
-                badge: "",
-                clickOn: "up",
-                enable: true
-            },
-
-            badge: function(value) {
-                var badge = this.badgeElement = this.badgeElement || createBadge(value).appendTo(this.element);
-
-                if (value || value === 0) {
-                    badge.html(value);
-                    return this;
-                }
-
-                if (value === false) {
-                    badge.empty().remove();
-                    this.badgeElement = false;
-                    return this;
-                }
-
-                return badge.html();
-            },
-
-            enable: function(enable) {
-                var element = this.element;
-
-                if (typeof enable == "undefined") {
-                    enable = true;
-                }
-
-                this.options.enable = enable;
-
-                if (enable) {
-                    element.prop(DISABLED, false);
-                } else {
-                    element.attr(DISABLED, DISABLED);
-                }
-
-                element.toggleClass(DISABLEDSTATE, !enable);
-            },
-
-            _timeoutDeactivate: function(e) {
-                if (!this.deactivateTimeoutID) {
-                    this.deactivateTimeoutID = setTimeout(highlightButton, 500, this, e, false);
-                }
-            },
-
-            _activate: function(e) {
-                var activeElement = document.activeElement,
-                    nodeName = activeElement ? activeElement.nodeName : "";
-
-                if (this.options.enable) {
-                    highlightButton(this, e, true);
-
-                    if (nodeName == "INPUT" || nodeName == "TEXTAREA") {
-                        activeElement.blur(); // Hide device keyboard
-                    }
-                }
-            },
-
-            _release: function(e) {
-                var that = this;
-
-                if (e.which > 1) {
-                    return;
-                }
-
-                if (!that.options.enable) {
-                    e.preventDefault();
-                    return;
-                }
-
-                if (that.trigger(CLICK, { target: $(e.target), button: that.element })) {
-                    e.preventDefault();
-                }
-            },
-
-            _style: function() {
-                var style = this.options.style,
-                    element = this.element,
-                    styles;
-
-                if (style) {
-                    styles = style.split(" ");
-                    $.each(styles, function() {
-                        element.addClass("km-" + this);
-                    });
-                }
-            },
-
-            _wrap: function() {
-                var that = this,
-                    icon = that.options.icon,
-                    badge = that.options.badge,
-                    iconSpan = '<span class="km-icon km-' + icon,
-                    element = that.element.addClass("km-button"),
-                    span = element.children("span:not(.km-icon)").addClass("km-text"),
-                    image = element.find("img").addClass("km-image");
-
-                if (!span[0] && element.html()) {
-                    span = element.wrapInner('<span class="km-text" />').children("span.km-text");
-                }
-
-                if (!image[0] && icon) {
-                    if (!span[0]) {
-                        iconSpan += " km-notext";
-                    }
-                    that.iconElement = element.prepend($(iconSpan + '" />'));
-                }
-
-                if (badge || badge === 0) {
-                    that.badgeElement = createBadge(badge).appendTo(element);
-                }
-            }
-        });
-
-        var BackButton = Button.extend({
-            options: {
-                name: "BackButton",
-                style: "back"
-            },
-
-            init: function(element, options) {
-                var that = this;
-                Button.fn.init.call(that, element, options);
-
-                if (typeof that.element.attr("href") === "undefined") {
-                    that.element.attr("href", "#:back");
-                }
-            }
-        });
-
-        var DetailButton = Button.extend({
-            options: {
-                name: "DetailButton",
-                style: ""
-            },
-
-            init: function(element, options) {
-                Button.fn.init.call(this, element, options);
-            },
-
-            _style: function() {
-                var style = this.options.style + " detail",
-                    element = this.element;
-
-                if (style) {
-                    var styles = style.split(" ");
-                    $.each(styles, function() {
-                        element.addClass("km-" + this);
-                    });
-                }
-            },
-
-            _wrap: function() {
-                var that = this,
-                    icon = that.options.icon,
-                    iconSpan = '<span class="km-icon km-' + icon,
-                    element = that.element,
-                    span = element.children("span"),
-                    image = element.find("img").addClass("km-image");
-
-                if (!image[0] && icon) {
-                    if (!span[0]) {
-                        iconSpan += " km-notext";
-                    }
-                    element.prepend($(iconSpan + '" />'));
-                }
-            }
-
-        });
-
-        ui.plugin(Button);
-        ui.plugin(BackButton);
-        ui.plugin(DetailButton);
-    })(window.kendo.jQuery);
-    var kendo$9 = kendo;
-
-    var __meta__$7 = {
-        id: "mobile.buttongroup",
-        name: "ButtonGroup",
-        category: "mobile",
-        description: "The Kendo mobile ButtonGroup widget is a linear set of grouped buttons.",
-        depends: [ "core" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            ui = kendo.mobile.ui,
-            Widget = ui.Widget,
-            ACTIVE = "state-active",
-            DISABLE = "state-disabled",
-            SELECT = "select",
-            SELECTOR = "li:not(.km-" + ACTIVE + ")";
-
-        function className(name) {
-            return "k-" + name + " km-" + name;
-        }
-
-        function createBadge(value) {
-            return $('<span class="' + className("badge") + '">' + value + '</span>');
-        }
-
-        var ButtonGroup = Widget.extend({
-            init: function(element, options) {
-                var that = this;
-
-                Widget.fn.init.call(that, element, options);
-
-                that.element.addClass("km-buttongroup k-widget k-button-group").find("li").each(that._button);
-
-                that.element.on(that.options.selectOn, SELECTOR, "_select");
-
-                that._enable = true;
-                that.select(that.options.index);
-
-                if (!that.options.enable) {
-                    that._enable = false;
-                    that.wrapper.addClass(className(DISABLE));
-                }
-            },
-
-            events: [
-                SELECT
-            ],
-
-            options: {
-                name: "ButtonGroup",
-                selectOn: "down",
-                index: -1,
-                enable: true
-            },
-
-            current: function() {
-                return this.element.find(".km-" + ACTIVE);
-            },
-
-            select: function(li) {
-                var that = this,
-                    index = -1;
-
-                if (li === undefined$1 || li === -1 || !that._enable || $(li).is(".km-" + DISABLE)) {
-                    return;
-                }
-
-                that.current().removeClass(className(ACTIVE));
-
-                if (typeof li === "number") {
-                    index = li;
-                    li = $(that.element[0].children[li]);
-                } else if (li.nodeType) {
-                    li = $(li);
-                    index = li.index();
-                }
-
-                li.addClass(className(ACTIVE));
-                that.selectedIndex = index;
-            },
-
-            badge: function(item, value) {
-                var buttongroup = this.element, badge;
-
-                if (!isNaN(item)) {
-                    item = buttongroup.children().get(item);
-                }
-
-                item = buttongroup.find(item);
-                badge = $(item.children(".km-badge")[0] || createBadge(value).appendTo(item));
-
-                if (value || value === 0) {
-                    badge.html(value);
-                    return this;
-                }
-
-                if (value === false) {
-                    badge.empty().remove();
-                    return this;
-                }
-
-                return badge.html();
-            },
-
-            enable: function(enable) {
-                if (typeof enable == "undefined") {
-                    enable = true;
-                }
-
-                this.wrapper.toggleClass(className(DISABLE), !enable);
-
-                this._enable = this.options.enable = enable;
-            },
-
-            _button: function() {
-                var button = $(this).addClass(className("button")),
-                    icon = kendo.attrValue(button, "icon"),
-                    badge = kendo.attrValue(button, "badge"),
-                    span = button.children("span"),
-                    image = button.find("img").addClass(className("image"));
-
-                if (!span[0]) {
-                    span = button.wrapInner("<span/>").children("span");
-                }
-
-                span.addClass(className("text"));
-
-                if (!image[0] && icon) {
-                    button.prepend($('<span class="' + className("icon") + ' ' + className(icon) + '"/>'));
-                }
-
-                if (badge || badge === 0) {
-                    createBadge(badge).appendTo(button);
-                }
-            },
-
-            _select: function(e) {
-                if (e.which > 1 || e.isDefaultPrevented() || !this._enable) {
-                    return;
-                }
-
-                this.select(e.currentTarget);
-                this.trigger(SELECT, { index: this.selectedIndex });
-            }
-        });
-
-        ui.plugin(ButtonGroup);
-    })(window.kendo.jQuery);
-    var kendo$8 = kendo;
-
-    var __meta__$6 = {
-        id: "mobile.collapsible",
-        name: "Collapsible",
-        category: "mobile",
-        description: "The Kendo mobile Collapsible widget provides ability for creating collapsible blocks of content.",
-        depends: [ "core", "userevents" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            ui = kendo.mobile.ui,
-            Widget = ui.Widget,
-            COLLAPSIBLE = "km-collapsible",
-            HEADER = "km-collapsible-header",
-            CONTENT = "km-collapsible-content",
-            INSET = "km-collapsibleinset",
-            HEADER_WRAPPER = "<div data-role='collapsible-header' class='" + HEADER + "'></div>",
-            CONTENT_WRAPPER = "<div data-role='collapsible-content' class='" + CONTENT + "'></div>",
-
-            COLLAPSED = "km-collapsed",
-            EXPANDED = "km-expanded",
-            ANIMATED = "km-animated",
-
-            //icon position
-            LEFT = "left",
-
-            //events
-            EXAPND = "expand",
-            COLLAPSE = "collapse";
-
-        var Collapsible = Widget.extend({
-            init: function(element, options) {
-                var that = this,
-                    container = $(element);
-
-                Widget.fn.init.call(that, container, options);
-
-                container.addClass(COLLAPSIBLE);
-
-                that._buildHeader();
-                that.content = container.children().not(that.header).wrapAll(CONTENT_WRAPPER).parent();
-
-                that._userEvents = new kendo.UserEvents(that.header, {
-                    fastTap: true,
-                    tap: function() { that.toggle(); }
-                });
-
-                container.addClass(that.options.collapsed ? COLLAPSED : EXPANDED);
-
-                if (that.options.inset) {
-                    container.addClass(INSET);
-                }
-
-                if (that.options.animation) {
-                    that.content.addClass(ANIMATED);
-                    that.content.height(0);
-                    if (that.options.collapsed) {
-                        that.content.hide();
-                    }
-                } else if (that.options.collapsed) {
-                    that.content.hide();
-                }
-            },
-
-            events: [
-                EXAPND,
-                COLLAPSE
-            ],
-
-            options: {
-                name: "Collapsible",
-                collapsed: true,
-                collapseIcon: "arrow-n",
-                expandIcon: "caret-alt-down",
-                iconPosition: LEFT,
-                animation: true,
-                inset: false
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                this._userEvents.destroy();
-            },
-
-            expand: function(instant) {
-                var icon = this.options.collapseIcon,
-                    content = this.content,
-                    ios = kendo.support.mobileOS.ios;
-
-                if (!this.trigger(EXAPND)) {
-                    if (icon) {
-                        this.header.find(".km-icon").removeClass().addClass("km-icon km-" + icon);
-                    }
-                    this.element.removeClass(COLLAPSED).addClass(EXPANDED);
-
-                    if (this.options.animation && !instant) {
-                        content.off("transitionend");
-                        content.show();
-                        if (ios) { content.removeClass(ANIMATED); } //required to get the height of the content on iOS
-                        content.height(this._getContentHeight());
-                        if (ios) { content.addClass(ANIMATED); }
-
-                        kendo.resize(content);
-                    } else {
-                        content.show();
-                    }
-                }
-            },
-
-            collapse: function(instant) {
-                var icon = this.options.expandIcon,
-                    content = this.content;
-
-                if (!this.trigger(COLLAPSE)) {
-                    if (icon) {
-                        this.header.find(".km-icon").removeClass().addClass("km-icon km-" + icon);
-                    }
-                    this.element.removeClass(EXPANDED).addClass(COLLAPSED);
-
-                    if (this.options.animation && !instant) {
-                        content.one("transitionend", function() { content.hide(); });
-                        content.height(0);
-                    } else {
-                        content.hide();
-                    }
-                }
-            },
-
-            toggle: function(instant) {
-                if (this.isCollapsed()) {
-                    this.expand(instant);
-                } else {
-                    this.collapse(instant);
-                }
-            },
-
-            isCollapsed: function() {
-                return this.element.hasClass(COLLAPSED);
-            },
-
-            resize: function() {
-                if (!this.isCollapsed() && this.options.animation) {
-                    this.content.height(this._getContentHeight());
-                }
-            },
-
-            _buildHeader: function() {
-                var header = this.element.children(":header").wrapAll(HEADER_WRAPPER),
-                    iconSpan = $('<span class="km-icon"/>'),
-                    icon = this.options.collapsed ? this.options.expandIcon : this.options.collapseIcon,
-                    iconPosition = this.options.iconPosition;
-
-                if (icon) {
-                    header.prepend(iconSpan);
-                    iconSpan.addClass("km-" + icon);
-                }
-
-                this.header = header.parent();
-                this.header.addClass("km-icon-" + iconPosition);
-            },
-
-            _getContentHeight: function() {
-                var style = this.content.attr("style"),
-                    height;
-
-                this.content.css({
-                    position: 'absolute',
-                    visibility: 'hidden',
-                    height: "auto"
-                });
-
-                height = this.content.height();
-
-                this.content.attr("style", style ? style : "");
-
-                return height;
-            }
-        });
-
-        ui.plugin(Collapsible);
-    })(window.kendo.jQuery);
-    var kendo$7 = kendo;
-
-    var __meta__$5 = {
-        id: "mobile.listview",
-        name: "ListView",
-        category: "mobile",
-        description: "The Kendo Mobile ListView widget is used to display flat or grouped list of items.",
-        depends: [ "data", "userevents", "mobile.button" ]
-    };
-
-    (function($, undefined$1) {
-        var this$1$1 = this;
-
-        var kendo = window.kendo,
-            Node = window.Node,
-            mobile = kendo.mobile,
-            ui = mobile.ui,
-            outerHeight = kendo._outerHeight,
-            DataSource = kendo.data.DataSource,
-            Widget = ui.DataBoundWidget,
-            ITEM_SELECTOR = ".km-list > li, > li:not(.km-group-container)",
-            HIGHLIGHT_SELECTOR = ".km-listview-link, .km-listview-label",
-            ICON_SELECTOR = "[" + kendo.attr("icon") + "]",
-            attrValue = kendo.attrValue,
-            GROUP_CLASS = "km-group-title",
-            ACTIVE_CLASS = "km-state-active",
-            GROUP_WRAPPER = "<div class=\"" + GROUP_CLASS + "\"><div class=\"km-text\"></div></div>",
-            GROUP_TEMPLATE = kendo.template(function (data) { return ("<li><div class=\"" + GROUP_CLASS + "\"><div class=\"km-text\">" + (this$1$1.headerTemplate(data)) + "</div></div><ul>" + (kendo.render(this$1$1.template, data.items)) + "</ul></li>"); }),
-            WRAPPER = '<div class="km-listview-wrapper"></div>',
-            SEARCH_TEMPLATE = kendo.template(function (ref) {
-                var placeholder = ref.placeholder;
-
-                return ("<form class=\"km-filter-form\"><div class=\"km-filter-wrap\"><input type=\"search\" placeholder=\"" + placeholder + "\"/><a href=\"#\" class=\"km-filter-reset\" title=\"Clear\"><span class=\"km-icon km-clear\"></span><span class=\"km-text\">Clear</span></a></div></form>");
-        }),
-            NS = ".kendoMobileListView",
-            STYLED = "styled",
-            DATABOUND = "dataBound",
-            DATABINDING = "dataBinding",
-            ITEM_CHANGE = "itemChange",
-            CLICK = "click",
-            CHANGE = "change",
-            PROGRESS = "progress",
-            FUNCTION = "function",
-
-            whitespaceRegExp = /^\s+$/,
-            buttonRegExp = /button/;
-
-        function whitespace() {
-            return this.nodeType === Node.TEXT_NODE && this.nodeValue.match(whitespaceRegExp);
-        }
-
-        function addIcon(item, icon) {
-            if (icon && !item[0].querySelector(".km-icon")) {
-                item.prepend('<span class="km-icon km-' + icon + '"/>');
-            }
-        }
-
-        function enhanceItem(item) {
-            addIcon(item, attrValue(item, "icon"));
-            addIcon(item, attrValue(item.children(ICON_SELECTOR), "icon"));
-        }
-
-        function enhanceLinkItem(item) {
-            var parent = item.parent(),
-                itemAndDetailButtons = item.add(parent.children(kendo.roleSelector("detailbutton"))),
-                otherNodes = parent.contents().not(itemAndDetailButtons).not(whitespace);
-
-            if (otherNodes.length) {
-                return;
-            }
-
-            item.addClass("km-listview-link")
-                .attr(kendo.attr("role"), "listview-link");
-
-            addIcon(item, attrValue(parent, "icon"));
-            addIcon(item, attrValue(item, "icon"));
-        }
-
-        function enhanceCheckBoxItem(label) {
-            if (!label[0].querySelector("input[type=checkbox],input[type=radio]")) {
-                return;
-            }
-
-            var item = label.parent();
-
-            if (item.contents().not(label).not(function() { return this.nodeType == 3; })[0]) {
-                return;
-            }
-
-            label.addClass("km-listview-label");
-
-            label.children("[type=checkbox],[type=radio]").addClass("km-widget km-icon km-check");
-        }
-
-        function putAt(element, top) {
-            $(element).css('transform', 'translate3d(0px, ' + top + 'px, 0px)');
-        }
-
-        var HeaderFixer = kendo.Class.extend({
-            init: function(listView) {
-                var scroller = listView.scroller();
-
-                if (!scroller) {
-                    return;
-                }
-
-                this.options = listView.options;
-                this.element = listView.element;
-                this.scroller = listView.scroller();
-                this._shouldFixHeaders();
-
-                var headerFixer = this;
-
-                var cacheHeaders = function() {
-                    headerFixer._cacheHeaders();
-                };
-
-                listView.bind("resize", cacheHeaders);
-
-                listView.bind(STYLED, cacheHeaders);
-                listView.bind(DATABOUND, cacheHeaders);
-
-                this._scrollHandler = function(e) {
-                    headerFixer._fixHeader(e);
-                };
-                scroller.bind("scroll", this._scrollHandler);
-            },
-
-            destroy: function() {
-                var that = this;
-                if (that.scroller) {
-                    that.scroller.unbind("scroll", that._scrollHandler);
-                }
-            },
-
-            _fixHeader: function(e) {
-                if (!this.fixedHeaders) {
-                    return;
-                }
-
-                var i = 0,
-                    scroller = this.scroller,
-                    headers = this.headers,
-                    scrollTop = e.scrollTop,
-                    headerPair,
-                    offset,
-                    header;
-
-                do {
-                    headerPair = headers[i++];
-                    if (!headerPair) {
-                        header = $("<div />");
-                        break;
-                    }
-                    offset = headerPair.offset;
-                    header = headerPair.header;
-                } while (offset + 1 > scrollTop);
-
-                if (this.currentHeader != i) {
-                    scroller.fixedContainer.html(header.clone());
-                    this.currentHeader = i;
-                }
-            },
-
-            _shouldFixHeaders: function() {
-                this.fixedHeaders = this.options.type === "group" && this.options.fixedHeaders;
-            },
-
-            _cacheHeaders: function() {
-                this._shouldFixHeaders();
-
-                if (!this.fixedHeaders) {
-                    return;
-                }
-
-                var headers = [], offset = this.scroller.scrollTop;
-
-                this.element.find("." + GROUP_CLASS).each(function(_, header) {
-                    header = $(header);
-                    headers.unshift({
-                        offset: header.position().top + offset,
-                        header: header
-                    });
-                });
-
-                this.headers = headers;
-                this._fixHeader({ scrollTop: offset });
-            }
-        });
-
-        var DEFAULT_PULL_PARAMETERS = function() {
-            return { page: 1 };
-        };
-
-        var RefreshHandler = kendo.Class.extend({
-            init: function(listView) {
-                var handler = this,
-                    options = listView.options,
-                    scroller = listView.scroller(),
-                    pullParameters = options.pullParameters || DEFAULT_PULL_PARAMETERS;
-
-                this.listView = listView;
-                this.scroller = scroller;
-
-                listView.bind("_dataSource", function(e) {
-                    handler.setDataSource(e.dataSource);
-                });
-
-                scroller.setOptions({
-                    pullToRefresh: true,
-                    pull: function() {
-                        if (!handler._pulled) {
-                            handler._pulled = true;
-                            handler.dataSource.read(pullParameters.call(listView, handler._first));
-                        }
-                    },
-                    messages: {
-                        pullTemplate: options.messages.pullTemplate,
-                        releaseTemplate: options.messages.releaseTemplate,
-                        refreshTemplate: options.messages.refreshTemplate
-                    }
-                });
-            },
-
-            setDataSource: function(dataSource) {
-                var handler = this;
-
-                this._first = dataSource.view()[0];
-                this.dataSource = dataSource;
-
-                dataSource.bind("change", function() {
-                    handler._change();
-                });
-
-                dataSource.bind("error", function() {
-                    handler._change();
-                });
-            },
-
-            _change: function() {
-                var scroller = this.scroller,
-                    dataSource = this.dataSource;
-
-                if (this._pulled) {
-                    scroller.pullHandled();
-                }
-
-                if (this._pulled || !this._first) {
-                    var view = dataSource.view();
-
-                    if (view[0]) {
-                        this._first = view[0];
-                    }
-                }
-
-                this._pulled = false;
-            }
-        });
-
-        var VirtualList = kendo.Observable.extend({
-            init: function(options) {
-                var list = this;
-
-                kendo.Observable.fn.init.call(list);
-
-                list.buffer = options.buffer;
-                list.height = options.height;
-                list.item = options.item;
-                list.items = [];
-                list.footer = options.footer;
-
-                list.buffer.bind("reset", function() {
-                    list.refresh();
-                });
-
-            },
-
-            refresh: function() {
-                var buffer = this.buffer,
-                    items = this.items,
-                    endReached = false;
-
-                while (items.length) {
-                    items.pop().destroy();
-                }
-
-                this.offset = buffer.offset;
-
-                var itemConstructor = this.item,
-                    prevItem,
-                    item;
-
-                for (var idx = 0; idx < buffer.viewSize; idx ++) {
-                    if (idx === buffer.total()) {
-                        endReached = true;
-                        break;
-                    }
-                    item = itemConstructor(this.content(this.offset + items.length));
-                    item.below(prevItem);
-                    prevItem = item;
-                    items.push(item);
-                }
-
-                this.itemCount = items.length;
-
-                this.trigger("reset");
-
-                this._resize();
-
-                if (endReached) {
-                    this.trigger("endReached");
-                }
-            },
-
-            totalHeight: function() {
-                if (!this.items[0]) {
-                    return 0;
-                }
-
-                var list = this,
-                    items = list.items,
-                    top = items[0].top,
-                    bottom = items[items.length - 1].bottom,
-                    averageItemHeight = (bottom - top) / list.itemCount,
-                    remainingItemsCount = list.buffer.length - list.offset - list.itemCount;
-
-                return (this.footer ? this.footer.height : 0) + bottom + remainingItemsCount * averageItemHeight;
-            },
-
-            batchUpdate: function(top) {
-                var height = this.height(),
-                    items = this.items,
-                    item,
-                    initialOffset = this.offset;
-
-                if (!items[0]) {
-                    return;
-                }
-
-                if (this.lastDirection) { // scrolling up
-                    while (items[items.length - 1].bottom > top + height * 2) {
-                        if (this.offset === 0) {
-                            break;
-                        }
-
-                        this.offset --;
-                        item = items.pop();
-                        item.update(this.content(this.offset));
-                        item.above(items[0]);
-                        items.unshift(item);
-                    }
-                } else { // scrolling down
-                    while (items[0].top < top - height) {
-                        var nextIndex = this.offset + this.itemCount; // here, it should be offset + 1 + itemCount - 1.
-
-                        if (nextIndex === this.buffer.total()) {
-                            this.trigger("endReached");
-                            break;
-                        }
-
-                        if (nextIndex === this.buffer.length) {
-                            break;
-                        }
-
-                        item = items.shift();
-                        item.update(this.content(this.offset + this.itemCount));
-                        item.below(items[items.length - 1]);
-                        items.push(item);
-                        this.offset ++;
-                    }
-                }
-
-                if (initialOffset !== this.offset) {
-                    this._resize();
-                }
-            },
-
-            update: function(top) {
-                var list = this,
-                    items = this.items,
-                    item,
-                    firstItem,
-                    lastItem,
-                    height = this.height(),
-                    itemCount = this.itemCount,
-                    padding = height / 2,
-                    up = (this.lastTop || 0) > top,
-                    topBorder = top - padding,
-                    bottomBorder = top + height + padding;
-
-                if (!items[0]) {
-                    return;
-                }
-
-                this.lastTop = top;
-                this.lastDirection = up;
-
-                if (up) { // scrolling up
-                   if (items[0].top > topBorder && // needs reorder
-                       items[items.length - 1].bottom > bottomBorder + padding && // enough padding below
-                       this.offset > 0 // we are not at the top
-                      )
-                   {
-                        this.offset --;
-                        item = items.pop();
-                        firstItem = items[0];
-                        item.update(this.content(this.offset));
-                        items.unshift(item);
-
-                        item.above(firstItem);
-                        list._resize();
-                   }
-                } else { // scrolling down
-                    if (
-                        items[items.length - 1].bottom < bottomBorder && // needs reorder
-                        items[0].top < topBorder - padding // enough padding above
-                    )
-                    {
-                        var nextIndex = this.offset + itemCount; // here, it should be offset + 1 + itemCount - 1.
-
-                        if (nextIndex === this.buffer.total()) {
-                            this.trigger("endReached");
-                        } else if (nextIndex !== this.buffer.length) {
-                            item = items.shift();
-                            lastItem = items[items.length - 1];
-                            items.push(item);
-                            item.update(this.content(this.offset + this.itemCount));
-                            list.offset ++;
-
-                            item.below(lastItem);
-                            list._resize();
-                        }
-                    }
-                }
-            },
-
-            content: function(index) {
-                return this.buffer.at(index);
-            },
-
-            destroy: function() {
-                this.unbind();
-            },
-
-            _resize: function() {
-                var items = this.items,
-                    top = 0,
-                    bottom = 0,
-                    firstItem = items[0],
-                    lastItem = items[items.length - 1];
-
-                if (firstItem) {
-                    top = firstItem.top;
-                    bottom = lastItem.bottom;
-                }
-
-                this.trigger("resize", { top: top, bottom: bottom });
-
-                if (this.footer) {
-                    this.footer.below(lastItem);
-                }
-            }
-        });
-
-        // export for testing purposes
-        kendo.mobile.ui.VirtualList = VirtualList;
-
-        var VirtualListViewItem = kendo.Class.extend({
-            init: function(listView, dataItem) {
-                var element = listView.append([dataItem], true)[0],
-                    height = element.offsetHeight;
-
-                $.extend(this, {
-                    top: 0,
-                    element: element,
-                    listView: listView,
-                    height: height,
-                    bottom: height
-                });
-            },
-
-            update: function(dataItem) {
-                this.element = this.listView.setDataItem(this.element, dataItem);
-            },
-
-            above: function(item) {
-                if (item) {
-                    this.height = this.element.offsetHeight;
-                    this.top = item.top - this.height;
-                    this.bottom = item.top;
-                    putAt(this.element, this.top);
-                }
-            },
-
-            below: function(item) {
-                if (item) {
-                    this.height = this.element.offsetHeight;
-                    this.top = item.bottom;
-                    this.bottom = this.top + this.height;
-                    putAt(this.element, this.top);
-                }
-            },
-
-            destroy: function() {
-                kendo.destroy(this.element);
-                $(this.element).remove();
-            }
-        });
-
-        var LOAD_ICON = '<div><span class="km-icon"></span><span class="km-loading-left"></span><span class="km-loading-right"></span></div>';
-        var VirtualListViewLoadingIndicator = kendo.Class.extend({
-            init: function(listView) {
-                this.element = $('<li class="km-load-more km-scroller-refresh" style="display: none"></li>').appendTo(listView.element);
-                this._loadIcon = $(LOAD_ICON).appendTo(this.element);
-            },
-
-            enable: function() {
-                this.element.show();
-                this.height = outerHeight(this.element, true);
-            },
-
-            disable: function() {
-                this.element.hide();
-                this.height = 0;
-            },
-
-            below: function(item) {
-                if (item) {
-                    this.top = item.bottom;
-                    this.bottom = this.height + this.top;
-                    putAt(this.element, this.top);
-                }
-            }
-        });
-
-        var VirtualListViewPressToLoadMore = VirtualListViewLoadingIndicator.extend({
-            init: function(listView, buffer) {
-
-                this._loadIcon = $(LOAD_ICON).hide();
-                this._loadButton = $('<a class="km-load">' + listView.options.messages.loadMoreText + '</a>').hide();
-                this.element = $('<li class="km-load-more" style="display: none"></li>').append(this._loadIcon).append(this._loadButton).appendTo(listView.element);
-
-                var loadMore = this;
-
-                this._loadButton.kendoMobileButton().data("kendoMobileButton").bind("click", function() {
-                    loadMore._hideShowButton();
-                    buffer.next();
-                });
-
-                buffer.bind("resize", function() {
-                    loadMore._showLoadButton();
-                });
-
-                this.height = outerHeight(this.element, true);
-                this.disable();
-            },
-
-            _hideShowButton: function() {
-                this._loadButton.hide();
-                this.element.addClass("km-scroller-refresh");
-                this._loadIcon.css('display', 'block');
-            },
-
-            _showLoadButton: function() {
-                this._loadButton.show();
-                this.element.removeClass("km-scroller-refresh");
-                this._loadIcon.hide();
-            }
-        });
-
-        var VirtualListViewItemBinder = kendo.Class.extend({
-            init: function(listView) {
-                var binder = this;
-
-                this.chromeHeight = outerHeight(listView.wrapper.children().not(listView.element));
-                this.listView = listView;
-                this.scroller = listView.scroller();
-                this.options = listView.options;
-
-                listView.bind("_dataSource", function(e) {
-                    binder.setDataSource(e.dataSource, e.empty);
-                });
-
-                listView.bind("resize", function() {
-                    if (!binder.list.items.length) {
-                        return;
-                    }
-
-                    binder.scroller.reset();
-                    binder.buffer.range(0);
-                    binder.list.refresh();
-                });
-
-                this.scroller.makeVirtual();
-
-                this._scroll = function(e) {
-                    binder.list.update(e.scrollTop);
-                };
-                this.scroller.bind('scroll', this._scroll);
-                this._scrollEnd = function(e) {
-                    binder.list.batchUpdate(e.scrollTop);
-                };
-                this.scroller.bind('scrollEnd', this._scrollEnd);
-            },
-
-            destroy: function() {
-                this.list.unbind();
-                this.buffer.unbind();
-                this.scroller.unbind('scroll', this._scroll);
-                this.scroller.unbind('scrollEnd', this._scrollEnd);
-            },
-
-            setDataSource: function(dataSource, empty) {
-                var binder = this,
-                    options = this.options,
-                    listView = this.listView,
-                    scroller = listView.scroller(),
-                    pressToLoadMore = options.loadMore,
-                    pageSize,
-                    buffer,
-                    footer;
-
-                this.dataSource = dataSource;
-
-                pageSize = dataSource.pageSize() || options.virtualViewSize;
-
-                if (!pageSize && !empty) {
-                    throw new Error("the DataSource does not have page size configured. Page Size setting is mandatory for the mobile listview virtual scrolling to work as expected.");
-                }
-
-                if (this.buffer) {
-                    this.buffer.destroy();
-                }
-
-                buffer = new kendo.data.Buffer(dataSource, Math.floor(pageSize / 2), pressToLoadMore);
-
-                if (pressToLoadMore) {
-                    footer = new VirtualListViewPressToLoadMore(listView, buffer);
-                } else {
-                    footer = new VirtualListViewLoadingIndicator(listView);
-                }
-
-                if (this.list) {
-                    this.list.destroy();
-                }
-
-                var list = new VirtualList({
-                    buffer: buffer,
-                    footer: footer,
-                    item: function(dataItem) { return new VirtualListViewItem(listView, dataItem); },
-                    height: function() { return scroller.height(); }
-                });
-
-                list.bind("resize", function() {
-                    binder.updateScrollerSize();
-                    listView.updateSize();
-                });
-
-                list.bind("reset", function() {
-                    binder.footer.enable();
-                });
-
-                list.bind("endReached", function() {
-                    footer.disable();
-                    binder.updateScrollerSize();
-                });
-
-                buffer.bind("expand", function() {
-                    list.lastDirection = false; // expand down
-                    list.batchUpdate(scroller.scrollTop);
-                });
-
-                $.extend(this, {
-                    buffer: buffer,
-                    scroller: scroller,
-                    list: list,
-                    footer: footer
-                });
-            },
-
-            updateScrollerSize: function() {
-                this.scroller.virtualSize(0, this.list.totalHeight() + this.chromeHeight);
-            },
-
-            refresh: function() {
-                this.list.refresh();
-            },
-
-            reset: function() {
-                this.buffer.range(0);
-                this.list.refresh();
-            }
-        });
-
-        var ListViewItemBinder = kendo.Class.extend({
-            init: function(listView) {
-                var binder = this;
-                this.listView = listView;
-                this.options = listView.options;
-
-                var itemBinder = this;
-
-                this._refreshHandler = function(e) {
-                    itemBinder.refresh(e);
-                };
-
-                this._progressHandler = function() {
-                    listView.showLoading();
-                };
-
-                listView.bind("_dataSource", function(e) {
-                    binder.setDataSource(e.dataSource);
-                });
-            },
-
-            destroy: function() {
-                this._unbindDataSource();
-            },
-
-            reset: function() { },
-
-            refresh: function(e) {
-                var action = e && e.action,
-                    dataItems = e && e.items,
-                    listView = this.listView,
-                    dataSource = this.dataSource,
-                    prependOnRefresh = this.options.appendOnRefresh,
-                    view = dataSource.view(),
-                    groups = dataSource.group(),
-                    groupedMode = groups && groups[0],
-                    item;
-
-
-                if (action === "itemchange") {
-                    if (!listView._hasBindingTarget()) {
-                        item = listView.findByDataItem(dataItems)[0];
-                        if (item) {
-                            listView.setDataItem(item, dataItems[0]);
-                        }
-                    }
-                    return;
-                }
-
-                var removedItems, addedItems, addedDataItems;
-                var adding = (action === "add" && !groupedMode) || (prependOnRefresh && !listView._filter);
-                var removing = action === "remove" && !groupedMode;
-
-                if (adding) {
-                    // no need to unbind anything
-                    removedItems = [];
-                } else if (removing) {
-                    // unbind the items about to be removed;
-                    removedItems = listView.findByDataItem(dataItems);
-                }
-
-                if (listView.trigger(DATABINDING, { action: action || "rebind", items: dataItems, removedItems: removedItems, index: e && e.index })) {
-                    if (this._shouldShowLoading()) {
-                        listView.hideLoading();
-                    }
-                    return;
-                }
-
-                if (action === "add" && !groupedMode) {
-                    var index = view.indexOf(dataItems[0]);
-                    if (index > -1) {
-                        addedItems = listView.insertAt(dataItems, index);
-                        addedDataItems = dataItems;
-                    }
-                } else if (action === "remove" && !groupedMode) {
-                    addedItems = [];
-                    listView.remove(dataItems);
-                } else if (groupedMode) {
-                    listView.replaceGrouped(view);
-                }
-                else if (prependOnRefresh && !listView._filter) {
-                    addedItems = listView.prepend(view);
-                    addedDataItems = view;
-                }
-                else {
-                    listView.replace(view);
-                }
-
-                if (this._shouldShowLoading()) {
-                    listView.hideLoading();
-                }
-
-                listView.trigger(DATABOUND, { ns: ui, addedItems: addedItems, addedDataItems: addedDataItems });
-            },
-
-            setDataSource: function(dataSource) {
-                if (this.dataSource) {
-                    this._unbindDataSource();
-                }
-
-                this.dataSource = dataSource;
-                dataSource.bind(CHANGE, this._refreshHandler);
-
-                if (this._shouldShowLoading()) {
-                    this.dataSource.bind(PROGRESS, this._progressHandler);
-                }
-            },
-
-            _unbindDataSource: function() {
-                this.dataSource.unbind(CHANGE, this._refreshHandler).unbind(PROGRESS, this._progressHandler);
-            },
-
-            _shouldShowLoading: function() {
-                var options = this.options;
-                return !options.pullToRefresh && !options.loadMore && !options.endlessScroll;
-            }
-        });
-
-        var ListViewFilter = kendo.Class.extend({
-            init: function(listView) {
-                var filter = this,
-                    filterable = listView.options.filterable,
-                    events = "change paste",
-                    that = this;
-
-                this.listView = listView;
-                this.options = filterable;
-
-                listView.element.before(SEARCH_TEMPLATE({ placeholder: filterable.placeholder || "Search..." }));
-
-                if (filterable.autoFilter !== false) {
-                    events += " keyup";
-                }
-
-                this.element = listView.wrapper.find(".km-search-form");
-
-                this.searchInput = listView.wrapper.find("input[type=search]")
-                    .closest("form").on("submit" + NS, function(e) {
-                        e.preventDefault();
-                    })
-                    .end()
-                    .on("focus" + NS, function() {
-                        filter._oldFilter = filter.searchInput.val();
-                    })
-                    .on(events.split(" ").join(NS + " ") + NS, this._filterChange.bind(this));
-
-                this.clearButton = listView.wrapper.find(".km-filter-reset")
-                    .on(CLICK, this._clearFilter.bind(this))
-                    .hide();
-
-                 this._dataSourceChange = this._refreshInput.bind(this);
-                 listView.bind("_dataSource", function(e) {
-                     e.dataSource.bind("change", that._dataSourceChange);
-                 });
-            },
-
-            _refreshInput: function() {
-                var appliedFilters = this.listView.dataSource.filter();
-                var searchInput = this.listView._filter.searchInput;
-
-                if (!appliedFilters || appliedFilters.filters[0].field !== this.listView.options.filterable.field) {
-                    searchInput.val("");
-                } else {
-                    searchInput.val(appliedFilters.filters[0].value);
-                }
-            },
-
-            _search: function(expr) {
-                this._filter = true;
-                this.clearButton[expr ? "show" : "hide"]();
-                this.listView.dataSource.filter(expr);
-            },
-
-            _filterChange: function(e) {
-                var filter = this;
-                if (e.type == "paste" && this.options.autoFilter !== false) {
-                    setTimeout(function() {
-                        filter._applyFilter();
-                    }, 1);
-                } else {
-                    this._applyFilter();
-                }
-            },
-
-            _applyFilter: function() {
-                var options = this.options,
-                    value = this.searchInput.val(),
-                    expr = value.length ? {
-                        field: options.field,
-                        operator: options.operator || "startswith",
-                        ignoreCase: options.ignoreCase,
-                        value: value
-                    } : null;
-
-                if (value === this._oldFilter) {
-                    return;
-                }
-
-                this._oldFilter = value;
-                this._search(expr);
-            },
-
-            _clearFilter: function(e) {
-                this.searchInput.val("");
-                this._search(null);
-
-                e.preventDefault();
-            }
-        });
-
-        var ListView = Widget.extend({
-            init: function(element, options) {
-                var listView = this;
-
-                Widget.fn.init.call(this, element, options);
-
-                element = this.element;
-
-                options = this.options;
-
-                // support for legacy typo in configuration options: scrollTreshold -> scrollThreshold.
-                if (options.scrollTreshold) {
-                    options.scrollThreshold = options.scrollTreshold;
-                }
-
-                element
-                    .on("down", HIGHLIGHT_SELECTOR, "_highlight")
-                    .on("move up cancel", HIGHLIGHT_SELECTOR, "_dim");
-
-                this._userEvents = new kendo.UserEvents(element, {
-                    fastTap: true,
-                    filter: ITEM_SELECTOR,
-                    allowSelection: true,
-                    tap: function(e) {
-                        listView._click(e);
-                    }
-                });
-
-                // HACK!!! to negate the ms touch action from the user events.
-                element.css("-ms-touch-action", "auto");
-
-                element.wrap(WRAPPER);
-
-                this.wrapper = this.element.parent();
-
-                this._headerFixer = new HeaderFixer(this);
-
-                this._itemsCache = {};
-                this._templates();
-
-                this.virtual = options.endlessScroll || options.loadMore;
-
-                this._style();
-
-                if (this.options.$angular && (this.virtual || this.options.pullToRefresh)) {
-                    setTimeout(this._start.bind(this));
-                } else {
-                    this._start();
-                }
-
-            },
-
-            _start: function() {
-                var options = this.options;
-
-                if (this.options.filterable) {
-                    this._filter = new ListViewFilter(this);
-                }
-
-                if (this.virtual) {
-                    this._itemBinder = new VirtualListViewItemBinder(this);
-                } else {
-                    this._itemBinder = new ListViewItemBinder(this);
-                }
-
-                if (this.options.pullToRefresh) {
-                    this._pullToRefreshHandler = new RefreshHandler(this);
-                }
-
-                this.setDataSource(options.dataSource);
-
-                this._enhanceItems(this.items());
-
-                kendo.notify(this, ui);
-            },
-
-            events: [
-                CLICK,
-                DATABINDING,
-                DATABOUND,
-                ITEM_CHANGE
-            ],
-
-            options: {
-                name: "ListView",
-                style: "",
-                type: "flat",
-                autoBind: true,
-                fixedHeaders: false,
-                template: function (data) { return kendo.htmlEncode(data); },
-                headerTemplate: function (ref) {
-                    var value = ref.value;
-
-                    return ("<span class=\"km-text\">" + (kendo.htmlEncode(value)) + "</span>");
-        },
-                appendOnRefresh: false,
-                loadMore: false,
-                endlessScroll: false,
-                scrollThreshold: 30,
-                pullToRefresh: false,
-                messages: {
-                    loadMoreText: "Press to load more",
-                    pullTemplate: "Pull to refresh",
-                    releaseTemplate: "Release to refresh",
-                    refreshTemplate: "Refreshing"
-                },
-                pullOffset: 140,
-                filterable: false,
-                virtualViewSize: null
-            },
-
-            refresh: function() {
-                this._itemBinder.refresh();
-            },
-
-            reset: function() {
-                this._itemBinder.reset();
-            },
-
-            setDataSource: function(dataSource) {
-                // the listView should have a ready datasource for MVVM to function properly. But an empty datasource should not empty the element
-                var emptyDataSource = !dataSource;
-                this.dataSource = DataSource.create(dataSource);
-
-                this.trigger("_dataSource", { dataSource: this.dataSource, empty: emptyDataSource });
-
-                if (this.options.autoBind && !emptyDataSource) {
-                    this.items().remove();
-                    this.dataSource.fetch();
-                }
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                kendo.destroy(this.element);
-                this._userEvents.destroy();
-                if (this._itemBinder) {
-                    this._itemBinder.destroy();
-                }
-
-                if (this._headerFixer) {
-                    this._headerFixer.destroy();
-                }
-
-                this.element.unwrap();
-                delete this.element;
-                delete this.wrapper;
-                delete this._userEvents;
-            },
-
-            items: function() {
-                if (this.options.type === "group") {
-                    return this.element.find(".km-list").children();
-                } else {
-                    return this.element.children().not('.km-load-more');
-                }
-            },
-
-            scroller: function() {
-                if (!this._scrollerInstance) {
-                    this._scrollerInstance = this.element.closest(".km-scroll-wrapper").data("kendoMobileScroller");
-                }
-
-                return this._scrollerInstance;
-            },
-
-            showLoading: function() {
-                var view = this.view();
-                if (view && view.loader) {
-                    view.loader.show();
-                }
-            },
-
-            hideLoading: function() {
-                var view = this.view();
-                if (view && view.loader) {
-                    view.loader.hide();
-                }
-            },
-
-            insertAt: function(dataItems, index, triggerChange) {
-                var listView = this;
-                return listView._renderItems(dataItems, function(items) {
-                    if (index === 0) {
-                        listView.element.prepend(items);
-                    }
-                    else if (index === -1) {
-                        listView.element.append(items);
-                    } else {
-                        listView.items().eq(index - 1).after(items);
-                    }
-
-                    if (triggerChange) {
-                        for (var i = 0; i < items.length; i ++) {
-                            listView.trigger(ITEM_CHANGE, { item: items.eq(i), data: dataItems[i], ns: ui });
-                        }
-                    }
-                });
-            },
-
-            append: function(dataItems, triggerChange) {
-                return this.insertAt(dataItems, -1, triggerChange);
-            },
-
-            prepend: function(dataItems, triggerChange) {
-                return this.insertAt(dataItems, 0, triggerChange);
-            },
-
-            replace: function(dataItems) {
-                this.options.type = "flat";
-                this._angularItems("cleanup");
-                kendo.destroy(this.element.children());
-                this.element.empty();
-                this._userEvents.cancel();
-                this._style();
-                return this.insertAt(dataItems, 0);
-            },
-
-            replaceGrouped: function(groups) {
-                this.options.type = "group";
-                this._angularItems("cleanup");
-                this.element.empty();
-                var items = $(kendo.render(this.groupTemplate, groups));
-
-                this._enhanceItems(items.children("ul").children("li"));
-                this.element.append(items);
-                mobile.init(items);
-                this._style();
-                this._angularItems("compile");
-            },
-
-            remove: function(dataItems) {
-                var items = this.findByDataItem(dataItems);
-                this.angular("cleanup", function() {
-                    return { elements: items };
-                });
-                kendo.destroy(items);
-                items.remove();
-            },
-
-            findByDataItem: function(dataItems) {
-                var selectors = [];
-
-                for (var idx = 0, length = dataItems.length; idx < length; idx ++) {
-                    selectors[idx] = "[data-" + kendo.ns + "uid=" + dataItems[idx].uid + "]";
-                }
-
-                return this.element.find(selectors.join(","));
-            },
-
-            // item is a DOM element, not jQuery object.
-            setDataItem: function(item, dataItem) {
-                var listView = this,
-                    replaceItem = function(items) {
-                        var newItem = $(items[0]);
-                        kendo.destroy(item);
-                        listView.angular("cleanup", function() { return { elements: [ $(item) ] }; });
-                        $(item).replaceWith(newItem);
-                        listView.trigger(ITEM_CHANGE, { item: newItem, data: dataItem, ns: ui });
-                    };
-
-                return this._renderItems([dataItem], replaceItem)[0];
-            },
-
-            updateSize: function() {
-                this._size = this.getSize();
-            },
-
-            _renderItems: function(dataItems, callback) {
-                var items = $(kendo.render(this.template, dataItems));
-
-                callback(items);
-
-                this.angular("compile", function() {
-                    return {
-                        elements: items,
-                        data: dataItems.map(function(data) {
-                            return { dataItem: data };
-                        })
-                    };
-                });
-
-                mobile.init(items);
-                this._enhanceItems(items);
-
-                return items;
-            },
-
-            _dim: function(e) {
-                this._toggle(e, false);
-            },
-
-            _highlight: function(e) {
-                this._toggle(e, true);
-            },
-
-            _toggle: function(e, highlight) {
-                if (e.which > 1) {
-                    return;
-                }
-
-                var clicked = $(e.currentTarget),
-                    item = clicked.parent(),
-                    role = attrValue(clicked, "role") || "",
-                    plainItem = (!role.match(buttonRegExp)),
-                    prevented = e.isDefaultPrevented();
-
-                if (plainItem) {
-                    item.toggleClass(ACTIVE_CLASS, highlight && !prevented);
-                }
-            },
-
-            _templates: function() {
-                var this$1$1 = this;
-
-                var template = this.options.template,
-                    headerTemplate = this.options.headerTemplate,
-                    templateProxy = {},
-                    groupTemplateProxy = {};
-
-                if (typeof template === FUNCTION) {
-                    templateProxy.template = template;
-                } else {
-                    templateProxy.template = kendo.template(template);
-                }
-
-                this.template = kendo.template(function (data) { return ("<li" + (data[0].uid ? (" data-uid=\"" + (data[0].uid) + "\"") : "") + ">" + (this$1$1.template(data)) + "</li>"); }).bind(templateProxy);
-
-                groupTemplateProxy.template = this.template;
-
-                if (typeof headerTemplate === FUNCTION) {
-                    groupTemplateProxy._headerTemplate = headerTemplate;
-                } else {
-                    groupTemplateProxy._headerTemplate = kendo.template(headerTemplate);
-                }
-
-                groupTemplateProxy.headerTemplate = kendo.template(function (data){ return this$1$1._headerTemplate(data); });
-
-                this.groupTemplate = GROUP_TEMPLATE.bind(groupTemplateProxy);
-            },
-
-            _click: function(e) {
-                if (e.event.which > 1 || e.event.isDefaultPrevented()) {
-                    return;
-                }
-
-                var dataItem,
-                    item = e.target,
-                    target = $(e.event.target),
-                    buttonElement = target.closest(kendo.roleSelector("button", "detailbutton", "backbutton")),
-                    button = kendo.widgetInstance(buttonElement, ui),
-                    id = item.attr(kendo.attr("uid"));
-
-                if (id) {
-                    dataItem = this.dataSource.getByUid(id);
-                }
-
-                if (this.trigger(CLICK, { target: target, item: item, dataItem: dataItem, button: button })) {
-                    e.preventDefault();
-                }
-            },
-
-            _styleGroups: function() {
-                var rootItems = this.element.children();
-
-                rootItems.children("ul").addClass("km-list");
-
-                rootItems.each(function() {
-                    var li = $(this),
-                        groupHeader = li.contents().first();
-
-                    li.addClass("km-group-container");
-                    if (!groupHeader.is("ul") && !groupHeader.is("div." + GROUP_CLASS)) {
-                        groupHeader.wrap(GROUP_WRAPPER);
-                    }
-                });
-            },
-
-            _style: function() {
-                var options = this.options,
-                    grouped = options.type === "group",
-                    element = this.element,
-                    inset = options.style === "inset";
-
-                element.addClass("km-listview")
-                    .toggleClass("km-list", !grouped)
-                    .toggleClass("km-virtual-list", this.virtual)
-                    .toggleClass("km-listinset", !grouped && inset)
-                    .toggleClass("km-listgroup", grouped && !inset)
-                    .toggleClass("km-listgroupinset", grouped && inset);
-
-                if (!element.parents(".km-listview")[0]) {
-                    element.closest(".km-content").toggleClass("km-insetcontent", inset); // iOS has white background when the list is not inset.
-                }
-
-                if (grouped) {
-                    this._styleGroups();
-                }
-
-                this.trigger(STYLED);
-            },
-
-            _enhanceItems: function(items) {
-                items.each(function() {
-                    var item = $(this),
-                        child,
-                        enhanced = false;
-
-                    item.children().each(function() {
-                        child = $(this);
-                        if (child.is("a")) {
-                            enhanceLinkItem(child);
-                            enhanced = true;
-                        } else if (child.is("label")) {
-                            enhanceCheckBoxItem(child);
-                            enhanced = true;
-                        }
-                    });
-
-                    if (!enhanced) {
-                        enhanceItem(item);
-                    }
-                });
-            }
-        });
-
-        ui.plugin(ListView);
-    })(window.kendo.jQuery);
-    var kendo$6 = kendo;
-
-    var __meta__$4 = {
-        id: "mobile.navbar",
-        name: "NavBar",
-        category: "mobile",
-        description: "The Kendo mobile NavBar widget is used inside a mobile View or Layout Header element to display an application navigation bar.",
-        depends: [ "core" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            mobile = kendo.mobile,
-            ui = mobile.ui,
-            Widget = ui.Widget;
-
-        function createContainer(align, element) {
-            var items = element.find("[" + kendo.attr("align") + "=" + align + "]");
-
-            if (items[0]) {
-                return $('<div class="km-' + align + 'item" />').append(items).prependTo(element);
-            }
-        }
-
-        function toggleTitle(centerElement) {
-            var siblings = centerElement.siblings(),
-                noTitle = !!centerElement.children("ul")[0],
-                showTitle = (!!siblings[0] && kendo.trim(centerElement.text()) === ""),
-                android = !!(kendo.mobile.application && kendo.mobile.application.element.is(".km-android"));
-
-            centerElement.prevAll().toggleClass("km-absolute", noTitle);
-            centerElement.toggleClass("km-show-title", showTitle);
-            centerElement.toggleClass("km-fill-title", showTitle && !kendo.trim(centerElement.html()));
-            centerElement.toggleClass("km-no-title", noTitle);
-            centerElement.toggleClass("km-hide-title", android && !siblings.children().is(":visible"));
-        }
-
-        var NavBar = Widget.extend({
-            init: function(element, options) {
-                var that = this;
-
-                Widget.fn.init.call(that, element, options);
-
-                element = that.element;
-
-                that.container().bind("show", this.refresh.bind(this));
-
-                element.addClass("km-navbar").wrapInner($('<div class="km-view-title km-show-title" />'));
-                that.leftElement = createContainer("left", element);
-                that.rightElement = createContainer("right", element);
-                that.centerElement = element.find(".km-view-title");
-            },
-
-            options: {
-                name: "NavBar"
-            },
-
-            title: function(value) {
-                this.element.find(kendo.roleSelector("view-title")).text(value);
-                toggleTitle(this.centerElement);
-            },
-
-            refresh: function(e) {
-                var view = e.view;
-                this.title(view.options.title);
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                kendo.destroy(this.element);
-            }
-        });
-
-        ui.plugin(NavBar);
-    })(window.kendo.jQuery);
-    var kendo$5 = kendo;
-
-    var __meta__$3 = {
-        id: "mobile.scrollview",
-        name: "ScrollView",
-        category: "mobile",
-        description: "The Kendo Mobile ScrollView widget is used to scroll content wider than the device screen.",
-        depends: [ "fx", "data", "draganddrop" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            mobile = kendo.mobile,
-            ui = mobile.ui,
-            Transition = kendo.effects.Transition,
-            Pane = kendo.ui.Pane,
-            PaneDimensions = kendo.ui.PaneDimensions,
-            Widget = ui.DataBoundWidget,
-            DataSource = kendo.data.DataSource,
-            Buffer = kendo.data.Buffer,
-            BatchBuffer = kendo.data.BatchBuffer,
-
-            // Math
-            math = Math,
-            abs = math.abs,
-            ceil = math.ceil,
-            round = math.round,
-            max = math.max,
-            min = math.min,
-            floor = math.floor,
-
-            CHANGE = "change",
-            CHANGING = "changing",
-            REFRESH = "refresh",
-            CURRENT_PAGE_CLASS = "current-page",
-            VIRTUAL_PAGE_CLASS = "virtual-page",
-            FUNCTION = "function",
-            ITEM_CHANGE = "itemChange",
-            CLEANUP = "cleanup",
-
-            VIRTUAL_PAGE_COUNT = 3,
-            LEFT_PAGE = -1,
-            CETER_PAGE = 0,
-            RIGHT_PAGE = 1,
-
-            LEFT_SWIPE = -1,
-            NUDGE = 0,
-            RIGHT_SWIPE = 1;
-
-        function className(name) {
-            return "k-" + name + " km-" + name;
-        }
-
-        var Pager = kendo.Class.extend({
-            init: function(scrollView) {
-                var that = this,
-                    element = $("<ol class='" + className("pages") + "'/>");
-
-                scrollView.element.append(element);
-
-                this._changeProxy = that._change.bind(that);
-                this._refreshProxy = that._refresh.bind(that);
-                scrollView.bind(CHANGE, this._changeProxy);
-                scrollView.bind(REFRESH, this._refreshProxy);
-
-                $.extend(that, { element: element, scrollView: scrollView });
-            },
-
-            items: function() {
-                return this.element.children();
-            },
-
-            _refresh: function(e) {
-                var pageHTML = "";
-
-                for (var idx = 0; idx < e.pageCount; idx ++) {
-                    pageHTML += "<li></li>";
-                }
-
-                this.element.html(pageHTML);
-                this.items().eq(e.page).addClass(className(CURRENT_PAGE_CLASS));
-            },
-
-            _change: function(e) {
-                this.items()
-                    .removeClass(className(CURRENT_PAGE_CLASS))
-                    .eq(e.page).addClass(className(CURRENT_PAGE_CLASS));
-            },
-
-            destroy: function() {
-                this.scrollView.unbind(CHANGE, this._changeProxy);
-                this.scrollView.unbind(REFRESH, this._refreshProxy);
-                this.element.remove();
-            }
-        });
-
-        kendo.mobile.ui.ScrollViewPager = Pager;
-
-        var TRANSITION_END = "transitionEnd",
-            DRAG_START = "dragStart",
-            DRAG_END = "dragEnd";
-
-        var ElasticPane = kendo.Observable.extend({
-            init: function(element, options) {
-                var that = this;
-
-                kendo.Observable.fn.init.call(this);
-
-                this.element = element;
-                this.container = element.parent();
-
-                var movable,
-                    transition,
-                    userEvents,
-                    dimensions,
-                    dimension,
-                    pane;
-
-                movable = new kendo.ui.Movable(that.element);
-
-                transition = new Transition({
-                    axis: "x",
-                    movable: movable,
-                    onEnd: function() {
-                        that.trigger(TRANSITION_END);
-                    }
-                });
-
-                userEvents = new kendo.UserEvents(element, {
-                    fastTap: true,
-                    start: function(e) {
-                        if (abs(e.x.velocity) * 2 >= abs(e.y.velocity)) {
-                            userEvents.capture();
-                        } else {
-                            userEvents.cancel();
-                        }
-
-                        that.trigger(DRAG_START, e);
-                        transition.cancel();
-                    },
-                    allowSelection: true,
-                    end: function(e) {
-                        that.trigger(DRAG_END, e);
-                    }
-                });
-
-                dimensions = new PaneDimensions({
-                    element: that.element,
-                    container: that.container
-                });
-
-                dimension = dimensions.x;
-
-                dimension.bind(CHANGE, function() {
-                    that.trigger(CHANGE);
-                });
-
-                pane = new Pane({
-                    dimensions: dimensions,
-                    userEvents: userEvents,
-                    movable: movable,
-                    elastic: true
-                });
-
-                $.extend(that, {
-                    duration: options && options.duration || 1,
-                    movable: movable,
-                    transition: transition,
-                    userEvents: userEvents,
-                    dimensions: dimensions,
-                    dimension: dimension,
-                    pane: pane
-                });
-
-                this.bind([TRANSITION_END, DRAG_START, DRAG_END, CHANGE], options);
-            },
-
-            size: function() {
-                return { width: this.dimensions.x.getSize(), height: this.dimensions.y.getSize() };
-            },
-
-            total: function() {
-                return this.dimension.getTotal();
-            },
-
-            offset: function() {
-                return -this.movable.x;
-            },
-
-            updateDimension: function() {
-                this.dimension.update(true);
-            },
-
-            refresh: function() {
-                this.dimensions.refresh();
-            },
-
-            moveTo: function(offset) {
-                this.movable.moveAxis("x", -offset);
-            },
-
-            transitionTo: function(offset, ease, instant) {
-                if (instant) {
-                    this.moveTo(-offset);
-                } else {
-                    this.transition.moveTo({ location: offset, duration: this.duration, ease: ease });
-                }
-            }
-        });
-
-        kendo.mobile.ui.ScrollViewElasticPane = ElasticPane;
-
-        var ScrollViewContent = kendo.Observable.extend({
-            init: function(element, pane, options) {
-                var that = this;
-
-                kendo.Observable.fn.init.call(this);
-                that.element = element;
-                that.pane = pane;
-                that._getPages();
-                this.page = 0;
-                this.pageSize = options.pageSize || 1;
-                this.contentHeight = options.contentHeight;
-                this.enablePager = options.enablePager;
-                this.pagerOverlay = options.pagerOverlay;
-            },
-
-            scrollTo: function(page, instant) {
-                this.page = page;
-                this.pane.transitionTo(- page * this.pane.size().width, Transition.easeOutExpo, instant);
-            },
-
-            paneMoved: function(swipeType, bounce, callback, /*internal*/ instant) {
-                var that = this,
-                    pane = that.pane,
-                    width = pane.size().width * that.pageSize,
-                    approx = round,
-                    ease = bounce ? Transition.easeOutBack : Transition.easeOutExpo,
-                    snap,
-                    nextPage;
-
-                if (swipeType === LEFT_SWIPE) {
-                    approx = ceil;
-                } else if (swipeType === RIGHT_SWIPE) {
-                    approx = floor;
-                }
-
-                nextPage = approx(pane.offset() / width);
-
-                snap = max(that.minSnap, min(-nextPage * width, that.maxSnap));
-
-                if (nextPage != that.page) {
-                    if (callback && callback({ currentPage: that.page, nextPage: nextPage })) {
-                        snap = -that.page * pane.size().width;
-                    }
-                }
-
-                pane.transitionTo(snap, ease, instant);
-            },
-
-            updatePage: function() {
-                var pane = this.pane,
-                    page = round(pane.offset() / pane.size().width);
-
-                if (page != this.page) {
-                    this.page = page;
-                    return true;
-                }
-
-                return false;
-            },
-
-            forcePageUpdate: function() {
-                return this.updatePage();
-            },
-
-            resizeTo: function(size) {
-                var pane = this.pane,
-                    width = size.width;
-
-                this.pageElements.width(width);
-
-                if (this.contentHeight === "100%") {
-                    var containerHeight = this.element.parent().height();
-
-                    if (this.enablePager === true) {
-                        var pager = this.element.parent().find("ol.km-pages");
-                        if (!this.pagerOverlay && pager.length) {
-                            containerHeight -= kendo._outerHeight(pager, true);
-                        }
-                    }
-
-                    this.element.css("height", containerHeight);
-                    this.pageElements.css("height", containerHeight);
-                }
-
-                // re-read pane dimension after the pageElements have been resized.
-                pane.updateDimension();
-
-                if (!this._paged) {
-                    this.page = floor(pane.offset() / width);
-                }
-
-                this.scrollTo(this.page, true);
-
-                this.pageCount = ceil(pane.total() / width);
-                this.minSnap = - (this.pageCount - 1) * width;
-                this.maxSnap = 0;
-            },
-
-            _getPages: function() {
-                this.pageElements = this.element.find(kendo.roleSelector("page"));
-                this._paged = this.pageElements.length > 0;
-            }
-        });
-
-        kendo.mobile.ui.ScrollViewContent = ScrollViewContent;
-
-        var VirtualScrollViewContent = kendo.Observable.extend({
-            init: function(element, pane, options) {
-                var that = this;
-
-                kendo.Observable.fn.init.call(this);
-
-                that.element = element;
-                that.pane = pane;
-                that.options = options;
-                that._templates();
-                that.page = options.page || 0;
-                that.pages = [];
-                that._initPages();
-                that.resizeTo(that.pane.size());
-
-                that.pane.dimension.forceEnabled();
-            },
-
-            setDataSource: function(dataSource) {
-                this.dataSource = DataSource.create(dataSource);
-                this._buffer();
-                this._pendingPageRefresh = false;
-                this._pendingWidgetRefresh = false;
-            },
-
-            _viewShow: function() {
-                var that = this;
-                if (that._pendingWidgetRefresh) {
-                    setTimeout(function() {
-                        that._resetPages();
-                    }, 0);
-                    that._pendingWidgetRefresh = false;
-                }
-            },
-
-            _buffer: function() {
-                var itemsPerPage = this.options.itemsPerPage;
-
-                if (this.buffer) {
-                    this.buffer.destroy();
-                }
-
-                if (itemsPerPage > 1) {
-                    this.buffer = new BatchBuffer(this.dataSource, itemsPerPage);
-                } else {
-                    this.buffer = new Buffer(this.dataSource, itemsPerPage * 3);
-                }
-
-                this._resizeProxy = this._onResize.bind(this);
-                this._resetProxy = this._onReset.bind(this);
-                this._endReachedProxy = this._onEndReached.bind(this);
-
-                this.buffer.bind({
-                    "resize": this._resizeProxy,
-                    "reset": this._resetProxy,
-                    "endreached": this._endReachedProxy
-                });
-            },
-
-            _templates: function() {
-                var this$1$1 = this;
-
-                var template = this.options.template,
-                    emptyTemplate = this.options.emptyTemplate,
-                    templateProxy = {},
-                    emptyTemplateProxy = {};
-
-                if (typeof template === FUNCTION) {
-                    templateProxy.template = template;
-                    template = function (data) { return this$1$1.template(data); };
-                }
-
-                this.template = kendo.template(template).bind(templateProxy);
-
-                if (typeof emptyTemplate === FUNCTION) {
-                    emptyTemplateProxy.emptyTemplate = emptyTemplate;
-                    emptyTemplate = function (data) { return this$1$1.emptyTemplate(data); };
-                }
-
-                this.emptyTemplate = kendo.template(emptyTemplate).bind(emptyTemplateProxy);
-            },
-
-            _initPages: function() {
-                var pages = this.pages,
-                    element = this.element,
-                    page;
-
-                for (var i = 0; i < VIRTUAL_PAGE_COUNT; i++) {
-                    page = new Page(element);
-                    pages.push(page);
-                }
-
-                this.pane.updateDimension();
-            },
-
-            resizeTo: function(size) {
-                var pages = this.pages,
-                    pane = this.pane;
-
-                for (var i = 0; i < pages.length; i++) {
-                    pages[i].setWidth(size.width);
-                }
-
-                if (this.options.contentHeight === "auto") {
-                    this.element.css("height", this.pages[1].element.height());
-                }
-
-                else if (this.options.contentHeight === "100%") {
-                    var containerHeight = this.element.parent().height();
-
-                    if (this.options.enablePager === true) {
-                        var pager = this.element.parent().find("ol.km-pages");
-                        if (!this.options.pagerOverlay && pager.length) {
-                            containerHeight -= kendo._outerHeight(pager, true);
-                        }
-                    }
-
-                    this.element.css("height", containerHeight);
-                    pages[0].element.css("height", containerHeight);
-                    pages[1].element.css("height", containerHeight);
-                    pages[2].element.css("height", containerHeight);
-                }
-
-                pane.updateDimension();
-
-                this._repositionPages();
-
-                this.width = size.width;
-            },
-
-            scrollTo: function(page) {
-                var buffer = this.buffer,
-                    dataItem;
-
-                buffer.syncDataSource();
-                dataItem = buffer.at(page);
-
-                if (!dataItem) {
-                    return;
-                }
-
-                this._updatePagesContent(page);
-
-                this.page = page;
-            },
-
-            paneMoved: function(swipeType, bounce, callback, /*internal*/ instant) {
-                var that = this,
-                    pane = that.pane,
-                    width = pane.size().width,
-                    offset = pane.offset(),
-                    thresholdPassed = Math.abs(offset) >= width / 3,
-                    ease = bounce ? kendo.effects.Transition.easeOutBack : kendo.effects.Transition. easeOutExpo,
-                    isEndReached = that.page + 2 > that.buffer.total(),
-                    nextPage,
-                    delta = 0;
-
-                if (swipeType === RIGHT_SWIPE) {
-                    if (that.page !== 0) {
-                        delta = -1; //backward
-                    }
-                } else if (swipeType === LEFT_SWIPE && !isEndReached) {
-                    delta = 1; //forward
-                } else if (offset > 0 && (thresholdPassed && !isEndReached)) {
-                    delta = 1; //forward
-                } else if (offset < 0 && thresholdPassed) {
-                    if (that.page !== 0) {
-                        delta = -1; //backward
-                    }
-                }
-
-                nextPage = that.page;
-                if (delta) {
-                    nextPage = (delta > 0) ? nextPage + 1 : nextPage - 1;
-                }
-
-                if (callback && callback({ currentPage: that.page, nextPage: nextPage })) {
-                    delta = 0;
-                }
-
-                if (delta === 0) {
-                    that._cancelMove(ease, instant);
-                } else if (delta === -1) {
-                    that._moveBackward(instant);
-                } else if (delta === 1) {
-                    that._moveForward(instant);
-                }
-            },
-
-            updatePage: function() {
-                var pages = this.pages;
-
-                if (this.pane.offset() === 0) {
-                    return false;
-                }
-
-                if (this.pane.offset() > 0) {
-                    pages.push(this.pages.shift());//forward
-                    this.page++;
-                    this.setPageContent(pages[2], this.page + 1);
-                } else {
-                    pages.unshift(this.pages.pop()); //back
-                    this.page--;
-                    this.setPageContent(pages[0], this.page - 1);
-                }
-
-                this._repositionPages();
-
-                this._resetMovable();
-
-                return true;
-            },
-
-            forcePageUpdate: function() {
-                var offset = this.pane.offset(),
-                    threshold = this.pane.size().width * 3 / 4;
-
-                if (abs(offset) > threshold) {
-                    return this.updatePage();
-                }
-
-                return false;
-            },
-
-            _resetMovable: function() {
-                this.pane.moveTo(0);
-            },
-
-            _moveForward: function(instant) {
-                this.pane.transitionTo(-this.width, kendo.effects.Transition.easeOutExpo, instant);
-            },
-
-            _moveBackward: function(instant) {
-                this.pane.transitionTo(this.width, kendo.effects.Transition.easeOutExpo, instant);
-            },
-
-            _cancelMove: function(ease, /*internal*/ instant) {
-                this.pane.transitionTo(0, ease, instant);
-            },
-
-            _resetPages: function() {
-                this.page = this.options.page || 0;
-
-                this._updatePagesContent(this.page);
-                this._repositionPages();
-
-                this.trigger("reset");
-            },
-
-            _onResize: function() {
-                this.pageCount = ceil(this.dataSource.total() / this.options.itemsPerPage);
-
-                if (this._pendingPageRefresh) {
-                    this._updatePagesContent(this.page);
-                    this._pendingPageRefresh = false;
-                }
-
-                this.trigger("resize");
-            },
-
-            _onReset: function() {
-                this.pageCount = ceil(this.dataSource.total() / this.options.itemsPerPage);
-                this._resetPages();
-            },
-
-            _onEndReached: function() {
-                this._pendingPageRefresh = true;
-            },
-
-            _repositionPages: function() {
-                var pages = this.pages;
-
-                pages[0].position(LEFT_PAGE);
-                pages[1].position(CETER_PAGE);
-                pages[2].position(RIGHT_PAGE);
-            },
-
-            _updatePagesContent: function(offset) {
-                var pages = this.pages,
-                    currentPage = offset || 0;
-
-                this.setPageContent(pages[0], currentPage - 1);
-                this.setPageContent(pages[1], currentPage);
-                this.setPageContent(pages[2], currentPage + 1);
-            },
-
-            setPageContent: function(page, index) {
-                var buffer = this.buffer,
-                    template = this.template,
-                    emptyTemplate = this.emptyTemplate,
-                    view = null;
-
-                if (index >= 0) {
-                    view = buffer.at(index);
-                    if (Array.isArray(view) && !view.length) {
-                        view = null;
-                    }
-                }
-
-                this.trigger(CLEANUP, { item: page.element });
-
-                if (view !== null) {
-                    page.content(template(view));
-                } else {
-                    page.content(emptyTemplate({}));
-                }
-
-                kendo.mobile.init(page.element);
-                this.trigger(ITEM_CHANGE, { item: page.element, data: view, ns: kendo.mobile.ui });
-
-            }
-        });
-
-        kendo.mobile.ui.VirtualScrollViewContent = VirtualScrollViewContent;
-
-        var Page = kendo.Class.extend({
-            init: function(container) {
-                this.element = $("<div class='" + className(VIRTUAL_PAGE_CLASS) + "'></div>");
-                this.width = container.width();
-                this.element.width(this.width);
-                container.append(this.element);
-            },
-
-            content: function(theContent) {
-                this.element.html(theContent);
-            },
-
-            position: function(position) { //position can be -1, 0, 1
-                this.element.css("transform", "translate3d(" + this.width * position + "px, 0, 0)");
-            },
-
-            setWidth: function(width) {
-                this.width = width;
-                this.element.width(width);
-            }
-        });
-
-        kendo.mobile.ui.VirtualPage = Page;
-
-        var ScrollView = Widget.extend({
-            init: function(element, options) {
-                var that = this;
-
-                Widget.fn.init.call(that, element, options);
-
-                options = that.options;
-                element = that.element;
-
-                kendo.stripWhitespace(element[0]);
-
-                element
-                    .wrapInner("<div/>")
-                    .addClass("k-widget " + className("scrollview"));
-
-                if (this.options.enablePager) {
-                    this.pager = new Pager(this);
-
-                    if (this.options.pagerOverlay) {
-                        element.addClass(className("scrollview-overlay"));
-                    }
-                }
-
-                that.inner = element.children().first();
-                that.page = 0;
-                that.inner.css("height", options.contentHeight);
-
-                that.pane = new ElasticPane(that.inner, {
-                    duration: this.options.duration,
-                    transitionEnd: this._transitionEnd.bind(this),
-                    dragStart: this._dragStart.bind(this),
-                    dragEnd: this._dragEnd.bind(this),
-                    change: this[REFRESH].bind(this)
-                });
-
-                that.bind("resize", function() {
-                    that.pane.refresh();
-                });
-
-                that.page = options.page;
-
-                var empty = this.inner.children().length === 0;
-
-                var content = empty ? new VirtualScrollViewContent(that.inner, that.pane, options) : new ScrollViewContent(that.inner, that.pane, options);
-
-                content.page = that.page;
-
-                content.bind("reset", function() {
-                    this._pendingPageRefresh = false;
-                    that._syncWithContent();
-                    that.trigger(REFRESH, { pageCount: content.pageCount, page: content.page });
-                });
-
-                content.bind("resize", function() {
-                    that.trigger(REFRESH, { pageCount: content.pageCount, page: content.page });
-                });
-
-                content.bind(ITEM_CHANGE, function(e) {
-                    that.trigger(ITEM_CHANGE, e);
-
-                    that.angular("compile", function() {
-                        return { elements: e.item, data: [ { dataItem: e.data } ] };
-                    });
-                });
-
-                content.bind(CLEANUP, function(e) {
-                    that.angular("cleanup", function() {
-                        return { elements: e.item };
-                    });
-                });
-
-                that._content = content;
-                that.setDataSource(options.dataSource);
-
-                var mobileContainer = that.container();
-
-                if (mobileContainer.nullObject) {
-                    that.viewInit();
-                    that.viewShow();
-                } else {
-                    mobileContainer.bind("show", this.viewShow.bind(this)).bind("init", this.viewInit.bind(this));
-                }
-            },
-
-            options: {
-                name: "ScrollView",
-                page: 0,
-                duration: 400,
-                velocityThreshold: 0.8,
-                contentHeight: "auto",
-                pageSize: 1,
-                itemsPerPage: 1,
-                bounceVelocityThreshold: 1.6,
-                enablePager: true,
-                pagerOverlay: false,
-                autoBind: true,
-                template: function () { return ""; },
-                emptyTemplate: function () { return ""; }
-            },
-
-            events: [
-                CHANGING,
-                CHANGE,
-                REFRESH
-            ],
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                kendo.destroy(this.element);
-            },
-
-            viewInit: function() {
-                if (this.options.autoBind) {
-                    this._content.scrollTo(this._content.page, true);
-                }
-            },
-
-            viewShow: function() {
-                this.pane.refresh();
-            },
-
-            refresh: function() {
-                var content = this._content;
-
-                content.resizeTo(this.pane.size());
-                this.page = content.page;
-                this.trigger(REFRESH, { pageCount: content.pageCount, page: content.page });
-            },
-
-            content: function(html) {
-               this.element.children().first().html(html);
-               this._content._getPages();
-               this.pane.refresh();
-            },
-
-            value: function(item) {
-                var dataSource = this.dataSource;
-
-                if (item) {
-                    this.scrollTo(dataSource.indexOf(item), true);
-                } else {
-                    return dataSource.at(this.page);
-                }
-            },
-
-            scrollTo: function(page, instant) {
-                this._content.scrollTo(page, instant);
-                this._syncWithContent();
-            },
-
-            prev: function() {
-                var that = this,
-                    prevPage = that.page - 1;
-
-                if (that._content instanceof VirtualScrollViewContent) {
-                    that._content.paneMoved(RIGHT_SWIPE, undefined$1, function(eventData) {
-                        return that.trigger(CHANGING, eventData);
-                    });
-                } else if (prevPage > -1) {
-                    that.scrollTo(prevPage);
-                }
-            },
-
-            next: function() {
-                var that = this,
-                    nextPage = that.page + 1;
-
-                if (that._content instanceof VirtualScrollViewContent) {
-                    that._content.paneMoved(LEFT_SWIPE, undefined$1, function(eventData) {
-                        return that.trigger(CHANGING, eventData);
-                    });
-                } else if (nextPage < that._content.pageCount) {
-                    that.scrollTo(nextPage);
-                }
-            },
-
-            setDataSource: function(dataSource) {
-                if (!(this._content instanceof VirtualScrollViewContent)) {
-                    return;
-                }
-                // the scrollview should have a ready datasource for MVVM to function properly. But an empty datasource should not empty the element
-                var emptyDataSource = !dataSource;
-                this.dataSource = DataSource.create(dataSource);
-
-                this._content.setDataSource(this.dataSource);
-
-                if (this.options.autoBind && !emptyDataSource) {
-                    // this.items().remove();
-                    this.dataSource.fetch();
-                }
-            },
-
-            items: function() {
-                return this.element.find(".km-" + VIRTUAL_PAGE_CLASS);
-            },
-
-            _syncWithContent: function() {
-                var pages = this._content.pages,
-                    buffer = this._content.buffer,
-                    data,
-                    element;
-
-                this.page = this._content.page;
-
-                data = buffer ? buffer.at(this.page) : undefined$1;
-                if (!(data instanceof Array)) {
-                    data = [data];
-                }
-                element = pages ? pages[1].element : undefined$1;
-
-                this.trigger(CHANGE, { page: this.page, element: element, data: data });
-            },
-
-            _dragStart: function() {
-                if (this._content.forcePageUpdate()) {
-                    this._syncWithContent();
-                }
-            },
-
-            _dragEnd: function(e) {
-                var that = this,
-                    velocity = e.x.velocity,
-                    velocityThreshold = this.options.velocityThreshold,
-                    swipeType = NUDGE,
-                    bounce = abs(velocity) > this.options.bounceVelocityThreshold;
-
-                if (velocity > velocityThreshold) {
-                    swipeType = RIGHT_SWIPE;
-                } else if (velocity < -velocityThreshold) {
-                    swipeType = LEFT_SWIPE;
-                }
-
-                this._content.paneMoved(swipeType, bounce, function(eventData) {
-                    return that.trigger(CHANGING, eventData);
-                });
-            },
-
-            _transitionEnd: function() {
-                if (this._content.updatePage()) {
-                    this._syncWithContent();
-                }
-            }
-        });
-
-        ui.plugin(ScrollView);
-
-    })(window.kendo.jQuery);
-    var kendo$4 = kendo;
-
-    var __meta__$2 = {
-        id: "mobile.switch",
-        name: "Switch",
-        category: "mobile",
-        description: "The mobile Switch widget is used to display two exclusive choices.",
-        depends: [ "fx", "userevents" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            ui = kendo.mobile.ui,
-            outerWidth = kendo._outerWidth,
-            Widget = ui.Widget,
-            support = kendo.support,
-            CHANGE = "change",
-            SWITCHON = "switch-on",
-            SWITCHOFF = "switch-off",
-            MARGINLEFT = "margin-left",
-            ACTIVE_STATE = "state-active",
-            DISABLED_STATE = "state-disabled",
-            DISABLED = "disabled",
-            RESOLVEDPREFIX = support.transitions.css === undefined$1 ? "" : support.transitions.css,
-            TRANSFORMSTYLE = RESOLVEDPREFIX + "transform";
-
-        function className(name) {
-            return "km-" + name;
-        }
-
-        function limitValue(value, minLimit, maxLimit) {
-            return Math.max(minLimit, Math.min(maxLimit, value));
-        }
-
-        var SWITCH_MARKUP = '<span class="' + className("switch") + ' ' + className("widget") + '">\
-        <span class="' + className("switch-wrapper") + '">\
-            <span class="' + className("switch-background") + '"></span>\
-        </span> \
-        <span class="' + className("switch-container") + '">\
-            <span class="' + className("switch-handle") + '"> \
-                <span class="' + className("switch-label-on") + '">{0}</span> \
-                <span class="' + className("switch-label-off") + '">{1}</span> \
-            </span> \
-        </span>\
-    </span>';
-
-        var Switch = Widget.extend({
-            init: function(element, options) {
-                var that = this, checked;
-
-                Widget.fn.init.call(that, element, options);
-
-                options = that.options;
-
-                that.wrapper = $(kendo.format(SWITCH_MARKUP, options.onLabel, options.offLabel));
-                that.handle = that.wrapper.find(".km-switch-handle");
-                that.background = that.wrapper.find(".km-switch-background");
-                that.wrapper.insertBefore(that.element).prepend(that.element);
-
-                that._drag();
-
-                that.origin = parseInt(that.background.css(MARGINLEFT), 10);
-
-                that.constrain = 0;
-                that.snapPoint = 0;
-
-                element = that.element[0];
-                element.type = "checkbox";
-                that._animateBackground = true;
-
-                checked = that.options.checked;
-
-                if (checked === null) {
-                    checked = element.checked;
-                }
-
-                that.check(checked);
-
-                that.options.enable = that.options.enable && !that.element.attr(DISABLED);
-                that.enable(that.options.enable);
-
-                that.refresh();
-                kendo.notify(that, kendo.mobile.ui);
-            },
-
-            refresh: function() {
-                var that = this,
-                    handleWidth = outerWidth(that.handle, true);
-
-                that.width = that.wrapper.width();
-
-                that.constrain = that.width - handleWidth;
-                that.snapPoint = that.constrain / 2;
-
-                if (typeof that.origin != "number") {
-                    that.origin = parseInt(that.background.css(MARGINLEFT), 10);
-                }
-
-                that.background.data("origin", that.origin);
-
-                that.check(that.element[0].checked);
-            },
-
-            events: [
-                CHANGE
-            ],
-
-            options: {
-                name: "Switch",
-                onLabel: "on",
-                offLabel: "off",
-                checked: null,
-                enable: true
-            },
-
-            check: function(check) {
-                var that = this,
-                    element = that.element[0];
-
-                if (check === undefined$1) {
-                    return element.checked;
-                }
-
-                that._position(check ? that.constrain : 0);
-                element.checked = check;
-                that.wrapper
-                    .toggleClass(className(SWITCHON), check)
-                    .toggleClass(className(SWITCHOFF), !check);
-            },
-
-            // alias for check, NG support
-            value: function() {
-                return this.check.apply(this, arguments);
-            },
-
-            destroy: function() {
-                Widget.fn.destroy.call(this);
-                this.userEvents.destroy();
-            },
-
-            toggle: function() {
-                var that = this;
-
-                that.check(!that.element[0].checked);
-            },
-
-            enable: function(enable) {
-                var element = this.element,
-                    wrapper = this.wrapper;
-
-                if (typeof enable == "undefined") {
-                    enable = true;
-                }
-
-                this.options.enable = enable;
-
-                if (enable) {
-                    element.prop(DISABLED, false);
-                } else {
-                    element.attr(DISABLED, DISABLED);
-                }
-
-                wrapper.toggleClass(className(DISABLED_STATE), !enable);
-            },
-
-            _resize: function() {
-                this.refresh();
-            },
-
-            _move: function(e) {
-                var that = this;
-                e.preventDefault();
-                that._position(limitValue(that.position + e.x.delta, 0, that.width - outerWidth(that.handle, true)));
-            },
-
-            _position: function(position) {
-                var that = this;
-
-                that.position = position;
-                that.handle.css(TRANSFORMSTYLE, "translatex(" + position + "px)");
-
-                if (that._animateBackground) {
-                    that.background.css(MARGINLEFT, that.origin + position);
-                }
-            },
-
-            _start: function() {
-                if (!this.options.enable) {
-                    this.userEvents.cancel();
-                } else {
-                    this.userEvents.capture();
-                    this.handle.addClass(className(ACTIVE_STATE));
-                }
-            },
-
-            _stop: function() {
-                var that = this;
-
-                that.handle.removeClass(className(ACTIVE_STATE));
-                that._toggle(that.position > that.snapPoint);
-            },
-
-            _toggle: function(checked) {
-                var that = this,
-                    handle = that.handle,
-                    element = that.element[0],
-                    value = element.checked,
-                    duration = kendo.mobile.application && kendo.mobile.application.os.wp ? 100 : 200,
-                    distance;
-
-                that.wrapper
-                    .toggleClass(className(SWITCHON), checked)
-                    .toggleClass(className(SWITCHOFF), !checked);
-
-                that.position = distance = checked * that.constrain;
-
-                if (that._animateBackground) {
-                    that.background
-                        .kendoStop(true, true)
-                        .kendoAnimate({ effects: "slideMargin", offset: distance, reset: true, reverse: !checked, axis: "left", duration: duration });
-                }
-
-                handle
-                    .kendoStop(true, true)
-                    .kendoAnimate({
-                        effects: "slideTo",
-                        duration: duration,
-                        offset: distance + "px,0",
-                        reset: true,
-                        complete: function() {
-                            if (value !== checked) {
-                                element.checked = checked;
-                                that.trigger(CHANGE, { checked: checked });
-                            }
-                        }
-                    });
-            },
-
-            _drag: function() {
-                var that = this;
-
-                that.userEvents = new kendo.UserEvents(that.wrapper, {
-                    fastTap: true,
-                    tap: function() {
-                        if (that.options.enable) {
-                            that._toggle(!that.element[0].checked);
-                        }
-                    },
-                    start: that._start.bind(that),
-                    move: that._move.bind(that),
-                    end: that._stop.bind(that)
-                });
-            }
-        });
-
-        ui.plugin(Switch);
-    })(window.kendo.jQuery);
-    var kendo$3 = kendo;
-
-    var __meta__$1 = {
-        id: "mobile.tabstrip",
-        name: "TabStrip",
-        category: "mobile",
-        description: "The mobile TabStrip widget is used inside a mobile view or layout footer element to display an application-wide group of navigation buttons.",
-        depends: [ "core" ]
-    };
-
-    (function($, undefined$1) {
-        var kendo = window.kendo,
-            ui = kendo.mobile.ui,
-            Widget = ui.Widget,
-            ACTIVE_STATE_CLASS = "km-state-active",
-            SELECT = "select";
-
-        function createBadge(value) {
-            return $('<span class="km-badge">' + value + '</span>');
-        }
-
-        var TabStrip = Widget.extend({
-            init: function(element, options) {
-                var that = this;
-
-                Widget.fn.init.call(that, element, options);
-                that.container().bind("show", this.refresh.bind(this));
-
-                that.element
-                   .addClass("km-tabstrip")
-                   .find("a").each(that._buildButton)
-                   .eq(that.options.selectedIndex).addClass(ACTIVE_STATE_CLASS);
-
-                that.element.on("down", "a", "_release");
-            },
-
-            events: [
-                SELECT
-            ],
-
-            switchTo: function(url) {
-                var tabs = this.element.find('a'),
-                    tab,
-                    path,
-                    idx = 0,
-                    length = tabs.length;
-
-                if (isNaN(url)) {
-                    for (; idx < length; idx ++) {
-                        tab = tabs[idx];
-                        path = tab.href.replace(/(\#.+)(\?.+)$/, "$1"); // remove the fragment query string - http://www.foo.com?foo#bar**?baz=qux**
-
-                        if (path.indexOf(url, path.length - url.length) !== -1) {
-                            this._setActiveItem($(tab));
-                            return true;
-                        }
-                    }
-                } else {
-                    this._setActiveItem(tabs.eq(url));
-                    return true;
-                }
-
-                return false;
-            },
-
-            switchByFullUrl: function(url) {
-                var tab;
-
-                tab = this.element.find("a[href$='" + url + "']");
-                this._setActiveItem(tab);
-            },
-
-            clear: function() {
-                this.currentItem().removeClass(ACTIVE_STATE_CLASS);
-            },
-
-            currentItem: function() {
-                return this.element.children("." + ACTIVE_STATE_CLASS);
-            },
-
-            badge: function(item, value) {
-                var tabstrip = this.element, badge;
-
-                if (!isNaN(item)) {
-                    item = tabstrip.children().get(item);
-                }
-
-                item = tabstrip.find(item);
-                badge = $(item.find(".km-badge")[0] || createBadge(value).insertAfter(item.children(".km-icon")));
-
-                if (value || value === 0) {
-                    badge.html(value);
-                    return this;
-                }
-
-                if (value === false) {
-                    badge.empty().remove();
-                    return this;
-                }
-
-                return badge.html();
-            },
-
-            _release: function(e) {
-                if (e.which > 1) {
-                    return;
-                }
-
-                var that = this,
-                    item = $(e.currentTarget);
-
-                if (item[0] === that.currentItem()[0]) {
-                    return;
-                }
-
-                if (that.trigger(SELECT, { item: item })) {
-                    e.preventDefault();
-                } else {
-                    that._setActiveItem(item);
-                }
-            },
-
-            _setActiveItem: function(item) {
-                if (!item[0]) {
-                    return;
-                }
-                this.clear();
-                item.addClass(ACTIVE_STATE_CLASS);
-            },
-
-            _buildButton: function() {
-                var button = $(this),
-                    icon = kendo.attrValue(button, "icon"),
-                    badge = kendo.attrValue(button, "badge"),
-                    image = button.find("img"),
-                    iconSpan = $('<span class="km-icon"/>');
-
-                button
-                    .addClass("km-button")
-                    .attr(kendo.attr("role"), "tab")
-                        .contents().not(image)
-                        .wrapAll('<span class="km-text"/>');
-
-                if (image[0]) {
-                    image.addClass("km-image").prependTo(button);
-                } else {
-                    button.prepend(iconSpan);
-                    if (icon) {
-                        iconSpan.addClass("km-" + icon);
-                        if (badge || badge === 0) {
-                            createBadge(badge).insertAfter(iconSpan);
-                        }
-                    }
-                }
-            },
-
-            refresh: function(e) {
-                var url = e.view.id;
-
-                if (url && !this.switchTo(e.view.id)) {
-                    this.switchTo(url);
-                }
-            },
-
-            options: {
-                name: "TabStrip",
-                selectedIndex: 0,
-                enable: true
-            }
-        });
-
-        ui.plugin(TabStrip);
-    })(window.kendo.jQuery);
     var kendo$2 = kendo;
 
     var __meta__ = {
@@ -75646,11 +69836,7 @@
             Upload: "input",
             Validator: "form",
             Button: "button",
-            MobileButton: "a",
-            MobileBackButton: "a",
-            MobileDetailButton: "a",
             ListView: "ul",
-            MobileListView: "ul",
             ScrollView: "div",
             PanelBar: "ul",
             TreeView: "ul",
@@ -75660,29 +69846,11 @@
             Switch: "input"
         };
 
-        var SKIP_SHORTCUTS = [
-            'MobileView',
-            'MobileDrawer',
-            'MobileLayout',
-            'MobileSplitView',
-            'MobilePane',
-            'MobileModalView'
-        ];
+        var SKIP_SHORTCUTS = [];
 
-        var MANUAL_DIRECTIVES = [
-            'MobileApplication',
-            'MobileView',
-            'MobileModalView',
-            'MobileLayout',
-            'MobileActionSheet',
-            'MobileDrawer',
-            'MobileSplitView',
-            'MobilePane',
-            'MobileScrollView',
-            'MobilePopOver'
-        ];
+        var MANUAL_DIRECTIVES = [];
 
-        angular.forEach(['MobileNavBar', 'MobileButton', 'MobileBackButton', 'MobileDetailButton', 'MobileTabStrip', 'MobileScrollView', 'MobileScroller'], function(widget) {
+        angular.forEach(['MobileScroller'], function(widget) {
             MANUAL_DIRECTIVES.push(widget);
             widget = "kendo" + widget;
             module.directive(widget, function() {
@@ -75736,9 +69904,6 @@
             if (MANUAL_DIRECTIVES.indexOf(name.replace("kendo", "")) > -1) {
                 return;
             }
-
-            // here name should be like kendoMobileListView so kendo-mobile-list-view works,
-            // and shortcut like kendoMobilelistview, for kendo-mobilelistview
 
             make(name, name);
             if (shortcut != name) {
@@ -76093,183 +70258,8 @@
             }
         });
 
-        {
-            // mobile/ButtonGroup does not have a "value" method, but looks
-            // like it would be useful.  We provide it here.
-
-            defadvice("mobile.ui.ButtonGroup", "value", function(mew) {
-                var self = this.self;
-                if (mew != null) {
-                    self.select(self.element.children("li.km-button").eq(mew));
-                    self.trigger("change");
-                    self.trigger("select", { index: self.selectedIndex });
-                }
-                return self.selectedIndex;
-            });
-
-            defadvice("mobile.ui.ButtonGroup", "_select", function() {
-                this.next();
-                this.self.trigger("change");
-            });
-        }
-
-        // mobile directives
-        module
-        .directive('kendoMobileApplication', function() {
-            return {
-                terminal: true,
-                link: function(scope, element, attrs) {
-                    createWidget(scope, element, attrs, 'kendoMobileApplication', 'kendoMobileApplication');
-                }
-            };
-        }).directive('kendoMobileView', function() {
-            return {
-                scope: true,
-                link: {
-                    pre: function(scope, element, attrs) {
-                        attrs.defaultOptions = scope.viewOptions;
-                        attrs._instance = createWidget(scope, element, attrs, 'kendoMobileView', 'kendoMobileView');
-                    },
-
-                    post: function(scope, element, attrs) {
-                        attrs._instance._layout();
-                        attrs._instance._scroller();
-                    }
-                }
-            };
-        }).directive('kendoMobileDrawer', function() {
-            return {
-                scope: true,
-                link: {
-                    pre: function(scope, element, attrs) {
-                        attrs.defaultOptions = scope.viewOptions;
-                        attrs._instance = createWidget(scope, element, attrs, 'kendoMobileDrawer', 'kendoMobileDrawer');
-                    },
-
-                    post: function(scope, element, attrs) {
-                        attrs._instance._layout();
-                        attrs._instance._scroller();
-                    }
-                }
-            };
-        }).directive('kendoMobileModalView', function() {
-            return {
-                scope: true,
-                link: {
-                    pre: function(scope, element, attrs) {
-                        attrs.defaultOptions = scope.viewOptions;
-                        attrs._instance = createWidget(scope, element, attrs, 'kendoMobileModalView', 'kendoMobileModalView');
-                    },
-
-                    post: function(scope, element, attrs) {
-                        attrs._instance._layout();
-                        attrs._instance._scroller();
-                    }
-                }
-            };
-        }).directive('kendoMobileSplitView', function() {
-            return {
-                terminal: true,
-                link: {
-                    pre: function(scope, element, attrs) {
-                        attrs.defaultOptions = scope.viewOptions;
-                        attrs._instance = createWidget(scope, element, attrs, 'kendoMobileSplitView', 'kendoMobileSplitView');
-                    },
-
-                    post: function(scope, element, attrs) {
-                        attrs._instance._layout();
-                    }
-                }
-            };
-        }).directive('kendoMobilePane', function() {
-            return {
-                terminal: true,
-                link: {
-                    pre: function(scope, element, attrs) {
-                        attrs.defaultOptions = scope.viewOptions;
-                        createWidget(scope, element, attrs, 'kendoMobilePane', 'kendoMobilePane');
-                    }
-                }
-            };
-        }).directive('kendoMobileLayout', function() {
-            return {
-                link: {
-                    pre: function(scope, element, attrs) {
-                        createWidget(scope, element, attrs, 'kendoMobileLayout', 'kendoMobileLayout');
-                    }
-                }
-            };
-        }).directive('kendoMobileActionSheet', function() {
-            return {
-                restrict: "A",
-                link: function(scope, element, attrs) {
-                    element.find("a[k-action]").each(function() {
-                        $(this).attr("data-" + kendo.ns + "action", $(this).attr("k-action"));
-                    });
-
-                    createWidget(scope, element, attrs, 'kendoMobileActionSheet', 'kendoMobileActionSheet');
-                }
-            };
-        }).directive('kendoMobilePopOver', function() {
-            return {
-                terminal: true,
-                link: {
-                    pre: function(scope, element, attrs) {
-                        attrs.defaultOptions = scope.viewOptions;
-                        createWidget(scope, element, attrs, 'kendoMobilePopOver', 'kendoMobilePopOver');
-                    }
-                }
-            };
-        }).directive('kendoViewTitle', function() {
-            return {
-                restrict: "E",
-                replace: true,
-                template: function(element) {
-                    return "<span data-" + kendo.ns + "role='view-title'>" + element.html() + "</span>";
-                }
-            };
-        }).directive('kendoMobileHeader', function() {
-                return {
-                    restrict: "E",
-                    link: function(scope, element) {
-                        element.addClass("km-header").attr("data-role", "header");
-                    }
-                };
-        }).directive('kendoMobileFooter', function() {
-                return {
-                    restrict: 'E',
-                    link: function(scope, element) {
-                        element.addClass("km-footer").attr("data-role", "footer");
-                    }
-                };
-        }).directive('kendoMobileScrollViewPage', function() {
-            return {
-                restrict: "E",
-                replace: true,
-                template: function(element) {
-                    return "<div data-" + kendo.ns + "role='page'>" + element.html() + "</div>";
-                }
-            };
-        });
-
-        angular.forEach(['align', 'icon', 'rel', 'transition', 'actionsheetContext'], function(attr) {
-              var kAttr = "k" + attr.slice(0, 1).toUpperCase() + attr.slice(1);
-
-              module.directive(kAttr, function() {
-                  return {
-                      restrict: 'A',
-                      priority: 2,
-                      link: function(scope, element, attrs) {
-                          element.attr(kendo.attr(kendo.toHyphens(attr)), scope.$eval(attrs[kAttr]));
-                      }
-                  };
-              });
-        });
-
         var WIDGET_TEMPLATE_OPTIONS = {
             "TreeMap": [ "Template" ],
-            "MobileListView": [ "HeaderTemplate", "Template" ],
-            "MobileScrollView": [ "EmptyTemplate", "Template" ],
             "Grid": [ "AltRowTemplate", "DetailTemplate", "RowTemplate" ],
             "ListView": [ "EditTemplate", "Template", "AltTemplate" ],
             "Pager": [ "SelectTemplate", "LinkTemplate" ],
