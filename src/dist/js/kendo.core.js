@@ -121,7 +121,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.2.718'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.2.803'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -294,7 +294,7 @@
                 return target;
             };
 
-        kendo.version = "2023.2.718".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.2.803".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 

@@ -121,7 +121,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.2.718'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.2.803'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -294,7 +294,7 @@
                 return target;
             };
 
-        kendo.version = "2023.2.718".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.2.803".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -23009,7 +23009,8 @@
             UNSELECTING = "k-unselecting",
             INPUTSELECTOR_ICONSSELECTOR_FONT = "span.k-icon.k-i-caret-alt-down,span.k-icon.k-i-caret-alt-up,.k-icon.k-i-caret-alt-down,.k-icon.k-i-caret-alt-right,.k-icon.k-i-caret-alt-left",
             INPUTSELECTOR_ICONSSELECTOR_SVG = INPUTSELECTOR_ICONSSELECTOR_FONT.replaceAll('k-i', 'k-svg-i'),
-            INPUTSELECTOR = "input,a,textarea,.k-multiselect-wrap,select,button," + INPUTSELECTOR_ICONSSELECTOR_FONT + "," + INPUTSELECTOR_ICONSSELECTOR_SVG + ",.k-button>span,.k-button>img,label.k-checkbox-label.k-no-text,span.k-numeric-wrap,.k-focusable",
+            INPUTSELECTOR_SVG_PARTS = INPUTSELECTOR_ICONSSELECTOR_SVG.split(",").map(function (selector) { return selector + " *"; }).join(","),
+            INPUTSELECTOR = "input,a,textarea,.k-multiselect-wrap,select,button," + INPUTSELECTOR_ICONSSELECTOR_FONT + "," + INPUTSELECTOR_ICONSSELECTOR_SVG + "," + INPUTSELECTOR_SVG_PARTS + ",.k-button>span,.k-button>span *,.k-button>img,label.k-checkbox-label.k-no-text,span.k-numeric-wrap,.k-focusable",
             msie = kendo.support.browser.msie,
             supportEventDelegation = false,
             extend = $.extend;
