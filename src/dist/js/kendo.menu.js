@@ -116,6 +116,10 @@
                     var result = "k-item k-menu-item",
                         index = item.index;
 
+                    if (item.separator) {
+                        result += " k-separator";
+                    }
+
                     if (item.enabled === false) {
                         result += " k-disabled";
                     }
@@ -200,7 +204,7 @@
                 },
 
                 groupAttributes: function(group) {
-                    return group.expanded !== true ? " style='display:none'" : "";
+                    return group.expanded !== true ? ((kendo.attr("style-display")) + "=\"none\"") : "";
                 },
 
                 groupCssClass: function() {
@@ -936,6 +940,7 @@
 
                 if (referenceItem && !parent.length) {
                     parent = $(that.renderGroup({ group: groupData, options: that.options })).css("display", "none").appendTo(referenceItem);
+                    kendo.applyStylesFromKendoAttributes(parent, ["display"]);
                 }
 
                 if (plain || isArray(item) || item instanceof kendo.data.ObservableArray) { // is JSON
@@ -943,10 +948,13 @@
                                 if (typeof value === "string") {
                                     return $(value).get();
                                 } else {
-                                    return $(that.renderItem({
+                                    var itemElement = $(that.renderItem({
                                         group: groupData,
                                         item: extend(value, { index: idx })
-                                    })).get();
+                                    }));
+
+                                    kendo.applyStylesFromKendoAttributes(itemElement, ["display"]);
+                                    return itemElement.get();
                                 }
                             }));
                 } else {
@@ -1071,8 +1079,8 @@
                     var li = $(this);
 
                     clearTimeout(li.data(TIMER));
-
-                    li.data(TIMER, setTimeout(function() {
+                    clearTimeout(that._timerTimeout);
+                    that._timerTimeout = setTimeout(function() {
                         var div = li.find("> .k-menu-popup, > .k-animation-container > .k-child-animation-container > .k-menu-popup").filter(":hidden").first();
                         var popup;
                         var overflowPopup;
@@ -1181,7 +1189,9 @@
                             that._initPopupScrolling(popup);
                         }
 
-                    }, that.options.hoverDelay));
+                    }, that.options.hoverDelay);
+
+                    li.data(TIMER, that._timerTimeout);
                 });
 
                 return that;
@@ -2357,7 +2367,7 @@
                             subGroup = data.subGroup;
                         var contentHtml = fieldAccessor("content")(item);
                         var groupId = kendo.guid();
-                        return "<li class='" + (rendering.wrapperCssClass(group, item)) + "' " + ((item.hasChildren || item.items) ? "aria-controls='" + groupId + '"' : '') + "' " + (rendering.itemCssAttributes(item.toJSON ? item.toJSON() : item)) + " role='menuitem'  " + (item.items ? "aria-haspopup='true'" : '') +
+                        return "<li class='" + (rendering.wrapperCssClass(group, item)) + "' " + ((item.hasChildren || item.items) ? 'aria-controls="' + groupId + '"' : '') + " " + (rendering.itemCssAttributes(item.toJSON ? item.toJSON() : item)) + " role='menuitem'  " + (item.items ? "aria-haspopup='true'" : '') +
                             "" + (item.enabled === false ? "aria-disabled='true'" : '') +
                             kendo.attr("uid") + "='" + (item.uid) + "' " +
                             (item.items && item.items.length > 0 ?
@@ -2366,8 +2376,8 @@
                                     : " aria-expanded='false'")
                                 : '') +
                             ">" +
-                            "" + (this$1$1.templates.itemWrapper(data)) +
-                            (item.hasChildren || item.items ?
+                            "" + (!item.separator && !item.content ? this$1$1.templates.itemWrapper(data) : '') +
+                            ((item.hasChildren || item.items) ?
                                 ("" + (subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded }, groupId: groupId })))
                                 : (item.content || item.contentUrl || contentHtml ?
                                 ("" + (data.renderContent(data)))
@@ -2408,6 +2418,7 @@
                     item = options.item;
 
                 return that.templates.item(extend(options, {
+                    separator: item.separator ? that.templates.separator : empty,
                     sprite: that.templates.sprite,
                     itemWrapper: that.templates.itemWrapper,
                     renderContent: that.renderContent,

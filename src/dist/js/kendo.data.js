@@ -655,7 +655,7 @@
            value = value || {};
 
            if (!isPrimitiveType(value)) {
-               protoKeys = Object.getOwnPropertyNames(Object.getPrototypeOf(value));
+               protoKeys = Object.getOwnPropertyNames(Object.getPrototypeOf(value)).filter(function (f) { return f.indexOf("__") !== 0; });
            }
 
            keys = Object.getOwnPropertyNames(value).concat(protoKeys);
@@ -4769,12 +4769,15 @@
            },
 
            _composeItemsFilter: function(group, parents) {
-               var filter = this.filter() || {
+               var filter = {
                    logic: "and",
                    filters: []
                };
 
-               filter.logic = 'and';
+               if (this.filter()) {
+                   filter.filters.push(this.filter());
+               }
+
                filter = extend(true, {}, filter);
                filter.filters.push({
                    field: group.field,

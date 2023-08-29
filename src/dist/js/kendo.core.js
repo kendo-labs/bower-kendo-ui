@@ -121,7 +121,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.2.803'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.2.829'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -294,7 +294,7 @@
                 return target;
             };
 
-        kendo.version = "2023.2.803".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.2.829".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -5366,6 +5366,20 @@
         kendo.registerCssClasses("size", sizeValues);
         //kendo.registerCssClasses("align", alignValues);
         kendo.registerCssClasses("positionMode", positionModeValues);
+
+        kendo.applyStylesFromKendoAttributes = function(element, styleProps) {
+            var selector = styleProps.map(function (styleProp){ return ("[" + (kendo.attr(("style-" + styleProp))) + "]"); }).join(',');
+            element.find(selector).addBack(selector).each(function (_, currentElement) {
+                var $currentElement = $(currentElement);
+                styleProps.forEach(function(styleProp) {
+                    var kendoAttr = kendo.attr(("style-" + styleProp));
+                    if ($currentElement.attr(kendoAttr)) {
+                        $currentElement.css(styleProp, $currentElement.attr(kendoAttr));
+                        $currentElement.removeAttr(kendoAttr);
+                    }
+                });
+            });
+        };
 
         // jQuery deferred helpers
 

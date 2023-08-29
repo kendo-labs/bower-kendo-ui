@@ -121,7 +121,7 @@
         productName: 'Kendo UI',
         productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
         publishDate: 0,
-        version: '2023.2.803'.replace(/^\s+|\s+$/g, ''),
+        version: '2023.2.829'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code'
     };
 
@@ -294,7 +294,7 @@
                 return target;
             };
 
-        kendo.version = "2023.2.803".replace(/^\s+|\s+$/g, '');
+        kendo.version = "2023.2.829".replace(/^\s+|\s+$/g, '');
 
         function Class() {}
 
@@ -5367,6 +5367,20 @@
         //kendo.registerCssClasses("align", alignValues);
         kendo.registerCssClasses("positionMode", positionModeValues);
 
+        kendo.applyStylesFromKendoAttributes = function(element, styleProps) {
+            var selector = styleProps.map(function (styleProp){ return ("[" + (kendo.attr(("style-" + styleProp))) + "]"); }).join(',');
+            element.find(selector).addBack(selector).each(function (_, currentElement) {
+                var $currentElement = $(currentElement);
+                styleProps.forEach(function(styleProp) {
+                    var kendoAttr = kendo.attr(("style-" + styleProp));
+                    if ($currentElement.attr(kendoAttr)) {
+                        $currentElement.css(styleProp, $currentElement.attr(kendoAttr));
+                        $currentElement.removeAttr(kendoAttr);
+                    }
+                });
+            });
+        };
+
         // jQuery deferred helpers
 
         // influenced from: https://gist.github.com/fearphage/4341799
@@ -8615,7 +8629,7 @@
             value = value || {};
 
             if (!isPrimitiveType(value)) {
-                protoKeys = Object.getOwnPropertyNames(Object.getPrototypeOf(value));
+                protoKeys = Object.getOwnPropertyNames(Object.getPrototypeOf(value)).filter(function (f) { return f.indexOf("__") !== 0; });
             }
 
             keys = Object.getOwnPropertyNames(value).concat(protoKeys);
@@ -12729,12 +12743,15 @@
             },
 
             _composeItemsFilter: function(group, parents) {
-                var filter = this.filter() || {
+                var filter = {
                     logic: "and",
                     filters: []
                 };
 
-                filter.logic = 'and';
+                if (this.filter()) {
+                    filter.filters.push(this.filter());
+                }
+
                 filter = extend(true, {}, filter);
                 filter.filters.push({
                     field: group.field,
@@ -24571,6 +24588,66 @@
         viewBox: '0 0 512 512'
     };
 
+    var warningCircleIcon = {
+        name: 'warning-circle',
+        content: '<path d="M256 480c123.7 0 224-100.3 224-224S379.7 32 256 32 32 132.3 32 256s100.3 224 224 224Zm-32-352v160h64V128h-64Zm0 256v-64h64v64h-64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var warningTriangleIcon = {
+        name: 'warning-triangle',
+        content: '<path d="M256 32 0 480h512L256 32Zm-32 160h64v160h-64V192Zm0 256v-64h64v64h-64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var fontGrowIcon = {
+        name: 'font-grow',
+        content: '<path d="m384 32-96 128h192L384 32ZM222 96h-60L32 480h60l32.4-96h135.2l32.4 96h60L222 96Zm-78 230.4 48-141.7 48 141.7h-96Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var fontShrinkIcon = {
+        name: 'font-shrink',
+        content: '<path d="m384 160 96-128H288l96 128Zm-152 0h-48L80 480h48l25.9-80h108.2l25.9 80h48L232 160Zm-62.4 192L208 233.9 246.4 352h-76.8Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var textOverflowIcon = {
+        name: 'text-overflow',
+        content: '<path d="M288 304v176h32V304h-32zm0-272v176h32V32h-32zM64 32v448h32V32H64zm288 288v-48H128v-32h224v-48l96 64-96 64z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var textWrapArrowIcon = {
+        name: 'text-wrap-arrow',
+        content: '<path d="M64 176v32h384v-32H64Zm0-64v32h384v-32H64Zm0 256v32h160v-32H64Zm0-64v32h160v-32H64Zm0 128v32h160v-32H64Zm288-32v.12c5.22.04 10.43.04 16.04-.12H352Zm94.44-64.64c-1.28 7.68-4.16 15.04-8 22.4-2.06 3.65-4.27 7.06-6.65 10.24-15.2 20.5-36.6 31.17-63.75 32H352v48l-96-64 96-64v48h14.12c18.88 0 33.28-7.68 43.2-23.68 2.24-3.84 3.84-7.68 5.12-11.52 2.24-8.32 2.24-16.96 0-24.96-2.88-10.56-9.28-20.48-18.88-26.88-8.64-6.08-18.24-8.96-28.8-8.96H64v-32h305.32c34.24.32 65.6 24.32 75.2 56.96.96 3.2 1.6 6.08 1.92 9.28 1.92 9.92 2.24 19.52 0 29.12ZM64 48v32h384V48H64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var textTruncateIcon = {
+        name: 'text-truncate',
+        content: '<path d="M448 32v384h-32V64H95.92L96 480H64V32h384Zm0 416h-32v32h32v-32Zm-64 .08h-31.92V480H384v-31.92Zm-64-.08h-32v32h32v-32Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var textClipIcon = {
+        name: 'text-clip',
+        content: '<path d="M64 32v448h32V32H64Zm384 448V32h-32v448h32ZM320 320v-48H128v-32h192v-48l96 64-96 64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var borderColorIcon = {
+        name: 'border-color',
+        content: '<path d="M480 384v96H168l95.9-96H480Zm-80-182.14L121.86 480H32v-89.86L310.14 112 400 201.86Zm-65.28-24.89-22.4-22.4L82.56 384.01l-5.44 5.44 22.72 22.72L128 384.01l206.72-207.04Zm136.02-45.98L426.03 176 336 86.29l45.01-45.02c12.36-12.36 32.33-12.36 45.01 0l44.71 45.02c12.36 12.04 12.36 32.33 0 44.69l.01.01Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var borderTypeIcon = {
+        name: 'border-type',
+        content: '<path d="M479 96H33v64h446V96ZM96 384c0-17.67-14.33-32-32-32s-32 14.33-32 32 14.33 32 32 32 32-14.33 32-32Zm128 0c0-17.67-14.33-32-32-32s-32 14.33-32 32 14.33 32 32 32 32-14.33 32-32Zm128 0c0-17.67-14.33-32-32-32s-32 14.33-32 32 14.33 32 32 32 32-14.33 32-32Zm128 0c0-17.67-14.33-32-32-32s-32 14.33-32 32 14.33 32 32 32 32-14.33 32-32ZM224 224H32v64h192v-64Zm256 0H288v64h192v-64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
     var undoIcon = {
         name: 'undo',
         content: '<path d="M479.9 416c-57.7-56.6-136.7-96-223.9-96v128L32 256 256 64v128c122.2 0 221.5 102.4 223.9 224z" />',
@@ -27839,6 +27916,7 @@
         boldIcon: boldIcon,
         bookIcon: bookIcon,
         borderBottomIcon: borderBottomIcon,
+        borderColorIcon: borderColorIcon,
         borderLeftIcon: borderLeftIcon,
         borderRadiusBottomLeftIcon: borderRadiusBottomLeftIcon,
         borderRadiusBottomRightIcon: borderRadiusBottomRightIcon,
@@ -27852,6 +27930,7 @@
         borderStyleRightIcon: borderStyleRightIcon,
         borderStyleTopIcon: borderStyleTopIcon,
         borderTopIcon: borderTopIcon,
+        borderTypeIcon: borderTypeIcon,
         bordersAllIcon: bordersAllIcon,
         bordersInsideHorizontalIcon: bordersInsideHorizontalIcon,
         bordersInsideIcon: bordersInsideIcon,
@@ -28081,6 +28160,8 @@
         folderOpenIcon: folderOpenIcon,
         folderUpIcon: folderUpIcon,
         fontFamilyIcon: fontFamilyIcon,
+        fontGrowIcon: fontGrowIcon,
+        fontShrinkIcon: fontShrinkIcon,
         fontSizeIcon: fontSizeIcon,
         foregroundColorIcon: foregroundColorIcon,
         formElementIcon: formElementIcon,
@@ -28372,6 +28453,10 @@
         tellAFriendBoxIcon: tellAFriendBoxIcon,
         tellAFriendIcon: tellAFriendIcon,
         templateManagerIcon: templateManagerIcon,
+        textClipIcon: textClipIcon,
+        textOverflowIcon: textOverflowIcon,
+        textTruncateIcon: textTruncateIcon,
+        textWrapArrowIcon: textWrapArrowIcon,
         textWrapIcon: textWrapIcon,
         textareaIcon: textareaIcon,
         textboxHiddenIcon: textboxHiddenIcon,
@@ -28416,6 +28501,8 @@
         volumeDownIcon: volumeDownIcon,
         volumeMuteIcon: volumeMuteIcon,
         volumeUpIcon: volumeUpIcon,
+        warningCircleIcon: warningCircleIcon,
+        warningTriangleIcon: warningTriangleIcon,
         wholeWordIcon: wholeWordIcon,
         windowIcon: windowIcon,
         windowMinimizeIcon: windowMinimizeIcon,
@@ -30053,6 +30140,8 @@
             ui = kendo.ui,
             Widget = ui.Widget,
             keys = kendo.keys,
+            mediaQuery = kendo.mediaQuery,
+            support = kendo.support,
             encode = kendo.htmlEncode,
             template = kendo.template,
             FIRST = "caret-alt-to-left",
@@ -30063,7 +30152,6 @@
             LAST_CONST = "caret-alt-to-right",
             PREV_CONST = "caret-alt-left",
             NEXT_CONST = "caret-alt-right",
-            SIZE = "k-pager-mobile-md k-pager-mobile-sm",
             FOCUSABLE = ":kendoFocusable:not([tabindex='-1'])",
             CHANGE = "change",
             NS = ".kendoPager",
@@ -30079,7 +30167,7 @@
                 var className = ref.className;
                 var size = ref.size;
 
-                return ("<button role=\"button\" title=\"" + text + "\" aria-label=\"" + text + "\" class=\"k-pager-nav k-button k-button-flat k-button-flat-base k-icon-button " + wrapClassName + " " + size + "\">" + (kendo.ui.icon(className)) + "</button>");
+                return ("<button role=\"button\" title=\"" + text + "\" aria-label=\"" + text + "\" class=\"k-pager-nav k-button k-button-flat k-button-flat-base k-icon-button " + wrapClassName + " " + size + "\">" + (kendo.ui.icon($('<span class="k-button-icon"></span>'),className)) + "</button>");
         };
 
         function button(options) {
@@ -30141,9 +30229,10 @@
         var Pager = Widget.extend( {
             init: function(element, options) {
                 var that = this, page, totalPages;
-                var sizeClassName = null;
                 var buttonSize = "";
                 var dropDownClasses = "";
+                var width;
+                var info;
 
                 Widget.fn.init.call(that, element, options);
 
@@ -30174,7 +30263,6 @@
                     PREV = PREV_CONST;
                     NEXT = NEXT_CONST;
                 }
-
 
                 if (options.size) {
                     buttonSize = kendo.getValidCssClass("k-button-", "size", options.size);
@@ -30214,7 +30302,7 @@
                         that._numericSelect = that._numericWrap.find(".k-dropdown");
 
                         if (that._numericSelect.length === 0) {
-                           that._numericSelect = $("<select aria-label='" + that.options.messages.numbersSelectLabel + "' class='k-dropdown k-picker k-dropdown-list " + dropDownClasses + "' />").appendTo(that._numericWrap);
+                           that._numericSelect = $("<select aria-label='" + that.options.messages.numbersSelectLabel + "' class='k-dropdown k-picker k-picker-solid k-dropdown-list " + dropDownClasses + "' />").appendTo(that._numericWrap);
                         }
                     }
 
@@ -30269,7 +30357,7 @@
                             return "<option>" + size + "</option>";
                         });
 
-                        $('<span class="k-pager-sizes k-label"><select></select>' + encode(options.messages.itemsPerPage) + "</span>")
+                        $('<span class="k-pager-sizes"><select></select><span>' + encode(options.messages.itemsPerPage) + "</span></span>")
                             .appendTo(that.element)
                             .find("select").html(pageItems.join("")).end()
                             .appendTo(that.element);
@@ -30311,17 +30399,28 @@
                 that._resizeHandler = that.resize.bind(that, true);
                 $(window).on("resize" + NS, that._resizeHandler);
 
-                sizeClassName = that._getWidthSizeClass(that.element.outerWidth());
-
-                if (sizeClassName) {
-                    that.element.addClass(sizeClassName);
-                }
-
                 if (options.size) {
                     that.element.addClass(kendo.getValidCssClass("k-pager-", "size", options.size));
                 }
 
                 that._navigatable();
+
+                if (that.options.responsive) {
+                    width = that.element.outerWidth();
+                    info = that.element.find(".k-pager-info");
+                    if (width <= 480) {
+                        info.hide();
+                        that.element.find(".k-pager-sizes").children().hide();
+                        if (options.numeric) {
+                            that._numericSelect.show();
+                            that.list.hide();
+                        }
+                    } else if (width <= 600) {
+                        info.hide();
+                    } else if (options.numeric) {
+                        that._numericSelect.hide();
+                    }
+                }
 
                 kendo.notify(that);
             },
@@ -30358,7 +30457,7 @@
                     var tabindex = ref.tabindex;
                     var size = ref.size;
 
-                    return ("<button role=\"button\" aria-current=\"page\" tabindex=\"" + tabindex + "\" aria-label=\"" + title + "\" class=\"k-button " + size + " k-button-flat k-button-flat-primary k-selected\">" + (encode(text)) + "</span>");
+                    return ("<button role=\"button\" aria-current=\"page\" tabindex=\"" + tabindex + "\" aria-label=\"" + title + "\" class=\"k-button " + size + " k-button-flat k-button-flat-primary k-selected\"><span class=\"k-button-text\">" + (encode(text)) + "</span></button>");
         },
                 linkTemplate: function (ref) {
                     var ns = ref.ns;
@@ -30368,7 +30467,7 @@
                     var tabindex = ref.tabindex;
                     var size = ref.size;
 
-                    return ("<button class=\"k-button " + size + " k-button-flat k-button-flat-primary\" tabindex=\"" + tabindex + "\" href=\"#\" data-" + ns + "page=\"" + idx + "\" " + (title !== "" ? ("title=\"" + title + "\"") : '') + ">" + (encode(text)) + "</button>");
+                    return ("<button class=\"k-button " + size + " k-button-flat k-button-flat-primary\" tabindex=\"" + tabindex + "\" href=\"#\" data-" + ns + "page=\"" + idx + "\" " + (title !== "" ? ("title=\"" + title + "\"") : '') + "><span class=\"k-button-text\">" + (encode(text)) + "</span></button>");
         },
                 numericSelectItemTemplate: function (ref) {
                     var idx = ref.idx;
@@ -30427,17 +30526,179 @@
                 });
             },
 
-            _resize: function(size) {
-                if (size.width) {
-                    var sizeClassName = this._getWidthSizeClass(size.width);
-                    var el = this.element;
+            _adaptiveStep: function(step, hide, availableWidth) {
+                var that = this;
+                switch (step) {
+                    case 0:
+                        return that._toggleButtons(hide, availableWidth);
+                    case 1:
+                        return that._toggleRefresh(hide, availableWidth);
+                    case 2:
+                        return that._togglePagerInfo(hide, availableWidth);
+                    case 3:
+                        return that._toggleInputSizesLabel(hide, availableWidth);
+                    case 4:
+                        return that._togglePageSizesLabel(hide, availableWidth);
+                    case 5:
+                        return that._togglePageSizesDropDown(hide, availableWidth);
+                    case 6:
+                        return that._togglePageInputs(hide, availableWidth);
+                    default:
+                     break;
+                  }
+            },
 
-                    if (!sizeClassName) {
-                        el.removeClass(SIZE);
-                    } else if (!el.hasClass(sizeClassName)) {
-                        el.removeClass(SIZE);
-                        el.addClass(sizeClassName);
+            _calculateNeededWidth: function() {
+                var sumWidth = 0;
+                var gap = parseInt(this.element.css("gap"));
+                this.element.children().each(function() {
+                    var element = $(this);
+                    var pagerInfo = element.hasClass("k-pager-info");
+                    if (pagerInfo) {
+                        element.removeClass("k-pager-info k-label");
                     }
+                    sumWidth += element.is(":visible") ? element.width() : 0;
+                    sumWidth += gap;
+                    if (pagerInfo) {
+                        element.addClass("k-pager-info k-label");
+                    }
+                });
+                return sumWidth;
+            },
+
+            _resize: function(size) {
+                var that = this;
+                if (!that._lastWidth || !that.options.responsive) {
+                    return;
+                }
+
+                if (that._lastWidth < size.width) {
+                    for (var i = 6; i >= 0; i--) {
+                        var availableWidth = that._calculateNeededWidth();
+                        if (size.width < availableWidth) {
+                            break;
+                        }
+                        var shouldBreak = that._adaptiveStep(i, false, size.width - availableWidth);
+                        if (shouldBreak) {
+                            break;
+                        }
+                    }
+                } else if (that._lastWidth > size.width) {
+                    for (var i$1 = 0; i$1 < 7; i$1++) {
+                        if (size.width > that._calculateNeededWidth()) {
+                            break;
+                        }
+                        that._adaptiveStep(i$1, true);
+                    }
+                }
+                that._lastWidth = size.width;
+            },
+
+            _toggleButtons: function(hide, availableWidth) {
+                if (!this._numericWrap || !this.list || !this._numericSelect) {
+                    return;
+                }
+
+                if (hide) {
+                    this._numericSelect.show();
+                    this.list.hide();
+                } else if (availableWidth && ((this.list.width() - this._numericSelect.width()) < availableWidth)) {
+                    this._numericSelect.hide();
+                    this.list.show();
+                }
+            },
+
+            _toggleRefresh: function(hide, availableWidth) {
+                if (!this.options.refresh) {
+                    return;
+                }
+                var refreshContainer = this.element.find(".k-pager-refresh");
+
+                if (hide) {
+                    refreshContainer.hide();
+                } else if (availableWidth && (refreshContainer.width() < availableWidth)) {
+                    refreshContainer.show();
+                } else {
+                    return true;
+                }
+            },
+
+            _togglePagerInfo: function(hide, availableWidth) {
+                if (!this.options.info) {
+                    return;
+                }
+                var infoBox = this.element.find(".k-pager-info");
+                if (hide) {
+                    infoBox.hide();
+                } else if (availableWidth && (infoBox.width() < availableWidth)) {
+                    infoBox.show();
+                } else if (!infoBox.is(":visible")) {
+                    return true;
+                }
+            },
+
+            _toggleInputSizesLabel: function(hide, availableWidth) {
+                if (!this.options.input) {
+                    return;
+                }
+                var inputElements = this.element.find(".k-pager-input").children();
+                var labels = inputElements.eq(0).add(inputElements.eq(2));
+
+                if (hide) {
+                    labels.hide();
+                } else if (availableWidth && ((inputElements.eq(0).width() + inputElements.eq(2).width()) < availableWidth)) {
+                    labels.show();
+                } else {
+                    return true;
+                }
+            },
+
+
+            _togglePageSizesLabel: function(hide, availableWidth) {
+                if (!this.options.pageSizes) {
+                    return;
+                }
+                var label = this.element.find(".k-pager-sizes").children().eq(1);
+
+                if (hide) {
+                    label.hide();
+                } else if (availableWidth && (label.width() < availableWidth)) {
+                    label.show();
+                } else {
+                    return true;
+                }
+            },
+
+            _togglePageSizesDropDown: function(hide, availableWidth) {
+                if (!this.options.pageSizes) {
+                    return;
+                }
+
+                var picker = this.element.find(".k-pager-sizes .k-picker");
+
+                if (hide) {
+                    picker.hide();
+                } else if (availableWidth && (picker.width() < availableWidth)) {
+                    picker.show();
+                } else {
+                    return true;
+                }
+            },
+
+
+            _togglePageInputs: function(hide, availableWidth) {
+                var options = this.options;
+
+                if (!options.input || !this._numericSelect) {
+                    return;
+                }
+
+                if (hide) {
+                    this._numericSelect.hide();
+                } else if (availableWidth && (this._numericSelect.width() < availableWidth) && !this.list.is(":visible")) {
+                    this._numericSelect.show();
+                } else {
+                    return true;
                 }
             },
 
@@ -30542,9 +30803,9 @@
                 if (options.input) {
                     that.element
                         .find(".k-pager-input")
-                        .html(that.options.messages.page +
+                        .html('<span>' + encode(that.options.messages.page) + '</span>' +
                             '<span class="k-textbox k-input k-input-md k-rounded-md k-input-solid"><input class="k-input-inner" aria-label="' + that.options.messages.page + " " + page + '"></span>' +
-                            encode(kendo.format(options.messages.of, totalPages)))
+                            '<span>' + encode(kendo.format(options.messages.of, totalPages)) + '</span>')
                         .find("input")
                         .val(page)
                         .attr(DISABLED, total < 1)
@@ -30582,6 +30843,13 @@
                 that._restoreFocus(start, end, totalPages);
                 that._excludeChildrenFromTab();
                 that._updateAria();
+
+                if (totalPages) {
+                    that._lastWidth = kendo._outerWidth(that.element) + 12;
+                    that.resize(true);
+                } else if (that._lastWidth) {
+                  that._lastWidth = kendo._outerWidth(that.element);
+                }
             },
 
             _excludeChildrenFromTab: function() {
@@ -30817,20 +31085,6 @@
                     }
                 }
             },
-
-            _getWidthSizeClass: function(width) {
-                var that = this,
-                    sizes = SIZE.split(" ");
-
-                if (!that.options.responsive) {
-                    return null;
-                } else if (width <= 480) {
-                    return sizes[1];
-                } else if (width <= 600) {
-                    return sizes[0];
-                }
-                return null;
-            }
         });
 
         ui.plugin(Pager);
@@ -34634,6 +34888,10 @@
                     var result = "k-item k-menu-item",
                         index = item.index;
 
+                    if (item.separator) {
+                        result += " k-separator";
+                    }
+
                     if (item.enabled === false) {
                         result += " k-disabled";
                     }
@@ -34718,7 +34976,7 @@
                 },
 
                 groupAttributes: function(group) {
-                    return group.expanded !== true ? " style='display:none'" : "";
+                    return group.expanded !== true ? ((kendo.attr("style-display")) + "=\"none\"") : "";
                 },
 
                 groupCssClass: function() {
@@ -35454,6 +35712,7 @@
 
                 if (referenceItem && !parent.length) {
                     parent = $(that.renderGroup({ group: groupData, options: that.options })).css("display", "none").appendTo(referenceItem);
+                    kendo.applyStylesFromKendoAttributes(parent, ["display"]);
                 }
 
                 if (plain || isArray(item) || item instanceof kendo.data.ObservableArray) { // is JSON
@@ -35461,10 +35720,13 @@
                                 if (typeof value === "string") {
                                     return $(value).get();
                                 } else {
-                                    return $(that.renderItem({
+                                    var itemElement = $(that.renderItem({
                                         group: groupData,
                                         item: extend(value, { index: idx })
-                                    })).get();
+                                    }));
+
+                                    kendo.applyStylesFromKendoAttributes(itemElement, ["display"]);
+                                    return itemElement.get();
                                 }
                             }));
                 } else {
@@ -35589,8 +35851,8 @@
                     var li = $(this);
 
                     clearTimeout(li.data(TIMER));
-
-                    li.data(TIMER, setTimeout(function() {
+                    clearTimeout(that._timerTimeout);
+                    that._timerTimeout = setTimeout(function() {
                         var div = li.find("> .k-menu-popup, > .k-animation-container > .k-child-animation-container > .k-menu-popup").filter(":hidden").first();
                         var popup;
                         var overflowPopup;
@@ -35699,7 +35961,9 @@
                             that._initPopupScrolling(popup);
                         }
 
-                    }, that.options.hoverDelay));
+                    }, that.options.hoverDelay);
+
+                    li.data(TIMER, that._timerTimeout);
                 });
 
                 return that;
@@ -36875,7 +37139,7 @@
                             subGroup = data.subGroup;
                         var contentHtml = fieldAccessor("content")(item);
                         var groupId = kendo.guid();
-                        return "<li class='" + (rendering.wrapperCssClass(group, item)) + "' " + ((item.hasChildren || item.items) ? "aria-controls='" + groupId + '"' : '') + "' " + (rendering.itemCssAttributes(item.toJSON ? item.toJSON() : item)) + " role='menuitem'  " + (item.items ? "aria-haspopup='true'" : '') +
+                        return "<li class='" + (rendering.wrapperCssClass(group, item)) + "' " + ((item.hasChildren || item.items) ? 'aria-controls="' + groupId + '"' : '') + " " + (rendering.itemCssAttributes(item.toJSON ? item.toJSON() : item)) + " role='menuitem'  " + (item.items ? "aria-haspopup='true'" : '') +
                             "" + (item.enabled === false ? "aria-disabled='true'" : '') +
                             kendo.attr("uid") + "='" + (item.uid) + "' " +
                             (item.items && item.items.length > 0 ?
@@ -36884,8 +37148,8 @@
                                     : " aria-expanded='false'")
                                 : '') +
                             ">" +
-                            "" + (this$1$1.templates.itemWrapper(data)) +
-                            (item.hasChildren || item.items ?
+                            "" + (!item.separator && !item.content ? this$1$1.templates.itemWrapper(data) : '') +
+                            ((item.hasChildren || item.items) ?
                                 ("" + (subGroup({ items: item.items, menu: menu, group: { expanded: item.expanded }, groupId: groupId })))
                                 : (item.content || item.contentUrl || contentHtml ?
                                 ("" + (data.renderContent(data)))
@@ -36926,6 +37190,7 @@
                     item = options.item;
 
                 return that.templates.item(extend(options, {
+                    separator: item.separator ? that.templates.separator : empty,
                     sprite: that.templates.sprite,
                     itemWrapper: that.templates.itemWrapper,
                     renderContent: that.renderContent,
@@ -39271,7 +39536,7 @@
 
             UL_EL = '<ul unselectable="on"/>',
             LIST_EL = "<div class='k-list'/>",
-            NO_DATA_EL = '<div class="k-no-data" style="display: none;"></div>',
+            NO_DATA_EL = '<div class="k-no-data"></div>',
             LIST_FOOTER_EL = '<div class="k-list-footer"></div>',
             TABLE_FOOTER_EL = '<div class="k-table-footer">' +
                     '<span class="k-table-td"></span>' +
@@ -39506,6 +39771,7 @@
 
             _columnsHeader: function() {
                 var list = this;
+                var $header;
                 var columnsHeader = $(list.columnsHeader);
 
                 this._angularElement(columnsHeader, "cleanup");
@@ -39527,10 +39793,7 @@
                     var widthStyle = '';
 
                     if (currentWidth && !isNaN(currentWidthInt)) {
-                        widthStyle += "style='width:";
-                        widthStyle += currentWidthInt;
-                        widthStyle += percentageUnitsRegex.test(currentWidth) ? "%" : "px";
-                        widthStyle += ";'";
+                        widthStyle += (kendo.attr('style-width')) + "=\"" + currentWidthInt + (percentageUnitsRegex.test(currentWidth) ? "%" : "px") + "\"";
                     }
 
                     colGroup += "<col " + widthStyle + "/>";
@@ -39539,6 +39802,7 @@
                     row += columnsHeaderTemplate(currentColumn);
                     row += "</th>";
                 }
+
                 colGroup += "</colgroup>";
                 row += "</tr>";
                 header += colGroup;
@@ -39546,7 +39810,10 @@
                 header += row;
                 header += "</thead></table></div></div>";
 
-                list.columnsHeader = columnsHeader = $(header);
+                $header = $(header);
+                kendo.applyStylesFromKendoAttributes($header, ["width"]);
+
+                list.columnsHeader = columnsHeader = $header;
                 list.list.prepend(columnsHeader);
 
                 this._angularElement(list.columnsHeader, "compile");
@@ -39566,7 +39833,7 @@
                     return;
                 }
 
-                list.noData = $(NO_DATA_EL).appendTo(list.list);
+                list.noData = $(NO_DATA_EL).hide().appendTo(list.list);
                 list.noDataTemplate = typeof template !== "function" ? kendo.template(template) : template;
             },
 
@@ -40195,7 +40462,7 @@
 
                 if (length || that.options.noDataTemplate) {
                     // Check where animation container stays
-                    popups = list.parent().add(list.closest(".k-animation-container")).show();
+                    popups = list.parent().add(list.closest(".k-animation-container").add(list.closest(".k-child-animation-container"))).show();
 
                     if (!list.parent().is(":visible")) {
                         popups.hide();
@@ -41345,7 +41612,7 @@
                     this.element.addClass(TABLE_LIST);
                 } else {
                     this.content = this.element.wrap("<div class='k-list-content k-list-scroller' unselectable='on'></div>").parent();
-                    this.header = this.content.before('<div class="k-list-group-sticky-header" style="display:none"></div>').prev();
+                    this.header = this.content.before($('<div class="k-list-group-sticky-header"></div>').hide()).prev();
                     this.element.addClass(LIST_UL);
                 }
 
@@ -42139,11 +42406,9 @@
                     var widthStyle = '';
 
                     if (currentWidth && !isNaN(currentWidthInt)) {
-                        widthStyle += "style='width:";
-                        widthStyle += currentWidthInt;
-                        widthStyle += percentageUnitsRegex.test(currentWidth) ? "%" : "px";
-                        widthStyle += ";'";
+                        widthStyle += (kendo.attr('style-width')) + "=\"" + currentWidthInt + (percentageUnitsRegex.test(currentWidth) ? "%" : "px") + "\"";
                     }
+
                     item += "<span class='k-table-td' " + widthStyle + ">";
                     item += this.templates["column" + i](dataItem);
                     item += "</span>";
@@ -42154,7 +42419,7 @@
 
             _render: function() {
                 var html = "";
-
+                var cspCompliantHtml;
                 var i = 0;
                 var idx = 0;
                 var context;
@@ -42197,7 +42462,10 @@
 
                 this._view = dataContext;
 
-                this.element[0].innerHTML = html;
+                cspCompliantHtml = $(html);
+                kendo.applyStylesFromKendoAttributes(cspCompliantHtml, ["width", "background-color"]);
+
+                this.element.empty().append(cspCompliantHtml);
 
                 if (isGrouped && dataContext.length) {
                     this._renderHeader();
@@ -44673,7 +44941,10 @@
                 } else {
                     element.removeClass("k-table-alt-row");
                 }
-                element.html(renderColumns(this.options, data.item, templates));
+
+                var renderedColumns = $(renderColumns(this.options, data.item, templates));
+                kendo.applyStylesFromKendoAttributes(renderedColumns, ["width", "max-width"]);
+                element.empty().append(renderedColumns);
             } else {
                 element.find("." + GROUPITEM).remove();
                 element.find(".k-list-item-text").html(itemTemplate(data.item || {}));
@@ -44717,7 +44988,7 @@
 
                 if (currentWidth) {
                     var widthValue = "" + currentWidthInt + (percentageUnitsRegex.test(currentWidth) ? "%" : "px");
-                    widthStyle = "style=\"width: " + widthValue + "; max-width: " + widthValue + ";\"";
+                    widthStyle = (kendo.attr("style-width")) + "=\"" + widthValue + "\" " + (kendo.attr("style-max-width")) + "=\"" + widthValue + "\"";
                 }
 
                 item += "<span class='k-table-td' " + widthStyle + ">";
@@ -50036,7 +50307,7 @@
                 } else if (options.iconClass) {
                     that.wrapper.prepend($("<span class='" + options.iconClass + "'></span>").attr(options.iconAttr));
                 } else if (options.avatarClass) {
-                    that.wrapper.prepend($("<span class='k-chip-avatar k-avatar " + options.avatarClass + "'></span>").attr(options.iconAttr));
+                    that.wrapper.prepend($("<span class='k-chip-avatar k-avatar k-avatar-md k-avatar-solid k-avatar-solid-primary k-rounded-full " + options.avatarClass + "'></span>").attr(options.iconAttr));
                 }
 
                 that.element.addClass("k-chip-content");
@@ -51549,6 +51820,8 @@
 
                         that._setOption(getter(addedItem.dataItem), true);
                     }
+
+                    kendo.applyStylesFromKendoAttributes(that.tagList, ["background-color"]);
                 } else {
                     if (!that._maxTotal || that._maxTotal < total) {
                         that._maxTotal = total;
@@ -51594,6 +51867,8 @@
                         maxTotal: that._maxTotal,
                         currentTotal: total
                     }));
+
+                    kendo.applyStylesFromKendoAttributes(that.tagList, ["background-color"]);
                 }
 
                 that._refreshTagListAria();
@@ -55898,7 +56173,8 @@
                     svgPath(getPaths(AAA_CONTRAST, STEP_COUNT, false), bezierCommandCalc) +
                     svgPath(getPaths(AAA_CONTRAST, STEP_COUNT, true), bezierCommandCalc);
 
-            return '<svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; overflow: visible; pointer-events: none; left: 0px; top: 0px; z-index: 3;" >' +
+            return "<svg xmlns=\"http://www.w3.org/2000/svg\" " + (kendo.attr("style-position")) + "=\"absolute\" " + (kendo.attr("style-overflow")) + "=\"visible\" " + (kendo.attr("style-pointer-events")) + "=\"none\" " +
+                    (kendo.attr("style-left")) + "=\"0px\" " + (kendo.attr("style-top")) + "=\"0px\" " + (kendo.attr("style-z-index")) + "=\"3\" >" +
                         paths  + '</svg>';
         }
 
@@ -56578,6 +56854,7 @@
                 }
 
                 newSvg = $(contrastToolUtils.renderSvgCurveLine(metrics, that._getHSV(), backgroundColor)).addClass(svgClassName);
+                kendo.applyStylesFromKendoAttributes(newSvg, ["position", "overflow", "pointer-events", "left", "top", "z-index"]);
 
                 hsvRect.find("." + svgClassName).remove();
                 hsvRect.append(newSvg);
@@ -56899,7 +57176,7 @@
                     }
 
                     cellElements +=
-                    "<td role=\"gridcell\" unselectable=\"on\" style=\"background-color:" + (colors[i].toCss()) + "\"" +
+                    "<td role=\"gridcell\" unselectable=\"on\" " + (kendo.attr("style-background-color")) + "=\"" + (colors[i].toCss()) + "\"" +
                         (selected ? " aria-selected=true" : "") + " " +
                         ((id && i === 0) ? 'id=\\"' + id + '\\" ' : '') + " " +
 
@@ -56952,7 +57229,8 @@
             _wrapper: function() {
                 var options = this.options,
                     colors = this._colors(),
-                    wrapper;
+                    wrapper,
+                    templateElement;
 
                 if (this.element.is("input")) {
                     wrapper = this.element.addClass("k-hidden").wrap("<div>").parent();
@@ -56960,15 +57238,18 @@
                     wrapper = this.element;
                 }
 
+                templateElement = $(this._template({
+                    colors: colors,
+                    columns: options.columns,
+                    tileSize: options.tileSize,
+                    value: this._value,
+                    id: options.ariaId
+                }));
+
+                kendo.applyStylesFromKendoAttributes(templateElement, ["background-color"]);
                 wrapper.addClass("k-colorpalette")
                     .attr("role", "grid")
-                    .append($(this._template({
-                        colors: colors,
-                        columns: options.columns,
-                        tileSize: options.tileSize,
-                        value: this._value,
-                        id: options.ariaId
-                    })))
+                    .append(templateElement)
                     .attr("tabindex", this._tabIndex);
 
                 this.wrapper = wrapper;
@@ -60853,7 +61134,7 @@
              return item.encoded === false ? item.text : kendo.htmlEncode(item.text);
         },
         groupAttributes: function(group) {
-            return group.expanded !== true ? " style='display:none'" : "";
+            return group.expanded !== true ? (" " + (kendo.attr("style-display")) + "=\"none\"") : "";
         },
         ariaHidden: function(group) {
             return group.expanded !== true;
@@ -60862,7 +61143,7 @@
             return "k-panelbar-group k-group k-panel";
         },
         contentAttributes: function(content) {
-            return content.item.expanded !== true ? " style='display:none'" : "";
+            return content.item.expanded !== true ? (" " + (kendo.attr("style-display")) + "=\"none\"") : "";
         },
         content: function(item) {
             return item.content ? item.content : item.contentUrl ? "" : "&nbsp;";
@@ -61373,10 +61654,13 @@
                             return $(value);
                         } else {
                             value.items = [];
-                            return $(that.renderItem({
+                            var itemElement = $(that.renderItem({
                                 group: groupData,
                                 item: extend(value, { index: idx })
                             }));
+
+                            kendo.applyStylesFromKendoAttributes(itemElement, ["display"]);
+                            return itemElement;
                         }
                 });
 
@@ -61608,10 +61892,13 @@
                         if (typeof value === "string") {
                             return $(value);
                         } else {
-                            return $(that.renderItem({
+                            var itemElement = $(that.renderItem({
                                 group: groupData,
                                 item: extend(value, { index: idx })
                             }));
+
+                            kendo.applyStylesFromKendoAttributes(itemElement, ["display"]);
+                            return itemElement;
                         }
                 });
 
@@ -61994,7 +62281,9 @@
                 };
 
                 if (isReferenceItem && !parent.length) {
-                    parent = $(that.renderGroup({ group: groupData, options: that.options })).appendTo(referenceItem);
+                    parent = $(that.renderGroup({ group: groupData, options: that.options }));
+                    kendo.applyStylesFromKendoAttributes(parent, ["display"]);
+                    parent.appendTo(referenceItem);
                 }
 
                 if (plain || Array.isArray(item) || item instanceof HierarchicalDataSource) { // is JSON or HierarchicalDataSource
@@ -62006,10 +62295,13 @@
                         if (typeof value === "string") {
                             return $(value);
                         } else {
-                            return $(that.renderItem({
+                            var itemElement = $(that.renderItem({
                                 group: groupData,
                                 item: extend(value, { index: idx })
                             }));
+
+                            kendo.applyStylesFromKendoAttributes(itemElement, ["display"]);
+                            return itemElement;
                         }
                     });
                     if (isReferenceItem) {
@@ -62350,7 +62642,7 @@
             },
 
             _addGroupElement: function(element) {
-                var group = $('<ul role="group" aria-hidden="true" class="k-panelbar-group k-group k-panel" style="display:none"></ul>');
+                var group = $('<ul role="group" aria-hidden="true" class="k-panelbar-group k-group k-panel"></ul>').hide();
 
                 element.append(group);
                 return group;
@@ -63342,7 +63634,7 @@
                     return item.url ? "a" : "span";
                 },
                 contentAttributes: function(content) {
-                    return content.active !== true ? " style='display:none' aria-hidden='true'" : "";
+                    return content.active !== true ? (" " + (kendo.attr("style-display")) + "=\"none\" aria-hidden='true'") : "";
                 },
                 content: function(item) {
                     return item.content ? item.content : item.contentUrl ? "" : "&nbsp;";
@@ -64263,9 +64555,12 @@
 
                     contents = map( tab, function(value, idx) {
                                 if (typeof value.content == "string" || value.contentUrl) {
-                                    return $(TabStrip.renderContent({
+                                    var tabstripContent = $(TabStrip.renderContent({
                                         item: extend(value, { index: idx })
                                     }));
+
+                                    kendo.applyStylesFromKendoAttributes(tabstripContent, ["display"]);
+                                    return tabstripContent;
                                 }
                             });
                 } else {

@@ -416,7 +416,8 @@
                     svgPath(getPaths(AAA_CONTRAST, STEP_COUNT, false), bezierCommandCalc) +
                     svgPath(getPaths(AAA_CONTRAST, STEP_COUNT, true), bezierCommandCalc);
 
-            return '<svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; overflow: visible; pointer-events: none; left: 0px; top: 0px; z-index: 3;" >' +
+            return "<svg xmlns=\"http://www.w3.org/2000/svg\" " + (kendo.attr("style-position")) + "=\"absolute\" " + (kendo.attr("style-overflow")) + "=\"visible\" " + (kendo.attr("style-pointer-events")) + "=\"none\" " +
+                    (kendo.attr("style-left")) + "=\"0px\" " + (kendo.attr("style-top")) + "=\"0px\" " + (kendo.attr("style-z-index")) + "=\"3\" >" +
                         paths  + '</svg>';
         }
 
@@ -1096,6 +1097,7 @@
                 }
 
                 newSvg = $(contrastToolUtils.renderSvgCurveLine(metrics, that._getHSV(), backgroundColor)).addClass(svgClassName);
+                kendo.applyStylesFromKendoAttributes(newSvg, ["position", "overflow", "pointer-events", "left", "top", "z-index"]);
 
                 hsvRect.find("." + svgClassName).remove();
                 hsvRect.append(newSvg);
@@ -1417,7 +1419,7 @@
                     }
 
                     cellElements +=
-                    "<td role=\"gridcell\" unselectable=\"on\" style=\"background-color:" + (colors[i].toCss()) + "\"" +
+                    "<td role=\"gridcell\" unselectable=\"on\" " + (kendo.attr("style-background-color")) + "=\"" + (colors[i].toCss()) + "\"" +
                         (selected ? " aria-selected=true" : "") + " " +
                         ((id && i === 0) ? 'id=\\"' + id + '\\" ' : '') + " " +
 
@@ -1470,7 +1472,8 @@
             _wrapper: function() {
                 var options = this.options,
                     colors = this._colors(),
-                    wrapper;
+                    wrapper,
+                    templateElement;
 
                 if (this.element.is("input")) {
                     wrapper = this.element.addClass("k-hidden").wrap("<div>").parent();
@@ -1478,15 +1481,18 @@
                     wrapper = this.element;
                 }
 
+                templateElement = $(this._template({
+                    colors: colors,
+                    columns: options.columns,
+                    tileSize: options.tileSize,
+                    value: this._value,
+                    id: options.ariaId
+                }));
+
+                kendo.applyStylesFromKendoAttributes(templateElement, ["background-color"]);
                 wrapper.addClass("k-colorpalette")
                     .attr("role", "grid")
-                    .append($(this._template({
-                        colors: colors,
-                        columns: options.columns,
-                        tileSize: options.tileSize,
-                        value: this._value,
-                        id: options.ariaId
-                    })))
+                    .append(templateElement)
                     .attr("tabindex", this._tabIndex);
 
                 this.wrapper = wrapper;

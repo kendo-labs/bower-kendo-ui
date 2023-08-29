@@ -744,6 +744,66 @@
         viewBox: '0 0 512 512'
     };
 
+    var warningCircleIcon = {
+        name: 'warning-circle',
+        content: '<path d="M256 480c123.7 0 224-100.3 224-224S379.7 32 256 32 32 132.3 32 256s100.3 224 224 224Zm-32-352v160h64V128h-64Zm0 256v-64h64v64h-64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var warningTriangleIcon = {
+        name: 'warning-triangle',
+        content: '<path d="M256 32 0 480h512L256 32Zm-32 160h64v160h-64V192Zm0 256v-64h64v64h-64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var fontGrowIcon = {
+        name: 'font-grow',
+        content: '<path d="m384 32-96 128h192L384 32ZM222 96h-60L32 480h60l32.4-96h135.2l32.4 96h60L222 96Zm-78 230.4 48-141.7 48 141.7h-96Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var fontShrinkIcon = {
+        name: 'font-shrink',
+        content: '<path d="m384 160 96-128H288l96 128Zm-152 0h-48L80 480h48l25.9-80h108.2l25.9 80h48L232 160Zm-62.4 192L208 233.9 246.4 352h-76.8Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var textOverflowIcon = {
+        name: 'text-overflow',
+        content: '<path d="M288 304v176h32V304h-32zm0-272v176h32V32h-32zM64 32v448h32V32H64zm288 288v-48H128v-32h224v-48l96 64-96 64z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var textWrapArrowIcon = {
+        name: 'text-wrap-arrow',
+        content: '<path d="M64 176v32h384v-32H64Zm0-64v32h384v-32H64Zm0 256v32h160v-32H64Zm0-64v32h160v-32H64Zm0 128v32h160v-32H64Zm288-32v.12c5.22.04 10.43.04 16.04-.12H352Zm94.44-64.64c-1.28 7.68-4.16 15.04-8 22.4-2.06 3.65-4.27 7.06-6.65 10.24-15.2 20.5-36.6 31.17-63.75 32H352v48l-96-64 96-64v48h14.12c18.88 0 33.28-7.68 43.2-23.68 2.24-3.84 3.84-7.68 5.12-11.52 2.24-8.32 2.24-16.96 0-24.96-2.88-10.56-9.28-20.48-18.88-26.88-8.64-6.08-18.24-8.96-28.8-8.96H64v-32h305.32c34.24.32 65.6 24.32 75.2 56.96.96 3.2 1.6 6.08 1.92 9.28 1.92 9.92 2.24 19.52 0 29.12ZM64 48v32h384V48H64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var textTruncateIcon = {
+        name: 'text-truncate',
+        content: '<path d="M448 32v384h-32V64H95.92L96 480H64V32h384Zm0 416h-32v32h32v-32Zm-64 .08h-31.92V480H384v-31.92Zm-64-.08h-32v32h32v-32Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var textClipIcon = {
+        name: 'text-clip',
+        content: '<path d="M64 32v448h32V32H64Zm384 448V32h-32v448h32ZM320 320v-48H128v-32h192v-48l96 64-96 64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var borderColorIcon = {
+        name: 'border-color',
+        content: '<path d="M480 384v96H168l95.9-96H480Zm-80-182.14L121.86 480H32v-89.86L310.14 112 400 201.86Zm-65.28-24.89-22.4-22.4L82.56 384.01l-5.44 5.44 22.72 22.72L128 384.01l206.72-207.04Zm136.02-45.98L426.03 176 336 86.29l45.01-45.02c12.36-12.36 32.33-12.36 45.01 0l44.71 45.02c12.36 12.04 12.36 32.33 0 44.69l.01.01Z" />',
+        viewBox: '0 0 512 512'
+    };
+
+    var borderTypeIcon = {
+        name: 'border-type',
+        content: '<path d="M479 96H33v64h446V96ZM96 384c0-17.67-14.33-32-32-32s-32 14.33-32 32 14.33 32 32 32 32-14.33 32-32Zm128 0c0-17.67-14.33-32-32-32s-32 14.33-32 32 14.33 32 32 32 32-14.33 32-32Zm128 0c0-17.67-14.33-32-32-32s-32 14.33-32 32 14.33 32 32 32 32-14.33 32-32Zm128 0c0-17.67-14.33-32-32-32s-32 14.33-32 32 14.33 32 32 32 32-14.33 32-32ZM224 224H32v64h192v-64Zm256 0H288v64h192v-64Z" />',
+        viewBox: '0 0 512 512'
+    };
+
     var undoIcon = {
         name: 'undo',
         content: '<path d="M479.9 416c-57.7-56.6-136.7-96-223.9-96v128L32 256 256 64v128c122.2 0 221.5 102.4 223.9 224z" />',
@@ -4012,6 +4072,7 @@
         boldIcon: boldIcon,
         bookIcon: bookIcon,
         borderBottomIcon: borderBottomIcon,
+        borderColorIcon: borderColorIcon,
         borderLeftIcon: borderLeftIcon,
         borderRadiusBottomLeftIcon: borderRadiusBottomLeftIcon,
         borderRadiusBottomRightIcon: borderRadiusBottomRightIcon,
@@ -4025,6 +4086,7 @@
         borderStyleRightIcon: borderStyleRightIcon,
         borderStyleTopIcon: borderStyleTopIcon,
         borderTopIcon: borderTopIcon,
+        borderTypeIcon: borderTypeIcon,
         bordersAllIcon: bordersAllIcon,
         bordersInsideHorizontalIcon: bordersInsideHorizontalIcon,
         bordersInsideIcon: bordersInsideIcon,
@@ -4254,6 +4316,8 @@
         folderOpenIcon: folderOpenIcon,
         folderUpIcon: folderUpIcon,
         fontFamilyIcon: fontFamilyIcon,
+        fontGrowIcon: fontGrowIcon,
+        fontShrinkIcon: fontShrinkIcon,
         fontSizeIcon: fontSizeIcon,
         foregroundColorIcon: foregroundColorIcon,
         formElementIcon: formElementIcon,
@@ -4545,6 +4609,10 @@
         tellAFriendBoxIcon: tellAFriendBoxIcon,
         tellAFriendIcon: tellAFriendIcon,
         templateManagerIcon: templateManagerIcon,
+        textClipIcon: textClipIcon,
+        textOverflowIcon: textOverflowIcon,
+        textTruncateIcon: textTruncateIcon,
+        textWrapArrowIcon: textWrapArrowIcon,
         textWrapIcon: textWrapIcon,
         textareaIcon: textareaIcon,
         textboxHiddenIcon: textboxHiddenIcon,
@@ -4589,6 +4657,8 @@
         volumeDownIcon: volumeDownIcon,
         volumeMuteIcon: volumeMuteIcon,
         volumeUpIcon: volumeUpIcon,
+        warningCircleIcon: warningCircleIcon,
+        warningTriangleIcon: warningTriangleIcon,
         wholeWordIcon: wholeWordIcon,
         windowIcon: windowIcon,
         windowMinimizeIcon: windowMinimizeIcon,

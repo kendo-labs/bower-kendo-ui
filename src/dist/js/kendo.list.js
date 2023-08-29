@@ -90,7 +90,7 @@
 
             UL_EL = '<ul unselectable="on"/>',
             LIST_EL = "<div class='k-list'/>",
-            NO_DATA_EL = '<div class="k-no-data" style="display: none;"></div>',
+            NO_DATA_EL = '<div class="k-no-data"></div>',
             LIST_FOOTER_EL = '<div class="k-list-footer"></div>',
             TABLE_FOOTER_EL = '<div class="k-table-footer">' +
                     '<span class="k-table-td"></span>' +
@@ -325,6 +325,7 @@
 
             _columnsHeader: function() {
                 var list = this;
+                var $header;
                 var columnsHeader = $(list.columnsHeader);
 
                 this._angularElement(columnsHeader, "cleanup");
@@ -346,10 +347,7 @@
                     var widthStyle = '';
 
                     if (currentWidth && !isNaN(currentWidthInt)) {
-                        widthStyle += "style='width:";
-                        widthStyle += currentWidthInt;
-                        widthStyle += percentageUnitsRegex.test(currentWidth) ? "%" : "px";
-                        widthStyle += ";'";
+                        widthStyle += (kendo.attr('style-width')) + "=\"" + currentWidthInt + (percentageUnitsRegex.test(currentWidth) ? "%" : "px") + "\"";
                     }
 
                     colGroup += "<col " + widthStyle + "/>";
@@ -358,6 +356,7 @@
                     row += columnsHeaderTemplate(currentColumn);
                     row += "</th>";
                 }
+
                 colGroup += "</colgroup>";
                 row += "</tr>";
                 header += colGroup;
@@ -365,7 +364,10 @@
                 header += row;
                 header += "</thead></table></div></div>";
 
-                list.columnsHeader = columnsHeader = $(header);
+                $header = $(header);
+                kendo.applyStylesFromKendoAttributes($header, ["width"]);
+
+                list.columnsHeader = columnsHeader = $header;
                 list.list.prepend(columnsHeader);
 
                 this._angularElement(list.columnsHeader, "compile");
@@ -385,7 +387,7 @@
                     return;
                 }
 
-                list.noData = $(NO_DATA_EL).appendTo(list.list);
+                list.noData = $(NO_DATA_EL).hide().appendTo(list.list);
                 list.noDataTemplate = typeof template !== "function" ? kendo.template(template) : template;
             },
 
@@ -1014,7 +1016,7 @@
 
                 if (length || that.options.noDataTemplate) {
                     // Check where animation container stays
-                    popups = list.parent().add(list.closest(".k-animation-container")).show();
+                    popups = list.parent().add(list.closest(".k-animation-container").add(list.closest(".k-child-animation-container"))).show();
 
                     if (!list.parent().is(":visible")) {
                         popups.hide();
@@ -2164,7 +2166,7 @@
                     this.element.addClass(TABLE_LIST);
                 } else {
                     this.content = this.element.wrap("<div class='k-list-content k-list-scroller' unselectable='on'></div>").parent();
-                    this.header = this.content.before('<div class="k-list-group-sticky-header" style="display:none"></div>').prev();
+                    this.header = this.content.before($('<div class="k-list-group-sticky-header"></div>').hide()).prev();
                     this.element.addClass(LIST_UL);
                 }
 
@@ -2958,11 +2960,9 @@
                     var widthStyle = '';
 
                     if (currentWidth && !isNaN(currentWidthInt)) {
-                        widthStyle += "style='width:";
-                        widthStyle += currentWidthInt;
-                        widthStyle += percentageUnitsRegex.test(currentWidth) ? "%" : "px";
-                        widthStyle += ";'";
+                        widthStyle += (kendo.attr('style-width')) + "=\"" + currentWidthInt + (percentageUnitsRegex.test(currentWidth) ? "%" : "px") + "\"";
                     }
+
                     item += "<span class='k-table-td' " + widthStyle + ">";
                     item += this.templates["column" + i](dataItem);
                     item += "</span>";
@@ -2973,7 +2973,7 @@
 
             _render: function() {
                 var html = "";
-
+                var cspCompliantHtml;
                 var i = 0;
                 var idx = 0;
                 var context;
@@ -3016,7 +3016,10 @@
 
                 this._view = dataContext;
 
-                this.element[0].innerHTML = html;
+                cspCompliantHtml = $(html);
+                kendo.applyStylesFromKendoAttributes(cspCompliantHtml, ["width", "background-color"]);
+
+                this.element.empty().append(cspCompliantHtml);
 
                 if (isGrouped && dataContext.length) {
                     this._renderHeader();
