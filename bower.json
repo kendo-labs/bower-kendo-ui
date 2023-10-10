@@ -1,6 +1,6 @@
 {
   "name": "kendo-ui",
-  "version": "2023.2.829+SP2",
+  "version": "2023.3.1010+Official",
   "dependencies": {
     "jquery": ">=1.9.1 <4"
   },
