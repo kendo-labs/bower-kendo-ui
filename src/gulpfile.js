@@ -76,7 +76,7 @@ function mjsMin() {
 }
 
 function distThirdParty() {
-    return gulp.src('js/{jquery,angular,pako,jszip}*.*')
+    return gulp.src('js/{jquery,pako,jszip}*.*')
         .pipe(gulp.dest('dist/js'));
 }
 

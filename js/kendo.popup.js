@@ -255,6 +255,7 @@
             open: function(x, y) {
                 var that = this,
                     fixed = { isFixed: !isNaN(parseInt(y,10)), x: x, y: y },
+                    shouldCorrectWidth = that._shouldCorrectWidth,
                     element = that.element,
                     options = that.options,
                     animation, wrapper,
@@ -287,7 +288,7 @@
                         that._toggleResize(true);
                     }
 
-                    that.wrapper = wrapper = kendo.wrap(element, options.autosize, options._resizeOnWrap)
+                    that.wrapper = wrapper = kendo.wrap(element, options.autosize, options._resizeOnWrap, shouldCorrectWidth)
                         .css({
                             overflow: HIDDEN,
                             display: "block",

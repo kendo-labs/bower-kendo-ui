@@ -33027,10 +33027,13 @@ select.k-picker-lg {
 
 .k-listbox .k-list-scroller {
     width: 100%;
+    min-height: 0;
     height: inherit;
     border-width: 1px;
     border-style: solid;
     box-sizing: border-box;
+    display: flex;
+    flex-flow: column nowrap;
 }
 
 .k-listbox .k-list-scroller .k-list-scroller {
@@ -33963,7 +33966,7 @@ select.k-picker-lg {
 }
 
 .k-slider-transitions.k-slider-horizontal .k-draghandle {
-    transition: left 0.3s ease-out, background-color 0.3s ease-out, transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: inset-inline-start 0.3s ease-out, background-color 0.3s ease-out, transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .k-slider-transitions.k-slider-vertical .k-draghandle {
@@ -42578,12 +42581,12 @@ div.k-grid-footer {
 }
 
 .k-grid .k-command-cell > .k-button {
+    margin-inline-end: 0.5rem;
     vertical-align: middle;
 }
 
-.k-grid .k-command-cell > .k-button + .k-button {
+.k-grid .k-command-cell > .k-button:last-child {
     margin-inline-end: unset;
-    margin-inline-start: 0.5rem;
 }
 
 .k-grid > .k-resize-handle,

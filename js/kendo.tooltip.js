@@ -345,6 +345,7 @@
                 }
 
                 this.popup._hovered = true;
+                this.popup._shouldCorrectWidth = false;
                 this.popup.open();
             }
         });
@@ -459,10 +460,6 @@
                 } else {
                     element.html(contentOptions);
                 }
-
-                that.angular("compile", function() {
-                    return { elements: element };
-                });
             },
 
             _ajaxRequest: function(options) {

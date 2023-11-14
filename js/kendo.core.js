@@ -119,7 +119,7 @@
     var packageMetadata = {
         name: '@progress/kendo-ui',
         productName: 'Kendo UI',
-        productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
+        productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'UIASPCORE', 'KENDOMVC', 'KENDOUIMVC'],
         publishDate: 0,
         version: 'undefined'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code?utm_medium=product&utm_source=kendojquery&utm_campaign=kendo-ui-jquery-purchase-license-keys-warning'
@@ -1445,7 +1445,11 @@
             return newLocalInfo;
         }
 
-        function parseExact(value, format, culture, strict) {
+        function unpadZero(value) {
+            return value.replace(/^0*/, '');
+        }
+
+        function parseExact(value, format, culture, strict, shouldUnpadZeros) {
             if (!value) {
                 return null;
             }
@@ -1462,8 +1466,22 @@
                     return i;
                 },
                 getNumber = function(size) {
-                    var rg = numberRegExp[size] || new RegExp('^\\d{1,' + size + '}'),
-                        match = value.substr(valueIdx, size).match(rg);
+                    var rg, match, part = "";
+                    if (size === 2) {
+                        for (var i = 0; i <= size; i++) {
+                            part += value[valueIdx + i] || "";
+                        }
+                    }
+
+                    // If the value comes in the form of 021, 022, 023 we must trim the leading zero otherwise the result will be 02 in all three cases instead of 21/22/23.
+                    if (shouldUnpadZeros && part.length === 3 && Number.isInteger(Number(part)) && Number(part) > 0) {
+                        part = unpadZero(part);
+                    } else {
+                        part = value.substr(valueIdx, size);
+                    }
+
+                    rg = numberRegExp[size] || new RegExp('^\\d{1,' + size + '}');
+                    match = part.match(rg);
 
                     if (match) {
                         match = match[0];
@@ -1782,7 +1800,7 @@
             return formats;
         }
 
-        function internalParseDate(value, formats, culture, strict) {
+        function internalParseDate(value, formats, culture, strict, shouldUnpadZeros) {
             if (objectToString.call(value) === "[object Date]") {
                 return value;
             }
@@ -1820,7 +1838,7 @@
             length = formats.length;
 
             for (; idx < length; idx++) {
-                date = parseExact(value, formats[idx], culture, strict);
+                date = parseExact(value, formats[idx], culture, strict, shouldUnpadZeros);
                 if (date) {
                     return date;
                 }
@@ -1829,8 +1847,8 @@
             return date;
         }
 
-        kendo.parseDate = function(value, formats, culture) {
-            return internalParseDate(value, formats, culture, false);
+        kendo.parseDate = function(value, formats, culture, shouldUnpadZeros) {
+            return internalParseDate(value, formats, culture, false, shouldUnpadZeros);
         };
 
         kendo.parseExactDate = function(value, formats, culture) {
@@ -1928,7 +1946,9 @@
             };
         }
 
-        function wrap(element, autosize, resize) {
+        function wrap(element, autosize, resize, shouldCorrectWidth) {
+            if ( shouldCorrectWidth === void 0 ) shouldCorrectWidth = true;
+
             var percentage,
                 outerWidth = kendo._outerWidth,
                 outerHeight = kendo._outerHeight,
@@ -1971,7 +1991,7 @@
                     });
                 }
             } else {
-                wrapResize(element, autosize);
+                wrapResize(element, autosize, shouldCorrectWidth);
             }
 
             parent = parent.parent();
@@ -1982,13 +2002,13 @@
             }
 
             if (resize) {
-                wrapResize(element, autosize);
+                wrapResize(element, autosize, shouldCorrectWidth);
             }
 
             return parent;
         }
 
-        function wrapResize(element, autosize) {
+        function wrapResize(element, autosize, shouldCorrectWidth) {
             var percentage,
                 outerWidth = kendo._outerWidth,
                 outerHeight = kendo._outerHeight,
@@ -2011,7 +2031,9 @@
                 if (!visible) {
                     element.add(parent).show();
                 }
-                parent.css("width", ""); // Needed to get correct width dimensions
+                if (shouldCorrectWidth) {
+                    parent.css("width", ""); // Needed to get correct width dimensions
+                }
                 parent.css({
                     width: autosize ? outerWidth(element) + 1 : outerWidth(element),
                 });
@@ -3126,8 +3148,6 @@
 
                 that.element = kendo.jQuery(element).handler(that);
 
-                that.angular("init", options);
-
                 Observable.fn.init.call(that);
 
                 var dataSource = options ? options.dataSource : null;
@@ -3240,15 +3260,6 @@
             },
             _destroy: function() {
                 this.destroy();
-            },
-            angular: function() {},
-
-            _muteAngularRebind: function(callback) {
-                this._muteRebind = true;
-
-                callback.call(this);
-
-                this._muteRebind = false;
             },
 
             _applyCssClasses: function(element) {
@@ -3370,21 +3381,8 @@
         });
 
         var DataBoundWidget = Widget.extend({
-            // Angular consumes these.
             dataItems: function() {
                 return this.dataSource.flatView();
-            },
-
-            _angularItems: function(cmd) {
-                var that = this;
-                that.angular(cmd, function() {
-                    return {
-                        elements: that.items(),
-                        data: $.map(that.dataItems(), function(dataItem) {
-                            return { dataItem: dataItem };
-                        })
-                    };
-                });
             }
         });
 

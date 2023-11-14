@@ -109,7 +109,7 @@
         return createMediaQuery(query);
     }
 
-    var __meta__$16 = {
+    var __meta__$15 = {
         id: "core",
         name: "Core",
         category: "framework",
@@ -119,7 +119,7 @@
     var packageMetadata = {
         name: '@progress/kendo-ui',
         productName: 'Kendo UI',
-        productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'KENDOUI', 'KENDOUICOMPLETE'],
+        productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'UIASPCORE', 'KENDOMVC', 'KENDOUIMVC'],
         publishDate: 0,
         version: 'undefined'.replace(/^\s+|\s+$/g, ''),
         licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code?utm_medium=product&utm_source=kendojquery&utm_campaign=kendo-ui-jquery-purchase-license-keys-warning'
@@ -1445,7 +1445,11 @@
             return newLocalInfo;
         }
 
-        function parseExact(value, format, culture, strict) {
+        function unpadZero(value) {
+            return value.replace(/^0*/, '');
+        }
+
+        function parseExact(value, format, culture, strict, shouldUnpadZeros) {
             if (!value) {
                 return null;
             }
@@ -1462,8 +1466,22 @@
                     return i;
                 },
                 getNumber = function(size) {
-                    var rg = numberRegExp[size] || new RegExp('^\\d{1,' + size + '}'),
-                        match = value.substr(valueIdx, size).match(rg);
+                    var rg, match, part = "";
+                    if (size === 2) {
+                        for (var i = 0; i <= size; i++) {
+                            part += value[valueIdx + i] || "";
+                        }
+                    }
+
+                    // If the value comes in the form of 021, 022, 023 we must trim the leading zero otherwise the result will be 02 in all three cases instead of 21/22/23.
+                    if (shouldUnpadZeros && part.length === 3 && Number.isInteger(Number(part)) && Number(part) > 0) {
+                        part = unpadZero(part);
+                    } else {
+                        part = value.substr(valueIdx, size);
+                    }
+
+                    rg = numberRegExp[size] || new RegExp('^\\d{1,' + size + '}');
+                    match = part.match(rg);
 
                     if (match) {
                         match = match[0];
@@ -1782,7 +1800,7 @@
             return formats;
         }
 
-        function internalParseDate(value, formats, culture, strict) {
+        function internalParseDate(value, formats, culture, strict, shouldUnpadZeros) {
             if (objectToString.call(value) === "[object Date]") {
                 return value;
             }
@@ -1820,7 +1838,7 @@
             length = formats.length;
 
             for (; idx < length; idx++) {
-                date = parseExact(value, formats[idx], culture, strict);
+                date = parseExact(value, formats[idx], culture, strict, shouldUnpadZeros);
                 if (date) {
                     return date;
                 }
@@ -1829,8 +1847,8 @@
             return date;
         }
 
-        kendo.parseDate = function(value, formats, culture) {
-            return internalParseDate(value, formats, culture, false);
+        kendo.parseDate = function(value, formats, culture, shouldUnpadZeros) {
+            return internalParseDate(value, formats, culture, false, shouldUnpadZeros);
         };
 
         kendo.parseExactDate = function(value, formats, culture) {
@@ -1928,7 +1946,9 @@
             };
         }
 
-        function wrap(element, autosize, resize) {
+        function wrap(element, autosize, resize, shouldCorrectWidth) {
+            if ( shouldCorrectWidth === void 0 ) shouldCorrectWidth = true;
+
             var percentage,
                 outerWidth = kendo._outerWidth,
                 outerHeight = kendo._outerHeight,
@@ -1971,7 +1991,7 @@
                     });
                 }
             } else {
-                wrapResize(element, autosize);
+                wrapResize(element, autosize, shouldCorrectWidth);
             }
 
             parent = parent.parent();
@@ -1982,13 +2002,13 @@
             }
 
             if (resize) {
-                wrapResize(element, autosize);
+                wrapResize(element, autosize, shouldCorrectWidth);
             }
 
             return parent;
         }
 
-        function wrapResize(element, autosize) {
+        function wrapResize(element, autosize, shouldCorrectWidth) {
             var percentage,
                 outerWidth = kendo._outerWidth,
                 outerHeight = kendo._outerHeight,
@@ -2011,7 +2031,9 @@
                 if (!visible) {
                     element.add(parent).show();
                 }
-                parent.css("width", ""); // Needed to get correct width dimensions
+                if (shouldCorrectWidth) {
+                    parent.css("width", ""); // Needed to get correct width dimensions
+                }
                 parent.css({
                     width: autosize ? outerWidth(element) + 1 : outerWidth(element),
                 });
@@ -3126,8 +3148,6 @@
 
                 that.element = kendo.jQuery(element).handler(that);
 
-                that.angular("init", options);
-
                 Observable.fn.init.call(that);
 
                 var dataSource = options ? options.dataSource : null;
@@ -3240,15 +3260,6 @@
             },
             _destroy: function() {
                 this.destroy();
-            },
-            angular: function() {},
-
-            _muteAngularRebind: function(callback) {
-                this._muteRebind = true;
-
-                callback.call(this);
-
-                this._muteRebind = false;
             },
 
             _applyCssClasses: function(element) {
@@ -3370,21 +3381,8 @@
         });
 
         var DataBoundWidget = Widget.extend({
-            // Angular consumes these.
             dataItems: function() {
                 return this.dataSource.flatView();
-            },
-
-            _angularItems: function(cmd) {
-                var that = this;
-                that.angular(cmd, function() {
-                    return {
-                        elements: that.items(),
-                        data: $.map(that.dataItems(), function(dataItem) {
-                            return { dataItem: dataItem };
-                        })
-                    };
-                });
             }
         });
 
@@ -5628,7 +5626,7 @@
     })(jQuery, window);
     var kendo$$ = kendo;
 
-    var __meta__$15 = {
+    var __meta__$14 = {
         id: "router",
         name: "Router",
         category: "framework",
@@ -6163,7 +6161,7 @@
         kendo.Router = Router;
     })();
 
-    var __meta__$14 = {
+    var __meta__$13 = {
         id: "userevents",
         name: "User Events",
         category: "framework",
@@ -7023,7 +7021,7 @@
      })(window.kendo.jQuery);
     var kendo$Z = kendo;
 
-    var __meta__$13 = {
+    var __meta__$12 = {
         id: "touch",
         name: "Touch",
         category: "mobile",
@@ -7324,7 +7322,7 @@
         return transformCompositeFilter(expr);
     };
 
-    var __meta__$12 = {
+    var __meta__$11 = {
         id: "data.odata",
         name: "OData",
         category: "framework",
@@ -7872,7 +7870,7 @@
     })(window.kendo.jQuery);
     var kendo$X = kendo;
 
-    var __meta__$11 = {
+    var __meta__$10 = {
         id: "data.xml",
         name: "XML",
         category: "framework",
@@ -8132,7 +8130,7 @@
     })(window.kendo.jQuery);
     var kendo$W = kendo;
 
-    var __meta__$10 = {
+    var __meta__$$ = {
         id: "data",
         name: "Data source",
         category: "framework",
@@ -14809,7 +14807,7 @@
     })(window.kendo.jQuery);
     var kendo$V = kendo;
 
-    var __meta__$$ = {
+    var __meta__$_ = {
         id: "binder",
         name: "MVVM",
         category: "framework",
@@ -16945,7 +16943,7 @@
     })(window.kendo.jQuery);
     var kendo$U = kendo;
 
-    var __meta__$_ = {
+    var __meta__$Z = {
         id: "fx",
         name: "Effects",
         category: "framework",
@@ -18529,7 +18527,7 @@
     })(window.kendo.jQuery);
     var kendo$T = kendo;
 
-    var __meta__$Z = {
+    var __meta__$Y = {
         id: "view",
         name: "View",
         category: "framework",
@@ -19174,7 +19172,7 @@
             },
 
             _locate: function(selectors) {
-                return this.$angular ? directiveSelector(selectors) : roleSelector(selectors);
+                return roleSelector(selectors);
             },
 
             _findViewElement: function(url) {
@@ -19247,7 +19245,7 @@
     })(window.kendo.jQuery);
     var kendo$S = kendo;
 
-    var __meta__$Y = {
+    var __meta__$X = {
         id: "floatinglabel",
         name: "FloatingLabel",
         category: "framework",
@@ -19370,7 +19368,7 @@
     })(window.kendo.jQuery);
     var kendo$R = kendo;
 
-    var __meta__$X = {
+    var __meta__$W = {
         id: 'label',
         name: 'Label',
         category: 'framework',
@@ -19498,7 +19496,7 @@
 
     kendo$Q.ui.plugin(Label);
 
-    var __meta__$W = {
+    var __meta__$V = {
         id: "data.signalr",
         name: "SignalR",
         category: "framework",
@@ -19623,7 +19621,7 @@
     })(window.kendo.jQuery);
     var kendo$P = kendo;
 
-    var __meta__$V = {
+    var __meta__$U = {
         id: "validator",
         name: "Validator",
         category: "web",
@@ -20430,7 +20428,7 @@
     })(window.kendo.jQuery);
     var kendo$O = kendo;
 
-    var __meta__$U = {
+    var __meta__$T = {
         id: "draganddrop",
         name: "Drag & drop",
         category: "framework",
@@ -21226,20 +21224,6 @@
 
                 if (hint) {
                     that._hint();
-
-                    that.angular("compile", function() {
-                        that.hint.removeAttr("ng-repeat");
-                        var scopeTarget = $(e.target);
-
-                        while (!scopeTarget.data("$$kendoScope") && scopeTarget.length) {
-                            scopeTarget = scopeTarget.parent();
-                        }
-
-                        return {
-                            elements: that.hint.get(),
-                            scopeFrom: scopeTarget.data("$$kendoScope")
-                        };
-                    });
                 }
 
                 draggables[options.group] = that;
@@ -21623,7 +21607,7 @@
      })(window.kendo.jQuery);
     var kendo$N = kendo;
 
-    var __meta__$T = {
+    var __meta__$S = {
         id: "mobile.scroller",
         name: "Scroller",
         category: "mobile",
@@ -22325,7 +22309,7 @@
     })(window.kendo.jQuery);
     var kendo$M = kendo;
 
-    var __meta__$S = {
+    var __meta__$R = {
         id: "resizable",
         name: "Resizable",
         category: "framework",
@@ -22520,7 +22504,7 @@
     })(window.kendo.jQuery);
     var kendo$L = kendo;
 
-    var __meta__$R = {
+    var __meta__$Q = {
         id: "sortable",
         name: "Sortable",
         category: "framework",
@@ -23039,7 +23023,7 @@
     })(window.kendo.jQuery);
     var kendo$K = kendo;
 
-    var __meta__$Q = {
+    var __meta__$P = {
         id: "selectable",
         name: "Selectable",
         category: "framework",
@@ -23624,7 +23608,7 @@
     })(window.kendo.jQuery);
     var kendo$J = kendo;
 
-    var __meta__$P = {
+    var __meta__$O = {
         id: "html.base",
         name: "Html.Base",
         category: "web",
@@ -23700,7 +23684,7 @@
     })(window.kendo.jQuery);
     var kendo$I = kendo;
 
-    var __meta__$O = {
+    var __meta__$N = {
         id: "html.icon",
         name: "Html.Icon",
         category: "web",
@@ -28593,7 +28577,7 @@
         zoomOutIcon: zoomOutIcon
     });
 
-    var __meta__$N = {
+    var __meta__$M = {
         id: "icons",
         name: "Icons",
         category: "web",
@@ -28667,7 +28651,7 @@
     })(window.kendo.jQuery);
     var kendo$G = kendo;
 
-    var __meta__$M = {
+    var __meta__$L = {
         id: "badge",
         name: "Badge",
         category: "web", // suite
@@ -28996,7 +28980,7 @@
     })(window.kendo.jQuery);
     var kendo$F = kendo;
 
-    var __meta__$L = {
+    var __meta__$K = {
         id: "html.button",
         name: "Html.Button",
         category: "web",
@@ -29138,7 +29122,7 @@
     })(window.kendo.jQuery);
     var kendo$E = kendo;
 
-    var __meta__$K = {
+    var __meta__$J = {
             id: "button",
             name: "Button",
             category: "web",
@@ -29368,7 +29352,7 @@
         })(window.kendo.jQuery);
     var kendo$D = kendo;
 
-    var __meta__$J = {
+    var __meta__$I = {
             id: "togglebutton",
             name: "ToggleButton",
             category: "web",
@@ -29481,7 +29465,7 @@
         })(window.kendo.jQuery);
     var kendo$C = kendo;
 
-    var __meta__$I = {
+    var __meta__$H = {
         id: "buttongroup",
         name: "ButtonGroup",
         category: "web",
@@ -29823,7 +29807,7 @@
     })(window.kendo.jQuery);
     var kendo$B = kendo;
 
-    var __meta__$H = {
+    var __meta__$G = {
         id: "bottomnavigation",
         name: "BottomNavigation",
         category: "web",
@@ -30199,7 +30183,7 @@
     })(window.kendo.jQuery);
     var kendo$A = kendo;
 
-    var __meta__$G = {
+    var __meta__$F = {
         id: "pager",
         name: "Pager",
         category: "framework",
@@ -30464,16 +30448,16 @@
                     .on(CHANGE + NS , "select.k-dropdown", that._numericSelectChange.bind(that))
                     .addClass("k-pager");
 
+                if (options.size) {
+                    that.element.addClass(kendo.getValidCssClass("k-pager-", "size", options.size));
+                }
+
                 if (options.autoBind) {
                     that.refresh();
                 }
 
                 that._resizeHandler = that.resize.bind(that, true);
                 $(window).on("resize" + NS, that._resizeHandler);
-
-                if (options.size) {
-                    that.element.addClass(kendo.getValidCssClass("k-pager-", "size", options.size));
-                }
 
                 that._navigatable();
 
@@ -30645,7 +30629,7 @@
 
             _resize: function(size) {
                 var that = this;
-                if (!that._lastWidth || !that.options.responsive) {
+                if (!that.element.is(":visible") || !that._lastWidth || !that.options.responsive) {
                     return;
                 }
 
@@ -31168,7 +31152,7 @@
     })(window.kendo.jQuery);
     var kendo$z = kendo;
 
-    var __meta__$F = {
+    var __meta__$E = {
         id: "popup",
         name: "Pop-up",
         category: "framework",
@@ -31405,6 +31389,7 @@
             open: function(x, y) {
                 var that = this,
                     fixed = { isFixed: !isNaN(parseInt(y,10)), x: x, y: y },
+                    shouldCorrectWidth = that._shouldCorrectWidth,
                     element = that.element,
                     options = that.options,
                     animation, wrapper,
@@ -31437,7 +31422,7 @@
                         that._toggleResize(true);
                     }
 
-                    that.wrapper = wrapper = kendo.wrap(element, options.autosize, options._resizeOnWrap)
+                    that.wrapper = wrapper = kendo.wrap(element, options.autosize, options._resizeOnWrap, shouldCorrectWidth)
                         .css({
                             overflow: HIDDEN,
                             display: "block",
@@ -32027,7 +32012,7 @@
     })(window.kendo.jQuery);
     var kendo$y = kendo;
 
-    var __meta__$E = {
+    var __meta__$D = {
         id: "actionsheet",
         name: "ActionSheet",
         category: "web", // suite
@@ -32626,7 +32611,7 @@
     })(window.kendo.jQuery);
     var kendo$x = kendo;
 
-    var __meta__$D = {
+    var __meta__$C = {
         id: "notification",
         name: "Notification",
         category: "web",
@@ -32992,9 +32977,6 @@
 
             _triggerHide: function(element) {
                 this.trigger(HIDE, { element: element });
-                this.angular("cleanup", function() {
-                    return { elements: element };
-                });
             },
 
             show: function(content, type, safe) {
@@ -33040,13 +33022,6 @@
 
                     wrapper.find(".k-notification-content").attr("id", contentId);
                     wrapper.attr("aria-describedby", contentId);
-
-                    that.angular("compile", function() {
-                        return {
-                            elements: wrapper,
-                            data: [{ dataItem: args }]
-                        };
-                    });
 
                     if ($(options.appendTo)[0]) {
                         that._showStatic(wrapper, options);
@@ -33160,7 +33135,7 @@
     })(window.kendo.jQuery);
     var kendo$w = kendo;
 
-    var __meta__$C = {
+    var __meta__$B = {
         id: "tooltip",
         name: "Tooltip",
         category: "web",
@@ -33487,6 +33462,7 @@
                 }
 
                 this.popup._hovered = true;
+                this.popup._shouldCorrectWidth = false;
                 this.popup.open();
             }
         });
@@ -33601,10 +33577,6 @@
                 } else {
                     element.html(contentOptions);
                 }
-
-                that.angular("compile", function() {
-                    return { elements: element };
-                });
             },
 
             _ajaxRequest: function(options) {
@@ -33773,7 +33745,7 @@
     })(window.kendo.jQuery);
     var kendo$v = kendo;
 
-    var __meta__$B = {
+    var __meta__$A = {
         id: "button.menu",
         name: "ButtonMenu",
         category: "web",
@@ -34217,7 +34189,7 @@
     })(window.kendo.jQuery);
     var kendo$u = kendo;
 
-    var __meta__$A = {
+    var __meta__$z = {
         id: "splitbutton",
         name: "SplitButton",
         category: "web",
@@ -34583,7 +34555,7 @@
     })(window.kendo.jQuery);
     var kendo$t = kendo;
 
-    var __meta__$z = {
+    var __meta__$y = {
         id: "dropdownbutton",
         name: "DropDownButton",
         category: "web",
@@ -34867,7 +34839,7 @@
     })(window.kendo.jQuery);
     var kendo$s = kendo;
 
-    var __meta__$y = {
+    var __meta__$x = {
         id: "menu",
         name: "Menu",
         category: "web",
@@ -35410,19 +35382,9 @@
                 var that = this;
 
                 if (that.dataSource) {
-                    that.angular("cleanup", function() {
-                        return {
-                            elements: that.element.children()
-                        };
-                    });
                     that.element.empty();
 
                     that.append(that.dataSource.view(), that.element);
-                    that.angular("compile", function() {
-                        return {
-                            elements: that.element.children()
-                        };
-                    });
                 }
             },
 
@@ -37693,7 +37655,7 @@
     })(window.kendo.jQuery);
     var kendo$r = kendo;
 
-    var __meta__$x = {
+    var __meta__$w = {
         id: "toolbar",
         name: "ToolBar",
         category: "web",
@@ -38217,10 +38179,6 @@
                     if (element.is("[disabled]")) {
                         element.removeAttr("disabled");
                     }
-
-                    this.angular("compile", function() {
-                        return { elements: element.get() };
-                    });
                 }
             },
 
@@ -39547,7 +39505,7 @@
     })(window.kendo.jQuery);
     var kendo$q = kendo;
 
-    var __meta__$w = {
+    var __meta__$v = {
         id: "list",
         name: "List",
         category: "framework",
@@ -39638,7 +39596,8 @@
             ARIA_BUSY = "aria-busy",
             ARIA_MULTISELECTABLE = "aria-multiselectable",
             ARIA_SELECTED = "aria-selected",
-            GROUP_ROW_SEL = ".k-table-group-row";
+            GROUP_ROW_SEL = ".k-table-group-row",
+            ACTIONSHEET_TITLEBAR = ".k-actionsheet-titlebar";
 
         var List = kendo.ui.DataBoundWidget.extend({
             init: function(element, options) {
@@ -39811,7 +39770,6 @@
                 var header = $(list.header);
                 var template = list.options.headerTemplate;
 
-                this._angularElement(header, "cleanup");
                 kendo.destroy(header);
                 header.remove();
 
@@ -39828,8 +39786,6 @@
                 if (list.list.parent.length > 0) {
                     list.list.before(header);
                 }
-
-                this._angularElement(list.header, "compile");
             },
 
             _filterHeader: function() {
@@ -39838,6 +39794,8 @@
                         kendo.ui.icon({ icon: "search", iconClass: "k-input-icon" }) +
                     '</span>' +
                 '</div>';
+
+                this.actionSheetFilterTemplate = "<div class=\"k-actionsheet-titlebar-group k-actionsheet-filter\">" + (this.filterTemplate) + "</div>";
 
                 if (this._isFilterEnabled()) {
                     this.filterInput = $('<input class="k-input-inner" type="text" />')
@@ -39857,7 +39815,6 @@
                 var $header;
                 var columnsHeader = $(list.columnsHeader);
 
-                this._angularElement(columnsHeader, "cleanup");
                 kendo.destroy(columnsHeader);
                 columnsHeader.remove();
 
@@ -39898,8 +39855,6 @@
 
                 list.columnsHeader = columnsHeader = $header;
                 list.list.prepend(columnsHeader);
-
-                this._angularElement(list.columnsHeader, "compile");
             },
 
             _noData: function() {
@@ -39907,7 +39862,6 @@
                 var noData = $(list.noData);
                 var template = list.options.noDataTemplate === true ? function () { return htmlEncode(list.options.messages.noData); } : list.options.noDataTemplate;
 
-                list.angular("cleanup", function() { return { elements: noData }; });
                 kendo.destroy(noData);
                 noData.remove();
 
@@ -39926,7 +39880,6 @@
                 var template = list.options.footerTemplate;
                 var footerEl = this.options.columns && this.options.columns.length ? TABLE_FOOTER_EL : LIST_FOOTER_EL;
 
-                this._angularElement(footer, "cleanup");
                 kendo.destroy(footer);
                 footer.remove();
 
@@ -39981,10 +39934,6 @@
 
                 if (!options.template) {
                     options.template = function (data) { return htmlEncode(kendo.getter(options.dataTextField)(data)); };
-                }
-
-                if (currentOptions.$angular) {
-                    options.$angular = currentOptions.$angular;
                 }
 
                 return options;
@@ -40155,16 +40104,6 @@
                 }
             },
 
-            _angularElement: function(element, action) {
-                if (!element) {
-                    return;
-                }
-
-                this.angular(action, function() {
-                    return { elements: element };
-                });
-            },
-
             _renderNoData: function() {
                 var list = this;
                 var noData = list.noData;
@@ -40173,9 +40112,7 @@
                     return;
                 }
 
-                this._angularElement(noData, "cleanup");
                 noData.html(list.noDataTemplate({ instance: list }));
-                this._angularElement(noData, "compile");
             },
 
             _toggleNoData: function(show) {
@@ -40195,9 +40132,7 @@
                     return;
                 }
 
-                this._angularElement(footer, "cleanup");
                 footer.html(list.footerTemplate({ instance: list }));
-                this._angularElement(footer, "compile");
             },
 
             _allowOpening: function() {
@@ -40759,6 +40694,31 @@
                 }
             },
 
+            _addFilterHeader: function() {
+                var list = this;
+
+                if (list._isFilterEnabled()) {
+                    list._filterHeader();
+
+                    if (list.options.adaptiveMode === "auto" && (list.mediumMQL.mediaQueryList.matches || list.smallMQL.mediaQueryList.matches)) {
+                        list.popup.element
+                            .find(ACTIONSHEET_TITLEBAR)
+                            .append($(list.actionSheetFilterTemplate))
+                            .find(".k-searchbox")
+                            .append(list.filterInput);
+                        list._enable();
+                    } else if (list.options.popupFilter) {
+                        list.list
+                            .parent()
+                            .prepend($(list.filterTemplate))
+                            .find(".k-searchbox")
+                            .append(list.filterInput);
+                    }
+
+                    list._enable();
+                }
+            },
+
             _createPopup: function() {
                 var this$1$1 = this;
 
@@ -40785,16 +40745,6 @@
                         this$1$1._refreshFloatingLabel();
                     }
                 }));
-
-                list._addFilterHeader = list._isFilterEnabled() && list.options.popupFilter ? function () {
-                    list._filterHeader();
-                    list.list
-                        .parent()
-                        .prepend($(list.filterTemplate))
-                        .find(".k-searchbox")
-                        .append(list.filterInput);
-                    list._enable();
-                } : $.noop;
 
                 list._postCreatePopup();
             },
@@ -40832,7 +40782,6 @@
                                 '</div>'
                                 : "") +
                             '</div>' +
-                        (this$1$1._isFilterEnabled() ? ("<div class=\"k-actionsheet-titlebar-group k-actionsheet-filter\">" + (list.filterTemplate) + "</div>") : '') +
                     '</div>'; },
                     open: list._openHandler.bind(list),
                     close: list._closeHandler.bind(list),
@@ -40851,15 +40800,6 @@
                         autosize: list.options.autoWidth
                     })
                 });
-
-                list._addFilterHeader = this._isFilterEnabled() ? function () {
-                    list._filterHeader();
-                    list.popup.element
-                        .find(".k-searchbox")
-                        .append(list.filterInput);
-                    list._enable();
-                } : $.noop;
-
 
                 list._postCreatePopup();
                 list._onActionSheetCreate();
@@ -42580,7 +42520,6 @@
                 var result;
 
                 that.trigger(DATA_BINDING);
-                that._angularItems("cleanup");
 
                 that._fixedHeader();
 
@@ -42614,7 +42553,6 @@
                     that._valueDeferred.resolve();
                 }
 
-                that._angularItems("compile");
                 that.trigger(DATA_BOUND);
             },
 
@@ -42718,7 +42656,7 @@
     })(window.kendo.jQuery);
     var kendo$p = kendo;
 
-    var __meta__$v = {
+    var __meta__$u = {
         id: "calendar",
         name: "Calendar",
         category: "web",
@@ -44844,7 +44782,7 @@
 
     // The current file development is no longer in active phase but the code will be kept as is.
 
-    var __meta__$u = {
+    var __meta__$t = {
         id: "dateinput",
         name: "DateInput",
         category: "web",
@@ -45775,7 +45713,7 @@
 
     // The current file development is no longer in active phase but the code will be kept as is.
 
-    var __meta__$t = {
+    var __meta__$s = {
         id: "datepicker",
         name: "DatePicker",
         category: "web",
@@ -46711,7 +46649,7 @@
 
     })(window.kendo.jQuery);
 
-    var __meta__$s = {
+    var __meta__$r = {
         id: "virtuallist",
         name: "VirtualList",
         category: "framework",
@@ -46879,10 +46817,6 @@
                 this.header.html(templates.fixedGroupTemplate(data.group));
             }
 
-            this.angular("cleanup", function() {
-                return { elements: [ element ] };
-            });
-
             element
                 .attr("data-uid", data.item ? data.item.uid : "")
                 .attr("data-offset-index", data.index);
@@ -46924,10 +46858,6 @@
             if (data.top !== undefined$1) {
                 position(element[0], data.top);
             }
-
-            this.angular("compile", function() {
-                return { elements: [ element ], data: [ { dataItem: data.item, group: data.group, newGroup: data.newGroup } ] };
-            });
         }
 
         function renderColumns(options, dataItem, templates) {
@@ -48557,7 +48487,7 @@
     })(window.kendo.jQuery);
     var kendo$n = kendo;
 
-    var __meta__$r = {
+    var __meta__$q = {
         id: "autocomplete",
         name: "AutoComplete",
         category: "web",
@@ -49453,7 +49383,7 @@
     })(window.kendo.jQuery);
     var kendo$m = kendo;
 
-    var __meta__$q = {
+    var __meta__$p = {
         id: "dropdownlist",
         name: "DropDownList",
         category: "web",
@@ -49947,9 +49877,6 @@
                                 .on(CLICKEVENTS, that._click.bind(that))
                                 .on(HOVEREVENTS, that._toggleHover);
 
-                that.angular("compile", function() {
-                    return { elements: that.optionLabel, data: [{ dataItem: that._optionLabelDataItem() }] };
-                });
             },
 
             _optionLabelText: function() {
@@ -50819,23 +50746,12 @@
                     }
                 }
 
-                var getElements = function() {
-                    return {
-                        elements: span.get(),
-                        data: [ { dataItem: dataItem } ]
-                    };
-                };
-
-                this.angular("cleanup", getElements);
-
                 try {
                     span.html(template(dataItem));
                 } catch (e) {
                     //dataItem has missing fields required in custom template
                     span.html("");
                 }
-
-                this.angular("compile", getElements);
             },
 
             _preselect: function(value, text) {
@@ -50916,7 +50832,7 @@
     })(window.kendo.jQuery);
     var kendo$l = kendo;
 
-    var __meta__$p = {
+    var __meta__$o = {
         id: "combobox",
         name: "ComboBox",
         category: "web",
@@ -52199,7 +52115,7 @@
     })(window.kendo.jQuery);
     var kendo$k = kendo;
 
-    var __meta__$o = {
+    var __meta__$n = {
         id: "html.chip",
         name: "Html.Chip",
         category: "web",
@@ -52320,7 +52236,7 @@
     })(window.kendo.jQuery);
     var kendo$j = kendo;
 
-    var __meta__$n = {
+    var __meta__$m = {
         id: "html.chiplist",
         name: "Html.ChipList",
         category: "web",
@@ -52383,7 +52299,7 @@
     })(window.kendo.jQuery);
     var kendo$i = kendo;
 
-    var __meta__$m = {
+    var __meta__$l = {
         id: "multiselect",
         name: "MultiSelect",
         category: "web",
@@ -53709,19 +53625,6 @@
                 return max === null || max > this.listView.value().length;
             },
 
-            _angularTagItems: function(cmd) {
-                var that = this;
-
-                that.angular(cmd, function() {
-                    return {
-                        elements: that.tagList[0].children,
-                        data: $.map(that.dataItems(), function(dataItem) {
-                            return { dataItem: dataItem };
-                        })
-                    };
-                });
-            },
-
             updatePersistTagList: function(added, removed) {
                 if (this.persistTagList.added &&
                     this.persistTagList.added.length === removed.length &&
@@ -53752,8 +53655,6 @@
 
                     return;
                 }
-
-                that._angularTagItems("cleanup");
 
                 if (that.options.tagMode === "multiple") {
                     for (idx = removed.length - 1; idx > -1; idx--) {
@@ -53793,7 +53694,6 @@
                 that._refreshTagListAria();
                 that._refreshFloatingLabel();
 
-                that._angularTagItems("compile");
                 that._placeholder();
             },
 
@@ -54144,7 +54044,7 @@
      */
     /* eslint-disable space-before-blocks, space-before-function-paren, no-multi-spaces */
 
-        var __meta__$l = {
+        var __meta__$k = {
             id: "color",
             name: "Color utils",
             category: "framework",
@@ -54714,7 +54614,7 @@
         Color: Color
     });
 
-    var __meta__$k = {
+    var __meta__$j = {
         id: "slider",
         name: "Slider",
         category: "web",
@@ -56465,7 +56365,7 @@
     })(window.kendo.jQuery);
     var kendo$g = kendo;
 
-    var __meta__$j = {
+    var __meta__$i = {
         id: "textbox",
         name: "TextBox",
         category: "web",
@@ -56744,7 +56644,7 @@
     })(window.kendo.jQuery);
     var kendo$f = kendo;
 
-    var __meta__$i = {
+    var __meta__$h = {
         id: "numerictextbox",
         name: "NumericTextBox",
         category: "web",
@@ -56870,12 +56770,6 @@
                  } else {
                      that.readonly(element.is("[readonly]"));
                  }
-
-                 that.angular("compile", function() {
-                     return {
-                         elements: that._text.get()
-                     };
-                 });
 
                  that._label();
                  that._ariaLabel(that._text);
@@ -58213,7 +58107,7 @@
 
     })(window.kendo.jQuery);
 
-    var __meta__$h = {
+    var __meta__$g = {
             id: "colorgradient",
             name: "ColorGradient",
             category: "web", // suite
@@ -59574,7 +59468,7 @@
         ui.plugin(FlatColorPicker);
     })(window.kendo.jQuery);
 
-    var __meta__$g = {
+    var __meta__$f = {
         id: "colorpicker",
         name: "Color tools",
         category: "web",
@@ -60003,7 +59897,7 @@
 
     // The current file development is no longer in active phase but the code will be kept as is.
 
-    var __meta__$f = {
+    var __meta__$e = {
         id: "editable",
         name: "Editable",
         category: "framework",
@@ -60300,8 +60194,6 @@
                 var that = this;
 
                 if (options.target) {
-                    options.$angular = options.target.options.$angular;
-
                     if (options.target.pane) {
                         that._isMobile = true;
                     }
@@ -60412,10 +60304,6 @@
             destroy: function() {
                 var that = this;
 
-                that.angular("cleanup", function() {
-                    return { elements: that.element };
-                });
-
                 Widget.fn.destroy.call(that);
 
                 that.options.model.unbind("set", that._validateProxy);
@@ -60464,15 +60352,6 @@
                      that.editor(field, modelField);
                 }
 
-                if (that.options.target) {
-                    that.angular("compile", function() {
-                        return {
-                            elements: container,
-                            data: container.map(function() { return { dataItem: model }; })
-                        };
-                    });
-                }
-
                 if (!length) {
                     modelFields = model.fields || model;
                     for (fieldName in modelFields) {
@@ -60517,7 +60396,7 @@
 
     // The current file development is no longer in active phase but the code will be kept as is.
 
-    var __meta__$e = {
+    var __meta__$d = {
         id: "listview",
         name: "ListView",
         category: "web",
@@ -60880,17 +60759,9 @@
                         if (item.length > 0) {
                             idx = item.index();
 
-                            that.angular("cleanup", function() {
-                                return { elements: [ item ] };
-                            });
-
                             item.replaceWith(template(data));
                             item = that.items().eq(idx);
                             item.attr(kendo.attr("uid"), data.uid);
-
-                            that.angular("compile", function() {
-                                return { elements: [ item ], data: [ { dataItem: data } ] };
-                            });
 
                             that.trigger("itemChange", {
                                 item: item,
@@ -60905,8 +60776,6 @@
                 if (that.trigger(DATABINDING, { action: e.action || "rebind", items: e.items, index: e.index })) {
                     return;
                 }
-
-                that._angularItems("cleanup");
 
                 if (!endlessAppend) {
                     that._destroyEditable();
@@ -60964,7 +60833,6 @@
                 }
 
                 that._setContentHeight();
-                that._angularItems("compile");
 
                 that._progress(false);
                 that._endlessFetchInProgress = null;
@@ -61389,10 +61257,6 @@
                         template = that.altTemplate;
                     }
 
-                    that.angular("cleanup", function() {
-                        return { elements: [ editable.element ] };
-                    });
-
                     data = that._modelFromElement(editable.element);
                     that._destroyEditable();
 
@@ -61406,10 +61270,6 @@
                     if (that._hasBindingTarget()) {
                         kendo.bind(item, data);
                     }
-
-                    that.angular("compile", function() {
-                        return { elements: [ item ], data: [ { dataItem: data } ] };
-                    });
                 }
                 return true;
             },
@@ -61564,7 +61424,7 @@
         kendo.ui.plugin(ListView);
     })(window.kendo.jQuery);
 
-    var __meta__$d = {
+    var __meta__$c = {
         id: "listbox",
         name: "ListBox",
         category: "web",
@@ -63284,7 +63144,7 @@
     })(window.kendo.jQuery);
     var kendo$c = kendo;
 
-    var __meta__$c = {
+    var __meta__$b = {
         id: "loader",
         name: "Loader",
         category: "web",
@@ -63476,7 +63336,7 @@
     })(window.kendo.jQuery);
     var kendo$b = kendo;
 
-    var __meta__$b = {
+    var __meta__$a = {
         id: "textarea",
         name: "TextArea",
         category: "web",
@@ -63778,7 +63638,7 @@
     })(window.kendo.jQuery);
     var kendo$a = kendo;
 
-    var __meta__$a = {
+    var __meta__$9 = {
         id: "maskedtextbox",
         name: "MaskedTextBox",
         category: "web",
@@ -64051,9 +63911,6 @@
                 var that = this;
 
                 if (that._maskLength) {
-                    if (that.options.$angular) {//detach "input" event in angular scenario to keep the ng-model consistent and updated only when the change event of the textbox is raised.
-                        that.element.off(INPUT);
-                    }
                     that.element
                         .on(ns(KEYDOWN), that._keydown.bind(that))
                         .on(ns(DROP), that._drop.bind(that))
@@ -64506,7 +64363,7 @@
     })(window.kendo.jQuery);
     var kendo$9 = kendo;
 
-    var __meta__$9 = {
+    var __meta__$8 = {
         id: "panelbar",
         name: "PanelBar",
         category: "web",
@@ -64760,10 +64617,6 @@
                     that.expand(content.parent(), false);
                 }
 
-                if (!options.dataSource) {
-                    that._angularCompile();
-                }
-
                 kendo.notify(that);
 
                 if (that._showWatermarkOverlay) {
@@ -64805,42 +64658,10 @@
                 dataTextField: null
             },
 
-            _angularCompile: function() {
-                var that = this;
-                that.angular("compile", function() {
-                    return {
-                        elements: that.element.children("li"),
-                        data: [{ dataItem: that.options.$angular }]
-                    };
-                });
-            },
-
-            _angularCompileElements: function(html, items) {
-                var that = this;
-                that.angular("compile", function() {
-                    return {
-                        elements: html,
-                        data: $.map(items, function(item) {
-                            return [{ dataItem: item }];
-                        })
-                    };
-                });
-            },
-
-            _angularCleanup: function() {
-                var that = this;
-
-                that.angular("cleanup", function() {
-                    return { elements: that.element.children("li") };
-                });
-            },
-
             destroy: function() {
                 Widget.fn.destroy.call(this);
 
                 this.element.off(NS);
-
-                this._angularCleanup();
 
                 kendo.destroy(this.element);
             },
@@ -65192,7 +65013,6 @@
                         ns: ui
                     });
                 }
-                this._angularCompileElements(rootItemsHtml, items);
             },
 
             _refreshChildren: function(item, parentNode) {
@@ -65203,7 +65023,6 @@
                 if (!items.length) {
                     updateItemHtml(parentNode);
                     children = parentNode.children(".k-group").children("li");
-                    this._angularCompileElements(children, items);
                 } else {
                     this.append(item.children, parentNode);
 
@@ -65433,7 +65252,6 @@
                       }
                    }
 
-                that._angularCompileElements(itemsHtml, items);
                   if (that.dataItem(parentNode)) {
                       that.dataItem(parentNode).hasChildren = true;
                       that.updateArrow(parentNode);
@@ -65460,10 +65278,6 @@
                     var elements = $.map(items, function(item) {
                         return that.findByUid(item.uid);
                     });
-
-                    if (render) {
-                        that.angular("cleanup", function() { return { elements: elements }; });
-                    }
 
                     for (i = 0; i < items.length; i++) {
                         context.item = item = items[i];
@@ -65499,17 +65313,6 @@
                         if (nodeWrapper.length) {
                             this.trigger("itemChange", { item: nodeWrapper.find(".k-link").first(), data: item, ns: ui });
                         }
-                    }
-
-                    if (render) {
-                        that.angular("compile", function() {
-                            return {
-                                elements: elements,
-                                data: $.map(items, function(item) {
-                                    return [{ dataItem: item }];
-                                })
-                            };
-                        });
                     }
                 }
             },
@@ -65850,7 +65653,6 @@
                     item = [item];
                 }
 
-                that._angularCompileElements(items, item);
                 return { items: items, group: parent };
             },
 
@@ -66249,9 +66051,7 @@
                             return { elements: contentElement.get() };
                         }
                         try {
-                            that.angular("cleanup", getElements);
                             contentElement.html(data);
-                            that.angular("compile", getElements);
                         } catch (e) {
                             var console = window.console;
 
@@ -66357,7 +66157,7 @@
     })(window.kendo.jQuery);
     var kendo$8 = kendo;
 
-    var __meta__$8 = {
+    var __meta__$7 = {
         id: "progressbar",
         name: "ProgressBar",
         category: "web",
@@ -66870,7 +66670,7 @@
     })(window.kendo.jQuery);
     var kendo$7 = kendo;
 
-    var __meta__$7 = {
+    var __meta__$6 = {
         id: "responsive-panel",
         name: "Responsive Panel",
         category: "web",
@@ -67033,7 +66833,7 @@
     })(window.kendo.jQuery);
     var kendo$6 = kendo;
 
-    var __meta__$6 = {
+    var __meta__$5 = {
         id: "tabstrip",
         name: "TabStrip",
         category: "web",
@@ -67599,7 +67399,6 @@
                                 }, 40);
                             }
 
-                            that.angular("cleanup", function() { return { elements: content.get() }; });
                             kendo.destroy(content);
                             content.html(data);
                         } catch (e) {
@@ -67614,8 +67413,6 @@
                         if (complete) {
                             complete.call(that, content);
                         }
-
-                        that.angular("compile", function() { return { elements: content.get() }; });
 
                         that.trigger(CONTENTLOAD, { item: element[0], contentElement: content[0] });
                     }
@@ -67644,7 +67441,6 @@
                     } else {
                         that.wrapper.append(contents);
                     }
-                    that.angular("compile", function() { return { elements: [ contents ] }; });
                 });
 
                 updateFirstLast(that.tabGroup);
@@ -67757,7 +67553,6 @@
                     referenceContent.after(contents);
 
                     that._moveUrlItem(fromIndex, $(this).index());
-                    that.angular("compile", function() { return { elements: [ contents ] }; });
                 });
 
                 updateFirstLast(that.tabGroup);
@@ -67786,7 +67581,6 @@
                     referenceContent.before(contents);
 
                     that._moveUrlItem(fromIndex, $(this).index());
-                    that.angular("compile", function() { return { elements: [ contents ] }; });
                 });
 
                 updateFirstLast(that.tabGroup);
@@ -68679,7 +68473,7 @@
 
     // The current file development is no longer in active phase but the code will be kept as is.
 
-    var __meta__$5 = {
+    var __meta__$4 = {
         id: "timepicker",
         name: "TimePicker",
         category: "web",
@@ -70742,7 +70536,7 @@
 
     // The current file development is no longer in active phase but the code will be kept as is.
 
-    var __meta__$4 = {
+    var __meta__$3 = {
         id: "datetimepicker",
         name: "DateTimePicker",
         category: "web",
@@ -71999,7 +71793,7 @@
 
     })(window.kendo.jQuery);
 
-    var __meta__$3 = {
+    var __meta__$2 = {
         id: "splitter",
         name: "Splitter",
         category: "web",
@@ -72275,9 +72069,7 @@
                             type: "GET",
                             dataType: "html",
                             success: function(data) {
-                                that.angular("cleanup", function() { return { elements: pane.get() }; });
                                 pane.html(data);
-                                that.angular("compile", function() { return { elements: pane.get() }; });
 
                                 that.trigger(CONTENTLOAD, { pane: pane[0] });
                             },
@@ -72842,7 +72634,7 @@
     })(window.kendo.jQuery);
     var kendo$4 = kendo;
 
-    var __meta__$2 = {
+    var __meta__$1 = {
             id: "dialog",
             name: "Dialog",
             category: "web", // suite
@@ -73723,23 +73515,8 @@
                         return content.html();
                     }
 
-                    this.angular("cleanup", function() {
-                        return { elements: content.children() };
-                    });
-
                     kendo.destroy(content.children());
                     content.html(html);
-
-                    this.angular("compile", function() {
-                        var a = [];
-                        for (var i = content.length; --i >= 0;) {
-                            a.push({ dataItem: data });
-                        }
-                        return {
-                            elements: content.children(),
-                            data: a
-                        };
-                    });
 
                     that.options.content = html;
 
@@ -74028,7 +73805,7 @@
         })(window.kendo.jQuery);
     var kendo$3 = kendo;
 
-    var __meta__$1 = {
+    var __meta__ = {
             id: "window",
             name: "Window",
             category: "web",
@@ -74999,24 +74776,9 @@
                         return content.html();
                     }
 
-                    this.angular("cleanup", function() {
-                        return { elements: content.children() };
-                    });
-
                     kendo.destroy(this.element.children());
 
                     content.empty().html(html);
-
-                    this.angular("compile", function() {
-                        var a = [];
-                        for (var i = content.length; --i >= 0;) {
-                            a.push({ dataItem: data });
-                        }
-                        return {
-                            elements: content.children(),
-                            data: a
-                        };
-                    });
 
                     return this;
                 },
@@ -76244,1286 +76006,6 @@
 
         })(window.kendo.jQuery);
     var kendo$2 = kendo;
-
-    var __meta__ = {
-        id: "angular",
-        name: "AngularJS Directives",
-        category: "framework",
-        description: "Adds Kendo UI for AngularJS directives",
-        depends: [ "core" ],
-        defer: true
-    };
-
-    (function($, angular, undefined$1) {
-        "use strict";
-
-        // Angular2 exposes a global angular object, but it does not have an injector...
-        if (!angular || !angular.injector) {
-            return;
-        }
-
-
-        var module = angular.module('kendo.directives', []),
-            $injector = angular.injector(['ng']),
-            $parse = $injector.get('$parse'),
-            $timeout = $injector.get('$timeout'),
-            $defaultCompile,
-            $log = $injector.get('$log');
-
-        function withoutTimeout(f) {
-            var save = $timeout;
-            try {
-                $timeout = function(f) { return f(); };
-                return f();
-            } finally {
-                $timeout = save;
-            }
-        }
-
-        var OPTIONS_NOW;
-
-        var createDataSource = (function() {
-            var types = {
-                TreeList: 'TreeListDataSource',
-                TreeView: 'HierarchicalDataSource',
-                Scheduler: 'SchedulerDataSource',
-                PivotGrid: 'PivotDataSource',
-                PivotConfigurator: 'PivotDataSource',
-                PanelBar: 'HierarchicalDataSource',
-                Menu: "$PLAIN",
-                ContextMenu: "$PLAIN"
-            };
-            var toDataSource = function(dataSource, type) {
-                if (type == '$PLAIN') {
-                    return dataSource;
-                }
-                return kendo.data[type].create(dataSource);
-            };
-            return function(scope, element, role, source) {
-                var type = types[role] || 'DataSource';
-                var current = scope.$eval(source);
-                var ds = toDataSource(current, type);
-
-                scope.$watch(source, function(mew) {
-                    var widget = kendoWidgetInstance(element);
-
-                    if (widget && typeof widget.setDataSource == "function") {
-                        if (mew !== current && mew !== widget.dataSource) {
-                            var ds = toDataSource(mew, type);
-                            widget.setDataSource(ds);
-                            current = mew;
-                        }
-                    }
-                });
-                return ds;
-            };
-        }());
-
-        var ignoredAttributes = {
-            kDataSource: true,
-            kOptions: true,
-            kRebind: true,
-            kNgModel: true,
-            kNgDelay: true
-        };
-
-        var ignoredOwnProperties = {
-            // XXX: other names to ignore here?
-            name: true,
-            title: true,
-            style: true
-        };
-
-        function createWidget(scope, element, attrs, widget, origAttr, controllers) {
-
-            if (!(element instanceof jQuery)) {
-                throw new Error("The Kendo UI directives require jQuery to be available before AngularJS. Please include jquery before angular in the document.");
-            }
-
-            var kNgDelay = attrs.kNgDelay,
-                delayValue = scope.$eval(kNgDelay);
-
-            controllers = controllers || [];
-
-            var ngModel = controllers[0],
-                ngForm = controllers[1];
-
-            var ctor = $(element)[widget];
-
-            if (!ctor) {
-                window.console.error("Could not find: " + widget);
-                return null;
-            }
-
-            var parsed = parseOptions(scope, element, attrs, widget, ctor);
-
-            var options = parsed.options;
-
-            if (parsed.unresolved.length) {
-                var promises = [];
-
-                for (var i = 0, len = parsed.unresolved.length; i < len; i++) {
-
-                    var unresolved = parsed.unresolved[i];
-
-                    var promise = $.Deferred(function(d) {
-                        var unwatch = scope.$watch(unresolved.path, function(newValue) {
-                            if (newValue !== undefined$1) {
-                                unwatch();
-                                d.resolve();
-                            }
-                        });
-                    }).promise();
-
-                    promises.push(promise);
-                }
-
-                $.when.apply(null, promises).then(createIt);
-
-                return;
-            }
-
-            if (kNgDelay && !delayValue) {
-                var root = scope.$root || scope;
-
-                var register = function() {
-                    var unregister = scope.$watch(kNgDelay, function(newValue) {
-                            if (newValue !== undefined$1) {
-                            unregister();
-                            // remove subsequent delays, to make ng-rebind work
-                            element.removeAttr(attrs.$attr.kNgDelay);
-                            kNgDelay = null;
-                            $timeout(createIt); // XXX: won't work without `timeout` ;-\
-                        }
-                    });
-                };
-
-                // WARNING: the watchers should be registered in the digest cycle.
-                // the fork here is for the timeout/non-timeout initiated widgets.
-                if (/^\$(digest|apply)$/.test(root.$$phase)) {
-                    register();
-                } else {
-                    scope.$apply(register);
-                }
-
-                return;
-            } else {
-                return createIt();
-            }
-
-            function createIt() {
-                var originalElement;
-
-                if (attrs.kRebind) {
-                    originalElement = $($(element)[0].cloneNode(true));
-                }
-
-                // re-parse the options here.
-                options = parseOptions(scope, element, attrs, widget, ctor).options;
-
-                if (element.is("select")) {
-                    (function(options) {
-                        if (options.length > 0) {
-                            var first = $(options[0]);
-                            if (!/\S/.test(first.text()) && /^\?/.test(first.val())) {
-                                first.remove();
-                            }
-
-                            for (var i = 0; i < options.length; i++) {
-                                $(options[i]).off("$destroy");
-                            }
-                        }
-                    }(element[0].options));
-                }
-
-                var object = ctor.call(element, OPTIONS_NOW = options).data(widget);
-
-                exposeWidget(object, scope, attrs, widget, origAttr);
-
-                scope.$emit("kendoWidgetCreated", object);
-
-                var destroyRegister = destroyWidgetOnScopeDestroy(scope, object);
-
-                if (attrs.kRebind) {
-                    setupRebind(object, scope, element, originalElement, attrs.kRebind, destroyRegister, attrs);
-                }
-
-                if (attrs.kNgDisabled) {
-                    var kNgDisabled = attrs.kNgDisabled;
-                    var isDisabled = scope.$eval(kNgDisabled);
-                    if (isDisabled) {
-                        object.enable(!isDisabled);
-                    }
-                    bindToKNgDisabled(object, scope, element, kNgDisabled);
-                }
-
-                if (attrs.kNgReadonly) {
-                    var kNgReadonly = attrs.kNgReadonly;
-                    var isReadonly = scope.$eval(kNgReadonly);
-                    if (isReadonly) {
-                        object.readonly(isReadonly);
-                    }
-                    bindToKNgReadonly(object, scope, element, kNgReadonly);
-                }
-
-                // kNgModel is used for the "logical" value
-                if (attrs.kNgModel) {
-                    bindToKNgModel(object, scope, attrs.kNgModel);
-                }
-
-                // 2 way binding: ngModel <-> widget.value()
-                if (ngModel) {
-                    bindToNgModel(object, scope, element, ngModel, ngForm);
-                }
-
-                if (object) {
-                    propagateClassToWidgetWrapper(object, element);
-                }
-
-                return object;
-            }
-        }
-
-
-        function parseOptions(scope, element, attrs, widget, ctor) {
-            var role = widget.replace(/^kendo/, '');
-            var unresolved = [];
-            var optionsPath = attrs.kOptions || attrs.options;
-            var optionsValue = scope.$eval(optionsPath);
-
-            if (optionsPath && optionsValue === undefined$1) {
-                unresolved.push({ option: "options", path: optionsPath });
-            }
-
-            var options = angular.extend({}, attrs.defaultOptions, optionsValue);
-
-            function addOption(name, value) {
-                var scopeValue = angular.copy(scope.$eval(value));
-                if (scopeValue === undefined$1) {
-                    unresolved.push({ option: name, path: value });
-                } else {
-                    options[name] = scopeValue;
-                }
-            }
-
-
-            var widgetOptions = ctor.widget.prototype.options;
-            var widgetEvents = ctor.widget.prototype.events;
-
-
-            $.each(attrs, function(name, value) {
-                if (name === "source" || name === "kDataSource" || name === "kScopeField" || name === "scopeField") {
-                    return;
-                }
-
-                var dataName = "data" + name.charAt(0).toUpperCase() + name.slice(1);
-
-                if (name.indexOf("on") === 0) { // let's search for such event.
-                    var eventKey = name.replace(/^on./, function(prefix) {
-                        return prefix.charAt(2).toLowerCase();
-                    });
-
-                    if (widgetEvents.indexOf(eventKey) > -1) {
-                        options[eventKey] = value;
-                    }
-                } // don't elsif here - there are on* options
-
-                if (widgetOptions.hasOwnProperty(dataName)) {
-                    addOption(dataName, value);
-                } else if (widgetOptions.hasOwnProperty(name) && !ignoredOwnProperties[name]) {
-                    addOption(name, value);
-                } else if (!ignoredAttributes[name]) {
-                    var match = name.match(/^k(On)?([A-Z].*)/);
-                    if (match) {
-                        var optionName = match[2].charAt(0).toLowerCase() + match[2].slice(1);
-                        if (match[1] && name != "kOnLabel" // XXX: k-on-label can be used on MobileSwitch :-\
-                        ) {
-                            options[optionName] = value;
-                        } else {
-                            if (name == "kOnLabel") {
-                                optionName = "onLabel"; // XXX: that's awful.
-                            }
-                            addOption(optionName, value);
-                        }
-                    }
-                }
-            });
-
-            // parse the datasource attribute
-            var dataSource = attrs.kDataSource || attrs.source;
-
-            if (dataSource) {
-                options.dataSource = createDataSource(scope, element, role, dataSource);
-            }
-
-            // deepExtend in kendo.core (used in Editor) will fail with stack
-            // overflow if we don't put it in an array :-\
-            options.$angular = [ scope ];
-
-            return {
-                options: options,
-                unresolved: unresolved
-            };
-        }
-
-        function bindToKNgDisabled(widget, scope, element, kNgDisabled) {
-            if ((kendo.ui.PanelBar && widget instanceof kendo.ui.PanelBar) || (kendo.ui.Menu && widget instanceof kendo.ui.Menu)) {
-                $log.warn("k-ng-disabled specified on a widget that does not have the enable() method: " + (widget.options.name));
-                return;
-            }
-            scope.$watch(kNgDisabled, function(newValue, oldValue) {
-                if (newValue != oldValue) {
-                    widget.enable(!newValue);
-                }
-            });
-        }
-
-        function bindToKNgReadonly(widget, scope, element, kNgReadonly) {
-            if (typeof widget.readonly != "function") {
-                $log.warn("k-ng-readonly specified on a widget that does not have the readonly() method: " + (widget.options.name));
-                return;
-            }
-            scope.$watch(kNgReadonly, function(newValue, oldValue) {
-                if (newValue != oldValue) {
-                    widget.readonly(newValue);
-                }
-            });
-        }
-
-        function exposeWidget(widget, scope, attrs, kendoWidget, origAttr) {
-            if (attrs[origAttr]) {
-                var set = $parse(attrs[origAttr]).assign;
-                if (set) {
-                    // set the value of the expression to the kendo widget object to expose its api
-                    set(scope, widget);
-                } else {
-                    throw new Error(origAttr + ' attribute used but expression in it is not assignable: ' + attrs[kendoWidget]);
-                }
-            }
-        }
-
-        function formValue(element) {
-            if (/checkbox|radio/i.test(element.attr("type"))) {
-                return element.prop("checked");
-            }
-            return element.val();
-        }
-
-        var formRegExp = /^(input|select|textarea)$/i;
-
-        function isForm(element) {
-            return formRegExp.test(element[0].tagName);
-        }
-
-        function bindToNgModel(widget, scope, element, ngModel, ngForm) {
-            if (!widget.value) {
-                return;
-            }
-
-            var value;
-            // Some widgets trigger "change" on the input field
-            // and this would result in two events sent (#135)
-            var haveChangeOnElement = false;
-
-            if (isForm(element)) {
-                value = function() {
-                    return formValue(element);
-                };
-            } else {
-                value = function() {
-                    return widget.value();
-                };
-            }
-
-            // Angular will invoke $render when the view needs to be updated with the view value.
-            var viewRender = function() {
-                // Update the widget with the view value.
-
-                // delaying with setTimout for cases where the datasource is set thereafter.
-                // https://github.com/kendo-labs/angular-kendo/issues/304
-                var val = ngModel.$viewValue;
-                if (val === undefined$1) {
-                    val = ngModel.$modelValue;
-                }
-
-                if (val === undefined$1) {
-                    val = null;
-                }
-
-                haveChangeOnElement = true;
-                setTimeout(function() {
-                    haveChangeOnElement = false;
-                    if (widget) { // might have been destroyed in between. :-(
-                        var kNgModel = scope[widget.element.attr("k-ng-model")];
-
-                        if (kNgModel) {
-                            val = kNgModel;
-                        }
-
-                        if (widget.options.autoBind === false && !widget.listView.bound()) {
-                            if (val) {
-                                widget.value(val);
-                            }
-                        } else {
-                            widget.value(val);
-                        }
-                    }
-                }, 0);
-            };
-
-            ngModel.$render = viewRender;
-            setTimeout(function() {
-                if (ngModel.$render !== viewRender) {
-                    ngModel.$render = viewRender;
-                    ngModel.$render();
-                }
-            });
-
-            if (isForm(element)) {
-                element.on("change", function() {
-                    haveChangeOnElement = true;
-                });
-            }
-
-            var onChange = function(pristine) {
-                return function() {
-                    var formPristine;
-                    if (haveChangeOnElement && !element.is("select")) {
-                        return;
-                    }
-                    if (pristine && ngForm) {
-                        formPristine = ngForm.$pristine;
-                    }
-                    ngModel.$setViewValue(value());
-                    if (pristine) {
-                        ngModel.$setPristine();
-                        if (formPristine) {
-                            ngForm.$setPristine();
-                        }
-                    }
-                    digest(scope);
-                };
-            };
-
-            widget.first("change", onChange(false));
-            widget.first("spin", onChange(false));
-
-            if (!(kendo.ui.AutoComplete && widget instanceof kendo.ui.AutoComplete)) {
-                widget.first("dataBound", onChange(true));
-            }
-
-            var currentVal = value();
-
-            // if the model value is undefined, then we set the widget value to match ( == null/undefined )
-            // In telerik/kendo-ui-core#1027 we discovered that after the timeout the $viewValue arives as NaN in some weird, default form.
-            // Hence the check below.
-            if (!isNaN(ngModel.$viewValue) && currentVal != ngModel.$viewValue) {
-                if (!ngModel.$isEmpty(ngModel.$viewValue)) {
-                    widget.value(ngModel.$viewValue);
-                } else if (currentVal != null && currentVal !== "" && currentVal != ngModel.$viewValue) {
-                    ngModel.$setViewValue(currentVal);
-                }
-            }
-
-            ngModel.$setPristine();
-        }
-
-        function bindToKNgModel(widget, scope, kNgModel) {
-            if (kendo.ui.DateRangePicker && widget instanceof kendo.ui.DateRangePicker) {
-                var rangePickerModels = kNgModel.split(",");
-                var rangePickerStartModel = rangePickerModels[0].trim();
-                var rangePickerEndModel;
-
-                bindToKNgModel(widget._startDateInput, scope, rangePickerStartModel);
-                if (rangePickerModels[1]) {
-                    rangePickerEndModel = rangePickerModels[1].trim();
-                    bindToKNgModel(widget._endDateInput, scope, rangePickerEndModel);
-                    widget.range({ start: scope[rangePickerStartModel], end: scope[rangePickerEndModel] });
-                } else {
-                    widget.range({ start: scope[rangePickerStartModel], end: null });
-                }
-
-                return;
-            }
-
-            if (typeof widget.value != "function") {
-                $log.warn("k-ng-model specified on a widget that does not have the value() method: " + (widget.options.name));
-                return;
-            }
-
-            var form = $(widget.element).parents("ng-form, form").first();
-            var ngForm = kendo.getter(form.attr("name"), true)(scope);
-            var getter = $parse(kNgModel);
-            var setter = getter.assign;
-            var updating = false;
-
-            var valueIsCollection = kendo.ui.MultiSelect && widget instanceof kendo.ui.MultiSelect ||
-                                    kendo.ui.RangeSlider && widget instanceof kendo.ui.RangeSlider;
-
-            var length = function(value) {
-                //length is irrelevant when value is not collection
-                return value && valueIsCollection ? value.length : 0;
-            };
-
-            var currentValueLength = length(getter(scope));
-
-            widget.$angular_setLogicValue(getter(scope));
-
-            // keep in sync
-            var watchHandler = function(newValue, oldValue) {
-                if (newValue === undefined$1) {
-                    // because widget's value() method usually checks if the new value is undefined,
-                    // in which case it returns the current value rather than clearing the field.
-                    // https://github.com/telerik/kendo-ui-core/issues/299
-                    newValue = null;
-                }
-
-                //compare values by reference if a collection
-                if (updating || (newValue == oldValue && length(newValue) == currentValueLength)) {
-                    return;
-                }
-
-                currentValueLength = length(newValue);
-                widget.$angular_setLogicValue(newValue);
-            };
-
-            if (valueIsCollection) {
-                scope.$watchCollection(kNgModel, watchHandler);
-            } else {
-                scope.$watch(kNgModel, watchHandler);
-            }
-
-            var changeHandler = function() {
-                updating = true;
-
-                if (ngForm && ngForm.$pristine) {
-                    ngForm.$setDirty();
-                }
-
-                digest(scope, function() {
-                    setter(scope, widget.$angular_getLogicValue());
-                    currentValueLength = length(getter(scope));
-                });
-
-                updating = false;
-            };
-
-            widget.first("change", changeHandler);
-            widget.first("spin", changeHandler);
-        }
-
-        function destroyWidgetOnScopeDestroy(scope, widget) {
-            var deregister = scope.$on("$destroy", function() {
-                deregister();
-                if (widget) {
-                    kendo.destroy(widget.element);
-                    widget = null;
-                }
-            });
-
-            return deregister;
-        }
-
-        // mutation observers - propagate the original
-        // element's class to the widget wrapper.
-        function propagateClassToWidgetWrapper(widget, element) {
-            if (!(window.MutationObserver && widget.wrapper)) {
-                return;
-            }
-
-            var prevClassList = [].slice.call($(element)[0].classList);
-
-            var mo = new MutationObserver(function(changes) {
-                suspend(); // make sure we don't trigger a loop
-                if (!widget) {
-                    return;
-                }
-
-                changes.forEach(function(chg) {
-                    var w = $(widget.wrapper)[0];
-                    switch (chg.attributeName) {
-
-                        case "class":
-                            // sync classes to the wrapper element
-                            var currClassList = [].slice.call(chg.target.classList);
-                            currClassList.forEach(function(cls) {
-                                if (prevClassList.indexOf(cls) < 0) {
-                                    w.classList.add(cls);
-                                    if (kendo.ui.ComboBox && widget instanceof kendo.ui.ComboBox) { // https://github.com/kendo-labs/angular-kendo/issues/356
-                                        widget.input[0].classList.add(cls);
-                                    }
-                                }
-                            });
-                            prevClassList.forEach(function(cls) {
-                                if (currClassList.indexOf(cls) < 0) {
-                                    w.classList.remove(cls);
-                                    if (kendo.ui.ComboBox && widget instanceof kendo.ui.ComboBox) { // https://github.com/kendo-labs/angular-kendo/issues/356
-                                        widget.input[0].classList.remove(cls);
-                                    }
-                                }
-                            });
-                            prevClassList = currClassList;
-                            break;
-
-                        case "disabled":
-                            if (typeof widget.enable == "function" && !widget.element.attr("readonly")) {
-                                widget.enable(!$(chg.target).attr("disabled"));
-                            }
-                            break;
-
-                        case "readonly":
-                            if (typeof widget.readonly == "function" && !widget.element.attr("disabled")) {
-                                widget.readonly(!!$(chg.target).attr("readonly"));
-                            }
-                            break;
-                    }
-                });
-
-                resume();
-            });
-
-            function suspend() {
-                mo.disconnect();
-            }
-
-            function resume() {
-                mo.observe($(element)[0], { attributes: true });
-            }
-
-            resume();
-            widget.first("destroy", suspend);
-        }
-
-        function setupRebind(widget, scope, element, originalElement, rebindAttr, destroyRegister, attrs) {
-            // watch for changes on the expression passed in the k-rebind attribute
-            var unregister = scope.$watch(rebindAttr, function(newValue, oldValue) {
-                if (!widget._muteRebind && newValue !== oldValue) {
-                    unregister(); // this watcher will be re-added if we compile again!
-
-                    if (attrs._cleanUp) {
-                        attrs._cleanUp();
-                    }
-
-                    var templateOptions = WIDGET_TEMPLATE_OPTIONS[widget.options.name];
-
-                    if (templateOptions) {
-                        templateOptions.forEach(function(name) {
-                            var templateContents = scope.$eval(attrs["k" + name]);
-
-                            if (templateContents) {
-                                originalElement.append($(templateContents).attr(kendo.toHyphens("k" + name), ""));
-                            }
-                        });
-                    }
-
-                    var _wrapper = $(widget.wrapper)[0];
-                    var _element = $(widget.element)[0];
-                    var isUpload = widget.options.name === "Upload";
-
-                    if (isUpload) {
-                        element = $(_element);
-                    }
-
-                    var compile = element.injector().get("$compile");
-                    widget._destroy();
-
-                    if (destroyRegister) {
-                        destroyRegister();
-                    }
-
-                    widget = null;
-
-                    if (_element) {
-                        if (_wrapper) {
-                            _wrapper.parentNode.replaceChild(_element, _wrapper);
-                        }
-                        $(element).replaceWith(originalElement);
-                    }
-
-                    compile(originalElement)(scope);
-                }
-            }, true); // watch for object equality. Use native or simple values.
-            digest(scope);
-        }
-
-        function bind(f, obj) {
-            return function(a, b) {
-                return f.call(obj, a, b);
-            };
-        }
-
-        function setTemplate(key, value) {
-            this[key] = kendo.stringify(value);
-        }
-
-        module.factory('directiveFactory', [ '$compile', function(compile) {
-            var kendoRenderedTimeout;
-            var RENDERED = false;
-
-            // caching $compile for the dirty hack upstairs. This is awful, but we happen to have elements outside of the bootstrapped root :(.
-            $defaultCompile = compile;
-
-            var create = function(role, origAttr) {
-                return {
-                    // Parse the directive for attributes and classes
-                    restrict: "AC",
-                    require: [ "?ngModel", "^?form" ],
-                    scope: false,
-
-                    controller: [ '$scope', '$attrs', '$element', function($scope, $attrs) {
-                        this.template = bind(setTemplate, $attrs);
-                        $attrs._cleanUp = bind(function() {
-                            this.template = null;
-                            $attrs._cleanUp = null;
-                        }, this);
-                    }],
-
-                    link: function(scope, element, attrs, controllers) {
-                        var $element = $(element);
-
-                        // we must remove data-kendo-widget-name attribute because
-                        // it breaks kendo.widgetInstance; can generate all kinds
-                        // of funny issues like
-                        //
-                        //   https://github.com/kendo-labs/angular-kendo/issues/167
-                        //
-                        // but we still keep the attribute without the
-                        // `data-` prefix, so k-rebind would work.
-                        var roleattr = role.replace(/([A-Z])/g, "-$1");
-
-                        $element.attr(roleattr, $element.attr("data-" + roleattr));
-                        $element[0].removeAttribute("data-" + roleattr);
-
-                        var widget = createWidget(scope, element, attrs, role, origAttr, controllers);
-
-                        if (!widget) {
-                            return;
-                        }
-
-                        if (kendoRenderedTimeout) {
-                            clearTimeout(kendoRenderedTimeout);
-                        }
-
-                        kendoRenderedTimeout = setTimeout(function() {
-                            scope.$emit("kendoRendered");
-                            if (!RENDERED) {
-                                RENDERED = true;
-                                $("form").each(function() {
-                                    var form = $(this).controller("form");
-                                    if (form) {
-                                        form.$setPristine();
-                                    }
-                                });
-                            }
-                        });
-                    }
-                };
-            };
-
-            return {
-                create: create
-            };
-        }]);
-
-        var TAGNAMES = {
-            Editor: "textarea",
-            NumericTextBox: "input",
-            DatePicker: "input",
-            DateTimePicker: "input",
-            TimePicker: "input",
-            AutoComplete: "input",
-            ColorPicker: "input",
-            MaskedTextBox: "input",
-            MultiSelect: "input",
-            Upload: "input",
-            Validator: "form",
-            Button: "button",
-            ListView: "ul",
-            ScrollView: "div",
-            PanelBar: "ul",
-            TreeView: "ul",
-            Menu: "ul",
-            ContextMenu: "ul",
-            ActionSheet: "ul",
-            Switch: "input"
-        };
-
-        var SKIP_SHORTCUTS = [];
-
-        var MANUAL_DIRECTIVES = [];
-
-        angular.forEach(['MobileScroller'], function(widget) {
-            MANUAL_DIRECTIVES.push(widget);
-            widget = "kendo" + widget;
-            module.directive(widget, function() {
-                return {
-                    restrict: "A",
-                    link: function(scope, element, attrs) {
-                        createWidget(scope, element, attrs, widget, widget);
-                    }
-                };
-            });
-        });
-
-        function createDirectives(klass, isMobile) {
-            function make(directiveName, widgetName) {
-                module.directive(directiveName, [
-                    "directiveFactory",
-                    function(directiveFactory) {
-                        return directiveFactory.create(widgetName, directiveName);
-                    }
-                ]);
-            }
-
-            var name = isMobile ? "Mobile" : "";
-            name += klass.fn.options.name;
-
-            var className = name;
-            var shortcut = "kendo" + name.charAt(0) + name.substr(1).toLowerCase();
-            name = "kendo" + name;
-
-            // <kendo-numerictextbox>-type directives
-            var dashed = name.replace(/([A-Z])/g, "-$1");
-
-            if (SKIP_SHORTCUTS.indexOf(name.replace("kendo", "")) == -1) {
-                var names = name === shortcut ? [ name ] : [ name, shortcut ];
-                angular.forEach(names, function(directiveName) {
-                    module.directive(directiveName, function() {
-                        return {
-                            restrict: "E",
-                            replace: true,
-                            template: function(element, attributes) {
-                                var tag = TAGNAMES[className] || "div";
-                                var scopeField = attributes.kScopeField || attributes.scopeField;
-
-                                return "<" + tag + " " + dashed + (scopeField ? ('="' + scopeField + '"') : "") + ">" + element.html() + "</" + tag + ">";
-                            }
-                        };
-                    });
-                });
-            }
-
-            if (MANUAL_DIRECTIVES.indexOf(name.replace("kendo", "")) > -1) {
-                return;
-            }
-
-            make(name, name);
-            if (shortcut != name) {
-                make(shortcut, name);
-            }
-
-        }
-
-        /* -----[ utils ]----- */
-
-        function kendoWidgetInstance(el) {
-            el = $(el);
-            return kendo.widgetInstance(el, kendo.ui) ||
-                kendo.widgetInstance(el, kendo.mobile.ui) ||
-                kendo.widgetInstance(el, kendo.dataviz.ui);
-        }
-
-        function digest(scope, func) {
-            var root = scope.$root || scope;
-            var isDigesting = /^\$(digest|apply)$/.test(root.$$phase);
-            if (func) {
-                if (isDigesting) {
-                    func();
-                } else {
-                    root.$apply(func);
-                }
-            } else if (!isDigesting) {
-                root.$digest();
-            }
-        }
-
-        function destroyScope(scope, el) {
-            scope.$destroy();
-            if (el) {
-                // prevent leaks. https://github.com/kendo-labs/angular-kendo/issues/237
-                $(el)
-                    .removeData("$scope")
-                    .removeData("$$kendoScope")
-                    .removeData("$isolateScope")
-                    .removeData("$isolateScopeNoTemplate")
-                    .removeClass("ng-scope");
-            }
-        }
-
-        var encode = kendo.htmlEncode;
-        var open = /{{/g;
-        var close = /}}/g;
-        var encOpen = '{&#8203;{';
-        var encClose = '}&#8203;}';
-
-        kendo.htmlEncode = function(str) {
-            return encode(str)
-                .replace(open, encOpen)
-                .replace(close, encClose);
-        };
-
-        var pendingPatches = [];
-
-        // defadvice will patch a class' method with another function.  That
-        // function will be called in a context containing `next` (to call
-        // the next method) and `object` (a reference to the original
-        // object).
-        function defadvice(klass, methodName, func) {
-            if (Array.isArray(klass)) {
-                return angular.forEach(klass, function(klass) {
-                    defadvice(klass, methodName, func);
-                });
-            }
-            if (typeof klass == "string") {
-                var a = klass.split(".");
-                var x = kendo;
-                while (x && a.length > 0) {
-                    x = x[a.shift()];
-                }
-                if (!x) {
-                    pendingPatches.push([ klass, methodName, func ]);
-                    return false;
-                }
-                klass = x.prototype;
-            }
-            var origMethod = klass[methodName];
-            klass[methodName] = function() {
-                var self = this, args = arguments;
-                return func.apply({
-                    self: self,
-                    next: function() {
-                        return origMethod.apply(self, arguments.length > 0 ? arguments : args);
-                    }
-                }, args);
-            };
-            return true;
-        }
-
-        kendo.onWidgetRegistered(function(entry) {
-            pendingPatches = $.grep(pendingPatches, function(args) {
-                return !defadvice.apply(null, args);
-            });
-            createDirectives(entry.widget, entry.prefix == "Mobile");
-        });
-
-        /* -----[ Customize widgets for Angular ]----- */
-
-        defadvice([ "ui.Widget", "mobile.ui.Widget" ], "angular", function(cmd, arg) {
-            var self = this.self;
-            if (cmd == "init") {
-                // `arg` here should be the widget options.
-                // the Chart doesn't send the options to Widget::init in constructor
-                // hence the OPTIONS_NOW hack (initialized in createWidget).
-                if (!arg && OPTIONS_NOW) {
-                    arg = OPTIONS_NOW;
-                }
-                OPTIONS_NOW = null;
-                if (arg && arg.$angular) {
-                    self.$angular_scope = arg.$angular[0];
-                    self.$angular_init(self.element, arg);
-                }
-                return;
-            }
-
-            var scope = self.$angular_scope;
-
-            if (scope) {
-                withoutTimeout(function() {
-                    var x = arg(), elements = x.elements, data = x.data;
-                    if (elements.length > 0) {
-                        switch (cmd) {
-
-                          case "cleanup":
-                            angular.forEach(elements, function(el) {
-                                var itemScope = $(el).data("$$kendoScope");
-
-                                if (itemScope && itemScope !== scope && itemScope.$$kendoScope) {
-                                    destroyScope(itemScope, el);
-                                }
-                            });
-                            break;
-
-                          case "compile":
-                            var injector = self.element.injector();
-                            var compile = injector ? injector.get("$compile") : $defaultCompile;
-
-                            angular.forEach(elements, function(el, i) {
-                                var itemScope;
-                                if (x.scopeFrom) {
-                                    itemScope = x.scopeFrom;
-                                } else {
-                                    var vars = data && data[i];
-                                    if (vars !== undefined$1) {
-                                        itemScope = $.extend(scope.$new(), vars);
-                                        itemScope.$$kendoScope = true;
-                                    } else {
-                                        itemScope = scope;
-                                    }
-                                }
-
-                                $(el).data("$$kendoScope", itemScope);
-                                compile(el)(itemScope);
-                            });
-                            digest(scope);
-                            break;
-                        }
-                    }
-                });
-            }
-        });
-
-        defadvice("ui.Widget", "$angular_getLogicValue", function() {
-            return this.self.value();
-        });
-
-        defadvice("ui.Widget", "$angular_setLogicValue", function(val) {
-            this.self.value(val);
-        });
-
-        defadvice("ui.Select", "$angular_getLogicValue", function() {
-            var item = this.self.dataItem(),
-                valueField = this.self.options.dataValueField;
-
-            if (item) {
-                if (this.self.options.valuePrimitive) {
-                    if (!!valueField) {
-                        return item[valueField];
-                    } else {
-                        return item;
-                    }
-                } else {
-                    return item.toJSON();
-                }
-            } else {
-                return null;
-            }
-        });
-
-        defadvice("ui.Select", "$angular_setLogicValue", function(val) {
-            var self = this.self;
-            var options = self.options;
-            var valueField = options.dataValueField;
-            var text = options.text || "";
-
-            if (val === undefined$1) {
-                val = "";
-            }
-
-            if (valueField && !options.valuePrimitive && val) {
-                text = val[options.dataTextField] || "";
-                val = val[valueField || options.dataTextField];
-            }
-
-            if (self.options.autoBind === false && !self.listView.bound()) {
-                if (!text && val && options.valuePrimitive) {
-                    self.value(val);
-                } else {
-                    self._preselect(val, text);
-                }
-            } else {
-                self.value(val);
-            }
-        });
-
-        defadvice("ui.MultiSelect", "$angular_getLogicValue", function() {
-            var value = this.self.dataItems().slice(0);
-            var valueField = this.self.options.dataValueField;
-
-            if (valueField && this.self.options.valuePrimitive) {
-                value = $.map(value, function(item) {
-                    return item[valueField];
-                });
-            }
-
-            return value;
-        });
-
-        defadvice("ui.MultiSelect", "$angular_setLogicValue", function(val) {
-            if (val == null) {
-                val = [];
-            }
-
-            var self = this.self;
-            var options = self.options;
-            var valueField = options.dataValueField;
-            var data = val;
-
-            if (valueField && !options.valuePrimitive) {
-                val = $.map(val, function(item) {
-                    return item[valueField];
-                });
-            }
-
-            if (options.autoBind === false && !options.valuePrimitive && !self.listView.bound()) {
-                self._preselect(data, val);
-            } else {
-                self.value(val);
-            }
-        });
-
-        /* AutoComplete's getter and setter are removed!
-           By design, AutoComplete should be bound only to primitive string
-           value and data items are bound only to serve the list of suggestions.
-
-           Binding multiple data items is supported by the MultiSelect widget.
-        */
-
-        // All event handlers that are strings are compiled the Angular way.
-        defadvice("ui.Widget", "$angular_init", function(element, options) {
-            var self = this.self;
-            if (options && !Array.isArray(options)) {
-                var scope = self.$angular_scope;
-                for (var i = self.events.length; --i >= 0;) {
-                    var event = self.events[i];
-                    var handler = options[event];
-                    if (handler && typeof handler == "string") {
-                        options[event] = self.$angular_makeEventHandler(event, scope, handler);
-                    }
-                }
-            }
-        });
-
-        // most handers will only contain a kendoEvent in the scope.
-        defadvice("ui.Widget", "$angular_makeEventHandler", function(event, scope, handler) {
-            handler = $parse(handler);
-            return function(e) {
-                digest(scope, function() {
-                    handler(scope, { kendoEvent: e });
-                });
-            };
-        });
-
-        // for the Grid and ListView we add `data` and `selected` too.
-        defadvice([ "ui.Grid", "ui.ListView", "ui.TreeView", "ui.PanelBar" ], "$angular_makeEventHandler", function(event, scope, handler) {
-            if (event != "change") {
-                return this.next();
-            }
-            handler = $parse(handler);
-            return function(ev) {
-                var widget = ev.sender;
-                var options = widget.options;
-                var cell, multiple, locals = { kendoEvent: ev }, elems, items, columns, colIdx;
-
-                if (angular.isString(options.selectable)) {
-                    cell = options.selectable.indexOf('cell') !== -1;
-                    multiple = options.selectable.indexOf('multiple') !== -1;
-                }
-                if (widget._checkBoxSelection) {
-                    multiple = true;
-                }
-
-                elems = locals.selected = this.select();
-                items = locals.data = [];
-                columns = locals.columns = [];
-                for (var i = 0; i < elems.length; i++) {
-                    var item = cell ? elems[i].parentNode : elems[i];
-                    var dataItem = widget.dataItem(item);
-                    if (cell) {
-                        if (angular.element.inArray(dataItem, items) < 0) {
-                            items.push(dataItem);
-                        }
-                        colIdx = angular.element(elems[i]).index();
-                        if (angular.element.inArray(colIdx, columns) < 0 ) {
-                            columns.push(colIdx);
-                        }
-                    } else {
-                        items.push(dataItem);
-                    }
-                }
-
-                if (!multiple) {
-                    locals.dataItem = locals.data = items[0];
-                    locals.angularDataItem = kendo.proxyModelSetters(locals.dataItem);
-                    locals.selected = elems[0];
-                }
-
-                digest(scope, function() {
-                    handler(scope, locals);
-                });
-            };
-        });
-
-        // If no `template` is supplied for Grid columns, provide an Angular
-        // template.  The reason is that in this way AngularJS will take
-        // care to update the view as the data in scope changes.
-        defadvice("ui.Grid", "$angular_init", function(element, options) {
-            this.next();
-            if (options.columns) {
-                var settings = $.extend({}, kendo.Template, options.templateSettings);
-                angular.forEach(options.columns, function(col) {
-                    if (col.field && !col.template && !col.format && !col.values && (col.encoded === undefined$1 || col.encoded)) {
-                        col.template = "<span ng-bind='" +
-                            kendo.expr(col.field, "dataItem") + "'>#: " +
-                            kendo.expr(col.field, settings.paramName) + "#</span>";
-                    }
-                });
-            }
-        });
-
-        var WIDGET_TEMPLATE_OPTIONS = {
-            "TreeMap": [ "Template" ],
-            "Grid": [ "AltRowTemplate", "DetailTemplate", "RowTemplate" ],
-            "ListView": [ "EditTemplate", "Template", "AltTemplate" ],
-            "Pager": [ "SelectTemplate", "LinkTemplate" ],
-            "PivotGrid": [ "ColumnHeaderTemplate", "DataCellTemplate", "RowHeaderTemplate" ],
-            "Scheduler": ["AllDayEventTemplate", "DateHeaderTemplate", "EventTemplate", "MajorTimeHeaderTemplate", "MinorTimeHeaderTemplate"],
-            "ScrollView": [ "Template" ],
-            "PanelBar": [ "Template" ],
-            "TreeView": [ "Template" ],
-            "Validator": [ "ErrorTemplate" ]
-        };
-
-        (function() {
-            var templateDirectives = {};
-            angular.forEach(WIDGET_TEMPLATE_OPTIONS, function(templates, widget) {
-                angular.forEach(templates, function(template) {
-                    if (!templateDirectives[template]) {
-                        templateDirectives[template] = [ ];
-                    }
-                    templateDirectives[template].push("?^^kendo" + widget);
-                });
-            });
-
-            angular.forEach(templateDirectives, function(parents, directive) {
-                var templateName = "k" + directive;
-                var attrName = kendo.toHyphens(templateName);
-
-                module.directive(templateName, function() {
-                    return {
-                        restrict: "A",
-                        require: parents,
-                        terminal: true,
-                        compile: function($element, $attrs) {
-                            if ($attrs[templateName] !== "") {
-                                return;
-                            }
-
-                            $element.removeAttr(attrName);
-                            var template = $element[0].outerHTML;
-
-                            return function(scope, element, attrs, controllers) {
-                                var controller;
-
-                                while (!controller && controllers.length) {
-                                    controller = controllers.shift();
-                                }
-
-                                if (!controller) {
-                                    $log.warn(attrName + " without a matching parent widget found. It can be one of the following: " + parents.join(", "));
-                                } else {
-                                    controller.template(templateName, template);
-                                    element.remove();
-                                }
-                            };
-                        }
-                    };
-                });
-            });
-
-        })();
-
-
-    })(window.kendo.jQuery, window.angular);
 
     // The current file development is no longer in active phase but the code will be kept as is.
         "bundle all";

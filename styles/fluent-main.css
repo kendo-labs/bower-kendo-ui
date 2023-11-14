@@ -31696,7 +31696,7 @@ textarea.k-input-inner {
   --INTERNAL--kendo-input-padding-y: 0.25rem;
   --INTERNAL--kendo-input-button-padding-x: 0.25rem;
   --INTERNAL--kendo-input-button-padding-y: 0.25rem;
-  --INTERNAL--kendo-input-icon-size: calc(var( --kendo-icon-size, 1rem ) + 0.75rem);
+  --INTERNAL--kendo-input-icon-size: calc(var(--kendo-icon-size, 1rem) + 0.75rem);
 }
 
 .k-input-sm .k-input-button,
@@ -31722,7 +31722,7 @@ textarea.k-input-inner {
   --INTERNAL--kendo-input-padding-y: 0.375rem;
   --INTERNAL--kendo-input-button-padding-x: 0.375rem;
   --INTERNAL--kendo-input-button-padding-y: 0.375rem;
-  --INTERNAL--kendo-input-icon-size: calc(var( --kendo-icon-size, 1rem ) + 0.5rem);
+  --INTERNAL--kendo-input-icon-size: calc(var(--kendo-icon-size, 1rem) + 0.5rem);
 }
 
 .k-input-md .k-input-button,
@@ -31748,7 +31748,7 @@ textarea.k-input-inner {
   --INTERNAL--kendo-input-padding-y: 0.5rem;
   --INTERNAL--kendo-input-button-padding-x: 0.5rem;
   --INTERNAL--kendo-input-button-padding-y: 0.5rem;
-  --INTERNAL--kendo-input-icon-size: calc(var( --kendo-icon-size, 1rem ) + 1rem);
+  --INTERNAL--kendo-input-icon-size: calc(var(--kendo-icon-size, 1rem) + 1rem);
 }
 
 .k-input-lg .k-input-button,
@@ -32352,10 +32352,13 @@ textarea.k-input-inner {
 
 .k-listbox .k-list-scroller {
   width: 100%;
+  min-height: 0;
   height: inherit;
   border-width: var(--kendo-listbox-border-width, 1px);
   border-style: solid;
   box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .k-listbox .k-list-scroller .k-list-scroller {
@@ -36737,12 +36740,12 @@ textarea.k-input-inner {
 .k-menu-group-sm .k-menu-link {
   --INTERNAL--kendo-menu-popup-item-padding-x: var( --kendo-menu-popup-item-padding-x-sm, 0.5rem );
   --INTERNAL--kendo-menu-popup-item-padding-y: var( --kendo-menu-popup-item-padding-y-sm, 0.375rem );
-  --INTERNAL--kendo-menu-popup-item-padding-end: var( --kendo-menu-popup-item-padding-end-sm, calc(1rem + var( --kendo-icon-size, 1rem )) );
+  --INTERNAL--kendo-menu-popup-item-padding-end: var( --kendo-menu-popup-item-padding-end-sm, calc(1rem + var(--kendo-icon-size, 1rem)) );
 }
 
 .k-menu-group-sm .k-menu-expand-arrow {
   --INTERNAL--kendo-menu-popup-item-icon-margin-start: var( --kendo-menu-popup-item-icon-margin-start-sm, 0 );
-  --INTERNAL--kendo-menu-popup-item-icon-margin-end: var( --kendo-menu-popup-item-icon-margin-end-sm, calc((var( --kendo-icon-size, 1rem ) + 0.5rem)*-1) );
+  --INTERNAL--kendo-menu-popup-item-icon-margin-end: var( --kendo-menu-popup-item-icon-margin-end-sm, calc((var(--kendo-icon-size, 1rem) + 0.5rem)*-1) );
 }
 
 .k-menu-group-md {
@@ -36753,12 +36756,12 @@ textarea.k-input-inner {
 .k-menu-group-md .k-menu-link {
   --INTERNAL--kendo-menu-popup-item-padding-x: var( --kendo-menu-popup-item-padding-x-md, 0.5rem );
   --INTERNAL--kendo-menu-popup-item-padding-y: var( --kendo-menu-popup-item-padding-y-md, 0.5rem );
-  --INTERNAL--kendo-menu-popup-item-padding-end: var( --kendo-menu-popup-item-padding-end-md, calc(1rem + var( --kendo-icon-size, 1rem )) );
+  --INTERNAL--kendo-menu-popup-item-padding-end: var( --kendo-menu-popup-item-padding-end-md, calc(1rem + var(--kendo-icon-size, 1rem)) );
 }
 
 .k-menu-group-md .k-menu-expand-arrow {
   --INTERNAL--kendo-menu-popup-item-icon-margin-start: var( --kendo-menu-popup-item-icon-margin-start-md, 0 );
-  --INTERNAL--kendo-menu-popup-item-icon-margin-end: var( --kendo-menu-popup-item-icon-margin-end-md, calc((var( --kendo-icon-size, 1rem ) + 0.5rem)*-1) );
+  --INTERNAL--kendo-menu-popup-item-icon-margin-end: var( --kendo-menu-popup-item-icon-margin-end-md, calc((var(--kendo-icon-size, 1rem) + 0.5rem)*-1) );
 }
 
 .k-menu-group-lg {
@@ -36769,12 +36772,12 @@ textarea.k-input-inner {
 .k-menu-group-lg .k-menu-link {
   --INTERNAL--kendo-menu-popup-item-padding-x: var( --kendo-menu-popup-item-padding-x-lg, 0.5rem );
   --INTERNAL--kendo-menu-popup-item-padding-y: var( --kendo-menu-popup-item-padding-y-lg, 0.625rem );
-  --INTERNAL--kendo-menu-popup-item-padding-end: var( --kendo-menu-popup-item-padding-end-lg, calc(1rem + var( --kendo-icon-size, 1rem )) );
+  --INTERNAL--kendo-menu-popup-item-padding-end: var( --kendo-menu-popup-item-padding-end-lg, calc(1rem + var(--kendo-icon-size, 1rem)) );
 }
 
 .k-menu-group-lg .k-menu-expand-arrow {
   --INTERNAL--kendo-menu-popup-item-icon-margin-start: var( --kendo-menu-popup-item-icon-margin-start-lg, 0 );
-  --INTERNAL--kendo-menu-popup-item-icon-margin-end: var( --kendo-menu-popup-item-icon-margin-end-lg, calc((var( --kendo-icon-size, 1rem ) + 0.5rem)*-1) );
+  --INTERNAL--kendo-menu-popup-item-icon-margin-end: var( --kendo-menu-popup-item-icon-margin-end-lg, calc((var(--kendo-icon-size, 1rem) + 0.5rem)*-1) );
 }
 
 .k-popups-wrapper {
@@ -41839,8 +41842,8 @@ kendo-card-footer {
 
 @supports (not (-ms-ime-mode: none)) and (not (overflow: -webkit-marquee)) and (not (-moz-appearance: none)) {
   .k-dock-manager-toolbar .k-toolbar-button {
-    padding-block: var(--INTERNAL--kendo-button-padding-y, 0);
-    padding-inline: var(--INTERNAL--kendo-button-padding-x, 0);
+    padding-block: var(--INTERNAL--kendo-button-padding-x, 0);
+    padding-inline: var(--INTERNAL--kendo-button-padding-y, 0);
   }
   .k-dock-manager-toolbar .k-toolbar-button .k-button-text {
     -ms-writing-mode: tb-lr;
@@ -42712,12 +42715,12 @@ div.k-grid-footer {
 }
 
 .k-grid .k-command-cell > .k-button {
+  margin-inline-end: var(--kendo-grid-command-cell-button-spacing, 0.5rem);
   vertical-align: middle;
 }
 
-.k-grid .k-command-cell > .k-button + .k-button {
+.k-grid .k-command-cell > .k-button:last-child {
   margin-inline-end: unset;
-  margin-inline-start: var(--kendo-grid-command-cell-button-spacing, 0.5rem);
 }
 
 .k-grid > .k-resize-handle,

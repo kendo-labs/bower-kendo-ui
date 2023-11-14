@@ -16,7 +16,7 @@ export const externals = glob.sync(`${root}/kendo.*.js`).map(resolvePath).concat
 export const cultures = glob.sync('cultures/*.js', { cwd: root });
 export const messages = glob.sync('messages/*.js', { cwd: root });
 const require = createRequire(import.meta.url);
-export const version = '2023.3.1010';
+export const version = '2023.3.1114';
 
 const globals = {
     jquery: '$'

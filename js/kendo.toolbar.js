@@ -542,10 +542,6 @@
                     if (element.is("[disabled]")) {
                         element.removeAttr("disabled");
                     }
-
-                    this.angular("compile", function() {
-                        return { elements: element.get() };
-                    });
                 }
             },
 

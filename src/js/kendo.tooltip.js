@@ -337,6 +337,7 @@ var __meta__ = {
             }
 
             this.popup._hovered = true;
+            this.popup._shouldCorrectWidth = false;
             this.popup.open();
         }
     });
@@ -451,10 +452,6 @@ var __meta__ = {
             } else {
                 element.html(contentOptions);
             }
-
-            that.angular("compile", function() {
-                return { elements: element };
-            });
         },
 
         _ajaxRequest: function(options) {

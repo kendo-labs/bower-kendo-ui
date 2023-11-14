@@ -512,9 +512,6 @@
                                 .on(CLICKEVENTS, that._click.bind(that))
                                 .on(HOVEREVENTS, that._toggleHover);
 
-                that.angular("compile", function() {
-                    return { elements: that.optionLabel, data: [{ dataItem: that._optionLabelDataItem() }] };
-                });
             },
 
             _optionLabelText: function() {
@@ -1384,23 +1381,12 @@
                     }
                 }
 
-                var getElements = function() {
-                    return {
-                        elements: span.get(),
-                        data: [ { dataItem: dataItem } ]
-                    };
-                };
-
-                this.angular("cleanup", getElements);
-
                 try {
                     span.html(template(dataItem));
                 } catch (e) {
                     //dataItem has missing fields required in custom template
                     span.html("");
                 }
-
-                this.angular("compile", getElements);
             },
 
             _preselect: function(value, text) {

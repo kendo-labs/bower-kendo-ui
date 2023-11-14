@@ -384,9 +384,6 @@
 
             _triggerHide: function(element) {
                 this.trigger(HIDE, { element: element });
-                this.angular("cleanup", function() {
-                    return { elements: element };
-                });
             },
 
             show: function(content, type, safe) {
@@ -432,13 +429,6 @@
 
                     wrapper.find(".k-notification-content").attr("id", contentId);
                     wrapper.attr("aria-describedby", contentId);
-
-                    that.angular("compile", function() {
-                        return {
-                            elements: wrapper,
-                            data: [{ dataItem: args }]
-                        };
-                    });
 
                     if ($(options.appendTo)[0]) {
                         that._showStatic(wrapper, options);

@@ -584,7 +584,6 @@
                                 }, 40);
                             }
 
-                            that.angular("cleanup", function() { return { elements: content.get() }; });
                             kendo.destroy(content);
                             content.html(data);
                         } catch (e) {
@@ -599,8 +598,6 @@
                         if (complete) {
                             complete.call(that, content);
                         }
-
-                        that.angular("compile", function() { return { elements: content.get() }; });
 
                         that.trigger(CONTENTLOAD, { item: element[0], contentElement: content[0] });
                     }
@@ -629,7 +626,6 @@
                     } else {
                         that.wrapper.append(contents);
                     }
-                    that.angular("compile", function() { return { elements: [ contents ] }; });
                 });
 
                 updateFirstLast(that.tabGroup);
@@ -742,7 +738,6 @@
                     referenceContent.after(contents);
 
                     that._moveUrlItem(fromIndex, $(this).index());
-                    that.angular("compile", function() { return { elements: [ contents ] }; });
                 });
 
                 updateFirstLast(that.tabGroup);
@@ -771,7 +766,6 @@
                     referenceContent.before(contents);
 
                     that._moveUrlItem(fromIndex, $(this).index());
-                    that.angular("compile", function() { return { elements: [ contents ] }; });
                 });
 
                 updateFirstLast(that.tabGroup);

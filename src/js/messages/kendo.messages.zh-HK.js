@@ -183,10 +183,6 @@
                 "import": "導入",
                 "print": "列印"
             });
-        kendo.ui.Editor.defaultTools.pdf.options.template.options =
-            $.extend(true, kendo.ui.Editor.defaultTools.pdf.options.template.options, {
-                "title": "匯出 PDF"
-            });
     }
 
     /* ImageBrowser messages */
@@ -1774,18 +1770,6 @@
                         "of": " / "
                     }
                 }
-            });
-    }
-
-    /* Mobile Messages ------------------------------ */
-
-    /* Mobile Scroller messages */
-    if (kendo.mobile.ui.Scroller) {
-        kendo.mobile.ui.Scroller.prototype.options.messages =
-            $.extend(true, kendo.mobile.ui.Scroller.prototype.options.messages, {
-                "pullTemplate": "下拉刷新",
-                "releaseTemplate": "釋放刷新",
-                "refreshTemplate": "刷新中..."
             });
     }
 

@@ -1344,19 +1344,6 @@
                 return max === null || max > this.listView.value().length;
             },
 
-            _angularTagItems: function(cmd) {
-                var that = this;
-
-                that.angular(cmd, function() {
-                    return {
-                        elements: that.tagList[0].children,
-                        data: $.map(that.dataItems(), function(dataItem) {
-                            return { dataItem: dataItem };
-                        })
-                    };
-                });
-            },
-
             updatePersistTagList: function(added, removed) {
                 if (this.persistTagList.added &&
                     this.persistTagList.added.length === removed.length &&
@@ -1387,8 +1374,6 @@
 
                     return;
                 }
-
-                that._angularTagItems("cleanup");
 
                 if (that.options.tagMode === "multiple") {
                     for (idx = removed.length - 1; idx > -1; idx--) {
@@ -1428,7 +1413,6 @@
                 that._refreshTagListAria();
                 that._refreshFloatingLabel();
 
-                that._angularTagItems("compile");
                 that._placeholder();
             },
 
