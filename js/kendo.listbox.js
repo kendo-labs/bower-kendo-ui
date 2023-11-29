@@ -1648,7 +1648,9 @@
             _onToolClick: function(e) {
                 e.preventDefault();
 
-                this._executeToolCommand($(e.currentTarget).data(COMMAND));
+                var tool = $(e.currentTarget);
+                this._tabindex(tool);
+                this._executeToolCommand(tool.data(COMMAND));
                 this._focusTool();
             },
 

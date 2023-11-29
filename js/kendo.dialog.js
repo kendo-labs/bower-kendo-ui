@@ -455,7 +455,12 @@
 
                 _mergeTextWithOptions: function(action) {
                     var text = action.text;
-                    return text ? template(text)(this.options) : "";
+
+                    if (isFunction(text)) {
+                        return text(this.options);
+                    }
+
+                    return text ? text : "";
                 },
 
                 _tabindex: function(target) {

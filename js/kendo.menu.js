@@ -368,7 +368,7 @@
             }
 
             if (options.items) {
-                $(element).children("ul").children("li").each(function(i) {
+                $(element).children("div").children("ul").children("li").each(function(i) {
                     storeItemSelectEventHandler(this, options.items[i]);
                 });
             }
@@ -1528,7 +1528,7 @@
                 var that = this;
                 var element = $(e.currentTarget);
                 var popupOpener = element.data(POPUP_OPENER_ATTR);
-                var hasChildren = (element.children(animationContainerSelector).length || element.children(groupSelector).length) || popupOpener;
+                var hasChildren = element.children(popupSelector).length || popupOpener;
                 var $window = $(window);
 
                 if (popupOpener) {
@@ -1566,7 +1566,7 @@
                      return;
                 }
 
-                popupElement = popupElement.children("ul");
+                popupElement = popupElement.find(popupSelector);
                 var popupId = popupElement.data(POPUP_ID_ATTR);
 
                 if (popupId) {
@@ -1627,7 +1627,7 @@
                 var overflowWrapper = that._overflowWrapper();
                 var popupId = current.data(POPUP_ID_ATTR);
                 var popupOpener = overflowWrapper.find(popupOpenerSelector(popupId));
-                popupId = popupOpener.parent().data(POPUP_ID_ATTR);
+                popupId = popupOpener.closest(popupSelector).data(POPUP_ID_ATTR);
                 that.close(popupOpener, true);
                 while (popupId && !that._openedPopups[popupId]) {
                     if (popupOpener.parent().is(menuSelector)) {
@@ -1635,7 +1635,7 @@
                     }
                     popupOpener = overflowWrapper.find(popupOpenerSelector(popupId));
                     that.close(popupOpener, true);
-                    popupId = popupOpener.parent().data(POPUP_ID_ATTR);
+                    popupId = popupOpener.closest(popupSelector).data(POPUP_ID_ATTR);
                 }
             },
 

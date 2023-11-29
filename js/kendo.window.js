@@ -1194,7 +1194,7 @@
                 },
 
                 _actionable: function(element) {
-                    return $(element).is((TITLEBAR_BUTTONSSELECTOR + ", :input, a, .k-input, .k-icon, .k-svg-icon, [role='gridcell'], .k-input-value-text"));
+                    return $(element).is((TITLEBAR_BUTTONSSELECTOR + ", :input, a, .k-input, .k-icon, .k-svg-icon, .k-svg-icon>svg, .k-svg-icon>svg>path, .k-icon-button, [role='gridcell'], .k-input-inner, .k-input-value-text"));
                 },
 
                 _shouldFocus: function(target) {

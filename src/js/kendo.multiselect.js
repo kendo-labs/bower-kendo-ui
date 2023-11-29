@@ -1551,6 +1551,7 @@ var __meta__ = {
             }
 
             element.removeAttr("accesskey");
+            input.attr("data-validate", false);
 
             that._focused = that.input = input.attr({
                 "autocomplete": AUTOCOMPLETEVALUE,

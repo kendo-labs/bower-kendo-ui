@@ -823,6 +823,17 @@
             return culture || kendo.cultures.current;
         }
 
+        function appendDesignatorsToCultures(calendars) {
+            // Don't ask. It's temporary.
+            if ((calendars.standard.AM && calendars.standard.AM.length)
+            && (calendars.standard.PM && calendars.standard.PM.length)
+            && (calendars.standard.AM.indexOf("PMA0") < 0)
+            && (calendars.standard.AM.indexOf("AM") > -1 || calendars.standard.PM.indexOf("PM") > -1)) {
+                calendars.standard.AM.push("a", "A", "PMa", "PMA", "PMa0", "PMA0");
+                calendars.standard.PM.push("p", "P", "AMp", "AMP", "AMp0", "AMP0");
+            }
+        }
+
         kendo.culture = function(cultureName) {
             var cultures = kendo.cultures, culture;
 
@@ -831,6 +842,7 @@
                 culture.calendar = culture.calendars.standard;
                 cultures.current = culture;
             } else {
+                appendDesignatorsToCultures(cultures.current.calendars);
                 return cultures.current;
             }
         };
@@ -1358,8 +1370,22 @@
         };
 
         kendo._round = round;
-        kendo._outerWidth = function(element, includeMargin) { return $(element).outerWidth(includeMargin || false) || 0; };
-        kendo._outerHeight = function(element, includeMargin) { return $(element).outerHeight(includeMargin || false) || 0; };
+        kendo._outerWidth = function(element, includeMargin, calculateFromHidden) {
+            element = $(element);
+            if (calculateFromHidden) {
+                return getHiddenDimensions(element, includeMargin).width;
+            }
+
+            return $(element).outerWidth(includeMargin || false) || 0;
+        };
+        kendo._outerHeight = function(element, includeMargin, calculateFromHidden) {
+            element = $(element);
+            if (calculateFromHidden) {
+                return getHiddenDimensions(element, includeMargin).height;
+            }
+
+            return $(element).outerHeight(includeMargin || false) || 0;
+        };
         kendo.toString = toString;
     })();
 
@@ -1465,6 +1491,7 @@
                     }
                     return i;
                 },
+                longestDesignatorLength = function (designators) { return Array.from(designators).sort(function (a, b) { return b.length - a.length; })[0].length; },
                 getNumber = function(size) {
                     var rg, match, part = "";
                     if (size === 2) {
@@ -1490,7 +1517,7 @@
                     }
                     return null;
                 },
-                getIndexByName = function(names, lower) {
+                getIndexByName = function(names, lower, subLength) {
                     var i = 0,
                         length = names.length,
                         name, nameLength,
@@ -1501,7 +1528,7 @@
                     for (; i < length; i++) {
                         name = names[i];
                         nameLength = name.length;
-                        subValue = value.substr(valueIdx, nameLength);
+                        subValue = value.substr(valueIdx, subLength || nameLength); // The `subLength` is part of the appendDesignatorsToCultures logic.
 
                         if (lower) {
                             subValue = subValue.toLowerCase();
@@ -1668,8 +1695,8 @@
                             pmDesignators = mapDesignators(pmDesignators);
                         }
 
-                        pmHour = getIndexByName(pmDesignators);
-                        if (!pmHour && !getIndexByName(amDesignators)) {
+                        pmHour = getIndexByName(pmDesignators, false, longestDesignatorLength(pmDesignators));
+                        if (!pmHour && !getIndexByName(amDesignators, false, longestDesignatorLength(amDesignators))) {
                             return null;
                         }
                     }
@@ -1946,6 +1973,25 @@
             };
         }
 
+        function getHiddenDimensions(element, includeMargin) {
+            var clone, width, height;
+
+            clone = element.clone();
+            clone.css("display", "");
+            clone.css("visibility", "hidden");
+            clone.appendTo($("body"));
+
+            width = clone.outerWidth(includeMargin || false);
+            height = clone.outerHeight(includeMargin || false);
+
+            clone.remove();
+
+            return {
+                width: width || 0,
+                height: height || 0
+            };
+        }
+
         function wrap(element, autosize, resize, shouldCorrectWidth) {
             if ( shouldCorrectWidth === void 0 ) shouldCorrectWidth = true;
 
@@ -1962,12 +2008,13 @@
                     height = element[0].style.height,
                     percentWidth = percentRegExp.test(width),
                     percentHeight = percentRegExp.test(height),
-                    forceWidth = element.hasClass("k-tooltip") || element.is(".k-menu-horizontal.k-context-menu");
+                    forceDimensions = element.hasClass("k-tooltip") || element.is(".k-menu-horizontal.k-context-menu"),
+                    calculateFromHidden = element.hasClass("k-tooltip");
 
                 percentage = percentWidth || percentHeight;
 
-                if (!percentWidth && (!autosize || (autosize && width) || forceWidth)) { width = autosize ? outerWidth(element) + 1 : outerWidth(element); }
-                if (!percentHeight && (!autosize || (autosize && height)) || element.is(".k-menu-horizontal.k-context-menu")) { height = outerHeight(element); }
+                if (!percentWidth && (!autosize || (autosize && width) || forceDimensions)) { width = autosize ? outerWidth(element, false, calculateFromHidden) + 1 : outerWidth(element, false, calculateFromHidden); }
+                if (!percentHeight && (!autosize || (autosize && height)) || forceDimensions) { height = outerHeight(element, false, calculateFromHidden); }
 
                 element.wrap(
                     $("<div/>")
@@ -8579,6 +8626,8 @@
 
                 this.length = idx;
                 this._parent = parentFn.bind(this);
+                this._loadPromises = [];
+                this._loadedNodes = [];
             },
             at: function(index) {
                 var item = this[index];
@@ -11269,12 +11318,11 @@
                 try {
                     for (var i = 0; i < items.length; i ++) {
                         var item = items[i];
-                        var model = this._createNewModel(item);
 
                         this._eachItem(this._data, function(dataItems) {
                             for (var idx = 0; idx < dataItems.length; idx++) {
                                 var dataItem = dataItems.at(idx);
-                                if (dataItem.id === model.id) {
+                                if (dataItem.uid === item.uid) {
                                     moved.push(dataItem);
                                     dataItems.splice(index >= idx ? --index : index, 0, dataItems.splice(idx, 1)[0]);
                                     index++;
@@ -12307,7 +12355,7 @@
                         that._addRange(that._observe(result.data));
 
                         if (options.skip + options.take > result.data.length) {
-                            options.skip = result.data.length - options.take;
+                            options.skip = Math.max(0, result.data.length - options.take);
                         }
 
                         that.view(query.range(options.skip, options.take).toArray());
@@ -30307,12 +30355,16 @@
                 that.downEvent = kendo.applyEventMap(MOUSEDOWN, kendo.guid());
 
                 isRtl = kendo.support.isRtl(element);
+                that._numericWrap = that.element.find(".k-pager-numbers-wrap");
 
                 if (isRtl) {
                     FIRST = LAST_CONST;
                     LAST = FIRST_CONST;
                     PREV = NEXT_CONST;
                     NEXT = PREV_CONST;
+                    if (that._numericWrap.length) {
+                        that._numericWrap.empty();
+                    }
                 } else {
                     FIRST = FIRST_CONST;
                     LAST = LAST_CONST;
@@ -30331,7 +30383,6 @@
                 that._template();
 
                 if (options.previousNext || options.numeric) {
-                    that._numericWrap = that.element.find(".k-pager-numbers-wrap");
 
                     if (that._numericWrap.length === 0) {
                         that._numericWrap = $("<div class='k-pager-numbers-wrap' />").appendTo(that.element);
@@ -35189,7 +35240,7 @@
             }
 
             if (options.items) {
-                $(element).children("ul").children("li").each(function(i) {
+                $(element).children("div").children("ul").children("li").each(function(i) {
                     storeItemSelectEventHandler(this, options.items[i]);
                 });
             }
@@ -36349,7 +36400,7 @@
                 var that = this;
                 var element = $(e.currentTarget);
                 var popupOpener = element.data(POPUP_OPENER_ATTR);
-                var hasChildren = (element.children(animationContainerSelector).length || element.children(groupSelector).length) || popupOpener;
+                var hasChildren = element.children(popupSelector).length || popupOpener;
                 var $window = $(window);
 
                 if (popupOpener) {
@@ -36387,7 +36438,7 @@
                      return;
                 }
 
-                popupElement = popupElement.children("ul");
+                popupElement = popupElement.find(popupSelector);
                 var popupId = popupElement.data(POPUP_ID_ATTR);
 
                 if (popupId) {
@@ -36448,7 +36499,7 @@
                 var overflowWrapper = that._overflowWrapper();
                 var popupId = current.data(POPUP_ID_ATTR);
                 var popupOpener = overflowWrapper.find(popupOpenerSelector(popupId));
-                popupId = popupOpener.parent().data(POPUP_ID_ATTR);
+                popupId = popupOpener.closest(popupSelector).data(POPUP_ID_ATTR);
                 that.close(popupOpener, true);
                 while (popupId && !that._openedPopups[popupId]) {
                     if (popupOpener.parent().is(menuSelector)) {
@@ -36456,7 +36507,7 @@
                     }
                     popupOpener = overflowWrapper.find(popupOpenerSelector(popupId));
                     that.close(popupOpener, true);
-                    popupId = popupOpener.parent().data(POPUP_ID_ATTR);
+                    popupId = popupOpener.closest(popupSelector).data(POPUP_ID_ATTR);
                 }
             },
 
@@ -53830,6 +53881,7 @@
                 }
 
                 element.removeAttr("accesskey");
+                input.attr("data-validate", false);
 
                 that._focused = that.input = input.attr({
                     "autocomplete": AUTOCOMPLETEVALUE,
@@ -63054,7 +63106,9 @@
             _onToolClick: function(e) {
                 e.preventDefault();
 
-                this._executeToolCommand($(e.currentTarget).data(COMMAND));
+                var tool = $(e.currentTarget);
+                this._tabindex(tool);
+                this._executeToolCommand(tool.data(COMMAND));
                 this._focusTool();
             },
 
@@ -73071,7 +73125,12 @@
 
                 _mergeTextWithOptions: function(action) {
                     var text = action.text;
-                    return text ? template(text)(this.options) : "";
+
+                    if (isFunction(text)) {
+                        return text(this.options);
+                    }
+
+                    return text ? text : "";
                 },
 
                 _tabindex: function(target) {
@@ -74981,7 +75040,7 @@
                 },
 
                 _actionable: function(element) {
-                    return $(element).is((TITLEBAR_BUTTONSSELECTOR + ", :input, a, .k-input, .k-icon, .k-svg-icon, [role='gridcell'], .k-input-value-text"));
+                    return $(element).is((TITLEBAR_BUTTONSSELECTOR + ", :input, a, .k-input, .k-icon, .k-svg-icon, .k-svg-icon>svg, .k-svg-icon>svg>path, .k-icon-button, [role='gridcell'], .k-input-inner, .k-input-value-text"));
                 },
 
                 _shouldFocus: function(target) {
