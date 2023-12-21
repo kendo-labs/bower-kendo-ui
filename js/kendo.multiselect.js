@@ -541,7 +541,7 @@
                 }
 
                 that.input.val("");
-                that._search();
+                that._search(true);
                 that._change();
                 that.focus();
                 that._hideClear();
@@ -659,7 +659,7 @@
                 var that = this,
                     filterValue = that.input.val().toLowerCase(),
                     listViewFilter = that.listView.dataSource.filter(),
-                    listViewFilterValue;
+                    listViewFilterValue = "";
 
                 if (listViewFilter && listViewFilter.filters.length > 0) {
                     listViewFilterValue = (listViewFilter.filters[0].value || "").toString().toLowerCase();
@@ -1312,19 +1312,30 @@
                 return -1;
             },
 
-            _search: function() {
+            _search: function(noDelay) {
                 var that = this;
+
+                if (noDelay) {
+                    that._performSearch();
+                    return;
+                }
 
                 clearTimeout(that._typingTimeout);
 
                 that._typingTimeout = setTimeout(function() {
-                    var value = that._inputValue();
-                    if (that._prev !== value) {
-                        that._prev = value;
-                        that.search(value);
-                        that._toggleCloseVisibility();
-                    }
+                    that._performSearch();
                 }, that.options.delay);
+            },
+
+            _performSearch: function() {
+                var that = this,
+                    value = that._inputValue();
+
+                if (that._prev !== value) {
+                    that._prev = value;
+                    that.search(value);
+                    that._toggleCloseVisibility();
+                }
             },
 
             _toggleCloseVisibility: function() {

@@ -1572,6 +1572,7 @@
                 var that = this;
                 clearTimeout(that._busy);
                 that._arrowIcon.removeClass(LOADING);
+                that._arrowIcon.find("svg").show();
                 that._focused.attr(ARIA_BUSY, false);
                 that._busy = null;
                 that._showClear();
@@ -1594,6 +1595,7 @@
                     if (that._arrowIcon) { //destroyed after request start
                         that._focused.attr(ARIA_BUSY, true);
                         that._arrowIcon.addClass(LOADING);
+                        that._arrowIcon.find("svg").hide();
                         that._hideClear();
                     }
                 }, 100);
@@ -2828,6 +2830,11 @@
                 var scrollTop = content.scrollTop;
                 var itemHeight = $(element.children[0]).height();
                 var itemIndex = Math.floor(scrollTop / itemHeight) || 0;
+
+                if (element.childElementCount == 0) {
+                    return null;
+                }
+
                 var item = element.children[itemIndex] || element.lastChild;
                 var forward = item.offsetTop < scrollTop;
 

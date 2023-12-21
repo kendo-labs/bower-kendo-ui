@@ -1053,7 +1053,9 @@ var __meta__ = {
             }
             that._getList().html(html);
             that._setItemIds();
-            that._createToolbar();
+            if (!that.toolbar) {
+                that._createToolbar();
+            }
             that._syncElement();
             that._updateToolbar();
             that._updateAllToolbars();

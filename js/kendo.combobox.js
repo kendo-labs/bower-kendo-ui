@@ -353,8 +353,9 @@
 
                 var item = that._focus();
                 var dataItem = this.listView.dataItemByIndex(this.listView.getElementIndex(item));
+                var selectedIndex = that.select();
 
-                if (value !== that.value() && that.trigger("select", { dataItem: dataItem, item: item })) {
+                if (value !== that.value() && selectedIndex !== -1 && that.trigger("select", { dataItem: dataItem, item: item })) {
                     that.value(value);
                     return;
                 }
@@ -921,6 +922,7 @@
                 var that = this;
                 clearTimeout(that._busy);
                 that._arrowIcon.removeClass(LOADING);
+                that._arrowIcon.find("svg").show();
                 that._focused.attr("aria-busy", false);
                 that._busy = null;
                 that._toggleCloseVisibility();
@@ -1066,6 +1068,7 @@
                     })
                     .show();
 
+                input.attr(kendo.attr("skip"), true);
                 if (placeholderSupported) {
                     input.attr("placeholder", that.options.placeholder);
                 }

@@ -1501,7 +1501,7 @@
                     }
 
                     // If the value comes in the form of 021, 022, 023 we must trim the leading zero otherwise the result will be 02 in all three cases instead of 21/22/23.
-                    if (shouldUnpadZeros && part.length === 3 && Number.isInteger(Number(part)) && Number(part) > 0) {
+                    if (shouldUnpadZeros && part.trim().length === 3 && Number.isInteger(Number(part)) && Number(part) > 0) {
                         part = unpadZero(part);
                     } else {
                         part = value.substr(valueIdx, size);
@@ -2061,6 +2061,7 @@
                 outerHeight = kendo._outerHeight,
                 parent = element.parent(),
                 wrapper = element.closest(".k-animation-container"),
+                calculateFromHidden = element.hasClass("k-tooltip"),
                 visible = element.is(":visible"),
                 wrapperStyle = parent[0].style,
                 elementHeight = element[0].style.height;
@@ -2082,7 +2083,7 @@
                     parent.css("width", ""); // Needed to get correct width dimensions
                 }
                 parent.css({
-                    width: autosize ? outerWidth(element) + 1 : outerWidth(element),
+                    width: autosize ? outerWidth(element, false, calculateFromHidden) + 1 : outerWidth(element, false, calculateFromHidden),
                 });
 
                 if (elementHeight === "auto") {

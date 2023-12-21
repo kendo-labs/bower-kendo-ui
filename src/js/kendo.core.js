@@ -27,7 +27,7 @@ var packageMetadata = {
     productName: 'Kendo UI',
     productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'UIASPCORE', 'KENDOMVC', 'KENDOUIMVC'],
     publishDate: 0,
-    version: '2023.3.1129'.replace(/^\s+|\s+$/g, ''),
+    version: '2023.3.1221'.replace(/^\s+|\s+$/g, ''),
     licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code?utm_medium=product&utm_source=kendojquery&utm_campaign=kendo-ui-jquery-purchase-license-keys-warning'
 };
 
@@ -198,7 +198,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2023.3.1129".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2023.3.1221".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -1405,7 +1405,7 @@ function pad(number, digits, end) {
                 }
 
                 // If the value comes in the form of 021, 022, 023 we must trim the leading zero otherwise the result will be 02 in all three cases instead of 21/22/23.
-                if (shouldUnpadZeros && part.length === 3 && Number.isInteger(Number(part)) && Number(part) > 0) {
+                if (shouldUnpadZeros && part.trim().length === 3 && Number.isInteger(Number(part)) && Number(part) > 0) {
                     part = unpadZero(part);
                 } else {
                     part = value.substr(valueIdx, size);
@@ -1963,6 +1963,7 @@ function pad(number, digits, end) {
             outerHeight = kendo._outerHeight,
             parent = element.parent(),
             wrapper = element.closest(".k-animation-container"),
+            calculateFromHidden = element.hasClass("k-tooltip"),
             visible = element.is(":visible"),
             wrapperStyle = parent[0].style,
             elementHeight = element[0].style.height;
@@ -1984,7 +1985,7 @@ function pad(number, digits, end) {
                 parent.css("width", ""); // Needed to get correct width dimensions
             }
             parent.css({
-                width: autosize ? outerWidth(element) + 1 : outerWidth(element),
+                width: autosize ? outerWidth(element, false, calculateFromHidden) + 1 : outerWidth(element, false, calculateFromHidden),
             });
 
             if (elementHeight === "auto") {

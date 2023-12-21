@@ -306,10 +306,17 @@
 
                 that._label();
 
-                that._editable({
-                    readonly: that.options.readonly,
-                    disable: !that.options.enable
-                });
+                if (options.enable !== undefined$1 || options.readonly !== undefined$1) {
+                    that._editable({
+                        readonly: options.readonly,
+                        disable: !options.enable
+                    });
+                } else {
+                    that._editable({
+                        readonly: that.element.attr("readonly") !== undefined$1 ? Boolean(that.element.attr("readonly")) : that.options.readonly,
+                        disable: that.element.attr("disabled") !== undefined$1 ? Boolean(that.element.attr("disabled")) : !that.options.enable
+                    });
+                }
 
                 if (options.value !== undefined$1) {
                     that.value(options.value);

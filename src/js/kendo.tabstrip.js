@@ -158,12 +158,10 @@ var __meta__ = {
             .addClass(ACTIVESTATE + " " + TABONTOP);
 
         tabs.attr("role", "tab");
-        tabs.filter("." + ACTIVESTATE)
-            .attr(ARIA_SELECTED, true);
-
 
         tabs.each(function() {
             var item = $(this);
+            item.attr(ARIA_SELECTED, item.is("." + ACTIVESTATE));
 
             if (!item.children("." + LINK).length) {
                 item
@@ -204,10 +202,10 @@ var __meta__ = {
 
             that._isRtl = kendo.support.isRtl(that.wrapper);
 
-            that._tabindex();
             that._updateClasses();
             that._dataSource();
 
+            that._tabindex(that.tabGroup);
             that.tabGroup.attr("role", "tablist");
 
             if (options.dataSource) {
@@ -295,9 +293,9 @@ var __meta__ = {
             options.animation = extend(true, animation, options.animation);
 
             if (options.navigatable) {
-                that.wrapper.on("keydown" + NS, that._keyDownProxy);
+                that.tabGroup.on("keydown" + NS, that._keyDownProxy);
             } else {
-                that.wrapper.off("keydown" + NS, that._keyDownProxy);
+                that.tabGroup.off("keydown" + NS, that._keyDownProxy);
             }
 
             Widget.fn.setOptions.call(that, options);
@@ -374,8 +372,9 @@ var __meta__ = {
 
             var isAjaxContent = (item.children("." + LINK).data(CONTENTURL) || that._contentUrls[itemIndex] || false) && contentHolder.is(EMPTY),
                 showContentElement = function() {
-                    oldTab.removeAttr(ARIA_SELECTED);
+                    oldTab.attr(ARIA_SELECTED, false);
                     item.attr(ARIA_SELECTED, true);
+                    that.tabGroup.attr("aria-activedescendant", item.attr("id"));
 
                     that._current(item);
 
@@ -661,7 +660,8 @@ var __meta__ = {
                 item.removeClass(ACTIVESTATE);
             }
 
-            item.removeAttr(ARIA_SELECTED);
+            item.attr(ARIA_SELECTED, false);
+            that.tabGroup.removeAttr("aria-activedescendant");
 
             that.contentAnimators
                     .filter("." + ACTIVESTATE)
@@ -918,6 +918,7 @@ var __meta__ = {
                 item = $(item);
                 if (!item.hasClass(ACTIVESTATE) && !that.trigger(SELECT, { item: item[0], contentElement: that.contentHolder(item.index())[0] })) {
                     that.activateTab(item);
+                    that.tabGroup.attr("aria-activedescendant", item.attr("id"));
                 }
             });
 
@@ -963,7 +964,9 @@ var __meta__ = {
             var that = this,
                 options = that.options;
 
-            that.wrapper
+            that.wrapper.on("focus" + NS, function() { that.tabGroup.trigger("focus"); });
+
+            that.tabGroup
                 .on(MOUSEENTER + NS + " " + MOUSELEAVE + NS, HOVERABLEITEMS, that._toggleHover)
                 .on("focus" + NS, that._active.bind(that))
                 .on("blur" + NS, function() { that._current(null); });
@@ -971,7 +974,7 @@ var __meta__ = {
             that._keyDownProxy = that._keydown.bind(that);
 
             if (options.navigatable) {
-                that.wrapper.on("keydown" + NS, that._keyDownProxy);
+                that.tabGroup.on("keydown" + NS, that._keyDownProxy);
             }
 
             that.tabGroup
@@ -1190,19 +1193,19 @@ var __meta__ = {
 
         _itemClick: function(e) {
             var that = this,
-                wr = that.wrapper[0];
+                tabGroup = that.tabGroup[0];
 
-            if (wr !== document.activeElement) {
+            if (tabGroup !== document.activeElement) {
                 var msie = kendo.support.browser.msie;
                 if (msie) {
                     try {
                         // does not scroll to the active element
-                        wr.setActive();
+                        tabGroup.setActive();
                     } catch (j) {
-                        wr.focus();
+                        tabGroup.focus();
                     }
                 } else {
-                    wr.focus();
+                    tabGroup.focus();
                 }
             }
 
@@ -1528,7 +1531,9 @@ var __meta__ = {
 
             if (tabs.length) {
                 updateTabClasses(tabs);
+                activeItem = tabs.filter("." + ACTIVESTATE).index();
 
+                that.tabGroup.attr("aria-activedescendant", tabs.eq(activeItem).attr("id"));
                 updateFirstLast(that.tabGroup);
                 that._updateContentElements(true);
             }

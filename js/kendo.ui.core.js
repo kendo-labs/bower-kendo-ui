@@ -1501,7 +1501,7 @@
                     }
 
                     // If the value comes in the form of 021, 022, 023 we must trim the leading zero otherwise the result will be 02 in all three cases instead of 21/22/23.
-                    if (shouldUnpadZeros && part.length === 3 && Number.isInteger(Number(part)) && Number(part) > 0) {
+                    if (shouldUnpadZeros && part.trim().length === 3 && Number.isInteger(Number(part)) && Number(part) > 0) {
                         part = unpadZero(part);
                     } else {
                         part = value.substr(valueIdx, size);
@@ -2061,6 +2061,7 @@
                 outerHeight = kendo._outerHeight,
                 parent = element.parent(),
                 wrapper = element.closest(".k-animation-container"),
+                calculateFromHidden = element.hasClass("k-tooltip"),
                 visible = element.is(":visible"),
                 wrapperStyle = parent[0].style,
                 elementHeight = element[0].style.height;
@@ -2082,7 +2083,7 @@
                     parent.css("width", ""); // Needed to get correct width dimensions
                 }
                 parent.css({
-                    width: autosize ? outerWidth(element) + 1 : outerWidth(element),
+                    width: autosize ? outerWidth(element, false, calculateFromHidden) + 1 : outerWidth(element, false, calculateFromHidden),
                 });
 
                 if (elementHeight === "auto") {
@@ -12665,7 +12666,7 @@
                     lastItem = group.items[Math.min(groupItemsSkip + take, groupItemCount - 1)];
 
                     if (firstItem.notFetched) {
-                        that.getGroupItems(group, options, parents, callback, math.max(math.floor(groupItemsSkip / pageSize), 0) * pageSize, math.round((groupItemsSkip + pageSize) / pageSize));
+                        that.getGroupItems(group, options, parents, callback, groupItemsSkip, math.round((groupItemsSkip + pageSize) / pageSize));
                         return true;
                     }
 
@@ -12702,9 +12703,9 @@
 
                 if (subgroups && subgroups.length) {
                     data.group = subgroups;
-                    data.groupPaging = true;
                 }
 
+                data.groupPaging = true;
                 clearTimeout(that._timeout);
                 that._timeout = setTimeout(function() {
                     that._queueRequest(data, function() {
@@ -35165,9 +35166,11 @@
             if (!item.children(LINK_SELECTOR).length) {
                 item.contents() // exclude groups, real links, templates and empty text nodes
                     .filter(function() { return (!this.nodeName.match(excludedNodesRegExp) && !(this.nodeType === 3 && !kendo.trim(this.nodeValue))); })
-                    .wrapAll("<span class='" + LINK + "'></span>")
+                    // adding role=none to span elements inside li[role=menuitem]
+                    // to make screen readers announce submenus #telerik/kendo-ui-core/issues/6942
+                    .wrapAll("<span class='" + LINK + "' role='none'></span>")
                     .filter(function(idx, elm) { return elm.nodeType === 3; })
-                    .wrap("<span class='k-menu-link-text'></span>");
+                    .wrap("<span class='k-menu-link-text' role='none'></span>");
             }
 
             updateArrow(item);
@@ -37191,7 +37194,7 @@
                             text = encode(text);
                         }
 
-                        return ("<span class='k-menu-link-text'>" + text + "</span>");
+                        return ("<span class='k-menu-link-text' role='none'>" + text + "</span>");
                     });
                 }
 
@@ -37215,7 +37218,7 @@
                         var imgAttributes = fieldAccessor("imageAttr")(item);
                         var tag = url ? 'a' : 'span';
 
-                        return "<" + tag + " class='" + (rendering.textClass(item)) + "' " + (url ? ("href='" + url + "'") : '') + " >" +
+                        return "<" + tag + " class='" + (rendering.textClass(item)) + "' role='none' " + (url ? ("href='" + url + "'") : '') + " >" +
                             (imageUrl ? ("<img " + (rendering.imageCssAttributes(imgAttributes)) + "  alt='' src='" + imageUrl + "' />") : '') +
                             this$1$1.templates.sprite(item) +
                             this$1$1.options.template(data) +
@@ -41110,6 +41113,7 @@
                 var that = this;
                 clearTimeout(that._busy);
                 that._arrowIcon.removeClass(LOADING);
+                that._arrowIcon.find("svg").show();
                 that._focused.attr(ARIA_BUSY, false);
                 that._busy = null;
                 that._showClear();
@@ -41132,6 +41136,7 @@
                     if (that._arrowIcon) { //destroyed after request start
                         that._focused.attr(ARIA_BUSY, true);
                         that._arrowIcon.addClass(LOADING);
+                        that._arrowIcon.find("svg").hide();
                         that._hideClear();
                     }
                 }, 100);
@@ -42366,6 +42371,11 @@
                 var scrollTop = content.scrollTop;
                 var itemHeight = $(element.children[0]).height();
                 var itemIndex = Math.floor(scrollTop / itemHeight) || 0;
+
+                if (element.childElementCount == 0) {
+                    return null;
+                }
+
                 var item = element.children[itemIndex] || element.lastChild;
                 var forward = item.offsetTop < scrollTop;
 
@@ -51218,8 +51228,9 @@
 
                 var item = that._focus();
                 var dataItem = this.listView.dataItemByIndex(this.listView.getElementIndex(item));
+                var selectedIndex = that.select();
 
-                if (value !== that.value() && that.trigger("select", { dataItem: dataItem, item: item })) {
+                if (value !== that.value() && selectedIndex !== -1 && that.trigger("select", { dataItem: dataItem, item: item })) {
                     that.value(value);
                     return;
                 }
@@ -51786,6 +51797,7 @@
                 var that = this;
                 clearTimeout(that._busy);
                 that._arrowIcon.removeClass(LOADING);
+                that._arrowIcon.find("svg").show();
                 that._focused.attr("aria-busy", false);
                 that._busy = null;
                 that._toggleCloseVisibility();
@@ -51931,6 +51943,7 @@
                     })
                     .show();
 
+                input.attr(kendo.attr("skip"), true);
                 if (placeholderSupported) {
                     input.attr("placeholder", that.options.placeholder);
                 }
@@ -52873,7 +52886,7 @@
                 }
 
                 that.input.val("");
-                that._search();
+                that._search(true);
                 that._change();
                 that.focus();
                 that._hideClear();
@@ -52991,7 +53004,7 @@
                 var that = this,
                     filterValue = that.input.val().toLowerCase(),
                     listViewFilter = that.listView.dataSource.filter(),
-                    listViewFilterValue;
+                    listViewFilterValue = "";
 
                 if (listViewFilter && listViewFilter.filters.length > 0) {
                     listViewFilterValue = (listViewFilter.filters[0].value || "").toString().toLowerCase();
@@ -53644,19 +53657,30 @@
                 return -1;
             },
 
-            _search: function() {
+            _search: function(noDelay) {
                 var that = this;
+
+                if (noDelay) {
+                    that._performSearch();
+                    return;
+                }
 
                 clearTimeout(that._typingTimeout);
 
                 that._typingTimeout = setTimeout(function() {
-                    var value = that._inputValue();
-                    if (that._prev !== value) {
-                        that._prev = value;
-                        that.search(value);
-                        that._toggleCloseVisibility();
-                    }
+                    that._performSearch();
                 }, that.options.delay);
+            },
+
+            _performSearch: function() {
+                var that = this,
+                    value = that._inputValue();
+
+                if (that._prev !== value) {
+                    that._prev = value;
+                    that.search(value);
+                    that._toggleCloseVisibility();
+                }
             },
 
             _toggleCloseVisibility: function() {
@@ -56984,10 +57008,17 @@
 
                 that._label();
 
-                that._editable({
-                    readonly: that.options.readonly,
-                    disable: !that.options.enable
-                });
+                if (options.enable !== undefined$1 || options.readonly !== undefined$1) {
+                    that._editable({
+                        readonly: options.readonly,
+                        disable: !options.enable
+                    });
+                } else {
+                    that._editable({
+                        readonly: that.element.attr("readonly") !== undefined$1 ? Boolean(that.element.attr("readonly")) : that.options.readonly,
+                        disable: that.element.attr("disabled") !== undefined$1 ? Boolean(that.element.attr("disabled")) : !that.options.enable
+                    });
+                }
 
                 if (options.value !== undefined$1) {
                     that.value(options.value);
@@ -62514,7 +62545,9 @@
                 }
                 that._getList().html(html);
                 that._setItemIds();
-                that._createToolbar();
+                if (!that.toolbar) {
+                    that._createToolbar();
+                }
                 that._syncElement();
                 that._updateToolbar();
                 that._updateAllToolbars();
@@ -67043,12 +67076,10 @@
                 .addClass(ACTIVESTATE + " " + TABONTOP);
 
             tabs.attr("role", "tab");
-            tabs.filter("." + ACTIVESTATE)
-                .attr(ARIA_SELECTED, true);
-
 
             tabs.each(function() {
                 var item = $(this);
+                item.attr(ARIA_SELECTED, item.is("." + ACTIVESTATE));
 
                 if (!item.children("." + LINK).length) {
                     item
@@ -67089,10 +67120,10 @@
 
                 that._isRtl = kendo.support.isRtl(that.wrapper);
 
-                that._tabindex();
                 that._updateClasses();
                 that._dataSource();
 
+                that._tabindex(that.tabGroup);
                 that.tabGroup.attr("role", "tablist");
 
                 if (options.dataSource) {
@@ -67180,9 +67211,9 @@
                 options.animation = extend(true, animation, options.animation);
 
                 if (options.navigatable) {
-                    that.wrapper.on("keydown" + NS, that._keyDownProxy);
+                    that.tabGroup.on("keydown" + NS, that._keyDownProxy);
                 } else {
-                    that.wrapper.off("keydown" + NS, that._keyDownProxy);
+                    that.tabGroup.off("keydown" + NS, that._keyDownProxy);
                 }
 
                 Widget.fn.setOptions.call(that, options);
@@ -67259,8 +67290,9 @@
 
                 var isAjaxContent = (item.children("." + LINK).data(CONTENTURL) || that._contentUrls[itemIndex] || false) && contentHolder.is(EMPTY),
                     showContentElement = function() {
-                        oldTab.removeAttr(ARIA_SELECTED);
+                        oldTab.attr(ARIA_SELECTED, false);
                         item.attr(ARIA_SELECTED, true);
+                        that.tabGroup.attr("aria-activedescendant", item.attr("id"));
 
                         that._current(item);
 
@@ -67546,7 +67578,8 @@
                     item.removeClass(ACTIVESTATE);
                 }
 
-                item.removeAttr(ARIA_SELECTED);
+                item.attr(ARIA_SELECTED, false);
+                that.tabGroup.removeAttr("aria-activedescendant");
 
                 that.contentAnimators
                         .filter("." + ACTIVESTATE)
@@ -67803,6 +67836,7 @@
                     item = $(item);
                     if (!item.hasClass(ACTIVESTATE) && !that.trigger(SELECT, { item: item[0], contentElement: that.contentHolder(item.index())[0] })) {
                         that.activateTab(item);
+                        that.tabGroup.attr("aria-activedescendant", item.attr("id"));
                     }
                 });
 
@@ -67848,7 +67882,9 @@
                 var that = this,
                     options = that.options;
 
-                that.wrapper
+                that.wrapper.on("focus" + NS, function() { that.tabGroup.trigger("focus"); });
+
+                that.tabGroup
                     .on(MOUSEENTER + NS + " " + MOUSELEAVE + NS, HOVERABLEITEMS, that._toggleHover)
                     .on("focus" + NS, that._active.bind(that))
                     .on("blur" + NS, function() { that._current(null); });
@@ -67856,7 +67892,7 @@
                 that._keyDownProxy = that._keydown.bind(that);
 
                 if (options.navigatable) {
-                    that.wrapper.on("keydown" + NS, that._keyDownProxy);
+                    that.tabGroup.on("keydown" + NS, that._keyDownProxy);
                 }
 
                 that.tabGroup
@@ -68075,19 +68111,19 @@
 
             _itemClick: function(e) {
                 var that = this,
-                    wr = that.wrapper[0];
+                    tabGroup = that.tabGroup[0];
 
-                if (wr !== document.activeElement) {
+                if (tabGroup !== document.activeElement) {
                     var msie = kendo.support.browser.msie;
                     if (msie) {
                         try {
                             // does not scroll to the active element
-                            wr.setActive();
+                            tabGroup.setActive();
                         } catch (j) {
-                            wr.focus();
+                            tabGroup.focus();
                         }
                     } else {
-                        wr.focus();
+                        tabGroup.focus();
                     }
                 }
 
@@ -68407,7 +68443,9 @@
 
                 if (tabs.length) {
                     updateTabClasses(tabs);
+                    activeItem = tabs.filter("." + ACTIVESTATE).index();
 
+                    that.tabGroup.attr("aria-activedescendant", tabs.eq(activeItem).attr("id"));
                     updateFirstLast(that.tabGroup);
                     that._updateContentElements(true);
                 }
