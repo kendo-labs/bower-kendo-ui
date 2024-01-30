@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -794,7 +794,7 @@
                        if (!composite) {
                            value = that.wrap(value, field, function() { return that; });
                        }
-                       if (!that._set(field, value) || field.indexOf("(") >= 0 || field.indexOf("[") >= 0) {
+                       if ((!that._set(field, value) || field.indexOf("(") >= 0 || field.indexOf("[") >= 0)) {
                            that.trigger(CHANGE, { field: field });
                        }
                    }
@@ -4084,7 +4084,7 @@
                    options.aggregate = convertDescriptorsField(options.aggregate, that.reader.model);
                }
 
-               if (!that.options.groupPaging) {
+               if (!that.options.groupPaging || !(that.options.serverPaging && that.options.serverGrouping)) {
                    delete options.groupPaging;
                }
 
@@ -4684,6 +4684,7 @@
                }
 
                data.groupPaging = true;
+
                clearTimeout(that._timeout);
                that._timeout = setTimeout(function() {
                    that._queueRequest(data, function() {

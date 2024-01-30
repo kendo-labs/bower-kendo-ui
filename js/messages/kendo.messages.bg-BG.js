@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -359,6 +359,7 @@
   kendo.spreadsheet.messages.view =
   $.extend(true, kendo.spreadsheet.messages.view,{
     "nameBox": "Име на клетка",
+    "formulaInput": "Поле за формула",
     "errors": {
       "shiftingNonblankCells": "Не може да се вмъкнат клетки поради възможност от загуба на данни. Изберете друга локация за вмъкване на клетки или изтрийте данни от края на работния лист."
     },
@@ -852,6 +853,50 @@
         "morePages": "Още страници"
       });
       }
+
+  /* PivotConfiguratorV2 messages */
+
+  if (kendo.ui.PivotConfiguratorV2) {
+    kendo.ui.PivotConfiguratorV2.prototype.options.messages =
+      $.extend(true, kendo.ui.PivotConfiguratorV2.prototype.options.messages, {
+        "title": "Настройки",
+        "cancelButtonText": "Отказ",
+        "applyButtonText": "Приложи",
+        "measures": "Избери полета за начална настройка",
+        "columns": "Избери полета за начална настройка",
+        "rows": "Избери полета за начална настройка"
+      });
+  }
+
+  /* PivotFieldMenuV2 messages */
+
+  if (kendo.ui.PivotFieldMenuV2) {
+    kendo.ui.PivotFieldMenuV2.prototype.options.messages =
+      $.extend(true, kendo.ui.PivotFieldMenuV2.prototype.options.messages, {
+        "apply": "Приложи",
+        "sortAscending": "Сортирай възходящо",
+        "sortDescending": "Сортирай низходящо",
+        "filterFields": "Филтрирай полета",
+        "filter": "Филтрирай",
+        "include": "Включи полета...",
+        "clear": "Премахни",
+        "reset": "Нулирай",
+        "moveToColumns": "Премести в Колони",
+        "moveToRows": "Премести в Редове",
+        "movePrevious": "Премести преди",
+        "moveNext": "Премести след",
+        "filterOperatorsDropDownLabel": "Регионални оператори за филтриране",
+        "filterValueTextBoxLabel": "Регионална стойност за филтриране",
+        "operators": {
+            "eq": "Е равно на",
+            "neq": "Не е равно на",
+            "startswith": "Започва с",
+            "contains": "Съдържа",
+            "doesnotcontain": "Не съдържа",
+            "endswith": "Завършва на"
+        }
+      });
+  }
 
   /* FilterMenu messages */
 

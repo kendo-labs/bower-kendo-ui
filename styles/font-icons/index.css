@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -933,6 +933,10 @@
     content: "\e07a";
 }
 
+.k-i-info-solid::before {
+    content: "\e07b";
+}
+
 .k-i-font-grow::before {
     content: "\e07c";
 }
@@ -963,6 +967,26 @@
 
 .k-i-border-type::before {
     content: "\e083";
+}
+
+.k-i-thumb-down-outline::before {
+    content: "\e084";
+}
+
+.k-i-thumb-down::before {
+    content: "\e085";
+}
+
+.k-i-thumb-up-outline::before {
+    content: "\e086";
+}
+
+.k-i-thumb-up::before {
+    content: "\e087";
+}
+
+.k-i-sparkles::before {
+    content: "\e088";
 }
 
 .k-i-undo::before {

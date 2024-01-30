@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+:root {
+  --kendo-body-bg: #ffffff;
+  --kendo-body-text: var(--kendo-neutral-160, inherit);
+  --kendo-component-bg: #ffffff;
+  --kendo-component-text: var(--kendo-neutral-160, inherit);
+  --kendo-component-border: var(--kendo-neutral-30, inherit);
+  --kendo-link-text: var(--kendo-primary-100, inherit);
+  --kendo-link-hover-text: var(--kendo-primary-120, inherit);
+  --kendo-disabled-bg: var(--kendo-neutral-20, inherit);
+  --kendo-disabled-text: var(--kendo-neutral-90, inherit);
+  --kendo-disabled-border: transparent;
+  --kendo-hover-bg: var(--kendo-neutral-20, inherit);
+  --kendo-hover-text: var(--kendo-neutral-190, inherit);
+  --kendo-hover-border: var(--kendo-neutral-20, inherit);
+  --kendo-selected-bg: var(--kendo-neutral-30, inherit);
+  --kendo-selected-text: var(--kendo-neutral-160, inherit);
+  --kendo-selected-border: var(--kendo-neutral-130, inherit);
+  --kendo-selected-hover-bg: var(--kendo-neutral-40, inherit);
+  --kendo-selected-hover-text: var(--kendo-neutral-190, inherit);
+  --kendo-selected-hover-border: var(--kendo-neutral-130, inherit);
+  --kendo-focus-outline: var(--kendo-neutral-130, inherit);
+  --kendo-subtle-text: var(--kendo-neutral-130, inherit);
+  --kendo-invalid-bg: initial;
+  --kendo-invalid-text: var(--kendo-error-190, inherit);
+  --kendo-invalid-border: var(--kendo-error-190, inherit);
+  --kendo-invalid-shadow: ;
+  --kendo-border-radius-sm: 0.0625rem;
+  --kendo-border-radius-md: 0.125rem;
+  --kendo-border-radius-lg: 0.25rem;
+}
+
 .k-theme-test-class,
 .k-common-test-class {
   opacity: 0;
@@ -581,7 +612,6 @@
 }
 
 .k-current-time {
-  width: var(--kendo-current-time-width, 1px);
   position: absolute;
 }
 
@@ -1315,7 +1345,7 @@ kendo-sortable {
   --kendo-primary-190: #162435;
   --kendo-primary-200: #131d29;
   --kendo-primary-210: #0e151e;
-  --kendo-primary-220: #070B10;
+  --kendo-primary-220: #070b10;
   --kendo-neutral-10: #faf9f8;
   --kendo-neutral-20: #f3f2f1;
   --kendo-neutral-30: #edebe9;
@@ -1595,123 +1625,95 @@ kendo-sortable {
   --kendo-error-text: var(--kendo-error-190, inherit);
   --kendo-error-bg: var(--kendo-error-20, inherit);
   --kendo-error-border: var(--kendo-error-20, inherit);
-  --kendo-body-bg: #ffffff;
-  --kendo-body-text: var(--kendo-neutral-160, inherit);
-  --kendo-component-bg: #ffffff;
-  --kendo-component-text: var(--kendo-neutral-160, inherit);
-  --kendo-component-border: var(--kendo-neutral-30, inherit);
-  --kendo-link-text: var(--kendo-primary-100, inherit);
-  --kendo-link-hover-text: var(--kendo-primary-120, inherit);
-  --kendo-disabled-bg: var(--kendo-neutral-20, inherit);
-  --kendo-disabled-text: var(--kendo-neutral-90, inherit);
-  --kendo-disabled-border: transparent;
-  --kendo-hover-bg: var(--kendo-neutral-20, inherit);
-  --kendo-hover-text: var(--kendo-neutral-190, inherit);
-  --kendo-hover-border: var(--kendo-neutral-20, inherit);
-  --kendo-selected-bg: var(--kendo-neutral-30, inherit);
-  --kendo-selected-text: var(--kendo-neutral-160, inherit);
-  --kendo-selected-border: var(--kendo-neutral-130, inherit);
-  --kendo-selected-hover-bg: var(--kendo-neutral-40, inherit);
-  --kendo-selected-hover-text: var(--kendo-neutral-190, inherit);
-  --kendo-selected-hover-border: var(--kendo-neutral-130, inherit);
-  --kendo-focus-outline: var(--kendo-neutral-130, inherit);
-  --kendo-subtle-text: var(--kendo-neutral-130, inherit);
-  --kendo-invalid-bg: initial;
-  --kendo-invalid-text: var(--kendo-error-190, inherit);
-  --kendo-invalid-border: var(--kendo-error-190, inherit);
-  --kendo-invalid-shadow: ;
-  --kendo-border-radius-sm: 0.0625rem;
-  --kendo-border-radius-md: 0.125rem;
-  --kendo-border-radius-lg: 0.25rem;
 }
 
-.k-text-primary,
-.k-color-primary {
+:root .k-text-primary,
+:root .k-color-primary {
   color: var(--kendo-text-primary, var(--kendo-primary-130, inherit));
 }
 
-.\!k-text-primary,
-.\!k-color-primary {
+:root .\!k-text-primary,
+:root .\!k-color-primary {
   color: var(--kendo-text-primary, var(--kendo-primary-130, inherit)) !important;
 }
 
-.k-bg-primary {
+:root .k-bg-primary {
   background-color: var(--kendo-bg-primary, var(--kendo-primary-130, inherit));
 }
 
-.\!k-bg-primary {
+:root .\!k-bg-primary {
   background-color: var(--kendo-bg-primary, var(--kendo-primary-130, inherit)) !important;
 }
 
-.k-text-info,
-.k-color-info {
+:root .k-text-info,
+:root .k-color-info {
   color: var(--kendo-text-info, var(--kendo-info-190, inherit));
 }
 
-.\!k-text-info,
-.\!k-color-info {
+:root .\!k-text-info,
+:root .\!k-color-info {
   color: var(--kendo-text-info, var(--kendo-info-190, inherit)) !important;
 }
 
-.k-bg-info {
+:root .k-bg-info {
   background-color: var(--kendo-bg-info, var(--kendo-info-190, inherit));
 }
 
-.\!k-bg-info {
+:root .\!k-bg-info {
   background-color: var(--kendo-bg-info, var(--kendo-info-190, inherit)) !important;
 }
 
-.k-text-success,
-.k-color-success {
+:root .k-text-success,
+:root .k-color-success {
   color: var(--kendo-text-success, var(--kendo-success-190, inherit));
 }
 
-.\!k-text-success,
-.\!k-color-success {
+:root .\!k-text-success,
+:root .\!k-color-success {
   color: var(--kendo-text-success, var(--kendo-success-190, inherit)) !important;
 }
 
-.k-bg-success {
+:root .k-bg-success {
   background-color: var(--kendo-bg-success, var(--kendo-success-190, inherit));
 }
 
-.\!k-bg-success {
+:root .\!k-bg-success {
   background-color: var(--kendo-bg-success, var(--kendo-success-190, inherit)) !important;
 }
 
-.k-text-warning,
-.k-color-warning {
+:root .k-text-warning,
+:root .k-color-warning {
   color: var(--kendo-text-warning, var(--kendo-neutral-160, inherit));
 }
 
-.\!k-text-warning,
-.\!k-color-warning {
+:root .\!k-text-warning,
+:root .\!k-color-warning {
   color: var(--kendo-text-warning, var(--kendo-neutral-160, inherit)) !important;
 }
 
-.k-bg-warning {
+:root .k-bg-warning {
   background-color: var(--kendo-bg-warning, var(--kendo-neutral-160, inherit));
 }
 
-.\!k-bg-warning {
+:root .\!k-bg-warning {
   background-color: var(--kendo-bg-warning, var(--kendo-neutral-160, inherit)) !important;
 }
 
-.k-text-error,
-.k-color-error {
+:root .k-text-error,
+:root .k-color-error {
   color: var(--kendo-text-error, var(--kendo-error-190, inherit));
 }
 
-.\!k-text-error,
-.\!k-color-error {
+:root .\!k-text-error,
+:root .\!k-color-error {
   color: var(--kendo-text-error, var(--kendo-error-190, inherit)) !important;
 }
 
-.k-bg-error {
+:root .k-bg-error {
   background-color: var(--kendo-bg-error, var(--kendo-error-190, inherit));
 }
 
-.\!k-bg-error {
+:root .\!k-bg-error {
   background-color: var(--kendo-bg-error, var(--kendo-error-190, inherit)) !important;
 }
 
@@ -26651,6 +26653,7 @@ kendo-sortable {
 .k-popup.k-popup-transparent {
   border-width: 0;
   background-color: transparent;
+  box-shadow: none;
 }
 
 .k-popup.k-popup-flush {
@@ -26706,14 +26709,14 @@ kendo-sortable {
 
 @keyframes ripple {
   0% {
-    transform: scale(0);
+    transform: translate(-50%, -50%) scale(0);
   }
   20% {
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
   }
   100% {
     opacity: 0;
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 .k-table {
@@ -28682,10 +28685,6 @@ kendo-badge-container {
   pointer-events: none;
 }
 
-.k-tooltip-wrapper .k-tooltip {
-  box-shadow: var(--kendo-tooltip-shadow, var(--kendo-box-shadow-depth-2, none));
-}
-
 .k-tooltip {
   box-shadow: var(--kendo-tooltip-shadow, var(--kendo-box-shadow-depth-2, none));
   --INTERNAL--kendo-tooltip-text: var( --kendo-tooltip-text, var(--kendo-component-text, initial) );
@@ -28706,16 +28705,16 @@ kendo-badge-container {
   --kendo-tooltip-border: var(--kendo-primary-100, inherit);
 }
 
-.k-tooltip-error {
-  --kendo-tooltip-text: var(--kendo-error-160, inherit);
-  --kendo-tooltip-bg: var(--kendo-error-20, inherit);
-  --kendo-tooltip-border: var(--kendo-error-20, inherit);
+.k-tooltip-secondary {
+  --kendo-tooltip-text: var(--kendo-neutral-160, inherit);
+  --kendo-tooltip-bg: var(--kendo-neutral-20, inherit);
+  --kendo-tooltip-border: var(--kendo-neutral-20, inherit);
 }
 
-.k-tooltip-warning {
-  --kendo-tooltip-text: var(--kendo-warning-160, inherit);
-  --kendo-tooltip-bg: var(--kendo-warning-20, inherit);
-  --kendo-tooltip-border: var(--kendo-warning-20, inherit);
+.k-tooltip-tertiary {
+  --kendo-tooltip-text: var(--kendo-tertiary-160, inherit);
+  --kendo-tooltip-bg: var(--kendo-tertiary-20, inherit);
+  --kendo-tooltip-border: var(--kendo-tertiary-20, inherit);
 }
 
 .k-tooltip-success {
@@ -28724,10 +28723,34 @@ kendo-badge-container {
   --kendo-tooltip-border: var(--kendo-success-20, inherit);
 }
 
+.k-tooltip-warning {
+  --kendo-tooltip-text: var(--kendo-warning-160, inherit);
+  --kendo-tooltip-bg: var(--kendo-warning-20, inherit);
+  --kendo-tooltip-border: var(--kendo-warning-20, inherit);
+}
+
+.k-tooltip-error {
+  --kendo-tooltip-text: var(--kendo-error-160, inherit);
+  --kendo-tooltip-bg: var(--kendo-error-20, inherit);
+  --kendo-tooltip-border: var(--kendo-error-20, inherit);
+}
+
 .k-tooltip-info {
   --kendo-tooltip-text: var(--kendo-info-160, inherit);
   --kendo-tooltip-bg: var(--kendo-info-20, inherit);
   --kendo-tooltip-border: var(--kendo-info-20, inherit);
+}
+
+.k-tooltip-dark {
+  --kendo-tooltip-text: #ffffff;
+  --kendo-tooltip-bg: var(--kendo-neutral-160, inherit);
+  --kendo-tooltip-border: var(--kendo-neutral-160, inherit);
+}
+
+.k-tooltip-light {
+  --kendo-tooltip-text: var(--kendo-neutral-160, inherit);
+  --kendo-tooltip-bg: var(--kendo-neutral-50, inherit);
+  --kendo-tooltip-border: var(--kendo-neutral-50, inherit);
 }
 
 .k-tooltip-button {
@@ -29172,7 +29195,7 @@ kendo-label > .k-label {
 
 [dir=rtl] .k-floating-label-container > .k-label, [dir=rtl] .k-floating-label-container:focus-within > .k-label, [dir=rtl] .k-floating-label-container.k-focus > .k-label, .k-rtl .k-floating-label-container > .k-label, .k-rtl .k-floating-label-container:focus-within > .k-label, .k-rtl .k-floating-label-container.k-focus > .k-label, .k-floating-label-container[dir=rtl] > .k-label, .k-floating-label-container[dir=rtl]:focus-within > .k-label, .k-floating-label-container[dir=rtl].k-focus > .k-label {
   left: auto;
-  right: var(--kendo-floating-label-offset-x, calc(0.5rem + 1px));
+  right: var(--kendo-floating-label-focus-offset-x, 0);
 }
 
 .k-floating-label-container:disabled, .k-floating-label-container[disabled], .k-floating-label-container.k-disabled {
@@ -31401,6 +31424,10 @@ select.k-picker {
   box-shadow: none;
 }
 
+.k-input-inner:valid {
+  box-shadow: none;
+}
+
 span.k-input-inner {
   white-space: nowrap;
   display: flex;
@@ -31458,9 +31485,8 @@ textarea.k-input-inner {
 
 .k-input-prefix,
 .k-input-suffix {
-  border: none;
+  border-color: inherit;
   display: flex;
-  flex-flow: row nowrap;
   align-items: center;
   flex: none;
 }
@@ -31468,13 +31494,45 @@ textarea.k-input-inner {
 .k-input-prefix > *,
 .k-input-suffix > * {
   flex-shrink: 0;
+  border: none;
+}
+
+.k-input-prefix-vertical,
+.k-input-suffix-vertical {
+  flex-flow: column wrap;
+}
+
+.k-input-prefix-horizontal,
+.k-input-suffix-horizontal {
+  flex-flow: row wrap;
+}
+
+.k-input-separator {
+  margin: 0;
+  border-style: solid;
+  border-color: inherit;
+  border-width: 0 0 0 1px;
+  height: 1rem;
+  align-self: center;
+}
+
+.k-input-separator-horizontal {
+  height: auto;
+  margin-inline: 0.375rem;
+  align-self: stretch;
+  border-width: 1px 0 0;
+}
+
+.k-input-separator-vertical {
+  height: auto;
+  margin-block: 0.375rem;
+  align-self: stretch;
+  border-width: 0 0 0 1px;
 }
 
 .k-input-icon,
 .k-input-validation-icon,
-.k-input-loading-icon,
-.k-input-prefix > .k-icon,
-.k-input-suffix > .k-icon {
+.k-input-loading-icon {
   padding-inline: var(--INTERNAL--kendo-input-padding-y, 0.375rem);
   padding-block: var(--INTERNAL--kendo-input-padding-y, 0.375rem);
   flex: none;
@@ -31670,7 +31728,10 @@ textarea.k-input-inner {
   border-width: 0 0 var(--kendo-input-focus-border-width, 2px) 0;
 }
 
-.k-input-flat.k-invalid:focus::after, .k-input-flat.k-invalid.k-focus::after, .k-input-flat.k-invalid:focus-within::after, .k-input-flat.ng-invalid.ng-touched:focus::after, .k-input-flat.ng-invalid.ng-touched.k-focus::after, .k-input-flat.ng-invalid.ng-touched:focus-within::after, .k-input-flat.ng-invalid.ng-dirty:focus::after, .k-input-flat.ng-invalid.ng-dirty.k-focus::after, .k-input-flat.ng-invalid.ng-dirty:focus-within::after,
+.k-input-flat.k-valid:focus::after, .k-input-flat.k-valid.k-focus::after, .k-input-flat.k-valid:focus-within::after, .k-input-flat.k-invalid:focus::after, .k-input-flat.k-invalid.k-focus::after, .k-input-flat.k-invalid:focus-within::after, .k-input-flat.ng-invalid.ng-touched:focus::after, .k-input-flat.ng-invalid.ng-touched.k-focus::after, .k-input-flat.ng-invalid.ng-touched:focus-within::after, .k-input-flat.ng-invalid.ng-dirty:focus::after, .k-input-flat.ng-invalid.ng-dirty.k-focus::after, .k-input-flat.ng-invalid.ng-dirty:focus-within::after,
+.k-picker-flat.k-valid:focus::after,
+.k-picker-flat.k-valid.k-focus::after,
+.k-picker-flat.k-valid:focus-within::after,
 .k-picker-flat.k-invalid:focus::after,
 .k-picker-flat.k-invalid.k-focus::after,
 .k-picker-flat.k-invalid:focus-within::after,
@@ -31714,6 +31775,29 @@ textarea.k-input-inner {
   width: var(--kendo-input-icon-picker-width, calc(var(--kendo-line-height, normal) * 1em + 0.5rem));
 }
 
+.k-input-sm .k-input-prefix > .k-icon,
+.k-input-sm .k-input-prefix > .k-input-prefix-text,
+.k-input-sm .k-input-suffix > .k-icon,
+.k-input-sm .k-input-suffix > .k-input-suffix-text,
+.k-picker-sm .k-input-prefix > .k-icon,
+.k-picker-sm .k-input-prefix > .k-input-prefix-text,
+.k-picker-sm .k-input-suffix > .k-icon,
+.k-picker-sm .k-input-suffix > .k-input-suffix-text {
+  padding-block: 0.25rem;
+  padding-inline: 0.25rem;
+  box-sizing: content-box;
+}
+
+.k-input-sm .k-input-separator-horizontal,
+.k-picker-sm .k-input-separator-horizontal {
+  margin-inline: 0.25rem;
+}
+
+.k-input-sm .k-input-separator-vertical,
+.k-picker-sm .k-input-separator-vertical {
+  margin-block: 0.25rem;
+}
+
 .k-input-md,
 .k-picker-md {
   --INTERNAL--kendo-input-font-size: var(--kendo-font-size, inherit);
@@ -31740,6 +31824,29 @@ textarea.k-input-inner {
   width: var(--kendo-input-icon-picker-width, calc(var(--kendo-line-height, normal) * 1em + 0.75rem));
 }
 
+.k-input-md .k-input-prefix > .k-icon,
+.k-input-md .k-input-prefix > .k-input-prefix-text,
+.k-input-md .k-input-suffix > .k-icon,
+.k-input-md .k-input-suffix > .k-input-suffix-text,
+.k-picker-md .k-input-prefix > .k-icon,
+.k-picker-md .k-input-prefix > .k-input-prefix-text,
+.k-picker-md .k-input-suffix > .k-icon,
+.k-picker-md .k-input-suffix > .k-input-suffix-text {
+  padding-block: 0.375rem;
+  padding-inline: 0.375rem;
+  box-sizing: content-box;
+}
+
+.k-input-md .k-input-separator-horizontal,
+.k-picker-md .k-input-separator-horizontal {
+  margin-inline: 0.375rem;
+}
+
+.k-input-md .k-input-separator-vertical,
+.k-picker-md .k-input-separator-vertical {
+  margin-block: 0.375rem;
+}
+
 .k-input-lg,
 .k-picker-lg {
   --INTERNAL--kendo-input-font-size: var(--kendo-font-size, inherit);
@@ -31764,6 +31871,29 @@ textarea.k-input-inner {
 .k-input-lg.k-icon-picker .k-input-inner,
 .k-picker-lg.k-icon-picker .k-input-inner {
   width: var(--kendo-input-icon-picker-width, calc(var(--kendo-line-height, normal) * 1em + 1rem));
+}
+
+.k-input-lg .k-input-prefix > .k-icon,
+.k-input-lg .k-input-prefix > .k-input-prefix-text,
+.k-input-lg .k-input-suffix > .k-icon,
+.k-input-lg .k-input-suffix > .k-input-suffix-text,
+.k-picker-lg .k-input-prefix > .k-icon,
+.k-picker-lg .k-input-prefix > .k-input-prefix-text,
+.k-picker-lg .k-input-suffix > .k-icon,
+.k-picker-lg .k-input-suffix > .k-input-suffix-text {
+  padding-block: 0.5rem;
+  padding-inline: 0.5rem;
+  box-sizing: content-box;
+}
+
+.k-input-lg .k-input-separator-horizontal,
+.k-picker-lg .k-input-separator-horizontal {
+  margin-inline: 0.5rem;
+}
+
+.k-input-lg .k-input-separator-vertical,
+.k-picker-lg .k-input-separator-vertical {
+  margin-block: 0.5rem;
 }
 
 .k-input > kendo-popup,
@@ -31826,6 +31956,14 @@ textarea.k-input-inner {
   --INTERNAL--kendo-input-border: var( --kendo-input-disabled-border );
 }
 
+.k-input:disabled .k-input-prefix, .k-input[disabled] .k-input-prefix, .k-input.k-disabled .k-input-prefix {
+  color: var(--kendo-input-prefix-disabled-text, var(--kendo-neutral-60, inherit));
+}
+
+.k-input:disabled .k-input-suffix, .k-input[disabled] .k-input-suffix, .k-input.k-disabled .k-input-suffix {
+  color: var(--kendo-input-prefix-disabled-text, var(--kendo-neutral-60, inherit));
+}
+
 .k-input.k-invalid, .k-input.ng-invalid.ng-touched, .k-input.ng-invalid.ng-dirty {
   --INTERNAL--kendo-input-border: var( --kendo-input-invalid-border, var(--kendo-invalid-border, var(--kendo-error-190, inherit)) );
 }
@@ -31844,6 +31982,38 @@ textarea.k-input-inner {
 
 .k-input.k-invalid:focus:hover .k-input-validation-icon, .k-input.k-invalid.k-focus:hover .k-input-validation-icon, .k-input.k-invalid:focus.k-hover .k-input-validation-icon, .k-input.k-invalid.k-focus.k-hover .k-input-validation-icon, .k-input.ng-invalid.ng-touched:focus:hover .k-input-validation-icon, .k-input.ng-invalid.ng-touched.k-focus:hover .k-input-validation-icon, .k-input.ng-invalid.ng-touched:focus.k-hover .k-input-validation-icon, .k-input.ng-invalid.ng-touched.k-focus.k-hover .k-input-validation-icon, .k-input.ng-invalid.ng-dirty:focus:hover .k-input-validation-icon, .k-input.ng-invalid.ng-dirty.k-focus:hover .k-input-validation-icon, .k-input.ng-invalid.ng-dirty:focus.k-hover .k-input-validation-icon, .k-input.ng-invalid.ng-dirty.k-focus.k-hover .k-input-validation-icon {
   color: var(--kendo-input-invalid-text, var(--kendo-invalid-text, var(--kendo-error-190, inherit)));
+}
+
+.k-input.k-valid {
+  --INTERNAL--kendo-input-border: var( --kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)) );
+}
+
+.k-input.k-valid::after {
+  border-color: var(--kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)));
+}
+
+.k-input.k-valid .k-input-validation-icon {
+  color: var(--kendo-input-valid-text, var(--kendo-valid-text, var(--kendo-success-190, inherit)));
+}
+
+.k-input.k-valid:focus:hover, .k-input.k-valid.k-focus:hover, .k-input.k-valid:focus.k-hover, .k-input.k-valid.k-focus.k-hover {
+  --INTERNAL--kendo-input-border: var( --kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)) );
+}
+
+.k-input.k-valid:focus:hover .k-input-validation-icon, .k-input.k-valid.k-focus:hover .k-input-validation-icon, .k-input.k-valid:focus.k-hover .k-input-validation-icon, .k-input.k-valid.k-focus.k-hover .k-input-validation-icon {
+  color: var(--kendo-input-valid-text, var(--kendo-valid-text, var(--kendo-success-190, inherit)));
+}
+
+.k-input .k-input-prefix {
+  color: var(--kendo-input-prefix-text, var(--kendo-neutral-130, inherit));
+}
+
+.k-input .k-input-suffix {
+  color: var(--kendo-input-suffix-text, var(--kendo-neutral-130, inherit));
+}
+
+.k-input .k-input-separator {
+  border-color: var(--kendo-input-separator-text, var(--kendo-neutral-30, inherit));
 }
 
 .k-picker {
@@ -31901,6 +32071,26 @@ textarea.k-input-inner {
 
 .k-picker.k-invalid:focus:hover .k-input-validation-icon, .k-picker.k-invalid.k-focus:hover .k-input-validation-icon, .k-picker.k-invalid:focus.k-hover .k-input-validation-icon, .k-picker.k-invalid.k-focus.k-hover .k-input-validation-icon, .k-picker.ng-invalid.ng-touched:focus:hover .k-input-validation-icon, .k-picker.ng-invalid.ng-touched.k-focus:hover .k-input-validation-icon, .k-picker.ng-invalid.ng-touched:focus.k-hover .k-input-validation-icon, .k-picker.ng-invalid.ng-touched.k-focus.k-hover .k-input-validation-icon, .k-picker.ng-invalid.ng-dirty:focus:hover .k-input-validation-icon, .k-picker.ng-invalid.ng-dirty.k-focus:hover .k-input-validation-icon, .k-picker.ng-invalid.ng-dirty:focus.k-hover .k-input-validation-icon, .k-picker.ng-invalid.ng-dirty.k-focus.k-hover .k-input-validation-icon {
   color: var(--kendo-input-invalid-text, var(--kendo-invalid-text, var(--kendo-error-190, inherit)));
+}
+
+.k-picker.k-valid {
+  --INTERNAL--kendo-picker-border: var( --kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)) );
+}
+
+.k-picker.k-valid::after {
+  border-color: var(--kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)));
+}
+
+.k-picker.k-valid .k-input-validation-icon {
+  color: var(--kendo-input-valid-text, var(--kendo-valid-text, var(--kendo-success-190, inherit)));
+}
+
+.k-picker.k-valid:focus:hover, .k-picker.k-valid.k-focus:hover, .k-picker.k-valid:focus.k-hover, .k-picker.k-valid.k-focus.k-hover {
+  --INTERNAL--kendo-picker-border: var( --kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)) );
+}
+
+.k-picker.k-valid:focus:hover .k-input-validation-icon, .k-picker.k-valid.k-focus:hover .k-input-validation-icon, .k-picker.k-valid:focus.k-hover .k-input-validation-icon, .k-picker.k-valid.k-focus.k-hover .k-input-validation-icon {
+  color: var(--kendo-input-valid-text, var(--kendo-valid-text, var(--kendo-success-190, inherit)));
 }
 
 .k-input-solid {
@@ -32009,6 +32199,10 @@ textarea.k-input-inner {
   --kendo-picker-disabled-text: var( --kendo-picker-flat-disabled-text, var(--kendo-neutral-90, inherit) );
   --kendo-picker-disabled-bg: var( --kendo-picker-flat-disabled-bg, none );
   --kendo-picker-disabled-border: var( --kendo-picker-flat-disabled-border, var(--kendo-neutral-90, inherit) );
+}
+
+.k-textarea:has(.k-input-inner[style*=width]) {
+  width: max-content;
 }
 
 .k-checkbox {
@@ -33019,16 +33213,6 @@ textarea.k-input-inner {
   cursor: default;
 }
 
-.k-slider-wrap {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-flow: inherit;
-  align-items: inherit;
-  gap: inherit;
-  position: relative;
-}
-
 .k-slider-button, .k-slider .k-button {
   flex: none;
 }
@@ -33434,14 +33618,6 @@ textarea.k-input-inner {
 
 .k-slider kendo-resize-sensor {
   position: absolute;
-}
-
-.k-slider-horizontal .k-slider-wrap:not(.k-slider-buttons) {
-  padding-inline: var(--kendo-slider-spacing, 0.5rem);
-}
-
-.k-slider-vertical .k-slider-wrap:not(.k-slider-buttons) {
-  padding-block: var(--kendo-slider-spacing, 0.5rem);
 }
 
 .k-slider {
@@ -34714,7 +34890,6 @@ textarea.k-input-inner {
   z-index: auto;
 }
 
-.k-colorgradient-slider .k-slider-wrap,
 .k-colorgradient-slider .k-slider-track-wrap {
   z-index: 1;
 }
@@ -35063,6 +35238,20 @@ textarea.k-input-inner {
 .k-multiselecttree-popup .k-check-all {
   padding-block: var(--kendo-dropdowntree-popup-padding-y, 0.5rem);
   padding-inline: var(--kendo-dropdowntree-popup-padding-x, 0.5rem);
+}
+
+.k-multiselecttree .k-input-values {
+  width: auto;
+  max-width: 100%;
+}
+
+.k-multiselecttree .k-input-inner::before {
+  content: "​";
+  width: 0px;
+  overflow: hidden;
+  flex: none;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .k-rating {
@@ -38027,6 +38216,7 @@ kendo-drawer .k-drawer-wrapper {
 
 .k-drawer-content {
   flex: 1 1 auto;
+  overflow: auto;
 }
 
 .k-drawer-overlay .k-drawer {
@@ -38305,13 +38495,7 @@ kendo-drawer .k-drawer-wrapper {
   flex-flow: column-reverse wrap;
   position: fixed;
   z-index: 1000;
-}
-
-.k-notification-container {
-  margin-block: var(--kendo-notification-container-padding-y, 0.125rem);
-  margin-inline: 0;
-  display: inline-flex;
-  vertical-align: top;
+  gap: var(--kendo-notificaiton-group-gap, 0.5rem) 0;
 }
 
 .k-notification-container-animating {
@@ -39551,6 +39735,17 @@ kendo-drawer .k-drawer-wrapper {
   transition-timing-function: ease-in-out;
 }
 
+.k-stepper .k-step-indicator::before {
+  border-radius: var(--kendo-stepper-indicator-border-radius, 50%);
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
 .k-stepper .k-step-indicator::after {
   border-radius: 100%;
   content: "";
@@ -39567,6 +39762,10 @@ kendo-drawer .k-drawer-wrapper {
 .k-stepper .k-step.k-focus .k-step-indicator::after,
 .k-stepper .k-step-link:focus .k-step-indicator::after {
   display: block;
+}
+
+.k-stepper .k-step.k-disabled .k-step-indicator {
+  border: 0;
 }
 
 .k-stepper .k-step.k-disabled .k-step-indicator::after {
@@ -40547,6 +40746,14 @@ kendo-card-footer {
   box-sizing: border-box;
 }
 
+.k-card .k-card-avatar,
+.k-card .k-avatar {
+  margin-inline-end: var(--kendo-card-avatar-spacing, 0.75rem);
+  width: var(--kendo-card-avatar-size, 3rem);
+  height: var(--kendo-card-avatar-size, 3rem);
+  flex-basis: var(--kendo-card-avatar-size, 3rem);
+}
+
 .k-card > .k-card-inner {
   border-radius: var(--kendo-card-inner-border-radius, 0.125rem);
   display: flex;
@@ -40634,15 +40841,6 @@ kendo-card-footer {
   padding: 0;
 }
 
-.k-card-avatar,
-.k-card .k-avatar {
-  margin-inline-end: var(--kendo-card-avatar-spacing, 0.75rem);
-  width: var(--kendo-card-avatar-size, 3rem);
-  height: var(--kendo-card-avatar-size, 3rem);
-  flex-basis: var(--kendo-card-avatar-size, 3rem);
-}
-
-.k-card-image,
 .k-card-media {
   border: 0;
   max-width: 100%;
@@ -40650,13 +40848,6 @@ kendo-card-footer {
   overflow: hidden;
 }
 
-.k-card-image > img,
-.k-card-media > img {
-  border: 0;
-  max-width: 100%;
-}
-
-.k-card-horizontal .k-card-image,
 .k-card-horizontal .k-card-media {
   max-width: var(--kendo-card-img-max-width, 100px);
   object-fit: cover;
@@ -40672,14 +40863,14 @@ kendo-card-footer {
   align-self: stretch;
 }
 
-.k-card-separator.k-separator-vertical,
-.k-card-horizontal > .k-card-separator {
-  border-left-width: 1px;
-}
-
 .k-card-separator.k-separator-horizontal,
 .k-card-vertical > .k-card-separator {
   border-top-width: 1px;
+}
+
+.k-card-separator.k-separator-vertical,
+.k-card-horizontal > .k-card-separator {
+  border-left-width: 1px;
 }
 
 .k-card > .k-hr {
@@ -40701,35 +40892,8 @@ kendo-card-footer {
   gap: var(--kendo-card-actions-gap, 0.5rem);
 }
 
-.k-card-actions-start {
-  justify-content: flex-start;
-}
-
-.k-card-actions-end {
-  justify-content: flex-end;
-}
-
-.k-card-actions-center {
-  justify-content: center;
-}
-
-.k-card-actions-horizontal {
-  flex-flow: row nowrap;
-}
-
-.k-card-actions-vertical {
-  flex-flow: column nowrap;
-}
-
-.k-card-actions-stretched > * {
-  flex: 1 1 auto;
-}
-
-.k-card-action {
-  border-width: 0;
-  border-style: solid;
-  border-color: inherit;
-  display: inline-flex;
+.k-card-horizontal .k-actions-horizontal {
+  width: auto;
 }
 
 .k-card-list {
@@ -41840,16 +42004,6 @@ kendo-card-footer {
   border-width: var(--kendo-dock-manager-border-width, 1px) 0 0;
 }
 
-@supports (not (-ms-ime-mode: none)) and (not (overflow: -webkit-marquee)) and (not (-moz-appearance: none)) {
-  .k-dock-manager-toolbar .k-toolbar-button {
-    padding-block: var(--INTERNAL--kendo-button-padding-x, 0);
-    padding-inline: var(--INTERNAL--kendo-button-padding-y, 0);
-  }
-  .k-dock-manager-toolbar .k-toolbar-button .k-button-text {
-    -ms-writing-mode: tb-lr;
-    writing-mode: vertical-lr;
-  }
-}
 .k-dock-manager-pane-container {
   width: 100%;
   height: 100%;
@@ -42887,6 +43041,16 @@ div.k-grid-footer {
   z-index: 3;
 }
 
+.k-master-row .k-grid-content-sticky::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
 kendo-grid .k-table-row.k-grid-row-sticky {
   border: 0;
   position: static;
@@ -43054,6 +43218,7 @@ div.k-grid-norecords {
   overflow: hidden;
 }
 
+.k-grid .k-grid-sm,
 .k-grid-sm {
   --INTERNAL--kendo-grid-header-padding-x: var( --kendo-grid-header-padding-x-sm, 0.75rem );
   --INTERNAL--kendo-grid-header-padding-y: var( --kendo-grid-header-padding-y-sm, 0.375rem );
@@ -43073,6 +43238,7 @@ div.k-grid-norecords {
   --INTERNAL--kendo-grid-selection-aggregates-padding-y: var( --kendo-grid-selection-aggregates-padding-y-sm, 0.375rem );
 }
 
+.k-grid .k-grid-md,
 .k-grid-md {
   --INTERNAL--kendo-grid-header-padding-x: var( --kendo-grid-header-padding-x-md, 0.75rem );
   --INTERNAL--kendo-grid-header-padding-y: var( --kendo-grid-header-padding-y-md, 0.75rem );
@@ -43652,13 +43818,11 @@ col.k-sorted,
   background-color: var(--kendo-grid-sticky-alt-bg, var(--kendo-component-bg, initial));
 }
 
-.k-master-row.k-selected .k-grid-content-sticky, .k-master-row.k-selected .k-grid-row-sticky,
-.k-master-row td.k-grid-content-sticky.k-selected,
-.k-master-row .k-table-td.k-grid-content-sticky.k-selected {
+.k-master-row.k-table-row.k-selected td.k-grid-content-sticky, .k-master-row.k-table-row.k-selected .k-table-td.k-grid-row-sticky, .k-master-row.k-table-row td.k-grid-content-sticky.k-selected, .k-master-row.k-table-row .k-table-td.k-grid-content-sticky.k-selected {
   background-color: var(--kendo-grid-sticky-selected-bg, var(--kendo-primary-20, inherit));
 }
 
-.k-master-row.k-selected.k-table-alt-row .k-grid-content-sticky, .k-master-row.k-selected.k-table-alt-row .k-grid-row-sticky, .k-master-row.k-table-alt-row td.k-grid-content-sticky.k-selected, .k-master-row.k-table-alt-row .k-table-td.k-grid-content-sticky.k-selected {
+.k-master-row.k-selected.k-table-alt-row td.k-grid-content-sticky, .k-master-row.k-selected.k-table-alt-row .k-table-td.k-grid-row-sticky, .k-master-row.k-table-alt-row td.k-grid-content-sticky.k-selected, .k-master-row.k-table-alt-row .k-table-td.k-grid-content-sticky.k-selected {
   background-color: var(--kendo-grid-sticky-selected-alt-bg, var(--kendo-primary-20, inherit));
 }
 
@@ -43666,7 +43830,7 @@ col.k-sorted,
   background-color: var(--kendo-grid-sticky-hover-bg, var(--kendo-hover-bg, inherit));
 }
 
-.k-master-row.k-selected:hover .k-grid-content-sticky, .k-master-row.k-selected:hover .k-grid-row-sticky, .k-master-row.k-selected.k-hover .k-grid-content-sticky, .k-master-row.k-selected.k-hover .k-grid-row-sticky, .k-master-row:hover td.k-grid-content-sticky.k-selected, .k-master-row.k-hover td.k-grid-content-sticky.k-selected, .k-master-row:hover .k-table-td.k-grid-content-sticky.k-selected, .k-master-row.k-hover .k-table-td.k-grid-content-sticky.k-selected {
+.k-master-row.k-selected:hover td.k-grid-content-sticky, .k-master-row.k-selected:hover .k-table-td.k-grid-row-sticky, .k-master-row.k-selected.k-hover td.k-grid-content-sticky, .k-master-row.k-selected.k-hover .k-table-td.k-grid-row-sticky, .k-master-row:hover td.k-grid-content-sticky.k-selected, .k-master-row.k-hover td.k-grid-content-sticky.k-selected, .k-master-row:hover .k-table-td.k-grid-content-sticky.k-selected, .k-master-row.k-hover .k-table-td.k-grid-content-sticky.k-selected {
   background-color: var(--kendo-grid-sticky-selected-hover-bg, var(--kendo-primary-30, inherit));
 }
 
@@ -43753,7 +43917,7 @@ kendo-grid.k-grid .k-table-row.k-hover .k-grid-content-sticky.k-selected {
 }
 
 .k-grouping-row:hover .k-grid-content-sticky, .k-grouping-row.k-hover .k-grid-content-sticky {
-  background-color: vr(--kendo-grid-sticky-hover-bg, var(--kendo-hover-bg, inherit));
+  background-color: var(--kendo-grid-sticky-hover-bg, var(--kendo-hover-bg, inherit));
 }
 
 .k-filter-menu.k-popup,
@@ -45052,7 +45216,7 @@ kendo-grid.k-grid .k-table-row.k-hover .k-grid-content-sticky.k-selected {
 .k-spreadsheet-filter.k-active {
   border-color: var(--kendo-spreadsheet-filter-button-active-border, var(--kendo-neutral-110, inherit));
   color: var(--kendo-spreadsheet-filter-button-active-text, var(--kendo-neutral-190, inherit));
-  background-color: var(--kendo-spreadsheet-filter-button-active-bg, var(--kendo-neutral-30, inherit));
+  background-color: var(--kendo-spreadsheet-filter-button-active-bg, f(false, var(--kendo-color-base-active, #edebe9), var(--kendo-neutral-30, inherit)));
 }
 
 .k-spreadsheet-value-treeview-wrapper {
@@ -46114,6 +46278,7 @@ kendo-grid.k-grid .k-table-row.k-hover .k-grid-content-sticky.k-selected {
   border-bottom-width: var(--kendo-file-manager-toolbar-border-width, 1px);
   border-color: inherit;
   flex-shrink: 0;
+  z-index: 1;
 }
 
 .k-filemanager-content-container {
@@ -46124,6 +46289,10 @@ kendo-grid.k-grid .k-table-row.k-hover .k-grid-content-sticky.k-selected {
   flex-flow: row nowrap;
   align-items: stretch;
   overflow: hidden;
+}
+
+.k-filemanager-splitter {
+  border-width: 0;
 }
 
 .k-filemanager-navigation {
@@ -47695,17 +47864,23 @@ kendo-editor.k-readonly .k-editor-content.k-focus {
   overflow: scroll;
 }
 
-.k-gantt-timeline .k-timeline {
+.k-gantt-timeline-pane .k-gantt-timeline {
   height: 100%;
   border-width: 0;
   display: flex;
 }
 
-.k-gantt-timeline .k-grid-content {
+.k-gantt-timeline-pane .k-gantt-timeline *,
+.k-gantt-timeline-pane .k-gantt-timeline *::before,
+.k-gantt-timeline-pane .k-gantt-timeline *::after, .k-gantt-timeline-pane .k-gantt-timeline::before, .k-gantt-timeline-pane .k-gantt-timeline::after {
+  box-sizing: border-box;
+}
+
+.k-gantt-timeline-pane .k-grid-content {
   overflow-x: scroll;
 }
 
-.k-gantt-timeline .k-header {
+.k-gantt-timeline-pane .k-header {
   padding-block: 0.75rem;
   padding-inline: 0.75rem;
   border-block-start-width: 0;
@@ -48190,7 +48365,7 @@ kendo-editor.k-readonly .k-editor-content.k-focus {
 }
 
 .k-pdf-export-shadow .k-gantt,
-.k-pdf-export-shadow .k-gantt-timeline,
+.k-pdf-export-shadow .k-gantt-timeline-pane,
 .k-pdf-export-shadow .k-gantt-dependencies {
   width: auto !important;
   height: auto !important;
@@ -48327,7 +48502,7 @@ kendo-editor.k-readonly .k-editor-content.k-focus {
 }
 
 .k-task-single:hover .k-task-complete {
-  background-color: var(--kendo-gantt-task-progress-hover-bg, var(--kendo-neutral-190, inherit));
+  background-color: var(--kendo-gantt-task-progress-hover-bg, var(--kendo-neutral-160, inherit));
 }
 
 .k-task-delayed .k-task-complete {
@@ -50606,10 +50781,6 @@ kendo-scheduler .k-recurrence-editor {
   display: none;
 }
 
-.k-timeline .k-event-collapse {
-  display: none;
-}
-
 .k-timeline.k-timeline-collapsible .k-card-header {
   cursor: pointer;
 }
@@ -51526,6 +51697,91 @@ kendo-scrollview.k-scrollview .k-scrollview-nav {
   box-shadow: var(--kendo-scrollview-pagebutton-hover-shadow, 0 0 0 1px var(--kendo-neutral-30, inherit));
 }
 
+.k-prompt {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.k-prompt-content {
+  padding-block: var(--kendo-prompt-content-padding-y, 1rem);
+  padding-inline: var(--kendo-prompt-content-padding-x, 1rem);
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 auto;
+  gap: var(--kendo-prompt-content-spacing, 1rem);
+  overflow: auto;
+}
+
+.k-prompt-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: var(--kendo-prompt-content-spacing, 1rem);
+}
+
+.k-prompt-expander {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: flex-start;
+  gap: var(--kendo-prompt-expander-spacing, 0.5rem);
+}
+
+.k-prompt-expander-content {
+  display: flex;
+  flex-flow: column;
+  flex: 0 0 auto;
+  gap: var(--kendo-prompt-expander-spacing, 0.5rem);
+  align-self: stretch;
+}
+
+.k-prompt-suggestion {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--kendo-prompt-suggestion-border-radius, var(--kendo-border-radius-md, 0.125rem));
+  padding-block: var(--kendo-prompt-suggestion-padding-y, 0.5rem);
+  padding-inline: var(--kendo-prompt-suggestion-padding-x, 0.5rem);
+  cursor: pointer;
+}
+
+.k-prompt-setting {
+  display: flex;
+  flex-direction: column;
+}
+
+.k-prompt-actions.k-actions, .k-prompt-actions.k-edit-buttons,
+.k-prompt-actions.k-action-buttons,
+.k-prompt-actions.k-columnmenu-actions, .k-prompt-actions.k-form-buttons {
+  margin: 0;
+}
+
+.k-prompt {
+  border-color: var(--kendo-prompt-border, var(--kendo-component-border, initial));
+  color: var(--kendo-prompt-text, var(--kendo-component-text, initial));
+  background-color: var(--kendo-prompt-bg, var(--kendo-component-bg, initial));
+}
+
+.k-prompt-header {
+  border-color: var(--kendo-prompt-header-border, var(--kendo-component-border, initial));
+  color: var(--kendo-prompt-header-text, var(--kendo-component-text, initial));
+  background-color: var(--kendo-prompt-header-bg, var(--kendo-component-bg, initial));
+}
+
+.k-prompt-content {
+  border-color: var(--kendo-prompt-content-border, var(--kendo-component-border, initial));
+  color: var(--kendo-prompt-content-text, var(--kendo-neutral-190, inherit));
+  background-color: var(--kendo-prompt-content-bg, var(--kendo-neutral-10, inherit));
+}
+
+.k-prompt-suggestion {
+  border-color: var(--kendo-prompt-suggestion-border, var(--kendo-component-border, initial));
+  color: var(--kendo-prompt-suggestion-text, var(--kendo-component-text, initial));
+  background-color: var(--kendo-prompt-suggestion-bg, var(--kendo-component-bg, initial));
+  box-shadow: var(--kendo-prompt-suggestion-shadow, var(--kendo-elevation-1, 0 0.3px 0.9px rgba(0, 0, 0, 0.1), 0 1.6px 3.6px rgba(0, 0, 0, 0.13)));
+}
+
 .k-barcode {
   display: inline-block;
 }
@@ -52086,7 +52342,7 @@ kendo-scrollview.k-scrollview .k-scrollview-nav {
 }
 
 .k-var--series-29 {
-  background-color: var(--kendo-series-e-60, inherit);
+  background-color: var(--kendo-series-e-160, inherit);
 }
 
 .k-var--series-30 {

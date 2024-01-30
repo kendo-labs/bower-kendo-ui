@@ -16,7 +16,7 @@ export const externals = glob.sync(`${root}/kendo.*.js`).map(resolvePath).concat
 export const cultures = glob.sync('cultures/*.js', { cwd: root });
 export const messages = glob.sync('messages/*.js', { cwd: root });
 const require = createRequire(import.meta.url);
-export const version = '2023.3.1221';
+export const version = '2024.1.130';
 
 const globals = {
     jquery: '$'
@@ -97,7 +97,11 @@ const configMap = (name) => ({
         addKendoVersion(),
         name === 'kendo.core.js' || isBundle(name) ? polyfill(['jquery']) : null,
         nodeResolve(),
-        buble()
+        buble({
+            transforms: {
+                asyncAwait: false
+            }
+        })
     ]
 });
 

@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1157,7 +1157,6 @@ var __meta__ = {
             var that = this;
             var toolbarOptions = that.options.toolbar;
             var position = toolbarOptions.position || RIGHT;
-            var toolbarInsertion = position === BOTTOM ? "insertAfter" : "insertBefore";
             var tools = toolbarOptions.tools || [];
             var messages = that.options.messages;
 
@@ -1165,7 +1164,7 @@ var __meta__ = {
             that.wrapper.removeClass(TOOLBAR_POSITION_CLASS_NAMES.join(SPACE));
 
             if (tools.length && tools.length > 0) {
-                var toolbarElement = $(that.templates.toolbar)[toolbarInsertion](that._innerWrapper);
+                var toolbarElement = $(that.templates.toolbar).insertBefore(that._innerWrapper);
                 that.toolbar = new ToolBar(toolbarElement, extend({}, toolbarOptions, { listBox: that, messages: messages }));
                 that.wrapper.addClass(TOOLBAR_CLASS + DASH + position);
             }

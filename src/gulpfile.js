@@ -75,12 +75,7 @@ function mjsMin() {
         .pipe(gulp.dest('dist/mjs'));
 }
 
-function distThirdParty() {
-    return gulp.src('js/{jquery,pako,jszip}*.*')
-        .pipe(gulp.dest('dist/js'));
-}
-
-gulp.task('scripts', gulp.parallel(gulp.series(compileScripts, gulp.parallel(distThirdParty, minScripts))));
+gulp.task('scripts', gulp.parallel(gulp.series(compileScripts, minScripts)));
 gulp.task('scripts:mjs', gulp.parallel(gulp.series(compileMjsScripts, mjsMin)));
 
 function minScripts() {
@@ -113,7 +108,11 @@ gulp.task("custom", function() {
             external: ['jquery'],
             treeshake: false,
             plugins: [
-                require('@rollup/plugin-buble')(),
+                require('@rollup/plugin-buble')({
+                    transforms: {
+                        asyncAwait: false
+                    }
+                }),
                 require("@rollup/plugin-node-resolve").nodeResolve(),
                 require('@rollup/plugin-virtual')({
                     custom: `

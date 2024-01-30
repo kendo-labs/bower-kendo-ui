@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,6 +99,11 @@ var __meta__ = {
             var head = $("head,body")[0];
             var style = document.createElement('style');
 
+            var nonce = this.options.nonce;
+            if (nonce) {
+                style.setAttribute("nonce", nonce);
+            }
+
             head.appendChild(style);
 
             if (style.styleSheet) {
@@ -110,6 +115,7 @@ var __meta__ = {
         options: {
             name: "ResponsivePanel",
             content: "",
+            nonce: "",
             orientation: "left",
             toggleButton: ".k-rpanel-toggle",
             breakpoint: 640,

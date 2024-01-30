@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -549,7 +549,7 @@ var __meta__ = {
 
         style = style ? " style='" + style + "'" : "";
 
-        return "<div class='k-widget k-slider" + orientationCssClass + cssClasses + "'" + style + ">" +
+        return "<div class='k-slider" + orientationCssClass + cssClasses + "'" + style + ">" +
                "<div class='k-slider-track-wrap" + tickPlacementCssClass +
                "'></div></div>";
     }
@@ -571,11 +571,11 @@ var __meta__ = {
             }
         }
 
-        return "<a role='button' class='k-button k-button-md k-rounded-full k-button-solid k-button-solid-base k-icon-button k-button-" + type + "' " +
+        return "<button class='k-button k-button-md k-rounded-full k-button-solid k-button-solid-base k-icon-button k-button-" + type + "' " +
                 "title='" + options[type + "ButtonTitle"] + "' " +
                 "aria-label='" + options[type + "ButtonTitle"] + "'>" +
                     kendo.ui.icon({ icon: buttonIconName, iconClass: "k-button-icon" }) +
-                "</a>";
+                "</button>";
     }
 
     function createSliderItems(options, distance) {

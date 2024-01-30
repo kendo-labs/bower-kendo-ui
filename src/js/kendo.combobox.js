@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ import "./kendo.list.js";
 import "./kendo.mobile.scroller.js";
 import "./kendo.virtuallist.js";
 import "./kendo.html.button.js";
+import { addInputPrefixSuffixContainers } from "./utils/prefix-suffix-containers.js";
 
 var __meta__ = {
     id: "combobox",
@@ -136,6 +137,10 @@ var __meta__ = {
                 that.enable(false);
             }
 
+            addInputPrefixSuffixContainers({ widget: that, wrapper: that.wrapper, options: that.options,
+                prefixInsertBefore: that.input,
+                suffixInsertAfter: that._clear.parent().length ? that._clear : that.input });
+
             kendo.notify(that);
             that._toggleCloseVisibility();
             that._applyCssClasses();
@@ -174,6 +179,12 @@ var __meta__ = {
             template: null,
             groupTemplate: (data) => encode(data),
             fixedGroupTemplate: (data) => encode(data),
+            prefixOptions: {
+                separator: true
+            },
+            suffixOptions: {
+                separator: true
+            },
             clearButton: true,
             syncValueAndText: true,
             autoWidth: false,

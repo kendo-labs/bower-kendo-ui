@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import "./kendo.userevents.js";
 import "./kendo.floatinglabel.js";
 import "./kendo.html.button.js";
 import "./kendo.icons.js";
+import { addInputPrefixSuffixContainers } from "./utils/prefix-suffix-containers.js";
 
 var __meta__ = {
     id: "numerictextbox",
@@ -150,6 +151,11 @@ var __meta__ = {
              that._ariaLabel(that._text);
              that._applyCssClasses();
 
+             addInputPrefixSuffixContainers({ widget: that, wrapper: that.wrapper, options: that.options, prefixInsertBefore: that._text, suffixInsertAfter: that._validationIcon });
+             if (that.floatingLabel) {
+                 that.floatingLabel.refresh();
+             }
+
              kendo.notify(that);
          },
 
@@ -174,7 +180,13 @@ var __meta__ = {
             label: null,
             size: "medium",
             fillMode: "solid",
-            rounded: "medium"
+            rounded: "medium",
+            prefixOptions: {
+                separator: true
+            },
+            suffixOptions: {
+                separator: true
+            }
         },
         events: [
             CHANGE,

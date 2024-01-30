@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,6 +169,7 @@ var __meta__ = {
             name: "DropDownList",
             enabled: true,
             autoBind: true,
+            _allowFilterPaste: true, // Related to the paste functionality in the Grid. In certain cases the focus remains on the dropdownlist and the paste action is executed on it instead of the Grid.
             index: 0,
             text: null,
             value: null,
@@ -621,7 +622,9 @@ var __meta__ = {
         },
 
         _filterPaste: function() {
-            this._search();
+            if (this.options._allowFilterPaste) {
+                this._search();
+            }
         },
 
         _attachFocusHandlers: function() {

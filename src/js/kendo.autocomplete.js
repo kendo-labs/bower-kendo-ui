@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 import "./kendo.list.js";
 import "./kendo.mobile.scroller.js";
 import "./kendo.virtuallist.js";
+import { addInputPrefixSuffixContainers } from "./utils/prefix-suffix-containers.js";
 
 var __meta__ = {
     id: "autocomplete",
@@ -157,6 +158,8 @@ var __meta__ = {
 
             that._resetFocusItemHandler = that._resetFocusItem.bind(that);
 
+            addInputPrefixSuffixContainers({ widget: that, wrapper: that.wrapper, options: that.options, prefixInsertBefore: that._inputValuesContainer, suffixInsertAfter: that._loading });
+
             kendo.notify(that);
             that._toggleCloseVisibility();
             that._applyCssClasses();
@@ -175,6 +178,12 @@ var __meta__ = {
             template: "",
             groupTemplate: (data) => encode(data),
             fixedGroupTemplate: (data) => encode(data),
+            prefixOptions: {
+                separator: true
+            },
+            suffixOptions: {
+                separator: true
+            },
             dataTextField: "",
             minLength: 1,
             enforceMinLength: false,
@@ -487,14 +496,18 @@ var __meta__ = {
 
         _clearText: $.noop,
 
-        _resetFocusItem: function() {
+        _highlightFirst: function() {
             var index = this.options.highlightFirst ? 0 : -1;
 
+            this.listView.focus(index);
+        },
+
+        _resetFocusItem: function() {
             if (this.options.virtual) {
                 this.listView.scrollTo(0);
             }
 
-            this.listView.focus(index);
+            this._highlightFirst();
         },
 
         _listBound: function() {
@@ -520,6 +533,8 @@ var __meta__ = {
                 if (options.suggest && isActive && that._inputValue()) {
                     that.suggest(data[0]);
                 }
+
+                that._highlightFirst();
             }
 
             if (that._open) {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -236,7 +236,7 @@ import "./kendo.html.button.js";
 
         kendo.cssProperties.registerValues("Button", [{
             prop: "fillMode",
-            values: kendo.cssProperties.fillModeValues.concat(["link"])
+            values: kendo.cssProperties.fillModeValues.concat(["link", "clear"])
         }, {
             prop: "rounded",
             values: kendo.cssProperties.roundedValues.concat([['full', 'full']])

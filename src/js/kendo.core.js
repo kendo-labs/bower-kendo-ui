@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ var packageMetadata = {
     productName: 'Kendo UI',
     productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'UIASPCORE', 'KENDOMVC', 'KENDOUIMVC'],
     publishDate: 0,
-    version: '2023.3.1221'.replace(/^\s+|\s+$/g, ''),
+    version: '2024.1.130'.replace(/^\s+|\s+$/g, ''),
     licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code?utm_medium=product&utm_source=kendojquery&utm_campaign=kendo-ui-jquery-purchase-license-keys-warning'
 };
 
@@ -198,7 +198,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2023.3.1221".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2024.1.130".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -1330,7 +1330,8 @@ function pad(number, digits, end) {
         numberRegExp = {
             2: /^\d{1,2}/,
             3: /^\d{1,3}/,
-            4: /^\d{4}/
+            4: /^\d{4}/,
+            exact3: /^\d{3}/
         },
         objectToString = {}.toString;
 
@@ -1405,7 +1406,7 @@ function pad(number, digits, end) {
                 }
 
                 // If the value comes in the form of 021, 022, 023 we must trim the leading zero otherwise the result will be 02 in all three cases instead of 21/22/23.
-                if (shouldUnpadZeros && part.trim().length === 3 && Number.isInteger(Number(part)) && Number(part) > 0) {
+                if (shouldUnpadZeros && part.match(numberRegExp.exact3) && Number.isInteger(Number(part)) && Number(part) > 0) {
                     part = unpadZero(part);
                 } else {
                     part = value.substr(valueIdx, size);
@@ -1896,7 +1897,7 @@ function pad(number, digits, end) {
         };
     }
 
-    function wrap(element, autosize, resize, shouldCorrectWidth = true) {
+    function wrap(element, autosize, resize, shouldCorrectWidth = true, autowidth) {
         var percentage,
             outerWidth = kendo._outerWidth,
             outerHeight = kendo._outerHeight,
@@ -1922,7 +1923,7 @@ function pad(number, digits, end) {
                 $("<div/>")
                 .addClass("k-child-animation-container")
                 .css({
-                    width: width,
+                    width: autowidth ? "auto" : width,
                     height: height
                 }));
             parent = element.parent();
@@ -5141,6 +5142,7 @@ function pad(number, digits, end) {
     var positionModeValues = [ 'fixed', 'static', 'sticky', 'absolute' ];
     var resizeValues = [ ['both', 'resize'], ['horizontal', 'resize-x'], ['vertical', 'resize-y'] ];
     var overflowValues = [ 'auto', 'hidden', 'visible', 'scroll', 'clip' ];
+    var layoutFlowValues = [ ['vertical', '!k-flex-col'], ['horizontal', '!k-flex-row'] ];
 
     kendo.cssProperties = (function() {
         var defaultValues = {},
@@ -5229,6 +5231,8 @@ function pad(number, digits, end) {
                     prefix = "k-";
                 } else if (propName === "overflow") {
                     prefix = "k-overflow-";
+                } else if (propName === "layoutFlow") {
+                    prefix = "";
                 } else {
                     prefix = widgetProperties[PREFIX];
                 }
@@ -5249,6 +5253,7 @@ function pad(number, digits, end) {
         registerCssClasses("rounded", roundedValues);
         registerCssClasses("resize", resizeValues);
         registerCssClasses("overflow", overflowValues);
+        registerCssClasses("layoutFlow", layoutFlowValues);
 
         return {
             positionModeValues: positionModeValues,

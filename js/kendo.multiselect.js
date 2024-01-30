@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
+ * Copyright 2024 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,81 @@
     typeof define === 'function' && define.amd ? define(['kendo.list', 'kendo.mobile.scroller', 'kendo.virtuallist', 'kendo.html.chip', 'kendo.html.chiplist', 'kendo.html.button'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, (global.kendomultiselect = global.kendomultiselect || {}, global.kendomultiselect.js = factory()));
 })(this, (function () {
+    var $ = kendo.jQuery;
+
+    function addInputPrefixSuffixContainers(ref) {
+        var widget = ref.widget;
+        var wrapper = ref.wrapper;
+        var options = ref.options;
+        var prefixInsertBefore = ref.prefixInsertBefore;
+        var suffixInsertAfter = ref.suffixInsertAfter;
+
+        var prefix = options.prefixOptions,
+            suffix = options.suffixOptions,
+            hasPrefixContent = prefix.template || prefix.icon,
+            hasSuffixContent = suffix.template || suffix.icon,
+            suffixInsertAfter = suffixInsertAfter || prefixInsertBefore,
+            layoutFlow = options.layoutFlow,
+            containerOrientation = layoutFlow ? (layoutFlow == "vertical" ? "horizontal" : "vertical") : "horizontal",
+            separatorOrientation = layoutFlow == "vertical" ? "horizontal" : "vertical",
+            INPUT_SEPARATOR = "<span class=\"k-input-separator k-input-separator-" + separatorOrientation + "\"></span>",
+            prefixContainer,
+            suffixContainer;
+
+        if (prefix && hasPrefixContent) {
+            prefixContainer = wrapper.children(".k-input-prefix");
+
+            if (!prefixContainer[0]) {
+                prefixContainer = $(("<span class=\"k-input-prefix k-input-prefix-" + containerOrientation + "\" />"));
+                if (prefixInsertBefore) {
+                    prefixContainer.insertBefore(prefixInsertBefore);
+                } else {
+                    prefixContainer.prependTo(wrapper);
+                }
+            }
+
+            if (prefix.icon) {
+                prefixContainer.html(kendo.html.renderIcon({ icon: prefix.icon }));
+            }
+
+            if (prefix.template) {
+                prefixContainer.html(kendo.template(prefix.template)({}));
+            }
+
+            if (prefix.separator) {
+                $(INPUT_SEPARATOR).insertAfter(prefixContainer);
+            }
+        }
+
+        if (suffix && hasSuffixContent) {
+            suffixContainer = wrapper.children(".k-input-suffix");
+
+            if (!suffixContainer[0]) {
+                suffixContainer = $(("<span class=\"k-input-suffix k-input-suffix-" + containerOrientation + "\" />")).appendTo(wrapper);
+                if (suffixInsertAfter) {
+                    suffixContainer.insertAfter(suffixInsertAfter);
+                } else {
+                    suffixContainer.appendTo(wrapper);
+                }
+            }
+
+            if (suffix.icon) {
+                suffixContainer.html(kendo.html.renderIcon({ icon: suffix.icon }));
+            }
+
+            if (suffix.template) {
+                suffixContainer.html(kendo.template(suffix.template)({}));
+            }
+
+            if (suffix.separator) {
+                $(INPUT_SEPARATOR).insertBefore(suffixContainer);
+            }
+        }
+
+        widget._prefixContainer = prefixContainer;
+        widget._suffixContainer = suffixContainer;
+    }
+
     var __meta__ = {
         id: "multiselect",
         name: "MultiSelect",
@@ -164,6 +239,11 @@
                 that._toggleCloseVisibility();
                 that._applyCssClasses();
 
+                addInputPrefixSuffixContainers({ widget: that, wrapper: that.wrapper, options: that.options, prefixInsertBefore: that._inputValuesContainer, suffixInsertAfter: that._loading });
+                if (that.floatingLabel) {
+                    that.floatingLabel.refresh();
+                }
+
                 kendo.notify(that);
             },
 
@@ -198,6 +278,12 @@
                 tagTemplate: "",
                 groupTemplate: function (data) { return encode(data); },
                 fixedGroupTemplate: function (data) { return encode(data); },
+                prefixOptions: {
+                    separator: true
+                },
+                suffixOptions: {
+                    separator: true
+                },
                 clearButton: true,
                 autoWidth: false,
                 popup: null,
