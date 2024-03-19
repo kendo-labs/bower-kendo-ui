@@ -193,7 +193,9 @@ var __meta__ = {
             fillMode: "solid",
             rounded: "medium",
             label: null,
-            clearOnEscape: true
+            clearOnEscape: true,
+            _removeDataItems: true,
+            _shouldPreventDefaultReset: true
         },
 
         events: [

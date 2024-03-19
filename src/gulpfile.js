@@ -25,9 +25,12 @@ var argv = require('yargs').argv;
 let HELPERS = {
     execute: (command) => {
       const process = exec(command);
+      // eslint-disable-next-line no-console
       process.stdout.on('data', (data) => { console.log(data.toString()); });
+      // eslint-disable-next-line no-console
       process.stderr.on('data', (data) => { console.log(data.toString()); });
       process.on('exit', (code) => {
+        // eslint-disable-next-line no-console
         console.log('Process exited with code ' + code.toString());
       });
       return process;
@@ -108,11 +111,6 @@ gulp.task("custom", function() {
             external: ['jquery'],
             treeshake: false,
             plugins: [
-                require('@rollup/plugin-buble')({
-                    transforms: {
-                        asyncAwait: false
-                    }
-                }),
                 require("@rollup/plugin-node-resolve").nodeResolve(),
                 require('@rollup/plugin-virtual')({
                     custom: `

@@ -65,6 +65,7 @@ import "./kendo.html.button.js";
             INLINE_FLEX = "k-display-inline-flex",
             // constants
             VISIBLE = ":visible",
+            KHIDDEN = "k-hidden",
             HIDDEN = "hidden",
             CURSOR = "cursor",
             // events
@@ -1820,6 +1821,10 @@ import "./kendo.html.button.js";
 
                 contentHtml.css("visibility", "").show();
 
+                if ($(contentHtml).hasClass(KHIDDEN))
+                {
+                    $(contentHtml).removeClass(KHIDDEN);
+                }
                 contentHtml.find("[data-role=editor]").each(function() {
                     var editor = $(this).data("kendoEditor");
 
@@ -1841,7 +1846,7 @@ import "./kendo.html.button.js";
                 return kendo.html.renderButton(`<button role='button' class='k-window-titlebar-action' aria-label='${name}'></button>`, { icon: iconName, fillMode: "flat" });
             }),
             titlebar: template(({ title }) =>
-                "<div class='k-window-titlebar k-hstack'>" +
+                "<div class='k-window-titlebar'>" +
                     `<span class='k-window-title'>${title}</span>` +
                     "<div class='k-window-titlebar-actions'></div>" +
                 "</div>"

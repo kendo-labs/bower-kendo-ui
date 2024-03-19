@@ -1,5 +1,4 @@
 import glob from 'glob';
-import buble from '@rollup/plugin-buble';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import polyfill from 'rollup-plugin-polyfill';
 import path from 'path';
@@ -16,7 +15,7 @@ export const externals = glob.sync(`${root}/kendo.*.js`).map(resolvePath).concat
 export const cultures = glob.sync('cultures/*.js', { cwd: root });
 export const messages = glob.sync('messages/*.js', { cwd: root });
 const require = createRequire(import.meta.url);
-export const version = '2024.1.130';
+export const version = '2024.1.319';
 
 const globals = {
     jquery: '$'
@@ -65,7 +64,7 @@ const resourcesConfig = (name, options = {}) => ({
     input: `${root}/${name}`,
     output: [{
         format: "umd",
-        dir: `./dist/js/${options.dir}`,
+        dir: `./dist/raw-js/${options.dir}`,
         sourcemap: false,
         ...baseOptions
     }],
@@ -85,7 +84,7 @@ const configMap = (name) => ({
     input: `${root}/${name}`,
     output: [{
         format: 'umd',
-        dir: './dist/js',
+        dir: './dist/raw-js',
         sourcemap: false,
         name: name.replace('.', ''),
         ...baseOptions
@@ -96,12 +95,7 @@ const configMap = (name) => ({
         transformCodePlugin(),
         addKendoVersion(),
         name === 'kendo.core.js' || isBundle(name) ? polyfill(['jquery']) : null,
-        nodeResolve(),
-        buble({
-            transforms: {
-                asyncAwait: false
-            }
-        })
+        nodeResolve()
     ]
 });
 

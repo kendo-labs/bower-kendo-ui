@@ -521,7 +521,7 @@ var __meta__ = {
             }
 
             widgetInstance = (widgetInstance && widgetInstance.options.name == "Signature") ? widgetInstance : kendo.widgetInstance(input);
-            if (!widgetInstance || !(widgetInstance._inputWrapper || widgetInstance.wrapper)) {
+            if (!widgetInstance || !(widgetInstance._inputWrapper || widgetInstance.wrapper) || (input.is("[type=checkbox]") || input.is("[type=radio]"))) {
                 input.toggleClass(INVALIDINPUT, !valid);
                 input.toggleClass(VALIDINPUT, valid);
             }
@@ -530,7 +530,7 @@ var __meta__ = {
                 var inputWrap = widgetInstance._inputWrapper || widgetInstance.wrapper;
                 var inputLabel = widgetInstance._inputLabel;
 
-                if (inputWrap) {
+                if (inputWrap && !(input.is("[type=checkbox]") || input.is("[type=radio]"))) {
                     inputWrap.toggleClass(INVALIDINPUT, !valid);
                     inputWrap.toggleClass(VALIDINPUT, valid);
                 }

@@ -140,6 +140,7 @@ var __meta__ = {
                 });
 
             that._clear.on("click" + ns + " touchend" + ns, that._clearValue.bind(that));
+            that._clear.on("mousedown" + ns, that._clearValueMouseDownHandler.bind(that));
             that._enable();
 
             that._old = that._accessor();
@@ -203,7 +204,17 @@ var __meta__ = {
             size: "medium",
             fillMode: "solid",
             rounded: "medium",
-            label: null
+            label: null,
+        },
+
+        _clearValueMouseDownHandler: function(ev) {
+            var that = this;
+
+            if (ev && ev.currentTarget && ev.currentTarget.classList.contains('k-clear-value')) {
+                that._clearValueTrigger = true;
+            } else {
+                that._clearValueTrigger = false;
+            }
         },
 
         _onActionSheetCreate: function() {
@@ -625,6 +636,7 @@ var __meta__ = {
 
             var valueUpdated = trigger && !that._typing;
             var itemSelected = that._oldText !== value;
+            var clearValueTrigger = that._clearValueTrigger;
 
             that._old = value;
             that._oldText = value;
@@ -633,12 +645,12 @@ var __meta__ = {
                 that.element.val(that.filterInput.val());
             }
 
-            if (valueUpdated || itemSelected) {
+            if ((valueUpdated || itemSelected) && !clearValueTrigger) {
                 // trigger the DOM change event so any subscriber gets notified
                 that.element.trigger(CHANGE);
             }
 
-            if (trigger) {
+            if (trigger && !clearValueTrigger) {
                 that.trigger(CHANGE);
             }
 
@@ -912,6 +924,7 @@ var __meta__ = {
         },
 
         _clearValue: function() {
+            this._clearValueTrigger = false;
             List.fn._clearValue.call(this);
             this.element.focus();
         }

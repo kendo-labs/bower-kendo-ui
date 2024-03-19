@@ -25752,36 +25752,72 @@ kendo-sortable {
   box-shadow: 0 0.3px 0.9px rgba(0, 0, 0, 0.1), 0 1.6px 3.6px rgba(0, 0, 0, 0.13);
 }
 
+.\!k-elevation-1 {
+  box-shadow: 0 0.3px 0.9px rgba(0, 0, 0, 0.1), 0 1.6px 3.6px rgba(0, 0, 0, 0.13) !important;
+}
+
 .k-elevation-2 {
   box-shadow: 0 0.6px 1.8px rgba(0, 0, 0, 0.1), 0 3.2px 7.2px rgba(0, 0, 0, 0.13);
+}
+
+.\!k-elevation-2 {
+  box-shadow: 0 0.6px 1.8px rgba(0, 0, 0, 0.1), 0 3.2px 7.2px rgba(0, 0, 0, 0.13) !important;
 }
 
 .k-elevation-3 {
   box-shadow: 0 0.9px 2.7px rgba(0, 0, 0, 0.1), 0 4.8px 10.8px rgba(0, 0, 0, 0.13);
 }
 
+.\!k-elevation-3 {
+  box-shadow: 0 0.9px 2.7px rgba(0, 0, 0, 0.1), 0 4.8px 10.8px rgba(0, 0, 0, 0.13) !important;
+}
+
 .k-elevation-4 {
   box-shadow: 0 1.2px 3.6px rgba(0, 0, 0, 0.1), 0 6.4px 14.4px rgba(0, 0, 0, 0.13);
+}
+
+.\!k-elevation-4 {
+  box-shadow: 0 1.2px 3.6px rgba(0, 0, 0, 0.1), 0 6.4px 14.4px rgba(0, 0, 0, 0.13) !important;
 }
 
 .k-elevation-5 {
   box-shadow: 0 1.8px 5.4px rgba(0, 0, 0, 0.1), 0 9.6px 21.6px rgba(0, 0, 0, 0.13);
 }
 
+.\!k-elevation-5 {
+  box-shadow: 0 1.8px 5.4px rgba(0, 0, 0, 0.1), 0 9.6px 21.6px rgba(0, 0, 0, 0.13) !important;
+}
+
 .k-elevation-6 {
   box-shadow: 0 2.4px 7.2px rgba(0, 0, 0, 0.18), 0 12.8px 28.8px rgba(0, 0, 0, 0.22);
+}
+
+.\!k-elevation-6 {
+  box-shadow: 0 2.4px 7.2px rgba(0, 0, 0, 0.18), 0 12.8px 28.8px rgba(0, 0, 0, 0.22) !important;
 }
 
 .k-elevation-7 {
   box-shadow: 0 3.2px 10.8px rgba(0, 0, 0, 0.18), 0 19.2px 43.2px rgba(0, 0, 0, 0.22);
 }
 
+.\!k-elevation-7 {
+  box-shadow: 0 3.2px 10.8px rgba(0, 0, 0, 0.18), 0 19.2px 43.2px rgba(0, 0, 0, 0.22) !important;
+}
+
 .k-elevation-8 {
   box-shadow: 0 4.8px 14.4px rgba(0, 0, 0, 0.18), 0 25.6px 57.6px rgba(0, 0, 0, 0.22);
 }
 
+.\!k-elevation-8 {
+  box-shadow: 0 4.8px 14.4px rgba(0, 0, 0, 0.18), 0 25.6px 57.6px rgba(0, 0, 0, 0.22) !important;
+}
+
 .k-elevation-9 {
   box-shadow: 0 6.4px 18px rgba(0, 0, 0, 0.18), 0 32px 72px rgba(0, 0, 0, 0.22);
+}
+
+.\!k-elevation-9 {
+  box-shadow: 0 6.4px 18px rgba(0, 0, 0, 0.18), 0 32px 72px rgba(0, 0, 0, 0.22) !important;
 }
 
 .k-svg-icon {
@@ -26841,12 +26877,15 @@ kendo-sortable {
   outline: none;
 }
 
+.k-table-list .k-table-row {
+  position: relative;
+}
+
 .k-table-list .k-table-row,
 .k-table-list .k-table-group-row {
   width: 100%;
   box-sizing: border-box;
   display: table-row;
-  position: relative;
 }
 
 .k-table-list .k-table-row:first-child .k-table-td,
@@ -26869,6 +26908,10 @@ kendo-sortable {
 .k-table-list .k-table-th,
 .k-table-list .k-table-td {
   vertical-align: middle;
+}
+
+.k-table-list .k-table-group-row {
+  position: sticky;
 }
 
 .k-table-list .k-table-group-row::before {
@@ -31424,10 +31467,6 @@ select.k-picker {
   box-shadow: none;
 }
 
-.k-input-inner:valid {
-  box-shadow: none;
-}
-
 span.k-input-inner {
   white-space: nowrap;
   display: flex;
@@ -31728,10 +31767,7 @@ textarea.k-input-inner {
   border-width: 0 0 var(--kendo-input-focus-border-width, 2px) 0;
 }
 
-.k-input-flat.k-valid:focus::after, .k-input-flat.k-valid.k-focus::after, .k-input-flat.k-valid:focus-within::after, .k-input-flat.k-invalid:focus::after, .k-input-flat.k-invalid.k-focus::after, .k-input-flat.k-invalid:focus-within::after, .k-input-flat.ng-invalid.ng-touched:focus::after, .k-input-flat.ng-invalid.ng-touched.k-focus::after, .k-input-flat.ng-invalid.ng-touched:focus-within::after, .k-input-flat.ng-invalid.ng-dirty:focus::after, .k-input-flat.ng-invalid.ng-dirty.k-focus::after, .k-input-flat.ng-invalid.ng-dirty:focus-within::after,
-.k-picker-flat.k-valid:focus::after,
-.k-picker-flat.k-valid.k-focus::after,
-.k-picker-flat.k-valid:focus-within::after,
+.k-input-flat.k-invalid:focus::after, .k-input-flat.k-invalid.k-focus::after, .k-input-flat.k-invalid:focus-within::after, .k-input-flat.ng-invalid.ng-touched:focus::after, .k-input-flat.ng-invalid.ng-touched.k-focus::after, .k-input-flat.ng-invalid.ng-touched:focus-within::after, .k-input-flat.ng-invalid.ng-dirty:focus::after, .k-input-flat.ng-invalid.ng-dirty.k-focus::after, .k-input-flat.ng-invalid.ng-dirty:focus-within::after,
 .k-picker-flat.k-invalid:focus::after,
 .k-picker-flat.k-invalid.k-focus::after,
 .k-picker-flat.k-invalid:focus-within::after,
@@ -31984,26 +32020,6 @@ textarea.k-input-inner {
   color: var(--kendo-input-invalid-text, var(--kendo-invalid-text, var(--kendo-error-190, inherit)));
 }
 
-.k-input.k-valid {
-  --INTERNAL--kendo-input-border: var( --kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)) );
-}
-
-.k-input.k-valid::after {
-  border-color: var(--kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)));
-}
-
-.k-input.k-valid .k-input-validation-icon {
-  color: var(--kendo-input-valid-text, var(--kendo-valid-text, var(--kendo-success-190, inherit)));
-}
-
-.k-input.k-valid:focus:hover, .k-input.k-valid.k-focus:hover, .k-input.k-valid:focus.k-hover, .k-input.k-valid.k-focus.k-hover {
-  --INTERNAL--kendo-input-border: var( --kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)) );
-}
-
-.k-input.k-valid:focus:hover .k-input-validation-icon, .k-input.k-valid.k-focus:hover .k-input-validation-icon, .k-input.k-valid:focus.k-hover .k-input-validation-icon, .k-input.k-valid.k-focus.k-hover .k-input-validation-icon {
-  color: var(--kendo-input-valid-text, var(--kendo-valid-text, var(--kendo-success-190, inherit)));
-}
-
 .k-input .k-input-prefix {
   color: var(--kendo-input-prefix-text, var(--kendo-neutral-130, inherit));
 }
@@ -32071,26 +32087,6 @@ textarea.k-input-inner {
 
 .k-picker.k-invalid:focus:hover .k-input-validation-icon, .k-picker.k-invalid.k-focus:hover .k-input-validation-icon, .k-picker.k-invalid:focus.k-hover .k-input-validation-icon, .k-picker.k-invalid.k-focus.k-hover .k-input-validation-icon, .k-picker.ng-invalid.ng-touched:focus:hover .k-input-validation-icon, .k-picker.ng-invalid.ng-touched.k-focus:hover .k-input-validation-icon, .k-picker.ng-invalid.ng-touched:focus.k-hover .k-input-validation-icon, .k-picker.ng-invalid.ng-touched.k-focus.k-hover .k-input-validation-icon, .k-picker.ng-invalid.ng-dirty:focus:hover .k-input-validation-icon, .k-picker.ng-invalid.ng-dirty.k-focus:hover .k-input-validation-icon, .k-picker.ng-invalid.ng-dirty:focus.k-hover .k-input-validation-icon, .k-picker.ng-invalid.ng-dirty.k-focus.k-hover .k-input-validation-icon {
   color: var(--kendo-input-invalid-text, var(--kendo-invalid-text, var(--kendo-error-190, inherit)));
-}
-
-.k-picker.k-valid {
-  --INTERNAL--kendo-picker-border: var( --kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)) );
-}
-
-.k-picker.k-valid::after {
-  border-color: var(--kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)));
-}
-
-.k-picker.k-valid .k-input-validation-icon {
-  color: var(--kendo-input-valid-text, var(--kendo-valid-text, var(--kendo-success-190, inherit)));
-}
-
-.k-picker.k-valid:focus:hover, .k-picker.k-valid.k-focus:hover, .k-picker.k-valid:focus.k-hover, .k-picker.k-valid.k-focus.k-hover {
-  --INTERNAL--kendo-picker-border: var( --kendo-input-valid-border, var(--kendo-valid-border, var(--kendo-success-190, inherit)) );
-}
-
-.k-picker.k-valid:focus:hover .k-input-validation-icon, .k-picker.k-valid.k-focus:hover .k-input-validation-icon, .k-picker.k-valid:focus.k-hover .k-input-validation-icon, .k-picker.k-valid.k-focus.k-hover .k-input-validation-icon {
-  color: var(--kendo-input-valid-text, var(--kendo-valid-text, var(--kendo-success-190, inherit)));
 }
 
 .k-input-solid {
@@ -42238,6 +42234,7 @@ kendo-card-footer {
 }
 
 .k-grid .k-grid-container {
+  border-color: inherit;
   display: flex;
   flex: 1 1 auto;
   overflow: hidden;
@@ -42561,7 +42558,9 @@ kendo-card-footer {
 }
 
 .k-grid-header-wrap .k-table-row:not(:only-child) .k-table-th,
-.k-grid-footer-wrap .k-table-row:not(:only-child) .k-table-th {
+.k-grid-header-wrap .k-table-row:not(:only-child) .k-table-td:nth-child(n+2),
+.k-grid-footer-wrap .k-table-row:not(:only-child) .k-table-th,
+.k-grid-footer-wrap .k-table-row:not(:only-child) .k-table-td:nth-child(n+2) {
   border-inline-start-width: 1px;
 }
 
@@ -42609,12 +42608,12 @@ div.k-grid-footer {
   cursor: default;
 }
 
-.k-grid-header .k-table-th:first-child {
-  border-inline-start-width: 0;
-}
-
 .k-grid-header .k-table-th.k-first {
   border-inline-start-width: var(--kendo-grid-header-first-border-width, 1px);
+}
+
+.k-grid-header .k-table-row .k-table-th:first-child:not(.k-first) {
+  border-inline-start-width: 0;
 }
 
 .k-grid-header .k-table-th > .k-link {
@@ -43922,7 +43921,7 @@ kendo-grid.k-grid .k-table-row.k-hover .k-grid-content-sticky.k-selected {
 
 .k-filter-menu.k-popup,
 .k-column-menu.k-popup {
-  box-shadow: var(--kendo-grid-column-menu-shadow, var(--kendo-box-shadow-depth-6, none));
+  box-shadow: var(--kendo-grid-column-menu-shadow, var(--kendo-box-shadow-depth-4, none));
 }
 
 .k-column-menu .k-menu:not(.k-context-menu) {
@@ -47652,6 +47651,10 @@ kendo-editor.k-readonly .k-editor-content.k-focus {
 .k-gantt .k-splitbar {
   position: relative;
   display: inline-flex;
+}
+
+.k-gantt .k-gantt-splitter {
+  border-width: 0;
 }
 
 .k-gantt .k-treelist-scrollable {

@@ -25958,36 +25958,72 @@ kendo-sortable {
     box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 2px 1px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px rgba(0, 0, 0, 0.14);
 }
 
+.\!k-elevation-1 {
+    box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 2px 1px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px rgba(0, 0, 0, 0.14) !important;
+}
+
 .k-elevation-2 {
     box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 3px 1px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14);
+}
+
+.\!k-elevation-2 {
+    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 3px 1px 0px rgba(0, 0, 0, 0.12), 0px 2px 2px 0px rgba(0, 0, 0, 0.14) !important;
 }
 
 .k-elevation-3 {
     box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2), 0px 3px 3px 0px rgba(0, 0, 0, 0.12), 0px 3px 4px 0px rgba(0, 0, 0, 0.14);
 }
 
+.\!k-elevation-3 {
+    box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.2), 0px 3px 3px 0px rgba(0, 0, 0, 0.12), 0px 3px 4px 0px rgba(0, 0, 0, 0.14) !important;
+}
+
 .k-elevation-4 {
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2), 0px 1px 10px 0px rgba(0, 0, 0, 0.12), 0px 4px 5px 0px rgba(0, 0, 0, 0.14);
+}
+
+.\!k-elevation-4 {
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2), 0px 1px 10px 0px rgba(0, 0, 0, 0.12), 0px 4px 5px 0px rgba(0, 0, 0, 0.14) !important;
 }
 
 .k-elevation-5 {
     box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2), 0px 1px 18px 0px rgba(0, 0, 0, 0.12), 0px 6px 10px 0px rgba(0, 0, 0, 0.14);
 }
 
+.\!k-elevation-5 {
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.2), 0px 1px 18px 0px rgba(0, 0, 0, 0.12), 0px 6px 10px 0px rgba(0, 0, 0, 0.14) !important;
+}
+
 .k-elevation-6 {
     box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2), 0px 3px 14px 0px rgba(0, 0, 0, 0.12), 0px 8px 10px 0px rgba(0, 0, 0, 0.14);
+}
+
+.\!k-elevation-6 {
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2), 0px 3px 14px 0px rgba(0, 0, 0, 0.12), 0px 8px 10px 0px rgba(0, 0, 0, 0.14) !important;
 }
 
 .k-elevation-7 {
     box-shadow: 0px 7px 8px 0px rgba(0, 0, 0, 0.2), 0px 5px 22px 0px rgba(0, 0, 0, 0.12), 0px 12px 17px 0px rgba(0, 0, 0, 0.14);
 }
 
+.\!k-elevation-7 {
+    box-shadow: 0px 7px 8px 0px rgba(0, 0, 0, 0.2), 0px 5px 22px 0px rgba(0, 0, 0, 0.12), 0px 12px 17px 0px rgba(0, 0, 0, 0.14) !important;
+}
+
 .k-elevation-8 {
     box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.2), 0px 6px 30px rgba(0, 0, 0, 0.12), 0px 16px 24px rgba(0, 0, 0, 0.14);
 }
 
+.\!k-elevation-8 {
+    box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.2), 0px 6px 30px rgba(0, 0, 0, 0.12), 0px 16px 24px rgba(0, 0, 0, 0.14) !important;
+}
+
 .k-elevation-9 {
     box-shadow: 0px 11px 15px rgba(0, 0, 0, 0.2), 0px 9px 46px rgba(0, 0, 0, 0.12), 0px 24px 38px rgba(0, 0, 0, 0.14);
+}
+
+.\!k-elevation-9 {
+    box-shadow: 0px 11px 15px rgba(0, 0, 0, 0.2), 0px 9px 46px rgba(0, 0, 0, 0.12), 0px 24px 38px rgba(0, 0, 0, 0.14) !important;
 }
 
 .k-body,
@@ -27500,12 +27536,15 @@ kendo-sortable {
     outline: none;
 }
 
+.k-table-list .k-table-row {
+    position: relative;
+}
+
 .k-table-list .k-table-row,
 .k-table-list .k-table-group-row {
     width: 100%;
     box-sizing: border-box;
     display: table-row;
-    position: relative;
 }
 
 .k-table-list .k-table-row.k-first {
@@ -27515,6 +27554,10 @@ kendo-sortable {
 .k-table-list .k-table-th,
 .k-table-list .k-table-td {
     vertical-align: middle;
+}
+
+.k-table-list .k-table-group-row {
+    position: sticky;
 }
 
 .k-table-list .k-table-group-row::before {
@@ -33378,14 +33421,6 @@ select.k-picker-lg {
     color: #f31700;
 }
 
-.k-input-solid.k-valid {
-    border-color: #37b400;
-}
-
-.k-input-solid.k-valid .k-input-validation-icon {
-    color: #37b400;
-}
-
 .k-input-solid .k-input-prefix {
     color: rgba(0, 0, 0, 0.54);
 }
@@ -33430,14 +33465,6 @@ select.k-picker-lg {
     color: #f31700;
 }
 
-.k-picker-solid.k-valid {
-    border-color: #37b400;
-}
-
-.k-picker-solid.k-valid .k-input-validation-icon {
-    color: #37b400;
-}
-
 .k-input-outline {
     border-color: rgba(0, 0, 0, 0.38);
     color: rgba(0, 0, 0, 0.87);
@@ -33480,14 +33507,6 @@ select.k-picker-lg {
 
 .k-input-outline.k-invalid .k-input-validation-icon, .k-input-outline.ng-invalid.ng-touched .k-input-validation-icon, .k-input-outline.ng-invalid.ng-dirty .k-input-validation-icon {
     color: #f31700;
-}
-
-.k-input-outline.k-valid {
-    border-color: #37b400;
-}
-
-.k-input-outline.k-valid .k-input-validation-icon {
-    color: #37b400;
 }
 
 .k-input-outline .k-input-prefix {
@@ -33535,14 +33554,6 @@ select.k-picker-lg {
     color: #f31700;
 }
 
-.k-picker-outline.k-valid {
-    border-color: #37b400;
-}
-
-.k-picker-outline.k-valid .k-input-validation-icon {
-    color: #37b400;
-}
-
 .k-input-flat {
     border-color: rgba(0, 0, 0, 0.38);
     color: rgba(0, 0, 0, 0.87);
@@ -33572,14 +33583,6 @@ select.k-picker-lg {
 
 .k-input-flat.k-invalid .k-input-validation-icon, .k-input-flat.ng-invalid.ng-touched .k-input-validation-icon, .k-input-flat.ng-invalid.ng-dirty .k-input-validation-icon {
     color: #f31700;
-}
-
-.k-input-flat.k-valid {
-    border-color: #37b400;
-}
-
-.k-input-flat.k-valid .k-input-validation-icon {
-    color: #37b400;
 }
 
 .k-input-flat .k-input-prefix {
@@ -33623,14 +33626,6 @@ select.k-picker-lg {
 
 .k-picker-flat.k-invalid .k-input-validation-icon, .k-picker-flat.ng-invalid.ng-touched .k-input-validation-icon, .k-picker-flat.ng-invalid.ng-dirty .k-input-validation-icon {
     color: #f31700;
-}
-
-.k-picker-flat.k-valid {
-    border-color: #37b400;
-}
-
-.k-picker-flat.k-valid .k-input-validation-icon {
-    color: #37b400;
 }
 
 .k-floating-label-container {
@@ -45289,11 +45284,13 @@ kendo-grid .k-grid-row-sticky .k-table-td {
     background-color: #1565c0;
 }
 
-.k-grid-header .k-table-thead > .k-table-row:not(:only-child) > .k-table-th {
+.k-grid-header .k-table-thead > .k-table-row:not(:only-child) > .k-table-th,
+.k-grid-header .k-table-thead > .k-table-row:not(:only-child) > .k-table-td {
     border-inline-start-color: rgba(0, 0, 0, 0.12);
 }
 
-.k-grid-header .k-table-thead > .k-table-row:not(:only-child) > .k-table-th.k-grid-header-sticky {
+.k-grid-header .k-table-thead > .k-table-row:not(:only-child) > .k-table-th.k-grid-header-sticky,
+.k-grid-header .k-table-thead > .k-table-row:not(:only-child) > .k-table-td.k-grid-header-sticky {
     border-inline-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -46218,7 +46215,7 @@ kendo-grid .k-grid-row-sticky .k-table-td {
     top: 8px;
 }
 
-.k-export-config .k-page-orientation .k-icon {
+.k-export-config .k-page-orientation .k-font-icon {
     font-size: 6em;
 }
 
@@ -49061,6 +49058,10 @@ kendo-grid .k-grid-row-sticky .k-table-td {
 .k-gantt .k-splitbar {
     position: relative;
     display: inline-flex;
+}
+
+.k-gantt .k-gantt-splitter {
+    border-width: 0;
 }
 
 .k-gantt .k-treelist-scrollable {

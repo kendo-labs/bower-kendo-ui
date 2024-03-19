@@ -27,7 +27,7 @@ var packageMetadata = {
     productName: 'Kendo UI',
     productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'UIASPCORE', 'KENDOMVC', 'KENDOUIMVC'],
     publishDate: 0,
-    version: '2024.1.130'.replace(/^\s+|\s+$/g, ''),
+    version: '2024.1.319'.replace(/^\s+|\s+$/g, ''),
     licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code?utm_medium=product&utm_source=kendojquery&utm_campaign=kendo-ui-jquery-purchase-license-keys-warning'
 };
 
@@ -198,7 +198,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2024.1.130".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2024.1.319".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -4598,7 +4598,7 @@ function pad(number, digits, end) {
 
         function splitDateFormat(format) {
             var info = kendo.culture();
-            var pattern = datePattern(format, info).replace("dddd", "EEEE").replace("tt", "aa");
+            var pattern = datePattern(format, info).replaceAll("dddd", "EEEE").replaceAll("ddd", "EEE").replace("tt", "aa");
             var parts = [];
             var dateFormatRegExp = /d{1,2}|E{1,6}|e{1,6}|c{3,6}|c{1}|M{1,5}|L{1,5}|y{1,4}|H{1,2}|h{1,2}|k{1,2}|K{1,2}|m{1,2}|a{1,5}|s{1,2}|S{1,3}|t{1,2}|z{1,4}|Z{1,5}|x{1,5}|X{1,5}|G{1,5}|q{1,5}|Q{1,5}|"[^"]*"|'[^']*'/g;
 

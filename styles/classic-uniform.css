@@ -25959,36 +25959,72 @@ kendo-sortable {
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
+.\!k-elevation-1 {
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
 .k-elevation-2 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.\!k-elevation-2 {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
 }
 
 .k-elevation-3 {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
+.\!k-elevation-3 {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
 .k-elevation-4 {
     box-shadow: 0 8px 10px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.\!k-elevation-4 {
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
 }
 
 .k-elevation-5 {
     box-shadow: 0 10px 12px rgba(0, 0, 0, 0.16), 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
+.\!k-elevation-5 {
+    box-shadow: 0 10px 12px rgba(0, 0, 0, 0.16), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
 .k-elevation-6 {
     box-shadow: 0 12px 14px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.\!k-elevation-6 {
+    box-shadow: 0 12px 14px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
 }
 
 .k-elevation-7 {
     box-shadow: 0 14px 16px rgba(0, 0, 0, 0.24), 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
+.\!k-elevation-7 {
+    box-shadow: 0 14px 16px rgba(0, 0, 0, 0.24), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
 .k-elevation-8 {
     box-shadow: 0 16px 18px rgba(0, 0, 0, 0.28), 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
+.\!k-elevation-8 {
+    box-shadow: 0 16px 18px rgba(0, 0, 0, 0.28), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
 .k-elevation-9 {
     box-shadow: 0 32px 34px rgba(0, 0, 0, 0.32), 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.\!k-elevation-9 {
+    box-shadow: 0 32px 34px rgba(0, 0, 0, 0.32), 0 4px 16px rgba(0, 0, 0, 0.12) !important;
 }
 
 .k-body,
@@ -27483,12 +27519,15 @@ kendo-sortable {
     outline: none;
 }
 
+.k-table-list .k-table-row {
+    position: relative;
+}
+
 .k-table-list .k-table-row,
 .k-table-list .k-table-group-row {
     width: 100%;
     box-sizing: border-box;
     display: table-row;
-    position: relative;
 }
 
 .k-table-list .k-table-row.k-first {
@@ -27498,6 +27537,10 @@ kendo-sortable {
 .k-table-list .k-table-th,
 .k-table-list .k-table-td {
     vertical-align: middle;
+}
+
+.k-table-list .k-table-group-row {
+    position: sticky;
 }
 
 .k-table-list .k-table-group-row::before {
@@ -32670,14 +32713,6 @@ select.k-picker-lg {
     color: #d92800;
 }
 
-.k-input-solid.k-valid {
-    border-color: #3ea44e;
-}
-
-.k-input-solid.k-valid .k-input-validation-icon {
-    color: #3ea44e;
-}
-
 .k-input-solid .k-input-prefix {
     color: #666666;
 }
@@ -32718,14 +32753,6 @@ select.k-picker-lg {
     color: #d92800;
 }
 
-.k-picker-solid.k-valid {
-    border-color: #3ea44e;
-}
-
-.k-picker-solid.k-valid .k-input-validation-icon {
-    color: #3ea44e;
-}
-
 .k-input-outline {
     border-color: rgba(255, 255, 255, 0.5);
 }
@@ -32761,14 +32788,6 @@ select.k-picker-lg {
 
 .k-input-outline.k-invalid .k-input-validation-icon, .k-input-outline.ng-invalid.ng-touched .k-input-validation-icon, .k-input-outline.ng-invalid.ng-dirty .k-input-validation-icon {
     color: #d92800;
-}
-
-.k-input-outline.k-valid {
-    border-color: #3ea44e;
-}
-
-.k-input-outline.k-valid .k-input-validation-icon {
-    color: #3ea44e;
 }
 
 .k-input-outline .k-input-prefix {
@@ -32810,14 +32829,6 @@ select.k-picker-lg {
     color: #d92800;
 }
 
-.k-picker-outline.k-valid {
-    border-color: #3ea44e;
-}
-
-.k-picker-outline.k-valid .k-input-validation-icon {
-    color: #3ea44e;
-}
-
 .k-input-flat {
     border-color: #6c6c6c;
     color: #272727;
@@ -32841,14 +32852,6 @@ select.k-picker-lg {
 
 .k-input-flat.k-invalid .k-input-validation-icon, .k-input-flat.ng-invalid.ng-touched .k-input-validation-icon, .k-input-flat.ng-invalid.ng-dirty .k-input-validation-icon {
     color: #d92800;
-}
-
-.k-input-flat.k-valid {
-    border-color: #3ea44e;
-}
-
-.k-input-flat.k-valid .k-input-validation-icon {
-    color: #3ea44e;
 }
 
 .k-input-flat .k-input-prefix {
@@ -32887,14 +32890,6 @@ select.k-picker-lg {
 
 .k-picker-flat.k-invalid .k-input-validation-icon, .k-picker-flat.ng-invalid.ng-touched .k-input-validation-icon, .k-picker-flat.ng-invalid.ng-dirty .k-input-validation-icon {
     color: #d92800;
-}
-
-.k-picker-flat.k-valid {
-    border-color: #3ea44e;
-}
-
-.k-picker-flat.k-valid .k-input-validation-icon {
-    color: #3ea44e;
 }
 
 .k-floating-label-container {
@@ -44693,7 +44688,7 @@ kendo-grid.k-grid .k-table-row.k-hover .k-grid-content-sticky.k-selected {
     top: 8px;
 }
 
-.k-export-config .k-page-orientation .k-icon {
+.k-export-config .k-page-orientation .k-font-icon {
     font-size: 6em;
 }
 
@@ -47441,6 +47436,10 @@ kendo-grid.k-grid .k-table-row.k-hover .k-grid-content-sticky.k-selected {
 .k-gantt .k-splitbar {
     position: relative;
     display: inline-flex;
+}
+
+.k-gantt .k-gantt-splitter {
+    border-width: 0;
 }
 
 .k-gantt .k-treelist-scrollable {

@@ -25958,36 +25958,72 @@ kendo-sortable {
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.038);
 }
 
+.\!k-elevation-1 {
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.038) !important;
+}
+
 .k-elevation-2 {
     box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.075);
+}
+
+.\!k-elevation-2 {
+    box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.075) !important;
 }
 
 .k-elevation-3 {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.\!k-elevation-3 {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1) !important;
+}
+
 .k-elevation-4 {
     box-shadow: 0px 6px 13px rgba(0, 0, 0, 0.125);
+}
+
+.\!k-elevation-4 {
+    box-shadow: 0px 6px 13px rgba(0, 0, 0, 0.125) !important;
 }
 
 .k-elevation-5 {
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.15);
 }
 
+.\!k-elevation-5 {
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.15) !important;
+}
+
 .k-elevation-6 {
     box-shadow: 0px 11px 24px 0px rgba(0, 0, 0, 0.159);
+}
+
+.\!k-elevation-6 {
+    box-shadow: 0px 11px 24px 0px rgba(0, 0, 0, 0.159) !important;
 }
 
 .k-elevation-7 {
     box-shadow: 0px 14px 36px 0px rgba(0, 0, 0, 0.168);
 }
 
+.\!k-elevation-7 {
+    box-shadow: 0px 14px 36px 0px rgba(0, 0, 0, 0.168) !important;
+}
+
 .k-elevation-8 {
     box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
 }
 
+.\!k-elevation-8 {
+    box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176) !important;
+}
+
 .k-elevation-9 {
     box-shadow: 0px 18px 60px 0px rgba(0, 0, 0, 0.185);
+}
+
+.\!k-elevation-9 {
+    box-shadow: 0px 18px 60px 0px rgba(0, 0, 0, 0.185) !important;
 }
 
 .k-body,
@@ -27492,12 +27528,15 @@ kendo-sortable {
     outline: none;
 }
 
+.k-table-list .k-table-row {
+    position: relative;
+}
+
 .k-table-list .k-table-row,
 .k-table-list .k-table-group-row {
     width: 100%;
     box-sizing: border-box;
     display: table-row;
-    position: relative;
 }
 
 .k-table-list .k-table-row.k-first {
@@ -27507,6 +27546,10 @@ kendo-sortable {
 .k-table-list .k-table-th,
 .k-table-list .k-table-td {
     vertical-align: middle;
+}
+
+.k-table-list .k-table-group-row {
+    position: sticky;
 }
 
 .k-table-list .k-table-group-row::before {
@@ -32759,22 +32802,6 @@ select.k-picker-lg {
     box-shadow: 0 0 0 0.25rem rgba(227, 71, 14, 0.25);
 }
 
-.k-input-solid.k-valid {
-    border-color: #5cb85c;
-}
-
-.k-input-solid.k-valid .k-input-validation-icon {
-    color: #5cb85c;
-}
-
-.k-input-solid.k-valid:focus, .k-input-solid.k-valid.k-focus {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
-}
-
-.k-input-solid.k-valid:focus-within {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
-}
-
 .k-input-solid .k-input-prefix {
     color: #6c757d;
 }
@@ -32826,22 +32853,6 @@ select.k-picker-lg {
     box-shadow: 0 0 0 0.25rem rgba(227, 71, 14, 0.25);
 }
 
-.k-picker-solid.k-valid {
-    border-color: #5cb85c;
-}
-
-.k-picker-solid.k-valid .k-input-validation-icon {
-    color: #5cb85c;
-}
-
-.k-picker-solid.k-valid:focus, .k-picker-solid.k-valid.k-focus {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
-}
-
-.k-picker-solid.k-valid:focus-within {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
-}
-
 .k-input-outline {
     border-color: rgba(28, 58, 76, 0.5);
     color: #1c3a4c;
@@ -32884,22 +32895,6 @@ select.k-picker-lg {
 
 .k-input-outline.k-invalid:focus-within, .k-input-outline.ng-invalid.ng-touched:focus-within, .k-input-outline.ng-invalid.ng-dirty:focus-within {
     box-shadow: 0 0 0 0.25rem rgba(227, 71, 14, 0.25);
-}
-
-.k-input-outline.k-valid {
-    border-color: #5cb85c;
-}
-
-.k-input-outline.k-valid .k-input-validation-icon {
-    color: #5cb85c;
-}
-
-.k-input-outline.k-valid:focus, .k-input-outline.k-valid.k-focus {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
-}
-
-.k-input-outline.k-valid:focus-within {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
 }
 
 .k-input-outline .k-input-prefix {
@@ -32949,22 +32944,6 @@ select.k-picker-lg {
     box-shadow: 0 0 0 0.25rem rgba(227, 71, 14, 0.25);
 }
 
-.k-picker-outline.k-valid {
-    border-color: #5cb85c;
-}
-
-.k-picker-outline.k-valid .k-input-validation-icon {
-    color: #5cb85c;
-}
-
-.k-picker-outline.k-valid:focus, .k-picker-outline.k-valid.k-focus {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
-}
-
-.k-picker-outline.k-valid:focus-within {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
-}
-
 .k-input-flat {
     border-color: #ced4da;
     color: #212529;
@@ -32994,22 +32973,6 @@ select.k-picker-lg {
 
 .k-input-flat.k-invalid:focus-within, .k-input-flat.ng-invalid.ng-touched:focus-within, .k-input-flat.ng-invalid.ng-dirty:focus-within {
     box-shadow: 0 0 0 0.25rem rgba(227, 71, 14, 0.25);
-}
-
-.k-input-flat.k-valid {
-    border-color: #5cb85c;
-}
-
-.k-input-flat.k-valid .k-input-validation-icon {
-    color: #5cb85c;
-}
-
-.k-input-flat.k-valid:focus, .k-input-flat.k-valid.k-focus {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
-}
-
-.k-input-flat.k-valid:focus-within {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
 }
 
 .k-input-flat .k-input-prefix {
@@ -33055,22 +33018,6 @@ select.k-picker-lg {
 
 .k-picker-flat.k-invalid:focus-within, .k-picker-flat.ng-invalid.ng-touched:focus-within, .k-picker-flat.ng-invalid.ng-dirty:focus-within {
     box-shadow: 0 0 0 0.25rem rgba(227, 71, 14, 0.25);
-}
-
-.k-picker-flat.k-valid {
-    border-color: #5cb85c;
-}
-
-.k-picker-flat.k-valid .k-input-validation-icon {
-    color: #5cb85c;
-}
-
-.k-picker-flat.k-valid:focus, .k-picker-flat.k-valid.k-focus {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
-}
-
-.k-picker-flat.k-valid:focus-within {
-    box-shadow: 0 0 0 0.25rem rgba(92, 184, 92, 0.25);
 }
 
 .k-floating-label-container {
@@ -44879,7 +44826,7 @@ kendo-grid.k-grid .k-table-row.k-hover .k-grid-content-sticky.k-selected {
     top: 0.5rem;
 }
 
-.k-export-config .k-page-orientation .k-icon {
+.k-export-config .k-page-orientation .k-font-icon {
     font-size: 6em;
 }
 
@@ -47661,6 +47608,10 @@ kendo-grid.k-grid .k-table-row.k-hover .k-grid-content-sticky.k-selected {
 .k-gantt .k-splitbar {
     position: relative;
     display: inline-flex;
+}
+
+.k-gantt .k-gantt-splitter {
+    border-width: 0;
 }
 
 .k-gantt .k-treelist-scrollable {

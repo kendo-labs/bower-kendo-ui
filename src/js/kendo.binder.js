@@ -1202,11 +1202,15 @@ var __meta__ = {
                 Binder.fn.init.call(this, widget.element[0], bindings, options);
 
                 this.widget = widget;
+                this.readonly = this.element.readOnly;
             },
 
             refresh: function() {
                 if (this.widget.enable) {
                     this.widget.enable(this.bindings.enabled.get());
+                }
+                if (this.readonly && this.widget.readonly) {
+                    this.widget.readonly(this.readonly);
                 }
             }
         }),
@@ -2050,6 +2054,11 @@ var __meta__ = {
     }
 
     function unbindElementTree(element, destroyWidgets) {
+
+        if (!element) {
+            return;
+        }
+
         unbindElement(element, destroyWidgets);
 
         unbindElementChildren(element, destroyWidgets);
