@@ -39,6 +39,7 @@ var __meta__ = {
     var setTimeout = window.setTimeout;
 
     var LABELCLASSES = "k-label k-input-label";
+    var FLOATINGLABELCLASS = "k-floating-label";
     var STATEDISABLED = "k-disabled";
     var STATEINVALID = "k-invalid";
     var FOCUSED = "k-focus";
@@ -650,7 +651,7 @@ var __meta__ = {
                     element.attr("id", id);
                 }
 
-                that._inputLabel = $("<label class='" + LABELCLASSES + "' for='" + id + "'>" + labelText + "</label>'").insertBefore(that.wrapper);
+                that._inputLabel = $("<label class='" + (floating ? FLOATINGLABELCLASS : LABELCLASSES) + "' for='" + id + "'>" + labelText + "</label>'")[floating ? "insertAfter" : "insertBefore"](that.wrapper);
             }
         },
 

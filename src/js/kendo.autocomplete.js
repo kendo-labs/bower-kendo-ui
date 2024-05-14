@@ -251,6 +251,11 @@ var __meta__ = {
             }
         },
 
+        _popup: function() {
+            List.fn._popup.call(this);
+            this.popup.element.addClass("k-autocomplete-popup");
+        },
+
         _dataSource: function() {
             var that = this;
 
@@ -878,7 +883,6 @@ var __meta__ = {
 
             if (this.options.clearButton) {
                 this._clear.insertAfter(this.element);
-                this.wrapper.addClass("k-autocomplete-clearable");
             }
         },
 

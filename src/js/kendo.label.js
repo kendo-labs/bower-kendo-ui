@@ -32,6 +32,7 @@ const Widget = ui.Widget;
 const isFunction = kendo.isFunction;
 
 const LABELCLASSES = "k-label k-input-label";
+const FLOATINGLABELCLASS = "k-floating-label";
 
 var Label = Widget.extend({
     options: {
@@ -94,10 +95,6 @@ var Label = Widget.extend({
         }
 
         that._label();
-
-        if (that.floatingLabel) {
-            that.floatingLabel.refresh();
-        }
     },
 
     _label: function() {
@@ -106,6 +103,7 @@ var Label = Widget.extend({
         var options = that.options;
         var id = element.attr("id");
         var labelText = options.content;
+        var floating = options.floating || false;
 
         if (isFunction(labelText)) {
             labelText = labelText.call(that);
@@ -120,10 +118,14 @@ var Label = Widget.extend({
             element.attr("id", id);
         }
 
-        that.element.addClass(LABELCLASSES)
+        that.element.addClass(floating ? FLOATINGLABELCLASS : LABELCLASSES)
             .attr("for", id)
             .text(labelText)
-            .insertBefore(that.options.beforeElm || that.widget.wrapper);
+            [floating ? "insertAfter" : "insertBefore"](that.options.beforeElm || that.widget.wrapper);
+
+        if (that.floatingLabel) {
+            that.floatingLabel.refresh();
+        }
     },
 
     _floatingLabel: function() {

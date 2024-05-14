@@ -989,6 +989,22 @@
     content: "\e088";
 }
 
+.k-i-paragraph-mark::before {
+    content: "\e089";
+}
+
+.k-i-pilcrow::before {
+    content: "\e089";
+}
+
+.k-i-paragraph-height::before {
+    content: "\e08a";
+}
+
+.k-i-user-outline::before {
+    content: "\e08b";
+}
+
 .k-i-undo::before {
     content: "\e100";
 }

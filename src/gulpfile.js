@@ -71,7 +71,7 @@ function uglifyScripts(stream) {
 }
 
 function mjsMin() {
-    return gulp.src(['dist/mjs/kendo.*.js', 'dist/mjs/cultures/*.js', 'dist/mjs/messages/*.js'], { base: "dist/mjs" })
+    return gulp.src(['dist/raw-mjs/kendo.*.js', 'dist/raw-mjs/cultures/*.js', 'dist/raw-mjs/messages/*.js'], { base: "dist/raw-mjs" })
         .pipe(gulpIf(makeSourceMaps, sourcemaps.init()))
         .pipe(terser(terserOptions))
         .pipe(sourcemaps.write("./"))
@@ -82,7 +82,7 @@ gulp.task('scripts', gulp.parallel(gulp.series(compileScripts, minScripts)));
 gulp.task('scripts:mjs', gulp.parallel(gulp.series(compileMjsScripts, mjsMin)));
 
 function minScripts() {
-    return gulp.src(['dist/js/kendo.*.js', 'dist/js/cultures/*.js', 'dist/js/messages/*.js'], { base: "dist/js" })
+    return gulp.src(['dist/raw-js/kendo.*.js', 'dist/raw-js/cultures/*.js', 'dist/raw-js/messages/*.js'], { base: "dist/raw-js" })
         .pipe(filter(file => !/\.min\.js/.test(file.path)))
         .pipe(flatmap(uglifyScripts))
         .pipe(gulp.dest("dist/js"));

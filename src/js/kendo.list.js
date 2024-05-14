@@ -260,6 +260,7 @@ var __meta__ = {
             }));
 
             that._inputLabel = that.label.element;
+            that._refreshFloatingLabel();
         },
 
         _floatCheck: function() {
@@ -1197,7 +1198,7 @@ var __meta__ = {
                 list.mediumMQL.onEnter(list._createActionSheet.bind(list));
                 list.smallMQL
                     .onEnter(() => {
-                        if (!list.popup) {
+                        if (!list.popup || !list.popup.fullscreen) {
                             list._createActionSheet();
                         }
 

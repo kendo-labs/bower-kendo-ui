@@ -39,20 +39,18 @@ var __meta__ = {
         NS = ".kendoPanelBar",
         IMG = "img",
         HREF = "href",
-        LAST = "k-last",
         LINK = "k-link",
         LINKSELECTOR = "." + LINK,
         ERROR = "error",
         ITEM = ".k-panelbar-item",
-        GROUP = ".k-group",
+        GROUP = ".k-panelbar-group",
         VISIBLEGROUP = GROUP + ":visible",
         IMAGE = "k-image",
-        FIRST = "k-first",
         CHANGE = "change",
         EXPAND = "expand",
         SELECT = "select",
         CLICK = "click",
-        CONTENT = "k-content",
+        CONTENT = "k-panelbar-content",
         ACTIVATE = "activate",
         COLLAPSE = "collapse",
         DATABOUND = "dataBound",
@@ -60,20 +58,18 @@ var __meta__ = {
         MOUSELEAVE = "mouseleave",
         CONTENTLOAD = "contentLoad",
         UNDEFINED = "undefined",
-        ACTIVECLASS = "k-active",
         EXPANDEDCLASS = "k-expanded",
-        GROUPS = "> .k-panel",
-        CONTENTS = "> .k-content",
+        GROUPS = "> .k-panelbar-group",
+        CONTENTS = "> .k-panelbar-content",
         STRING = "string",
         FOCUSEDCLASS = "k-focus",
         DISABLEDCLASS = "k-disabled",
         SELECTEDCLASS = "k-selected",
         SELECTEDSELECTOR = "." + SELECTEDCLASS,
-        HIGHLIGHTCLASS = "k-highlight",
         ACTIVEITEMSELECTOR = ITEM + ":not(.k-disabled)",
-        clickableItems = "> " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR + ", .k-panel > " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR,
+        clickableItems = "> " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR + ", .k-panelbar-group > " + ACTIVEITEMSELECTOR + " > " + LINKSELECTOR,
         disabledItems = ITEM + ".k-disabled > .k-link",
-        selectableItems = "> li > " + SELECTEDSELECTOR + ", .k-panel > li > " + SELECTEDSELECTOR,
+        selectableItems = "> li > " + SELECTEDSELECTOR + ", .k-panelbar-group > li > " + SELECTEDSELECTOR,
         ARIA_DISABLED = "aria-disabled",
         ARIA_EXPANDED = "aria-expanded",
         ARIA_HIDDEN = "aria-hidden",
@@ -85,7 +81,9 @@ var __meta__ = {
             text: "dataTextField",
             url: "dataUrlField",
             spriteCssClass: "dataSpriteCssClassField",
-            imageUrl: "dataImageUrlField"
+            imageUrl: "dataImageUrlField",
+            icon: "dataIconField",
+            iconClass: "dataIconClassField",
         },
         itemIcon,
         rendering = {
@@ -114,16 +112,7 @@ var __meta__ = {
         if (item.enabled === false) {
             result += " " + DISABLEDCLASS;
         } else if (item.expanded === true) {
-            result += " " + ACTIVECLASS;
             result += " " + EXPANDEDCLASS;
-        }
-
-        if (index === 0) {
-            result += " k-first";
-        }
-
-        if (index == group.length - 1) {
-            result += " k-last";
         }
 
         if (item.cssClass) {
@@ -165,7 +154,7 @@ var __meta__ = {
         return group.expanded !== true;
     },
     groupCssClass: function() {
-        return "k-panelbar-group k-group k-panel";
+        return "k-panelbar-group";
     },
     contentAttributes: function(content) {
         return content.item.expanded !== true ? ` ${kendo.attr("style-display")}="none"` : "";
@@ -177,15 +166,6 @@ var __meta__ = {
         return item.contentUrl ? 'href="' + item.contentUrl + '"' : "";
     }
 };
-
-    function updateFirstLast(items) {
-        items = $(items);
-
-        items.filter(".k-first:not(:first-child)").removeClass(FIRST);
-        items.filter(".k-last:not(:last-child)").removeClass(LAST);
-        items.filter(":first-child").addClass(FIRST);
-        items.filter(":last-child").addClass(LAST);
-    }
 
     function updateLevel(item) {
         item = $(item);
@@ -228,7 +208,7 @@ var __meta__ = {
 
             Widget.fn.init.call(that, element, options);
 
-            element = that.wrapper = that.element.addClass("k-panelbar k-pos-relative");
+            element = that.wrapper = that.element.addClass("k-panelbar");
             options = that.options;
 
             if (element[0].id) {
@@ -264,7 +244,7 @@ var __meta__ = {
                 })
                 .attr("role", "tree");
 
-            content = element.find("li." + ACTIVECLASS + " > ." + CONTENT);
+            content = element.find("li." + EXPANDEDCLASS + " > ." + CONTENT);
 
             if (content[0]) {
                 that.expand(content.parent(), false);
@@ -308,7 +288,8 @@ var __meta__ = {
             loadOnDemand: true,
             expandMode: "multiple",
             template: null,
-            dataTextField: null
+            dataTextField: null,
+            selectable: true
         },
 
         destroy: function() {
@@ -341,18 +322,19 @@ var __meta__ = {
                     options.template = template(options.template);
               } else if (!options.template) {
                   options.template = template((data) => {
-                      var text = fieldAccessor("text")(data.item);
-                      if (typeof data.item.encoded != 'undefined' && data.item.encoded === false) {
-                          return `<span class='k-panelbar-item-text'>${text}</span>`;
-                      } else {
-                          return `<span class='k-panelbar-item-text'>${encode(text)}</span>`;
-                      }
+                     var text = fieldAccessor("text")(data.item);
+
+                     if (data.item.encoded !== false) {
+                         text = encode(text);
+                     }
+
+                     return `<span class='k-panelbar-item-text'>${text}</span>`;
                   });
                 }
 
             that.templates = {
                 content: template(
-                   ({ data, item, contentAttributes, content }) => `<div class='k-panelbar-content k-content'${contentAttributes({ data, item, contentAttributes, content })}>${content(item)}</div>`
+                   ({ data, item, contentAttributes, content }) => `<div class='k-panelbar-content'${contentAttributes({ data, item, contentAttributes, content })}>${content(item)}</div>`
                 ),
                 group: template( ({ data, items, group, renderItems, panelBar, ariaHidden, groupCssClass, groupAttributes }) =>
                     `<ul role='group' aria-hidden='${ariaHidden(group)}' class='${groupCssClass(group)}' ${groupAttributes(group)}>` +
@@ -363,12 +345,16 @@ var __meta__ = {
                      var url = fieldAccessor("url")(item);
                      var imageUrl = fieldAccessor("imageUrl")(item);
                      var spriteCssClass = fieldAccessor("spriteCssClass")(item);
+                     var icon = fieldAccessor("icon")(item);
+                     var iconClass = fieldAccessor("iconClass")(item);
+                     iconClass = iconClass ? " " + iconClass : "";
                      var contentUrl = contentUrl(item);
                      var tag = url || contentUrl ? 'a' : 'span';
 
                     return `<${tag} class='${textClass(item)}' ${contentUrl}${textAttributes(url)}>` +
                         (imageUrl ? `<img class='k-panelbar-item-icon k-image' alt='' src='${imageUrl}' />` : '') +
                         (spriteCssClass ? `<span class='k-sprite ${spriteCssClass}'></span>` : '') +
+                        (icon ? kendo.ui.icon($("<span></span>"), { icon: icon, iconClass: "k-panelbar-item-icon" + iconClass }) : '') +
                         panelBar.options.template({ panelBar, item, arrow, textClass, textAttributes, contentUrl }) +
                         arrow({ panelBar, item, arrow, textClass, arrowIconOptions, textAttributes, contentUrl }) +
                     `</${tag}>`;
@@ -432,7 +418,7 @@ var __meta__ = {
 
             element.each(function(index, item) {
                 item = $(item);
-                var wrapper = element.children(".k-group,.k-content");
+                var wrapper = element.children(".k-panelbar-group,.k-panelbar-content");
 
                 if (!wrapper.length) {
                     wrapper = that._addGroupElement(element);
@@ -445,9 +431,6 @@ var __meta__ = {
                     if (that.options.expandMode == SINGLE && that._collapseAllExpanded(item)) {
                         return that;
                     }
-
-                    element.find("." + HIGHLIGHTCLASS).removeClass(HIGHLIGHTCLASS);
-                    item.addClass(HIGHLIGHTCLASS);
 
                     if (!useAnimation) {
                         animBackup = that.options.animation;
@@ -481,7 +464,6 @@ var __meta__ = {
                 var groups = item.find(GROUPS).add(item.find(CONTENTS));
 
                 if (!item.hasClass(DISABLEDCLASS) && groups.is(VISIBLE)) {
-                    item.removeClass(HIGHLIGHTCLASS);
 
                     if (!useAnimation) {
                         animBackup = that.options.animation;
@@ -512,8 +494,8 @@ var __meta__ = {
                         var dataItem = that.dataItem(this);
 
                         if (!dataItem) {
-                            return $(this).find(".k-panel").length > 0 ||
-                                $(this).find(".k-content").length > 0;
+                            return $(this).find(".k-panelbar-group").length > 0 ||
+                                $(this).find(".k-panelbar-content").length > 0;
                         }
 
                         return dataItem.hasChildren || dataItem.content || dataItem.contentUrl;
@@ -523,8 +505,8 @@ var __meta__ = {
                         var item = $(this),
                             parent = item.parent();
                         let icon = kendo.ui.icon({
-                            icon: parent.hasClass(ACTIVECLASS) ? "chevron-up" : "chevron-down",
-                            iconClass: `k-panelbar-toggle k-panelbar-${parent.hasClass(ACTIVECLASS) ? "collapse" : "expand" }`
+                            icon: parent.hasClass(EXPANDEDCLASS) ? "chevron-up" : "chevron-down",
+                            iconClass: `k-panelbar-toggle k-panelbar-${parent.hasClass(EXPANDEDCLASS) ? "collapse" : "expand" }`
                         });
 
                         item.append(icon);
@@ -618,18 +600,18 @@ var __meta__ = {
         _refreshChildren: function(item, parentNode) {
             var i, children, child;
 
-            parentNode.children(".k-group").empty();
+            parentNode.children(".k-panelbar-group").empty();
             var items = item.children.data();
             if (!items.length) {
                 updateItemHtml(parentNode);
-                children = parentNode.children(".k-group").children("li");
+                children = parentNode.children(".k-panelbar-group").children("li");
             } else {
                 this.append(item.children, parentNode);
 
                 if (this.options.loadOnDemand) {
-                    this._toggleGroup(parentNode.children(".k-group"), false);
+                    this._toggleGroup(parentNode.children(".k-panelbar-group"), false);
                 }
-                children = parentNode.children(".k-group").children("li");
+                children = parentNode.children(".k-panelbar-group").children("li");
 
                 for (i = 0; i < children.length; i++) {
                     child = children.eq(i);
@@ -796,7 +778,9 @@ var __meta__ = {
                     { field: "text" },
                     { field: "url" },
                     { field: "spriteCssClass" },
-                    { field: "imageUrl" }
+                    { field: "imageUrl" },
+                    { field: "icon" },
+                    { field: "iconClass" }
                 ];
             }
 
@@ -812,7 +796,7 @@ var __meta__ = {
                   children = parentNode.children("li");
                   wrapper = parentNode;
               } else {
-                  wrapper = parentNode.children(".k-group");
+                  wrapper = parentNode.children(".k-panelbar-group");
                   if (!wrapper.length) {
                       wrapper = that._addGroupElement(parentNode);
                   }
@@ -887,7 +871,7 @@ var __meta__ = {
                     if (render) {
                         context.group = {
                             firstLevel: node.hasClass("k-panelbar"),
-                            expanded: nodeWrapper.parent().hasClass(ACTIVECLASS),
+                            expanded: nodeWrapper.parent().hasClass(EXPANDEDCLASS),
                             length: nodeWrapper.children().length
                         };
 
@@ -982,12 +966,10 @@ var __meta__ = {
 
             each(inserted.items, function() {
                 inserted.group.append(this);
-                updateFirstLast(this);
                 updateLevel(this);
             });
 
             this.updateArrow(referenceItem);
-            updateFirstLast(inserted.group.find(".k-first, .k-last"));
             inserted.group.height("auto");
 
             return this;
@@ -1000,11 +982,9 @@ var __meta__ = {
 
             each(inserted.items, function() {
                 referenceItem.before(this);
-                updateFirstLast(this);
                 updateLevel(this);
             });
 
-            updateFirstLast(referenceItem);
             inserted.group.height("auto");
 
             return this;
@@ -1017,11 +997,9 @@ var __meta__ = {
 
             each(inserted.items, function() {
                 referenceItem.after(this);
-                updateFirstLast(this);
                 updateLevel(this);
             });
 
-            updateFirstLast(referenceItem);
             inserted.group.height("auto");
 
             return this;
@@ -1044,7 +1022,6 @@ var __meta__ = {
                 parent = parent.eq(0);
 
                 that.updateArrow(parent);
-                updateFirstLast(parent);
             }
 
             return that;
@@ -1145,7 +1122,7 @@ var __meta__ = {
                 next = item.nextAll(":visible").first();
 
             if (group[0]) {
-                next = group.children("." + FIRST);
+                next = group.children().first();
             }
 
             if (!next[0]) {
@@ -1175,7 +1152,7 @@ var __meta__ = {
             } else {
                 result = prev;
                 while (result[0]) {
-                    result = result.children(VISIBLEGROUP).children("." + LAST);
+                    result = result.children(VISIBLEGROUP).children().last();
                     if (result[0]) {
                         prev = result;
                     }
@@ -1198,7 +1175,7 @@ var __meta__ = {
 
             groupData = {
                 firstLevel: parent.hasClass("k-panelbar"),
-                expanded: $(referenceItem).hasClass(ACTIVECLASS),
+                expanded: $(referenceItem).hasClass(EXPANDEDCLASS),
                 length: parent.children().length
             };
 
@@ -1233,7 +1210,7 @@ var __meta__ = {
                         dataItem.hasChildren = true;
                         referenceItem
                             .attr(ARIA_EXPANDED, dataItem.expanded)
-                            .not("." + ACTIVECLASS)
+                            .not("." + EXPANDEDCLASS)
                             .children("ul")
                             .attr(ARIA_HIDDEN, !dataItem.expanded);
                     } else {
@@ -1271,7 +1248,7 @@ var __meta__ = {
             panels = that.element
                          .find("li > ul")
                          .not(function() { return $(this).parentsUntil(".k-panelbar", "div").length; })
-                         .addClass("k-panelbar-group k-group k-panel")
+                         .addClass("k-panelbar-group")
                          .attr("role", "group");
 
             panelsParent = panels.parent();
@@ -1281,7 +1258,7 @@ var __meta__ = {
             panels.parent()
                   .not("[" + ARIA_EXPANDED + "]")
                   .attr(ARIA_EXPANDED, expanded)
-                  .not("." + ACTIVECLASS)
+                  .not("." + EXPANDEDCLASS)
                   .children("ul")
                   .attr(ARIA_HIDDEN, !expanded)
                   .hide();
@@ -1290,7 +1267,6 @@ var __meta__ = {
 
             that._updateItemsClasses(items);
             that.updateArrow(items);
-            updateFirstLast(items);
         },
 
         _updateItemsClasses: function(items) {
@@ -1409,7 +1385,7 @@ var __meta__ = {
 
             that._updateSelected(link);
 
-            var wrapper = item.children(".k-group,.k-content");
+            var wrapper = item.children(".k-panelbar-group,.k-panelbar-content");
             var dataItem = this.dataItem(item);
 
             if (!wrapper.length && ((that.options.loadOnDemand && dataItem && dataItem.hasChildren) ||
@@ -1480,7 +1456,7 @@ var __meta__ = {
                      this._progress(element, true);
                  }
 
-                 element.children(".k-group,.k-content").remove();
+                 element.children(".k-panelbar-group,.k-panelbar-content").remove();
                  prevent = dataItem.hasChildren;
 
                  dataItem.load();
@@ -1530,7 +1506,6 @@ var __meta__ = {
 
             element.parent()
                 .attr(ARIA_EXPANDED, !visibility)
-                .toggleClass(ACTIVECLASS, !visibility)
                 .toggleClass(EXPANDEDCLASS, !visibility)
                 .find("> .k-link > .k-panelbar-collapse,> .k-link > .k-panelbar-expand")
                 .each(function(ind, el) {
@@ -1567,7 +1542,7 @@ var __meta__ = {
         },
 
         _addGroupElement: function(element) {
-            var group = $('<ul role="group" aria-hidden="true" class="k-panelbar-group k-group k-panel"></ul>').hide();
+            var group = $('<ul role="group" aria-hidden="true" class="k-panelbar-group"></ul>').hide();
 
             element.append(group);
             return group;
@@ -1681,6 +1656,12 @@ var __meta__ = {
                 selected = that._selected,
                 dataItem = that.dataItem(item);
 
+            if (that.options.selectable == false) {
+                that._current(item[0] ? item : null);
+
+                return;
+            }
+
             if (selected) {
                 selected.attr(ARIA_SELECTED, false);
             }
@@ -1688,10 +1669,8 @@ var __meta__ = {
             that._selected = item.attr(ARIA_SELECTED, true);
 
             element.find(selectableItems).removeClass(SELECTEDCLASS);
-            element.find("> ." + HIGHLIGHTCLASS + ", .k-panel > ." + HIGHLIGHTCLASS).removeClass(HIGHLIGHTCLASS);
 
             link.addClass(SELECTEDCLASS);
-            link.parentsUntil(element, ITEM).filter(":has(.k-link)").addClass(HIGHLIGHTCLASS);
             that._current(item[0] ? item : null);
             if (dataItem) {
                  dataItem.set("selected", true);

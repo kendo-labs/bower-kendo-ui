@@ -544,6 +544,10 @@ $.extend(true, kendo.ui.Gantt.prototype.options.messages,{
 if (kendo.ui.Grid) {
 kendo.ui.Grid.prototype.options.messages =
 $.extend(true, kendo.ui.Grid.prototype.options.messages,{
+  "loader": {
+    "loading": "Loading...",
+    "exporting": "Exporting..."
+  },
   "commands": {
     "cancel": "Cancel changes",
     "canceledit": "Cancel",
@@ -1731,6 +1735,15 @@ if (kendo.dataviz.ui.Map) {
     $.extend(true, kendo.dataviz.ui.Map.prototype.options.messages, {
         "tileTitle": "Map title"
     });
+}
+
+/* Sankey messages */
+
+if (kendo.dataviz.ui.Sankey) {
+  kendo.dataviz.ui.Sankey.prototype.options.messages =
+  $.extend(true, kendo.ui.Captcha.prototype.options.messages,{
+      "tooltipUnits": "{0} Units"
+  });
 }
 
 })(window.kendo.jQuery);

@@ -56,6 +56,7 @@ var __meta__ = {
         SYMBOL = "symbol",
         CLASS_ICON = "k-icon",
         LABELCLASSES = "k-label k-input-label",
+        FLOATINGLABELCLASS = "k-floating-label",
         SELECTED = "k-selected",
         STATEDISABLED = "k-disabled",
         STATEINVALID = "k-invalid",
@@ -287,7 +288,6 @@ var __meta__ = {
             var that = this;
             Widget.fn.setOptions.call(that, options);
 
-            that.wrapper.toggleClass("k-expand-padding", !that.options.spinners);
             that._text.prop("placeholder", that.options.placeholder);
             that._placeholder(that.options.placeholder);
             that.element.attr({
@@ -444,7 +444,6 @@ var __meta__ = {
 
             if (!spinners) {
                 arrows.parent().toggle(spinners);
-                that.wrapper.addClass("k-expand-padding");
             }
 
             that._upArrow = arrows.eq(0);
@@ -936,7 +935,7 @@ var __meta__ = {
                     element.attr("id", id);
                 }
 
-                that._inputLabel = $("<label class='" + LABELCLASSES + "' for='" + id + "'>" + labelText + "</label>'").insertBefore(that.wrapper);
+                that._inputLabel = $("<label class='" + (floating ? FLOATINGLABELCLASS : LABELCLASSES) + "' for='" + id + "'>" + labelText + "</label>'")[floating ? "insertAfter" : "insertBefore"](that.wrapper);
 
                 if ((that.element.attr("disabled") === undefined) && (that.element.attr("readonly") === undefined)) {
                     that._inputLabel.on("click" + ns, that.focus.bind(that));
