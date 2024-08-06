@@ -909,6 +909,12 @@ var __meta__ = {
                 delete options.id;
             }
 
+            // Remove the name property. Otherwise the default component name will be overriden.
+            // This will cause us to init an element with data-role=${name} instead of the correct data-role of the component.
+            if (options.name) {
+                delete options.name;
+            }
+
             options.size = this.options.size;
 
             widget = new kendo.ui[component]($(widgetElement), options);
@@ -1326,9 +1332,11 @@ var __meta__ = {
         },
 
         _mapTool: function(tool, messages, defaultTools) {
-            var that = this,
+            let that = this,
                 isArray = Array.isArray(tool),
-                isBuiltInTool, toolOptions, attributes;
+                isPlainObjectTool = $.isPlainObject(tool),
+                toolKeysCount = isPlainObjectTool && Object.keys(tool).length,
+                isBuiltInTool, toolOptions, attributes, originalTool;
 
             if (isArray) {
                 return {
@@ -1337,14 +1345,15 @@ var __meta__ = {
                 };
             }
 
-            isBuiltInTool = $.isPlainObject(tool) && Object.keys(tool).length === 1 && tool.name;
+            isBuiltInTool = isPlainObjectTool && (toolKeysCount === 1 || toolKeysCount === 2) && tool.name;
+            originalTool = isBuiltInTool ? tool : {};
             tool = isBuiltInTool ? tool.name : tool;
             toolOptions = $.isPlainObject(tool) ? tool : $.extend({}, defaultTools[tool]);
 
             attributes = $.extend({}, that._mapAttributes(toolOptions, messages), toolOptions.attributes);
 
             kendo.deepExtend(toolOptions, {
-                text: messages[toolOptions.name || toolOptions.property],
+                text: originalTool.text || messages[toolOptions.name || toolOptions.property],
                 attributes: attributes,
             });
 

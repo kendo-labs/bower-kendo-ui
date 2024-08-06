@@ -90,6 +90,7 @@ var __meta__ = {
             size: "medium",
             fillMode: "solid",
             themeColor: "base",
+            showArrowButton: false,
             icon: null,
             popup: null,
             messages: {
@@ -114,6 +115,19 @@ var __meta__ = {
             that.element.addClass(cssClasses.menuButton).addClass(cssClasses.dropdownButton);
 
             html.renderButton(that.element, options);
+
+            if (that.options.showArrowButton) {
+                $("<span></span>")
+                    .addClass("k-button-arrow")
+                    .addClass("k-menu-button-arrow")
+                    .append(kendo.ui.icon(kendo.htmlEncode("caret-alt-down")))
+                    .appendTo(that.element);
+            } else {
+                const arrowButton = that.element.find(".k-button-arrow");
+                if (arrowButton) {
+                    arrowButton.remove();
+                }
+            }
         },
 
         _aria: function() {
@@ -137,10 +151,6 @@ var __meta__ = {
 
             delete options.click;
             delete options.name;
-
-            if (!options.items.length) {
-                return;
-            }
 
             that.menu = menu.appendTo(document.body).kendoButtonMenu(extend({
                 mainButton: that.element,
@@ -258,11 +268,11 @@ var __meta__ = {
         },
 
         open: function() {
-            this.menu._popup.open();
+            this.menu.open();
         },
 
         close: function() {
-            this.menu._popup.close();
+            this.menu.close();
         },
 
         items: function() {
@@ -299,4 +309,3 @@ var __meta__ = {
 
 })(window.kendo.jQuery);
 export default kendo;
-

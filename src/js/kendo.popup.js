@@ -54,8 +54,7 @@ var __meta__ = {
         DOCUMENT_ELEMENT = $(document.documentElement),
         WINDOW = $(window),
         SCROLL = "scroll",
-        cssPrefix = support.transitions.css,
-        TRANSFORM = cssPrefix + "transform",
+        TRANSFORM = "transform",
         extend = $.extend,
         NS = ".kendoPopup",
         styles = ["font-size",
@@ -700,7 +699,7 @@ var __meta__ = {
                 anchorOffset = getOffset(anchor),
                 appendTo = $(that.options.appendTo),
                 appendToOffset,
-                width = outerWidth(element),
+                width = outerWidth(element) || outerWidth(element.find(".k-child-animation-container").children().first()),
                 height = outerHeight(element) || outerHeight(element.find(".k-child-animation-container").children().first()),
                 anchorWidth = outerWidth(anchor),
                 anchorHeight = outerHeight(anchor),
@@ -803,7 +802,7 @@ var __meta__ = {
             });
 
             if (this.element.is("[tabindex]")) {
-                elements.push(this.element[0]);
+                [].push.call(elements, this.element[0]);
             }
 
             return elements;
@@ -812,7 +811,7 @@ var __meta__ = {
             var sortedElements;
 
             if (stableSort) {
-                sortedElements = elements.sort(function(prev, next) {
+                sortedElements = [].sort.call(elements, function(prev, next) {
                     return prev.tabIndex - next.tabIndex;
                 });
             } else {
@@ -821,7 +820,7 @@ var __meta__ = {
                     item.setAttribute(attrName, i);
                 });
 
-                sortedElements = elements.sort(function(prev, next) {
+                sortedElements = [].sort.call(elements, function(prev, next) {
                     return prev.tabIndex === next.tabIndex ?
                         parseInt(prev.getAttribute(attrName), 10) - parseInt(next.getAttribute(attrName), 10) :
                         prev.tabIndex - next.tabIndex;

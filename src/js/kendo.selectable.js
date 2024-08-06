@@ -774,6 +774,8 @@ let __meta__ = {
                 return { start: that._start, end: that._end };
             }
 
+            that._clearFlags();
+
             items = that.element.find(options.cellSelector);
 
             startIdx = $.inArray($(start)[0], items);

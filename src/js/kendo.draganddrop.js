@@ -420,7 +420,7 @@ var __meta__ = {
         }
     });
 
-    var TRANSFORM_STYLE = support.transitions.prefix + "Transform",
+    var TRANSFORM_STYLE = "transform",
         translate;
 
 
@@ -725,7 +725,8 @@ var __meta__ = {
                 options = that.options,
                 boundaries = that.boundaries,
                 axis = options.axis,
-                cursorOffset = that.options.cursorOffset;
+                cursorOffset = that.options.cursorOffset,
+                updateHint = options.updateHint;
 
             if (cursorOffset) {
                coordinates = { left: e.x.location + cursorOffset.left, top: e.y.location + cursorOffset.top };
@@ -750,6 +751,10 @@ var __meta__ = {
                 delete coordinates.top;
             } else if (axis === "y") {
                 delete coordinates.left;
+            }
+
+            if (updateHint && kendo.isFunction(updateHint)) {
+               return $(updateHint.call(that, that.hint, e));
             }
 
             that.hint.css(coordinates);
@@ -786,11 +791,11 @@ var __meta__ = {
                 var offset = getOffset(that.currentTarget);
                 that.hintOffset = offset;
 
-                that.hint.css( {
+                that.hint.css({
                     position: "absolute",
                     zIndex: 20000, // the Window's z-index is 10000 and can be raised because of z-stacking
                     left: offset.left,
-                    top: offset.top
+                    top: offset.top,
                 })
                 .appendTo(document.body);
             }

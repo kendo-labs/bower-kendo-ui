@@ -131,7 +131,7 @@ var __meta__ = {
         }
 
         if (data.iconSize) {
-            inlineStyles.fontSize = data.iconSize;
+            inlineStyles.fontSize = data.iconSize + "px";
         }
 
         if (Object.keys(inlineStyles).length) {

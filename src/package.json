@@ -15,6 +15,9 @@
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-virtual": "^2.1.0",
     "@rollup/stream": "^2.0.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
     "gulp": "^4.0.2",
     "gulp-cached": "~1.1.0",
     "gulp-clone": "^2.0.1",
@@ -43,6 +46,7 @@
   "scripts": {
     "build": "npx gulp build",
     "scripts": "npx gulp scripts",
+    "scripts:babel": "npx gulp scripts:babel",
     "scripts:mjs": "npx gulp scripts:mjs",
     "scripts:modules": "npx rollup -c rollup.modules.config.js",
     "scripts:all": "npm run scripts && npm run scripts:mjs && npm run scripts:modules"

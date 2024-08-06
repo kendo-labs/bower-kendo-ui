@@ -15,11 +15,15 @@ export const externals = glob.sync(`${root}/kendo.*.js`).map(resolvePath).concat
 export const cultures = glob.sync('cultures/*.js', { cwd: root });
 export const messages = glob.sync('messages/*.js', { cwd: root });
 const require = createRequire(import.meta.url);
-export const version = '2024.2.514';
+export const version = '2024.3.806';
 
 const globals = {
     jquery: '$'
 };
+
+// Used only for the source code bundle.
+const babelArg = process.argv.includes("--configBabel");
+const babel = babelArg ? require('@rollup/plugin-babel') : null;
 
 export function transformCodePlugin() {
     return {
@@ -73,7 +77,8 @@ const resourcesConfig = (name, options = {}) => ({
     plugins: [
         transformCodePlugin(),
         addKendoVersion(),
-        polyfill(['../kendo.core.js'])
+        polyfill(['../kendo.core.js']),
+        babel ? babel({ babelHelpers: 'bundled' }) : null // Used only for the source code bundle.
     ]
 });
 
@@ -95,7 +100,8 @@ const configMap = (name) => ({
         transformCodePlugin(),
         addKendoVersion(),
         name === 'kendo.core.js' || isBundle(name) ? polyfill(['jquery']) : null,
-        nodeResolve()
+        nodeResolve(),
+        babel ? babel({ babelHelpers: 'bundled' }) : null // Used only for the source code bundle.
     ]
 });
 

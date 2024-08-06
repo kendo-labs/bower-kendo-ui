@@ -224,10 +224,6 @@ import "./kendo.html.button.js";
 
                 wrapper = that.wrapper = element.closest(KWINDOW);
 
-                if (options.themeColor && options.themeColor !== "none") {
-                    wrapper.addClass(kendo.getValidCssClass("k-window-", "themeColor", options.themeColor));
-                }
-
                 if (!element.is(".k-window-content") || !wrapper[0]) {
                     element.addClass("k-window-content");
                     element.attr("tabindex", 0);
@@ -240,6 +236,10 @@ import "./kendo.html.button.js";
                     if (options._footerTemplate) {
                         that.wrapper.append(kendo.template(options._footerTemplate)(options._footerMessages));
                     }
+                }
+
+                if (options.themeColor && options.themeColor !== "none") {
+                    wrapper.addClass(kendo.getValidCssClass("k-window-", "themeColor", options.themeColor));
                 }
 
                 that.minTop = that.minLeft = -Infinity;
@@ -889,7 +889,7 @@ import "./kendo.html.button.js";
 
             _object: function(element) {
                 var content = element.children(KWINDOWCONTENT);
-                var widget = kendo.widgetInstance(content);
+                var widget = content.getKendoWindow();
 
                 if (widget) {
                     return widget;
@@ -2093,6 +2093,11 @@ import "./kendo.html.button.js";
 
                 wnd.initialWindowPosition = kendo.getOffset(wnd.wrapper, "position");
 
+                if (!wnd.initialPointerPosition) {
+                    wnd.options.position.left = constrain(wnd.initialWindowPosition.left, wnd.minLeft, wnd.maxLeft);
+                    wnd.options.position.top = constrain(wnd.initialWindowPosition.top, wnd.minTop, wnd.maxTop);
+                }
+
                 wnd.initialPointerPosition = {
                     left: wnd.options.position.left,
                     top: wnd.options.position.top
@@ -2153,15 +2158,11 @@ import "./kendo.html.button.js";
                     position.top = constrain(top, wnd.minTop, wnd.maxTop);
                 }
 
-                if (kendo.support.transforms) {
-                    $(wnd.wrapper).css(
-                        "transform", "translate(" +
-                        (position.left - wnd.initialPointerPosition.left) + "px, " +
-                        (position.top - wnd.initialPointerPosition.top) + "px)"
-                    );
-                } else {
-                    $(wnd.wrapper).css(position);
-                }
+                $(wnd.wrapper).css(
+                    "transform", "translate(" +
+                    (position.left - wnd.initialPointerPosition.left) + "px, " +
+                    (position.top - wnd.initialPointerPosition.top) + "px)"
+                );
 
             },
 

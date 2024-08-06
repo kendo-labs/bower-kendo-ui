@@ -41,6 +41,10 @@ function compileScripts() {
     return HELPERS.execute('node --max-old-space-size=8192 ./node_modules/rollup/dist/bin/rollup -c');
 }
 
+function compileScriptsBabel() {
+    return HELPERS.execute('node --max-old-space-size=8192 ./node_modules/rollup/dist/bin/rollup -c rollup.config.js --configBabel');
+}
+
 function compileMjsScripts() {
     return HELPERS.execute('npx rollup -c rollup.mjs.config.js');
 }
@@ -79,6 +83,7 @@ function mjsMin() {
 }
 
 gulp.task('scripts', gulp.parallel(gulp.series(compileScripts, minScripts)));
+gulp.task('scripts:babel', gulp.parallel(gulp.series(compileScriptsBabel, minScripts)));
 gulp.task('scripts:mjs', gulp.parallel(gulp.series(compileMjsScripts, mjsMin)));
 
 function minScripts() {

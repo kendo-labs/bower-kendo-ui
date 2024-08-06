@@ -27,7 +27,7 @@ var packageMetadata = {
     productName: 'Kendo UI',
     productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'UIASPCORE', 'KENDOMVC', 'KENDOUIMVC'],
     publishDate: 0,
-    version: '2024.2.514'.replace(/^\s+|\s+$/g, ''),
+    version: '2024.3.806'.replace(/^\s+|\s+$/g, ''),
     licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code?utm_medium=product&utm_source=kendojquery&utm_campaign=kendo-ui-jquery-purchase-license-keys-warning'
 };
 
@@ -198,7 +198,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2024.2.514".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2024.3.806".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 
@@ -1867,7 +1867,7 @@ function pad(number, digits, end) {
 })();
 
     function getShadows(element) {
-        var shadow = element.css(kendo.support.transitions.css + "box-shadow") || element.css("box-shadow"),
+        var shadow = element.css("box-shadow"),
             radius = shadow ? shadow.match(boxShadowRegExp) || [ 0, 0, 0, 0, 0 ] : [ 0, 0, 0, 0, 0 ],
             blur = math.max((+radius[3]), +(radius[4] || 0));
 
@@ -2026,6 +2026,10 @@ function pad(number, digits, end) {
             destProp;
 
         for (property in source) {
+            if (property === '__proto__' || property === 'constructor') {
+                continue;
+            }
+
             propValue = source[property];
             propType = typeof propValue;
 
@@ -2203,41 +2207,16 @@ function pad(number, digits, end) {
 
         support.touch = "ontouchstart" in window;
 
-        var docStyle = document.documentElement.style;
-        var transitions = support.transitions = false,
-            transforms = support.transforms = false,
-            elementProto = "HTMLElement" in window ? HTMLElement.prototype : [];
+        let docStyle = document.documentElement.style;
+        let elementProto = "HTMLElement" in window ? HTMLElement.prototype : [];
 
+        // Transforms and Transitions - no longer required, however these were public properties in the past.
+        // It is possible some customers may have used them so keep them for the time being.
+        support.transforms = support.transitions = { css: "", prefix: "", event: "transitionend" };
         support.hasHW3D = ("WebKitCSSMatrix" in window && "m11" in new window.WebKitCSSMatrix()) || "MozPerspective" in docStyle || "msPerspective" in docStyle;
         support.cssFlexbox = ("flexWrap" in docStyle) || ("WebkitFlexWrap" in docStyle) || ("msFlexWrap" in docStyle);
 
-        each([ "Moz", "webkit", "O", "ms" ], function() {
-            var prefix = this.toString(),
-                hasTransitions = typeof table.style[prefix + "Transition"] === STRING;
-
-            if (hasTransitions || typeof table.style[prefix + "Transform"] === STRING) {
-                var lowPrefix = prefix.toLowerCase();
-
-                transforms = {
-                    css: (lowPrefix != "ms") ? "-" + lowPrefix + "-" : "",
-                    prefix: prefix,
-                    event: (lowPrefix === "o" || lowPrefix === "webkit") ? lowPrefix : ""
-                };
-
-                if (hasTransitions) {
-                    transitions = transforms;
-                    transitions.event = transitions.event ? transitions.event + "TransitionEnd" : "transitionend";
-                }
-
-                return false;
-            }
-        });
-
         table = null;
-
-        support.transforms = transforms;
-        support.transitions = transitions;
-
         support.devicePixelRatio = window.devicePixelRatio === undefined ? 1 : window.devicePixelRatio;
 
         try {
@@ -2769,7 +2748,26 @@ function pad(number, digits, end) {
         quoteRegExp = /"/g,
         aposRegExp = /'/g,
         gtRegExp = />/g;
-    function htmlEncode(value) {
+
+    function htmlDecode(value) {
+        var entities = {
+            '&amp;': '&',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&quot;': '"',
+            '&#39;': "'"
+        };
+
+        return value.replace(/&(?:amp|lt|gt|quot|#39);/g, function(match) {
+            return entities[match];
+        });
+    }
+
+    function htmlEncode(value, shouldDecode) {
+        if (shouldDecode === true) {
+            value = htmlDecode(value);
+        }
+
         return ("" + value).replace(ampRegExp, "&amp;").replace(ltRegExp, "&lt;").replace(gtRegExp, "&gt;").replace(quoteRegExp, "&quot;").replace(aposRegExp, "&#39;");
     }
 

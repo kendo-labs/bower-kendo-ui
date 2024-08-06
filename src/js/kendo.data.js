@@ -3266,7 +3266,7 @@ var __meta__ = {
                     for (idx = 0, length = arguments.length; idx < length; idx++) {
                         if (arguments[idx]) {
                             that._accept(arguments[idx]);
-                            changedItems = arguments[idx].models;
+                            changedItems.push(...arguments[idx].models);
                         }
                     }
 
@@ -4092,7 +4092,20 @@ var __meta__ = {
                 e.partialUpdate = that._operationsForUpdatedFields() && !that._preventPartialUpdate;
 
                 if (e.action === "itemchange" && items.some(i => i.dirtyFields)) {
-                    that._updatedFields = Object.keys(e.items[0].dirtyFields);
+                    let item = e.items[0],
+                        keys = Object.keys(item.dirtyFields),
+                        result = keys;
+
+                    for (const key of keys) {
+                        if (item[key] instanceof Object) {
+                            let cleanObject = JSON.parse(kendo.stringify(item[key])),
+                                cleanObjectKeys = Object.keys(cleanObject).map((k) => key + "." + k);
+
+                            result.push(...cleanObjectKeys);
+                        }
+                    }
+
+                    that._updatedFields = result;
                 }
             }
 
