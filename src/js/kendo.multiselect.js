@@ -167,7 +167,7 @@ var __meta__ = {
             that._toggleCloseVisibility();
             that._applyCssClasses();
 
-            addInputPrefixSuffixContainers({ widget: that, wrapper: that.wrapper, options: that.options, prefixInsertBefore: that._inputValuesContainer, suffixInsertAfter: that._loading });
+            addInputPrefixSuffixContainers({ widget: that, wrapper: that.wrapper, options: that.options, prefixInsertBefore: that._inputValuesContainer, suffixInsertAfter: options.clearButton ? that._clear : that.element });
             if (that.floatingLabel) {
                 that.floatingLabel.refresh();
             }

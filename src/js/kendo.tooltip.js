@@ -369,6 +369,10 @@ var __meta__ = {
                 that.element.on("mouseenter" + NS, that.options.filter, that._mouseenter.bind(that));
             }
 
+            if (this.options.autoHide && this._isShownOnMouseEnter()) {
+                that.element.on("mouseleave" + NS, that.options.filter, that._mouseleave.bind(that));
+            }
+
             if (this.options.autoHide && this._isShownOnFocus()) {
                 that.element.on("blur" + NS, that.options.filter, that._blur.bind(that));
             }
@@ -556,11 +560,6 @@ var __meta__ = {
 
             that._openPopup();
 
-            if (this.options.autoHide && this._isShownOnMouseEnter()) {
-                target.on("mouseleave" + NS, that._mouseleave.bind(that));
-                that._target = target;
-            }
-
             if (shouldBindPopup) {
                 if (that.options.autoHide && this._isShownOnMouseEnter()) {
                     that.popup.wrapper.on("mouseleave" + NS, that._mouseleave.bind(that));
@@ -648,7 +647,6 @@ var __meta__ = {
         _closePopup: function(target) {
             if (this.popup && !this.popup._hovered) {
                 this.popup.close();
-                $(this._target).off("mouseleave" + NS);
             } else {
                 restoreTitle($(target));
             }

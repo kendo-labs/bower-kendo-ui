@@ -402,6 +402,7 @@ var __meta__ = {
 
         focus: function() {
             this._focusin();
+            this.selectValue();
         },
 
         _adjust: function(value) {

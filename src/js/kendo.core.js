@@ -27,7 +27,7 @@ var packageMetadata = {
     productName: 'Kendo UI',
     productCodes: ['KENDOUICOMPLETE', 'KENDOUI', 'UIASPCORE', 'KENDOMVC', 'KENDOUIMVC'],
     publishDate: 0,
-    version: '2024.3.806'.replace(/^\s+|\s+$/g, ''),
+    version: '2024.3.1015'.replace(/^\s+|\s+$/g, ''),
     licensingDocsUrl: 'https://docs.telerik.com/kendo-ui/intro/installation/using-license-code?utm_medium=product&utm_source=kendojquery&utm_campaign=kendo-ui-jquery-purchase-license-keys-warning'
 };
 
@@ -198,7 +198,7 @@ var packageMetadata = {
             return target;
         };
 
-    kendo.version = "2024.3.806".replace(/^\s+|\s+$/g, '');
+    kendo.version = "2024.3.1015".replace(/^\s+|\s+$/g, '');
 
     function Class() {}
 

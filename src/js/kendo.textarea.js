@@ -54,6 +54,7 @@ var __meta__ = {
             that.options.readonly = options.readonly !== undefined ? options.readonly : Boolean(that.element.attr("readonly"));
             that.options.enable = options.enable !== undefined ? options.enable : !(Boolean(that.element.attr("disabled")));
             that.options.placeholder = options.placeholder || that.element.attr("placeholder");
+            that.options.maxLength = options.maxLength || that.element.attr("maxlength");
 
             if (!that.options.value.replace(/\s/g, '').length) {
                 that.options.value = '';
@@ -69,9 +70,7 @@ var __meta__ = {
             });
             that._applyAttributes();
             that._applyCssClasses();
-            that.element
-                .addClass(INPUT)
-                .attr("autocomplete", "off");
+            that.element.attr("autocomplete", "off");
 
             addInputPrefixSuffixContainers({ widget: that, wrapper: that.wrapper, options: that.options });
             if (that.floatingLabel) {
@@ -149,6 +148,7 @@ var __meta__ = {
 
             that.element[action](resize);
             that.element[action](overflow);
+            that.element[action](INPUT);
             that.wrapper[action](layoutFlow);
             if (options.layoutFlow == "vertical") {
                 that.element[action]("!k-flex-none");
@@ -213,18 +213,30 @@ var __meta__ = {
         destroy: function() {
             var that = this;
 
+            that._applyCssClasses("removeClass");
+
             if (that.floatingLabel) {
                 that.floatingLabel.destroy();
             }
 
+            if (that._inputLabel) {
+                that._inputLabel.remove();
+                that._inputLabel = null;
+            }
+
+            // Move the styles back to the element.
+            that.element[0].style.cssText = that.wrapper[0].style.cssText;
+
             that.element.off(NS);
+            that.element.unwrap();
+            that.wrapper = null;
             Widget.fn.destroy.call(that);
         },
 
         setOptions: function(options) {
             var that = this;
-            that._applyCssClasses("removeClass");
-            Widget.fn.setOptions.call(that, options);
+            that.destroy();
+            that.init(that.element, options);
         },
 
         _editable: function(options) {
