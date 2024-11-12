@@ -15,7 +15,7 @@
  */
 import "./kendo.html.base.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "html.input",
     name: "Html.Input",
     category: "web",

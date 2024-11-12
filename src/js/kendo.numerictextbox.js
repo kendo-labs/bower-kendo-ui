@@ -20,7 +20,7 @@ import "./kendo.html.button.js";
 import "./kendo.icons.js";
 import { addInputPrefixSuffixContainers } from "./utils/prefix-suffix-containers.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "numerictextbox",
     name: "NumericTextBox",
     category: "web",
@@ -595,7 +595,7 @@ var __meta__ = {
 
             if (text.length < 2) {
                 text = $('<input type="text"/>')
-                        .attr(kendo.attr("validate"), false)
+                        .attr(kendo.attr("validate"), "false")
                         .insertBefore(element);
             }
 

@@ -5,11 +5,21 @@
     "url": "https://github.com/telerik/kendo-ui-core.git"
   },
   "version": "1.0.0",
-  "dependencies": {},
-  "devDependencies": {
-    "@progress/kendo-dateinputs-common": "^0.3.0-dev.202309201016",
-    "@progress/kendo-svg-icons": "^2.0.0",
+  "dependencies": {
+    "@progress/kendo-charts": "2.6.1",
+    "@progress/kendo-dateinputs-common": "^0.3.6",
     "@progress/kendo-draggable": "^3.0.2",
+    "@progress/kendo-drawing": "1.21.1",
+    "@progress/kendo-font-icons": "4.0.0",
+    "@progress/kendo-ooxml": "^1.9.0",
+    "@progress/kendo-pdfviewer-common": "^0.3.3",
+    "@progress/kendo-pivotgrid-common": "0.6.1",
+    "@progress/kendo-ripple": "^1.0.2",
+    "@progress/kendo-spreadsheet-common": "^1.2.2",
+    "@progress/kendo-svg-icons": "4.0.0",
+    "jquery": "1.10.0 - 3.7.0"
+  },
+  "devDependencies": {
     "rollup": "^2.75.6",
     "rollup-plugin-polyfill": "^4.0.0",
     "@rollup/plugin-node-resolve": "^13.3.0",

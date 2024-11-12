@@ -15,7 +15,7 @@
  */
 import "./kendo.core.js";
 
-let __meta__ = {
+export const __meta__ = {
     id: "validator",
     name: "Validator",
     category: "web",

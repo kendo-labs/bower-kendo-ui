@@ -18,7 +18,7 @@ import "./kendo.floatinglabel.js";
 import "./kendo.icons.js";
 import { addInputPrefixSuffixContainers } from "./utils/prefix-suffix-containers.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "maskedtextbox",
     name: "MaskedTextBox",
     category: "web",
@@ -705,7 +705,7 @@ var __meta__ = {
             var numberFormat = kendo.getCulture(this.options.culture).numberFormat;
             var rules = this._rules;
 
-            for (; idx < length; idx++) {
+            while (idx < length) {
                 chr = maskChars[idx];
                 rule = rules[chr];
 
@@ -731,6 +731,7 @@ var __meta__ = {
                         tokenIdx += 1;
                     }
                 }
+                idx++;
             }
 
             this.tokens = tokens;

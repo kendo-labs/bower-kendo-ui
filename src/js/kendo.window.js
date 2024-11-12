@@ -18,7 +18,7 @@ import "./kendo.popup.js";
 import "./kendo.icons.js";
 import "./kendo.html.button.js";
 
-    var __meta__ = {
+    export const __meta__ = {
         id: "window",
         name: "Window",
         category: "web",
@@ -772,7 +772,7 @@ import "./kendo.html.button.js";
                         } else {
                             newHeight = wrapper.outerHeight() + distance;
                         }
-                    } if (keyCode == keys.LEFT) {
+                    } else if (keyCode == keys.LEFT) {
                         handled = true;
                         newWidth = wrapper.outerWidth() - distance;
                     } else if (keyCode == keys.RIGHT) {
@@ -1246,7 +1246,7 @@ import "./kendo.html.button.js";
                 if (that._shouldFocus(target)) {
                     if (!avoidFocus) {
                         setTimeout(function() {
-                            that.wrapper.focus();
+                            that.wrapper.trigger("focus");
                         }, openAnimation ? openAnimation.duration : 0);
                     }
 

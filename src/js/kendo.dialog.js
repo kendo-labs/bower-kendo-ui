@@ -18,7 +18,7 @@ import "./kendo.popup.js";
 import "./kendo.textbox.js";
 import "./kendo.icons.js";
 
-    var __meta__ = {
+    export const __meta__ = {
         id: "dialog",
         name: "Dialog",
         category: "web", // suite
@@ -566,7 +566,7 @@ import "./kendo.icons.js";
                 });
 
                 if (!wrapper[0].style.zIndex || originalZIndex < zIndex) {
-                    wrapper.css(ZINDEX, zIndex + 2);
+                    wrapper.css(ZINDEX, zIndex + 1);
                 }
 
                 wrapper = null;

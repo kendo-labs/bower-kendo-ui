@@ -19,7 +19,7 @@ import "./kendo.data.js";
 import "./kendo.selectable.js";
 import "./kendo.html.button.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "listbox",
     name: "ListBox",
     category: "web",
@@ -867,9 +867,9 @@ var __meta__ = {
         },
 
         select: function(items) {
-            var that = this;
-            var selectable = that.selectable;
-            var enabledItems;
+            const that = this,
+                selectable = that.selectable;
+            let enabledItems;
 
             if (isUndefined(items)) {
                 return selectable.value();
@@ -882,16 +882,20 @@ var __meta__ = {
                 enabledItems = enabledItems.first();
             }
 
-            return selectable.value(enabledItems);
+            const result = selectable.value(enabledItems);
+            that._updateAllToolbars();
+            return result;
         },
 
         clearSelection: function() {
-            var that = this;
-            var selectable = that.selectable;
+            const that = this,
+                selectable = that.selectable;
 
             if (selectable) {
                 selectable.clear();
             }
+
+            that._updateAllToolbars();
         },
 
         enable: function(items, enable) {

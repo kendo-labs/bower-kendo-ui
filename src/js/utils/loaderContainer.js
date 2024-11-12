@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import '../kendo.core.js';
+
 let $ = kendo.jQuery;
 
 export function useLoaderContainer(toggle, options) {

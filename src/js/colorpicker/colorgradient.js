@@ -15,16 +15,11 @@
  */
 import "../kendo.core.js";
 import "../kendo.popup.js";
+import "../kendo.slider.js";
+import "../kendo.binder.js";
 import "./contrastToolUtils.js";
 import "../kendo.icons.js";
 
-    var __meta__ = {
-        id: "colorgradient",
-        name: "ColorGradient",
-        category: "web", // suite
-        description: "ColorGradient allows selection of a color from an HSV canvas.",
-        depends: ["core", "popup", "textbox", "icons"] // dependencies
-    };
 (function($, undefined) {
     // WARNING: removing the following jshint declaration and turning
     // == into === to make JSHint happy will break functionality.
@@ -246,7 +241,6 @@ import "../kendo.icons.js";
             }
 
             options.messages = options.messages ? $.extend(that.options.messages, options.messages) : that.options.messages;
-            element = that.element;
 
             that._wrapper();
             that._sliders();
@@ -292,7 +286,7 @@ import "../kendo.icons.js";
                 (options.contrastTool ? '<div class="k-colorgradient-color-contrast k-vbox"></div>' : '')
         ),
         focus: function() {
-            this._hsvHandle.focus();
+            this._hsvHandle.trigger("focus");
         },
         setBackgroundColor: function(color) {
             var that = this;
@@ -373,10 +367,12 @@ import "../kendo.icons.js";
                 var offset = this.offset,
                     dx = x - offset.left, dy = y - offset.top,
                     rw = this.width, rh = this.height,
+                    dxrw = dx > rw ? rw : dx,
+                    dyrh = dy > rh ? rh : dy,
                     resultX, resultY;
 
-                dx = dx < 0 ? 0 : dx > rw ? rw : dx;
-                dy = dy < 0 ? 0 : dy > rh ? rh : dy;
+                dx = dx < 0 ? 0 : dxrw;
+                dy = dy < 0 ? 0 : dyrh;
                 resultX = dx / rw;
                 resultY = 1 - dy / rh;
 
@@ -389,12 +385,12 @@ import "../kendo.icons.js";
                     this.offset = kendo.getOffset(hsvRect);
                     this.width = hsvRect.width();
                     this.height = hsvRect.height();
-                    hsvHandle.focus();
+                    hsvHandle.trigger("focus");
                     update.call(this, e.x.location, e.y.location);
                 },
                 start: function() {
                     hsvRect.addClass("k-dragging");
-                    hsvHandle.focus();
+                    hsvHandle.trigger("focus");
                 },
                 move: function(e) {
                     e.preventDefault();

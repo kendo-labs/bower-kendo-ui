@@ -16,7 +16,7 @@
 import "./kendo.data.js";
 import { valueMapperOptions } from "./utils/valueMapper.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "virtuallist",
     name: "VirtualList",
     category: "framework",
@@ -1643,7 +1643,8 @@ var __meta__ = {
                 this._selectedDataItems = [];
                 this._selectedIndexes = [];
             } else if (selectable === "multiple") {
-                for (var i = 0; i < indices.length; i++) {
+                let i = 0;
+                while (i < indices.length) {
                     result = null;
                     position = $.inArray(indices[i], selectedIndexes);
                     dataItem = this.dataItemByIndex(indices[i]);
@@ -1672,6 +1673,7 @@ var __meta__ = {
                         removedindexesCounter++;
                         i--;
                     }
+                    i++;
                 }
             }
 

@@ -16,7 +16,7 @@
 import "./kendo.data.js";
 import "./kendo.icons.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "panelbar",
     name: "PanelBar",
     category: "web",
@@ -692,7 +692,6 @@ var __meta__ = {
 
             if (node) {
                 this._progress(node, false);
-                this._expanded(node, false);
                 kendo.ui.icon(itemIcon(node), { icon: "arrow-rotate-cw" });
                 e.node.loaded(false);
             } else {
@@ -1572,13 +1571,13 @@ var __meta__ = {
 
                  that.one("complete", function() {
                     setTimeout(function() {
-                        children.each(function(index, child) {
-                            var dataItem = that.dataItem(child);
+                        for (let i = 0; i < children.length; i++) {
+                            let dataItem = that.dataItem(children.eq(i));
 
                             if (dataItem) {
                                 dataItem.set("expanded", false);
                             }
-                        });
+                        }
                     });
                 });
             }
@@ -1703,12 +1702,12 @@ var __meta__ = {
         },
 
         renderGroup: function(options) {
-            var that = this;
-            var templates = that.templates || options.panelBar.templates;
+            let that = this;
+            let templates = (that && that.templates) || options.panelBar.templates;
 
             return templates.group(extend({
                 renderItems: function(options) {
-                    var html = "",
+                    let html = "",
                         i = 0,
                         items = options.items,
                         len = items ? items.length : 0,

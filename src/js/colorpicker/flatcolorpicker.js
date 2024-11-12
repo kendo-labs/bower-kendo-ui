@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import "./colorselector.js";
 import "./colorgradient.js";
 import "./colorpalette.js";
 import "../kendo.html.button.js";
@@ -80,7 +81,6 @@ import "../kendo.html.button.js";
 
             ColorSelector.fn.init.call(that, element, options);
             options = that.options = kendo.deepExtend({}, that.options, options);
-            element = that.element;
 
             that._wrapper();
 

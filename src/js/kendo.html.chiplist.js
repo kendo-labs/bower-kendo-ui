@@ -15,7 +15,7 @@
  */
 import "./kendo.html.base.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "html.chiplist",
     name: "Html.ChipList",
     category: "web",

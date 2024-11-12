@@ -21,7 +21,7 @@ import "./kendo.html.chiplist.js";
 import "./kendo.html.button.js";
 import { addInputPrefixSuffixContainers } from "./utils/prefix-suffix-containers.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "multiselect",
     name: "MultiSelect",
     category: "web",
@@ -107,7 +107,6 @@ var __meta__ = {
             that._tagList();
             that._input();
             that._textContainer();
-            that._loader();
             that._clearButton();
             that._arrowButton();
 
@@ -167,7 +166,7 @@ var __meta__ = {
             that._toggleCloseVisibility();
             that._applyCssClasses();
 
-            addInputPrefixSuffixContainers({ widget: that, wrapper: that.wrapper, options: that.options, prefixInsertBefore: that._inputValuesContainer, suffixInsertAfter: options.clearButton ? that._clear : that.element });
+            addInputPrefixSuffixContainers({ widget: that, wrapper: that.wrapper, options: that.options, prefixInsertBefore: that._inputValuesContainer, suffixInsertAfter: options.clearButton ? that._clear : that.element.find("k-input-values") });
             if (that.floatingLabel) {
                 that.floatingLabel.refresh();
             }
@@ -872,12 +871,16 @@ var __meta__ = {
             if (that.dataSource && that._refreshHandler) {
                 that._unbindDataSource();
             } else {
-                that._progressHandler = that._showBusy.bind(that);
-                that._errorHandler = that._hideBusy.bind(that);
+                that._progressHandler = that._showBusy;
+                that._endRequestHandler = that._hideBusy;
+                that._errorHandler = function() {
+                    that._hideBusy();
+                };
             }
 
             that.dataSource = kendo.data.DataSource.create(dataSource)
                                    .bind(PROGRESS, that._progressHandler)
+                                   .bind("requestEnd", that._endRequestHandler)
                                    .bind("error", that._errorHandler);
         },
 
@@ -1183,35 +1186,6 @@ var __meta__ = {
             if (handled) {
                 e.stopPropagation();
             }
-        },
-
-        _hideBusy: function() {
-            var that = this;
-            clearTimeout(that._busy);
-            that.input.attr(ARIA_BUSY, false);
-            that._loading.addClass(HIDDENCLASS);
-            that._request = false;
-            that._busy = null;
-
-            that._toggleCloseVisibility();
-        },
-
-        _showBusyHandler: function() {
-            this.input.attr(ARIA_BUSY, true);
-            this._loading.removeClass(HIDDENCLASS);
-            this._hideClear();
-        },
-
-        _showBusy: function() {
-            var that = this;
-
-            that._request = true;
-
-            if (that._busy) {
-                return;
-            }
-
-            that._busy = setTimeout(that._showBusyHandler.bind(that), 100);
         },
 
         _placeholder: function(show, skipCaret) {
@@ -1529,29 +1503,31 @@ var __meta__ = {
             });
         },
 
+        _selectIndices: function(indices) {
+            let listView = this.listView;
+            let that = this;
+
+            listView.select(indices).done(function() {
+                indices.forEach(function(index) {
+                    var dataItem = listView.dataItemByIndex(index);
+                    var candidate = listView.element.children()[index];
+                    var isSelected = $(candidate).hasClass("k-selected");
+
+                    that.trigger(isSelected ? SELECT : DESELECT, { dataItem: dataItem, item: $(candidate) });
+                });
+                that._change();
+            });
+        },
+
         _selectRange: function(startIndex, endIndex) {
             var that = this;
-            var listView = this.listView;
             var maxSelectedItems = this.options.maxSelectedItems;
             var indices = this._getSelectedIndices().slice();
             var indicesToSelect = [];
             var i;
 
-            var selectIndices = function(indices) {
-                listView.select(indices).done(function() {
-                    indices.forEach(function(index) {
-                        var dataItem = listView.dataItemByIndex(index);
-                        var candidate = listView.element.children()[index];
-                        var isSelected = $(candidate).hasClass("k-selected");
-
-                        that.trigger(isSelected ? SELECT : DESELECT, { dataItem: dataItem, item: $(candidate) });
-                    });
-                    that._change();
-                });
-            };
-
             if (indices.length - 1 === endIndex - startIndex) {
-                return selectIndices(indices);
+                return that._selectIndices(indices);
             }
 
             if (startIndex < endIndex) {
@@ -1583,7 +1559,7 @@ var __meta__ = {
             }
 
             that.persistTagList = false;
-            return selectIndices(indices);
+            return that._selectIndices(indices);
         },
 
         _input: function() {
@@ -1597,7 +1573,7 @@ var __meta__ = {
             }
 
             element.removeAttr("accesskey");
-            input.attr("data-validate", false);
+            input.attr("data-validate", "false");
 
             that._focused = that.input = input.attr({
                 "autocomplete": AUTOCOMPLETEVALUE,
@@ -1685,10 +1661,6 @@ var __meta__ = {
                     })
                 );
             };
-        },
-
-        _loader: function() {
-            this._loading = $('<span class="k-icon k-i-loading k-input-loading-icon ' + HIDDENCLASS + '"></span>').insertAfter(this._inputValuesContainer);
         },
 
         _popup: function() {

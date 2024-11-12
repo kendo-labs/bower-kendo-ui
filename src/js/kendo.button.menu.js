@@ -17,7 +17,7 @@ import "./kendo.core.js";
 import "./kendo.popup.js";
 import "./kendo.icons.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "button.menu",
     name: "ButtonMenu",
     category: "web",
@@ -173,6 +173,9 @@ var __meta__ = {
             that.list.attr(ID, id + "_buttonmenu");
 
             items.forEach(that._renderListItem.bind(that));
+
+            that.list.find(DOT + cssClasses.menuItem + ':first-child').addClass("k-first");
+            that.list.find(DOT + cssClasses.menuItem + ':last-child').addClass("k-last");
         },
 
         _renderListItem: function(item) {

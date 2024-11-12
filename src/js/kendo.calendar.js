@@ -17,7 +17,7 @@ import "./kendo.core.js";
 import "./kendo.selectable.js";
 import "./kendo.icons.js";
 
-let __meta__ = {
+export const __meta__ = {
     id: "calendar",
     name: "Calendar",
     category: "web",
@@ -307,7 +307,10 @@ let __meta__ = {
         },
 
         setOptions: function(options) {
-            var that = this;
+            let that = this,
+            isComponentTypeChanged;
+
+            isComponentTypeChanged = options.componentType ? true : false;
 
             normalize(options);
 
@@ -324,6 +327,20 @@ let __meta__ = {
 
             that._selectable();
 
+            if (isComponentTypeChanged) {
+                let componentTypes = Calendar.prototype.componentTypes;
+
+                that.options.header = componentTypes[options.componentType].header;
+                that.options.hasFooter = componentTypes[options.componentType].hasFooter;
+                let header = that.element.find(HEADERSELECTOR)[0];
+
+                if (header) {
+                    header.remove();
+                }
+
+                that._header();
+            }
+
             that._viewWrapper();
 
             if (that.options.hasFooter) {
@@ -335,6 +352,14 @@ let __meta__ = {
             that._index = views[that.options.start];
 
             that.navigate();
+
+            if (isComponentTypeChanged) {
+                let value = parse(that.options.value, options.format, options.culture);
+                that._current = new DATE(+restrictValue(value, options.min, options.max));
+                that._cell = null;
+                that._table = null;
+                that.value(value);
+            }
 
             if (options.weekNumber) {
                 that.element.addClass('k-week-number');

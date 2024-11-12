@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 import "./kendo.data.js";
+import "./kendo.dropdownlist.js";
 import "./kendo.icons.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "pager",
     name: "Pager",
     category: "framework",
@@ -41,6 +42,7 @@ var __meta__ = {
         LAST_CONST = "caret-alt-to-right",
         PREV_CONST = "caret-alt-left",
         NEXT_CONST = "caret-alt-right",
+        REFRESH = "arrow-rotate-cw",
         FOCUSABLE = ":kendoFocusable:not([tabindex='-1'])",
         CHANGE = "change",
         NS = ".kendoPager",
@@ -170,13 +172,13 @@ var __meta__ = {
                 if (!that._numericWrap.find("[class*='-i-" + FIRST + "']").length) {
                     that._numericWrap.append(icon(FIRST, options.messages.first, "k-pager-first", that._id, buttonSize));
 
-                    first(that._numericWrap, page, totalPages);
+                    first(that._numericWrap, page);
                 }
 
                 if (!that._numericWrap.find("[class*='-i-" + PREV + "']").length) {
                     that._numericWrap.append(icon(PREV, options.messages.previous, null, that._id, buttonSize));
 
-                    prev(that._numericWrap, page, totalPages);
+                    prev(that._numericWrap, page);
                 }
             }
 
@@ -258,7 +260,7 @@ var __meta__ = {
             if (options.refresh) {
                 if (!that.element.find(".k-pager-refresh").length) {
                     that.element.append('<button role="button" href="#" class="k-pager-refresh k-button ' + buttonSize + ' k-button-flat k-button-flat-base k-icon-button" title="' + options.messages.refresh +
-                        '" aria-label="' + options.messages.refresh + '">' + kendo.ui.icon("arrow-rotate-cw") + '</button>');
+                        '" aria-label="' + options.messages.refresh + '">' + kendo.ui.icon($('<span class="k-button-icon"></span>'),REFRESH) + '</button>');
                 }
 
                 that.element.on(CLICK + NS, ".k-pager-refresh", that._refreshClick.bind(that));
@@ -266,7 +268,7 @@ var __meta__ = {
 
             if (options.info) {
                 if (!that.element.find(".k-pager-info").length) {
-                    that.element.append('<span class="k-pager-info k-label" />');
+                    that.element.append('<span class="k-pager-info" />');
                 }
             }
 
@@ -695,9 +697,9 @@ var __meta__ = {
             }
 
             if (options.previousNext) {
-                first(that.element, page, totalPages);
+                first(that.element, page);
 
-                prev(that.element, page, totalPages);
+                prev(that.element, page);
 
                 next(that.element, page, totalPages);
 
@@ -765,7 +767,7 @@ var __meta__ = {
 
         _restoreTabIndexes: function() {
             this.element
-                .find("[tabindex='-1']:not(.k-disabled)")
+                .find("[tabindex='-1']:not(.k-disabled):not(.k-dropdownlist > .k-icon-button)")
                 .attr("tabindex", 0);
         },
 
@@ -887,6 +889,11 @@ var __meta__ = {
             }
 
             if (target[0] !== that.element[0] && e.keyCode == keys.TAB) {
+
+                if (that.options._isToolbarItem) {
+                    that._restoreTabIndexes();
+                }
+
                 allFocusable = that.element.find(FOCUSABLE);
                 focusedIndex = allFocusable.index(target);
 
@@ -918,26 +925,26 @@ var __meta__ = {
             var value = target.value;
             var page = parseInt(value, 10);
 
-            target.blur();
-
             this.page(page);
         },
 
         _click: function(e) {
-            var target = $(e.currentTarget);
+            const that = this,
+                target = $(e.currentTarget);
 
             e.preventDefault();
 
-            if (this.options.navigatable) {
-                if (target.attr("title") == this.options.messages.morePages) {
-                    this._focusMore = target.parent().index();
+            if (that.options.navigatable) {
+                if (target.attr("title") == that.options.messages.morePages) {
+                    that._focusMore = target.parent().index();
                 } else if (!target.hasClass("k-pager-refresh") && !target.hasClass("k-pager-nav")) {
-                    this._focusSelected = true;
+                    that._focusSelected = true;
                 }
+                that._restoreTabIndexes();
             }
 
             if (!target.is(".k-disabled")) {
-                this.page(parseInt(target.attr(kendo.attr("page")), 10));
+                that.page(parseInt(target.attr(kendo.attr("page")), 10));
             }
         },
 

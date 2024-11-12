@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 import "../kendo.core.js";
+import "../kendo.popup.js";
+import "../kendo.color.js";
 
 (function($, undefined) {
     // WARNING: removing the following jshint declaration and turning

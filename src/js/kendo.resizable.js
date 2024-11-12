@@ -16,11 +16,11 @@
 import "./kendo.core.js";
 import "./kendo.draganddrop.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "resizable",
     name: "Resizable",
     category: "framework",
-    depends: [ "core", "draganddrop" ],
+    depends: ["core", "draganddrop"],
     advanced: true
 };
 
@@ -105,8 +105,8 @@ var __meta__ = {
                 that.hint.css({
                     position: "absolute"
                 })
-                .css(that._position, that._initialElementPosition)
-                .appendTo(that.element);
+                    .css(that._position, that._initialElementPosition)
+                    .appendTo(that.element);
             }
 
             that.trigger(START, e);
@@ -129,7 +129,7 @@ var __meta__ = {
 
             if (that.hint) {
                 that.hint.toggleClass(that.options.invalidClass || "", position == maxPosition || position == minPosition)
-                         .css(that._position, position);
+                    .css(that._position, position);
             }
 
             that.resizing = true;

@@ -17,7 +17,7 @@ import "./kendo.data.js";
 import "./kendo.icons.js";
 import "./kendo.sortable.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "tabstrip",
     name: "TabStrip",
     category: "web",
@@ -52,6 +52,7 @@ var __meta__ = {
         NEXT = "next",
         SHOW = "show",
         LINK = "k-link",
+        LINK_TEXT = "k-link-text",
         LAST = "k-last",
         CLICK = "click",
         ERROR = "error",
@@ -60,7 +61,7 @@ var __meta__ = {
         FIRST = "k-first",
         SELECT = "select",
         ACTIVATE = "activate",
-        CONTENT = "k-tabstrip-content k-content",
+        CONTENT = "k-tabstrip-content",
         CONTENTURL = "contentUrl",
         MOUSEENTER = "mouseenter",
         MOUSELEAVE = "mouseleave",
@@ -69,7 +70,6 @@ var __meta__ = {
         ACTIVESTATE = "k-active",
         FOCUSEDSTATE = "k-focus",
         HOVERSTATE = "k-hover",
-        TABONTOP = "k-tab-on-top",
         NAVIGATABLEITEMS = ".k-item:not(." + DISABLEDSTATE + ")",
         KEYBOARDNAVIGATABLEITEMS = ".k-item",
         HOVERABLEITEMS = ".k-tabstrip-items > " + NAVIGATABLEITEMS + ":not(." + ACTIVESTATE + ")",
@@ -83,10 +83,10 @@ var __meta__ = {
 
         templates = {
             content: (data) =>
-                `<div class='k-tabstrip-content k-content' ${data.contentAttributes(data)} tabindex='0'>${data.content(data.item)}</div>`,
+                `<div class='k-tabstrip-content' ${data.contentAttributes(data)} tabindex='0'>${data.content(data.item)}</div>`,
             textWrapper: ({ tag, item , contentUrl, textAttributes, image, sprite, text }) =>
-                `<${tag(item)} class='k-link' ${contentUrl(item)} ${textAttributes(item)}>` +
-                    `${image(item)}${sprite(item)}${text(item)}` +
+                `<${tag(item)} class='${LINK}' ${contentUrl(item)} ${textAttributes(item)}>` + `${image(item)}${sprite(item)}` +
+                        `<span class='${LINK_TEXT}'>${text(item)}</span>` +
                 `</${tag(item)}>`,
             item: (data) =>templates.itemWrapper(data,`${data.textWrapper(data)}`),
             itemWrapper: (data, item) =>
@@ -95,12 +95,12 @@ var __meta__ = {
                 "</li>",
             image: ({ imageUrl }) => `<img class='k-image' alt='' src='${imageUrl}' />`,
             sprite: ({ spriteCssClass }) => `<span class='k-sprite ${spriteCssClass}'></span>`,
-            empty: () => ""
+            empty: () => "",
         },
 
         rendering = {
             wrapperCssClass: function(group, item) {
-                var result = ["k-tabstrip-item", "k-item"],
+                var result = ["k-item"],
                     index = item.index;
 
                 if (item.enabled === false) {
@@ -155,7 +155,7 @@ var __meta__ = {
             .children("a")
             .filter(":focus")
             .parent()
-            .addClass(ACTIVESTATE + " " + TABONTOP);
+            .addClass(ACTIVESTATE);
 
         tabs.attr("role", "tab");
 
@@ -167,7 +167,8 @@ var __meta__ = {
                 item
                     .contents() // exclude groups, real links, templates and empty text nodes
                     .filter(function() { return (!this.nodeName.match(excludedNodesRegExp) && !(this.nodeType == 3 && !trim(this.nodeValue))); })
-                    .wrapAll("<span UNSELECTABLE='on' class='" + LINK + "'/>");
+                    .wrapAll("<span UNSELECTABLE='on' class='" + LINK + "'/>")
+                    .wrapAll("<span UNSELECTABLE='on' class='" + LINK_TEXT + "'/>");
             }
         });
 
@@ -179,11 +180,34 @@ var __meta__ = {
         tabs.filter(".k-first:not(:first-child)").removeClass(FIRST);
         tabs.filter(".k-last:not(:last-child)").removeClass(LAST);
         tabs.filter(":first-child").addClass(FIRST);
-        tabs.filter(":last-child").addClass(LAST);
+        if (tabs.length > 1) {
+            tabs.filter(":last-child").addClass(LAST);
+        }
     }
 
     function scrollButtonHtml(buttonClass, iconClass) {
-        return `<span aria-hidden='true' class='k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button k-tabstrip-${buttonClass}' unselectable='on'>${kendo.ui.icon({ icon: iconClass, iconClass: "k-button-icon" })}</span>`;
+        return `<span aria-hidden='true' tabindex='-1' class='k-button k-button-md k-rounded-md k-button-flat k-button-flat-base k-icon-button k-tabstrip-${buttonClass}' unselectable='on'>${kendo.ui.icon({ icon: iconClass, iconClass: "k-button-icon" })}</span>`;
+    }
+
+    function ajaxXhr() {
+        var current = this,
+            request = $.ajaxSettings.xhr(),
+            event = current.progressUpload ? "progressUpload" : current.progress ? "progress" : false;
+
+        if (request) {
+            $.each([ request, request.upload ], function() {
+                if (this.addEventListener) {
+                    this.addEventListener("progress", function(evt) {
+                        if (event) {
+                            current[event](evt);
+                        }
+                    }, false);
+                }
+            });
+        }
+
+        current.noProgress = !(window.XMLHttpRequest && ('upload' in new XMLHttpRequest()));
+        return request;
     }
 
     var TabStrip = Widget.extend({
@@ -199,7 +223,6 @@ var __meta__ = {
             that._contentUrls = options.contentUrls || [];
 
             that._wrapper();
-
             that._isRtl = kendo.support.isRtl(that.wrapper);
 
             that._updateClasses();
@@ -335,9 +358,7 @@ var __meta__ = {
             }
 
             if (contentAnimators.length === 0) {
-                that.tabGroup.find("." + TABONTOP).removeClass(TABONTOP);
-                item.addClass(TABONTOP) // change these directly to bring the tab on top.
-                    .css("z-index");
+                that.tabGroup.find("." + ACTIVESTATE);
 
                 item.addClass(ACTIVESTATE);
                 that._current(item, true);
@@ -353,7 +374,7 @@ var __meta__ = {
 
             var visibleContents = contentAnimators.filter("." + ACTIVESTATE),
                 contentHolder = that.contentHolder(itemIndex),
-                contentElement = contentHolder.closest(".k-content");
+                contentElement = contentHolder.closest(".k-tabstrip-content");
 
             that.tabsHeight = outerHeight(that.tabGroup) +
                               parseInt(that.wrapper.css("border-top-width"), 10) +
@@ -393,17 +414,6 @@ var __meta__ = {
 
                                 that.trigger(ACTIVATE, { item: item[0], contentElement: contentHolder[0] });
                                 kendo.resize(contentHolder);
-
-                                // Force IE and Edge rendering to fix visual glitches telerik/kendo-ui-core#2777.
-                                if (isAnimationEnabled && (kendo.support.browser.msie || kendo.support.browser.edge)) {
-                                    contentHolder.finish().animate({
-                                        opacity: 0.9
-                                    },"fast", "linear", function() {
-                                        contentHolder.finish().animate({
-                                            opacity: 1
-                                        },"fast", "linear");
-                                    });
-                                }
                             }
                         } ) );
                 },
@@ -434,8 +444,7 @@ var __meta__ = {
             }
 
             visibleContents.removeClass(ACTIVESTATE);
-            that.tabGroup.find("." + TABONTOP).removeClass(TABONTOP);
-            item.addClass(TABONTOP).css("z-index");
+            that.tabGroup.find("." + ACTIVESTATE);
 
             if (kendo.size(animation.effects)) {
                 item.kendoAddClass(ACTIVESTATE, { duration: animation.duration });
@@ -462,28 +471,10 @@ var __meta__ = {
             element = this.tabGroup.find(element);
 
             var that = this,
-                xhr = $.ajaxSettings.xhr,
                 link = element.find("." + LINK),
-                data = {},
-                halfWidth = element.width() / 2,
-                fakeProgress = false,
-                statusIcon = element.find(".k-loading").removeClass("k-complete");
+                data = {};
 
-            if (!statusIcon[0]) {
-                statusIcon = $("<span class='k-loading'/>").prependTo(element);
-            }
-
-            var endState = halfWidth * 2 - statusIcon.width();
-
-            var oldProgressAnimation = function() {
-                statusIcon.animate({ marginLeft: (parseInt(statusIcon.css("marginLeft"), 10) || 0) < halfWidth ? endState : 0 }, 500, oldProgressAnimation);
-            };
-
-            if (kendo.support.browser.msie && kendo.support.browser.version < 10) {
-                setTimeout(oldProgressAnimation, 40);
-            }
-
-             url = url || link.data(CONTENTURL) || that._contentUrls[element.index()] || link.attr(HREF);
+            url = url || link.data(CONTENTURL) || that._contentUrls[element.index()] || link.attr(HREF);
             that.inRequest = true;
 
             var ajaxOptions = {
@@ -492,39 +483,7 @@ var __meta__ = {
                 url: url,
                 dataType: "html",
                 data: data,
-                xhr: function() {
-                    var current = this,
-                        request = xhr(),
-                        event = current.progressUpload ? "progressUpload" : current.progress ? "progress" : false;
-
-                    if (request) {
-                        $.each([ request, request.upload ], function() {
-                            if (this.addEventListener) {
-                                this.addEventListener("progress", function(evt) {
-                                    if (event) {
-                                        current[event](evt);
-                                    }
-                                }, false);
-                            }
-                        });
-                    }
-
-                    current.noProgress = !(window.XMLHttpRequest && ('upload' in new XMLHttpRequest()));
-                    return request;
-                },
-
-                progress: function(evt) {
-                    if (evt.lengthComputable) {
-                        var percent = parseInt((evt.loaded / evt.total * 100), 10) + "%";
-                        statusIcon
-                            .stop(true)
-                            .addClass("k-progress")
-                            .css({
-                                "width": percent,
-                                "marginLeft": 0
-                            });
-                    }
-                },
+                xhr: ajaxXhr,
 
                 error: function(xhr, status) {
                     if (that.trigger("error", { xhr: xhr, status: status })) {
@@ -532,49 +491,15 @@ var __meta__ = {
                     }
                 },
 
-                stopProgress: function() {
-                    clearInterval(fakeProgress);
-                    statusIcon
-                        .stop(true)
-                        .addClass("k-progress")
-                        [0].style.cssText = "";
-                },
-
                 complete: function(xhr) {
                     that.inRequest = false;
-                    if (this.noProgress) {
-                        setTimeout(this.stopProgress, 500);
-                    } else {
-                        this.stopProgress();
-                    }
-
-                    if (xhr.statusText == "abort") {
-                        statusIcon.remove();
-                    }
                 },
 
                 success: function(data) {
-                    statusIcon.addClass("k-complete");
                     try {
-                        var current = this,
-                            loaded = 10;
-
-                        if (current.noProgress) {
-                            statusIcon.width(loaded + "%");
-                            fakeProgress = setInterval(function() {
-                                current.progress({ lengthComputable: true, loaded: Math.min(loaded, 100), total: 100 });
-                                loaded += 10;
-                            }, 40);
-                        }
-
                         kendo.destroy(content);
                         content.html(data);
                     } catch (e) {
-                        var console = window.console;
-
-                        if (console && console.error) {
-                            console.error(e.name + ": " + e.message + " in " + url);
-                        }
                         this.error(this.xhr, "error");
                     }
 
@@ -632,7 +557,7 @@ var __meta__ = {
 
             if (contentElements) {
                 for (var i = 0, len = contentElements.length; i < len; i++) {
-                    if (contentElements.eq(i).closest(".k-content")[0].id == id) {
+                    if (contentElements.eq(i).closest(".k-tabstrip-content")[0].id == id) {
                         return contentElements[i];
                     }
                 }
@@ -1315,8 +1240,8 @@ var __meta__ = {
                     var browser = kendo.support.browser;
                     var isRtlScrollDirection = that._isRtl && !browser.msie && !browser.edge;
 
-                    that.tabWrapper.prepend(scrollButtonHtml("prev", "caret-alt-left"));
-                    that.tabWrapper.append(scrollButtonHtml("next", "caret-alt-right"));
+                        that.tabWrapper.prepend(scrollButtonHtml("prev", "caret-alt-left"));
+                        that.tabWrapper.append(scrollButtonHtml("next", "caret-alt-right"));
 
                     scrollPrevButton = that._scrollPrevButton = that.tabWrapper.children(".k-tabstrip-prev");
                     scrollNextButton = that._scrollNextButton = that.tabWrapper.children(".k-tabstrip-next");
@@ -1426,13 +1351,13 @@ var __meta__ = {
             }
 
             that.sortable = new kendo.ui.Sortable(that.tabGroup, {
-                filter: "li.k-tabstrip-item",
+                filter: "li.k-item",
                 axis,
                 container: that.tabWrapper,
                 hint: el => `<div id='hint' class='k-tabstrip k-tabstrip-${position}'>
                                 <div class= 'k-tabstrip-items-wrapper k-hstack'>
                                     <ul class='k-tabstrip-items k-reset'>
-                                        <li class='k-item k-tabstrip-item k-first k-active k-tab-on-${position}'>${el.html()}</li>
+                                        <li class='k-item k-first k-active'>${el.html()}</li>
                                     </ul>
                                 </div>
                             </div>`,
@@ -1486,10 +1411,11 @@ var __meta__ = {
         _toggleScrollButtons: function() {
             var that = this,
                 ul = that.tabGroup,
-                scrollLeft = kendo.scrollLeft(ul);
+                scrollLeft = Math.floor(kendo.scrollLeft(ul));
+                const disableNextButton = Math.abs(scrollLeft - (ul[0].scrollWidth - ul[0].offsetWidth)) <= 1;
 
                 that._scrollPrevButton.toggleClass('k-disabled', scrollLeft === 0);
-                that._scrollNextButton.toggleClass('k-disabled', scrollLeft === ul[0].scrollWidth - ul[0].offsetWidth);
+                that._scrollNextButton.toggleClass('k-disabled', disableNextButton);
         },
 
         _updateClasses: function() {
@@ -1497,7 +1423,7 @@ var __meta__ = {
                 tabs, activeItem, activeTab;
             var isHorizontal = /top|bottom/.test(that.options.tabPosition);
 
-            that.wrapper.addClass("k-widget k-tabstrip");
+            that.wrapper.addClass("k-tabstrip");
 
             if (!that.tabGroup) {
                 that.tabGroup = that.wrapper.children("ul");
@@ -1515,7 +1441,7 @@ var __meta__ = {
             that.tabWrapper.addClass(isHorizontal ? 'k-hstack' : 'k-vstack');
             that.tabGroup.addClass('k-tabstrip-items k-reset');
 
-            tabs = that.tabGroup.find("li").addClass("k-tabstrip-item k-item");
+            tabs = that.tabGroup.find("li").addClass("k-item");
 
             if (tabs.length) {
                 activeItem = tabs.filter("." + ACTIVESTATE).index();
@@ -1525,10 +1451,6 @@ var __meta__ = {
                     .contents()
                     .filter(function() { return (this.nodeType == 3 && !trim(this.nodeValue)); })
                     .remove();
-            }
-
-            if (activeItem >= 0) {
-                tabs.eq(activeItem).addClass(TABONTOP);
             }
 
             that.contentElements = that.wrapper.children("div:not(.k-tabstrip-items-wrapper)");
@@ -1595,10 +1517,6 @@ var __meta__ = {
                     } else {
                         // set the ID on the content element
                         currentContent.attr("id", contentId);
-
-                        if (!$(this).children(".k-loading")[0] && !contentUrls[idx]) {
-                            $("<span class='k-loading k-complete'/>").prependTo(this);
-                        }
                     }
 
                     currentContent.attr("role", "tabpanel");

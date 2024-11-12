@@ -15,7 +15,7 @@
  */
 import "./kendo.core.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "floatinglabel",
     name: "FloatingLabel",
     category: "framework",

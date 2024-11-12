@@ -17,7 +17,7 @@ import "./kendo.core.js";
 import "./kendo.binder.js";
 import "./kendo.fx.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "view",
     name: "View",
     category: "framework",
@@ -319,8 +319,7 @@ var __meta__ = {
         _createHeader: function() {
             var that = this;
             var wrapper = that.wrapper;
-
-            this.header = wrapper.children(roleSelector("header")).addClass(classNames.header);
+            this.header = wrapper.children(roleSelector("header"));
         },
 
         _createFooter: function() {

@@ -15,7 +15,7 @@
  */
 import "./kendo.core.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "userevents",
     name: "User Events",
     category: "framework",
@@ -368,6 +368,7 @@ var __meta__ = {
                 // the touch events lock to the element anyway, so no need for the global setting
                 surface: options.global && ENABLE_GLOBAL_SURFACE ? $(element[0].ownerDocument.documentElement) : $(options.surface || element),
                 stopPropagation: options.stopPropagation,
+                preventDefault: options.preventDefault,
                 pressed: false
             });
 
@@ -547,6 +548,10 @@ var __meta__ = {
             UserEvents.current = null;
 
             that.currentTarget = e.currentTarget;
+
+            if (that.preventDefault) {
+                e.preventDefault();
+            }
 
             if (that.stopPropagation) {
                 e.stopPropagation();

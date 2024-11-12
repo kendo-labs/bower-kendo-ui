@@ -17,7 +17,7 @@ import "./kendo.core.js";
 import "./kendo.togglebutton.js";
 import "./kendo.button.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "buttongroup",
     name: "ButtonGroup",
     category: "web",
@@ -33,7 +33,7 @@ var __meta__ = {
     var Button = ui.Button;
     var keys = kendo.keys;
     var NS = ".kendoButtonGroup";
-    var KBUTTONGROUP = "k-button-group k-button-group-solid";
+    var KBUTTONGROUP = "k-button-group k-button-group-";
     var KBUTTON = "k-button";
     var SELECTED = "k-selected";
     var DISABLED = "k-disabled";
@@ -60,9 +60,9 @@ var __meta__ = {
             that.selectedIndices = [];
 
             that._buttons = that._renderItems(that.options.items);
-
+            const fillMode = options && options.fillMode ? options.fillMode : 'solid';
             that.element
-                .addClass(EMPTY + KBUTTONGROUP)
+                .addClass(EMPTY + KBUTTONGROUP + fillMode)
                 .attr("role", "group");
 
             that._enable = true;

@@ -15,7 +15,7 @@
  */
 import "./kendo.data.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "data.signalr",
     name: "SignalR",
     category: "framework",

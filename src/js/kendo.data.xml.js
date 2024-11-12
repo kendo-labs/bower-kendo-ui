@@ -15,7 +15,7 @@
  */
 import "./kendo.core.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "data.xml",
     name: "XML",
     category: "framework",

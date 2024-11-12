@@ -16,7 +16,7 @@
 import "./kendo.html.button.js";
 import "./kendo.button.menu.js";
 
-var __meta__ = {
+export const __meta__ = {
     id: "dropdownbutton",
     name: "DropDownButton",
     category: "web",
@@ -55,7 +55,6 @@ var __meta__ = {
 
     var cssClasses = {
         menuButton: "k-menu-button",
-        dropdownButton: "k-dropdown-button"
     };
 
     var DropDownButton = Widget.extend({
@@ -112,7 +111,7 @@ var __meta__ = {
 
             delete options.click;
 
-            that.element.addClass(cssClasses.menuButton).addClass(cssClasses.dropdownButton);
+            that.element.addClass(cssClasses.menuButton);
 
             html.renderButton(that.element, options);
 
