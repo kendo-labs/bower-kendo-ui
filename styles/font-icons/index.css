@@ -51,11 +51,11 @@
 }
 
 .k-icon-xs {
-  font-size: calc( 16px * .75 );
+  font-size: calc(16px * 0.75);
 }
 
 .k-icon-sm {
-  font-size: calc( 16px * .875 );
+  font-size: calc(16px * 0.875);
 }
 
 .k-icon-md {
@@ -63,19 +63,19 @@
 }
 
 .k-icon-lg {
-  font-size: calc( 16px * 1.25 );
+  font-size: calc(16px * 1.25);
 }
 
 .k-icon-xl {
-  font-size: calc( 16px * 1.5 );
+  font-size: calc(16px * 1.5);
 }
 
 .k-icon-xxl {
-  font-size: calc( 16px * 2 );
+  font-size: calc(16px * 2);
 }
 
 .k-icon-xxxl {
-  font-size: calc( 16px * 3 );
+  font-size: calc(16px * 3);
 }
 
 .k-flip-h {
@@ -1043,6 +1043,442 @@
   content: "\e095";
 }
 
+.k-i-inputbox::before {
+  content: "\e096";
+}
+
+.k-i-scale::before {
+  content: "\e097";
+}
+
+.k-i-van::before {
+  content: "\e098";
+}
+
+.k-i-truck::before {
+  content: "\e099";
+}
+
+.k-i-wallet-outline::before {
+  content: "\e09a";
+}
+
+.k-i-transactions::before {
+  content: "\e09b";
+}
+
+.k-i-handle-drag-dots::before {
+  content: "\e09c";
+}
+
+.k-i-six-dice::before {
+  content: "\e09c";
+}
+
+.k-i-six-dots-vertical::before {
+  content: "\e09c";
+}
+
+.k-i-arrow-down-left::before {
+  content: "\e09d";
+}
+
+.k-i-return-key::before {
+  content: "\e09d";
+}
+
+.k-i-recycle-solid::before {
+  content: "\e09e";
+}
+
+.k-i-industrial-vehicle::before {
+  content: "\e09f";
+}
+
+.k-i-recycle-outline::before {
+  content: "\e0a0";
+}
+
+.k-i-plane-solid::before {
+  content: "\e0a1";
+}
+
+.k-i-plane-outline::before {
+  content: "\e0a2";
+}
+
+.k-i-money-exchange::before {
+  content: "\e0a3";
+}
+
+.k-i-sustainability::before {
+  content: "\e0a4";
+}
+
+.k-i-speed::before {
+  content: "\e0a5";
+}
+
+.k-i-devices-outline::before {
+  content: "\e0a6";
+}
+
+.k-i-devices-solid::before {
+  content: "\e0a7";
+}
+
+.k-i-instagram-box::before {
+  content: "\e0a8";
+}
+
+.k-i-instagram::before {
+  content: "\e0a9";
+}
+
+.k-i-laptop-outline::before {
+  content: "\e0aa";
+}
+
+.k-i-laptop-solid::before {
+  content: "\e0ab";
+}
+
+.k-i-mobile-outline-ringing::before {
+  content: "\e0ac";
+}
+
+.k-i-mobile-outline::before {
+  content: "\e0ad";
+}
+
+.k-i-mobile-solid-ringing::before {
+  content: "\e0ae";
+}
+
+.k-i-mobile-solid::before {
+  content: "\e0af";
+}
+
+.k-i-locations::before {
+  content: "\e0b0";
+}
+
+.k-i-tablet-outline::before {
+  content: "\e0b1";
+}
+
+.k-i-tablet-solid::before {
+  content: "\e0b2";
+}
+
+.k-i-users-outline::before {
+  content: "\e0b3";
+}
+
+.k-i-users-solid::before {
+  content: "\e0b4";
+}
+
+.k-i-whatsapp-box::before {
+  content: "\e0b5";
+}
+
+.k-i-whatsapp::before {
+  content: "\e0b6";
+}
+
+.k-i-x-logo-box::before {
+  content: "\e0b7";
+}
+
+.k-i-sms-outline::before {
+  content: "\e0b8";
+}
+
+.k-i-sms-solid::before {
+  content: "\e0b9";
+}
+
+.k-i-therapist-outline::before {
+  content: "\e0ba";
+}
+
+.k-i-therapist-solid::before {
+  content: "\e0bb";
+}
+
+.k-i-patient-solid::before {
+  content: "\e0bc";
+}
+
+.k-i-patient-outline::before {
+  content: "\e0bd";
+}
+
+.k-i-nurse-solid::before {
+  content: "\e0be";
+}
+
+.k-i-nurse-outline::before {
+  content: "\e0bf";
+}
+
+.k-i-optimization::before {
+  content: "\e0c0";
+}
+
+.k-i-security-check-outline::before {
+  content: "\e0c1";
+}
+
+.k-i-security-check-solid::before {
+  content: "\e0c2";
+}
+
+.k-i-security-lock-outline::before {
+  content: "\e0c3";
+}
+
+.k-i-security-lock-solid::before {
+  content: "\e0c4";
+}
+
+.k-i-upgrade-outline::before {
+  content: "\e0c5";
+}
+
+.k-i-upgrade-reload::before {
+  content: "\e0c6";
+}
+
+.k-i-upgrade-solid::before {
+  content: "\e0c7";
+}
+
+.k-i-food-solid::before {
+  content: "\e0c8";
+}
+
+.k-i-food-outline::before {
+  content: "\e0c9";
+}
+
+.k-i-area::before {
+  content: "\e0ca";
+}
+
+.k-i-arrow-shape::before {
+  content: "\e0cb";
+}
+
+.k-i-border-radius-undefined::before {
+  content: "\e0cc";
+}
+
+.k-i-border-width::before {
+  content: "\e0cd";
+}
+
+.k-i-circle-shape::before {
+  content: "\e0ce";
+}
+
+.k-i-combobox::before {
+  content: "\e0cf";
+}
+
+.k-i-cube::before {
+  content: "\e0d0";
+}
+
+.k-i-distance::before {
+  content: "\e0d1";
+}
+
+.k-i-draw-free::before {
+  content: "\e0d2";
+}
+
+.k-i-dropdown::before {
+  content: "\e0d3";
+}
+
+.k-i-eraser-solid::before {
+  content: "\e0d4";
+}
+
+.k-i-hexagon-shape::before {
+  content: "\e0d5";
+}
+
+.k-i-insert-free-text::before {
+  content: "\e0d6";
+}
+
+.k-i-line-shape::before {
+  content: "\e0d7";
+}
+
+.k-i-password-box::before {
+  content: "\e0d8";
+}
+
+.k-i-perimeter::before {
+  content: "\e0d9";
+}
+
+.k-i-rectangle-shape::before {
+  content: "\e0da";
+}
+
+.k-i-replace-free-text::before {
+  content: "\e0db";
+}
+
+.k-i-ruler-outline-alt::before {
+  content: "\e0dc";
+}
+
+.k-i-ruler-solid-alt::before {
+  content: "\e0dd";
+}
+
+.k-i-ruler-solid::before {
+  content: "\e0de";
+}
+
+.k-i-ruler-triangle-outline::before {
+  content: "\e0df";
+}
+
+.k-i-ruler-triangle-solid::before {
+  content: "\e0e0";
+}
+
+.k-i-award-number-outline::before {
+  content: "\e0e1";
+}
+
+.k-i-award-number-solid::before {
+  content: "\e0e2";
+}
+
+.k-i-award-star-outline::before {
+  content: "\e0e3";
+}
+
+.k-i-award-star-solid::before {
+  content: "\e0e4";
+}
+
+.k-i-banknote-outline::before {
+  content: "\e0e5";
+}
+
+.k-i-banknote-solid::before {
+  content: "\e0e6";
+}
+
+.k-i-bathtube-outline::before {
+  content: "\e0e7";
+}
+
+.k-i-bathtube-solid::before {
+  content: "\e0e8";
+}
+
+.k-i-bed-outline::before {
+  content: "\e0e9";
+}
+
+.k-i-bed-solid::before {
+  content: "\e0ea";
+}
+
+.k-i-bug-outline::before {
+  content: "\e0eb";
+}
+
+.k-i-bug-solid::before {
+  content: "\e0ec";
+}
+
+.k-i-buildings-outline::before {
+  content: "\e0ed";
+}
+
+.k-i-buildings-solid::before {
+  content: "\e0ee";
+}
+
+.k-i-bicycle::before {
+  content: "\e0ef";
+}
+
+.k-i-bus::before {
+  content: "\e0f0";
+}
+
+.k-i-car::before {
+  content: "\e0f1";
+}
+
+.k-i-dashboard-outline::before {
+  content: "\e0f2";
+}
+
+.k-i-dashboard-solid::before {
+  content: "\e0f3";
+}
+
+.k-i-decision::before {
+  content: "\e0f4";
+}
+
+.k-i-directions::before {
+  content: "\e0f5";
+}
+
+.k-i-education-outline::before {
+  content: "\e0f6";
+}
+
+.k-i-education-solid::before {
+  content: "\e0f7";
+}
+
+.k-i-headset::before {
+  content: "\e0f8";
+}
+
+.k-i-luggage-outline::before {
+  content: "\e0f9";
+}
+
+.k-i-luggage-solid::before {
+  content: "\e0fa";
+}
+
+.k-i-non-stop-outline::before {
+  content: "\e0fb";
+}
+
+.k-i-non-stop-solid::before {
+  content: "\e0fc";
+}
+
+.k-i-pills-outline::before {
+  content: "\e0fd";
+}
+
+.k-i-pills-solid::before {
+  content: "\e0fe";
+}
+
+.k-i-plan::before {
+  content: "\e0ff";
+}
+
 .k-i-undo::before {
   content: "\e100";
 }
@@ -1725,6 +2161,58 @@
 
 .k-i-clock-arrow-rotate::before {
   content: "\e15d";
+}
+
+.k-i-question-solid::before {
+  content: "\e15e";
+}
+
+.k-i-clean-outline::before {
+  content: "\e15f";
+}
+
+.k-i-clean-solid::before {
+  content: "\e160";
+}
+
+.k-i-concrete-truck::before {
+  content: "\e161";
+}
+
+.k-i-discount-outline::before {
+  content: "\e162";
+}
+
+.k-i-discount-solid::before {
+  content: "\e163";
+}
+
+.k-i-doctor-outline::before {
+  content: "\e164";
+}
+
+.k-i-doctor-solid::before {
+  content: "\e165";
+}
+
+.k-i-lab-technician-outline::before {
+  content: "\e166";
+}
+
+.k-i-lab-technician-solid::before {
+  content: "\e167";
+}
+
+.k-i-sweeper-vehicle::before {
+  content: "\e168";
+}
+
+.k-i-weight-scale-outline::before {
+  content: "\e169";
+}
+
+.k-i-weight-scale-solid::before {
+  content: "\e16a";
 }
 
 .k-i-play::before {
