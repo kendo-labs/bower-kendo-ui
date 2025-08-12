@@ -2215,6 +2215,22 @@
   content: "\e16a";
 }
 
+.k-i-microphone-solid::before {
+  content: "\e16b";
+}
+
+.k-i-microphone-outline::before {
+  content: "\e16c";
+}
+
+.k-i-row-expand::before {
+  content: "\e16d";
+}
+
+.k-i-row-collapse::before {
+  content: "\e16e";
+}
+
 .k-i-play::before {
   content: "\e200";
 }
