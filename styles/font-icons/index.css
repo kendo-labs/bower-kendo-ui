@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 @font-face {
   font-family: "WebComponentsIcons";
   font-style: normal;
@@ -23,7 +24,6 @@
   width: 1em;
   height: 1em;
   outline: 0;
-  font-size: 16px;
   font-family: "WebComponentsIcons";
   font-style: normal;
   font-variant: normal;
@@ -45,37 +45,30 @@
 .k-font-icon:hover, .k-font-icon:focus {
   text-decoration: none;
 }
+.k-font-icon.k-icon-xs {
+  font-size: calc(16px * 0.75);
+}
+.k-font-icon.k-icon-sm {
+  font-size: calc(16px * 0.875);
+}
+.k-font-icon, .k-font-icon.k-icon-md {
+  font-size: 16px;
+}
+.k-font-icon.k-icon-lg {
+  font-size: calc(16px * 1.25);
+}
+.k-font-icon.k-icon-xl {
+  font-size: calc(16px * 1.5);
+}
+.k-font-icon.k-icon-xxl {
+  font-size: calc(16px * 2);
+}
+.k-font-icon.k-icon-xxxl {
+  font-size: calc(16px * 3);
+}
 
 .k-i-none::before {
   display: none !important;
-}
-
-.k-icon-xs {
-  font-size: calc(16px * 0.75);
-}
-
-.k-icon-sm {
-  font-size: calc(16px * 0.875);
-}
-
-.k-icon-md {
-  font-size: 16px;
-}
-
-.k-icon-lg {
-  font-size: calc(16px * 1.25);
-}
-
-.k-icon-xl {
-  font-size: calc(16px * 1.5);
-}
-
-.k-icon-xxl {
-  font-size: calc(16px * 2);
-}
-
-.k-icon-xxxl {
-  font-size: calc(16px * 3);
 }
 
 .k-flip-h {
@@ -2229,6 +2222,90 @@
 
 .k-i-row-collapse::before {
   content: "\e16e";
+}
+
+.k-i-menu-filter::before {
+  content: "\e16f";
+}
+
+.k-i-menu-sort-asc::before {
+  content: "\e170";
+}
+
+.k-i-menu-sort-desc::before {
+  content: "\e171";
+}
+
+.k-i-paste-sparkle::before {
+  content: "\e172";
+}
+
+.k-i-pin-solid::before {
+  content: "\e173";
+}
+
+.k-i-pin-outline::before {
+  content: "\e174";
+}
+
+.k-i-unpin-solid::before {
+  content: "\e175";
+}
+
+.k-i-unpin-outline::before {
+  content: "\e176";
+}
+
+.k-i-pin-outline-top::before {
+  content: "\e177";
+}
+
+.k-i-pin-outline-bottom::before {
+  content: "\e178";
+}
+
+.k-i-arrow-down-outline::before {
+  content: "\e179";
+}
+
+.k-i-arrow-rotate-cw-outline::before {
+  content: "\e17a";
+}
+
+.k-i-arrow-up-outline::before {
+  content: "\e17b";
+}
+
+.k-i-arrows-rotate-outline::before {
+  content: "\e17c";
+}
+
+.k-i-file-clock-outline::before {
+  content: "\e17d";
+}
+
+.k-i-lightbulb-outline::before {
+  content: "\e17e";
+}
+
+.k-i-paperclip-outline-alt-right::before {
+  content: "\e17f";
+}
+
+.k-i-paperclip-outline::before {
+  content: "\e180";
+}
+
+.k-i-x-mark-outline::before {
+  content: "\e181";
+}
+
+.k-i-x-mark-sm-outline::before {
+  content: "\e182";
+}
+
+.k-i-zoom-sparkle::before {
+  content: "\e183";
 }
 
 .k-i-play::before {
