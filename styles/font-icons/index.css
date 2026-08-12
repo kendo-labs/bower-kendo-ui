@@ -20,6 +20,18 @@
   font-weight: normal;
   src: url("kendo-font-icons.ttf") format("truetype");
 }
+:root {
+  --kendo-icon-size: 16px;
+  --kendo-icon-size-xs: calc( var(--kendo-icon-size) * .75 );
+  --kendo-icon-size-sm: calc( var(--kendo-icon-size) * .875 );
+  --kendo-icon-size-md: var(--kendo-icon-size);
+  --kendo-icon-size-lg: calc( var(--kendo-icon-size) * 1.25 );
+  --kendo-icon-size-xl: calc( var(--kendo-icon-size) * 1.5 );
+  --kendo-icon-size-xxl: calc( var(--kendo-icon-size) * 2 );
+  --kendo-icon-size-xxxl: calc( var(--kendo-icon-size) * 3 );
+  --kendo-icon-rotation: 0deg;
+}
+
 .k-font-icon {
   width: 1em;
   height: 1em;
@@ -41,30 +53,31 @@
   position: relative;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
+  transform: rotate(var(--kendo-icon-rotation));
 }
 .k-font-icon:hover, .k-font-icon:focus {
   text-decoration: none;
 }
 .k-font-icon.k-icon-xs {
-  font-size: calc(16px * 0.75);
+  font-size: var(--kendo-icon-size-xs, calc(var(--kendo-icon-size, 16px) * 0.75));
 }
 .k-font-icon.k-icon-sm {
-  font-size: calc(16px * 0.875);
+  font-size: var(--kendo-icon-size-sm, calc(var(--kendo-icon-size, 16px) * 0.875));
 }
 .k-font-icon, .k-font-icon.k-icon-md {
-  font-size: 16px;
+  font-size: var(--kendo-icon-size-md, var(--kendo-icon-size, 16px));
 }
 .k-font-icon.k-icon-lg {
-  font-size: calc(16px * 1.25);
+  font-size: var(--kendo-icon-size-lg, calc(var(--kendo-icon-size, 16px) * 1.25));
 }
 .k-font-icon.k-icon-xl {
-  font-size: calc(16px * 1.5);
+  font-size: var(--kendo-icon-size-xl, calc(var(--kendo-icon-size, 16px) * 1.5));
 }
 .k-font-icon.k-icon-xxl {
-  font-size: calc(16px * 2);
+  font-size: var(--kendo-icon-size-xxl, calc(var(--kendo-icon-size, 16px) * 2));
 }
 .k-font-icon.k-icon-xxxl {
-  font-size: calc(16px * 3);
+  font-size: var(--kendo-icon-size-xxxl, calc(var(--kendo-icon-size, 16px) * 3));
 }
 
 .k-i-none::before {
@@ -85,35 +98,43 @@
 }
 
 .k-rotate-0 {
-  transform: rotate(0deg);
+  --kendo-icon-rotation: 0deg;
+  transform: rotate(var(--kendo-icon-rotation));
 }
 
 .k-rotate-45 {
-  transform: rotate(45deg);
+  --kendo-icon-rotation: 45deg;
+  transform: rotate(var(--kendo-icon-rotation));
 }
 
 .k-rotate-90 {
-  transform: rotate(90deg);
+  --kendo-icon-rotation: 90deg;
+  transform: rotate(var(--kendo-icon-rotation));
 }
 
 .k-rotate-135 {
-  transform: rotate(135deg);
+  --kendo-icon-rotation: 135deg;
+  transform: rotate(var(--kendo-icon-rotation));
 }
 
 .k-rotate-180 {
-  transform: rotate(180deg);
+  --kendo-icon-rotation: 180deg;
+  transform: rotate(var(--kendo-icon-rotation));
 }
 
 .k-rotate-225 {
-  transform: rotate(225deg);
+  --kendo-icon-rotation: 225deg;
+  transform: rotate(var(--kendo-icon-rotation));
 }
 
 .k-rotate-270 {
-  transform: rotate(270deg);
+  --kendo-icon-rotation: 270deg;
+  transform: rotate(var(--kendo-icon-rotation));
 }
 
 .k-rotate-315 {
-  transform: rotate(315deg);
+  --kendo-icon-rotation: 315deg;
+  transform: rotate(var(--kendo-icon-rotation));
 }
 
 .k-i-caret-tr::before {
@@ -2494,6 +2515,10 @@
 
 .k-i-zoom-sparkle::before {
   content: "\e183";
+}
+
+.k-i-repeat::before {
+  content: "\e184";
 }
 
 .k-i-play::before {
