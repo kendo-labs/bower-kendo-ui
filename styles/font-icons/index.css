@@ -2521,6 +2521,66 @@
   content: "\e184";
 }
 
+.k-i-circle-half-tilted::before {
+  content: "\e185";
+}
+
+.k-i-circles-three-intersecting::before {
+  content: "\e186";
+}
+
+.k-i-drop-half-pixelated::before {
+  content: "\e187";
+}
+
+.k-i-frame-corners::before {
+  content: "\e188";
+}
+
+.k-i-line-point-angular::before {
+  content: "\e189";
+}
+
+.k-i-line-point-circle::before {
+  content: "\e18a";
+}
+
+.k-i-line-point-rhombus::before {
+  content: "\e18b";
+}
+
+.k-i-line-point-rounded::before {
+  content: "\e18c";
+}
+
+.k-i-line-point-square::before {
+  content: "\e18d";
+}
+
+.k-i-oval-shape::before {
+  content: "\e18e";
+}
+
+.k-i-pentagon-shape::before {
+  content: "\e18f";
+}
+
+.k-i-square-dotted::before {
+  content: "\e190";
+}
+
+.k-i-squares-overlapping-plus::before {
+  content: "\e191";
+}
+
+.k-i-squares-pixelated::before {
+  content: "\e192";
+}
+
+.k-i-sliders-horizontal::before {
+  content: "\e193";
+}
+
 .k-i-play::before {
   content: "\e200";
 }
